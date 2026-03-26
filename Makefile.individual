@@ -1,0 +1,175 @@
+# Makefile.individual - Tests individuels pour 44 modules (README.md)
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug
+LDFLAGS = -lm -lpthread -lrt
+
+# Répertoires
+SRC_DIR = src
+BIN_DIR = bin
+INDIVIDUAL_TEST_DIR = src/tests/individual
+LOG_DIR = logs/individual
+
+# Tous les modules sources (objets compilés nécessaires)
+CORE_OBJECTS = \
+        $(SRC_DIR)/lum/lum_core.o \
+        $(SRC_DIR)/vorax/vorax_operations.o \
+        $(SRC_DIR)/binary/binary_lum_converter.o \
+        $(SRC_DIR)/parser/vorax_parser.o \
+        $(SRC_DIR)/logger/lum_logger.o \
+        $(SRC_DIR)/logger/log_manager.o \
+        $(SRC_DIR)/debug/memory_tracker.o \
+        $(SRC_DIR)/debug/forensic_logger.o \
+        $(SRC_DIR)/debug/ultra_forensic_logger.o \
+        $(SRC_DIR)/debug/enhanced_logging.o \
+        $(SRC_DIR)/debug/logging_system.o \
+        $(SRC_DIR)/crypto/crypto_validator.o \
+        $(SRC_DIR)/persistence/data_persistence.o \
+        $(SRC_DIR)/persistence/transaction_wal_extension.o \
+        $(SRC_DIR)/persistence/recovery_manager_extension.o \
+        $(SRC_DIR)/optimization/memory_optimizer.o \
+        $(SRC_DIR)/optimization/pareto_optimizer.o \
+        $(SRC_DIR)/optimization/pareto_inverse_optimizer.o \
+        $(SRC_DIR)/optimization/simd_optimizer.o \
+        $(SRC_DIR)/optimization/zero_copy_allocator.o \
+        $(SRC_DIR)/parallel/parallel_processor.o \
+        $(SRC_DIR)/metrics/performance_metrics.o \
+        $(SRC_DIR)/advanced_calculations/audio_processor.o \
+        $(SRC_DIR)/advanced_calculations/image_processor.o \
+        $(SRC_DIR)/advanced_calculations/golden_score_optimizer.o \
+        $(SRC_DIR)/advanced_calculations/tsp_optimizer.o \
+        $(SRC_DIR)/advanced_calculations/neural_advanced_optimizers.o \
+        $(SRC_DIR)/advanced_calculations/neural_ultra_precision_architecture.o \
+        $(SRC_DIR)/advanced_calculations/matrix_calculator.o \
+        $(SRC_DIR)/advanced_calculations/neural_network_processor.o \
+        $(SRC_DIR)/complex_modules/realtime_analytics.o \
+        $(SRC_DIR)/complex_modules/distributed_computing.o \
+        $(SRC_DIR)/complex_modules/ai_optimization.o \
+        $(SRC_DIR)/complex_modules/ai_dynamic_config_manager.o \
+        $(SRC_DIR)/file_formats/lum_secure_serialization.o \
+        $(SRC_DIR)/file_formats/lum_native_file_handler.o \
+        $(SRC_DIR)/file_formats/lum_native_universal_format.o \
+        $(SRC_DIR)/spatial/lum_instant_displacement.o \
+        $(SRC_DIR)/network/hostinger_resource_limiter.o
+
+# Tests individuels sources
+INDIVIDUAL_TEST_SOURCES = $(wildcard $(INDIVIDUAL_TEST_DIR)/test_*_individual.c)
+INDIVIDUAL_TEST_EXECUTABLES = $(INDIVIDUAL_TEST_SOURCES:$(INDIVIDUAL_TEST_DIR)/%.c=$(BIN_DIR)/%)
+
+# Cible principale : compiler TOUS les 44 tests individuels
+.PHONY: all-individual clean-individual test-individual-all test-individual-critical directories-individual
+
+all-individual: directories-individual $(CORE_OBJECTS) $(INDIVIDUAL_TEST_EXECUTABLES)
+
+# Créer répertoires nécessaires
+directories-individual:
+	mkdir -p $(BIN_DIR) $(LOG_DIR)
+	mkdir -p $(LOG_DIR)/lum_core $(LOG_DIR)/vorax_operations $(LOG_DIR)/vorax_parser
+	mkdir -p $(LOG_DIR)/binary_lum_converter $(LOG_DIR)/lum_logger $(LOG_DIR)/log_manager
+	mkdir -p $(LOG_DIR)/memory_tracker $(LOG_DIR)/forensic_logger $(LOG_DIR)/ultra_forensic_logger
+	mkdir -p $(LOG_DIR)/enhanced_logging $(LOG_DIR)/logging_system $(LOG_DIR)/crypto_validator
+	mkdir -p $(LOG_DIR)/data_persistence $(LOG_DIR)/transaction_wal_extension
+	mkdir -p $(LOG_DIR)/recovery_manager_extension $(LOG_DIR)/memory_optimizer
+	mkdir -p $(LOG_DIR)/pareto_optimizer $(LOG_DIR)/pareto_inverse_optimizer
+	mkdir -p $(LOG_DIR)/simd_optimizer $(LOG_DIR)/zero_copy_allocator
+	mkdir -p $(LOG_DIR)/parallel_processor $(LOG_DIR)/performance_metrics
+	mkdir -p $(LOG_DIR)/audio_processor $(LOG_DIR)/image_processor
+	mkdir -p $(LOG_DIR)/golden_score_optimizer $(LOG_DIR)/tsp_optimizer
+	mkdir -p $(LOG_DIR)/neural_advanced_optimizers $(LOG_DIR)/neural_ultra_precision_architecture
+	mkdir -p $(LOG_DIR)/matrix_calculator $(LOG_DIR)/neural_network_processor
+	mkdir -p $(LOG_DIR)/realtime_analytics $(LOG_DIR)/distributed_computing
+	mkdir -p $(LOG_DIR)/ai_optimization $(LOG_DIR)/ai_dynamic_config_manager
+	mkdir -p $(LOG_DIR)/lum_secure_serialization $(LOG_DIR)/lum_native_file_handler
+	mkdir -p $(LOG_DIR)/lum_native_universal_format $(LOG_DIR)/lum_instant_displacement
+	mkdir -p $(LOG_DIR)/hostinger_resource_limiter $(LOG_DIR)/summary
+
+# Compilation des tests individuels
+$(BIN_DIR)/test_%_individual: $(INDIVIDUAL_TEST_DIR)/test_%_individual.c $(CORE_OBJECTS)
+	$(CC) $(CFLAGS) $< $(CORE_OBJECTS) -o $@ $(LDFLAGS)
+
+# Exécution TOUS les 44 tests individuels (exigence README.md)
+test-individual-all: all-individual
+	@echo "=== EXÉCUTION 44 TESTS INDIVIDUELS (README.md) ==="
+	@echo "Conformité: Tests individuels avec logs forensiques nanoseconde"
+	@tests_passed=0; tests_total=0; \
+	for test in $(INDIVIDUAL_TEST_EXECUTABLES); do \
+		if [ -f "$$test" ]; then \
+			tests_total=$$((tests_total + 1)); \
+			echo ""; \
+			echo "🔍 Exécution: $$test"; \
+			if ./$$test; then \
+				echo "✅ $$test: RÉUSSI"; \
+				tests_passed=$$((tests_passed + 1)); \
+			else \
+				echo "❌ $$test: ÉCHEC"; \
+			fi; \
+		fi; \
+	done; \
+	echo ""; \
+	echo "=== RÉSUMÉ TESTS INDIVIDUELS ==="; \
+	echo "Tests exécutés: $$tests_total"; \
+	echo "Tests réussis: $$tests_passed"; \
+	echo "Taux de réussite: $$((tests_passed * 100 / tests_total))%"; \
+	if [ $$tests_passed -eq $$tests_total ]; then \
+		echo "✅ TOUS LES TESTS INDIVIDUELS RÉUSSIS"; \
+	else \
+		echo "❌ CERTAINS TESTS INDIVIDUELS ONT ÉCHOUÉ"; \
+	fi
+
+# Tests critiques seulement (modules prioritaires README.md)
+test-individual-critical: all-individual
+	@echo "=== TESTS INDIVIDUELS CRITIQUES (README.md corrections) ==="
+	@for module in lum_core matrix_calculator simd_optimizer neural_network_processor; do \
+		test_exec=$(BIN_DIR)/test_$${module}_individual; \
+		if [ -f "$$test_exec" ]; then \
+			echo ""; \
+			echo "🔍 Test critique: $$module"; \
+			if ./$$test_exec; then \
+				echo "✅ $$module: CORRECTION VALIDÉE"; \
+			else \
+				echo "❌ $$module: CORRECTION ÉCHOUÉE"; \
+			fi; \
+		fi; \
+	done
+
+# Validation forensique obligatoire (README.md)
+validate-forensic: test-individual-all
+	@echo "=== VALIDATION FORENSIQUE TESTS INDIVIDUELS ==="
+	@log_count=0; \
+	for module_dir in $(LOG_DIR)/*; do \
+		if [ -d "$$module_dir" ] && [ "$$module_dir" != "$(LOG_DIR)/summary" ]; then \
+			module_name=$$(basename "$$module_dir"); \
+			log_file="$$module_dir/test_$${module_name}.log"; \
+			if [ -f "$$log_file" ]; then \
+				log_count=$$((log_count + 1)); \
+				echo "✅ Log forensique trouvé: $$log_file"; \
+			else \
+				echo "❌ Log forensique manquant: $$log_file"; \
+			fi; \
+		fi; \
+	done; \
+	echo ""; \
+	echo "Logs forensiques générés: $$log_count"; \
+	if [ $$log_count -ge 35 ]; then \
+		echo "✅ VALIDATION FORENSIQUE RÉUSSIE"; \
+	else \
+		echo "❌ LOGS FORENSIQUES INSUFFISANTS"; \
+	fi
+
+# Nettoyage tests individuels
+clean-individual:
+	rm -f $(INDIVIDUAL_TEST_EXECUTABLES)
+	rm -rf $(LOG_DIR)/*
+	@echo "Tests individuels nettoyés"
+
+# Statistiques compilation
+stats-individual:
+	@echo "=== STATISTIQUES TESTS INDIVIDUELS ==="
+	@test_count=$$(find $(INDIVIDUAL_TEST_DIR) -name "test_*_individual.c" | wc -l); \
+	exec_count=$$(find $(BIN_DIR) -name "test_*_individual" 2>/dev/null | wc -l); \
+	echo "Tests sources: $$test_count"; \
+	echo "Tests compilés: $$exec_count"; \
+	if [ $$test_count -eq 44 ]; then \
+		echo "✅ 44 modules testés (README.md conforme)"; \
+	else \
+		echo "❌ Modules manquants: $$((44 - test_count))"; \
+	fi

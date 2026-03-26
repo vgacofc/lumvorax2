@@ -1,0 +1,23 @@
+# Demo du langage VORAX - Opérations de base
+
+# Déclaration des zones
+zone A, B, C, D;
+mem buffer;
+
+# Émission de LUMs dans la zone A  
+emit A += 5;
+
+# Répartition équitable de A vers B et C
+split A -> [B, C];
+
+# Déplacement d'une LUM de B vers D
+move B -> D, 1;
+
+# Stockage en mémoire depuis C
+store buffer <- C, 1;
+
+# Récupération depuis la mémoire vers A
+retrieve buffer -> A;
+
+# Cycle sur la zone D (modulo 3)
+cycle D % 3;

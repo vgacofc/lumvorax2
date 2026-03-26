@@ -1,0 +1,49 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug
+LDFLAGS = -lm -lpthread -lrt
+SRC_DIR = src
+BIN_DIR = bin
+LOG_DIR = logs
+
+CORE_SOURCES = \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/vorax/vorax_operations.c \
+	$(SRC_DIR)/binary/binary_lum_converter.c \
+	$(SRC_DIR)/parser/vorax_parser.c \
+	$(SRC_DIR)/logger/lum_logger.c \
+	$(SRC_DIR)/logger/log_manager.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/debug/ultra_forensic_logger.c \
+	$(SRC_DIR)/debug/enhanced_logging.c \
+	$(SRC_DIR)/optimization/memory_optimizer.c \
+	$(SRC_DIR)/optimization/simd_optimizer.c \
+	$(SRC_DIR)/parallel/parallel_processor.c \
+	$(SRC_DIR)/metrics/performance_metrics.c \
+	$(SRC_DIR)/advanced_calculations/audio_processor.c \
+	$(SRC_DIR)/advanced_calculations/image_processor.c
+
+CORE_OBJECTS = $(CORE_SOURCES:.c=.o)
+MAIN_EXECUTABLE = $(BIN_DIR)/lum_vorax_simple_100
+
+.PHONY: all clean run-tests directories
+
+all: directories $(MAIN_EXECUTABLE)
+
+directories:
+	mkdir -p $(BIN_DIR) $(LOG_DIR)/forensic $(LOG_DIR)/execution $(LOG_DIR)/tests $(LOG_DIR)/console
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(MAIN_EXECUTABLE): $(CORE_OBJECTS)
+	$(CC) $(CFLAGS) $(SRC_DIR)/main_simple.c $(CORE_OBJECTS) -o $@ $(LDFLAGS)
+
+run-tests: $(MAIN_EXECUTABLE)
+	$(MAIN_EXECUTABLE) --progressive-stress-all
+
+clean:
+	rm -f $(CORE_OBJECTS)
+	rm -f $(MAIN_EXECUTABLE)
+	rm -rf $(BIN_DIR)
+	find . -name "*.o" -type f -delete

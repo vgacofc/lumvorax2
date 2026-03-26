@@ -1,0 +1,117 @@
+modules = ["python-3.12"]
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Run Python"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Quantum Research Cycle C37"
+
+[[workflows.workflow]]
+name = "Run Python"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "git fetch "
+mode = "sequential"
+author = 54178035
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git fetch origin git reset --hard origin/main"
+
+[[workflows.workflow]]
+name = "chmod +x generate_ssh_key.sh"
+mode = "sequential"
+author = 54178035
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x generate_ssh_key.sh"
+
+[[workflows.workflow]]
+name = "bash generate_ssh_key.sh"
+mode = "sequential"
+author = 54178035
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash generate_ssh_key.sh"
+
+[[workflows.workflow]]
+name = "ssh -T git@github.com"
+mode = "sequential"
+author = 54178035
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "ssh -T git@github.com"
+
+[[workflows.workflow]]
+name = "Quantum Research Cycle C37"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd src/advanced_calculations/quantum_problem_hubbard_hts && bash run_research_cycle.sh"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[nix]
+packages = ["arrow-cpp", "cairo", "clang", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "pkg-config", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
+channel = "stable-25_05"
+
+[deployment]
+deploymentTarget = "vm"
+run = ["./bin/lum_vorax_complete", "--progressive-stress-all"]
+build = ["make", "clean", "all"]
+
+[userenv]
+
+[userenv.shared]
+KAGGLE_API_TOKEN = "KGAT_5fcd05f27636ded50a5c8053f13da836"
+KAGGLE_USERNAME = "ndarray2000"
+KAGGLE_CONFIG_DIR = "/home/runner/.kaggle"
+
+[userenv.development]
+ARISTOTLE_API_KEY = "arstl_YykBEXr6oNR5R9toq_wI1wTtyfVrj5eUZfgpe_BlgYo"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13ZGVxcGZ4YmNkYXlhZWx3cWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODQzNzEsImV4cCI6MjA4OTg2MDM3MX0.BIqmkgVngljtERZhiZxTLt2TmpLOtk5qWjAhpFDafos"
+SUPABASE_DB_HOST = "db.mwdeqpfxbcdayaelwqht.supabase.co"
+SUPABASE_DB_NAME = "postgres"
+SUPABASE_DB_PASSWORD = " @Pass20262027"
+SUPABASE_DB_PORT = "5432"
+SUPABASE_DB_USER = " postgres"
+SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13ZGVxcGZ4YmNkYXlhZWx3cWh0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4NDM3MSwiZXhwIjoyMDg5ODYwMzcxfQ.5LfZB5mYcW9j7rfX8hAAgQ009sTdv9DfaJ_wr03bj3s"
+SUPABASE_SERVICE_ROLE_KEY_GENERALLe = "N8ahCt20bV0zALIk0+9UZFI2G4ZZ5wVegkXhEN0536eCTP19Jbr/b4mkUItlsKtf1Rt+oqQqdo9iHDZzWnvHjQ=="
+SUPABASE_URL = "postgresql://postgres:%40Pass20262027@db.mwdeqpfxbcdayaelwqht.supabase.co:5432/postgres"
+
+[userenv.production]
+ARISTOTLE_API_KEY = "arstl_YykBEXr6oNR5R9toq_wI1wTtyfVrj5eUZfgpe_BlgYo"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13ZGVxcGZ4YmNkYXlhZWx3cWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODQzNzEsImV4cCI6MjA4OTg2MDM3MX0.BIqmkgVngljtERZhiZxTLt2TmpLOtk5qWjAhpFDafos"
+SUPABASE_DB_HOST = "db.mwdeqpfxbcdayaelwqht.supabase.co"
+SUPABASE_DB_NAME = "postgres"
+SUPABASE_DB_PASSWORD = " @Pass20262027"
+SUPABASE_DB_PORT = "5432"
+SUPABASE_DB_USER = " postgres"
+SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13ZGVxcGZ4YmNkYXlhZWx3cWh0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDI4NDM3MSwiZXhwIjoyMDg5ODYwMzcxfQ.5LfZB5mYcW9j7rfX8hAAgQ009sTdv9DfaJ_wr03bj3s"
+SUPABASE_SERVICE_ROLE_KEY_GENERALLe = "N8ahCt20bV0zALIk0+9UZFI2G4ZZ5wVegkXhEN0536eCTP19Jbr/b4mkUItlsKtf1Rt+oqQqdo9iHDZzWnvHjQ=="
+SUPABASE_URL = "postgresql://postgres:%40Pass20262027@db.mwdeqpfxbcdayaelwqht.supabase.co:5432/postgres"

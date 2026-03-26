@@ -1,0 +1,35 @@
+cat > .gitignore << 'EOF'
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Packaging / wheels
+*.whl
+*.tar
+*.tar.gz
+*.zip
+
+# Data / datasets / outputs
+*.csv
+*.parquet
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# ML / scientific outputs
+results/
+outputs/
+checkpoints/
+experiments/
+
+# Dependency dumps (your case)
+RAPPORT-VESUVIUS/
+lum-vorax-dependencies/
+nx47_dependencies_v3/
+temp_v1_v2/
+
+# System / logs
+*.log
+EOF
