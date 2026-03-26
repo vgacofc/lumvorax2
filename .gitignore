@@ -32,4 +32,21 @@ temp_v1_v2/
 
 # System / logs
 *.log
+
+cat > .gitignore << 'EOF'
+# secrets
+*.json
+.kaggle/
+.env
+
+# data
+*.csv
+*.whl
+*.zip
+*.tar.gz
+
+# system
+.replit
+__pycache__/
+EOF
 EOF
