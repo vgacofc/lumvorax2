@@ -1,0 +1,256 @@
+# AUDIT D'INTÉGRATION FONCTIONS — NX46 VX
+Date: 2026-02-24
+
+## Sources fusionnées
+- V61.5: `RAPPORT-VESUVIUS/notebook-version-NX47-V61.5/nx47-vesu-kernel-new-v61-5.ipynb`
+- V144.2: `RAPPORT-VESUVIUS/notebook-version-NX47-V144.2/nx47-vesu-kernel-new-v144-2.ipynb`
+- V7.7: `RAPPORT-VESUVIUS/src_vesuvius/nx46_vesuvius_core_kaggle_ready_v7.7/nx46-vesuvius-core-kaggle-ready-v7-7.ipynb`
+- V7.6: `RAPPORT-VESUVIUS/src_vesuvius/nx46_vesuvius_core_kaggle_ready_v7.6/nx46-vesuvius-core-kaggle-ready-v7-6.ipynb`
+
+## Inventaire des fonctions par version
+
+### V61.5 (10 fonctions)
+- `__init__`
+- `_safe`
+- `file_metric`
+- `install_offline`
+- `log`
+- `process_file`
+- `read_tiff`
+- `run_all`
+- `slice_metric`
+- `slice_percentiles`
+
+### V144.2 (69 fonctions)
+- `__init__`
+- `_assert_continuity_integrity`
+- `_assert_no_hardcoded_metric_pattern`
+- `_assert_train_completed_100`
+- `_assert_train_pairs_threshold`
+- `_audit_train_dataset_size`
+- `_balance_sample_indices`
+- `_binary_stats`
+- `_build_continuity_matrix`
+- `_build_progress_bar`
+- `_build_v1442_forensic_report`
+- `_compute_learning_percent_real`
+- `_derive_train_pair_requirement`
+- `_dice_loss_from_logits`
+- `_extract_2p5d_patches`
+- `_fbeta_from_stats`
+- `_is_pkg_available`
+- `_load_label_2d`
+- `_load_volume`
+- `_log_array_ultra`
+- `_log_heartbeat`
+- `_log_progress`
+- `_parse_v130_log_summary`
+- `_predict_mask`
+- `_resolve_root`
+- `_run_preflight_5pct`
+- `_sigmoid`
+- `_validate_submission_competition_rules`
+- `_write`
+- `_zscore`
+- `adapt_learning_rate`
+- `add_step`
+- `audit_logits_distribution`
+- `auto_select_features`
+- `bit_stats`
+- `bootstrap_dependencies_fail_fast`
+- `build_supervised_model`
+- `calibrate_target_ratio`
+- `calibrate_thresholds`
+- `choose_adaptive_ratio`
+- `choose_slicewise_adaptive_ratio`
+- `compute_proxy_f1`
+- `discover_inputs`
+- `discover_train_pairs`
+- `dynamic_regularization_lambda`
+- `emit`
+- `ensure_imagecodecs`
+- `extract_multi_features`
+- `fit_prox`
+- `forward`
+- `hysteresis_topology_3d`
+- `install_offline`
+- `log`
+- `log_array`
+- `make_batches`
+- `overall_progress`
+- `predict_proba`
+- `probe_hardware_metrics`
+- `pseudo_labels`
+- `read_tiff_lzw_safe`
+- `run`
+- `run_simulation_100`
+- `simulate_f1_vs_ratio_curve`
+- `slice_adaptive_fusion`
+- `train_nx47_autonomous`
+- `train_nx47_supervised`
+- `train_unet_25d_supervised`
+- `update`
+- `write_tiff_lzw_safe`
+
+### V7.7 (51 fonctions)
+- `__init__`
+- `_append`
+- `_apply_binary_mode`
+- `_calibrate_threshold_from_unlabeled`
+- `_candidate_roots`
+- `_dataset_inventory`
+- `_discover_layout`
+- `_ink_energy_projection`
+- `_label_candidates_for_train_tif`
+- `_load_a2z_manifest`
+- `_load_label`
+- `_load_test_item`
+- `_load_train_item`
+- `_material_proxy_map`
+- `_merkle_sign`
+- `_normalize_stack`
+- `_publish_submission_aliases`
+- `_quick_has_label`
+- `_read_fragment_stack`
+- `_read_sample_submission_ids`
+- `_resolve_root`
+- `_score_25d_proxy`
+- `_score_3d_native`
+- `_smooth_along_z`
+- `_to_stack`
+- `_track_bits`
+- `_validate_zip`
+- `_validate_zip_content_binary_01`
+- `_write_material_outputs`
+- `_write_submission_csv`
+- `_write_submission_zip`
+- `add`
+- `as_dict`
+- `bootstrap_dependencies_fail_fast`
+- `emit_dependency_manifest`
+- `ensure_imagecodecs`
+- `finalize`
+- `infer_mask`
+- `install_offline`
+- `log_bits`
+- `log_event`
+- `log_merkle`
+- `log_metrics`
+- `read_tiff_lzw_safe`
+- `run_pipeline`
+- `score_projection`
+- `slab_allocate`
+- `train_threshold`
+- `update`
+- `write_discovery_inventory`
+- `write_state`
+
+### V7.6 (50 fonctions)
+- `__init__`
+- `_append`
+- `_apply_binary_mode`
+- `_calibrate_threshold_from_unlabeled`
+- `_candidate_roots`
+- `_dataset_inventory`
+- `_discover_layout`
+- `_ink_energy_projection`
+- `_label_candidates_for_train_tif`
+- `_load_a2z_manifest`
+- `_load_label`
+- `_load_test_item`
+- `_load_train_item`
+- `_material_proxy_map`
+- `_merkle_sign`
+- `_normalize_stack`
+- `_publish_submission_aliases`
+- `_quick_has_label`
+- `_read_fragment_stack`
+- `_read_sample_submission_ids`
+- `_resolve_root`
+- `_score_25d_proxy`
+- `_score_3d_native`
+- `_smooth_along_z`
+- `_to_stack`
+- `_track_bits`
+- `_validate_zip`
+- `_validate_zip_content_binary_01`
+- `_write_material_outputs`
+- `_write_submission_csv`
+- `_write_submission_zip`
+- `add`
+- `as_dict`
+- `bootstrap_dependencies_fail_fast`
+- `ensure_imagecodecs`
+- `finalize`
+- `infer_mask`
+- `install_offline`
+- `log_bits`
+- `log_event`
+- `log_merkle`
+- `log_metrics`
+- `read_tiff_lzw_safe`
+- `run_pipeline`
+- `score_projection`
+- `slab_allocate`
+- `train_threshold`
+- `update`
+- `write_discovery_inventory`
+- `write_state`
+
+## Collisions de noms (51)
+- `__init__`: V61.5, V144.2, V7.7, V7.6
+- `_append`: V7.7, V7.6
+- `_apply_binary_mode`: V7.7, V7.6
+- `_calibrate_threshold_from_unlabeled`: V7.7, V7.6
+- `_candidate_roots`: V7.7, V7.6
+- `_dataset_inventory`: V7.7, V7.6
+- `_discover_layout`: V7.7, V7.6
+- `_ink_energy_projection`: V7.7, V7.6
+- `_label_candidates_for_train_tif`: V7.7, V7.6
+- `_load_a2z_manifest`: V7.7, V7.6
+- `_load_label`: V7.7, V7.6
+- `_load_test_item`: V7.7, V7.6
+- `_load_train_item`: V7.7, V7.6
+- `_material_proxy_map`: V7.7, V7.6
+- `_merkle_sign`: V7.7, V7.6
+- `_normalize_stack`: V7.7, V7.6
+- `_publish_submission_aliases`: V7.7, V7.6
+- `_quick_has_label`: V7.7, V7.6
+- `_read_fragment_stack`: V7.7, V7.6
+- `_read_sample_submission_ids`: V7.7, V7.6
+- `_resolve_root`: V144.2, V7.7, V7.6
+- `_score_25d_proxy`: V7.7, V7.6
+- `_score_3d_native`: V7.7, V7.6
+- `_smooth_along_z`: V7.7, V7.6
+- `_to_stack`: V7.7, V7.6
+- `_track_bits`: V7.7, V7.6
+- `_validate_zip`: V7.7, V7.6
+- `_validate_zip_content_binary_01`: V7.7, V7.6
+- `_write_material_outputs`: V7.7, V7.6
+- `_write_submission_csv`: V7.7, V7.6
+- `_write_submission_zip`: V7.7, V7.6
+- `add`: V7.7, V7.6
+- `as_dict`: V7.7, V7.6
+- `bootstrap_dependencies_fail_fast`: V144.2, V7.7, V7.6
+- `ensure_imagecodecs`: V144.2, V7.7, V7.6
+- `finalize`: V7.7, V7.6
+- `infer_mask`: V7.7, V7.6
+- `install_offline`: V61.5, V144.2, V7.7, V7.6
+- `log`: V61.5, V144.2
+- `log_bits`: V7.7, V7.6
+- `log_event`: V7.7, V7.6
+- `log_merkle`: V7.7, V7.6
+- `log_metrics`: V7.7, V7.6
+- `read_tiff_lzw_safe`: V144.2, V7.7, V7.6
+- `run_pipeline`: V7.7, V7.6
+- `score_projection`: V7.7, V7.6
+- `slab_allocate`: V7.7, V7.6
+- `train_threshold`: V7.7, V7.6
+- `update`: V144.2, V7.7, V7.6
+- `write_discovery_inventory`: V7.7, V7.6
+- `write_state`: V7.7, V7.6
+
+## Vérification ligne par ligne (synthèse)
+- Les cellules code des 4 notebooks ont été injectées en séquence dans le notebook unifié sans suppression de cellules de code non vides.
+- Les noms de fonctions et sous-fonctions sont conservés exactement tels que définis dans les sources.
+- En cas de collision de nom, la dernière définition dans l'ordre d'intégration (V7.6 après V7.7 après V144.2 après V61.5) prévaut au runtime Python.

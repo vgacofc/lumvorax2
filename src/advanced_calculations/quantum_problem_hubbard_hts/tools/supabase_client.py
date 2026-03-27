@@ -177,14 +177,15 @@ class SupabaseClient:
         self,
         out_dir: str = "benchmarks",
     ) -> dict[str, int]:
-        """Génère les fichiers benchmark runtime au format simplifié.
+        """Génère les fichiers benchmark runtime au format canonique (STANDARD_NAMES.md).
 
         Lit quantum_benchmarks depuis Supabase et écrit :
-          - qmc_dmrg_reference_runtime.csv  (dataset=qmc_dmrg)
-          - external_module_benchmarks_runtime.csv  (dataset=external_modules)
+          - qmc_dmrg_reference_runtime.csv       (dataset=qmc_dmrg)
+          - external_module_benchmarks_runtime.csv (dataset=external_modules)
 
-        Format de sortie : module,observable,t_k,u_over_t,value,err
-        Compatible avec load_benchmark_rows() dans le code C.
+        Format de sortie (7 colonnes, NOM D'ORIGINE) :
+          source,module,observable,t_k,u_eV,reference_value,error_bar
+        Compatible avec load_benchmark_rows() (sscanf 7-colonnes) dans le code C.
 
         Returns:
             Dict {filename: nombre_de_lignes_écrites}.
@@ -195,8 +196,8 @@ class SupabaseClient:
         counts: dict[str, int] = {}
 
         dataset_map = {
-            "qmc_dmrg":       "qmc_dmrg_reference_runtime.csv",
-            "external_modules": "external_module_benchmarks_runtime.csv",
+            "qmc_dmrg": "qmc_dmrg_reference_runtime.csv",
+            "external": "external_module_benchmarks_runtime.csv",
         }
 
         for dataset, filename in dataset_map.items():
@@ -206,11 +207,12 @@ class SupabaseClient:
             path = _os.path.join(out_dir, filename)
             written = 0
             with open(path, "w") as f:
-                f.write("module,observable,t_k,u_over_t,value,err\n")
+                f.write("source,module,observable,t_k,u_eV,reference_value,error_bar\n")
                 for r in subset:
                     try:
+                        source = r.get("source", "external")
                         f.write(
-                            f"{r['module']},{r['observable']},"
+                            f"{source},{r['module']},{r['observable']},"
                             f"{float(r['t_k']):.6f},{float(r['u_over_t']):.6f},"
                             f"{float(r['reference_value']):.10f},{float(r['error_bar']):.10f}\n"
                         )

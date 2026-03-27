@@ -328,7 +328,98 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 
 ---
 
+## SECTION J — TABLES SUPABASE ET COLONNES CSV BENCHMARK (NOM D'ORIGINE = À UTILISER)
+
+> **Règle :** Ces noms sont figés. Ne jamais en créer de nouveaux pour les mêmes entités.
+> Toute écriture (Python, shell, C) doit utiliser exactement ces noms de colonnes.
+
+### Tables Supabase (NOM D'ORIGINE)
+
+| NOM D'ORIGINE (table) | Rôle |
+|---|---|
+| `quantum_benchmarks` | Références QMC/DMRG et externes — source de vérité benchmark |
+| `run_scores` | Scores par run (iso, trace, repr, robust, phys, expert, total) |
+| `quantum_run_files` | Métadonnées des fichiers de run (path, taille, checksum) |
+| `quantum_csv_rows` | Lignes CSV individuelles archivées par run |
+| `benchmark_runtime` | Résultats de benchmark par run et par module |
+| `research_modules_config` | Configuration des modules de recherche |
+| `problems_config` | Paramètres physiques des problèmes |
+
+### Colonnes table `quantum_benchmarks` (NOM D'ORIGINE)
+
+| NOM D'ORIGINE (colonne Supabase) | Type | Description |
+|---|---|---|
+| `id` | int | Clé primaire auto |
+| `dataset` | text | `qmc_dmrg` ou `external` — **jamais** `external_modules` |
+| `module` | text | Nom du module (conforme Section D) |
+| `observable` | text | `energy_eV` ou `pairing` |
+| `t_k` | float | Température en Kelvin |
+| `u_over_t` | float | U/t (valeur numérique utilisée comme u_eV si t=1) |
+| `reference_value` | float | Valeur de référence publiée |
+| `reference_method` | text | Méthode de référence (QMC, DMRG, exact, etc.) |
+| `source` | text | Publication source (ex: `Leblanc2015`, `exact_2x2`) |
+| `error_bar` | float | Barre d'erreur sur la référence |
+| `notes` | text | Notes libres |
+| `created_at` | timestamp | Date création auto |
+
+### Colonnes table `run_scores` (NOM D'ORIGINE)
+
+| NOM D'ORIGINE (colonne Supabase) | Type | Description |
+|---|---|---|
+| `id` | int | Clé primaire auto |
+| `run_id` | text | Identifiant run (ex: `research_20260327T165138Z_841`) — UNIQUE |
+| `runner` | text | Version du runner (ex: `fullscale_v7`, `advanced_parallel_v10`) |
+| `score_iso` | int | Score isolation (0–100) |
+| `score_trace` | int | Score traçabilité (0–100) |
+| `score_repr` | int | Score reproductibilité (0–100) |
+| `score_robust` | int | Score robustesse (0–100) |
+| `score_phys` | int | Score physique (0–100) |
+| `score_expert` | int | Score expert (0–100) |
+| `score_total` | int | Total (somme des 6 critères, max 600) |
+| `notes` | text | Notes libres sur le run |
+| `created_at` | timestamp | Date création auto |
+
+### Format CSV benchmark de référence (NOM D'ORIGINE — 7 colonnes)
+
+> Fichiers : `benchmarks/qmc_dmrg_reference_runtime.csv` et `benchmarks/external_module_benchmarks_runtime.csv`
+> Généré par : `tools/supabase_client.py` → `generate_benchmark_runtime_csv()`
+> Lu par : `load_benchmark_rows()` dans `hubbard_hts_research_cycle_advanced_parallel.c`
+
+```
+source,module,observable,t_k,u_eV,reference_value,error_bar
+```
+
+| Position | NOM D'ORIGINE (colonne CSV) | Correspond à (Supabase) | Description |
+|---|---|---|---|
+| 1 | `source` | `source` | Publication (ex: `Leblanc2015`) |
+| 2 | `module` | `module` | Nom module physique |
+| 3 | `observable` | `observable` | `energy_eV` ou `pairing` |
+| 4 | `t_k` | `t_k` | Température K |
+| 5 | `u_eV` | `u_over_t` | U en eV (=U/t si t=1 eV) |
+| 6 | `reference_value` | `reference_value` | Valeur référence publiée |
+| 7 | `error_bar` | `error_bar` | Barre d'erreur |
+
+### Format CSV de sortie benchmark (NOM D'ORIGINE — 10 colonnes)
+
+> Fichiers générés par le code C : `benchmark_comparison_qmc_dmrg.csv` et `benchmark_comparison_external_modules.csv`
+
+```
+module,observable,T,U,reference,model,abs_error,rel_error,error_bar,within_error_bar
+```
+
+### Identifiants dataset `quantum_benchmarks` (NOM D'ORIGINE)
+
+| NOM D'ORIGINE | Fichier runtime cible |
+|---|---|
+| `qmc_dmrg` | `benchmarks/qmc_dmrg_reference_runtime.csv` |
+| `external` | `benchmarks/external_module_benchmarks_runtime.csv` |
+
+> **INTERDIT** : `external_modules` (ancien nom erroné — supprimé C63)
+
+---
+
 *Maintenu par :* Agent Replit  
 *Version 1.0 :* 2026-03-16 — création initiale (erreur : LV_MODULE_METRIC désigné comme officiel)  
 *Version 2.0 :* 2026-03-16 — correction C25-NAMES : FORENSIC_LOG_MODULE_METRIC = nom d'origine réel
 *Version 3.0 :* 2026-03-17 — ajout Section I : Logger V4 NEXT (qf_log_*) — Cycle C33
+*Version 4.0 :* 2026-03-27 — ajout Section J : Tables Supabase + colonnes CSV benchmark (NOM D'ORIGINE) — Cycle C63
