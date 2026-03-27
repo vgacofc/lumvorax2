@@ -25,8 +25,11 @@ Usage:
     python3 upload_to_supabase.py <run_dir> --delete-after
 
 Variables d'environnement:
-    SUPABASE_SERVICE_ROLE_KEY  eyJ... (219 chars JWT, obligatoire)
-    SUPABASE_DB_HOST           db.mwdeqpfxbcdayaelwqht.supabase.co (optionnel)
+    SUPABASE_SERVICE_ROLE_KEY  JWT service role (obligatoire pour écriture REST)
+    SUPABASE8_API_URL          https://<project>.supabase.co (prioritaire, même nom que Replit secrets)
+    SUPABASE_DB_HOST           db.<project>.supabase.co → URL REST dérivée automatiquement
+    SUPABASE_DEBUG             si "1", affiche le corps complet des erreurs HTTP PostgREST
+    SUPABASE_MAX_LOG_LINES     limite lignes raw_log uploadées (défaut 5000)
 """
 
 import os
@@ -48,11 +51,30 @@ except ImportError:
 ROOT        = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "results"
 
-SUPABASE_URL = "https://mwdeqpfxbcdayaelwqht.supabase.co"
+
+def _derive_supabase_rest_url() -> str:
+    """URL HTTPS du projet — jamais de postgresql:// pour PostgREST."""
+    u = (os.environ.get("SUPABASE8_API_URL")
+         or os.environ.get("SUPABASE_URL_HTTP")
+         or os.environ.get("SUPABASE_PUBLIC_URL", "")).strip().rstrip("/")
+    if u.startswith("https://") and "supabase.co" in u:
+        return u
+    db_host = os.environ.get("SUPABASE_DB_HOST", "").strip()
+    if db_host.startswith("db.") and ".supabase.co" in db_host:
+        pid = db_host[3:].replace(".supabase.co", "")
+        return f"https://{pid}.supabase.co"
+    u2 = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+    if u2.startswith("https://") and "supabase.co" in u2:
+        return u2
+    return ""
+
+
+SUPABASE_URL = _derive_supabase_rest_url()
 SERVICE_KEY  = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+SUPABASE_DEBUG = os.environ.get("SUPABASE_DEBUG", "") == "1"
 
 BATCH_SIZE    = 200
-MAX_LOG_LINES = 5000
+MAX_LOG_LINES = int(os.environ.get("SUPABASE_MAX_LOG_LINES", "5000"))
 
 def _hdrs(prefer="return=minimal"):
     return {
@@ -71,10 +93,14 @@ def _ok(status):
 def _post(table, data, prefer="return=minimal", timeout=20):
     if not SERVICE_KEY:
         return False
+    if not SUPABASE_URL:
+        print("  [WARN] URL Supabase absente — définir SUPABASE8_API_URL ou SUPABASE_DB_HOST")
+        return False
     try:
         r = requests.post(_rest(table), headers=_hdrs(prefer), json=data, timeout=timeout)
         if not _ok(r.status_code):
-            print(f"  [WARN] POST {table}: {r.status_code} | {r.text[:80]}")
+            detail = r.text if SUPABASE_DEBUG else (r.text[:500] + ("…" if len(r.text) > 500 else ""))
+            print(f"  [WARN] POST {table}: {r.status_code} | {detail}")
             return False
         return True
     except Exception as e:
@@ -92,6 +118,9 @@ def _delete_rows(table, filter_str, timeout=10):
 def check_tables():
     if not SERVICE_KEY:
         print("[WARN] SUPABASE_SERVICE_ROLE_KEY absent — Supabase désactivé")
+        return False
+    if not SUPABASE_URL:
+        print("[WARN] URL Supabase absente (SUPABASE8_API_URL / SUPABASE_DB_HOST)")
         return False
     ok = True
     tables = [
@@ -288,9 +317,13 @@ def upload_csv_rows(run_id: str, all_modules: list, score: dict, log_path: Path)
 def upload_run(run_dir: Path, delete_after: bool = False):
     run_id = run_dir.name
     print(f"\n[SUPABASE] Upload {run_id}")
+    print(f"  [REST] base={SUPABASE_URL or '(non défini)'}")
 
     if not SERVICE_KEY:
         print("  [SKIP] SUPABASE_SERVICE_ROLE_KEY absent — Supabase désactivé")
+        return False
+    if not SUPABASE_URL:
+        print("  [SKIP] URL Supabase absente — définir secrets Replit SUPABASE8_API_URL + SUPABASE_DB_HOST")
         return False
 
     log_path = run_dir / "logs" / "research_execution.log"

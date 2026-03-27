@@ -17,8 +17,9 @@ Usage:
     python3 tools/download_from_supabase.py [--run-id <run_id>] [--latest] [--list]
 
 Variables d'environnement:
-    SUPABASE_DB_HOST           = db.mwdeqpfxbcdayaelwqht.supabase.co
-    SUPABASE_SERVICE_ROLE_KEY  = eyJ...
+    SUPABASE8_API_URL          = https://<project>.supabase.co (prioritaire)
+    SUPABASE_DB_HOST           = db.<project>.supabase.co
+    SUPABASE_SERVICE_ROLE_KEY  = JWT service role
 """
 
 import os
@@ -39,6 +40,10 @@ RESULTS_DIR = ROOT / "results"
 
 
 def _derive_url() -> str:
+    u = (os.environ.get("SUPABASE8_API_URL")
+         or os.environ.get("SUPABASE_URL_HTTP", "")).strip().rstrip("/")
+    if u.startswith("https://") and "supabase.co" in u:
+        return u
     db_host = os.environ.get("SUPABASE_DB_HOST", "")
     if db_host.startswith("db.") and ".supabase.co" in db_host:
         pid = db_host[3:].replace(".supabase.co", "")

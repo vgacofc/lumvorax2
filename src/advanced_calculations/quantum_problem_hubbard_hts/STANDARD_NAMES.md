@@ -200,6 +200,12 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 | `PTMC_RUN_INDEX` | entier 0–N | Seeds déterministes distincts : XOR = N × φ64 (0x9e3779b97f4a7c15) |
 | `PTMC_SEED_RANDOM` | `1` | Seed aléatoire basée sur time(NULL)^(pid<<32) |
 | `LUMVORAX_ENABLED` | flag compilateur `-DLUMVORAX_ENABLED=1` | Active le bridge secondaire Lumvorax (distinct du logger principal) |
+| `SUPABASE8_API_URL` | `https://<ref>.supabase.co` | URL REST PostgREST (secret Replit / local — **ne pas committer**) |
+| `SUPABASE_SERVICE_ROLE_KEY` | JWT | Écriture REST (upload_to_supabase) |
+| `SUPABASE_DEBUG` | `1` | Journalise les corps d’erreur HTTP PostgREST complets |
+| `SUPABASE_MAX_LOG_LINES` | entier | Limite d’upload des lignes `raw_log` (défaut 5000) |
+| `OMP_NUM_THREADS` / `OPENBLAS_NUM_THREADS` | ≤ nproc | Parallélisme CPU (fix C65 dans `run_research_cycle.sh`) |
+| `LUMVORAX_SHELL_TRACE` | `1` | Lignes `[PHASE]` dans la session shell (orchestration fullscale/advanced) |
 
 ---
 

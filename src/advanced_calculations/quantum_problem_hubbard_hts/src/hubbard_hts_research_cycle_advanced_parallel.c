@@ -1619,11 +1619,13 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    int line = 4; /* Après START/ISOLATION/BASELINE (000001–000003) — incrément unique pour research_execution.log */
+
     /* C43 : suppression override dense_nuclear_fullscale steps=2100.
      * La valeur est maintenant lue directement depuis problems_cycle06.csv (10500 steps).
      * L'override C37-P5 était basé sur une normalisation T8 obsolète à 2100 steps.
      * Avec 10500 steps, step_min≈5250 → normalisé correctement. */
-    fprintf(lg, "000004 | C43 dense_nuclear_fullscale override supprimé — steps depuis CSV: %llu\n",
+    fprintf(lg, "%06d | C43 dense_nuclear_fullscale override supprimé — steps depuis CSV: %llu\n", line++,
             (nprobs > 0) ? (unsigned long long)probs[3].steps : 0ULL);
 
     for (int i = 0; i < nprobs; ++i) {
@@ -1653,7 +1655,6 @@ int main(int argc, char** argv) {
 
     sim_result_t base[16];
 
-    int line = 4;
     for (int i = 0; i < nprobs; ++i) {
         base[i] = simulate_fullscale(&probs[i], (uint64_t)(0xABC000 + i) ^ g_run_seed_xor, 99, raw);
         fprintf(lg, "%06d | BASE_RESULT problem=%s energy=%.6f pairing=%.6f sign=%.6f cpu_peak=%.2f mem_peak=%.2f elapsed_ns=%llu\n", line++, probs[i].name, base[i].energy_eV, base[i].pairing_norm, base[i].sign_ratio, base[i].cpu_peak, base[i].mem_peak, (unsigned long long)base[i].elapsed_ns);
@@ -1676,11 +1677,15 @@ int main(int argc, char** argv) {
         fprintf(dmcsv, "%s,%.10f,%.10f,%.10e,%.10e,%s,H_t_over_hbar_dimensionless\n", probs[i].name, h_scale_eV, t_ns, HBAR_eV_NS, ratio, dim_ok ? "PASS" : "FAIL");
     }
 
+    fprintf(lg, "%06d | PHASE base_fullscale_complete n_modules=%d — début sous-phases (worm_mc, pt_mc, benchmarks, …)\n",
+            line++, nprobs);
+
     /* --- C37-P2 : Worm MC bosonique — activation appel worm_mc_run() en production
      *     Module compilé et lié depuis C36-P3. Appel effectif activé ici.
      *     Référence : Prokof'ev-Svistunov, Phys. Lett. A 238, 253 (1998)
      *     C56-02 : FORENSIC_LOG_MODULE_START ajouté (section manquante)          --- */
     FORENSIC_LOG_MODULE_START("worm_mc_bosonic", "campaign");
+    fprintf(lg, "%06d | PHASE worm_mc_bosonic_enter\n", line++);
     {
         char worm_csv_path[MAX_PATH];
         pjoin(worm_csv_path, sizeof(worm_csv_path), tests, "worm_mc_bosonic_results.csv");
@@ -2464,6 +2469,7 @@ int main(int argc, char** argv) {
     if (bn < 0) bn = 0;
     if (bn_mod < 0) bn_mod = 0;
 
+    fprintf(lg, "%06d | BENCH_QMC_START n=%d ref_csv=%s\n", line++, bn, bench_ref);
     double sum_sq = 0.0, sum_abs = 0.0;
     int m = 0, within_bar = 0;
     for (int i = 0; i < bn; ++i) {
@@ -2484,10 +2490,16 @@ int main(int argc, char** argv) {
         m++;
         fprintf(bcsv, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
                 brow[i].module, brow[i].observable, brow[i].t, brow[i].u, brow[i].value, model, abs_e, rel_e, brow[i].err, ok_bar);
+        fprintf(lg, "%06d | BENCH_QMC_ROW i=%d module=%s obs=%s ref=%.6f model=%.6f abs_e=%.6f within_bar=%d seed=%llu\n",
+                line++, i, brow[i].module, brow[i].observable, brow[i].value, model, abs_e, ok_bar,
+                (unsigned long long)(1234 + (uint64_t)i));
     }
+    fprintf(lg, "%06d | BENCH_QMC_END within=%d/%d\n", line++, within_bar, m);
 
     double sum_sq_mod = 0.0, sum_abs_mod = 0.0;
     int m_mod = 0, within_mod = 0;
+    fprintf(lg, "%06d | BENCH_EXT_START n=%d ref_csv=%s bench_offset=%d\n",
+            line++, bn_mod, bench_ref_modules, bench_offset);
     for (int i = 0; i < bn_mod; ++i) {
         benchmark_row_t* br = &brow[bench_offset + i];
         int ip = find_problem_index(probs, nprobs, br->module);
@@ -2509,15 +2521,19 @@ int main(int argc, char** argv) {
         double t_match = fabs(br->t - probs[ip].temp_K) / (fabs(probs[ip].temp_K) + 1e-6);
         double u_match = fabs(br->u - probs[ip].u_eV)   / (fabs(probs[ip].u_eV)   + 1e-6);
         sim_result_t rr;
+        const char* ext_path = "reuse_base_ip";
         if (t_match < 0.05 && u_match < 0.05) {
             /* Paramètres identiques (<5%) → réutiliser base[ip] sans re-simulation */
             rr = base[ip];
         } else {
             /* Paramètres différents → re-simuler avec seed validée (même famille que base) */
+            ext_path = "resim_fullscale";
             problem_t p = probs[ip];
             p.temp_K = br->t;
             p.u_eV   = br->u;
-            rr = simulate_fullscale(&p, (uint64_t)(0xABC000 + i), 99, NULL);
+            /* C65-FIX : seed sur ip (problème), pas sur i (indice benchmark) — évite collision
+             * entre lignes external et comportement non physique cohérent avec base[]. */
+            rr = simulate_fullscale(&p, (uint64_t)(0xABC000 + (unsigned)ip), 99, NULL);
         }
         double model = (strcmp(br->observable, "pairing") == 0)
             ? rr.pairing_norm
@@ -2531,7 +2547,11 @@ int main(int argc, char** argv) {
         m_mod++;
         fprintf(bcsvm, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
                 br->module, br->observable, br->t, br->u, br->value, model, abs_e, rel_e, br->err, ok_bar);
+        fprintf(lg, "%06d | BENCH_EXT_ROW i=%d module=%s obs=%s ip=%d t_match=%.5f u_match=%.5f path=%s energy=%.6f pairing=%.6f ref=%.6f within_bar=%d\n",
+                line++, i, br->module, br->observable, ip, t_match, u_match, ext_path,
+                rr.energy_eV, rr.pairing_norm, br->value, ok_bar);
     }
+    fprintf(lg, "%06d | BENCH_EXT_END within=%d/%d\n", line++, within_mod, m_mod);
 
     double rmse = (m > 0) ? sqrt(sum_sq / (double)m) : 1e9;
     double mae = (m > 0) ? (sum_abs / (double)m) : 1e9;
@@ -2893,25 +2913,7 @@ int main(int argc, char** argv) {
         fclose(cr);
     }
 
-    fprintf(lg, "%06d | TEST exact_2x2 u4=%.10f u8=%.10f ordered=%s\n", line++, e2x2_u4, e2x2_u8, ed_order ? "yes" : "no");
-    fprintf(lg, "%06d | RUSAGE maxrss_kb=%ld user=%.6f sys=%.6f\n", line++, ru.ru_maxrss, ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6, ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
-    fprintf(lg, "%06d | SCORE iso=%d trace=%d repr=%d robust=%d phys=%d expert=%d\n", line++, p_iso, p_tr, p_rep, p_rob, p_phy, p_exp);
-    fprintf(lg, "%06d | END report=%s\n", line++, report);
-
-    fclose(lg);
-    fclose(raw);
-    fclose(tcsv);
-    fclose(qcsv);
-    fclose(prov);
-    fclose(bcsv);
-    fclose(bcsvm);
-    fclose(mmeta);
-    fclose(det);
-    fclose(nstab);
-
-    /* AC-03-FIX : génération model_metadata.json avec toutes les clés METADATA_KEYS.
-     * Le Python post_run_physics_readiness_pack.py cherche ces clés exactes.
-     * Ce JSON est généré avec les paramètres du premier module (hubbard_hts_core). */
+    /* AC-03-FIX : model_metadata.json avant fclose(lg) — évite use-after-free (C65). */
     {
         char meta_json_path[MAX_PATH];
         pjoin(meta_json_path, sizeof(meta_json_path), logs, "model_metadata.json");
@@ -2951,6 +2953,22 @@ int main(int argc, char** argv) {
             fclose(mjson);
         }
     }
+
+    fprintf(lg, "%06d | TEST exact_2x2 u4=%.10f u8=%.10f ordered=%s\n", line++, e2x2_u4, e2x2_u8, ed_order ? "yes" : "no");
+    fprintf(lg, "%06d | RUSAGE maxrss_kb=%ld user=%.6f sys=%.6f\n", line++, ru.ru_maxrss, ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6, ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+    fprintf(lg, "%06d | SCORE iso=%d trace=%d repr=%d robust=%d phys=%d expert=%d\n", line++, p_iso, p_tr, p_rep, p_rob, p_phy, p_exp);
+    fprintf(lg, "%06d | END report=%s\n", line++, report);
+
+    fclose(lg);
+    fclose(raw);
+    fclose(tcsv);
+    fclose(qcsv);
+    fclose(prov);
+    fclose(bcsv);
+    fclose(bcsvm);
+    fclose(mmeta);
+    fclose(det);
+    fclose(nstab);
 
     FILE* cjson = fopen(compliance_json, "w");
     if (cjson) {

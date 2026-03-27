@@ -84,6 +84,17 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60] ulimit -n=$(ulimit -n) (limite d
 # Priorité maximale pour le processus (nice -20 si possible)
 renice -n -10 $$ 2>/dev/null || true
 
+# ── C65-THREADS : utiliser tous les cœurs disponibles (local + Replit) ─────
+# Sans ces exports, OpenBLAS/OMP peuvent rester à 1 thread → sous-utilisation CPU.
+_NPROC="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)"
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-$_NPROC}"
+export OMP_DYNAMIC="${OMP_DYNAMIC:-FALSE}"
+export OPENBLAS_NUM_THREADS="${OPENBLAS_NUM_THREADS:-$_NPROC}"
+export MKL_NUM_THREADS="${MKL_NUM_THREADS:-$_NPROC}"
+export NUMEXPR_NUM_THREADS="${NUMEXPR_NUM_THREADS:-$_NPROC}"
+export GOTO_NUM_THREADS="${GOTO_NUM_THREADS:-$_NPROC}"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C65-THREADS] nproc=${_NPROC} OMP_NUM_THREADS=${OMP_NUM_THREADS} OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS}"
+
 # ── BC-LV04 fix : Wrapper LumVorax pour phases Python 8-39 ──────────
 # Lit LUMVORAX_CSV_PATH (défini après le run C) et instrumente chaque phase Python
 _LV_PHASE_NUM=7  # Compteur de phase Python (commence à 8 = après 7 phases C)
@@ -208,6 +219,8 @@ export LUMVORAX_LOG_PERSISTENCE="1"
 export LUMVORAX_HFBL360_ENABLED="1"
 export LUMVORAX_MEMORY_TRACKER="1"
 export LUMVORAX_RUN_GROUP="campaign_${STAMP_UTC}"
+# C65 : journaux d’orchestration shell (phases runner) — n’altère pas le CSV LumVorax
+export LUMVORAX_SHELL_TRACE="${LUMVORAX_SHELL_TRACE:-1}"
 
 # ── C26-RUNNER-RETRY : relance automatique si le runner fullscale est tué ───
 # Retry jusqu'à MAX_RUNNER_RETRY tentatives, sans jamais réduire les logs
@@ -215,6 +228,9 @@ MAX_RUNNER_RETRY=5
 FULLSCALE_OK=0
 for _try in $(seq 1 $MAX_RUNNER_RETRY); do
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner fullscale — tentative ${_try}/${MAX_RUNNER_RETRY}"
+    if [ "${LUMVORAX_SHELL_TRACE:-0}" = "1" ]; then
+      echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [PHASE] fullscale_try=${_try} binary=hubbard_hts_research_runner root=${ROOT_DIR}"
+    fi
     export LUMVORAX_SOLVER_VARIANT="fullscale"
     if "$ROOT_DIR/hubbard_hts_research_runner" "$ROOT_DIR"; then
         FULLSCALE_OK=1
@@ -229,7 +245,7 @@ done
 print_progress "fullscale simulation"
 checkpoint_save 3
 
-LATEST_FULLSCALE_RUN="$(ls -1 "$ROOT_DIR/results" | rg '^research_' | tail -n 1)"
+LATEST_FULLSCALE_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
 FULLSCALE_RUN_DIR="$ROOT_DIR/results/$LATEST_FULLSCALE_RUN"
 
 # C22-BUG04 FIX : entourer avec lv_wrap pour que SystemExit(1) du script Python
@@ -269,6 +285,9 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] PID=$WATCHER_PID lancé 
 ADV_OK=0
 for _try in $(seq 1 $MAX_RUNNER_RETRY); do
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel — tentative ${_try}/${MAX_RUNNER_RETRY}"
+    if [ "${LUMVORAX_SHELL_TRACE:-0}" = "1" ]; then
+      echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [PHASE] advanced_parallel_try=${_try} binary=hubbard_hts_research_runner_advanced_parallel root=${ROOT_DIR} last_fullscale_dir=${FULLSCALE_RUN_DIR:-unknown}"
+    fi
     export LUMVORAX_SOLVER_VARIANT="advanced_parallel"
     if "$ROOT_DIR/hubbard_hts_research_runner_advanced_parallel" "$ROOT_DIR"; then
         ADV_OK=1
@@ -288,7 +307,7 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Watcher arrêté"
 print_progress "advanced parallel simulation"
 checkpoint_save 10
 
-LATEST_ADV_RUN="$(ls -1 "$ROOT_DIR/results" | rg '^research_' | tail -n 1)"
+LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
 ADV_RUN_DIR="$ROOT_DIR/results/$LATEST_ADV_RUN"
 
 RUN_DIR="$ADV_RUN_DIR"

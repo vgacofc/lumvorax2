@@ -11,6 +11,7 @@ __pycache__/
 .env
 .kaggle/
 *.json
+src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/reports/secret.md
 
 # =========================
 # DEPENDENCIES / SYSTEM
@@ -50,3 +51,10 @@ experiments/
 # (sinon cassera ton pipeline)
 !*.zipsrc/advanced_calculations/quantum_problem_hubbard_hts/logs/
 src/advanced_calculations/quantum_problem_hubbard_hts/logs/
+
+# Hubbard HTS — après !src/** : ré-exclure runs lourds & secrets de prod local
+src/advanced_calculations/quantum_problem_hubbard_hts/results/
+src/advanced_calculations/quantum_problem_hubbard_hts/backups/
+src/advanced_calculations/quantum_problem_hubbard_hts/.run_current_phase
+src/advanced_calculations/quantum_problem_hubbard_hts/.run_checkpoint
+src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/reports/secret.md
