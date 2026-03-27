@@ -1,52 +1,51 @@
-cat > .gitignore << 'EOF'
-# Python cache
+# =========================
+# PYTHON CACHE
+# =========================
 __pycache__/
 *.pyc
 *.pyo
 
-# Packaging / wheels
+# =========================
+# ENV / SECRETS
+# =========================
+.env
+.kaggle/
+*.json
+
+# =========================
+# DEPENDENCIES / SYSTEM
+# =========================
 *.whl
 *.tar
 *.tar.gz
-*.zip
 
-# Data / datasets / outputs
-*.csv
-*.parquet
-*.npy
-*.npz
-*.h5
-*.hdf5
-
-# ML / scientific outputs
+# =========================
+# RESULTS ONLY (NOT CONFIG)
+# =========================
 results/
 outputs/
 checkpoints/
 experiments/
 
-# Dependency dumps (your case)
-RAPPORT-VESUVIUS/
-lum-vorax-dependencies/
-nx47_dependencies_v3/
-temp_v1_v2/
+# Ignorer uniquement les CSV de résultats
+**/results/*.csv
+**/outputs/*.csv
 
-# System / logs
+# Ignorer logs runtime uniquement
 *.log
 
-cat > .gitignore << 'EOF'
-# secrets
-*.json
-.kaggle/
-.env
+# =========================
+# IMPORTANT: DO NOT IGNORE BENCHMARKS
+# =========================
+!benchmarks/
+!benchmarks/**/*.csv
 
-# data
-*.csv
-*.whl
-*.zip
-*.tar.gz
+# =========================
+# EXCEPTIONS (CRITICAL FOR YOUR PROJECT)
+# =========================
+!src/
+!src/**
 
-# system
-.replit
-__pycache__/
-EOF
-EOF
+# NE PAS ignorer les archives workspace si utilisées comme source
+# (sinon cassera ton pipeline)
+!*.zip
