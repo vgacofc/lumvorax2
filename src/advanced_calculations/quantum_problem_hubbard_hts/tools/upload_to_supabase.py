@@ -228,7 +228,10 @@ def upload_benchmark_runtime(run_id: str, run_dir: Path):
     for bf in bench_files:
         if not bf.exists():
             continue
-        dataset = bf.stem.replace("benchmark_comparison_", "")
+        dataset_raw = bf.stem.replace("benchmark_comparison_", "")
+        # Conformité STANDARD_NAMES.md Section J : valeurs autorisées = "qmc_dmrg" ou "external"
+        # "external_modules" (ancien nom C63) est interdit — mapper vers "external"
+        dataset = "external" if dataset_raw.startswith("external") else dataset_raw
         try:
             with open(bf, newline="", errors="replace") as f:
                 reader = csv.DictReader(f)

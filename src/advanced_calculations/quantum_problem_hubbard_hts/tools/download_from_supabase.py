@@ -10,8 +10,8 @@ Tables réelles (vérifiées C61) :
   quantum_csv_rows   : id, run_id, file_name, row_number, data, created_at
   quantum_benchmarks : id, dataset, module, observable, t_k, u_over_t,
                        reference_value, reference_method, source, error_bar, notes, created_at
-  run_scores         : run_id, iso, trace, repr, robust, phys, expert, total, created_at
-  benchmark_runtime  : run_id, module, observable, sim_value, ref_value, rmse, created_at
+  run_scores         : run_id, runner, score_iso, score_trace, score_repr, score_robust, score_phys, score_expert, score_total, notes, created_at
+  benchmark_runtime  : run_id, dataset, module, observable, t_k, u_over_t, reference_value, error_bar, model_value, abs_error, rel_error, within_error_bar
 
 Usage:
     python3 tools/download_from_supabase.py [--run-id <run_id>] [--latest] [--list]
@@ -268,28 +268,31 @@ def download_benchmarks() -> int:
     qmc_rows = [r for r in rows if r.get("dataset", "").startswith("qmc")]
     ext_rows = [r for r in rows if r.get("dataset", "").startswith("ext")]
 
+    # Format canonique conforme STANDARD_NAMES.md Section J :
+    # source,module,observable,t_k,u_eV,reference_value,error_bar  (7 colonnes)
+    # Compatible avec sscanf dans load_benchmark_rows() du code C.
     count = 0
     if qmc_rows and (not qmc_file.exists() or qmc_file.stat().st_size < 100):
-        header = "module,observable,t_k,u_over_t,reference_value,reference_method,source,error_bar"
+        header = "source,module,observable,t_k,u_eV,reference_value,error_bar"
         lines  = [header]
         for r in qmc_rows:
             lines.append(
-                f"{r.get('module','')},{r.get('observable','')},{r.get('t_k','')},"
-                f"{r.get('u_over_t','')},{r.get('reference_value','')},{r.get('reference_method','')},"
-                f"{r.get('source','')},{r.get('error_bar','')}"
+                f"{r.get('source','unknown')},{r.get('module','')},{r.get('observable','')},"
+                f"{r.get('t_k',0.0)},{r.get('u_over_t',0.0)},"
+                f"{r.get('reference_value',0.0)},{r.get('error_bar',0.0)}"
             )
         qmc_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
         print(f"  [DL-BENCH] qmc_dmrg_reference_v2.csv ({len(qmc_rows)} lignes)", flush=True)
         count += 1
 
     if ext_rows and (not ext_file.exists() or ext_file.stat().st_size < 100):
-        header = "module,observable,t_k,u_over_t,reference_value,reference_method,source,error_bar"
+        header = "source,module,observable,t_k,u_eV,reference_value,error_bar"
         lines  = [header]
         for r in ext_rows:
             lines.append(
-                f"{r.get('module','')},{r.get('observable','')},{r.get('t_k','')},"
-                f"{r.get('u_over_t','')},{r.get('reference_value','')},{r.get('reference_method','')},"
-                f"{r.get('source','')},{r.get('error_bar','')}"
+                f"{r.get('source','external')},{r.get('module','')},{r.get('observable','')},"
+                f"{r.get('t_k',0.0)},{r.get('u_over_t',0.0)},"
+                f"{r.get('reference_value',0.0)},{r.get('error_bar',0.0)}"
             )
         ext_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
         print(f"  [DL-BENCH] external_module_benchmarks_v1.csv ({len(ext_rows)} lignes)", flush=True)
