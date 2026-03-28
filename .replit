@@ -18,6 +18,10 @@ args = "Run Python"
 task = "workflow.run"
 args = "Quantum Research Cycle C37"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "LumVorax Visualisation"
+
 [[workflows.workflow]]
 name = "Run Python"
 author = "agent"
@@ -76,6 +80,18 @@ args = "cd src/advanced_calculations/quantum_problem_hubbard_hts && bash run_res
 [workflows.workflow.metadata]
 outputType = "console"
 
+[[workflows.workflow]]
+name = "LumVorax Visualisation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python src/visualization/server.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [nix]
 packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "pkg-config", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
 channel = "stable-25_05"
@@ -119,3 +135,7 @@ SUPABASE_SERVICE_ROLE_KEY_GENERALLe = "N8ahCt20bV0zALIk0+9UZFI2G4ZZ5wVegkXhEN053
 SUPABASE_URL = "postgresql://postgres:%40Pass20262027@db.mwdeqpfxbcdayaelwqht.supabase.co:5432/postgres"
 DOPPLER_API_KEY = "dp.st.dev_lvxdoppler.ubG5XBRuejZF3lpYpn9oq2R644cJmD46PCY4UFQxLqQ"
 SUPABASE8_API_URL = "https://mwdeqpfxbcdayaelwqht.supabase.co"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

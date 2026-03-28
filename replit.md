@@ -27,6 +27,19 @@ Any script that imports torch must either:
 ## Workflows
 - **Run Python**: Runs `python main.py` (entry point / smoke test)
 - **Quantum Research Cycle C37**: Runs the full C-based HTS research cycle via `bash run_research_cycle.sh`
+- **LumVorax Visualisation**: Serveur Flask (port 5000) — module de visualisation 3D/2D des simulations Hubbard-HTS
+
+## Module de Visualisation (`src/visualization/`)
+- **server.py** : Serveur Flask exposant les données réelles des runs via API REST (`/api/viz/*`)
+- **static/index.html** : Interface Three.js r128 avec 5 modes de visualisation :
+  1. **Champs Scalaires** → volume heatmap 3D (simulate_fs: energy_eV / pairing)
+  2. **Trajectoires** → curves (simulate_fs: step_energy_norm_step0)
+  3. **Réseau Hubbard** → instancing (pairing d-wave, spin, bonds t_eV)
+  4. **Graphe d'Interaction** → nodes + edges (benchmark_adv: QMC/DMRG + external_ref)
+  5. **Multi-Échelles LOD** → fractal (cluster_scale 8×8 → 255×255, thermodynamic_limit)
+- Noms canoniques : conformes STANDARD_NAMES.md v3.0 (C68-REALTIME-BENCH)
+- Fallback Canvas 2D si WebGL non disponible
+- Données réelles : problems_cycle06.csv, qmc_dmrg_reference_runtime.csv, research_execution.log
 
 ## Corrections C37 (2026-03-25)
 
