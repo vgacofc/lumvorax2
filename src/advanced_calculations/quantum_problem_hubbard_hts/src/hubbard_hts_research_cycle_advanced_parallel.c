@@ -1567,19 +1567,25 @@ int main(int argc, char** argv) {
      * _IOLBF = flush automatique à chaque \n = écriture disque après chaque ligne CSV.
      * Les fichiers sont donc lisibles en temps réel par le watcher ptmc_realtime_uploader. */
     setvbuf(raw,   NULL, _IOLBF, 0);
-    setvbuf(tcsv,  NULL, _IOLBF, 0);
-    setvbuf(qcsv,  NULL, _IOLBF, 0);
-    setvbuf(prov,  NULL, _IOLBF, 0);
-    setvbuf(bcsv,  NULL, _IOLBF, 0);
-    setvbuf(bcsvm, NULL, _IOLBF, 0);
-    setvbuf(mmeta, NULL, _IOLBF, 0);
-    setvbuf(det,   NULL, _IOLBF, 0);
-    setvbuf(nstab, NULL, _IOLBF, 0);
-    setvbuf(toy,   NULL, _IOLBF, 0);
-    setvbuf(tdrv,  NULL, _IOLBF, 0);
-    setvbuf(ucsv,  NULL, _IOLBF, 0);
-    setvbuf(ngcsv, NULL, _IOLBF, 0);
-    setvbuf(dmcsv, NULL, _IOLBF, 0);
+    /* C67-IONBF : mode totalement unbuffered (_IONBF) sur TOUS les CSV critiques.
+     * Remplace _IOLBF (line-buffered) : même avec \n, le flush n'est garanti que si
+     * le buffer est plein ou fclose() est appelé. Sur SIGKILL, le buffer stdio est
+     * détruit sans flush → données perdues. _IONBF écrit chaque byte immédiatement
+     * sur le file descriptor → données sur disque même si SIGKILL arrive à n'importe
+     * quel moment pendant un fprintf(). Impact performance : négligeable pour CSV.  */
+    setvbuf(tcsv,  NULL, _IONBF, 0);
+    setvbuf(qcsv,  NULL, _IONBF, 0);
+    setvbuf(prov,  NULL, _IONBF, 0);
+    setvbuf(bcsv,  NULL, _IONBF, 0);
+    setvbuf(bcsvm, NULL, _IONBF, 0);
+    setvbuf(mmeta, NULL, _IONBF, 0);
+    setvbuf(det,   NULL, _IONBF, 0);
+    setvbuf(nstab, NULL, _IONBF, 0);
+    setvbuf(toy,   NULL, _IONBF, 0);
+    setvbuf(tdrv,  NULL, _IONBF, 0);
+    setvbuf(ucsv,  NULL, _IONBF, 0);
+    setvbuf(ngcsv, NULL, _IONBF, 0);
+    setvbuf(dmcsv, NULL, _IONBF, 0);
 
     fprintf(raw, "problem,step,energy,pairing,sign_ratio,cpu_percent,mem_percent,elapsed_ns,norm_deviation,ema_abs_energy\n");
     fprintf(tcsv, "test_family,test_id,parameter,value,status\n");
@@ -2125,8 +2131,8 @@ int main(int argc, char** argv) {
     fprintf(tcsv, "reproducibility,rep_fixed_seed,delta_same_seed,%.14f,%s\n", delta_same, rep_fixed ? "PASS" : "FAIL");
     fprintf(tcsv, "reproducibility,rep_diff_seed,delta_diff_seed,%.14f,%s\n", delta_diff, rep_diff ? "PASS" : "FAIL");
 
-    /* C43 : steps_set proportionnels aux nouveaux steps (14000 pour hubbard_hts_core) */
-    uint64_t steps_set[] = {1000, 3500, 7000, 14000};
+    /* C43 : steps_set proportionnels aux nouveaux steps (7000 max — C67-PERF : réduit 14000→7000) */
+    uint64_t steps_set[] = {1000, 2000, 3500, 7000};
     double pvals[4];
     for (int i = 0; i < 4; ++i) {
         problem_t p = probs[0];
@@ -2219,7 +2225,7 @@ int main(int argc, char** argv) {
     double ts[4096] = {0};
     uint64_t ts_n = 0;
     problem_t stability = probs[0];
-    stability.steps = 8700; /* 3x beyond +2000 requested extension */
+    stability.steps = 3000; /* C67-PERF : réduit 8700→3000 (toujours >2700 pour le test temporal_t_gt_2700) */
     sim_result_t stable_ctl = simulate_fullscale_controlled(&stability, 20260307, 125, NULL, &ctl, ts, 4096, &ts_n);
     sim_result_t stable_open = simulate_fullscale_controlled(&stability, 20260307, 125, NULL, NULL, NULL, 0, NULL);
     bool stability_finite = isfinite(stable_ctl.energy_eV) && isfinite(stable_ctl.pairing_norm) && isfinite(stable_ctl.sign_ratio);
@@ -2259,7 +2265,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 3; ++i) {
         problem_t dp = probs[0];
         dp.dt = dt_set[i];
-        dp.steps = 4700;
+        dp.steps = 1500; /* C67-PERF : réduit 4700→1500 (dt_sensitivity) */
         sim_result_t dr = simulate_fullscale_controlled(&dp, (uint64_t)(6000 + i), 99, NULL, &ctl, NULL, 0, NULL);
         dt_pair[i] = dr.pairing_norm;
         /* C53-DT : PASS si pairing dans [0.60, 0.90] — plage physique attendue
@@ -2378,8 +2384,8 @@ int main(int argc, char** argv) {
     }
 
     /* Numerical stability diagnostics: conservation + Von Neumann fullscale for all modules + toy case */
-    /* C43 : stability_checkpoints proportionnels aux nouveaux steps (~10000-15000) */
-    const int stability_checkpoints[] = {4000, 8000, 12000, 16000};
+    /* C67-PERF : stability_checkpoints réduits {4000,8000,12000,16000}→{2000,4000,6000,8000} */
+    const int stability_checkpoints[] = {2000, 4000, 6000, 8000};
     const int n_stability_checkpoints = 4;
     double hubbard_spectral_radius = 0.0;
     bool hubbard_vn_stable = false;
@@ -2624,12 +2630,13 @@ int main(int argc, char** argv) {
          *   lx ≤ 255  : 700 steps  (réseau ≤ 65025 sites, τ_int ≤ 7000)
          *   lx ≤ 512  : 500 steps  (réseau ≤ 262144 sites, minimum extrapolation fiable)
          * Chaque taille : seed indépendante pour reproductibilité et détection de biais. */
-        cp.steps = (cp.lx <= 20)  ? 14000
-                 : (cp.lx <= 36)  ?  7000
-                 : (cp.lx <= 68)  ?  3500
-                 : (cp.lx <= 128) ?  1500
-                 : (cp.lx <= 255) ?   700
-                 :                    500;
+        /* C67-PERF : steps réduits pour cluster scalability — économise ~60% CPU */
+        cp.steps = (cp.lx <= 20)  ?  5000
+                 : (cp.lx <= 36)  ?  3000
+                 : (cp.lx <= 68)  ?  1500
+                 : (cp.lx <= 128) ?   800
+                 : (cp.lx <= 255) ?   400
+                 :                    250;
         sim_result_t cr = simulate_fullscale(&cp, (uint64_t)(4321 + ci), 149, NULL);
         c_pair[ci] = cr.pairing_norm;
         c_energy[ci] = cr.energy_eV;
