@@ -152,32 +152,61 @@ else:
         record("Supabase REST endpoint", False, str(e))
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TEST 4 — Connexion PostgreSQL directe
+# TEST 4 — Connexion PostgreSQL (pooler via SUPABASE_URL2 ou direct)
 # ══════════════════════════════════════════════════════════════════════════════
 print("\n═══ TEST 4 : Connexion PostgreSQL directe ═══")
 pg_ok = False
 try:
+    import re as _re
     import psycopg2
-    db_host = os.environ.get("SUPABASE_DB_HOST","").strip()
-    db_user = os.environ.get("SUPABASE_DB_USER","postgres").strip()
-    db_pass = os.environ.get("SUPABASE_DB_PASSWORD","").strip()
-    db_port = int(os.environ.get("SUPABASE_DB_PORT","5432"))
-    db_name = os.environ.get("SUPABASE_DB_NAME","postgres").strip()
 
-    if not db_host or not db_pass:
-        record("PostgreSQL direct", False, "SUPABASE_DB_HOST ou DB_PASSWORD absent")
-    else:
+    def _try_pg_connect(host, port, user, passwd, dbname):
         conn = psycopg2.connect(
-            host=db_host, user=db_user, password=db_pass,
-            port=db_port, dbname=db_name,
-            connect_timeout=10, sslmode="require"
+            host=host, port=port, user=user, password=passwd,
+            dbname=dbname, connect_timeout=10, sslmode="require"
         )
         cur = conn.cursor()
         cur.execute("SELECT version();")
         ver = cur.fetchone()[0]
         conn.close()
-        pg_ok = True
-        record("PostgreSQL direct", True, ver[:60])
+        return ver
+
+    db_pass = os.environ.get("SUPABASE_DB_PASSWORD","").strip()
+    pg_ver  = None
+
+    # — Tentative 1 : pooler via SUPABASE_URL2 (aws-1-eu-west-1, port 6543) —
+    url2 = os.environ.get("SUPABASE_URL2","").strip()
+    if url2:
+        h = _re.search(r'-h\s+(\S+)', url2)
+        p = _re.search(r'-p\s+(\d+)', url2)
+        u = _re.search(r'-U\s+(\S+)', url2)
+        d = _re.search(r'-d\s+(\S+)', url2)
+        if h and u and db_pass:
+            try:
+                pg_ver = _try_pg_connect(
+                    h.group(1), int(p.group(1)) if p else 6543,
+                    u.group(1), db_pass, d.group(1) if d else "postgres"
+                )
+                pg_ok = True
+                record("PostgreSQL pooler (SUPABASE_URL2)", True, pg_ver[:80])
+            except Exception as e1:
+                record("PostgreSQL pooler (SUPABASE_URL2)", False, str(e1)[:100])
+
+    # — Tentative 2 : connexion directe SUPABASE_DB_HOST (port 5432) —
+    if not pg_ok:
+        db_host = os.environ.get("SUPABASE_DB_HOST","").strip()
+        db_user = os.environ.get("SUPABASE_DB_USER","postgres").strip()
+        db_port = int(os.environ.get("SUPABASE_DB_PORT","5432"))
+        db_name = os.environ.get("SUPABASE_DB_NAME","postgres").strip()
+        if not db_host or not db_pass:
+            record("PostgreSQL direct", False, "SUPABASE_DB_HOST ou DB_PASSWORD absent")
+        else:
+            try:
+                pg_ver = _try_pg_connect(db_host, db_port, db_user, db_pass, db_name)
+                pg_ok = True
+                record("PostgreSQL direct", True, pg_ver[:80])
+            except Exception as e2:
+                record("PostgreSQL direct", False, str(e2)[:120])
 except Exception as e:
     record("PostgreSQL direct", False, str(e)[:120])
 
