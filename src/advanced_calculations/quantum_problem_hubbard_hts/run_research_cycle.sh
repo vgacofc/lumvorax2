@@ -65,6 +65,13 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}
 # ── C60-SUPABASE-DOWNLOAD : récupération des fichiers depuis Supabase au démarrage ──
 # Garantit que chaque nouvelle session Replit dispose des benchmarks et du dernier run
 # même si LFS est désactivé et que les fichiers locaux ont disparu après un push.
+# C68-REQUESTS-FIX : s'assurer que requests est installé avant le download
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] Vérification dépendances Python..."
+python3 -c "import requests" 2>/dev/null || {
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] requests manquant — installation en cours..."
+    pip3 install requests -q 2>&1 || pip install requests -q 2>&1 || true
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] requests installé"
+}
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase..."
 if python3 "$ROOT_DIR/tools/download_from_supabase.py" 2>&1; then
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Download Supabase OK"
