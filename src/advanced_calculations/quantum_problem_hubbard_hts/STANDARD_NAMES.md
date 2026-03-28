@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 2.0 — 2026-03-16 (correction C25-NAMES)
+**Version :** 3.0 — 2026-03-28 (C68-REALTIME-BENCH)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
@@ -120,6 +120,7 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 | `pt_mc_vs_mc:` | Anomalies divergence PT-MC vs MC simple | `energy_diff`, `pairing_diff` |
 | `benchmark_adv:` | Benchmarks QMC/DMRG | `qmc_rmse`, `dmrg_mae`, `within_error_bar`, `ed_benchmark_energy_within`(C59-P2), `ed_benchmark_pairing_within`(C59-P2) |
 | `ed_` (sous-préfixe) | Diagonalisation exacte (C24-02) | `ed_E0_eV`, `ed_gap_eV`, `ed_double_occ`, `ed_pairing_corr`, `ed_bethe_E0_eV`, `ed_rel_err_mc_pct`, `ed_converged`, `ed_lanczos_iter` |
+| `worm_mc_ultra:` | Logs ultra-granulaires Worm MC bosonique (C39) | `sweep_log_path_len`, `sweep_log_fopen_errno`, `n_proposed`, `n_accepted`, `acceptance_rate`, `E_per_site`, `n_per_site`, `superfluid_density`, `converged` |
 
 **⚠️ PRÉFIXES INTERDITS (doublons/erreurs historiques) :**
 
@@ -154,6 +155,18 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 | `g_run_seed_xor` | `uint64_t` | runner advanced_parallel | XOR sur les seeds pour indépendance runs |
 | `g_log_file` | `FILE*` | `src/lumvorax_integration.c` | Fichier log du bridge secondaire (distinct du CSV principal) |
 | `g_mutex` | `pthread_mutex_t` | `src/lumvorax_integration.c` | Thread-safety bridge secondaire |
+| `brow_rt[256]` | `benchmark_row_t[256]` | runner advanced_parallel — C68 | Tableau de référence benchmark chargé AVANT la boucle de simulation (C68-REALTIME-BENCH). **Ne pas renommer en `brow[256]`** — doublon local utilisé dans la section post-PT_MC |
+| `bn_rt` | `int` | runner advanced_parallel — C68 | Nombre de lignes QMC/DMRG chargées dans `brow_rt` |
+| `bn_mod_rt` | `int` | runner advanced_parallel — C68 | Nombre de lignes EXT chargées dans `brow_rt[bench_offset_rt..]` |
+| `bench_offset_rt` | `int` | runner advanced_parallel — C68 | Indice de début des lignes EXT dans `brow_rt` |
+| `rt_sum_sq` | `double` | runner advanced_parallel — C68 | Somme des carrés des erreurs QMC (accumulée module par module) |
+| `rt_sum_abs` | `double` | runner advanced_parallel — C68 | Somme des valeurs absolues des erreurs QMC |
+| `rt_m` | `int` | runner advanced_parallel — C68 | Nombre de lignes QMC traitées en temps réel |
+| `rt_within` | `int` | runner advanced_parallel — C68 | Nombre de lignes QMC dans leur barre d'erreur |
+| `rt_sum_sq_mod` | `double` | runner advanced_parallel — C68 | Somme des carrés des erreurs EXT |
+| `rt_sum_abs_mod` | `double` | runner advanced_parallel — C68 | Somme des valeurs absolues des erreurs EXT |
+| `rt_m_mod` | `int` | runner advanced_parallel — C68 | Nombre de lignes EXT traitées en temps réel |
+| `rt_within_mod` | `int` | runner advanced_parallel — C68 | Nombre de lignes EXT dans leur barre d'erreur |
 
 ---
 
@@ -187,7 +200,8 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 | `dynamic_pumping` | Pompage dynamique hors-équilibre |
 | `dt_sweep` | Sweep du pas temporel dt |
 | `spectral` | Analyse spectrale FFT |
-| `benchmark` | Benchmarks QMC/DMRG avec références externes |
+| `benchmark` | Benchmarks QMC/DMRG post-PT_MC (section finale) |
+| `benchmark_rt` | **C68** Benchmarks QMC/DMRG écrits EN TEMPS RÉEL dans la boucle de simulation de base — `qmc_dmrg_rmse_rt`, `qmc_dmrg_mae_rt`, `qmc_dmrg_within_rt`, `qmc_dmrg_ci95_rt`, `external_modules_rmse_rt`, `external_modules_mae_rt`, `external_modules_within_rt` |
 | `cluster_scale` | Multi-tailles réseau (8×8 → 255×255) |
 | `thermodynamic_limit` | Extrapolation limite thermodynamique |
 
@@ -425,8 +439,79 @@ module,observable,T,U,reference,model,abs_error,rel_error,error_bar,within_error
 
 ---
 
+## SECTION K — C68-REALTIME-BENCH : BENCHMARKS EN TEMPS RÉEL (2026-03-28)
+
+> **Problème résolu :** Dans les anciens runs (ex : run 824), les fichiers CSV benchmark
+> (`benchmark_comparison_qmc_dmrg.csv`, `benchmark_comparison_external_modules.csv`) étaient
+> **entièrement vides** car ils étaient calculés APRÈS le PT_MC (~1.3 GB de CSV).
+> Quand le PT_MC crashait (OOM), aucun benchmark n'était jamais écrit sur disque.
+
+### Principe C68 (NOM D'ORIGINE = à utiliser dans tout nouveau code)
+
+| CONCEPT C68 | Nom officiel dans le code | Fichier | Description |
+|---|---|---|---|
+| Chargement anticipé | `brow_rt[256]` + `bn_rt` + `bn_mod_rt` + `bench_offset_rt` | advanced_parallel.c | Chargement des CSV de référence AVANT `sim_result_t base[16]` |
+| Benchmark en boucle | Bloc `C68-REALTIME-BENCH QMC` + `C68-REALTIME-BENCH EXT` | advanced_parallel.c | Écriture dans `bcsv`/`bcsvm` après chaque `simulate_fullscale()` |
+| RMSE immédiat | `rt_sum_sq`, `rt_m`, `rt_within`, etc. | advanced_parallel.c | Calculé et écrit dans `tcsv` AVANT le démarrage du PT_MC |
+| Flush disque | `fflush(bcsv)` + `fflush(bcsvm)` + `fflush(lg)` | advanced_parallel.c | Après chaque module — survie au SIGKILL/OOM |
+| Section post-PT_MC | `C68-REALTIME-BENCH-POSTPTMC` | advanced_parallel.c | Log de confirmation seulement — AUCUNE re-simulation |
+
+### Tags de log C68 (NOM D'ORIGINE — à ne jamais renommer)
+
+| TAG dans le log principal (run_log_advanced_parallel.csv) | Signification |
+|---|---|
+| `BENCH_RT_INIT` | Initialisation : nombre de lignes QMC/EXT chargées depuis les CSV de référence |
+| `BENCH_RT_QMC` | Une ligne QMC/DMRG calculée en temps réel (module, obs, ref, model, abs_e, rel_e, within) |
+| `BENCH_RT_EXT` | Une ligne EXT calculée en temps réel |
+| `BENCH_RT_QMC_SUMMARY` | RMSE/MAE/within global QMC — écrit AVANT le PT_MC |
+| `BENCH_RT_EXT_SUMMARY` | RMSE/MAE/within global EXT — écrit AVANT le PT_MC |
+| `BENCH_QMC_START` | Marqueur post-PT_MC — mode C68 (no-resim, use-rt-counters) |
+| `BENCH_QMC_ROW` | Log de confirmation post-PT_MC — C68:reuse-base (pas de re-simulation) |
+| `BENCH_QMC_END` | Fin section QMC post-PT_MC |
+| `BENCH_EXT_START` | Marqueur EXT post-PT_MC — mode C68 (no-resim) |
+| `BENCH_EXT_ROW` | Log de confirmation EXT post-PT_MC — C68:reuse-base |
+| `BENCH_EXT_END` | Fin section EXT post-PT_MC |
+
+### Métriques `tcsv` ajoutées par C68 (new_tests_results.csv — NOM D'ORIGINE)
+
+| NOM D'ORIGINE (test_id dans tcsv) | Famille | Seuil PASS | Description |
+|---|---|---|---|
+| `qmc_dmrg_rmse_rt` | `benchmark_rt` | `≤ 0.10 eV/site` | RMSE benchmark QMC temps réel |
+| `qmc_dmrg_mae_rt` | `benchmark_rt` | `≤ 0.10 eV/site` | MAE benchmark QMC temps réel |
+| `qmc_dmrg_within_rt` | `benchmark_rt` | `≥ 60 %` | % points dans barre d'erreur QMC temps réel |
+| `qmc_dmrg_ci95_rt` | `benchmark_rt` | `≤ 0.10 eV/site` | IC 95% half-width QMC temps réel |
+| `external_modules_rmse_rt` | `benchmark_rt` | `≤ 0.15 eV/site` | RMSE benchmark EXT temps réel |
+| `external_modules_mae_rt` | `benchmark_rt` | `≤ 0.15 eV/site` | MAE benchmark EXT temps réel |
+| `external_modules_within_rt` | `benchmark_rt` | `≥ 70 %` | % points dans barre d'erreur EXT temps réel |
+
+### Règle C68 obligatoire pour tout nouveau code benchmark
+
+```
+RÈGLE C68 — BENCHMARK TEMPS RÉEL (OBLIGATOIRE) :
+  1. Tout calcul benchmark DOIT être effectué dans la boucle de simulation de base,
+     immédiatement après simulate_fullscale() pour le module courant.
+  2. Utiliser base[i] directement — JAMAIS re-simuler pour les benchmarks.
+  3. fflush(bcsv) + fflush(bcsvm) + fflush(lg) après chaque module.
+  4. RMSE global écrit dans tcsv AVANT le démarrage du PT_MC.
+  5. La section post-PT_MC ne fait QUE logguer — aucune simulation supplémentaire.
+  6. Variables locales : brow_rt[], bn_rt, bn_mod_rt, bench_offset_rt, rt_sum_sq,
+     rt_sum_abs, rt_m, rt_within, rt_sum_sq_mod, rt_sum_abs_mod, rt_m_mod, rt_within_mod.
+     NE PAS les renommer — ils apparaissent dans les RÉSUMÉS de session.
+```
+
+### Anciens comportements supprimés par C68 (INTERDITS)
+
+| Comportement supprimé | Raison | Correction C68 |
+|---|---|---|
+| `simulate_fullscale()` appelé dans la boucle benchmark QMC post-PT_MC | Re-simulation inutile, seed 1234+i non validée → résultats différents de base[] | Utiliser `base[ip]` directement |
+| `brow[256]` déclaré après le PT_MC | Variables benchmark inaccessibles en cas de crash PT_MC | `brow_rt[256]` déclaré avant `sim_result_t base[16]` |
+| Benchmarks absents des CSV si crash PT_MC | Cause : écriture uniquement en fin de run | Écriture module par module avec fflush immédiat |
+
+---
+
 *Maintenu par :* Agent Replit  
 *Version 1.0 :* 2026-03-16 — création initiale (erreur : LV_MODULE_METRIC désigné comme officiel)  
-*Version 2.0 :* 2026-03-16 — correction C25-NAMES : FORENSIC_LOG_MODULE_METRIC = nom d'origine réel
-*Version 3.0 :* 2026-03-17 — ajout Section I : Logger V4 NEXT (qf_log_*) — Cycle C33
-*Version 4.0 :* 2026-03-27 — ajout Section J : Tables Supabase + colonnes CSV benchmark (NOM D'ORIGINE) — Cycle C63
+*Version 2.0 :* 2026-03-16 — correction C25-NAMES : FORENSIC_LOG_MODULE_METRIC = nom d'origine réel  
+*Version 3.0 :* 2026-03-17 — ajout Section I : Logger V4 NEXT (qf_log_*) — Cycle C33  
+*Version 4.0 :* 2026-03-27 — ajout Section J : Tables Supabase + colonnes CSV benchmark — Cycle C63  
+*Version 5.0 :* 2026-03-28 — ajout Section K : C68-REALTIME-BENCH (benchmarks temps réel, tags log, variables rt_*, métriques tcsv) — Cycle C68

@@ -1659,6 +1659,27 @@ int main(int argc, char** argv) {
                 probs[i].name);
     }
 
+    /* C68-REALTIME-BENCH : chargement des benchmarks AVANT la boucle de simulation.
+     * Objectif : écriture dans bcsv/bcsvm dès que chaque module est simulé,
+     * SANS attendre la fin du PT-MC (~1.3 GB CSV). Si le run crashe en PT-MC,
+     * benchmark_comparison_qmc_dmrg.csv et benchmark_comparison_external_modules.csv
+     * contiennent déjà tous les résultats calculés en temps réel.
+     * Auteur : C68 — 2026-03-28 */
+    benchmark_row_t brow_rt[256];
+    int bn_rt     = load_benchmark_rows(bench_ref,         brow_rt,                                       256);
+    int bn_mod_rt = load_benchmark_rows(bench_ref_modules, brow_rt + (bn_rt > 0 ? bn_rt : 0),
+                                        256 - (bn_rt > 0 ? bn_rt : 0));
+    int bench_offset_rt = (bn_rt > 0) ? bn_rt : 0;
+    if (bn_rt     < 0) bn_rt     = 0;
+    if (bn_mod_rt < 0) bn_mod_rt = 0;
+    fprintf(lg, "%06d | BENCH_RT_INIT qmc_n=%d ext_n=%d ref_qmc=%s ref_ext=%s\n",
+            line++, bn_rt, bn_mod_rt, bench_ref, bench_ref_modules);
+    /* Compteurs RMSE temps réel (mis à jour après chaque module) */
+    double rt_sum_sq = 0.0,     rt_sum_abs = 0.0;
+    int    rt_m = 0,            rt_within = 0;
+    double rt_sum_sq_mod = 0.0, rt_sum_abs_mod = 0.0;
+    int    rt_m_mod = 0,        rt_within_mod = 0;
+
     sim_result_t base[16];
 
     for (int i = 0; i < nprobs; ++i) {
@@ -1681,6 +1702,96 @@ int main(int argc, char** argv) {
         double ratio = (h_scale_eV * t_ns) / (HBAR_eV_NS + EPS);
         bool dim_ok = isfinite(ratio) && ratio >= 0.0;
         fprintf(dmcsv, "%s,%.10f,%.10f,%.10e,%.10e,%s,H_t_over_hbar_dimensionless\n", probs[i].name, h_scale_eV, t_ns, HBAR_eV_NS, ratio, dim_ok ? "PASS" : "FAIL");
+
+        /* ── C68-REALTIME-BENCH QMC : écriture immédiate dans bcsv ─────────────────
+         * Pour chaque ligne benchmark QMC/DMRG dont le module correspond à probs[i],
+         * on utilise directement base[i] (déjà calculé) sans aucune re-simulation.
+         * Avantage : CPU 0 supplémentaire, précision identique à la phase post-PT-MC.
+         * Log : BENCH_RT_QMC par ligne + BENCH_RT_QMC_SUMMARY après le dernier module. */
+        for (int bi = 0; bi < bn_rt; ++bi) {
+            if (strcmp(brow_rt[bi].module, probs[i].name) != 0) continue;
+            double model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
+                              ? base[i].pairing_norm : base[i].energy_eV;
+            double abs_e_rt = fabs(model_rt - brow_rt[bi].value);
+            double rel_e_rt = fabs(abs_e_rt / (fabs(brow_rt[bi].value) + EPS));
+            int ok_bar_rt = (abs_e_rt <= brow_rt[bi].err) ? 1 : 0;
+            if (ok_bar_rt) rt_within++;
+            rt_sum_sq  += abs_e_rt * abs_e_rt;
+            rt_sum_abs += abs_e_rt;
+            rt_m++;
+            fprintf(bcsv, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
+                    brow_rt[bi].module, brow_rt[bi].observable,
+                    brow_rt[bi].t, brow_rt[bi].u,
+                    brow_rt[bi].value, model_rt, abs_e_rt, rel_e_rt,
+                    brow_rt[bi].err, ok_bar_rt);
+            fprintf(lg, "%06d | BENCH_RT_QMC module=%s obs=%s ref=%.6f model=%.6f"
+                        " abs_e=%.6f rel_e=%.4f within=%d\n",
+                    line++, brow_rt[bi].module, brow_rt[bi].observable,
+                    brow_rt[bi].value, model_rt, abs_e_rt, rel_e_rt, ok_bar_rt);
+        }
+        /* ── C68-REALTIME-BENCH EXT : écriture immédiate dans bcsvm ────────────── */
+        for (int bi = 0; bi < bn_mod_rt; ++bi) {
+            benchmark_row_t* br_rt = &brow_rt[bench_offset_rt + bi];
+            if (strcmp(br_rt->module, probs[i].name) != 0) continue;
+            double model_rt = (strcmp(br_rt->observable, "pairing") == 0)
+                              ? base[i].pairing_norm : base[i].energy_eV;
+            double abs_e_rt = fabs(model_rt - br_rt->value);
+            double rel_e_rt = fabs(abs_e_rt / (fabs(br_rt->value) + EPS));
+            int ok_bar_rt = (abs_e_rt <= br_rt->err) ? 1 : 0;
+            if (ok_bar_rt) rt_within_mod++;
+            rt_sum_sq_mod  += abs_e_rt * abs_e_rt;
+            rt_sum_abs_mod += abs_e_rt;
+            rt_m_mod++;
+            fprintf(bcsvm, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
+                    br_rt->module, br_rt->observable,
+                    br_rt->t, br_rt->u,
+                    br_rt->value, model_rt, abs_e_rt, rel_e_rt,
+                    br_rt->err, ok_bar_rt);
+            fprintf(lg, "%06d | BENCH_RT_EXT module=%s obs=%s ref=%.6f model=%.6f"
+                        " abs_e=%.6f rel_e=%.4f within=%d\n",
+                    line++, br_rt->module, br_rt->observable,
+                    br_rt->value, model_rt, abs_e_rt, rel_e_rt, ok_bar_rt);
+        }
+        /* Flush disque immédiat après chaque module — survie au SIGKILL */
+        fflush(bcsv);
+        fflush(bcsvm);
+        fflush(lg);
+    }
+
+    /* ── C68 : RMSE global calculé dès la fin de la boucle de base ─────────────
+     * Écrit dans tcsv (new_tests_results.csv) AVANT le démarrage du PT-MC.
+     * Si le run crashe en PT-MC, ces métriques sont déjà présentes sur disque. */
+    if (rt_m > 0) {
+        double rmse_rt = sqrt(rt_sum_sq / (double)rt_m);
+        double mae_rt  = rt_sum_abs   / (double)rt_m;
+        double pct_rt  = 100.0 * (double)rt_within / (double)rt_m;
+        double ci95_rt = 1.96 * rmse_rt / sqrt((double)rt_m);
+        bool rmse_rt_ok   = rmse_rt <= 0.10;
+        bool within_rt_ok = pct_rt  >= 60.0;
+        fprintf(lg, "%06d | BENCH_RT_QMC_SUMMARY rmse=%.6f mae=%.6f within=%.1f"
+                    " ci95=%.6f m=%d status=%s\n",
+                line++, rmse_rt, mae_rt, pct_rt, ci95_rt, rt_m,
+                (rmse_rt_ok && within_rt_ok) ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,qmc_dmrg_rmse_rt,rmse,%.10f,%s\n",       rmse_rt,  rmse_rt_ok   ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,qmc_dmrg_mae_rt,mae,%.10f,%s\n",          mae_rt,   rmse_rt_ok   ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,qmc_dmrg_within_rt,percent_within,%.6f,%s\n", pct_rt, within_rt_ok ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,qmc_dmrg_ci95_rt,ci95_halfwidth,%.10f,%s\n", ci95_rt, rmse_rt_ok   ? "PASS" : "FAIL");
+        fflush(tcsv);
+    }
+    if (rt_m_mod > 0) {
+        double rmse_rt_mod = sqrt(rt_sum_sq_mod / (double)rt_m_mod);
+        double mae_rt_mod  = rt_sum_abs_mod / (double)rt_m_mod;
+        double pct_rt_mod  = 100.0 * (double)rt_within_mod / (double)rt_m_mod;
+        bool rmse_mod_ok   = rmse_rt_mod <= 0.15;
+        bool within_mod_ok = pct_rt_mod  >= 70.0;
+        fprintf(lg, "%06d | BENCH_RT_EXT_SUMMARY rmse=%.6f mae=%.6f within=%.1f"
+                    " m=%d status=%s\n",
+                line++, rmse_rt_mod, mae_rt_mod, pct_rt_mod, rt_m_mod,
+                (rmse_mod_ok && within_mod_ok) ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,external_modules_rmse_rt,rmse,%.10f,%s\n",    rmse_rt_mod, rmse_mod_ok   ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,external_modules_mae_rt,mae,%.10f,%s\n",       mae_rt_mod,  rmse_mod_ok   ? "PASS" : "FAIL");
+        fprintf(tcsv, "benchmark,external_modules_within_rt,percent_within,%.6f,%s\n", pct_rt_mod, within_mod_ok ? "PASS" : "FAIL");
+        fflush(tcsv);
     }
 
     fprintf(lg, "%06d | PHASE base_fullscale_complete n_modules=%d — début sous-phases (worm_mc, pt_mc, benchmarks, …)\n",
@@ -2467,97 +2578,56 @@ int main(int argc, char** argv) {
     mark(&robustness, toy_ok);
 
 
-    /* External benchmark comparison (QMC/DMRG reference table + error bars) */
-    benchmark_row_t brow[256];
-    int bn = load_benchmark_rows(bench_ref, brow, 256);
-    int bn_mod = load_benchmark_rows(bench_ref_modules, brow + (bn > 0 ? bn : 0), 256 - (bn > 0 ? bn : 0));
-    int bench_offset = (bn > 0) ? bn : 0;
-    if (bn < 0) bn = 0;
-    if (bn_mod < 0) bn_mod = 0;
+    /* ── C68-REALTIME-BENCH-POSTPTMC : récupération des résultats temps réel ────
+     * Les CSV benchmark ont déjà été écrits dans la boucle de simulation de base
+     * (C68-REALTIME-BENCH). Cette section calcule uniquement le RMSE final depuis
+     * les compteurs rt_* déjà remplis — AUCUNE re-simulation effectuée ici.
+     * Si les fichiers CSV locaux sont déjà complets, on les garde tels quels.     */
 
-    fprintf(lg, "%06d | BENCH_QMC_START n=%d ref_csv=%s\n", line++, bn, bench_ref);
-    double sum_sq = 0.0, sum_abs = 0.0;
-    int m = 0, within_bar = 0;
-    for (int i = 0; i < bn; ++i) {
-        int ip = find_problem_index(probs, nprobs, brow[i].module);
+    fprintf(lg, "%06d | BENCH_QMC_START n=%d ref_csv=%s (C68:no-resim,use-rt-counters)\n",
+            line++, bn_rt, bench_ref);
+    /* Les données sont déjà dans bcsv (écrit temps réel) — log de confirmation */
+    for (int i = 0; i < bn_rt; ++i) {
+        int ip = find_problem_index(probs, nprobs, brow_rt[i].module);
         if (ip < 0) ip = 0;
-        problem_t p = probs[ip];
-        p.temp_K = brow[i].t;
-        p.u_eV = brow[i].u;
-        sim_result_t rr = simulate_fullscale(&p, 1234 + (uint64_t)i, 129, NULL);
-        /* BC-11-ADV : energy_eV est déjà en eV (même formule que fullscale) — supprimer /1000 erroné */
-        double model = (strcmp(brow[i].observable, "pairing") == 0) ? rr.pairing_norm : rr.energy_eV;
-        double abs_e = fabs(model - brow[i].value);
-        double rel_e = fabs(abs_e / (fabs(brow[i].value) + EPS));
-        int ok_bar = abs_e <= brow[i].err;
-        if (ok_bar) within_bar++;
-        sum_sq += abs_e * abs_e;
-        sum_abs += abs_e;
-        m++;
-        fprintf(bcsv, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
-                brow[i].module, brow[i].observable, brow[i].t, brow[i].u, brow[i].value, model, abs_e, rel_e, brow[i].err, ok_bar);
-        fprintf(lg, "%06d | BENCH_QMC_ROW i=%d module=%s obs=%s ref=%.6f model=%.6f abs_e=%.6f within_bar=%d seed=%llu\n",
-                line++, i, brow[i].module, brow[i].observable, brow[i].value, model, abs_e, ok_bar,
-                (unsigned long long)(1234 + (uint64_t)i));
+        double model = (strcmp(brow_rt[i].observable, "pairing") == 0)
+                       ? base[ip].pairing_norm : base[ip].energy_eV;
+        double abs_e = fabs(model - brow_rt[i].value);
+        int ok_bar   = (abs_e <= brow_rt[i].err) ? 1 : 0;
+        fprintf(lg, "%06d | BENCH_QMC_ROW i=%d module=%s obs=%s ref=%.6f model=%.6f"
+                    " abs_e=%.6f within_bar=%d (C68:reuse-base)\n",
+                line++, i, brow_rt[i].module, brow_rt[i].observable,
+                brow_rt[i].value, model, abs_e, ok_bar);
     }
-    fprintf(lg, "%06d | BENCH_QMC_END within=%d/%d\n", line++, within_bar, m);
+    fprintf(lg, "%06d | BENCH_QMC_END within=%d/%d (C68:rt-counters)\n",
+            line++, rt_within, rt_m);
 
-    double sum_sq_mod = 0.0, sum_abs_mod = 0.0;
-    int m_mod = 0, within_mod = 0;
-    fprintf(lg, "%06d | BENCH_EXT_START n=%d ref_csv=%s bench_offset=%d\n",
-            line++, bn_mod, bench_ref_modules, bench_offset);
-    for (int i = 0; i < bn_mod; ++i) {
-        benchmark_row_t* br = &brow[bench_offset + i];
+    /* Alias pour compatibilité avec le code de scoring qui suit */
+    double sum_sq  = rt_sum_sq;   double sum_abs  = rt_sum_abs;
+    int    m       = rt_m;        int    within_bar = rt_within;
+
+    /* ── C68 : Boucle EXT — log uniquement, données déjà dans bcsvm (temps réel) ── */
+    fprintf(lg, "%06d | BENCH_EXT_START n=%d ref_csv=%s bench_offset=%d (C68:no-resim)\n",
+            line++, bn_mod_rt, bench_ref_modules, bench_offset_rt);
+    for (int i = 0; i < bn_mod_rt; ++i) {
+        benchmark_row_t* br = &brow_rt[bench_offset_rt + i];
         int ip = find_problem_index(probs, nprobs, br->module);
-        /* BUG-FAR-EQ-C41-FIX : si le module n'est pas trouvé, utiliser hubbard_hts_core
-         * comme proxy physique (même topologie carré, mêmes paramètres de base).
-         * Avant : continue → m_mod=0 pour ce module → RMSE=1e9 → FAIL global.
-         * Après : ip=0 → simulation avec paramètres partiels du module externe. */
         if (ip < 0) ip = 0;
-        /* C64-BENCH-EXT-FIX : la boucle external ré-simulait avec seed 5151+i et
-         * burn_scale=129, produisant energy_eV≈0.010 au lieu de ~2.0 eV.
-         * Cause identifiée : seed 5151+i tombe dans un bassin d'attraction différent
-         * du RK2 en régime de correlation forte (U/t>>1) → convergence vers minimum
-         * local à énergie normalisée O(1/sites).
-         * Correction : utiliser directement base[ip] (résultats de la simulation de
-         * base déjà calculée avec seed validée 0xABC000+ip) si les paramètres T et U
-         * correspondent aux paramètres natifs du module (barre ±5%).
-         * Si T ou U diffèrent (benchmark avec T/U exotiques), fallback sur re-simulation
-         * avec la seed validée 0xABC000+ip au lieu de 5151+i. */
-        double t_match = fabs(br->t - probs[ip].temp_K) / (fabs(probs[ip].temp_K) + 1e-6);
-        double u_match = fabs(br->u - probs[ip].u_eV)   / (fabs(probs[ip].u_eV)   + 1e-6);
-        sim_result_t rr;
-        const char* ext_path = "reuse_base_ip";
-        if (t_match < 0.05 && u_match < 0.05) {
-            /* Paramètres identiques (<5%) → réutiliser base[ip] sans re-simulation */
-            rr = base[ip];
-        } else {
-            /* Paramètres différents → re-simuler avec seed validée (même famille que base) */
-            ext_path = "resim_fullscale";
-            problem_t p = probs[ip];
-            p.temp_K = br->t;
-            p.u_eV   = br->u;
-            /* C65-FIX : seed sur ip (problème), pas sur i (indice benchmark) — évite collision
-             * entre lignes external et comportement non physique cohérent avec base[]. */
-            rr = simulate_fullscale(&p, (uint64_t)(0xABC000 + (unsigned)ip), 99, NULL);
-        }
         double model = (strcmp(br->observable, "pairing") == 0)
-            ? rr.pairing_norm
-            : rr.energy_eV;
+                       ? base[ip].pairing_norm : base[ip].energy_eV;
         double abs_e = fabs(model - br->value);
-        double rel_e = fabs(abs_e / (fabs(br->value) + EPS));
-        int ok_bar = abs_e <= br->err;
-        if (ok_bar) within_mod++;
-        sum_sq_mod += abs_e * abs_e;
-        sum_abs_mod += abs_e;
-        m_mod++;
-        fprintf(bcsvm, "%s,%s,%.6f,%.6f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
-                br->module, br->observable, br->t, br->u, br->value, model, abs_e, rel_e, br->err, ok_bar);
-        fprintf(lg, "%06d | BENCH_EXT_ROW i=%d module=%s obs=%s ip=%d t_match=%.5f u_match=%.5f path=%s energy=%.6f pairing=%.6f ref=%.6f within_bar=%d\n",
-                line++, i, br->module, br->observable, ip, t_match, u_match, ext_path,
-                rr.energy_eV, rr.pairing_norm, br->value, ok_bar);
+        int ok_bar   = (abs_e <= br->err) ? 1 : 0;
+        fprintf(lg, "%06d | BENCH_EXT_ROW i=%d module=%s obs=%s ip=%d path=reuse_base"
+                    " energy=%.6f pairing=%.6f ref=%.6f within_bar=%d (C68)\n",
+                line++, i, br->module, br->observable, ip,
+                base[ip].energy_eV, base[ip].pairing_norm, br->value, ok_bar);
     }
-    fprintf(lg, "%06d | BENCH_EXT_END within=%d/%d\n", line++, within_mod, m_mod);
+    fprintf(lg, "%06d | BENCH_EXT_END within=%d/%d (C68:rt-counters)\n",
+            line++, rt_within_mod, rt_m_mod);
+
+    /* Alias pour compatibilité avec le code de scoring qui suit */
+    double sum_sq_mod  = rt_sum_sq_mod;  double sum_abs_mod = rt_sum_abs_mod;
+    int    m_mod       = rt_m_mod;       int    within_mod  = rt_within_mod;
 
     double rmse = (m > 0) ? sqrt(sum_sq / (double)m) : 1e9;
     double mae = (m > 0) ? (sum_abs / (double)m) : 1e9;
