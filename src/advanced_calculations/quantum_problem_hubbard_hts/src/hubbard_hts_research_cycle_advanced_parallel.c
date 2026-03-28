@@ -1925,11 +1925,11 @@ int main(int argc, char** argv) {
     double pt_pairing_cold[16] = {0.0};
     double pt_chi_sc[16]       = {0.0};
     {
-        /* ── Rotation PT-MC CSV à 95 MB ──────────────────────────────────
+        /* ── Rotation PT-MC CSV à 20 MB ──────────────────────────────────
          * L'en-tête est écrit dans la première partie par pt_mc_run
          * (flag write_header=true). Pour les parties suivantes on passe
          * write_header=true pour que chaque partie soit autonome. */
-        #define PTMC_MAX_BYTES (95LL * 1024LL * 1024LL)
+        #define PTMC_MAX_BYTES (20LL * 1024LL * 1024LL)
         char pt_mc_csv_base[MAX_PATH];
         pjoin(pt_mc_csv_base, sizeof(pt_mc_csv_base), tests, "parallel_tempering_mc_results");
         char pt_mc_csv_path[MAX_PATH];
@@ -1939,7 +1939,7 @@ int main(int argc, char** argv) {
         int pt_mc_part_num = 0;   /* 0 = fichier original */
         bool pt_mc_need_header = true;
         for (int i = 0; i < nprobs; ++i) {
-            /* Rotation : si le fichier courant ≥ 95 MB, ouvrir une nouvelle partie */
+            /* Rotation : si le fichier courant ≥ 20 MB, ouvrir une nouvelle partie */
             if (ptcsv) {
                 long pos = ftell(ptcsv);
                 if (pos >= PTMC_MAX_BYTES) {
@@ -1952,7 +1952,7 @@ int main(int argc, char** argv) {
                     ptcsv = fopen(pt_mc_csv_path, "w");
                     pt_mc_need_header = true;
                     fprintf(stderr,
-                        "[PTMC] Rotation CSV → %s (partie %d, cap 95 MB atteint)\n",
+                        "[PTMC] Rotation CSV → %s (partie %d, cap 20 MB atteint)\n",
                         pt_mc_csv_path, pt_mc_part_num);
                 }
             }

@@ -221,7 +221,7 @@ static void lv_rotate_csv(void) {
 static void csv_write_line(const char* line) {
     if (!g_run_csv_path[0]) return;
     pthread_mutex_lock(&g_csv_mutex);
-    /* Rotation si le fichier courant a atteint 95 MB */
+    /* Rotation si le fichier courant a atteint 20 MB */
     struct stat st;
     if (stat(g_run_csv_path, &st) == 0 && st.st_size >= LV_MAX_CSV_BYTES) {
         lv_rotate_csv();

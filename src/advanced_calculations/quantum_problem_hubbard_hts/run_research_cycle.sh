@@ -65,14 +65,53 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}
 # ── C60-SUPABASE-DOWNLOAD : récupération des fichiers depuis Supabase au démarrage ──
 # Garantit que chaque nouvelle session Replit dispose des benchmarks et du dernier run
 # même si LFS est désactivé et que les fichiers locaux ont disparu après un push.
-# C68-REQUESTS-FIX : s'assurer que requests est installé avant le download
-echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] Vérification dépendances Python..."
-python3 -c "import requests" 2>/dev/null || {
-    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] requests manquant — installation en cours..."
-    pip3 install requests -q 2>&1 || pip install requests -q 2>&1 || true
-    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C68-DEPS] requests installé"
-}
-echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase..."
+# ── AUTO-INSTALL : vérification et installation de toutes les dépendances Python ──
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [AUTO-DEPS] Vérification et auto-installation des dépendances..."
+python3 - <<'PYCHECK'
+import subprocess, sys
+DEPS = [
+    ("requests",         "requests"),
+    ("psycopg2-binary",  "psycopg2"),
+    ("numpy",            "numpy"),
+    ("pandas",           "pandas"),
+    ("scipy",            "scipy"),
+]
+missing = []
+for pkg, imp in DEPS:
+    try:
+        __import__(imp)
+    except ImportError:
+        missing.append(pkg)
+if missing:
+    print(f"[AUTO-DEPS] Installation : {missing}", flush=True)
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q"] + missing, check=False)
+    for pkg, imp in DEPS:
+        try:
+            __import__(imp)
+            print(f"[AUTO-DEPS] {pkg} : OK", flush=True)
+        except ImportError:
+            print(f"[AUTO-DEPS] {pkg} : ECHEC", flush=True)
+else:
+    print("[AUTO-DEPS] Toutes les dépendances déjà présentes", flush=True)
+PYCHECK
+
+# ── TEST SUPABASE + DOPPLER : validation des connexions avant run ─────────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST] Test connexion Supabase + Doppler..."
+if python3 "$ROOT_DIR/tools/test_supabase_doppler.py" 2>&1; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST] ✔ Connexion Supabase + Doppler validée"
+    export SUPABASE_CONNEXION_OK=1
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST-WARN] ⚠ Connexion partielle — vérifier les secrets"
+    export SUPABASE_CONNEXION_OK=0
+fi
+
+# ── CRÉATION DES TABLES SUPABASE MANQUANTES ─────────────────────────────
+if [ "${SUPABASE_CONNEXION_OK:-0}" = "1" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TABLES] Création tables manquantes..."
+    python3 "$ROOT_DIR/tools/test_supabase_doppler.py" --create-tables 2>&1 || true
+fi
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase...
 if python3 "$ROOT_DIR/tools/download_from_supabase.py" 2>&1; then
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Download Supabase OK"
 else
