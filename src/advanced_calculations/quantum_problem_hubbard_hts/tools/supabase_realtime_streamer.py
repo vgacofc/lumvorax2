@@ -9,7 +9,7 @@ Usage (background daemon) :
 Fonctionnement :
   1. Surveille un fichier de log (ou tous les CSV/log d'un répertoire) en continu
   2. Envoie chaque nouvelle ligne vers Supabase (table quantum_realtime_logs) en temps réel
-  3. Rotation à 20 MB : ferme le fichier courant, crée une nouvelle partie, supprime l'ancien
+  3. Rotation à 90 MB : ferme le fichier courant, crée une nouvelle partie, supprime l'ancien
   4. Suppression locale après upload réussi (--delete-after)
   5. Batch de 50 lignes max pour éviter les timeouts
   6. Identifie automatiquement : module, metric, value depuis le format CSV Lumvorax
@@ -55,7 +55,7 @@ def _derive_url():
 SUPABASE_URL = _derive_url()
 SERVICE_KEY  = os.environ.get("SUPABASE_SERVICE_ROLE_KEY","").strip()
 
-MAX_FILE_BYTES = 20 * 1024 * 1024   # 20 MB — STANDARD_NAMES.md C53-ROT
+MAX_FILE_BYTES = 90 * 1024 * 1024   # 90 MB — rotation standard conforme C37
 BATCH_SIZE     = 50
 POLL_INTERVAL  = 0.5                 # secondes entre polls
 TABLE_LOGS     = "quantum_realtime_logs"
@@ -162,7 +162,7 @@ def upload_csv_rows(run_id: str, file_name: str, lines: list[str]) -> bool:
 # ── Surveillance d'un fichier ──────────────────────────────────────────────
 class FileWatcher:
     """Surveille un fichier en continu, envoie les nouvelles lignes vers Supabase.
-    Gère la rotation à 20 MB et la suppression locale après upload.
+    Gère la rotation à 90 MB et la suppression locale après upload.
     """
     def __init__(self, path: Path, run_id: str, delete_after: bool = False):
         self.path         = path

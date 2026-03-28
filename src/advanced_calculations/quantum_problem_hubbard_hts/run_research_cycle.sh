@@ -59,6 +59,17 @@ mkdir -p "$SESSION_LOG_DIR"
 # Persistent real-time log (console + file)
 exec > >(stdbuf -oL tee -a "$SESSION_LOG") 2>&1
 
+# ── LD_LIBRARY_PATH : préchargement libstdc++ pour numpy/pandas sous NixOS ──
+# Sans ce fix, numpy échoue avec "libstdc++.so.6: cannot open shared object file"
+# car le store Nix n'est pas dans le chemin de la bibliothèque par défaut.
+_LIBSTDCPP="/nix/store/bmi5znnqk4kg2grkrhk6py0irc8phf6l-gcc-14.2.1.20250322-lib/lib"
+if [ -f "${_LIBSTDCPP}/libstdc++.so.6" ]; then
+    export LD_LIBRARY_PATH="${_LIBSTDCPP}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [LD_LIBRARY_PATH] libstdc++.so.6 chargée depuis ${_LIBSTDCPP}"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [LD_LIBRARY_PATH-WARN] libstdc++.so.6 non trouvée à ${_LIBSTDCPP} — numpy peut échouer"
+fi
+
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] run_research_cycle start stamp=${STAMP_UTC}"
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}"
 
@@ -111,7 +122,7 @@ if [ "${SUPABASE_CONNEXION_OK:-0}" = "1" ]; then
     python3 "$ROOT_DIR/tools/test_supabase_doppler.py" --create-tables 2>&1 || true
 fi
 
-echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase...
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase..."
 if python3 "$ROOT_DIR/tools/download_from_supabase.py" 2>&1; then
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Download Supabase OK"
 else

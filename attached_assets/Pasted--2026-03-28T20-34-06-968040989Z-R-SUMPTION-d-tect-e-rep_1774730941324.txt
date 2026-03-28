@@ -1,0 +1,52 @@
+[2026-03-28T20:34:06.968040989Z] RÉSUMPTION détectée — reprise depuis phase 2
+[2026-03-28T20:34:06.977867989Z] run_research_cycle start stamp=20260328T203406Z
+[2026-03-28T20:34:06.980786599Z] RESUME_FROM_PHASE=2
+[2026-03-28T20:34:06.983212709Z] [AUTO-DEPS] Vérification et auto-installation d[AUTO-DEPS] Installation : ['pandas']
+[AUTO-DEPS] requests : OK
+[AUTO-DEPS] psycopg2-binary : OK
+[AUTO-DEPS] numpy : OK
+[AUTO-DEPS] pandas : ECHEC
+[AUTO-DEPS] scipy : OK
+[2026-03-28T20:34:09.062088868Z] [SUPABASE-TEST] Test connexion Supabase + Doppler...
+
+═══ TEST 1 : Variables d'environnement (Section H) ═══
+  [✔ PASS] SUPABASE8_API_URL — https://mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_SERVICE_ROLE_KEY — présent
+  [✔ PASS] SUPABASE_DB_HOST — db.mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_DB_USER — présent
+  [✔ PASS] SUPABASE_DB_PASSWORD — présent
+  [✔ PASS] DOPPLER_TOKEN — présent
+  [✔ PASS] DOPPLER_API_KEY — présent
+
+═══ TEST 2 : Connexion Doppler API ═══
+  [✔ PASS] Doppler API (DOPPLER_TOKEN) — workplace=lvxsecret
+  [✔ PASS] Doppler secrets SUPABASE présents — 9 clés SUPABASE trouvées
+
+═══ TEST 3 : Connexion Supabase REST (PostgREST) ═══
+  [✔ PASS] Supabase REST endpoint — HTTP 200
+
+═══ TEST 4 : Connexion PostgreSQL directe ═══
+  [✘ FAIL] PostgreSQL direct — connection to server at "db.mwdeqpfxbcdayaelwqht.supabase.co" (2a05:d018:135e:16ad:8fdd:36b4:892b:7962), port 5432 faile
+
+═══ TEST 5 : Tables Supabase (Section J) ═══
+  [✔ PASS] Table 'quantum_run_files'
+  [✔ PASS] Table 'quantum_csv_rows'
+  [✔ PASS] Table 'quantum_benchmarks'
+  [✔ PASS] Table 'run_scores'
+  [✔ PASS] Table 'benchmark_runtime'
+  [✔ PASS] Table 'research_modules_config'
+  [✔ PASS] Table 'problems_config'
+  [✘ FAIL] Table 'quantum_realtime_logs' — TABLE MANQUANTE — lancer --create-tables
+
+═══ TEST 6 : Colonnes STANDARD_NAMES.md (noms exacts) ═══
+  [⚠ WARN] Vérification colonnes ignorée (PostgreSQL non disponible)
+
+═══ TEST 7 : Écriture temps réel (quantum_realtime_logs) ═══
+  [⚠ WARN] Test écriture ignoré (table absente ou REST non dispo)
+
+════════════════════════════════════════════════════════════
+  RÉSULTAT : 17/19 tests passés — 2 échecs
+  [✘ FAIL] 2 problème(s) détecté(s) — corriger avant lancement simulation
+════════════════════════════════════════════════════════════
+[2026-03-28T20:34:14.613329632Z] [SUPABASE-TEST-WARN] ⚠ Connexion partielle — vérifier les secrets
+run_research_cycle.sh: line 129: syntax error near unexpected token `('
