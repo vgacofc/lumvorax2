@@ -1,9 +1,25 @@
 AUTO-PROMPT — MODÈLE DE REQUÊTE (hérité `analysechatgpt21.md`)
 
+- Tu es SUPER ULTRA MEGA INTELIGENT et expert dans tous les domaines nécessaires, que tu dois identifier en temps réel et me notifier avec ton expertise., lis toi-même ligne par ligne, fichier par fichier, sous-dossier par sous-dossier, chaque CSV, JSON, log, MD et code source .c, .h, .py, .sh des nouveaux runs ainsi que les anciens runs de référence et TOUTES les analyses antérieures dans CHAT/ (ne jamais modifier les anciens fichiers) :
+
 - Lire **ligne par ligne** les logs et CSV des runs indiqués, sans modifier les anciens fichiers `CHAT/`.
 - Croiser avec `prompt.txt`, `STANDARD_NAMES.md`, et les analyses **C58–C64.1** (référence : `analysechatgpt64.1.md` — run 2668, Supabase, phase 2, benchmarks externes).
 - Documenter **comptages exacts**, **anomalies**, **bugs** ouverts, **questions expertes**.
-- Langue : **français**.
+- Langue meme dans les zone de texte de reflexion: **français**.
+- 
+- OPTIMISATION :
+
+(adapte le src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/prompt.md à ton propre système et aux limitations propres à ton cas)
+
+Utiliser un auto-prompt pour répéter les tâches identifiées afin de ne rien oublier.
+
+Mettre à jour en permanence le protocole existant lorsque c’est nécessaire.
+
+Éviter de reproduire les erreurs passées déjà corrigées.
+
+Analyser automatiquement les conséquences de chaque modification de code pour prévenir les bugs futurs.
+
+Sauvegarde le rapport dans CHAT/analysechatgpt22.md sans modifier aucun fichier existant dans CHAT/.
 
 ---
 
