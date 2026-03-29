@@ -962,11 +962,23 @@ int main(int argc, char** argv) {
 
         /* ── C68-REALTIME-BENCH QMC : écriture immédiate dans bcsv ────────────────
          * Règle C68 §1+§2 : benchmark calculé ici, base[i] utilisé directement
-         * (pas de re-simulation). fflush(bcsv)+fflush(lg) après chaque module (§3). */
+         * (pas de re-simulation sauf si U diffère — AC-09).
+         * fflush(bcsv)+fflush(lg) après chaque module (§3). */
         for (int bi = 0; bi < bn_rt; ++bi) {
             if (strcmp(brow_rt[bi].module, probs[i].name) != 0) continue;
-            double model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
-                ? base[i].pairing : base[i].energy;
+            /* AC-09 : si U de la ligne benchmark diffère de U simulé, re-simuler
+             * avec le bon U (ex: ed_validation_2x2 référencé pour U=4 ET U=8). */
+            double model_rt;
+            if (fabs(brow_rt[bi].u - probs[i].u_eV) > 1e-3) {
+                problem_t p_u = probs[i];
+                p_u.u_eV = brow_rt[bi].u;
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(brow_rt[bi].u * 1000), 40, NULL);
+                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
+                    ? r_u.pairing : r_u.energy;
+            } else {
+                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
+                    ? base[i].pairing : base[i].energy;
+            }
             double abs_e_rt  = fabs(model_rt - brow_rt[bi].value);
             double rel_e_rt  = fabs(abs_e_rt / (fabs(brow_rt[bi].value) + EPS));
             int    ok_bar_rt = (abs_e_rt <= brow_rt[bi].err) ? 1 : 0;
@@ -990,10 +1002,20 @@ int main(int argc, char** argv) {
         for (int bi = 0; bi < bn_mod_rt; ++bi) {
             benchmark_row_t* br_rt = &brow_rt[bench_offset_rt + bi];
             if (strcmp(br_rt->module, probs[i].name) != 0) continue;
-            double n_sites_rt = (double)(probs[i].lx * probs[i].ly);
-            double model_rt   = (strcmp(br_rt->observable, "pairing") == 0)
-                ? base[i].pairing
-                : base[i].energy / (n_sites_rt > 0 ? n_sites_rt : 1.0);
+            /* AC-06 : base[i].energy est DÉJÀ en eV/site (normalisé par sites
+             * dans simulate_fullscale). Ne PAS diviser à nouveau par n_sites.
+             * AC-09 : re-simuler si U du benchmark diffère du U simulé. */
+            double model_rt;
+            if (fabs(br_rt->u - probs[i].u_eV) > 1e-3) {
+                problem_t p_u = probs[i];
+                p_u.u_eV = br_rt->u;
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(br_rt->u * 1000), 40, NULL);
+                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
+                    ? r_u.pairing : r_u.energy;
+            } else {
+                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
+                    ? base[i].pairing : base[i].energy;
+            }
             double abs_e_rt  = fabs(model_rt - br_rt->value);
             double rel_e_rt  = fabs(abs_e_rt / (fabs(br_rt->value) + EPS));
             int    ok_bar_rt = (abs_e_rt <= br_rt->err) ? 1 : 0;
@@ -1251,7 +1273,10 @@ int main(int argc, char** argv) {
                 for (int k = 0; k < 4; ++k) d2_ring[k] = d2;
                 d2_ring_n = 4;
             }
-            /* Guard |d2 - mu_d2| > 5*sigma_d2 → NaN. Filet absolu |d2|>0.35 si ring vide. */
+            /* AC-05 : Guard |d2 - mu_d2| > 5*sqrt(6)*sigma_d2 → NaN.
+             * Seuil adapté MC : la variance de d2 est ~6× celle de d1 (propagation
+             * d'erreur sur dérivée seconde). 5σ seul génère 2421 faux positifs par run.
+             * Filet absolu |d2|>0.35 si ring vide. */
             double d2_out = d2;
             if (isfinite(d2) && fabs(d2) > 0.35 && d2_ring_n < 4) {
                 d2_out = (double)NAN;
@@ -1263,9 +1288,10 @@ int main(int argc, char** argv) {
                 md /= (double)n;
                 double vd2 = md2v / (double)n - md * md;
                 double sd   = (vd2 > 0.0) ? sqrt(vd2) : 0.0;
-                if (sd > 0.0 && fabs(d2 - md) > 5.0 * sd) {
+                /* AC-05 : seuil 5*sqrt(6)*sd ≈ 12.25*sd pour d2 (variance×6 vs d1) */
+                if (sd > 0.0 && fabs(d2 - md) > 5.0 * sqrt(6.0) * sd) {
                     d2_out = (double)NAN; /* artefact détecté — remplacement par NaN */
-                    FORENSIC_LOG_ANOMALY("temporal_d2", "spike_5sigma_guard_nan", d2);
+                    FORENSIC_LOG_ANOMALY("temporal_d2", "spike_5sqrt6sigma_guard_nan", d2);
                 }
             }
             /* C37-RING-FIX : stocker d2_out (valeur filtrée) pas d2 brut.

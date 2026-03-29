@@ -1,0 +1,47 @@
+~/workspace$ cd src/advanced_calculations/quantum_problem_hubbard_hts && bash run_research_cycle.sh
+[2026-03-29T00:10:44.088269841Z] RÉSUMPTION détectée — reprise depuis phase 2
+[2026-03-29T00:10:44.099029680Z] [LD_LIBRARY_PATH] libstdc++.so.6 chargée depuis /nix/store/bmi5znnqk4kg2grkrhk6py0irc8phf6l-gcc-14.2.1.20250322-lib/lib
+[2026-03-29T00:10:44.102139909Z] run_research_cycle start stamp=20260329T001044Z
+[2026-03-29T00:10:44.105192019Z] RESUME_FROM_PHASE=2
+[2026-03-29T00:10:44.108540769Z] [AUTO-DEPS] Vérification et auto-installation des dépendances...
+[AUTO-DEPS] Toutes les dépendances déjà présentes
+[2026-03-29T00:10:45.050261859Z] [SUPABASE-TEST] Test connexion Supabase + Doppler...
+
+═══ TEST 1 : Variables d'environnement (Section H) ═══
+  [✔ PASS] SUPABASE8_API_URL — https://mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_SERVICE_ROLE_KEY — présent
+  [✔ PASS] SUPABASE_DB_HOST — db.mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_DB_USER — présent
+  [✔ PASS] SUPABASE_DB_PASSWORD — présent
+  [✔ PASS] DOPPLER_TOKEN — présent
+  [✔ PASS] DOPPLER_API_KEY — présent
+
+═══ TEST 2 : Connexion Doppler API ═══
+  [✔ PASS] Doppler API (DOPPLER_TOKEN) — workplace=lvxsecret
+  [✔ PASS] Doppler secrets SUPABASE présents — 14 clés SUPABASE trouvées
+
+═══ TEST 3 : Connexion Supabase REST (PostgREST) ═══
+  [✔ PASS] Supabase REST endpoint — HTTP 200
+
+═══ TEST 4 : Connexion PostgreSQL directe ═══
+  [✘ FAIL] PostgreSQL direct — connection to server at "db.mwdeqpfxbcdayaelwqht.supabase.co" (2a05:d018:135e:16ad:8fdd:36b4:892b:7962), port 5432 faile
+
+═══ TEST 5 : Tables Supabase (Section J) ═══
+  [✔ PASS] Table 'quantum_run_files'
+  [✔ PASS] Table 'quantum_csv_rows'
+  [✔ PASS] Table 'quantum_benchmarks'
+  [✔ PASS] Table 'run_scores'
+  [✔ PASS] Table 'benchmark_runtime'
+  [✔ PASS] Table 'research_modules_config'
+  [✔ PASS] Table 'problems_config'
+  [✔ PASS] Table 'quantum_realtime_logs'
+
+═══ TEST 6 : Colonnes STANDARD_NAMES.md (noms exacts) ═══
+  [⚠ WARN] Vérification colonnes ignorée (PostgreSQL non disponible)
+
+═══ TEST 7 : Écriture temps réel (quantum_realtime_logs) ═══
+  [✔ PASS] Écriture quantum_realtime_logs — HTTP 201
+
+════════════════════════════════════════════════════════════
+  RÉSULTAT : 19/20 tests passés — 1 échecs
+  [✘ FAIL] 1 problème(s) détecté(s) — corriger avant lancement simulation

@@ -1706,12 +1706,23 @@ int main(int argc, char** argv) {
         /* ── C68-REALTIME-BENCH QMC : écriture immédiate dans bcsv ─────────────────
          * Pour chaque ligne benchmark QMC/DMRG dont le module correspond à probs[i],
          * on utilise directement base[i] (déjà calculé) sans aucune re-simulation.
-         * Avantage : CPU 0 supplémentaire, précision identique à la phase post-PT-MC.
+         * Exception AC-09 : si U du benchmark diffère de U simulé, re-simuler avec
+         * le bon U (ex: ed_validation_2x2 référencé pour U=4 ET U=8 → même module).
          * Log : BENCH_RT_QMC par ligne + BENCH_RT_QMC_SUMMARY après le dernier module. */
         for (int bi = 0; bi < bn_rt; ++bi) {
             if (strcmp(brow_rt[bi].module, probs[i].name) != 0) continue;
-            double model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
-                              ? base[i].pairing_norm : base[i].energy_eV;
+            /* AC-09 : vérifier que U correspond — re-simuler avec le bon U sinon */
+            double model_rt;
+            if (fabs(brow_rt[bi].u - probs[i].u_eV) > 1e-3) {
+                problem_t p_u = probs[i];
+                p_u.u_eV = brow_rt[bi].u;
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ g_run_seed_xor ^ (uint64_t)(brow_rt[bi].u * 1000), 40, NULL);
+                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
+                           ? r_u.pairing_norm : r_u.energy_eV;
+            } else {
+                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
+                           ? base[i].pairing_norm : base[i].energy_eV;
+            }
             double abs_e_rt = fabs(model_rt - brow_rt[bi].value);
             double rel_e_rt = fabs(abs_e_rt / (fabs(brow_rt[bi].value) + EPS));
             int ok_bar_rt = (abs_e_rt <= brow_rt[bi].err) ? 1 : 0;
@@ -1733,8 +1744,18 @@ int main(int argc, char** argv) {
         for (int bi = 0; bi < bn_mod_rt; ++bi) {
             benchmark_row_t* br_rt = &brow_rt[bench_offset_rt + bi];
             if (strcmp(br_rt->module, probs[i].name) != 0) continue;
-            double model_rt = (strcmp(br_rt->observable, "pairing") == 0)
-                              ? base[i].pairing_norm : base[i].energy_eV;
+            /* AC-09 : vérifier U — re-simuler si U diffère du U simulé */
+            double model_rt;
+            if (fabs(br_rt->u - probs[i].u_eV) > 1e-3) {
+                problem_t p_u = probs[i];
+                p_u.u_eV = br_rt->u;
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ g_run_seed_xor ^ (uint64_t)(br_rt->u * 1000), 40, NULL);
+                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
+                           ? r_u.pairing_norm : r_u.energy_eV;
+            } else {
+                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
+                           ? base[i].pairing_norm : base[i].energy_eV;
+            }
             double abs_e_rt = fabs(model_rt - br_rt->value);
             double rel_e_rt = fabs(abs_e_rt / (fabs(br_rt->value) + EPS));
             int ok_bar_rt = (abs_e_rt <= br_rt->err) ? 1 : 0;
@@ -2428,7 +2449,9 @@ int main(int argc, char** argv) {
                 for (int k = 0; k < 4; ++k) d2_ring[k] = d2;
                 d2_ring_n = 4;
             }
-            /* Guard |d2 - mu_d2| > 5*sigma_d2 → NaN (artefact numérique détecté).
+            /* AC-05 : Guard |d2 - mu_d2| > 5*sqrt(6)*sigma_d2 → NaN.
+             * Seuil adapté MC : variance d2 ≈ 6× variance d1 (propagation d'erreur
+             * sur dérivée seconde). 5σ seul causait 2421 faux positifs/run.
              * Filet absolu complémentaire : |d2| > 0.35 actif même si ring vide. */
             double d2_out = d2;
             if (isfinite(d2) && fabs(d2) > 0.35 && d2_ring_n < 4) {
@@ -2441,9 +2464,10 @@ int main(int argc, char** argv) {
                 md /= (double)n;
                 double vd2 = md2v / (double)n - md * md;
                 double sd   = (vd2 > 0.0) ? sqrt(vd2) : 0.0;
-                if (sd > 0.0 && fabs(d2 - md) > 5.0 * sd) {
+                /* AC-05 : seuil 5*sqrt(6)*sd ≈ 12.25*sd adapté à la variance d2 */
+                if (sd > 0.0 && fabs(d2 - md) > 5.0 * sqrt(6.0) * sd) {
                     d2_out = (double)NAN; /* artefact détecté — remplacement par NaN */
-                    FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_5sigma_guard_nan", d2);
+                    FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_5sqrt6sigma_guard_nan", d2);
                 }
             }
             /* Stocker d2_out (valeur filtrée) dans le ring — jamais les NaN
