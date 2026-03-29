@@ -60,8 +60,10 @@ BATCH_SIZE     = 50
 POLL_INTERVAL  = 0.5                 # secondes entre polls
 TABLE_LOGS     = "quantum_realtime_logs"
 TABLE_ROWS     = "quantum_csv_rows"
+TABLE_RUNS     = "quantum_run_files"
 
-_stop_event = threading.Event()
+_stop_event      = threading.Event()
+_ensured_parents: set = set()   # run_id dont le parent a déjà été UPSERT
 
 def _hdrs():
     return {
@@ -76,6 +78,45 @@ def _rest(table):
 
 def _is_supabase_ok():
     return bool(SUPABASE_URL) and bool(SERVICE_KEY)
+
+
+def ensure_run_parent(run_id: str) -> bool:
+    """UPSERT du parent dans quantum_run_files avant tout insert dans quantum_csv_rows.
+
+    La FK quantum_csv_rows_run_id_fkey exige un enregistrement parent avec le même
+    run_id dans quantum_run_files. Cette fonction fait un INSERT ... ON CONFLICT DO NOTHING
+    via l'en-tête Prefer: resolution=ignore-duplicates pour garantir l'existence du parent
+    AVANT toute insertion enfant — et met le run_id en cache pour éviter les appels répétés.
+    """
+    global _ensured_parents
+    if run_id in _ensured_parents:
+        return True
+    if not _is_supabase_ok():
+        return False
+    try:
+        r = requests.post(
+            _rest(TABLE_RUNS),
+            headers={
+                "apikey":        SERVICE_KEY,
+                "Authorization": f"Bearer {SERVICE_KEY}",
+                "Content-Type":  "application/json",
+                "Prefer":        "resolution=ignore-duplicates,return=minimal",
+            },
+            json={"run_id": run_id, "module": "streamer_auto"},
+            timeout=15,
+        )
+        ok = r.status_code in (200, 201, 204)
+        if ok:
+            _ensured_parents.add(run_id)
+            print(f"[STREAMER] quantum_run_files parent UPSERT run_id={run_id} → HTTP {r.status_code}",
+                  flush=True)
+        else:
+            print(f"[STREAMER][WARN] ensure_run_parent({run_id}): HTTP {r.status_code} — {r.text[:200]}",
+                  flush=True)
+        return ok
+    except Exception as e:
+        print(f"[STREAMER][ERR] ensure_run_parent({run_id}): {e}", flush=True)
+        return False
 
 # ── Parseur de ligne CSV Lumvorax ──────────────────────────────────────────
 # Format : event,timestamp_utc,timestamp_ns,pid,detail,value
@@ -144,6 +185,17 @@ def upload_batch(rows: list[dict], table=TABLE_LOGS) -> bool:
 
 # ── Raw CSV rows (quantum_csv_rows) ────────────────────────────────────────
 def upload_csv_rows(run_id: str, file_name: str, lines: list[str]) -> bool:
+    """Upload des lignes brutes vers quantum_csv_rows.
+
+    GARANTIE FK : s'assure que le parent quantum_run_files(run_id) existe via UPSERT
+    AVANT tout insert dans quantum_csv_rows, conformément à la contrainte
+    quantum_csv_rows_run_id_fkey. Sans cette garantie, l'insert enfant est rejeté
+    avec un message 'Key (run_id)=(...) is not present in table quantum_run_files'.
+    """
+    if not ensure_run_parent(run_id):
+        print(f"[STREAMER][WARN] upload_csv_rows: parent run_id={run_id} non créé — "
+              f"insert quantum_csv_rows abandonné pour éviter FK violation", flush=True)
+        return False
     rows = []
     for i, line in enumerate(lines):
         rows.append({
