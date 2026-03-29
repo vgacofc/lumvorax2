@@ -338,6 +338,28 @@ _WATCHER_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | ta
 WATCHER_PID=$!
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] PID=$WATCHER_PID lancé en background"
 
+# ── C70-STREAM : streaming temps réel logs LumVorax → Supabase quantum_realtime_logs ──
+# Attend la création du nouveau run_dir (même base que C60-WATCHER),
+# puis lance supabase_realtime_streamer.py en DirectoryWatcher sur ce répertoire.
+# Surveille tous les *.csv et *.log : lumvorax_*.csv, research_execution.log, etc.
+# Pas de --delete-after : conservation locale des logs LumVorax après upload.
+(
+    _STREAM_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+    for _ws in $(seq 1 120); do
+        sleep 2
+        _NEW_RUN_STREAM="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+        if [ -n "$_NEW_RUN_STREAM" ] && [ "$_NEW_RUN_STREAM" != "$_STREAM_BEFORE" ]; then
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Run détecté: $_NEW_RUN_STREAM"
+            python3 "$ROOT_DIR/tools/supabase_realtime_streamer.py" \
+                --watch "$_NEW_RUN_STREAM" \
+                --run-id "$STAMP_UTC"
+            break
+        fi
+    done
+) &
+LUMVORAX_STREAM_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax PID=$LUMVORAX_STREAM_PID"
+
 # ── C26-RUNNER-RETRY : relance automatique si le runner advanced_parallel est tué ─
 ADV_OK=0
 for _try in $(seq 1 $MAX_RUNNER_RETRY); do
@@ -356,10 +378,13 @@ for _try in $(seq 1 $MAX_RUNNER_RETRY); do
     fi
 done
 
-# Arrêt propre du watcher après fin du runner
+# Arrêt propre du watcher PTMC et du streamer LumVorax après fin du runner
 kill "$WATCHER_PID" 2>/dev/null || true
 wait "$WATCHER_PID" 2>/dev/null || true
-echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Watcher arrêté"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Watcher PTMC arrêté"
+kill "$LUMVORAX_STREAM_PID" 2>/dev/null || true
+wait "$LUMVORAX_STREAM_PID" 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax arrêté"
 [ "$ADV_OK" -eq 0 ] && echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] WARNING: Runner advanced_parallel non terminé après ${MAX_RUNNER_RETRY} tentatives — continuation quand même"
 print_progress "advanced parallel simulation"
 checkpoint_save 10
