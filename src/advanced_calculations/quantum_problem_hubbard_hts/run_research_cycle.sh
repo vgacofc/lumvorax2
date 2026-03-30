@@ -15,18 +15,25 @@
 
 set -euo pipefail
 
-# ── GUARD AUTO-START : évite le démarrage au boot de Replit ─────────────────
-# Le fichier .c37_autorun_disabled bloque l'exécution automatique.
-# Pour lancer manuellement : rm <ce_répertoire>/.c37_autorun_disabled && bash run_research_cycle.sh
-# Pour réactiver l'auto-start : supprimer le fichier .c37_autorun_disabled
+# ── GUARD AUTO-START : double verrou — fichier persistant + env var ──────────
+# Bloque le lancement automatique au boot de Replit.
+# LANCEMENT MANUEL (2 méthodes équivalentes) :
+#   Méthode 1 (recommandée) : C37_AUTORUN_ENABLED=1 bash run_research_cycle.sh
+#   Méthode 2 (classique)   : rm .c37_autorun_disabled && bash run_research_cycle.sh
+# Le guard fichier est recréé automatiquement à chaque fin de run réussie,
+# ce qui empêche tout relancement automatique non voulu après un run complet.
 _GUARD_DIR="$(cd "$(dirname "$0")" && pwd)"
-if [ -f "$_GUARD_DIR/.c37_autorun_disabled" ]; then
+_GUARD_FILE="$_GUARD_DIR/.c37_autorun_disabled"
+if [ -f "$_GUARD_FILE" ] && [ "${C37_AUTORUN_ENABLED:-0}" != "1" ]; then
     echo "[C37-GUARD] $(date -u +%Y-%m-%dT%H:%M:%SZ) Cycle C37 : démarrage automatique BLOQUÉ."
-    echo "[C37-GUARD] Fichier de contrôle présent : $_GUARD_DIR/.c37_autorun_disabled"
-    echo "[C37-GUARD] Pour lancer manuellement :"
-    echo "[C37-GUARD]   rm $_GUARD_DIR/.c37_autorun_disabled && bash $_GUARD_DIR/run_research_cycle.sh"
+    echo "[C37-GUARD] Fichier guard présent : $_GUARD_FILE"
+    echo "[C37-GUARD] Méthode 1 : C37_AUTORUN_ENABLED=1 bash $_GUARD_DIR/run_research_cycle.sh"
+    echo "[C37-GUARD] Méthode 2 : rm $_GUARD_FILE && bash $_GUARD_DIR/run_research_cycle.sh"
     exit 0
 fi
+# Lancement autorisé — guard absent ou C37_AUTORUN_ENABLED=1
+rm -f "$_GUARD_FILE" 2>/dev/null || true
+echo "[C37-GUARD] $(date -u +%Y-%m-%dT%H:%M:%SZ) Lancement autorisé — guard levé pour cette session."
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPT_PATH="$(realpath "$0")"
@@ -607,3 +614,9 @@ fi
 print_progress "supabase upload + nettoyage local"
 
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] ===== run_research_cycle.sh TERMINÉ AVEC SUCCÈS ====="
+
+# ── GUARD : Recréation automatique après run complet ─────────────────────────
+# Empêche le relancement automatique non voulu au prochain démarrage Replit.
+touch "$_GUARD_FILE" 2>/dev/null || true
+echo "[C37-GUARD] Guard recréé automatiquement — prochain boot Replit sera bloqué."
+echo "[C37-GUARD] Pour relancer : C37_AUTORUN_ENABLED=1 bash $_GUARD_DIR/run_research_cycle.sh"
