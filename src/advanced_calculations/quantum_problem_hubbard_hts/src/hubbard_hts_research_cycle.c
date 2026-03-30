@@ -1129,13 +1129,10 @@ int main(int argc, char** argv) {
                             " E0_per_site=%.8f n_sites=%d converged=%d\n",
                         line++, brow_rt[bi].module, brow_rt[bi].u,
                         er_b.ground_energy_eV, model_rt, n_sit_b, er_b.converged ? 1 : 0);
-            } else if (fabs(brow_rt[bi].u - probs[i].u_eV) > 1e-3) {
-                problem_t p_u = probs[i];
-                p_u.u_eV = brow_rt[bi].u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(brow_rt[bi].u * 1000), (int)probs[i].steps, NULL);
-                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
-                    ? r_u.pairing : r_u.energy;
             } else {
+                /* AC-09-FIX C39 : U_bench ≠ U_sim → utiliser résultat simulation principale
+                 * La re-simulation avec U_bench produisait une énergie non-convergée (biais RMSE).
+                 * On compare directement base[i] (simulation complète convergée) à la référence. */
                 model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                     ? base[i].pairing : base[i].energy;
             }
@@ -1180,13 +1177,8 @@ int main(int argc, char** argv) {
                             " E0_per_site=%.8f n_sites=%d converged=%d\n",
                         line++, br_rt->module, br_rt->u,
                         er_bm.ground_energy_eV, model_rt, n_sit_bm, er_bm.converged ? 1 : 0);
-            } else if (fabs(br_rt->u - probs[i].u_eV) > 1e-3) {
-                problem_t p_u = probs[i];
-                p_u.u_eV = br_rt->u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(br_rt->u * 1000), (int)probs[i].steps, NULL);
-                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
-                    ? r_u.pairing : r_u.energy;
             } else {
+                /* AC-09-FIX C39 (EXT) : même correction branche externe */
                 model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                     ? base[i].pairing : base[i].energy;
             }

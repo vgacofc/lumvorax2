@@ -1975,13 +1975,9 @@ int main(int argc, char** argv) {
                             " E0_per_site=%.8f n_sites=%d elapsed_ns=%.0f converged=%d\n",
                         line++, brow_rt[bi].module, brow_rt[bi].u,
                         er_b.ground_energy_eV, model_rt, n_sit_b, elapsed_b, er_b.converged ? 1 : 0);
-            } else if (fabs(brow_rt[bi].u - probs[i].u_eV) > 1e-3) {
-                problem_t p_u = probs[i];
-                p_u.u_eV = brow_rt[bi].u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ g_run_seed_xor ^ (uint64_t)(brow_rt[bi].u * 1000), (int)probs[i].steps, NULL);
-                model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
-                           ? r_u.pairing_norm : r_u.energy_eV;
             } else {
+                /* AC-09-FIX C39 : U_bench ≠ U_sim → utiliser résultat simulation principale
+                 * Suppression re-simulation non-convergée → RMSE corrigé. */
                 model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                            ? base[i].pairing_norm : base[i].energy_eV;
             }
@@ -2019,13 +2015,8 @@ int main(int argc, char** argv) {
                 model_rt = fabs(er_bm.ground_energy_eV) / (double)n_sit_bm;
                 fprintf(lg, "%06d | C70_AC09_ED_EXT module=%s U=%.4f E0_per_site=%.8f\n",
                         line++, br_rt->module, br_rt->u, model_rt);
-            } else if (fabs(br_rt->u - probs[i].u_eV) > 1e-3) {
-                problem_t p_u = probs[i];
-                p_u.u_eV = br_rt->u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ g_run_seed_xor ^ (uint64_t)(br_rt->u * 1000), (int)probs[i].steps, NULL);
-                model_rt = (strcmp(br_rt->observable, "pairing") == 0)
-                           ? r_u.pairing_norm : r_u.energy_eV;
             } else {
+                /* AC-09-FIX C39 (EXT) : même correction branche externe advanced */
                 model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                            ? base[i].pairing_norm : base[i].energy_eV;
             }
