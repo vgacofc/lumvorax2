@@ -15,6 +15,19 @@
 
 set -euo pipefail
 
+# ── GUARD AUTO-START : évite le démarrage au boot de Replit ─────────────────
+# Le fichier .c37_autorun_disabled bloque l'exécution automatique.
+# Pour lancer manuellement : rm <ce_répertoire>/.c37_autorun_disabled && bash run_research_cycle.sh
+# Pour réactiver l'auto-start : supprimer le fichier .c37_autorun_disabled
+_GUARD_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "$_GUARD_DIR/.c37_autorun_disabled" ]; then
+    echo "[C37-GUARD] $(date -u +%Y-%m-%dT%H:%M:%SZ) Cycle C37 : démarrage automatique BLOQUÉ."
+    echo "[C37-GUARD] Fichier de contrôle présent : $_GUARD_DIR/.c37_autorun_disabled"
+    echo "[C37-GUARD] Pour lancer manuellement :"
+    echo "[C37-GUARD]   rm $_GUARD_DIR/.c37_autorun_disabled && bash $_GUARD_DIR/run_research_cycle.sh"
+    exit 0
+fi
+
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPT_PATH="$(realpath "$0")"
 STAMP_UTC="$(date -u +%Y%m%dT%H%M%SZ)"

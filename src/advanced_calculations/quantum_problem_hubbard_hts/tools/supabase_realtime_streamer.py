@@ -183,6 +183,42 @@ def upload_batch(rows: list[dict], table=TABLE_LOGS) -> bool:
         print(f"[STREAMER][ERR] upload_batch: {e}", flush=True)
         return False
 
+# ── FK guard : quantum_run_files AVANT quantum_csv_rows ───────────────────
+_run_file_registered: set = set()
+
+def ensure_run_file_record(run_id: str) -> bool:
+    """Upsert dans quantum_run_files avant tout insert dans quantum_csv_rows.
+    Évite la violation de contrainte FK (quantum_csv_rows.run_id → quantum_run_files.run_id).
+    Conforme STANDARD_NAMES.md §J — colonne module NOT NULL."""
+    if run_id in _run_file_registered:
+        return True
+    if not _is_supabase_ok():
+        return False
+    data = {
+        "run_id":          run_id,
+        "file_path":       "lumvorax_stream_init",
+        "file_type":       "stream",
+        "module":          "lumvorax_stream",
+        "file_size_bytes": 0,
+        "sha256":          "",
+    }
+    try:
+        r = requests.post(
+            _rest("quantum_run_files"),
+            headers={**_hdrs(), "Prefer": "resolution=merge-duplicates,return=minimal"},
+            json=data, timeout=20
+        )
+        ok = r.status_code in (200, 201, 204)
+        if ok:
+            _run_file_registered.add(run_id)
+            print(f"[STREAMER-FK] ✓ quantum_run_files upsert run_id={run_id}", flush=True)
+        else:
+            print(f"[STREAMER-FK][WARN] {r.status_code}: {r.text[:120]}", flush=True)
+        return ok
+    except Exception as e:
+        print(f"[STREAMER-FK][ERR] {e}", flush=True)
+        return False
+
 # ── Raw CSV rows (quantum_csv_rows) ────────────────────────────────────────
 def upload_csv_rows(run_id: str, file_name: str, lines: list[str]) -> bool:
     """Upload des lignes brutes vers quantum_csv_rows.
@@ -192,7 +228,7 @@ def upload_csv_rows(run_id: str, file_name: str, lines: list[str]) -> bool:
     quantum_csv_rows_run_id_fkey. Sans cette garantie, l'insert enfant est rejeté
     avec un message 'Key (run_id)=(...) is not present in table quantum_run_files'.
     """
-    if not ensure_run_parent(run_id):
+    if not ensure_run_file_record(run_id):
         print(f"[STREAMER][WARN] upload_csv_rows: parent run_id={run_id} non créé — "
               f"insert quantum_csv_rows abandonné pour éviter FK violation", flush=True)
         return False
@@ -224,6 +260,8 @@ class FileWatcher:
         self._buffer      = []
         self._upload_ok   = 0
         self._upload_fail = 0
+        # FK guard : garantir que quantum_run_files(run_id) existe avant tout quantum_csv_rows
+        ensure_run_file_record(run_id)
 
     def _flush(self):
         if not self._buffer:

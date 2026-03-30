@@ -357,13 +357,12 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
      *   - temp_K → beta_local_pair : T_K / 27.0 (constante BC-05-H4 fitée QMC/DMRG)
      *   - t_eV + u_eV → h_scale_eV (amplitude hamiltonien total)
      *   - dt → dt_scale (pas de temps adaptatif borné par stabilité RK2) */
-    FORENSIC_LOG_TID("simulate_adv");
-    FORENSIC_LOG_CONV("simulate_adv", "K", "pair_scale_inv", 27.0,
-                      p->temp_K, p->temp_K / 27.0);
-    FORENSIC_LOG_CONV("simulate_adv", "eV_t+eV_u", "h_scale_eV", 1.0,
-                      fabs(p->t_eV) + fabs(p->u_eV), h_scale_eV);
-    FORENSIC_LOG_CONV("simulate_adv", "dt_raw_ns", "dt_scale_bounded", dt_scale,
-                      dt, dt_scale);
+    FORENSIC_LOG_THREAD_START("simulate_adv", "tid_record");
+    FORENSIC_LOG_ALGO("simulate_adv", "conv_K_pair_scale_inv:in",    p->temp_K);
+    FORENSIC_LOG_ALGO("simulate_adv", "conv_K_pair_scale_inv:out",   p->temp_K / 27.0);
+    FORENSIC_LOG_ALGO("simulate_adv", "conv_t_u_h_scale_eV:in",      fabs(p->t_eV) + fabs(p->u_eV));
+    FORENSIC_LOG_ALGO("simulate_adv", "conv_t_u_h_scale_eV:out",     h_scale_eV);
+    FORENSIC_LOG_ALGO("simulate_adv", "conv_dt_dt_scale:out",        dt_scale);
     FORENSIC_LOG_MODULE_METRIC("simulate_adv", "dt_scale",    dt_scale);
     FORENSIC_LOG_MODULE_METRIC("simulate_adv", "h_scale_eV",  h_scale_eV);
     FORENSIC_LOG_MODULE_METRIC("simulate_adv", "t_eV",        p->t_eV);
@@ -449,47 +448,35 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
                  * Traçabilité : qui (simulate_adv, tid courant), quand (step, site), quoi (op). */
                 if ((step == 0 || step % 100 == 0) && i < 4) {
                     /* TANH : transforme d_site en valeur physique bornée [-1,+1] */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "TANH_d",
-                                        d_before_tanh, 0.0, d[i],
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_TANH_d:before", d_before_tanh);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_TANH_d:after",  d[i]);
                     /* n_up = 0.5*(1+d) : occupation spin-up */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "n_up_from_d",
-                                        0.5, 1.0 + d[i], n_up,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_n_up_from_d:in",  0.5 * (1.0 + d[i]));
+                    FORENSIC_LOG_NANO("simulate_adv", "op_n_up_from_d:out", n_up);
                     /* n_dn = 0.5*(1-d) : occupation spin-down */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "n_dn_from_d",
-                                        0.5, 1.0 - d[i], n_dn,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_n_dn_from_d:in",  0.5 * (1.0 - d[i]));
+                    FORENSIC_LOG_NANO("simulate_adv", "op_n_dn_from_d:out", n_dn);
                     /* hopping = -0.5*d*(d_left+d_right) : terme cinétique */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "MUL_hopping_t",
-                                        -0.5 * d[i], d_left_t0 + d_right_t0, hopping_lr,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_hopping:in",  -0.5 * d[i]);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_hopping:out", hopping_lr);
                     /* contrib_U = U * n_up * n_dn : répulsion Hubbard */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "MUL_U_nup_ndn",
-                                        p->u_eV * n_up, n_dn, local_energy_contrib_U,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_U_nup_ndn:in",  p->u_eV * n_up);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_U_nup_ndn:out", local_energy_contrib_U);
                     /* contrib_t = -t * hopping : énergie cinétique */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "MUL_t_hopping",
-                                        -p->t_eV, hopping_lr, local_energy_contrib_t,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_t_hopping:in",  -p->t_eV);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_t_hopping:out", local_energy_contrib_t);
                     /* contrib_mu = -mu*(n_up+n_dn-1) : potentiel chimique */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "MUL_mu_occ",
-                                        -p->mu_eV, n_up + n_dn - 1.0, local_energy_contrib_mu,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_mu_occ:in",  -p->mu_eV);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_MUL_mu_occ:out", local_energy_contrib_mu);
                     /* local_energy = sum des 3 contrib */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "ADD_local_energy",
-                                        local_energy_contrib_U + local_energy_contrib_t,
-                                        local_energy_contrib_mu, local_energy,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_ADD_local_E:U_t",  local_energy_contrib_U + local_energy_contrib_t);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_ADD_local_E:out", local_energy);
                     /* division par sites : normalisation par volume */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "DIV_local_E_sites",
-                                        local_energy, (double)sites,
-                                        local_energy / (double)sites,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_DIV_E_sites:in",  local_energy);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_DIV_E_sites:out", local_energy / (double)sites);
                     /* local_pair = exp(-|d|*T/27) * (1+0.08*corr²) */
-                    FORENSIC_LOG_OP_FULL("simulate_adv", "local_pair_exp",
-                                        -fabs(d[i]) * p->temp_K / 27.0, 0.0, local_pair,
-                                        (long)step, (long)i);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_pair_exp:arg",    -fabs(d[i]) * p->temp_K / 27.0);
+                    FORENSIC_LOG_NANO("simulate_adv", "op_pair_exp:result", local_pair);
                     /* ring buffer NANO : valeurs intermédiaires complètes */
                     FORENSIC_LOG_NANO("simulate_adv", "n_up",              n_up);
                     FORENSIC_LOG_NANO("simulate_adv", "n_dn",              n_dn);
@@ -532,12 +519,10 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             }
             /* C72 : log direct dans CSV à step%100 — opérations INV_NORM + MUL_NORM */
             if (step == 0 || step % 100 == 0) {
-                FORENSIC_LOG_OP_FULL("simulate_adv", "INV_NORM",
-                                     norm_before, 0.0, inv_norm,
-                                     (long)step, -1L);
-                FORENSIC_LOG_OP_FULL("simulate_adv", "NORM_AFTER",
-                                     norm_after, 0.0, norm_after - 1.0,
-                                     (long)step, -1L);
+                FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:before", norm_before);
+                FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:result", inv_norm);
+                FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:val", norm_after);
+                FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:dev", norm_after - 1.0);
             }
         }
 
@@ -862,7 +847,7 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
     const int sites  = p->lx * p->ly;
 
     /* C72-GRANULAR : identification thread + setup pt_mc */
-    FORENSIC_LOG_TID("pt_mc");
+    FORENSIC_LOG_THREAD_START("pt_mc", "tid_record");
     FORENSIC_LOG_MODULE_METRIC("pt_mc", "N_SWEEPS",    (double)N_SW);
     FORENSIC_LOG_MODULE_METRIC("pt_mc", "N_THERMALIZE",(double)PT_MC_N_THERMALIZE);
     FORENSIC_LOG_MODULE_METRIC("pt_mc", "N_REPLICAS",  (double)R);
@@ -881,11 +866,10 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
          * Quoi : T_K × KB_EV_PER_K = T_eV, puis beta = 1/T_eV.
          * Formule : beta_r = 1 / (KB_EV_PER_K × T_rep[r])
          *           KB_EV_PER_K = 8.617333e-5 eV/K (constante de Boltzmann). */
-        FORENSIC_LOG_CONV("pt_mc", "K", "T_eV",
-                          KB_EV_PER_K, T_rep[r], KB_EV_PER_K * T_rep[r]);
-        FORENSIC_LOG_CONV("pt_mc", "T_eV", "beta_inv_eV",
-                          1.0 / (KB_EV_PER_K * T_rep[r]),
-                          KB_EV_PER_K * T_rep[r], beta_rep[r]);
+        FORENSIC_LOG_ALGO("pt_mc", "conv_K_T_eV:in",         T_rep[r]);
+        FORENSIC_LOG_ALGO("pt_mc", "conv_K_T_eV:out",        KB_EV_PER_K * T_rep[r]);
+        FORENSIC_LOG_ALGO("pt_mc", "conv_T_eV_beta_inv:in",  KB_EV_PER_K * T_rep[r]);
+        FORENSIC_LOG_ALGO("pt_mc", "conv_T_eV_beta_inv:out", beta_rep[r]);
         FORENSIC_LOG_MODULE_METRIC("pt_mc", "T_rep_K",   T_rep[r]);
         FORENSIC_LOG_MODULE_METRIC("pt_mc", "beta_rep_eV_inv", beta_rep[r]);
     }
@@ -1119,10 +1103,12 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
                     double variance = mean_p2 - mean_p * mean_p;
                     chi_intermed = (double)sites * variance / T_eV_cur;
                 }
-                FORENSIC_LOG_CHI_SWEEP("pt_mc_prod", sw, chi_intermed, p_cold_sw);
+                FORENSIC_LOG_NANO("pt_mc_prod", "chi_sw_idx",  (double)(sw));
+                FORENSIC_LOG_NANO("pt_mc_prod", "chi_val",     chi_intermed);
+                FORENSIC_LOG_NANO("pt_mc_prod", "chi_p_cold",  p_cold_sw);
                 /* Aussi : conversions unités locales pour ce sweep */
-                FORENSIC_LOG_CONV("pt_mc_prod", "K", "T_eV_prod",
-                                  KB_EV_PER_K, p->temp_K, T_eV_cur);
+                FORENSIC_LOG_ALGO("pt_mc_prod", "conv_K_T_eV_prod:in",  p->temp_K);
+                FORENSIC_LOG_ALGO("pt_mc_prod", "conv_K_T_eV_prod:out", T_eV_cur);
             }
         }
 
