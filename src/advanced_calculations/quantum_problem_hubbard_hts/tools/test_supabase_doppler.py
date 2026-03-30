@@ -35,7 +35,6 @@ import requests
 SUPABASE_URL    = ""
 SERVICE_KEY     = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 DOPPLER_TOKEN   = os.environ.get("DOPPLER_TOKEN", "").strip()
-DOPPLER_API_KEY = os.environ.get("DOPPLER_API_KEY", "").strip()
 
 def _derive_url():
     u = (os.environ.get("SUPABASE8_API_URL") or
@@ -72,34 +71,37 @@ record("SUPABASE_DB_HOST",           bool(os.environ.get("SUPABASE_DB_HOST",""))
 record("SUPABASE_DB_USER",           bool(os.environ.get("SUPABASE_DB_USER","")), "présent" if os.environ.get("SUPABASE_DB_USER") else "ABSENT")
 record("SUPABASE_DB_PASSWORD",       bool(os.environ.get("SUPABASE_DB_PASSWORD","")), "présent" if os.environ.get("SUPABASE_DB_PASSWORD") else "ABSENT")
 record("DOPPLER_TOKEN",              bool(DOPPLER_TOKEN),   "présent" if DOPPLER_TOKEN else "ABSENT")
-record("DOPPLER_API_KEY",            bool(DOPPLER_API_KEY), "présent" if DOPPLER_API_KEY else "ABSENT")
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TEST 2 — Connexion Doppler API
+# TEST 2 — Connexion Doppler API (uniquement DOPPLER_TOKEN)
 # ══════════════════════════════════════════════════════════════════════════════
 print("\n═══ TEST 2 : Connexion Doppler API ═══")
 def test_doppler():
-    for token_val, token_name in [(DOPPLER_TOKEN, "DOPPLER_TOKEN"), (DOPPLER_API_KEY, "DOPPLER_API_KEY")]:
-        if not token_val:
-            continue
-        try:
-            r = requests.get(
-                "https://api.doppler.com/v3/me",
-                headers={"Authorization": f"Bearer {token_val}"},
-                timeout=10
-            )
-            if r.status_code == 200:
-                data = r.json()
-                workplace = data.get("workplace", {}).get("name","—")
-                record(f"Doppler API ({token_name})", True, f"workplace={workplace}")
-                return True
-            else:
-                record(f"Doppler API ({token_name})", False, f"HTTP {r.status_code} — {r.text[:200]}")
-        except Exception as e:
-            record(f"Doppler API ({token_name})", False, str(e))
-    if not DOPPLER_TOKEN and not DOPPLER_API_KEY:
-        record("Doppler API", False, "aucun token disponible")
-    return False
+    if not DOPPLER_TOKEN:
+        record("Doppler API (DOPPLER_TOKEN)", False, "DOPPLER_TOKEN absent — définir dans Doppler dashboard")
+        return False
+    try:
+        r = requests.get(
+            "https://api.doppler.com/v3/me",
+            headers={"Authorization": f"Bearer {DOPPLER_TOKEN}"},
+            timeout=10
+        )
+        if r.status_code == 200:
+            data = r.json()
+            workplace = data.get("workplace", {}).get("name","—")
+            record("Doppler API (DOPPLER_TOKEN)", True, f"workplace={workplace}")
+            return True
+        elif r.status_code == 401:
+            print(f"  [{WARN}] Doppler API (DOPPLER_TOKEN) — HTTP 401 — Token invalide ou expiré")
+            print(f"         → Régénérer le Service Token dans : Doppler Dashboard → Projet → Config → Access")
+            results.append(("Doppler API (DOPPLER_TOKEN)", False))
+            return False
+        else:
+            record("Doppler API (DOPPLER_TOKEN)", False, f"HTTP {r.status_code} — {r.text[:200]}")
+            return False
+    except Exception as e:
+        record("Doppler API (DOPPLER_TOKEN)", False, str(e))
+        return False
 
 doppler_ok = test_doppler()
 
@@ -146,7 +148,7 @@ elif not SERVICE_KEY:
 else:
     try:
         r = requests.get(f"{SUPABASE_URL}/rest/v1/", headers=_hdrs(), timeout=10)
-        rest_ok = r.status_code in (200, 404)  # 404 = pas de table listée mais connexion ok
+        rest_ok = r.status_code in (200, 404)
         record("Supabase REST endpoint", rest_ok, f"HTTP {r.status_code}")
     except Exception as e:
         record("Supabase REST endpoint", False, str(e))
@@ -156,6 +158,7 @@ else:
 # ══════════════════════════════════════════════════════════════════════════════
 print("\n═══ TEST 4 : Connexion PostgreSQL directe ═══")
 pg_ok = False
+pg_conn_params = {}  # stocke les params du pooler qui a réussi pour TEST 6
 try:
     import re as _re
     import psycopg2
@@ -183,11 +186,14 @@ try:
         d = _re.search(r'-d\s+(\S+)', url2)
         if h and u and db_pass:
             try:
-                pg_ver = _try_pg_connect(
-                    h.group(1), int(p.group(1)) if p else 6543,
-                    u.group(1), db_pass, d.group(1) if d else "postgres"
-                )
+                _host = h.group(1)
+                _port = int(p.group(1)) if p else 6543
+                _user = u.group(1)
+                _db   = d.group(1) if d else "postgres"
+                pg_ver = _try_pg_connect(_host, _port, _user, db_pass, _db)
                 pg_ok = True
+                pg_conn_params = {"host": _host, "port": _port, "user": _user,
+                                  "password": db_pass, "dbname": _db}
                 record("PostgreSQL pooler (SUPABASE_URL2)", True, pg_ver[:80])
             except Exception as e1:
                 record("PostgreSQL pooler (SUPABASE_URL2)", False, str(e1)[:100])
@@ -204,9 +210,12 @@ try:
             try:
                 pg_ver = _try_pg_connect(db_host, db_port, db_user, db_pass, db_name)
                 pg_ok = True
+                pg_conn_params = {"host": db_host, "port": db_port, "user": db_user,
+                                  "password": db_pass, "dbname": db_name}
                 record("PostgreSQL direct", True, pg_ver[:80])
             except Exception as e2:
-                record("PostgreSQL direct", False, str(e2)[:120])
+                print(f"  [{WARN}] PostgreSQL direct inaccessible (réseau) — {str(e2)[:100]}")
+                results.append(("PostgreSQL direct", False))
 except Exception as e:
     record("PostgreSQL direct", False, str(e)[:120])
 
@@ -215,7 +224,6 @@ except Exception as e:
 # ══════════════════════════════════════════════════════════════════════════════
 print("\n═══ TEST 5 : Tables Supabase (Section J) ═══")
 
-# Tables officiales STANDARD_NAMES.md Section J
 TABLES_REQUIRED = {
     "quantum_run_files": {
         "cols": ["run_id","module","lx","ly","t_ev","u_ev","mu_ev",
@@ -275,18 +283,18 @@ for table, meta in TABLES_REQUIRED.items():
         record(f"Table '{table}'", False, str(e)[:80])
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TEST 6 — Vérification colonnes exactes (STANDARD_NAMES.md)
+# TEST 6 — Vérification colonnes exactes (STANDARD_NAMES.md) via pooler
 # ══════════════════════════════════════════════════════════════════════════════
 print("\n═══ TEST 6 : Colonnes STANDARD_NAMES.md (noms exacts) ═══")
-if pg_ok:
+if pg_ok and pg_conn_params:
     try:
         import psycopg2
         conn = psycopg2.connect(
-            host=os.environ.get("SUPABASE_DB_HOST",""),
-            user=os.environ.get("SUPABASE_DB_USER","postgres"),
-            password=os.environ.get("SUPABASE_DB_PASSWORD",""),
-            port=int(os.environ.get("SUPABASE_DB_PORT","5432")),
-            dbname=os.environ.get("SUPABASE_DB_NAME","postgres"),
+            host=pg_conn_params["host"],
+            user=pg_conn_params["user"],
+            password=pg_conn_params["password"],
+            port=pg_conn_params["port"],
+            dbname=pg_conn_params["dbname"],
             connect_timeout=10, sslmode="require"
         )
         cur = conn.cursor()
@@ -310,9 +318,10 @@ if pg_ok:
             record(f"Colonnes '{table}'", ok, detail)
         conn.close()
     except Exception as e:
-        print(f"  [{WARN}] Vérification colonnes : {e}")
+        print(f"  [{WARN}] Vérification colonnes : réseau inaccessible — {str(e)[:120]}")
+        print(f"         → TEST 6 ignoré (connexion PostgreSQL directe non disponible depuis Replit)")
 else:
-    print(f"  [{WARN}] Vérification colonnes ignorée (PostgreSQL non disponible)")
+    print(f"  [{WARN}] Vérification colonnes ignorée (PostgreSQL non disponible via pooler)")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TEST 7 — Écriture + lecture test dans quantum_realtime_logs
@@ -343,16 +352,16 @@ else:
 # ══════════════════════════════════════════════════════════════════════════════
 # TEST 8 — Création tables manquantes (--create-tables)
 # ══════════════════════════════════════════════════════════════════════════════
-if "--create-tables" in sys.argv and pg_ok:
+if "--create-tables" in sys.argv and pg_ok and pg_conn_params:
     print("\n═══ CRÉATION des tables manquantes ═══")
     try:
         import psycopg2
         conn = psycopg2.connect(
-            host=os.environ.get("SUPABASE_DB_HOST",""),
-            user=os.environ.get("SUPABASE_DB_USER","postgres"),
-            password=os.environ.get("SUPABASE_DB_PASSWORD",""),
-            port=int(os.environ.get("SUPABASE_DB_PORT","5432")),
-            dbname=os.environ.get("SUPABASE_DB_NAME","postgres"),
+            host=pg_conn_params["host"],
+            user=pg_conn_params["user"],
+            password=pg_conn_params["password"],
+            port=pg_conn_params["port"],
+            dbname=pg_conn_params["dbname"],
             connect_timeout=10, sslmode="require"
         )
         cur = conn.cursor()

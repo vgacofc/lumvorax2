@@ -1006,7 +1006,7 @@ int main(int argc, char** argv) {
             if (fabs(brow_rt[bi].u - probs[i].u_eV) > 1e-3) {
                 problem_t p_u = probs[i];
                 p_u.u_eV = brow_rt[bi].u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(brow_rt[bi].u * 1000), 40, NULL);
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(brow_rt[bi].u * 1000), (int)probs[i].steps, NULL);
                 model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                     ? r_u.pairing : r_u.energy;
             } else {
@@ -1043,7 +1043,7 @@ int main(int argc, char** argv) {
             if (fabs(br_rt->u - probs[i].u_eV) > 1e-3) {
                 problem_t p_u = probs[i];
                 p_u.u_eV = br_rt->u;
-                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(br_rt->u * 1000), 40, NULL);
+                sim_result_t r_u = simulate_fullscale(&p_u, (uint64_t)(0xABC000 + i) ^ (uint64_t)(br_rt->u * 1000), (int)probs[i].steps, NULL);
                 model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                     ? r_u.pairing : r_u.energy;
             } else {
