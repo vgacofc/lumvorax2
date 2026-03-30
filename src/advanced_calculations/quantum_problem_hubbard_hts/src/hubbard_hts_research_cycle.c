@@ -325,25 +325,40 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             double hopping_lr = -0.5 * d[i] * (d_left + d_right);
             /* BC-05-H4 : constante physique corrigée 65→27 K (fit QMC/DMRG, RMSE≈0.007) */
             double local_pair = exp(-fabs(d[i]) * p->temp_K / 27.0) * (1.0 + 0.08 * corr[i] * corr[i]);
-            /* BC-LV04 : trace forensique local_pair au site 0, step 0 uniquement */
-            if (step == 0 && i == 0) {
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "local_pair_site0_step0", local_pair);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "d_site0_step0",          d[i]);
-                /* C70-GRANULARITY §2 : décomposition terme par terme du Hamiltonien Hubbard (site 0, step 0) */
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "n_up_site0",            n_up);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "n_dn_site0",            n_dn);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "corr_alpha_site0",      (step < 500) ? 0.05 : 0.15);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "corr_val_site0",        corr[i]);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "k1_rk2_site0",          k1);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "hopping_lr_site0",      hopping_lr);
+            /* FORENSIC GRANULAIRE TOTAL §SITE-STEP : CHAQUE site × CHAQUE step — ZÉRO filtre.
+             * Directive : log_all_sites_all_steps — aucun filtre sur i ni sur step.
+             * Clé dynamique format "metric_sN" avec N=indice du site. */
+            {
+                char _lv_k[80];
+                snprintf(_lv_k, sizeof(_lv_k), "local_pair_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, local_pair);
+                snprintf(_lv_k, sizeof(_lv_k), "d_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, d[i]);
+                snprintf(_lv_k, sizeof(_lv_k), "n_up_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, n_up);
+                snprintf(_lv_k, sizeof(_lv_k), "n_dn_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, n_dn);
+                snprintf(_lv_k, sizeof(_lv_k), "corr_alpha_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, (step < 500) ? 0.05 : 0.15);
+                snprintf(_lv_k, sizeof(_lv_k), "corr_val_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, corr[i]);
+                snprintf(_lv_k, sizeof(_lv_k), "k1_rk2_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, k1);
+                snprintf(_lv_k, sizeof(_lv_k), "hopping_lr_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, hopping_lr);
             }
             double local_energy = p->u_eV * n_up * n_dn - p->t_eV * hopping_lr - p->mu_eV * (n_up + n_dn - 1.0);
-            /* C70-GRANULARITY §3 : décomposition additive locale (site 0, step 0) */
-            if (step == 0 && i == 0) {
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "U_term_site0",    p->u_eV * n_up * n_dn);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "t_hop_site0",    -p->t_eV * hopping_lr);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "mu_occ_site0",   -p->mu_eV * (n_up + n_dn - 1.0));
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "local_e_site0",   local_energy);
+            /* FORENSIC GRANULAIRE TOTAL §HAMILTONIAN-SITE : décomposition U/t/mu CHAQUE site × CHAQUE step */
+            {
+                char _lv_k2[80];
+                snprintf(_lv_k2, sizeof(_lv_k2), "U_term_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, p->u_eV * n_up * n_dn);
+                snprintf(_lv_k2, sizeof(_lv_k2), "t_hop_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, -p->t_eV * hopping_lr);
+                snprintf(_lv_k2, sizeof(_lv_k2), "mu_occ_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, -p->mu_eV * (n_up + n_dn - 1.0));
+                snprintf(_lv_k2, sizeof(_lv_k2), "local_e_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, local_energy);
             }
 
             step_energy += local_energy / (double)(sites);
@@ -358,18 +373,15 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
         /* BC-05-H3 : réversion BC-04 — diviseur N seul (BCS estimateur déjà normalisé) */
         step_pairing /= (double)sites;
         step_sign /= (double)sites;
-        /* BC-LV04 + C70-GRANULARITY §4 : checkpoints énergétiques complets (step 0 + tous les 500 steps + step final).
-         * Permet de reconstruire la convergence MC et détecter les dérives d'énergie/pairing au fil du calcul. */
-        if (step == 0 || (step % 500 == 0) || (step == p->steps - 1)) {
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_step",        (double)step);
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_energy_eV",   step_energy);
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_pairing",     step_pairing);
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_sign",        step_sign);
-        }
-        if (step == 0) {
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_pairing_norm_step0", step_pairing);
-            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_energy_norm_step0",  step_energy);
-        }
+        /* FORENSIC GRANULAIRE TOTAL §CKPT-ALL-STEPS : log énergie/pairing/sign à CHAQUE step — ZÉRO filtre.
+         * Directive : log_every_step — step 0 à steps-1 sans exception.
+         * Anciens filtres supprimés : step%500, step==0 seul. */
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_step",              (double)step);
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_energy_eV",         step_energy);
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_pairing",           step_pairing);
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_sign",              step_sign);
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_pairing_norm",      step_pairing);
+        FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_energy_norm",       step_energy);
 
         /* Normalisation vecteur d'état à chaque pas (cohérence avec advanced_parallel) */
         normalize_state_vector(d, sites);

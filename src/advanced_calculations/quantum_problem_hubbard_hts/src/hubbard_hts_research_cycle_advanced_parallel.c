@@ -429,10 +429,14 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
 
             /* BC-05-H4 : constante physique corrigée 65→27 K (fit QMC/DMRG, RMSE≈0.007) */
             double local_pair = exp(-fabs(d[i]) * p->temp_K / 27.0) * (1.0 + 0.08 * corr[i] * corr[i]);
-            /* BC-LV04 : trace forensique step 0, site 0 */
-            if (step == 0 && i == 0) {
-                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "local_pair_site0_step0", local_pair);
-                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "d_site0_step0", d[i]);
+            /* FORENSIC GRANULAIRE TOTAL §ADV-SITE-STEP : CHAQUE site × CHAQUE step — ZÉRO filtre.
+             * Anciens filtres supprimés : step==0 && i==0 */
+            {
+                char _lv_adv[80];
+                snprintf(_lv_adv, sizeof(_lv_adv), "local_pair_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", _lv_adv, local_pair);
+                snprintf(_lv_adv, sizeof(_lv_adv), "d_s%d", i);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", _lv_adv, d[i]);
             }
 
             /* C72-TANH-OP : traçabilité opération TANH — déjà appliqué ci-dessus.
@@ -444,9 +448,9 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
                 double local_energy_contrib_mu = -p->mu_eV * (n_up + n_dn - 1.0);
                 double local_energy = local_energy_contrib_U + local_energy_contrib_t + local_energy_contrib_mu;
 
-                /* C72-OP-SITE : à step%100, 4 premiers sites → opérations élémentaires complètes.
-                 * Traçabilité : qui (simulate_adv, tid courant), quand (step, site), quoi (op). */
-                if ((step == 0 || step % 100 == 0) && i < 4) {
+                /* FORENSIC GRANULAIRE TOTAL §OP-SITE : CHAQUE step × CHAQUE site — ZÉRO filtre.
+                 * Anciens filtres supprimés : step%100 && i<4 */
+                {
                     /* TANH : transforme d_site en valeur physique bornée [-1,+1] */
                     FORENSIC_LOG_NANO("simulate_adv", "op_TANH_d:before", d_before_tanh);
                     FORENSIC_LOG_NANO("simulate_adv", "op_TANH_d:after",  d[i]);
@@ -510,20 +514,16 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             double norm_after  = state_vector_norm(d, sites);
             double inv_norm = (norm_before > 1e-15) ? 1.0 / norm_before : 0.0;
 
-            /* Ring buffer NANO à step%1000 — valeurs intermédiaires */
-            if (step == 0 || step % 1000 == 0) {
-                FORENSIC_LOG_NANO("simulate_adv", "norm_before_renorm", norm_before);
-                FORENSIC_LOG_NANO("simulate_adv", "norm_after_renorm",  norm_after);
-                FORENSIC_LOG_NANO("simulate_adv", "inv_norm_factor",    inv_norm);
-                FORENSIC_LOG_NANO("simulate_adv", "norm_step",          (double)step);
-            }
-            /* C72 : log direct dans CSV à step%100 — opérations INV_NORM + MUL_NORM */
-            if (step == 0 || step % 100 == 0) {
-                FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:before", norm_before);
-                FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:result", inv_norm);
-                FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:val", norm_after);
-                FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:dev", norm_after - 1.0);
-            }
+            /* FORENSIC GRANULAIRE TOTAL §NORM-ALL-STEPS : CHAQUE step — ZÉRO filtre.
+             * Anciens filtres supprimés : step%1000 (ring buffer) et step%100 (INV_NORM/MUL_NORM). */
+            FORENSIC_LOG_NANO("simulate_adv", "norm_before_renorm", norm_before);
+            FORENSIC_LOG_NANO("simulate_adv", "norm_after_renorm",  norm_after);
+            FORENSIC_LOG_NANO("simulate_adv", "inv_norm_factor",    inv_norm);
+            FORENSIC_LOG_NANO("simulate_adv", "norm_step",          (double)step);
+            FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:before", norm_before);
+            FORENSIC_LOG_NANO("simulate_adv", "op_INV_NORM:result", inv_norm);
+            FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:val",  norm_after);
+            FORENSIC_LOG_NANO("simulate_adv", "op_NORM_AFTER:dev",  norm_after - 1.0);
         }
 
         double norm_dev = fabs(state_vector_norm(d, sites) - 1.0);
@@ -531,11 +531,10 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
         /* BC-05-H3 : réversion BC-04 — diviseur N seul (BCS estimateur déjà normalisé) */
         step_pairing /= (double)sites;
         step_sign /= (double)sites;
-        /* BC-LV04 : métriques step 0 après normalisation */
-        if (step == 0) {
-            FORENSIC_LOG_MODULE_METRIC("simulate_adv", "step_pairing_norm_step0", step_pairing);
-            FORENSIC_LOG_MODULE_METRIC("simulate_adv", "step_energy_norm_step0", step_energy);
-        }
+        /* FORENSIC GRANULAIRE TOTAL §STEP-NORM : log pairing/energy normalisés à CHAQUE step — ZÉRO filtre.
+         * Ancien filtre supprimé : step==0 seul. */
+        FORENSIC_LOG_MODULE_METRIC("simulate_adv", "step_pairing_norm", step_pairing);
+        FORENSIC_LOG_MODULE_METRIC("simulate_adv", "step_energy_norm",  step_energy);
 
         (void)burn_scale;
         (void)collective_mode;
@@ -1089,12 +1088,9 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
             chi_pair_sq_sum += p_cold_sw * p_cold_sw;
             chi_n++;
 
-            /* C72-CHI-SWEEP : log chi_sc intermédiaire toutes les 1000 sweeps.
-             * Permet de reconstruire l'historique complet de χ_sc(T) pour détecter
-             * le pic de Tc secondaire. Formule intermédiaire :
-             *   chi_sc_curr = N × (⟨P²⟩ - ⟨P⟩²) / T_eV (avec N = chi_n mesures courantes)
-             * À chaque 1000 sweeps : qui (pt_mc, thread courant), quand (sw), quoi (chi_sc, pairing). */
-            if (sw == 0 || sw % 1000 == 0) {
+            /* FORENSIC GRANULAIRE TOTAL §CHI-ALL-SWEEPS : chi_sc à CHAQUE sweep — ZÉRO filtre.
+             * Ancien filtre supprimé : sw%1000. Chaque sweep produit χ_sc intermédiaire. */
+            {
                 double T_eV_cur = KB_EV_PER_K * p->temp_K;
                 double chi_intermed = 0.0;
                 if (chi_n > 1 && T_eV_cur > 1e-12) {
@@ -1106,7 +1102,6 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
                 FORENSIC_LOG_NANO("pt_mc_prod", "chi_sw_idx",  (double)(sw));
                 FORENSIC_LOG_NANO("pt_mc_prod", "chi_val",     chi_intermed);
                 FORENSIC_LOG_NANO("pt_mc_prod", "chi_p_cold",  p_cold_sw);
-                /* Aussi : conversions unités locales pour ce sweep */
                 FORENSIC_LOG_ALGO("pt_mc_prod", "conv_K_T_eV_prod:in",  p->temp_K);
                 FORENSIC_LOG_ALGO("pt_mc_prod", "conv_K_T_eV_prod:out", T_eV_cur);
             }
@@ -1123,11 +1118,9 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
         FORENSIC_LOG_NANO("pt_mc", "delta_mc",   delta_mc);
         FORENSIC_LOG_NANO("pt_mc", "E_cold",     E_rep[0]);
         FORENSIC_LOG_NANO("pt_mc", "elapsed_ns", (double)(now_ns() - t0));
-        /* FORENSIC_LOG_HW_SAMPLE toutes les 100 sweeps — lit /proc/stat et /proc/meminfo.
-         * Garantit la traçabilité RAM/CPU 100% exigée sans flood I/O à chaque sweep. */
-        if (sw % 100 == 0) {
-            FORENSIC_LOG_HW_SAMPLE("pt_mc");
-        }
+        /* FORENSIC GRANULAIRE TOTAL §HW-ALL-SWEEPS : HW_SAMPLE à CHAQUE sweep — ZÉRO filtre.
+         * Ancien filtre supprimé : sw%100. CPU/RAM tracés à chaque sweep sans exception. */
+        FORENSIC_LOG_HW_SAMPLE("pt_mc");
 
         /* G-C23-01 : Enregistrement CSV à CHAQUE sweep de production (pas seulement 7).
          * Granularité 100% : chaque sweep × chaque réplique, avec métriques Metropolis. */
