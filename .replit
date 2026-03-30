@@ -12,30 +12,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Run Python"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Quantum Research Cycle C37"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "LumVorax Visualisation"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Start application"
-
-[[workflows.workflow]]
-name = "Run Python"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python main.py"
-
-[workflows.workflow.metadata]
-outputType = "console"
 
 [[workflows.workflow]]
 name = "git fetch "
@@ -47,62 +24,15 @@ task = "shell.exec"
 args = "git fetch origin git reset --hard origin/main"
 
 [[workflows.workflow]]
-name = "chmod +x generate_ssh_key.sh"
-mode = "sequential"
-author = 54178035
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "chmod +x generate_ssh_key.sh"
-
-[[workflows.workflow]]
-name = "bash generate_ssh_key.sh"
-mode = "sequential"
-author = 54178035
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "bash generate_ssh_key.sh"
-
-[[workflows.workflow]]
-name = "ssh -T git@github.com"
-mode = "sequential"
-author = 54178035
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "ssh -T git@github.com"
-
-[[workflows.workflow]]
-name = "Quantum Research Cycle C37"
+name = "Start application"
 author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd src/advanced_calculations/quantum_problem_hubbard_hts && bash run_research_cycle.sh"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow]]
-name = "LumVorax Visualisation"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python src/visualization/server.py"
-waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
 
-[[workflows.workflow]]
-name = "Start application"
-author = "agent"
-
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+args = "python3 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload --chdir src/visualization server:app"
 waitForPort = 5000
 
 [nix]

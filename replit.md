@@ -25,9 +25,7 @@ Any script that imports torch must either:
 2. Preload the library manually via `ctypes.CDLL(path)` before `import torch`
 
 ## Workflows
-- **Run Python**: Runs `python main.py` (entry point / smoke test)
-- **Quantum Research Cycle C37**: Runs the full C-based HTS research cycle via `bash run_research_cycle.sh`
-- **LumVorax Visualisation**: Serveur Flask (port 5000) — module de visualisation 3D/2D des simulations Hubbard-HTS
+- **Start application**: Runs the Flask visualization server via `python3 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload --chdir src/visualization server:app` (port 5000, webview)
 
 ## Module de Visualisation (`src/visualization/`)
 - **server.py** : Serveur Flask exposant les données réelles des runs via API REST (`/api/viz/*`)
