@@ -1,0 +1,45 @@
+
+═══ TEST 1 : Variables d'environnement (Section H) ═══
+  [✔ PASS] SUPABASE8_API_URL — https://mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_SERVICE_ROLE_KEY — présent
+  [✔ PASS] SUPABASE_DB_HOST — db.mwdeqpfxbcdayaelwqht.supabase.co
+  [✔ PASS] SUPABASE_DB_USER — présent
+  [✔ PASS] SUPABASE_DB_PASSWORD — présent
+  [✔ PASS] DOPPLER_TOKEN — présent
+
+═══ TEST 2 : Connexion Doppler API ═══
+  [⚠ WARN] Doppler API (DOPPLER_TOKEN) — HTTP 401 — Token invalide ou expiré
+         → Régénérer le Service Token dans : Doppler Dashboard → Projet → Config → Access
+
+═══ TEST 3 : Connexion Supabase REST (PostgREST) ═══
+  [✔ PASS] Supabase REST endpoint — HTTP 200
+
+═══ TEST 4 : Connexion PostgreSQL directe ═══
+  [✔ PASS] PostgreSQL pooler (SUPABASE_URL2) — PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-b
+
+═══ TEST 5 : Tables Supabase (Section J) ═══
+  [✔ PASS] Table 'quantum_run_files'
+  [✔ PASS] Table 'quantum_csv_rows'
+  [✔ PASS] Table 'quantum_benchmarks'
+  [✔ PASS] Table 'run_scores'
+  [✔ PASS] Table 'benchmark_runtime'
+  [✔ PASS] Table 'research_modules_config'
+  [✔ PASS] Table 'problems_config'
+  [✔ PASS] Table 'quantum_realtime_logs'
+
+═══ TEST 6 : Colonnes STANDARD_NAMES.md (noms exacts) ═══
+  [✔ PASS] Colonnes 'quantum_run_files' — EXTRA=['id'] 
+  [✔ PASS] Colonnes 'quantum_csv_rows' — EXTRA=['id'] 
+  [✔ PASS] Colonnes 'quantum_benchmarks' — EXTRA=['u_ev'] 
+  [✔ PASS] Colonnes 'run_scores' — EXTRA=['modules_ok', 'modules_total', 'cpu_peak_pct', 'mem_peak_pct', 'elapsed_ns', 'research_execution_bytes'] 
+  [✘ FAIL] Colonnes 'benchmark_runtime' — MANQUANTES=['dataset', 'u_over_t'] EXTRA=['id', 'benchmark_type', 'u_ev', 'rmse_global', 'mae_global', 'pct_within_global'] 
+  [✔ PASS] Colonnes 'research_modules_config' — 11 colonnes OK
+  [✘ FAIL] Colonnes 'problems_config' — MANQUANTES=['enabled'] EXTRA=['cycle', 'notes'] 
+  [✔ PASS] Colonnes 'quantum_realtime_logs' — 11 colonnes OK
+
+═══ TEST 7 : Écriture temps réel (quantum_realtime_logs) ═══
+  [✔ PASS] Écriture quantum_realtime_logs — HTTP 201
+
+════════════════════════════════════════════════════════════
+  RÉSULTAT : 23/26 tests passés — 3 échecs
+  [✘ FAIL] 3 problème(s) détecté(s) — corriger avant lancement simulation

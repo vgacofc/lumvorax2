@@ -81,48 +81,43 @@ def test_doppler():
         record("Doppler API (DOPPLER_TOKEN)", False, "DOPPLER_TOKEN absent — définir dans Doppler dashboard")
         return False
     try:
+        # Essai 1 : Service Token → endpoint secrets du projet (usage réel du token)
         r = requests.get(
+            "https://api.doppler.com/v3/configs/config/secrets",
+            headers={"Authorization": f"Bearer {DOPPLER_TOKEN}"},
+            params={"project": "lumvorax", "config": "dev_lumvorax"},
+            timeout=10
+        )
+        if r.status_code == 200:
+            secrets = r.json().get("secrets", {})
+            n_supa = sum(1 for k in secrets if "SUPABASE" in k)
+            record("Doppler API (DOPPLER_TOKEN)", True,
+                   f"Service Token OK — {n_supa} clés SUPABASE dans lumvorax/dev_lumvorax")
+            return True
+        # Essai 2 : Personal Token → endpoint /me
+        r2 = requests.get(
             "https://api.doppler.com/v3/me",
             headers={"Authorization": f"Bearer {DOPPLER_TOKEN}"},
             timeout=10
         )
-        if r.status_code == 200:
-            data = r.json()
+        if r2.status_code == 200:
+            data = r2.json()
             workplace = data.get("workplace", {}).get("name","—")
-            record("Doppler API (DOPPLER_TOKEN)", True, f"workplace={workplace}")
+            record("Doppler API (DOPPLER_TOKEN)", True, f"Personal Token OK — workplace={workplace}")
             return True
-        elif r.status_code == 401:
-            print(f"  [{WARN}] Doppler API (DOPPLER_TOKEN) — HTTP 401 — Token invalide ou expiré")
-            print(f"         → Régénérer le Service Token dans : Doppler Dashboard → Projet → Config → Access")
+        elif r2.status_code == 401:
+            print(f"  [{WARN}] Doppler API (DOPPLER_TOKEN) — HTTP 401 sur /secrets ET /me")
+            print(f"         → Vérifier : projet='lumvorax', config='dev_lumvorax' OU régénérer le token")
             results.append(("Doppler API (DOPPLER_TOKEN)", False))
             return False
         else:
-            record("Doppler API (DOPPLER_TOKEN)", False, f"HTTP {r.status_code} — {r.text[:200]}")
+            record("Doppler API (DOPPLER_TOKEN)", False, f"HTTP {r2.status_code} — {r2.text[:100]}")
             return False
     except Exception as e:
         record("Doppler API (DOPPLER_TOKEN)", False, str(e))
         return False
 
 doppler_ok = test_doppler()
-
-# Test secrets Doppler (liste les secrets disponibles)
-if doppler_ok and DOPPLER_TOKEN:
-    try:
-        r2 = requests.get(
-            "https://api.doppler.com/v3/configs/config/secrets",
-            headers={"Authorization": f"Bearer {DOPPLER_TOKEN}"},
-            params={"project": "lumvorax", "config": "dev_lumvorax"},
-            timeout=10
-        )
-        if r2.status_code == 200:
-            secrets = r2.json().get("secrets", {})
-            has_supa = any("SUPABASE" in k for k in secrets)
-            record("Doppler secrets SUPABASE présents", has_supa,
-                   f"{sum(1 for k in secrets if 'SUPABASE' in k)} clés SUPABASE trouvées")
-        else:
-            print(f"  [{WARN}] Doppler secrets : HTTP {r2.status_code} (projet/config peut différer)")
-    except Exception as e:
-        print(f"  [{WARN}] Doppler secrets : {e}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TEST 3 — Connexion Supabase REST (PostgREST)
@@ -244,9 +239,10 @@ TABLES_REQUIRED = {
                  "notes","created_at"]
     },
     "benchmark_runtime": {
-        "cols": ["run_id","dataset","module","observable","t_k","u_over_t",
+        "cols": ["run_id","benchmark_type","u_ev","module","observable","t_k",
                  "reference_value","error_bar","model_value","abs_error",
-                 "rel_error","within_error_bar","created_at"]
+                 "rel_error","within_error_bar","rmse_global","mae_global",
+                 "pct_within_global","created_at"]
     },
     "research_modules_config": {
         "cols": ["id","module","lx","ly","t_ev","u_ev","mu_ev","temp_k",
@@ -254,7 +250,7 @@ TABLES_REQUIRED = {
     },
     "problems_config": {
         "cols": ["id","name","lx","ly","t_ev","u_ev","mu_ev","temp_k",
-                 "dt","steps","enabled","created_at"]
+                 "dt","steps","cycle","notes","created_at"]
     },
     "quantum_realtime_logs": {
         "cols": ["id","run_id","ts_utc","ts_ns","pid","event_type",

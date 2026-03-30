@@ -400,6 +400,52 @@ Format d'une ligne : `METRIC,timestamp_utc,timestamp_ns,pid,PRÉFIXE:nom_métriq
 | `notes` | text | Notes libres sur le run |
 | `created_at` | timestamp | Date création auto |
 
+### Colonnes table `benchmark_runtime` (NOM D'ORIGINE — vérifié Supabase 2026-03-30)
+
+| NOM D'ORIGINE (colonne Supabase) | Type | Description |
+|---|---|---|
+| `id` | int | Clé primaire auto |
+| `run_id` | text | Identifiant run |
+| `benchmark_type` | text | Type de benchmark (`qmc_dmrg` ou `external`) |
+| `u_ev` | float | U en eV (paramètre Hubbard) |
+| `module` | text | Nom du module (conforme Section D) |
+| `observable` | text | `energy_eV` ou `pairing` |
+| `t_k` | float | Température en Kelvin |
+| `reference_value` | float | Valeur de référence publiée |
+| `error_bar` | float | Barre d'erreur sur la référence |
+| `model_value` | float | Valeur simulée par le modèle |
+| `abs_error` | float | Erreur absolue `|model - ref|` |
+| `rel_error` | float | Erreur relative |
+| `within_error_bar` | bool | 1 si `abs_error ≤ error_bar` |
+| `rmse_global` | float | RMSE global de la session |
+| `mae_global` | float | MAE global de la session |
+| `pct_within_global` | float | % points dans barre d'erreur (global) |
+| `created_at` | timestamp | Date création auto |
+
+> **Note C71-2026-03-30** : Les colonnes `dataset` et `u_over_t` (anciennes définitions) sont ABSENTES de Supabase.
+> Utiliser `benchmark_type` et `u_ev` à la place — conforme schéma réel vérifié via PostgreSQL pooler.
+
+### Colonnes table `problems_config` (NOM D'ORIGINE — vérifié Supabase 2026-03-30)
+
+| NOM D'ORIGINE (colonne Supabase) | Type | Description |
+|---|---|---|
+| `id` | int | Clé primaire auto |
+| `name` | text | Nom du problème (conforme Section D) |
+| `lx` | int | Dimension x de la grille |
+| `ly` | int | Dimension y de la grille |
+| `t_ev` | float | Paramètre de hopping t (eV) |
+| `u_ev` | float | Paramètre d'interaction U (eV) |
+| `mu_ev` | float | Potentiel chimique µ (eV) |
+| `temp_k` | float | Température en Kelvin |
+| `dt` | float | Pas de temps dt |
+| `steps` | int | Nombre de steps MC |
+| `cycle` | int | Numéro de cycle de recherche |
+| `notes` | text | Notes libres |
+| `created_at` | timestamp | Date création auto |
+
+> **Note C71-2026-03-30** : La colonne `enabled` (ancienne définition) est ABSENTE de Supabase.
+> Les colonnes réelles sont `cycle` et `notes` — conforme schéma réel vérifié via PostgreSQL pooler.
+
 ### Format CSV benchmark de référence (NOM D'ORIGINE — 7 colonnes)
 
 > Fichiers : `benchmarks/qmc_dmrg_reference_runtime.csv` et `benchmarks/external_module_benchmarks_runtime.csv`
