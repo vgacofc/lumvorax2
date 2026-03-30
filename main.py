@@ -1,5 +1,6 @@
 import ctypes
 import os
+import sys
 
 _lib_paths = [
     "/nix/store/bmi5znnqk4kg2grkrhk6py0irc8phf6l-gcc-14.2.1.20250322-lib/lib/libstdc++.so.6",
@@ -11,10 +12,8 @@ for _p in _lib_paths:
         ctypes.CDLL(_p)
         break
 
-
-def main():
-    print("Hello from repl-nix-workspace!")
-
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src", "visualization"))
+from server import app
 
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", port=5000)

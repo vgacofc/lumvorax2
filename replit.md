@@ -25,7 +25,7 @@ Any script that imports torch must either:
 2. Preload the library manually via `ctypes.CDLL(path)` before `import torch`
 
 ## Workflows
-- **Start application**: Runs the Flask visualization server via `python3 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload --chdir src/visualization server:app` (port 5000, webview)
+- **Start application**: Runs the Flask visualization server via `python3 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app` (port 5000, webview). `main.py` imports the Flask `app` from `src/visualization/server.py`.
 
 ## Module de Visualisation (`src/visualization/`)
 - **server.py** : Serveur Flask exposant les données réelles des runs via API REST (`/api/viz/*`)
