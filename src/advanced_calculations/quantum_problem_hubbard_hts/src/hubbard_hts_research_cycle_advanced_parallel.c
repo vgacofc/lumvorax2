@@ -371,6 +371,13 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
     FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ly",          (double)p->ly);
     FORENSIC_LOG_MODULE_METRIC("simulate_adv", "dt_raw",      dt);
 
+    /* C37-CONV §ADV : ring buffer convergence précoce + garde RAM ≤ 90%
+     * Fenêtre 200 steps, minimum 500 steps avant vérification.
+     * Critères : std(energy) < 1e-6 eV ET std(pairing) < 1e-4.
+     * ZÉRO log forensique supprimé — granularité 100% maintenue. */
+    double _cr_adv_e[200]; double _cr_adv_p[200]; int _ci_adv = 0, _cf_adv = 0;
+    memset(_cr_adv_e, 0, sizeof(_cr_adv_e)); memset(_cr_adv_p, 0, sizeof(_cr_adv_p));
+
     for (uint64_t step = 0; step < p->steps; ++step) {
         double collective_mode = 0.0;
         double step_energy = 0.0;
@@ -573,6 +580,44 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
         if (pairing_series && series_len && *series_len < series_cap) {
             pairing_series[*series_len] = r.pairing_norm;
             (*series_len)++;
+        }
+
+        /* C37-CONV §ADV : garde RAM 90% + convergence précoce — ZÉRO log supprimé */
+        if (step % 10 == 0) {
+            double _ram_adv = mem_percent();
+            FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_pct", _ram_adv);
+            if (_ram_adv > 90.0) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_stop_pct",  _ram_adv);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_stop_step", (double)step);
+                if (trace_csv) fprintf(trace_csv,
+                    "RAM_LIMIT,%s,step=%llu,ram_pct=%.2f\n",
+                    p->name, (unsigned long long)step, _ram_adv);
+                break;
+            }
+        }
+        _cr_adv_e[_ci_adv] = r.energy_eV;  _cr_adv_p[_ci_adv] = r.pairing_norm;
+        _ci_adv = (_ci_adv + 1) % 200;     if (!_ci_adv) _cf_adv = 1;
+        if (step >= 500 && _cf_adv) {
+            double _em = 0.0, _pm = 0.0;
+            for (int _j = 0; _j < 200; _j++) { _em += _cr_adv_e[_j]; _pm += _cr_adv_p[_j]; }
+            _em /= 200.0; _pm /= 200.0;
+            double _ev = 0.0, _pv = 0.0;
+            for (int _j = 0; _j < 200; _j++) {
+                _ev += (_cr_adv_e[_j]-_em)*(_cr_adv_e[_j]-_em);
+                _pv += (_cr_adv_p[_j]-_pm)*(_cr_adv_p[_j]-_pm);
+            }
+            double _es = sqrt(_ev/200.0), _ps = sqrt(_pv/200.0);
+            FORENSIC_LOG_MODULE_METRIC("simulate_adv", "conv_e_std",  _es);
+            FORENSIC_LOG_MODULE_METRIC("simulate_adv", "conv_p_std",  _ps);
+            if (_es < 1e-6 && _ps < 1e-4) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "conv_step",   (double)step);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "conv_e_mean", _em);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "conv_p_mean", _pm);
+                if (trace_csv) fprintf(trace_csv,
+                    "CONVERGENCE,%s,step=%llu,e_std=%.10f,p_std=%.10f,e_mean=%.10f,p_mean=%.10f\n",
+                    p->name, (unsigned long long)step, _es, _ps, _em, _pm);
+                break;
+            }
         }
     }
 
@@ -1252,6 +1297,11 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
     long double prev_step_energy = 0.0L;
     bool has_prev_step_energy = false;
     for (int i = 0; i < sites; ++i) d[i] = ((long double)rand01(&seed) - 0.5L) * 1e-3L;
+
+    /* C37-CONV §ADV-IND : ring buffer convergence précoce + garde RAM ≤ 90% */
+    double _cr_ai_e[200]; double _cr_ai_p[200]; int _ci_ai = 0, _cf_ai = 0;
+    memset(_cr_ai_e, 0, sizeof(_cr_ai_e)); memset(_cr_ai_p, 0, sizeof(_cr_ai_p));
+
     for (uint64_t step = 0; step < p->steps; ++step) {
         long double collective_mode = 0.0L;
         long double step_energy = 0.0L;
@@ -1303,6 +1353,25 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
         has_prev_step_energy = true;
         r.pairing_norm = (double)step_pairing;
         r.sign_ratio = (double)step_sign;
+
+        /* C37-CONV §ADV-IND : garde RAM 90% + convergence précoce */
+        if (step % 10 == 0) {
+            double _ram_ai = mem_percent();
+            if (_ram_ai > 90.0) { break; }
+        }
+        _cr_ai_e[_ci_ai] = r.energy_eV;  _cr_ai_p[_ci_ai] = r.pairing_norm;
+        _ci_ai = (_ci_ai + 1) % 200;     if (!_ci_ai) _cf_ai = 1;
+        if (step >= 500 && _cf_ai) {
+            double _em = 0.0, _pm = 0.0;
+            for (int _j = 0; _j < 200; _j++) { _em += _cr_ai_e[_j]; _pm += _cr_ai_p[_j]; }
+            _em /= 200.0; _pm /= 200.0;
+            double _ev = 0.0, _pv = 0.0;
+            for (int _j = 0; _j < 200; _j++) {
+                _ev += (_cr_ai_e[_j]-_em)*(_cr_ai_e[_j]-_em);
+                _pv += (_cr_ai_p[_j]-_pm)*(_cr_ai_p[_j]-_pm);
+            }
+            if (sqrt(_ev/200.0) < 1e-6 && sqrt(_pv/200.0) < 1e-4) { break; }
+        }
     }
     TRACKED_FREE(corr);
     TRACKED_FREE(d);

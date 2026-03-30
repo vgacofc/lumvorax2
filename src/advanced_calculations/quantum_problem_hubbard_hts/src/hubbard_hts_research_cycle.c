@@ -284,6 +284,14 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ly",         (double)p->ly);
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "seed_lo32",  (double)(seed & 0xFFFFFFFFULL));
 
+    /* C37-CONV : ring buffer convergence précoce + garde RAM ≤ 90%
+     * Fenêtre 200 steps, minimum 500 steps avant vérification.
+     * Critères : std(energy) < 1e-6 eV ET std(pairing) < 1e-4.
+     * Garde RAM : vérification toutes les 10 steps (overhead /proc minimal).
+     * ZÉRO log forensique supprimé — logs granulaires 100% maintenus. */
+    double _cr_e[200]; double _cr_p[200]; int _ci = 0, _cf = 0;
+    memset(_cr_e, 0, sizeof(_cr_e)); memset(_cr_p, 0, sizeof(_cr_p));
+
     for (uint64_t step = 0; step < p->steps; ++step) {
         double collective_mode = 0.0;
         double step_energy = 0.0;
@@ -382,6 +390,46 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
         FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ckpt_sign",              step_sign);
         FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_pairing_norm",      step_pairing);
         FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_energy_norm",       step_energy);
+
+        /* C37-CONV §FS : garde RAM 90% + convergence précoce — ZÉRO log supprimé */
+        /* Vérification RAM toutes les 10 steps pour limiter l'overhead I/O /proc */
+        if (step % 10 == 0) {
+            double _ram = mem_percent();
+            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ram_pct", _ram);
+            if (_ram > 90.0) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ram_stop_pct",  _ram);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "ram_stop_step", (double)step);
+                if (trace_csv) fprintf(trace_csv,
+                    "RAM_LIMIT,%s,step=%llu,ram_pct=%.2f\n",
+                    p->name, (unsigned long long)step, _ram);
+                break;
+            }
+        }
+        /* Ring buffer convergence : fenêtre glissante 200 steps */
+        _cr_e[_ci] = step_energy;  _cr_p[_ci] = step_pairing;
+        _ci = (_ci + 1) % 200;     if (!_ci) _cf = 1;
+        if (step >= 500 && _cf) {
+            double _em = 0.0, _pm = 0.0;
+            for (int _j = 0; _j < 200; _j++) { _em += _cr_e[_j]; _pm += _cr_p[_j]; }
+            _em /= 200.0; _pm /= 200.0;
+            double _ev = 0.0, _pv = 0.0;
+            for (int _j = 0; _j < 200; _j++) {
+                _ev += (_cr_e[_j]-_em)*(_cr_e[_j]-_em);
+                _pv += (_cr_p[_j]-_pm)*(_cr_p[_j]-_pm);
+            }
+            double _es = sqrt(_ev/200.0), _ps = sqrt(_pv/200.0);
+            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "conv_e_std",  _es);
+            FORENSIC_LOG_MODULE_METRIC("simulate_fs", "conv_p_std",  _ps);
+            if (_es < 1e-6 && _ps < 1e-4) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "conv_step",   (double)step);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "conv_e_mean", _em);
+                FORENSIC_LOG_MODULE_METRIC("simulate_fs", "conv_p_mean", _pm);
+                if (trace_csv) fprintf(trace_csv,
+                    "CONVERGENCE,%s,step=%llu,e_std=%.10f,p_std=%.10f,e_mean=%.10f,p_mean=%.10f\n",
+                    p->name, (unsigned long long)step, _es, _ps, _em, _pm);
+                break;
+            }
+        }
 
         /* Normalisation vecteur d'état à chaque pas (cohérence avec advanced_parallel) */
         normalize_state_vector(d, sites);
@@ -526,6 +574,10 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
             for (int i = 0; i < sites; ++i) d[i] *= inv;
         }
     }
+    /* C37-CONV §IND : ring buffer convergence précoce + garde RAM ≤ 90% */
+    double _cr_ind_e[200]; double _cr_ind_p[200]; int _ci_ind = 0, _cf_ind = 0;
+    memset(_cr_ind_e, 0, sizeof(_cr_ind_e)); memset(_cr_ind_p, 0, sizeof(_cr_ind_p));
+
     for (uint64_t step = 0; step < p->steps; ++step) {
         long double collective_mode = 0.0L;
         long double step_energy = 0.0L;
@@ -578,6 +630,25 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
         r.energy = (double)step_energy;
         r.pairing = (double)step_pairing;
         r.sign_ratio = (double)step_sign;
+
+        /* C37-CONV §IND : garde RAM 90% + convergence précoce */
+        if (step % 10 == 0) {
+            double _ram_ind = mem_percent();
+            if (_ram_ind > 90.0) { break; }
+        }
+        _cr_ind_e[_ci_ind] = r.energy;  _cr_ind_p[_ci_ind] = r.pairing;
+        _ci_ind = (_ci_ind + 1) % 200;  if (!_ci_ind) _cf_ind = 1;
+        if (step >= 500 && _cf_ind) {
+            double _em = 0.0, _pm = 0.0;
+            for (int _j = 0; _j < 200; _j++) { _em += _cr_ind_e[_j]; _pm += _cr_ind_p[_j]; }
+            _em /= 200.0; _pm /= 200.0;
+            double _ev = 0.0, _pv = 0.0;
+            for (int _j = 0; _j < 200; _j++) {
+                _ev += (_cr_ind_e[_j]-_em)*(_cr_ind_e[_j]-_em);
+                _pv += (_cr_ind_p[_j]-_pm)*(_cr_ind_p[_j]-_pm);
+            }
+            if (sqrt(_ev/200.0) < 1e-6 && sqrt(_pv/200.0) < 1e-4) { break; }
+        }
     }
     TRACKED_FREE(corr);
     TRACKED_FREE(d);

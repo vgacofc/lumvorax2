@@ -286,7 +286,13 @@ verify_checksums() {
 }
 
 checkpoint_save 1
-make -C "$ROOT_DIR" clean all
+# C37-SKIPBUILD : si SKIP_MAKE=1 ET binaires déjà présents → sauter recompilation
+_RUNNER_BIN="$ROOT_DIR/hubbard_hts_research_runner_advanced_parallel"
+if [ "${SKIP_MAKE:-0}" = "1" ] && [ -x "$_RUNNER_BIN" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SKIPBUILD] Binaires déjà présents — compilation ignorée (SKIP_MAKE=1)"
+else
+    make -C "$ROOT_DIR" clean all
+fi
 print_progress "build"
 checkpoint_save 2
 
