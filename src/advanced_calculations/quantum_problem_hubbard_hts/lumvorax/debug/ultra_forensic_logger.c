@@ -829,3 +829,117 @@ void ultra_forensic_generate_summary_report(void) {
     fclose(sf);
     printf("Rapport résumé généré: %s\n", summary_path);
 }
+
+/* ══════════════════════════════════════════════════════════════════
+ * C72-GRANULAR — Opérations élémentaires, conversions d'unités,
+ * thread ID et chi_sc par sweep.
+ *
+ * Format CSV commun :
+ *   TYPE,ts_iso,ts_ns,pid,tid,func,module,...champs spécifiques...
+ *
+ * TYPE = OP | CONV | TID | CHI_SWEEP
+ * ══════════════════════════════════════════════════════════════════ */
+
+/* ── Écriture thread-safe dans le CSV courant ─── (helper interne) */
+static void lv_write_csv_line(const char* line) {
+    if (!g_forensic_initialized) return;
+    pthread_mutex_lock(&g_csv_mutex);
+    FILE* csv = fopen(g_run_csv_path, "a");
+    if (csv) {
+        /* Rotation automatique si le fichier dépasse la limite */
+        struct stat st;
+        if (fstat(fileno(csv), &st) == 0 && st.st_size >= LV_MAX_CSV_BYTES) {
+            fclose(csv);
+            lv_rotate_csv();
+            csv = fopen(g_run_csv_path, "a");
+        }
+        if (csv) {
+            fputs(line, csv);
+            fclose(csv);
+        }
+    }
+    pthread_mutex_unlock(&g_csv_mutex);
+}
+
+/* ── C72 : Opération élémentaire ─────────────────────────────────
+ * Format : OP,ts_iso,ts_ns,pid,tid,func,module,op_type,step,site,
+ *           val1,val2,result
+ * Exemple : OP,2026-03-30T09:00:00Z,1712041200000000000,12345,
+ *           139706123456789,simulate_adv,simulate_adv,MUL_U_n_up_n_dn,
+ *           1247,3,2.450000e+00,2.340000e-01,5.733000e-01
+ */
+void ultra_forensic_log_op(const char* func, const char* module,
+                           const char* op, double val1, double val2, double result,
+                           long step, long site) {
+    if (!g_forensic_initialized) return;
+    char iso[32]; fill_iso(iso, sizeof(iso));
+    uint64_t ts  = get_precise_timestamp_ns();
+    unsigned long long tid = (unsigned long long)(uintptr_t)pthread_self();
+    char line[256];
+    int n = snprintf(line, sizeof(line),
+        "OP,%s,%" PRIu64 ",%d,%llu,%s,%s,%s,%ld,%ld,%.10e,%.10e,%.10e\n",
+        iso, ts, getpid(), tid, func ? func : "?", module ? module : "?",
+        op ? op : "?", step, site, val1, val2, result);
+    if (n > 0 && n < (int)sizeof(line))
+        lv_write_csv_line(line);
+}
+
+/* ── C72 : Conversion d'unités ───────────────────────────────────
+ * Format : CONV,ts_iso,ts_ns,pid,tid,func,module,
+ *          from_unit,to_unit,factor,val_in,val_out
+ * Exemple : CONV,2026-03-30T09:00:00Z,...,pt_mc,K,beta_eV,
+ *           8.617333e-05,300.000000,3.863e-02
+ */
+void ultra_forensic_log_conv(const char* func, const char* module,
+                             const char* from_unit, const char* to_unit,
+                             double factor, double val_in, double val_out) {
+    if (!g_forensic_initialized) return;
+    char iso[32]; fill_iso(iso, sizeof(iso));
+    uint64_t ts  = get_precise_timestamp_ns();
+    unsigned long long tid = (unsigned long long)(uintptr_t)pthread_self();
+    char line[256];
+    int n = snprintf(line, sizeof(line),
+        "CONV,%s,%" PRIu64 ",%d,%llu,%s,%s,%s,%s,%.10e,%.10e,%.10e\n",
+        iso, ts, getpid(), tid, func ? func : "?", module ? module : "?",
+        from_unit ? from_unit : "?", to_unit ? to_unit : "?",
+        factor, val_in, val_out);
+    if (n > 0 && n < (int)sizeof(line))
+        lv_write_csv_line(line);
+}
+
+/* ── C72 : Thread ID courant ─────────────────────────────────────
+ * Format : TID,ts_iso,ts_ns,pid,tid,func,module
+ * Émis une fois par thread au démarrage d'une simulation/module.
+ */
+void ultra_forensic_log_tid(const char* func, const char* module) {
+    if (!g_forensic_initialized) return;
+    char iso[32]; fill_iso(iso, sizeof(iso));
+    uint64_t ts  = get_precise_timestamp_ns();
+    unsigned long long tid = (unsigned long long)(uintptr_t)pthread_self();
+    char line[192];
+    int n = snprintf(line, sizeof(line),
+        "TID,%s,%" PRIu64 ",%d,%llu,%s,%s\n",
+        iso, ts, getpid(), tid, func ? func : "?", module ? module : "?");
+    if (n > 0 && n < (int)sizeof(line))
+        lv_write_csv_line(line);
+}
+
+/* ── C72 : Chi_sc intermédiaire par sweep PT_MC ─────────────────
+ * Format : CHI_SWEEP,ts_iso,ts_ns,pid,tid,func,module,sw,chi_val,pairing
+ * Émis à CHAQUE sweep de production — permet de reconstruire
+ * l'historique complet de χ_sc et de détecter le pic de Tc.
+ */
+void ultra_forensic_log_chi_sweep(const char* func, const char* module,
+                                  long sw, double chi_val, double pairing) {
+    if (!g_forensic_initialized) return;
+    char iso[32]; fill_iso(iso, sizeof(iso));
+    uint64_t ts  = get_precise_timestamp_ns();
+    unsigned long long tid = (unsigned long long)(uintptr_t)pthread_self();
+    char line[192];
+    int n = snprintf(line, sizeof(line),
+        "CHI_SWEEP,%s,%" PRIu64 ",%d,%llu,%s,%s,%ld,%.10e,%.10e\n",
+        iso, ts, getpid(), tid, func ? func : "?", module ? module : "?",
+        sw, chi_val, pairing);
+    if (n > 0 && n < (int)sizeof(line))
+        lv_write_csv_line(line);
+}

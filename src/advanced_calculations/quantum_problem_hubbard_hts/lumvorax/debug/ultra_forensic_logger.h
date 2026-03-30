@@ -133,6 +133,46 @@ typedef struct {
 #define FORENSIC_LOG_THREAD_END(module, thread_label) \
     ultra_forensic_log_thread(__func__, module, thread_label, "END")
 
+/* ── C72-GRANULAR : Opérations élémentaires + conversions d'unités ──
+ *
+ * FORENSIC_LOG_OP  : trace CHAQUE opération arithmétique.
+ *   module  = composant C ("simulate_adv", "pt_mc", "ed_hubbard_2x2", …)
+ *   op      = type d'opération ("MUL","ADD","DIV","TANH","INV_NORM","SUB")
+ *   val1    = premier opérande
+ *   val2    = second opérande (0.0 si unaire)
+ *   result  = résultat de l'opération
+ *   Champs CSV supplémentaires : tid (pthread_self), step, site.
+ *   Utiliser FORENSIC_LOG_OP_FULL pour préciser step et site.
+ *
+ * FORENSIC_LOG_CONV : trace CHAQUE conversion d'unités.
+ *   from_unit, to_unit = "K","eV","J","beta_eV","K_inv"
+ *   factor  = constante de conversion (KB_EV_PER_K = 8.617333e-5, etc.)
+ *   val_in  = valeur avant conversion
+ *   val_out = valeur après conversion = val_in * factor (ou 1/factor)
+ *
+ * FORENSIC_LOG_TID : log du thread courant au début d'une simulation.
+ *   Associe le module à l'ID POSIX du thread.
+ *
+ * FORENSIC_LOG_CHI_SWEEP : chi_sc intermédiaire à chaque sweep PT_MC.
+ *   sw      = numéro du sweep
+ *   chi_val = valeur courante de chi_sc
+ *   pairing = pairing courant de la réplique froide
+ */
+#define FORENSIC_LOG_OP(module, op, val1, val2, result) \
+    ultra_forensic_log_op(__func__, (module), (op), (double)(val1), (double)(val2), (double)(result), -1, -1)
+
+#define FORENSIC_LOG_OP_FULL(module, op, val1, val2, result, step, site) \
+    ultra_forensic_log_op(__func__, (module), (op), (double)(val1), (double)(val2), (double)(result), (long)(step), (long)(site))
+
+#define FORENSIC_LOG_CONV(module, from_unit, to_unit, factor, val_in, val_out) \
+    ultra_forensic_log_conv(__func__, (module), (from_unit), (to_unit), (double)(factor), (double)(val_in), (double)(val_out))
+
+#define FORENSIC_LOG_TID(module) \
+    ultra_forensic_log_tid(__func__, (module))
+
+#define FORENSIC_LOG_CHI_SWEEP(module, sw, chi_val, pairing) \
+    ultra_forensic_log_chi_sweep(__func__, (module), (long)(sw), (double)(chi_val), (double)(pairing))
+
 /* ── Déclarations de fonctions ──────────────────────────────────── */
 void ultra_forensic_logger_init_lum(const char* log_file);
 bool ultra_forensic_logger_init(void);
@@ -158,6 +198,21 @@ void ultra_forensic_log_algo(const char* func, const char* algo_name,
 void ultra_forensic_log_phase_bridge(int phase_num, const char* script_name, const char* status);
 void ultra_forensic_log_thread(const char* func, const char* module,
                                const char* thread_label, const char* event);
+
+/* ── C72-GRANULAR : nouvelles fonctions nanoseconde ─────────────── */
+/* Opération élémentaire : module, op_type, val1 OP val2 = result, step, site */
+void ultra_forensic_log_op(const char* func, const char* module,
+                           const char* op, double val1, double val2, double result,
+                           long step, long site);
+/* Conversion d'unités : from_unit → to_unit via facteur, val_in → val_out */
+void ultra_forensic_log_conv(const char* func, const char* module,
+                             const char* from_unit, const char* to_unit,
+                             double factor, double val_in, double val_out);
+/* Thread ID : associe le module au pthread_self() courant */
+void ultra_forensic_log_tid(const char* func, const char* module);
+/* Chi_sc intermédiaire à chaque sweep PT_MC */
+void ultra_forensic_log_chi_sweep(const char* func, const char* module,
+                                  long sw, double chi_val, double pairing);
 
 /* Utilitaires hardware */
 lv_hw_snapshot_t ultra_forensic_hw_snapshot(void);
