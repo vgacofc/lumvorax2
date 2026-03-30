@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include <malloc.h>
 
 /* BC-LV01/LV02/LV03/LV04/LV05 : Intégration LumVorax forensique — 2026-03-14 */
 /* LumVorax — vrais modules forensiques — activation 100% inconditionnelle */
@@ -582,17 +583,28 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             (*series_len)++;
         }
 
-        /* C37-CONV §ADV : garde RAM 90% + convergence précoce — ZÉRO log supprimé */
+        /* C38-RAM §ADV : stabilisation RAM ≤ 90% — throttle sans arrêt du run */
         if (step % 10 == 0) {
             double _ram_adv = mem_percent();
             FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_pct", _ram_adv);
+            /* Avertissement précoce : libération heap avant saturation */
+            if (_ram_adv >= 85.0) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_warn_pct", _ram_adv);
+                malloc_trim(0);
+            }
+            /* Throttle RAM : jamais arrêter le run, ralentir jusqu'à redescente */
             if (_ram_adv > 90.0) {
-                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_stop_pct",  _ram_adv);
-                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_stop_step", (double)step);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_throttle_pct",  _ram_adv);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv", "ram_throttle_step", (double)step);
                 if (trace_csv) fprintf(trace_csv,
-                    "RAM_LIMIT,%s,step=%llu,ram_pct=%.2f\n",
+                    "RAM_THROTTLE,%s,step=%llu,ram_pct=%.2f\n",
                     p->name, (unsigned long long)step, _ram_adv);
-                break;
+                /* Boucle throttle : jusqu'à 5 × 500 ms — puis on continue quoi qu'il arrive */
+                for (int _rt = 0; _rt < 5 && mem_percent() > 90.0; _rt++) {
+                    malloc_trim(0);
+                    usleep(500000); /* 500 ms */
+                }
+                /* Le run CONTINUE — aucun break sur RAM */
             }
         }
         _cr_adv_e[_ci_adv] = r.energy_eV;  _cr_adv_p[_ci_adv] = r.pairing_norm;
@@ -1354,10 +1366,19 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
         r.pairing_norm = (double)step_pairing;
         r.sign_ratio = (double)step_sign;
 
-        /* C37-CONV §ADV-IND : garde RAM 90% + convergence précoce */
+        /* C38-RAM §ADV-IND : stabilisation RAM ≤ 90% — throttle sans arrêt du run */
         if (step % 10 == 0) {
             double _ram_ai = mem_percent();
-            if (_ram_ai > 90.0) { break; }
+            if (_ram_ai >= 85.0) { malloc_trim(0); }
+            if (_ram_ai > 90.0) {
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv_ind", "ram_throttle_pct",  _ram_ai);
+                FORENSIC_LOG_MODULE_METRIC("simulate_adv_ind", "ram_throttle_step", (double)step);
+                for (int _rt = 0; _rt < 5 && mem_percent() > 90.0; _rt++) {
+                    malloc_trim(0);
+                    usleep(500000); /* 500 ms */
+                }
+                /* Le run CONTINUE — aucun break sur RAM */
+            }
         }
         _cr_ai_e[_ci_ai] = r.energy_eV;  _cr_ai_p[_ci_ai] = r.pairing_norm;
         _ci_ai = (_ci_ai + 1) % 200;     if (!_ci_ai) _cf_ai = 1;
