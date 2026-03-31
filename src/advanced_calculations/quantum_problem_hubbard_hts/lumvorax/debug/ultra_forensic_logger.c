@@ -160,38 +160,36 @@ lv_hw_snapshot_t ultra_forensic_hw_snapshot(void) {
     return s;
 }
 
-/* ── ROTATION FICHIER CSV : 20 MB max par partie, 10 parties max ────
- * C53-ROT : limite réduite de 95 MB → 20 MB par partie.
- * C53-MAXPART : plafond absolu LV_MAX_CSV_PARTS pour éviter l'explosion
- * disque (run 437 : 38 × 20 MB = 760 MB → crash PT-MC).
- * Au-delà de LV_MAX_CSV_PARTS, les logs continuent dans la dernière partie
- * (ring-append) — aucune donnée n'est perdue, le disque est protégé.
+/* ── ROTATION FICHIER CSV : 20 MB max par partie, numérotation décimale ──
+ * C53-ROT  : limite 20 MB par partie (inchangé).
+ * C37-NUMPART : numérotation décimale _part_0001.csv, _part_0002.csv …
+ *   au lieu de aa/ab/ac — suit exactement le nombre de fichiers générés.
+ * Plafond supprimé (LV_MAX_CSV_PARTS = 99999) — aucune donnée perdue.
  * Le découpage se fait ligne par ligne, sans bufferiser. */
 #define LV_MAX_CSV_BYTES  (20LL * 1024LL * 1024LL)
-#define LV_MAX_CSV_PARTS  10               /* C53-MAXPART : plafond absolu */
+#define LV_MAX_CSV_PARTS  99999            /* C37-NUMPART : plafond illimité */
 static int  g_csv_part_num  = 0;          /* 0 = fichier original    */
 static char g_csv_base[512] = {0};        /* chemin sans .csv        */
 
 /* Génère le chemin de la partie N :
- *   0 → g_run_csv_path inchangé (fichier original)
- *   1 → _part_ab.csv
- *   2 → _part_ac.csv  …                                              */
+ *   0 → g_run_csv_path inchangé (fichier original, sans suffixe _part_)
+ *   1 → _part_0001.csv
+ *   2 → _part_0002.csv  …
+ * Numérotation décimale sur 4 chiffres minimum (extensible au-delà de 9999). */
 static void lv_build_part_path(int part_num, char* out, size_t out_sz) {
     if (part_num == 0) {
         /* Première partie : chemin original (base + .csv) */
         snprintf(out, out_sz, "%s.csv", g_csv_base);
     } else {
-        /* aa=1, ab=2, ac=3 … */
-        int a = 'a' + (part_num - 1) / 26;
-        int b = 'a' + (part_num - 1) % 26;
-        snprintf(out, out_sz, "%s_part_%c%c.csv", g_csv_base, a, b);
+        /* C37-NUMPART : 0001, 0002, 0003 … */
+        snprintf(out, out_sz, "%s_part_%04d.csv", g_csv_base, part_num);
     }
 }
 
 /* Ouvre la prochaine partie et écrit un en-tête de continuation.
  * Appelé sous g_csv_mutex.
- * C53-MAXPART : si LV_MAX_CSV_PARTS atteint, on reste dans la dernière
- * partie (ring-append) — le plafond disque est respecté. */
+ * C37-NUMPART : plafond à 99999 parties — pratiquement illimité.
+ * Chaque partie est nommée _part_NNNN.csv (numérotation décimale). */
 static void lv_rotate_csv(void) {
     if (g_csv_part_num >= LV_MAX_CSV_PARTS) {
         fprintf(stderr,

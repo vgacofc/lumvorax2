@@ -2230,14 +2230,13 @@ int main(int argc, char** argv) {
                 if (pos >= PTMC_MAX_BYTES) {
                     fclose(ptcsv);
                     pt_mc_part_num++;
-                    int pa = 'a' + (pt_mc_part_num - 1) / 26;
-                    int pb = 'a' + (pt_mc_part_num - 1) % 26;
+                    /* C37-NUMPART : numérotation décimale _part_0001, _part_0002 … */
                     snprintf(pt_mc_csv_path, sizeof(pt_mc_csv_path),
-                             "%s_part_%c%c.csv", pt_mc_csv_base, pa, pb);
+                             "%s_part_%04d.csv", pt_mc_csv_base, pt_mc_part_num);
                     ptcsv = fopen(pt_mc_csv_path, "w");
                     pt_mc_need_header = true;
                     fprintf(stderr,
-                        "[PTMC] Rotation CSV → %s (partie %d, cap 20 MB atteint)\n",
+                        "[PTMC] Rotation CSV → %s (partie %04d, cap 20 MB atteint)\n",
                         pt_mc_csv_path, pt_mc_part_num);
                 }
             }

@@ -1016,7 +1016,15 @@ int main(int argc, char** argv) {
 
     problem_t probs[64] = {0};
     char problems_cfg[MAX_PATH];
-    pjoin(problems_cfg, sizeof(problems_cfg), root, "config/problems_cycle06.csv");
+    /* C37-RESUME : lire config depuis LUMVORAX_PROBLEMS_CSV si défini (reprise intelligente) */
+    const char* _env_pcfg = getenv("LUMVORAX_PROBLEMS_CSV");
+    if (_env_pcfg && _env_pcfg[0]) {
+        strncpy(problems_cfg, _env_pcfg, sizeof(problems_cfg)-1);
+        problems_cfg[sizeof(problems_cfg)-1] = '\0';
+        fprintf(lg, "000002b| RESUME problems_csv=%s (LUMVORAX_PROBLEMS_CSV)\n", problems_cfg);
+    } else {
+        pjoin(problems_cfg, sizeof(problems_cfg), root, "config/problems_cycle06.csv");
+    }
     int nprobs = load_problems_from_csv(problems_cfg, probs, 64);
     if (nprobs <= 0) {
         fprintf(stderr, "ERROR: missing/invalid problems config: %s\n", problems_cfg);
