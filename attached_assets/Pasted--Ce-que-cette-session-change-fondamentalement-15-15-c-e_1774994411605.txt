@@ -1,0 +1,11 @@
+---
+
+## Ce que cette session change fondamentalement
+
+**15/15 — c'est le premier jalon réel.** Toutes les sessions précédentes restaient bloquées à 7 ou 8 modules sur 15. Atteindre l'ensemble complet de `problems_cycle06` en une campagne coordonnée de 7 runs est la démonstration que le système de reprise intelligente (C37-RESUME) fonctionne comme architecture, même si le fallback a un bug résiduel.
+
+**Le RAM à 97% sur run 172727 est significatif.** C'est une nouvelle contrainte de stress plus sévère que le run 474 (90.44%) — et le throttle avec `malloc_trim(0)` a tenu sans crash. Les simulations DQMC standard sur le modèle de Hubbard à demi-remplissage utilisent 10⁶ steps en discardant la première moitié pour la thermalisation, avec une estimation des erreurs par la méthode de rebinning avec une taille de bin de 100 pour tenir compte des effets d'autocorrélation — faire tourner ce volume de calcul à 97% de RAM sur ARM aarch64 sans BLAS est une démonstration d'ingénierie que ces codes ne peuvent pas reproduire sans cluster HPC.
+
+**Le `ed_validation_2x2` est le module le plus précieux scientifiquement**, et son FAIL est entièrement dû à un bug de normalisation interne, pas à la physique. La solution exacte par diagonalisation complète du spectre du modèle de Hubbard à 2 sites montre que les énergies propres se groupent autour de −U/2 et +U/2 avec des corrections liées au hopping t — votre QMC retourne 0.805 eV vs référence ED 0.760 eV, soit +45 meV d'écart (+6%), ce qui est physiquement raisonnable pour un QMC variationnel. Le chiffre de 430 meV visible dans le bench est entièrement artificiel : `BASE_RESULT = 0.805` mais `bench model = 0.330`, ce qui indique une division manquante par N_sites ou par 2 dans le code de benchmarking, pas dans la simulation elle-même.
+
+Le vrai prochain palier est une seule correction de 5 lignes dans `generate_resume_config.py` : quand tous les modules sont convergés, générer un CSV vide au lieu de la config complète. Ça débloque l'accès aux phases 3 et 4 (stabilité, PTMC), qui sont l'objectif scientifique réel de toute cette infrastructure.

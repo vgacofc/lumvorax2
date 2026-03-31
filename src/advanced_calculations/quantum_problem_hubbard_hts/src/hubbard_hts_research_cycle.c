@@ -399,6 +399,10 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
                 "[PROGRESS] %s step=%llu/%" PRIu64 " (%.1f%%) E=%.6f P=%.6f\n",
                 p->name, (unsigned long long)step, p->steps, _prog_pct,
                 step_energy, step_pairing);
+            /* C37-RAM-STEP : libération heap après chaque palier de 100 steps
+             * pour éviter l'accumulation progressive en RAM entre les steps.
+             * Conforme STANDARD_NAMES.md — appelé inconditionnellement (pas seulement à >= 85%). */
+            malloc_trim(0);
         }
 
         /* C38-RAM §FS : stabilisation RAM ≤ 90% — throttle sans arrêt du run */
@@ -1035,9 +1039,28 @@ int main(int argc, char** argv) {
         pjoin(problems_cfg, sizeof(problems_cfg), root, "config/problems_cycle06.csv");
     }
     int nprobs = load_problems_from_csv(problems_cfg, probs, 64);
-    if (nprobs <= 0) {
+    if (nprobs < 0) {
+        /* Erreur réelle : fichier absent ou illisible */
         fprintf(stderr, "ERROR: missing/invalid problems config: %s\n", problems_cfg);
+        fclose(lg); fclose(raw); fclose(tcsv); fclose(qcsv); fclose(prov);
+        fclose(bcsv); fclose(bcsvm); fclose(mmeta); fclose(det); fclose(nstab);
+        fclose(tdrv); fclose(toy);
+        ultra_forensic_logger_destroy();
         return 2;
+    }
+    if (nprobs == 0) {
+        /* C37-RESUME : CSV resume vide (header seul) = convergence totale 15/15.
+         * → Le runner fullscale quitte avec succès (return 0).
+         * → Le script bash (run_research_cycle.sh) met FULLSCALE_OK=1 et
+         *   passe directement au runner advanced_parallel (phases stabilité + PTMC).
+         * NE PAS retourner 2 : ce n'est pas une erreur, c'est l'état cible. */
+        fprintf(lg, "000001 | RESUME_COMPLETE all_modules_converged=1 nprobs=0 action=skip_fullscale_goto_advanced\n");
+        fprintf(stderr, "[C37-RESUME] nprobs=0 : CONVERGENCE TOTALE 15/15 — skip fullscale → phases avancées (PTMC/stabilité)\n");
+        fclose(lg); fclose(raw); fclose(tcsv); fclose(qcsv); fclose(prov);
+        fclose(bcsv); fclose(bcsvm); fclose(mmeta); fclose(det); fclose(nstab);
+        fclose(tdrv); fclose(toy);
+        ultra_forensic_logger_destroy();
+        return 0;
     }
 
     for (int i = 0; i < nprobs; ++i) {
