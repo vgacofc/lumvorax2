@@ -79,8 +79,16 @@ def main():
     print(f"[C37-RESUME] {len(remaining)} modules restants / {len(already_done)} déjà convergés", flush=True)
 
     if not remaining:
-        print("[C37-RESUME] Tous les modules sont déjà convergés — resume = config complète", flush=True)
-        remaining = already_done[:]
+        # Tous les modules sont convergés → générer un CSV VIDE (header seulement).
+        # Le runner C verra nprobs=0 et devra passer aux phases avancées (stabilité/PTMC).
+        # NE PAS utiliser la config complète comme fallback — cela causerait une re-simulation.
+        print("[C37-RESUME] TOUS LES 15 MODULES CONVERGÉS — Resume vide généré → phases avancées", flush=True)
+        with open(out_path, "w", newline="") as fh:
+            writer = csv.DictWriter(fh, fieldnames=fieldnames)
+            writer.writeheader()
+        print(f"[C37-RESUME] Écrit : {out_path} (0 modules — convergence totale)", flush=True)
+        print(out_path, flush=True)
+        return
 
     with open(out_path, "w", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
