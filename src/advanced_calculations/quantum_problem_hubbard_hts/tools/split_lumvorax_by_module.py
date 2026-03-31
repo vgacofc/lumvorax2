@@ -14,11 +14,8 @@ import re
 ROTATION_BYTES = 20 * 1024 * 1024  # 20 MB
 
 def get_part_suffix(n):
-    """Génère un suffixe type _part_aa, _part_ab, ..."""
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
-    first = alphabet[n // 26 % 26]
-    second = alphabet[n % 26]
-    return f"_part_{first}{second}"
+    """Génère un suffixe numérique type _part_0001, _part_0002, ... (C37-NUMPART)"""
+    return f"_part_{n:04d}"
 
 def split_lumvorax(run_dir):
     logs_dir = os.path.join(run_dir, "logs")

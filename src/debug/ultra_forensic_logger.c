@@ -162,7 +162,7 @@ lv_hw_snapshot_t ultra_forensic_hw_snapshot(void) {
 
 /* ── ROTATION FICHIER CSV : 20 MB max par partie ───────────────────
  * Quand le fichier courant atteint 20 MB, on le ferme et on ouvre
- * automatiquement une nouvelle partie (_part_ab, _part_ac, …) PENDANT
+ * automatiquement une nouvelle partie (_part_0001, _part_0002, …) PENDANT
  * la génération — jamais après. Aucun log n'est supprimé ni throttlé.
  * Le découpage se fait ligne par ligne, sans bufferiser. */
 #define LV_MAX_CSV_BYTES  (20LL * 1024LL * 1024LL)
@@ -171,17 +171,15 @@ static char g_csv_base[512] = {0};        /* chemin sans .csv        */
 
 /* Génère le chemin de la partie N :
  *   0 → g_run_csv_path inchangé (fichier original)
- *   1 → _part_ab.csv
- *   2 → _part_ac.csv  …                                              */
+ *   1 → _part_0001.csv
+ *   2 → _part_0002.csv  …                                            */
 static void lv_build_part_path(int part_num, char* out, size_t out_sz) {
     if (part_num == 0) {
         /* Première partie : chemin original (base + .csv) */
         snprintf(out, out_sz, "%s.csv", g_csv_base);
     } else {
-        /* aa=1, ab=2, ac=3 … */
-        int a = 'a' + (part_num - 1) / 26;
-        int b = 'a' + (part_num - 1) % 26;
-        snprintf(out, out_sz, "%s_part_%c%c.csv", g_csv_base, a, b);
+        /* C37-NUMPART : numérotation décimale _part_0001, _part_0002 … */
+        snprintf(out, out_sz, "%s_part_%04d.csv", g_csv_base, part_num);
     }
 }
 
