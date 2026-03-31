@@ -296,6 +296,26 @@ fi
 print_progress "build"
 checkpoint_save 2
 
+# ── C37-RESUME : reprise intelligente par module ─────────────────────────────
+# Détecte les modules déjà convergés dans le dernier run → génère problems_cycle06_resume.csv
+# Le runner C lit LUMVORAX_PROBLEMS_CSV pour choisir sa config (getenv ligne 1019)
+_PREV_RUN="$(ls -1dt "$ROOT_DIR/results"/research_* 2>/dev/null | head -1 || true)"
+_PROBLEMS_CSV="$ROOT_DIR/config/problems_cycle06.csv"
+if [ -n "$_PREV_RUN" ] && [ -d "$_PREV_RUN" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Dernier run détecté : $_PREV_RUN"
+    _RESUME_OUT="$(python3 "$ROOT_DIR/tools/generate_resume_config.py" "$_PROBLEMS_CSV" "$_PREV_RUN" 2>&1)"
+    echo "$_RESUME_OUT"
+    _RESUME_CSV="$(echo "$_RESUME_OUT" | tail -1)"
+    if [ -f "${_RESUME_CSV:-}" ]; then
+        export LUMVORAX_PROBLEMS_CSV="$_RESUME_CSV"
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] LUMVORAX_PROBLEMS_CSV=$LUMVORAX_PROBLEMS_CSV"
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] CSV resume invalide — config complète utilisée"
+    fi
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Aucun run précédent — config complète utilisée"
+fi
+
 # Force forensic runtime toggles ON for full traceability contract
 export LUMVORAX_FORENSIC_REALTIME="1"
 export LUMVORAX_LOG_PERSISTENCE="1"
@@ -330,6 +350,10 @@ checkpoint_save 3
 
 LATEST_FULLSCALE_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
 FULLSCALE_RUN_DIR="$ROOT_DIR/results/$LATEST_FULLSCALE_RUN"
+
+# ── C37-SPLITLOG : séparation lumvorax par module (runner fullscale) ──────────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SPLITLOG] Split lumvorax → modules individuels : $FULLSCALE_RUN_DIR"
+python3 "$ROOT_DIR/tools/split_lumvorax_by_module.py" "$FULLSCALE_RUN_DIR" 2>&1 || true
 
 # C22-BUG04 FIX : entourer avec lv_wrap pour que SystemExit(1) du script Python
 # ne propage pas d'exit code non-zero au shell (set -euo pipefail).
@@ -417,6 +441,10 @@ checkpoint_save 10
 
 LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
 ADV_RUN_DIR="$ROOT_DIR/results/$LATEST_ADV_RUN"
+
+# ── C37-SPLITLOG : séparation lumvorax par module (runner advanced_parallel) ──
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SPLITLOG] Split lumvorax → modules individuels : $ADV_RUN_DIR"
+python3 "$ROOT_DIR/tools/split_lumvorax_by_module.py" "$ADV_RUN_DIR" 2>&1 || true
 
 RUN_DIR="$ADV_RUN_DIR"
 LATEST_RUN="$LATEST_ADV_RUN"
