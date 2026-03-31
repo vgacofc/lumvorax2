@@ -164,10 +164,18 @@ lv_hw_snapshot_t ultra_forensic_hw_snapshot(void) {
  * Quand le fichier courant atteint 20 MB, on le ferme et on ouvre
  * automatiquement une nouvelle partie (_part_0001, _part_0002, …) PENDANT
  * la génération — jamais après. Aucun log n'est supprimé ni throttlé.
- * Le découpage se fait ligne par ligne, sans bufferiser. */
+ * Le découpage se fait ligne par ligne, sans bufferiser.
+ *
+ * C-FIX-RAM-01 : FD GLOBAL PERSISTANT
+ * g_csv_fp reste ouvert pour toute la durée du run.
+ * csv_write_line() n'appelle PLUS fopen/fclose à chaque ligne.
+ * Ceci élimine les ~28M fopen/fclose par run qui saturaient le slab
+ * kernel (SUnreclaim +1.1 GiB) et épuisaient la RAM cache. */
 #define LV_MAX_CSV_BYTES  (20LL * 1024LL * 1024LL)
-static int  g_csv_part_num  = 0;          /* 0 = fichier original    */
-static char g_csv_base[512] = {0};        /* chemin sans .csv        */
+static int    g_csv_part_num  = 0;        /* 0 = fichier original    */
+static char   g_csv_base[512] = {0};      /* chemin sans .csv        */
+static FILE*  g_csv_fp        = NULL;     /* FD global persistant    */
+static int    g_csv_write_count = 0;      /* compteur lignes → fflush toutes 256 */
 
 /* Génère le chemin de la partie N :
  *   0 → g_run_csv_path inchangé (fichier original)
@@ -184,39 +192,61 @@ static void lv_build_part_path(int part_num, char* out, size_t out_sz) {
 }
 
 /* Ouvre la prochaine partie et écrit un en-tête de continuation.
- * Appelé sous g_csv_mutex. */
+ * Appelé sous g_csv_mutex.
+ * C-FIX-RAM-01 : ferme g_csv_fp (partie courante) et ouvre la suivante. */
 static void lv_rotate_csv(void) {
+    /* Fermer le FD de la partie courante avant d'en ouvrir une nouvelle */
+    if (g_csv_fp) { fflush(g_csv_fp); fclose(g_csv_fp); g_csv_fp = NULL; }
+
     g_csv_part_num++;
     lv_build_part_path(g_csv_part_num, g_run_csv_path, sizeof(g_run_csv_path));
 
-    FILE* nf = fopen(g_run_csv_path, "w");
-    if (nf) {
+    g_csv_fp = fopen(g_run_csv_path, "w");
+    if (g_csv_fp) {
         uint64_t ts = get_precise_timestamp_ns();
         char iso[64]; fill_iso(iso, sizeof(iso));
-        fprintf(nf,
+        fprintf(g_csv_fp,
             "event,timestamp_utc,timestamp_ns,pid,detail,value\n"
             "ROTATION,%s,%" PRIu64 ",%d,part_num,%d\n",
             iso, ts, getpid(), g_csv_part_num);
-        fclose(nf);
+        fflush(g_csv_fp);
+        /* Le FD reste ouvert — csv_write_line l'utilisera directement */
     }
+    g_csv_write_count = 0;
     fprintf(stderr,
         "[LUMVORAX] Rotation CSV → %s (partie %d, cap 20 MB atteint)\n",
         g_run_csv_path, g_csv_part_num);
 }
 
 /* ── Écriture thread-safe dans le CSV global ────────────────────── */
+/* C-FIX-RAM-01 : utilise g_csv_fp (FD persistant) — ZERO fopen/fclose par ligne.
+ * Rotation basée sur ftell() plutôt que stat() (une seule syscall, pas deux).
+ * fflush() toutes les 256 lignes pour limiter la pression sur la dirty page list.
+ * Avant cette correction : ~28M fopen/fclose par run → SUnreclaim +1.1 GiB.
+ * Après : 0 fopen/fclose pendant le run (seulement à la rotation 20 MiB). */
 static void csv_write_line(const char* line) {
     if (!g_run_csv_path[0]) return;
     pthread_mutex_lock(&g_csv_mutex);
-    /* Rotation si le fichier courant a atteint 95 MB */
-    struct stat st;
-    if (stat(g_run_csv_path, &st) == 0 && st.st_size >= LV_MAX_CSV_BYTES) {
-        lv_rotate_csv();
+    /* Ouvrir g_csv_fp s'il n'est pas encore ouvert (première écriture) */
+    if (!g_csv_fp) {
+        g_csv_fp = fopen(g_run_csv_path, "a");
+        g_csv_write_count = 0;
     }
-    FILE* csv = fopen(g_run_csv_path, "a");
-    if (csv) {
-        fputs(line, csv);
-        fclose(csv);
+    if (g_csv_fp) {
+        /* Rotation si la partie courante dépasse LV_MAX_CSV_BYTES */
+        long pos = ftell(g_csv_fp);
+        if (pos >= LV_MAX_CSV_BYTES) {
+            lv_rotate_csv();  /* ferme g_csv_fp et ouvre la suivante */
+        }
+        if (g_csv_fp) {
+            fputs(line, g_csv_fp);
+            g_csv_write_count++;
+            /* Flush périodique : toutes les 256 lignes pour éviter l'accumulation
+             * de pages dirty en mémoire (le kernel write-back est trop lent sinon) */
+            if (g_csv_write_count % 256 == 0) {
+                fflush(g_csv_fp);
+            }
+        }
     }
     pthread_mutex_unlock(&g_csv_mutex);
 }
@@ -264,44 +294,48 @@ void ultra_forensic_logger_init_lum(const char* log_file) {
     if (blen > 4 && strcmp(g_csv_base + blen - 4, ".csv") == 0)
         g_csv_base[blen - 4] = '\0';
     g_csv_part_num = 0;  /* Remet à zéro à chaque nouveau run */
+    g_csv_write_count = 0;
 
     /* Première mesure CPU pour initialiser le delta */
     (void)cpu_percent_delta();
 
     pthread_mutex_lock(&g_csv_mutex);
-    FILE* lf = fopen(log_file, "w");
-    if (lf) {
+    /* C-FIX-RAM-01 : fermer l'éventuel FD précédent avant d'en ouvrir un nouveau */
+    if (g_csv_fp) { fflush(g_csv_fp); fclose(g_csv_fp); g_csv_fp = NULL; }
+    g_csv_fp = fopen(log_file, "w");
+    if (g_csv_fp) {
         uint64_t ts = get_precise_timestamp_ns();
         char iso[64]; fill_iso(iso, sizeof(iso));
-        fprintf(lf, "event,timestamp_utc,timestamp_ns,pid,detail,value\n");
-        fprintf(lf, "INIT,%s,%" PRIu64 ",%d,activation,100PCT_INCONDITIONNELLE\n",
+        fprintf(g_csv_fp, "event,timestamp_utc,timestamp_ns,pid,detail,value\n");
+        fprintf(g_csv_fp, "INIT,%s,%" PRIu64 ",%d,activation,100PCT_INCONDITIONNELLE\n",
                 iso, ts, getpid());
-        fprintf(lf, "INIT,%s,%" PRIu64 ",%d,modules_reels,ultra_forensic_logger_v3+memory_tracker\n",
+        fprintf(g_csv_fp, "INIT,%s,%" PRIu64 ",%d,modules_reels,ultra_forensic_logger_v3+memory_tracker\n",
                 iso, ts, getpid());
-        fprintf(lf, "INIT,%s,%" PRIu64 ",%d,version,3.0_cycle17_NL03_NV01_NV02_AC01_NANO_ANOMALY\n",
+        fprintf(g_csv_fp, "INIT,%s,%" PRIu64 ",%d,version,3.0_cycle17_NL03_NV01_NV02_AC01_NANO_ANOMALY_FIX_RAM01\n",
                 iso, ts, getpid());
         /* Snapshot hardware initial */
         lv_hw_snapshot_t hw = ultra_forensic_hw_snapshot();
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:cpu_delta_pct,%.4f\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:cpu_delta_pct,%.4f\n",
                 iso, ts, getpid(), hw.cpu_delta_pct);
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_used_pct,%.4f\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_used_pct,%.4f\n",
                 iso, ts, getpid(), hw.mem_used_pct);
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_total_kb,%ld\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_total_kb,%ld\n",
                 iso, ts, getpid(), hw.mem_total_kb);
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_avail_kb,%ld\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:mem_avail_kb,%ld\n",
                 iso, ts, getpid(), hw.mem_avail_kb);
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:vm_rss_kb,%ld\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:vm_rss_kb,%ld\n",
                 iso, ts, getpid(), hw.vm_rss_kb);
-        fprintf(lf, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:vm_peak_kb,%ld\n",
+        fprintf(g_csv_fp, "HW_SAMPLE,%s,%" PRIu64 ",%d,init:vm_peak_kb,%ld\n",
                 iso, ts, getpid(), hw.vm_peak_kb);
-        fflush(lf);
-        fclose(lf);
+        fflush(g_csv_fp);
+        /* g_csv_fp reste ouvert — toutes les écritures suivantes via csv_write_line
+         * utiliseront ce FD sans fopen/fclose supplémentaire */
     } else {
         g_run_csv_path[0] = '\0';
         fprintf(stderr, "[LUMVORAX] AVERTISSEMENT: impossible d'écrire dans %s\n", log_file);
     }
     pthread_mutex_unlock(&g_csv_mutex);
-    fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s ACTIF v3.0\n", log_file);
+    fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s ACTIF v3.0 (FD_PERSISTANT=ON)\n", log_file);
 }
 
 /* C37-MODFILE : Ouvre un nouveau fichier LumVorax nommé par le module courant.
@@ -317,8 +351,13 @@ void ultra_forensic_logger_switch_module_file(const char* logs_dir, const char* 
              logs_dir, module_name, ts, getpid());
 
     pthread_mutex_lock(&g_csv_mutex);
+    /* C-FIX-RAM-01 : fermer le FD du module précédent avant d'ouvrir le suivant.
+     * CRUCIAL : sans ce fclose, les FDs s'accumulent (1 par module = 15 FDs ouverts) */
+    if (g_csv_fp) { fflush(g_csv_fp); fclose(g_csv_fp); g_csv_fp = NULL; }
+
     /* Réinitialise la numérotation de rotation pour ce nouveau module */
     g_csv_part_num = 0;
+    g_csv_write_count = 0;
     strncpy(g_run_csv_path, new_path, sizeof(g_run_csv_path) - 1);
     g_run_csv_path[sizeof(g_run_csv_path) - 1] = '\0';
     /* Initialise la base sans .csv pour la rotation */
@@ -328,14 +367,15 @@ void ultra_forensic_logger_switch_module_file(const char* logs_dir, const char* 
     if (blen > 4 && strcmp(g_csv_base + blen - 4, ".csv") == 0)
         g_csv_base[blen - 4] = '\0';
 
-    FILE* lf = fopen(new_path, "w");
-    if (lf) {
+    /* Ouvrir le nouveau FD et le garder ouvert (FD persistant) */
+    g_csv_fp = fopen(new_path, "w");
+    if (g_csv_fp) {
         char iso[64]; fill_iso(iso, sizeof(iso));
-        fprintf(lf, "event,timestamp_utc,timestamp_ns,pid,detail,value\n");
-        fprintf(lf, "MODULE_FILE_START,%s,%" PRIu64 ",%d,module,%s\n",
+        fprintf(g_csv_fp, "event,timestamp_utc,timestamp_ns,pid,detail,value\n");
+        fprintf(g_csv_fp, "MODULE_FILE_START,%s,%" PRIu64 ",%d,module,%s\n",
                 iso, ts, getpid(), module_name);
-        fflush(lf);
-        fclose(lf);
+        fflush(g_csv_fp);
+        /* g_csv_fp reste ouvert — csv_write_line l'utilisera sans fopen/fclose */
     } else {
         g_run_csv_path[0] = '\0';
         fprintf(stderr, "[LUMVORAX] AVERTISSEMENT: impossible de créer %s\n", new_path);
@@ -370,6 +410,15 @@ void ultra_forensic_logger_destroy(void) {
                  iso, hw.ts_ns, getpid(), hw.vm_rss_kb);
         csv_write_line(line);
     }
+
+    /* C-FIX-RAM-01 : fermer le FD global CSV persistant en dernier */
+    pthread_mutex_lock(&g_csv_mutex);
+    if (g_csv_fp) {
+        fflush(g_csv_fp);
+        fclose(g_csv_fp);
+        g_csv_fp = NULL;
+    }
+    pthread_mutex_unlock(&g_csv_mutex);
 
     pthread_mutex_lock(&g_global_mutex);
     for (int i = 0; i < g_tracker_count; i++) {

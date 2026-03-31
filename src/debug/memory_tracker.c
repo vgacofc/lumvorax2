@@ -476,3 +476,40 @@ void memory_tracker_cleanup(void) {
     pthread_mutex_unlock(&g_tracker_mutex);
     printf("[MEMORY_TRACKER] Cleanup completed\n");
 }
+
+/* C-FIX-RAM-03 : compactage du tableau entries entre chaque module.
+ * Supprime les entrées is_freed=true par compactage en place (déplace les actives
+ * vers le début). Évite l'accumulation de 50 000 entrées mixtes actives/libérées
+ * qui ne se réinitialisent jamais (g_tracker est statique).
+ * Retourne le nombre d'entrées actives restantes après compactage. */
+int memory_tracker_reset_freed(void) {
+    if (!g_tracker_initialized) return 0;
+    pthread_mutex_lock(&g_tracker_mutex);
+
+    size_t write_idx = 0;
+    size_t active_count = 0;
+    for (size_t i = 0; i < g_tracker.count; i++) {
+        if (!g_tracker.entries[i].is_freed) {
+            /* Entrée active : la conserver en compactant vers le début */
+            if (write_idx != i) {
+                g_tracker.entries[write_idx] = g_tracker.entries[i];
+            }
+            write_idx++;
+            active_count++;
+        }
+        /* Entrées libérées : ignorées (écrasées par la prochaine entrée active) */
+    }
+    /* Zeroise les entrées expulsées pour éviter les pointeurs fantômes */
+    if (write_idx < g_tracker.count) {
+        memset(&g_tracker.entries[write_idx], 0,
+               (g_tracker.count - write_idx) * sizeof(memory_entry_t));
+    }
+    size_t freed_count = g_tracker.count - write_idx;
+    g_tracker.count = write_idx;
+
+    pthread_mutex_unlock(&g_tracker_mutex);
+    fprintf(stderr,
+        "[MEMORY_TRACKER] C-FIX-RAM-03: purge freed entries: %zu supprimées, %zu actives restantes\n",
+        freed_count, active_count);
+    return (int)active_count;
+}

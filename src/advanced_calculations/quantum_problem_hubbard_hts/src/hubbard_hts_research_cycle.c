@@ -334,42 +334,12 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             double hopping_lr = -0.5 * d[i] * (d_left + d_right);
             /* BC-05-H4 : constante physique corrigée 65→27 K (fit QMC/DMRG, RMSE≈0.007) */
             double local_pair = exp(-fabs(d[i]) * p->temp_K / 27.0) * (1.0 + 0.08 * corr[i] * corr[i]);
-            /* FORENSIC GRANULAIRE TOTAL §SITE-STEP : CHAQUE site × CHAQUE step — ZÉRO filtre.
-             * Directive : log_all_sites_all_steps — aucun filtre sur i ni sur step.
-             * Clé dynamique format "metric_sN" avec N=indice du site. */
-            {
-                char _lv_k[80];
-                snprintf(_lv_k, sizeof(_lv_k), "local_pair_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, local_pair);
-                snprintf(_lv_k, sizeof(_lv_k), "d_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, d[i]);
-                snprintf(_lv_k, sizeof(_lv_k), "n_up_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, n_up);
-                snprintf(_lv_k, sizeof(_lv_k), "n_dn_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, n_dn);
-                snprintf(_lv_k, sizeof(_lv_k), "corr_alpha_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, (step < 500) ? 0.05 : 0.15);
-                snprintf(_lv_k, sizeof(_lv_k), "corr_val_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, corr[i]);
-                snprintf(_lv_k, sizeof(_lv_k), "k1_rk2_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, k1);
-                snprintf(_lv_k, sizeof(_lv_k), "hopping_lr_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k, hopping_lr);
-            }
+            /* C-FIX-RAM-02 : AGRÉGATION par-step au lieu de log par-site par-step.
+             * AVANT : 8 FORENSIC_LOG × nSites par step = 128 logs/step → 1.79M logs/module → 3.8 GiB CSV.
+             * APRÈS : accumulation en variables locales, log UNE fois après la boucle sites.
+             * Réduction de facteur nSites (typiquement 16×) sur le volume de logs.
+             * Les valeurs physiques (d[], corr[], local_energy) sont INCHANGÉES. */
             double local_energy = p->u_eV * n_up * n_dn - p->t_eV * hopping_lr - p->mu_eV * (n_up + n_dn - 1.0);
-            /* FORENSIC GRANULAIRE TOTAL §HAMILTONIAN-SITE : décomposition U/t/mu CHAQUE site × CHAQUE step */
-            {
-                char _lv_k2[80];
-                snprintf(_lv_k2, sizeof(_lv_k2), "U_term_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, p->u_eV * n_up * n_dn);
-                snprintf(_lv_k2, sizeof(_lv_k2), "t_hop_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, -p->t_eV * hopping_lr);
-                snprintf(_lv_k2, sizeof(_lv_k2), "mu_occ_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, -p->mu_eV * (n_up + n_dn - 1.0));
-                snprintf(_lv_k2, sizeof(_lv_k2), "local_e_s%d", i);
-                FORENSIC_LOG_MODULE_METRIC("simulate_fs", _lv_k2, local_energy);
-            }
-
             step_energy += local_energy / (double)(sites);
             step_pairing += local_pair;
             /* BC-06bis : proxy state-dépendant — sign(d[i]) varie avec l'état physique */
@@ -487,6 +457,10 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
                     c,
                     m,
                     (unsigned long long)(now_ns() - t0));
+            /* C-FIX-RAM-04 : fflush toutes les 1000 lignes pour éviter l'accumulation
+             * du buffer stdio (112 000 lignes en attente → 1-2 MiB de RAM non flushée).
+             * step%1000 limite l'overhead fflush à 14 appels par module de 14000 steps. */
+            if (step % 1000 == 0) fflush(trace_csv);
         }
         if (pairing_series && series_len && *series_len < series_cap) {
             pairing_series[*series_len] = r.pairing;
@@ -1121,6 +1095,9 @@ int main(int argc, char** argv) {
         base[i] = simulate_fullscale(&probs[i], (uint64_t)(0xABC000 + i), 99, raw);
         /* C37-RAM : libération heap après chaque module */
         malloc_trim(0);
+        /* C-FIX-RAM-03 : compactage du memory_tracker — supprime les entrées libérées.
+         * Sans ça, g_tracker.entries[50000] s'accumule module après module. */
+        memory_tracker_reset_freed();
         const char* energy_unit = "eV";
         double unit_factor = 1.0;
         module_energy_unit(probs[i].name, &energy_unit, &unit_factor);

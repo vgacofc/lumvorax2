@@ -70,5 +70,10 @@ void memory_tracker_set_release_mode(bool release_mode);
 void memory_tracker_cleanup(void);
 size_t memory_tracker_get_current_usage(void);
 
+/* C-FIX-RAM-03 : compactage du tableau entries — supprime les entrées is_freed=true.
+ * À appeler entre chaque module pour éviter l'accumulation de 50 000 entrées.
+ * Retourne le nombre d'entrées actives (non libérées) restantes après compactage. */
+int memory_tracker_reset_freed(void);
+
 
 #endif // MEMORY_TRACKER_H
