@@ -392,6 +392,15 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
         FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_pairing_norm",      step_pairing);
         FORENSIC_LOG_MODULE_METRIC("simulate_fs", "step_energy_norm",       step_energy);
 
+        /* C37-PROGRESS : progression % en temps réel toutes les 100 steps */
+        if (step % 100 == 0 && p->steps > 0) {
+            double _prog_pct = 100.0 * (double)step / (double)p->steps;
+            fprintf(stderr,
+                "[PROGRESS] %s step=%llu/%" PRIu64 " (%.1f%%) E=%.6f P=%.6f\n",
+                p->name, (unsigned long long)step, p->steps, _prog_pct,
+                step_energy, step_pairing);
+        }
+
         /* C38-RAM §FS : stabilisation RAM ≤ 90% — throttle sans arrêt du run */
         /* Vérification RAM toutes les 10 steps pour limiter l'overhead I/O /proc */
         if (step % 10 == 0) {
@@ -1083,8 +1092,12 @@ int main(int argc, char** argv) {
 
     int line = 4;
     for (int i = 0; i < nprobs; ++i) {
+        /* C37-MODFILE : ouvrir un fichier LumVorax dédié pour ce module */
+        ultra_forensic_logger_switch_module_file(logs, probs[i].name);
         FORENSIC_LOG_MODULE_START("fullscale_sim", probs[i].name);
         base[i] = simulate_fullscale(&probs[i], (uint64_t)(0xABC000 + i), 99, raw);
+        /* C37-RAM : libération heap après chaque module */
+        malloc_trim(0);
         const char* energy_unit = "eV";
         double unit_factor = 1.0;
         module_energy_unit(probs[i].name, &energy_unit, &unit_factor);

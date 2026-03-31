@@ -297,13 +297,13 @@ print_progress "build"
 checkpoint_save 2
 
 # ── C37-RESUME : reprise intelligente par module ─────────────────────────────
-# Détecte les modules déjà convergés dans le dernier run → génère problems_cycle06_resume.csv
+# Scanne TOUS les runs dans results/ et agrège les BASE_RESULT convergés
 # Le runner C lit LUMVORAX_PROBLEMS_CSV pour choisir sa config (getenv ligne 1019)
-_PREV_RUN="$(ls -1dt "$ROOT_DIR/results"/research_* 2>/dev/null | head -1 || true)"
 _PROBLEMS_CSV="$ROOT_DIR/config/problems_cycle06.csv"
-if [ -n "$_PREV_RUN" ] && [ -d "$_PREV_RUN" ]; then
-    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Dernier run détecté : $_PREV_RUN"
-    _RESUME_OUT="$(python3 "$ROOT_DIR/tools/generate_resume_config.py" "$_PROBLEMS_CSV" "$_PREV_RUN" 2>&1)"
+_RESULTS_DIR="$ROOT_DIR/results"
+if [ -d "$_RESULTS_DIR" ] && [ -n "$(ls -A "$_RESULTS_DIR" 2>/dev/null)" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Scan de tous les runs dans $_RESULTS_DIR"
+    _RESUME_OUT="$(python3 "$ROOT_DIR/tools/generate_resume_config.py" "$_PROBLEMS_CSV" "$_RESULTS_DIR" 2>&1)"
     echo "$_RESUME_OUT"
     _RESUME_CSV="$(echo "$_RESUME_OUT" | tail -1)"
     if [ -f "${_RESUME_CSV:-}" ]; then

@@ -304,6 +304,47 @@ void ultra_forensic_logger_init_lum(const char* log_file) {
     fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s ACTIF v3.0\n", log_file);
 }
 
+/* C37-MODFILE : Ouvre un nouveau fichier LumVorax nommé par le module courant.
+ * Ferme proprement le fichier CSV actuel, remet la rotation à zéro,
+ * puis crée lumvorax_<module_name>_<ts>_<pid>.csv dans logs_dir. */
+void ultra_forensic_logger_switch_module_file(const char* logs_dir, const char* module_name) {
+    if (!logs_dir || !module_name || !logs_dir[0] || !module_name[0]) return;
+
+    char new_path[4096];
+    uint64_t ts = get_precise_timestamp_ns();
+    snprintf(new_path, sizeof(new_path),
+             "%s/lumvorax_%s_%" PRIu64 "_%d.csv",
+             logs_dir, module_name, ts, getpid());
+
+    pthread_mutex_lock(&g_csv_mutex);
+    /* Réinitialise la numérotation de rotation pour ce nouveau module */
+    g_csv_part_num = 0;
+    strncpy(g_run_csv_path, new_path, sizeof(g_run_csv_path) - 1);
+    g_run_csv_path[sizeof(g_run_csv_path) - 1] = '\0';
+    /* Initialise la base sans .csv pour la rotation */
+    strncpy(g_csv_base, new_path, sizeof(g_csv_base) - 1);
+    g_csv_base[sizeof(g_csv_base) - 1] = '\0';
+    size_t blen = strlen(g_csv_base);
+    if (blen > 4 && strcmp(g_csv_base + blen - 4, ".csv") == 0)
+        g_csv_base[blen - 4] = '\0';
+
+    FILE* lf = fopen(new_path, "w");
+    if (lf) {
+        char iso[64]; fill_iso(iso, sizeof(iso));
+        fprintf(lf, "event,timestamp_utc,timestamp_ns,pid,detail,value\n");
+        fprintf(lf, "MODULE_FILE_START,%s,%" PRIu64 ",%d,module,%s\n",
+                iso, ts, getpid(), module_name);
+        fflush(lf);
+        fclose(lf);
+    } else {
+        g_run_csv_path[0] = '\0';
+        fprintf(stderr, "[LUMVORAX] AVERTISSEMENT: impossible de créer %s\n", new_path);
+    }
+    pthread_mutex_unlock(&g_csv_mutex);
+
+    fprintf(stderr, "[LUMVORAX] [C37-MODFILE] Nouveau fichier par module : %s\n", new_path);
+}
+
 void ultra_forensic_logger_destroy(void) {
     if (!g_forensic_initialized) return;
 

@@ -137,6 +137,10 @@ typedef struct {
 void ultra_forensic_logger_init_lum(const char* log_file);
 bool ultra_forensic_logger_init(void);
 void ultra_forensic_logger_destroy(void);
+/* C37-MODFILE : ouvre un nouveau fichier LumVorax par simulation (module_name).
+ * Ferme le fichier courant, réinitialise la rotation, nomme le nouveau fichier
+ * lumvorax_<module_name>_<ts>_<pid>.csv dans logs_dir. */
+void ultra_forensic_logger_switch_module_file(const char* logs_dir, const char* module_name);
 
 void ultra_forensic_log_module_start(const char* file, int line, const char* func,
                                      const char* module, const char* test);
