@@ -1502,11 +1502,13 @@ static double exact_ground_energy_2x2(double t, double u) {
     return num / den;
 }
 
-static int latest_classic_run(const char* results_root, char* out, size_t n) {
+static int latest_classic_run(const char* results_root, const char* exclude_run_id, char* out, size_t n) {
     /* C84-BASELINE-FIX : la version précédente avait la condition INVERSÉE (! strncmp),
      * ce qui sautait TOUS les répertoires "research_*" → NOT_FOUND systématique.
      * Correction : ne traiter QUE les répertoires préfixés "research_" et tri
-     * lexicographique (les noms research_YYYYMMDD... sont déjà triables chrono). */
+     * lexicographique (les noms research_YYYYMMDD... sont déjà triables chrono).
+     * C87-BASELINE-EXCL (AP) : exclusion du run_id courant pour éviter l'auto-référence.
+     * Le répertoire courant est créé avant l'appel → sans exclusion, retourne lui-même. */
     DIR* d = opendir(results_root);
     if (!d) return -1;
     struct dirent* e;
@@ -1515,6 +1517,8 @@ static int latest_classic_run(const char* results_root, char* out, size_t n) {
     while ((e = readdir(d))) {
         if (e->d_name[0] == '.') continue;
         if (strncmp(e->d_name, "research_", 9) != 0) continue; /* sauter non-research_ */
+        /* C87-BASELINE-EXCL : exclure le run courant (auto-référence) */
+        if (exclude_run_id && strcmp(e->d_name, exclude_run_id) == 0) continue;
         if (!found || strcmp(e->d_name, bestn) > 0) {
             snprintf(bestn, sizeof(bestn), "%s", e->d_name);
             found = 1;
