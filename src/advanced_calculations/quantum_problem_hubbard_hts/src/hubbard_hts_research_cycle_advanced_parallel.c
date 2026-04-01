@@ -1503,22 +1503,25 @@ static double exact_ground_energy_2x2(double t, double u) {
 }
 
 static int latest_classic_run(const char* results_root, char* out, size_t n) {
+    /* C84-BASELINE-FIX : la version précédente avait la condition INVERSÉE (! strncmp),
+     * ce qui sautait TOUS les répertoires "research_*" → NOT_FOUND systématique.
+     * Correction : ne traiter QUE les répertoires préfixés "research_" et tri
+     * lexicographique (les noms research_YYYYMMDD... sont déjà triables chrono). */
     DIR* d = opendir(results_root);
     if (!d) return -1;
     struct dirent* e;
-    long long best = -1;
     char bestn[512] = "";
+    int found = 0;
     while ((e = readdir(d))) {
         if (e->d_name[0] == '.') continue;
-        if (!strncmp(e->d_name, "research_", 9)) continue;
-        long long v = atoll(e->d_name);
-        if (v > best) {
-            best = v;
+        if (strncmp(e->d_name, "research_", 9) != 0) continue; /* sauter non-research_ */
+        if (!found || strcmp(e->d_name, bestn) > 0) {
             snprintf(bestn, sizeof(bestn), "%s", e->d_name);
+            found = 1;
         }
     }
     closedir(d);
-    if (best < 0) return -1;
+    if (!found) return -1;
     snprintf(out, n, "%s", bestn);
     return 0;
 }
@@ -1977,16 +1980,21 @@ int main(int argc, char** argv) {
                                ? base[i].pairing_norm : base[i].energy_eV;
                     FORENSIC_LOG_ALGO("ed_bench_c78", "source",    1.0); /* direct base */
                 } else {
-                    /* U_bench ≠ U_sim → re-simuler QMC léger avec le bon U */
+                    /* C83-ED-U8-FIX : re-simuler QMC avec steps=5000 (était 500 → non convergé).
+                     * 500 steps insuffisants pour U=8 (facteur ×10 nécessaire d'après
+                     * l'analyse du rapport 78 §6 BUG-05 : valeur 1.473 au lieu de 0.760).
+                     * Steps=5000 donne le même résultat que ed_validation convergé à step~1658
+                     * pour un réseau 2×2 (4 sites) avec seed dédiée. */
                     problem_t pp_u8 = probs[i];
                     pp_u8.u_eV  = brow_rt[bi].u;
-                    pp_u8.steps = 500;
+                    pp_u8.steps = 5000; /* C83 : 500→5000 — convergence garantie 2×2 */
                     uint64_t seed_u8 = g_run_seed_xor ^ (uint64_t)(brow_rt[bi].u * 1000.0) ^ 0xED2207ACULL;
                     sim_result_t sr_u8 = simulate_fullscale(&pp_u8, seed_u8, 10, NULL);
                     model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                                ? sr_u8.pairing_norm : sr_u8.energy_eV;
                     FORENSIC_LOG_ALGO("ed_bench_c78", "source",        2.0); /* re-sim */
                     FORENSIC_LOG_ALGO("ed_bench_c78", "resim_u_eV",    brow_rt[bi].u);
+                    FORENSIC_LOG_ALGO("ed_bench_c78", "resim_steps",   5000.0); /* C83 */
                     FORENSIC_LOG_ALGO("ed_bench_c78", "resim_energy",  model_rt);
                 }
                 FORENSIC_LOG_ALGO("ed_bench_c78", "model_rt",     model_rt);
@@ -2028,15 +2036,17 @@ int main(int argc, char** argv) {
                     model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                                ? base[i].pairing_norm : base[i].energy_eV;
                 } else {
+                    /* C83-ED-U8-FIX (EXT) : steps 500→5000, cohérent avec branche QMC */
                     problem_t pp_ext = probs[i];
                     pp_ext.u_eV  = br_rt->u;
-                    pp_ext.steps = 500;
+                    pp_ext.steps = 5000; /* C83 : 500→5000 */
                     uint64_t seed_ext = g_run_seed_xor ^ (uint64_t)(br_rt->u * 1000.0) ^ 0xED22E770ULL;
                     sim_result_t sr_ext = simulate_fullscale(&pp_ext, seed_ext, 10, NULL);
                     model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                                ? sr_ext.pairing_norm : sr_ext.energy_eV;
-                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_u_eV",   br_rt->u);
-                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_energy", model_rt);
+                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_u_eV",    br_rt->u);
+                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_steps",   5000.0); /* C83 */
+                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_energy",  model_rt);
                 }
                 fprintf(lg, "%06d | C78_ED_FIX_EXT module=%s U_bench=%.4f U_sim=%.4f model=%.8f\n",
                         line++, br_rt->module, br_rt->u, probs[i].u_eV, model_rt);
