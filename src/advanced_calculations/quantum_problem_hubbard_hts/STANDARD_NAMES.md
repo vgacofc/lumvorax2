@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 3.0 — 2026-03-28 (C68-REALTIME-BENCH)
+**Version :** 3.1 — 2026-04-02 (C91-RCS : module Random Circuit Sampling)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
@@ -561,3 +561,102 @@ RÈGLE C68 — BENCHMARK TEMPS RÉEL (OBLIGATOIRE) :
 *Version 3.0 :* 2026-03-17 — ajout Section I : Logger V4 NEXT (qf_log_*) — Cycle C33  
 *Version 4.0 :* 2026-03-27 — ajout Section J : Tables Supabase + colonnes CSV benchmark — Cycle C63  
 *Version 5.0 :* 2026-03-28 — ajout Section K : C68-REALTIME-BENCH (benchmarks temps réel, tags log, variables rt_*, métriques tcsv) — Cycle C68
+
+---
+
+## SECTION D — MODULE 16 : Random Circuit Sampling (C91-RCS)
+
+**Ajouté le :** 2026-04-02 — Cycle C91-RCS  
+**Auteur :** Agent Replit — conforme RÈGLE D'UTILISATION §1-5  
+**Référence :** CHAT/analysechatgpt82.2.md (section 5)
+
+### Paramètres dans `problems_cycle06.csv` (ligne 17, module 16)
+
+| Colonne CSV | Valeur | Interprétation RCS |
+|---|---|---|
+| `name` | `random_circuit_sampling` | **NOM D'ORIGINE — ne jamais renommer** |
+| `lx` | `10` | Largeur réseau qubits (10 × 10 = 100 qubits) |
+| `ly` | `10` | Hauteur réseau qubits |
+| `t_eV` | `1.000000` | `coupling_strength` — amplitude porte 2Q (CZ) |
+| `u_eV` | `2.000000` | `entanglement_strength` — modulation bruit de couplage |
+| `mu_eV` | `0.000000` | `phase_offset` (inutilisé dans la v1) |
+| `temp_K` | `0.001` | `noise_level_K` (quasi-idéal : bruit ≈ 0) |
+| `dt` | `0.010000` | `circuit_depth_increment` : depth = dt × 1000 = 10 couches |
+| `steps` | `5000` | `n_circuits_sampled` (5 000 circuits Haar-aléatoires) |
+
+### Fonctions C (NOM D'ORIGINE — SECTION D)
+
+| NOM D'ORIGINE | Fichier | Signature | Description |
+|---|---|---|---|
+| `simulate_rcs_module` | `src/random_circuit_sampling.c` | `rcs_result_t f(const rcs_problem_t*, uint64_t)` | **Simulation RCS principale** — génère circuits, calcule XEB, compare Porter-Thomas |
+| `apply_haar_1q` | `src/random_circuit_sampling.c` | `void f(double*,double*,double*,double*, uint64_t*)` | Porte Haar-aléatoire 1-qubit (3 angles θ,φ,λ) |
+| `apply_cz_2q` | `src/random_circuit_sampling.c` | `void f(double*,double*,double*,double*, double, uint64_t*)` | Porte CZ entanglement 2-qubits avec couplage modulé |
+
+### Types C (NOM D'ORIGINE — SECTION D)
+
+| NOM D'ORIGINE | Fichier | Description |
+|---|---|---|
+| `rcs_result_t` | `src/random_circuit_sampling.h` | Résultat simulation RCS (F_XEB, H_norm, XEB_ratio, etc.) |
+| `rcs_problem_t` | `src/random_circuit_sampling.h` | Paramètres du problème RCS (aligné sur `problem_t`) |
+
+### Métriques LumVorax loggées par le module RCS
+
+Préfixe obligatoire : `rcs:` — toutes les métriques commencent par `rcs:` dans le CSV Lumvorax.
+
+| NOM D'ORIGINE (metric dans FORENSIC_LOG_MODULE_METRIC) | Unité | Description |
+|---|---|---|
+| `rcs:n_qubits` | entier | Nombre de qubits simulés (lx × ly) |
+| `rcs:circuit_depth` | entier | Profondeur effective du circuit (couches de portes 2Q) |
+| `rcs:n_circuits` | entier | Nombre de circuits Haar-aléatoires générés |
+| `rcs:coupling_strength` | eV | Amplitude porte CZ 2-qubits |
+| `rcs:entanglement_str` | eV | Force d'entanglement (modulation bruit) |
+| `rcs:noise_level_eV` | eV | Bruit thermique (kB × T_K) |
+| `rcs:F_xeb_mean` | sans unité [0,1] | Score XEB moyen : fidelité Cross-Entropy Benchmarking |
+| `rcs:xeb_std` | sans unité | Écart-type XEB sur les n_circuits |
+| `rcs:xeb_rel_var` | sans unité | Variance relative XEB (convergence si < 0.01) |
+| `rcs:H_norm` | sans unité [0,1] | Entropie de Shannon normalisée : H / H_max |
+| `rcs:porter_thomas_kl` | sans unité | Divergence KL approx vs distribution Porter-Thomas |
+| `rcs:xeb_ratio_vs_willow` | sans unité | F_XEB / F_Willow (>1 = record battu) |
+| `rcs:xeb_drift_mean` | sans unité | Dérivée temporelle moyenne de la fidelité XEB |
+| `rcs:norm_dev_max` | sans unité | Max |‖ψ‖ - 1| (stabilité numérique) |
+| `rcs:converged` | 0/1 | Convergence XEB (variance relative < 1%) |
+| `rcs:willow_fidelity_ref` | sans unité | Fidelité de référence Google Willow 2024 (≈2×10⁻⁴) |
+| `rcs:beats_willow` | 0/1 | 1 si F_XEB > F_Willow |
+| `rcs:op_init_state_circuit` | entier | Opération : initialisation état |+⟩^n |
+| `rcs:op_init_inv_sqrt_n` | 1/√n | Facteur de normalisation initial |
+| `rcs:op_layer_start` | entier | Opération : début couche de portes |
+| `rcs:op_1q_gate_qubit` | entier | Opération : application porte Haar 1Q sur qubit q |
+| `rcs:op_2q_cz_pair` | entier | Opération : application porte CZ sur paire (q, q+1) |
+| `rcs:op_2q_coupling` | eV | Valeur du couplage effectif utilisé |
+| `rcs:op_renorm_factor` | 1/‖ψ‖ | Facteur de renormalisation (stabilité numérique) |
+| `rcs:op_p_bitstring_circuit` | entier | Opération : calcul probabilité bitstring (circuit circ) |
+| `rcs:p_bitstring` | sans unité | Probabilité du bitstring mesuré (approximation MF) |
+| `rcs:entropy_circuit` | nats | Entropie de Shannon locale du circuit |
+| `rcs:xeb_circuit` | sans unité | Contribution XEB du circuit : D_eff × p - 1 |
+| `rcs:D_eff_log` | sans unité | log(D) = n_qubits × ln(2) |
+| `rcs:op_acc_xeb_running_mean` | sans unité | Moyenne glissante XEB (toutes 500 itérations) |
+| `rcs_to_sim_F_xeb` | sans unité | Conversion rcs_result_t → sim_result_t : F_XEB → energy_eV |
+| `rcs_to_sim_H_norm` | sans unité | Conversion : H_norm → pairing_norm |
+| `rcs_to_sim_xeb_ratio` | sans unité | Conversion : xeb_ratio → sign_ratio |
+
+### Convention de conversion rcs_result_t → sim_result_t
+
+| Champ `sim_result_t` | Source dans `rcs_result_t` | Signification physique RCS |
+|---|---|---|
+| `energy_eV` | `rr.energy_eV` = `|F_XEB|` | Fidelité XEB (≥ 0) |
+| `pairing_norm` | `rr.pairing_norm` = `H_norm` | Entropie normalisée [0,1] |
+| `sign_ratio` | `rr.sign_ratio` = `xeb_ratio` | Rapport vs Willow (>1 = record) |
+| `energy_drift_metric` | `rr.energy_drift_metric` | Drift XEB inter-circuits |
+| `norm_deviation_max` | `rr.norm_deviation_max` | Stabilité numérique |
+| `cpu_peak`, `mem_peak`, `elapsed_ns` | directs | Ressources HW |
+
+### Références physiques
+
+| Document | Résultat RCS pertinent |
+|---|---|
+| Arute et al., Nature 574, 505 (2019) | Sycamore : 53 qubits, depth 20, F_XEB ≈ 0.22% |
+| Google Quantum AI, Nature 638, 840 (2024) | Willow : 105 qubits, depth 25, F_XEB ≈ 2×10⁻⁴ |
+| Boixo et al., Nature Physics 14, 595 (2018) | Théorie XEB : F_XEB = D × ⟨p_ideal⟩ − 1 |
+| Porter & Thomas, Phys. Rev. 104, 483 (1956) | Distribution idéale : P(p) = D exp(−Dp) |
+
+*Mise à jour : Version 3.1 — 2026-04-02 — C91-RCS*

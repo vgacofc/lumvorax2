@@ -15,8 +15,9 @@ BIN_RESEARCH_ADV  := hubbard_hts_research_runner_advanced_parallel
 SRC_MAIN          := src/main.c src/hubbard_hts_module.c
 ED_SRC            := src/exact_diagonalization.c
 WORM_SRC          := src/worm_mc_bosonic.c
+RCS_SRC           := src/random_circuit_sampling.c
 SRC_RESEARCH      := src/hubbard_hts_research_cycle.c $(ED_SRC) $(LUM_SRC)
-SRC_RESEARCH_ADV  := src/hubbard_hts_research_cycle_advanced_parallel.c $(ED_SRC) $(WORM_SRC) $(LUM_SRC)
+SRC_RESEARCH_ADV  := src/hubbard_hts_research_cycle_advanced_parallel.c $(ED_SRC) $(WORM_SRC) $(RCS_SRC) $(LUM_SRC)
 
 all: $(BIN_MAIN) $(BIN_RESEARCH) $(BIN_RESEARCH_ADV)
 

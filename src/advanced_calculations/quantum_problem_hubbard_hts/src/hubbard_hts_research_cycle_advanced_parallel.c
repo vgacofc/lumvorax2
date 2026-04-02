@@ -21,6 +21,8 @@
 /* C24-02 : Cross-validation ED — exact_diagonalization.h requis */
 #include "exact_diagonalization.h"
 #include "../include/worm_mc_bosonic.h"  /* C36-P3 : Worm MC bosonique */
+/* C91-RCS : Random Circuit Sampling — module 16 (suprématie quantique / XEB) */
+#include "random_circuit_sampling.h"
 
 #define MAX_PATH 768
 #define EPS 1e-12
@@ -724,6 +726,41 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
 }
 
 static sim_result_t simulate_fullscale(const problem_t* p, uint64_t seed, int burn_scale, FILE* trace_csv) {
+    /* C91-RCS : détection du module Random Circuit Sampling (module 16).
+     * Si le module est "random_circuit_sampling", on appelle simulate_rcs_module()
+     * et on convertit rcs_result_t → sim_result_t (convention unifiée).
+     * Les modules Hubbard/QCD/ED/... passent par simulate_fullscale_controlled() normalement. */
+    if (p && p->name && strcmp(p->name, "random_circuit_sampling") == 0) {
+        (void)burn_scale;
+        (void)trace_csv;
+        rcs_problem_t rcs_p;
+        rcs_p.name        = p->name;
+        rcs_p.lx          = p->lx;
+        rcs_p.ly          = p->ly;
+        rcs_p.t_eV        = p->t_eV;
+        rcs_p.u_eV        = p->u_eV;
+        rcs_p.mu_eV       = p->mu_eV;
+        rcs_p.temp_K      = p->temp_K;
+        rcs_p.dt          = p->dt;
+        rcs_p.steps       = p->steps;
+        rcs_result_t rr   = simulate_rcs_module(&rcs_p, seed);
+        /* Conversion rcs_result_t → sim_result_t (convention runner principal) */
+        sim_result_t sr   = {0};
+        sr.energy_eV          = rr.energy_eV;          /* F_XEB */
+        sr.energy_drift_metric = rr.energy_drift_metric; /* drift XEB */
+        sr.pairing_norm       = rr.pairing_norm;        /* H_norm entropie */
+        sr.sign_ratio         = rr.sign_ratio;          /* XEB_ratio vs Willow */
+        sr.cpu_peak           = rr.cpu_peak;
+        sr.mem_peak           = rr.mem_peak;
+        sr.elapsed_ns         = rr.elapsed_ns;
+        sr.norm_deviation_max = rr.norm_deviation_max;
+        /* Log de conversion dans le CSV forensique principal */
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_F_xeb",   sr.energy_eV);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_H_norm",  sr.pairing_norm);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_xeb_ratio", sr.sign_ratio);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_elapsed_ns", (double)sr.elapsed_ns);
+        return sr;
+    }
     return simulate_fullscale_controlled(p, seed, burn_scale, trace_csv, NULL, NULL, 0, NULL);
 }
 
