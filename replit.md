@@ -25,7 +25,14 @@ Any script that imports torch must either:
 2. Preload the library manually via `ctypes.CDLL(path)` before `import torch`
 
 ## Workflows
-- **Start application**: Runs the Flask visualization server via `python3 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app` (port 5000, webview). `main.py` imports the Flask `app` from `src/visualization/server.py`.
+
+> **IMPORTANT — 2026-04-02** : Le workflow **"Start application"** est **DÉSACTIVÉ** intentionnellement.
+> Raison : le tableau de bord Flask (`src/visualization/server.py`) n'est pas nécessaire pour les cycles de calcul quantique C37. Son démarrage automatique consommait des ressources et interférait avec le runner avancé. La commande du workflow est volontairement vide (args=""). Ne pas réactiver sans validation explicite.
+>
+> Le seul workflow actif est : **"Quantum Research Cycle C37"** → `bash run_research_cycle.sh`.
+
+- **Start application**: ~~DÉSACTIVÉ~~ — Anciennement Flask via gunicorn port 5000. Commande vidée intentionnellement le 2026-04-02.
+- **Quantum Research Cycle C37**: Runner de simulation quantique Hubbard-HTS. Lance `run_research_cycle.sh` dans `src/advanced_calculations/quantum_problem_hubbard_hts/`.
 
 ## Module de Visualisation (`src/visualization/`)
 - **server.py** : Serveur Flask exposant les données réelles des runs via API REST (`/api/viz/*`)

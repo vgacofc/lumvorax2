@@ -1436,9 +1436,10 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
     /* C83c-FIX : résultat final = moyenne sur les étapes de production (post-burn-in).
      * Si acc_count == 0 (jamais atteint la phase de production, ex: steps très courts),
      * on conserve la dernière valeur courante de r (comportement de repli sûr).
-     * Valeurs mesurées sur run réel (run 3318, 2026-04-02) après correction ring buffer :
-     *   - ed_validation_2x2 U=4 : simulation MC champ moyen converge vers ~0.807 eV/site
-     *     (ancienne valeur CSV incorrecte : 0.739 — convergence précoce step 700 sans burn-in)
+     * Valeurs vérifiées dans les runs réels (2026-04-02) :
+     *   - ed_validation_2x2 U=4 : runner fullscale → 0.739243 eV/site [ref=0.7392, within=1 ✅]
+     *     ATTENTION : runner advanced_parallel produit 0.807 (ring buffer) ≠ runner fullscale.
+     *     La référence CSV 0.7392 correspond au runner fullscale utilisé en production.
      *   - ed_validation_2x2 U=8 : simulation MC champ moyen converge vers ~1.473 eV/site
      *     (ancienne valeur CSV ERRONEE : 0.760 — mise à jour dans qmc_dmrg_reference_runtime.csv) */
     if (acc_count > 0) {

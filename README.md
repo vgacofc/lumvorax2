@@ -1,3 +1,7 @@
+# LUM/VORAX System — Environnement de Simulation Quantique Hubbard-HTS
+
+> **STATUT WORKFLOW (2026-04-02)** : Le workflow **"Start application"** (Flask dashboard) est **DÉSACTIVÉ** — commande vidée intentionnellement. Seul le workflow **"Quantum Research Cycle C37"** est actif.
+
 # LUM/VORAX System - Version V32 (Advanced Optimization)
 
 ## Présentation
