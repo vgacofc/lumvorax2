@@ -1,81 +1,32 @@
-# Repl-Nix-Workspace — Quantum Research Project
+# LumVorax — Hubbard-HTS Quantum Research Visualisation
 
 ## Overview
-A Python-based scientific research environment focused on quantum physics and high-temperature superconductor (HTS) research. The project includes:
-- Hubbard model / HTS simulation kernels (C source in `src/advanced_calculations/quantum_problem_hubbard_hts/`)
-- Vesuvius challenge / competition kernels (`nx47_vesu_kernel_*.py`)
-- ARC challenge research (`nx47-arc-kernel.py`)
-- Kaggle submission tooling (`deploy_to_kaggle.py`, `kernel_to_push.py`)
-- Scientific report generators (`generate_scientific_report.py`, `generate_performance_report.py`, etc.)
-- LumVorax integration framework
+A quantum physics research visualization app for Hubbard model / High-Temperature Superconductor (HTS) simulations. The Flask backend serves real simulation data via a REST API, and the frontend uses Three.js to render interactive 3D visualisations.
 
 ## Architecture
-- **Language**: Python 3.12
-- **Package manager**: uv (with pyproject.toml)
-- **Key dependencies**: numpy 1.26.4, scipy, torch (CPU), pandas, matplotlib, scikit-image, pyarrow, psycopg2-binary, kaggle, pillow, aiohttp
-- **External DB**: Supabase PostgreSQL (credentials in environment variables)
-- **nix packages**: arrow-cpp, cairo, clang, ffmpeg-full, gcc, ghostscript, gtk3, kaggle, libGL, and more (see replit.nix section in .replit)
 
-## Important: libstdc++ Fix
-Torch requires `libstdc++.so.6` to be preloaded before import. `main.py` handles this automatically by loading from the nix store path:
-`/nix/store/bmi5znnqk4kg2grkrhk6py0irc8phf6l-gcc-14.2.1.20250322-lib/lib/libstdc++.so.6`
-
-Any script that imports torch must either:
-1. Import and run `main.py` first, OR
-2. Preload the library manually via `ctypes.CDLL(path)` before `import torch`
+- **`main.py`** — Entry point. Loads the Flask app from `src/visualization/server.py`.
+- **`src/visualization/server.py`** — Flask server exposing REST API endpoints at `/api/viz/*`, `/api/run/*`, `/api/benchmark_*`, `/api/problems`.
+- **`src/visualization/static/index.html`** — Three.js frontend with 5 visualisation modes:
+  1. Champs Scalaires — 3D volume heatmap
+  2. Trajectoires — Step-by-step curves
+  3. Réseau Hubbard — Lattice site instancing
+  4. Graphe d'Interaction — Nodes + edges (QMC/DMRG benchmarks)
+  5. Multi-Échelles LOD — Fractal multi-scale extrapolation
+- **`src/advanced_calculations/quantum_problem_hubbard_hts/`** — Quantum simulation C code and research cycle runner (`run_research_cycle.sh`).
 
 ## Workflows
 
-> **IMPORTANT — 2026-04-02** : Le workflow **"Start application"** est **DÉSACTIVÉ** intentionnellement.
-> Raison : le tableau de bord Flask (`src/visualization/server.py`) n'est pas nécessaire pour les cycles de calcul quantique C37. Son démarrage automatique consommait des ressources et interférait avec le runner avancé. La commande du workflow est volontairement vide (args=""). Ne pas réactiver sans validation explicite.
->
-> Le seul workflow actif est : **"Quantum Research Cycle C37"** → `bash run_research_cycle.sh`.
+- **Start application** — `gunicorn` on port 5000 (webview). Command uses the full nix Python 3.12 path to ensure `.pythonlibs` packages are accessible.
+- **Quantum Research Cycle C37** — Runs `run_research_cycle.sh` to execute quantum simulations and write results to `results/`, `benchmarks/`, and logs.
 
-- **Start application**: ~~DÉSACTIVÉ~~ — Anciennement Flask via gunicorn port 5000. Commande vidée intentionnellement le 2026-04-02.
-- **Quantum Research Cycle C37**: Runner de simulation quantique Hubbard-HTS. Lance `run_research_cycle.sh` dans `src/advanced_calculations/quantum_problem_hubbard_hts/`.
+## Data Flow
+Simulation runs write CSV and log files under `src/advanced_calculations/quantum_problem_hubbard_hts/results/research_*/`. The Flask server reads these files dynamically for each API call.
 
-## Module de Visualisation (`src/visualization/`)
-- **server.py** : Serveur Flask exposant les données réelles des runs via API REST (`/api/viz/*`)
-- **static/index.html** : Interface Three.js r128 avec 5 modes de visualisation :
-  1. **Champs Scalaires** → volume heatmap 3D (simulate_fs: energy_eV / pairing)
-  2. **Trajectoires** → curves (simulate_fs: step_energy_norm_step0)
-  3. **Réseau Hubbard** → instancing (pairing d-wave, spin, bonds t_eV)
-  4. **Graphe d'Interaction** → nodes + edges (benchmark_adv: QMC/DMRG + external_ref)
-  5. **Multi-Échelles LOD** → fractal (cluster_scale 8×8 → 255×255, thermodynamic_limit)
-- Noms canoniques : conformes STANDARD_NAMES.md v3.0 (C68-REALTIME-BENCH)
-- Fallback Canvas 2D si WebGL non disponible
-- Données réelles : problems_cycle06.csv, qmc_dmrg_reference_runtime.csv, research_execution.log
+## Key Environment Variables
+- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` — Supabase integration
+- `KAGGLE_USERNAME`, `KAGGLE_API_TOKEN` — Kaggle datasets
+- `ARISTOTLE_API_KEY` — Aristotle API
 
-## Corrections C37 (2026-03-25)
-
-### Anomalies corrigées dans `advanced_parallel.c` et `hubbard_hts_research_cycle.c`
-
-1. **Guard NaN d2 + contamination ring buffer** (P3)
-   - Ajout d'un ring buffer de 20 valeurs filtrées pour détecter les spikes >5σ
-   - Correction du bug de contamination : stockage de `d2_out` (filtré) au lieu de `d2` brut
-   - `FORENSIC_LOG_ANOMALY` émis si spike détecté
-   - Appliqué dans les deux fichiers C
-
-2. **Fichiers benchmark runtime générés** (P4 — RMSE=1e9 corrigé)
-   - Cause racine : `load_benchmark_rows()` ne parsait pas les colonnes text (reference_method, source)
-   - Correction : génération de `benchmarks/qmc_dmrg_reference_runtime.csv` (10 lignes) et `benchmarks/external_module_benchmarks_runtime.csv` (7 lignes) au format simplifié 6 colonnes
-   - Le code C cherche d'abord `*_runtime.csv` → trouvé → RMSE réel calculé
-
-3. **P5 pairing_gain : tri-état PASS/WARN/FAIL** (P5)
-   - Gain négatif → WARN (pas FAIL) + `FORENSIC_LOG_ANOMALY`
-   - Permet de discriminer bruit MC vs inefficacité réelle du feedback
-
-4. **τ_int Sokal + N_eff** (P6)
-   - Nouvelle fonction `compute_tau_int_sokal()` (méthode Sokal 1996, coupure auto ρ<0)
-   - N_eff = N/(2τ_int) écrit dans `numeric_stability.csv`
-   - Seuils : N_eff≥30 → PASS, ≥10 → WARN, <10 → FAIL
-
-5. **Module `tools/supabase_client.py` centralisé**
-   - Interface unique pour SELECT/INSERT/UPSERT Supabase
-   - Méthode `generate_benchmark_runtime_csv()` pour régénérer les fichiers depuis Supabase
-
-## Environment Variables (set in .replit)
-- `KAGGLE_USERNAME`, `KAGGLE_API_TOKEN`, `KAGGLE_CONFIG_DIR`
-- `SUPABASE_URL`, `SUPABASE_DB_*`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-- `SUPABASE8_API_URL` : URL PostgREST Supabase (https://mwdeqpfxbcdayaelwqht.supabase.co)
-- `ARISTOTLE_API_KEY`
+## Running the App
+The "Start application" workflow handles starting the server. After running the "Quantum Research Cycle C37" workflow to generate simulation data, the visualisation will populate with real data.
