@@ -1747,6 +1747,42 @@ static bool verify_file_real(const char* path, const char* label) {
     return true;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * C92 — Parallélisation pthread de la boucle de simulation principale.
+ *
+ * Chaque module (Hubbard/QCD/RCS/…) est totalement indépendant : seeds
+ * séparées, pas de dépendance de données inter-modules → embarras parallèle.
+ *
+ * Architecture à 2 phases :
+ *   Phase 1 : simulate_fullscale() exécuté en parallèle (nprobs threads).
+ *             trace_csv=NULL → aucun accès concurrent sur raw (FILE* partagé).
+ *             Le logger LumVorax (FORENSIC_LOG_MODULE_METRIC) possède son
+ *             propre mutex interne → thread-safe sans modification.
+ *   Phase 2 : post-traitement séquentiel inchangé (lg, raw, prov, ucsv,
+ *             ngcsv, dmcsv, bcsv, bcsvm, tcsv — tous les FILE* partagés).
+ *
+ * Fallback : si pthread_create() échoue pour un module, simulation séquentielle
+ *            immédiate avec trace_csv=raw (comportement pré-C92 préservé).
+ *
+ * Gain estimé : 4–6× sur 8 cœurs (CPU 19–33% → ~90%).
+ * Risque race condition : ZÉRO — aucun FILE* partagé dans la phase de calcul.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+typedef struct {
+    const problem_t* prob;
+    uint64_t         seed;
+    int              burn_scale;
+    sim_result_t     result;
+} c92_arg_t;
+
+static void* c92_sim_thread(void* arg) {
+    c92_arg_t* a = (c92_arg_t*)arg;
+    /* trace_csv=NULL : thread-safe — évite les accès concurrents sur raw.
+     * La trace step-by-step LumVorax (rotation CSV 20 MB par module) reste
+     * active via FORENSIC_LOG_MODULE_METRIC (mutex interne ultra_forensic_logger). */
+    a->result = simulate_fullscale(a->prob, a->seed, a->burn_scale, NULL);
+    return NULL;
+}
+
 int main(int argc, char** argv) {
     const char* root = (argc > 1) ? argv[1] : "src/advanced_calculations/quantum_problem_hubbard_hts";
     char results_root[MAX_PATH], run_id[128], run_dir[MAX_PATH], logs[MAX_PATH], reports[MAX_PATH], tests[MAX_PATH];
@@ -2023,8 +2059,58 @@ int main(int argc, char** argv) {
 
     sim_result_t base[16];
 
+    /* C92 — Phase 1 : lancement parallèle des nprobs threads de simulation.
+     * Chaque thread appelle simulate_fullscale() avec trace_csv=NULL pour
+     * éviter tout accès concurrent sur raw (baseline_reanalysis_metrics.csv).
+     * Fallback séquentiel automatique si pthread_create() échoue (EAGAIN/ENOMEM). */
+    {
+        c92_arg_t c92_args[16];
+        pthread_t c92_threads[16];
+        memset(c92_threads, 0, sizeof(c92_threads));
+
+        fprintf(lg, "%06d | C92_PARALLEL_START nprobs=%d\n", line++, nprobs);
+
+        for (int i = 0; i < nprobs && i < 16; ++i) {
+            c92_args[i].prob       = &probs[i];
+            c92_args[i].seed       = (uint64_t)(0xABC000 + i) ^ g_run_seed_xor;
+            c92_args[i].burn_scale = 99;
+            c92_args[i].result     = (sim_result_t){0};
+            if (pthread_create(&c92_threads[i], NULL, c92_sim_thread, &c92_args[i]) != 0) {
+                fprintf(stderr, "C92: pthread_create[%d] failed pour '%s' — fallback séquentiel\n",
+                        i, probs[i].name);
+                /* Fallback : simulation immédiate avec trace (comportement pré-C92). */
+                c92_args[i].result = simulate_fullscale(&probs[i], c92_args[i].seed, 99, raw);
+                c92_threads[i] = (pthread_t)0;
+            }
+        }
+
+        /* C92 — Phase 2 : attente de tous les threads (pthread_join) avant post-traitement.
+         * Protège les accès à bcsv, bcsvm, lg, prov, ucsv, ngcsv, dmcsv (FILE* partagés). */
+        for (int i = 0; i < nprobs && i < 16; ++i) {
+            if ((uintptr_t)c92_threads[i] != 0)
+                pthread_join(c92_threads[i], NULL);
+            base[i] = c92_args[i].result;
+        }
+
+        fprintf(lg, "%06d | C92_PARALLEL_DONE nprobs=%d\n", line++, nprobs);
+
+        /* C92 — Écriture résumé dans raw (baseline_reanalysis_metrics.csv).
+         * La trace step-by-step (supprimée dans les threads pour thread-safety)
+         * est remplacée par une ligne de résumé par module : valeurs convergées finales. */
+        for (int i = 0; i < nprobs && i < 16; ++i) {
+            fprintf(raw, "%s,C92_summary,%.6f,%.6f,%.6f,%.2f,%.2f,%llu,%.12e,%.6f\n",
+                    probs[i].name,
+                    base[i].energy_eV, base[i].pairing_norm, base[i].sign_ratio,
+                    base[i].cpu_peak,  base[i].mem_peak,
+                    (unsigned long long)base[i].elapsed_ns,
+                    base[i].norm_deviation_max, base[i].energy_drift_metric);
+        }
+    } /* fin bloc C92 */
+
+    /* C92 — Phase 3 : post-traitement séquentiel inchangé.
+     * Toutes les écritures dans les FILE* partagés (lg, prov, ucsv, ngcsv,
+     * dmcsv, bcsv, bcsvm, tcsv) sont protégées par leur nature séquentielle. */
     for (int i = 0; i < nprobs; ++i) {
-        base[i] = simulate_fullscale(&probs[i], (uint64_t)(0xABC000 + i) ^ g_run_seed_xor, 99, raw);
         fprintf(lg, "%06d | BASE_RESULT problem=%s energy=%.6f pairing=%.6f sign=%.6f cpu_peak=%.2f mem_peak=%.2f elapsed_ns=%llu\n", line++, probs[i].name, base[i].energy_eV, base[i].pairing_norm, base[i].sign_ratio, base[i].cpu_peak, base[i].mem_peak, (unsigned long long)base[i].elapsed_ns);
         /* C79-BETA : écriture de β = 1/(kB·T) dans provenance.log pour chaque module.
          * Débloque la comparaison quantitative avec PRB 94, 085103 (Xu 2016) / LeBlanc 2015.

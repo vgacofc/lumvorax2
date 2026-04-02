@@ -41,7 +41,7 @@ Simulation runs write CSV and log files under `src/advanced_calculations/quantum
 |-----|--------|
 | C83b/C83c burn_scale ignoré | ✅ Corrigé (acc_energy/acc_count post-burn-in) |
 | C89 gap spectral Lanczos | ✅ Corrigé (tridiag_two_lowest dans exact_diagonalization.c) |
-| CPU multicoeur 19–33% (séquentiel) | ⚠️ Documenté — correction C92 (pthread) en attente |
+| CPU multicoeur 19–33% (séquentiel) | ✅ Corrigé C92 — pool pthread 16 threads dans advanced_parallel.c (Phase 1 : simulate_fullscale() en parallèle, Phase 2 : post-traitement séquentiel) |
 | Ops=0 opérations non loggées | ✅ Résolu par module RCS (pattern de référence) |
 
 ## Key Environment Variables
