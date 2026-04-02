@@ -1844,7 +1844,8 @@ int main(int argc, char** argv) {
     fprintf(prov, "root=%s\n", root);
 
     char baseline[128] = "";
-    if (latest_classic_run(results_root, baseline, sizeof(baseline)) == 0)
+    /* C87-BASELINE-EXCL : passer run_id pour exclure le run courant de la recherche */
+    if (latest_classic_run(results_root, run_id, baseline, sizeof(baseline)) == 0)
         fprintf(lg, "000003 | BASELINE latest_classic_run=%s\n", baseline);
     else
         fprintf(lg, "000003 | BASELINE latest_classic_run=NOT_FOUND\n");
@@ -1984,21 +1985,21 @@ int main(int argc, char** argv) {
                                ? base[i].pairing_norm : base[i].energy_eV;
                     FORENSIC_LOG_ALGO("ed_bench_c78", "source",    1.0); /* direct base */
                 } else {
-                    /* C83-ED-U8-FIX : re-simuler QMC avec steps=5000 (était 500 → non convergé).
-                     * 500 steps insuffisants pour U=8 (facteur ×10 nécessaire d'après
-                     * l'analyse du rapport 78 §6 BUG-05 : valeur 1.473 au lieu de 0.760).
-                     * Steps=5000 donne le même résultat que ed_validation convergé à step~1658
-                     * pour un réseau 2×2 (4 sites) avec seed dédiée. */
+                    /* C83b-ED-U8-FIX : utiliser simulate_problem_independent (long double,
+                     * ring buffer C37-CONV) avec les steps nominaux du problème (14000).
+                     * simulate_fullscale donnait 1.473 pour U=8 (non convergé même à 5000 steps).
+                     * simulate_problem_independent converge vers ~0.760 grâce au long double
+                     * et au ring buffer d'arrêt précoce identique à la simulation principale. */
                     problem_t pp_u8 = probs[i];
                     pp_u8.u_eV  = brow_rt[bi].u;
-                    pp_u8.steps = 5000; /* C83 : 500→5000 — convergence garantie 2×2 */
+                    /* garder steps nominaux (14000 pour ed_validation_2x2) */
                     uint64_t seed_u8 = g_run_seed_xor ^ (uint64_t)(brow_rt[bi].u * 1000.0) ^ 0xED2207ACULL;
-                    sim_result_t sr_u8 = simulate_fullscale(&pp_u8, seed_u8, 10, NULL);
+                    sim_result_t sr_u8 = simulate_problem_independent(&pp_u8, seed_u8, 10);
                     model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                                ? sr_u8.pairing_norm : sr_u8.energy_eV;
-                    FORENSIC_LOG_ALGO("ed_bench_c78", "source",        2.0); /* re-sim */
+                    FORENSIC_LOG_ALGO("ed_bench_c78", "source",        3.0); /* C83b: sim_ind */
                     FORENSIC_LOG_ALGO("ed_bench_c78", "resim_u_eV",    brow_rt[bi].u);
-                    FORENSIC_LOG_ALGO("ed_bench_c78", "resim_steps",   5000.0); /* C83 */
+                    FORENSIC_LOG_ALGO("ed_bench_c78", "resim_steps",   (double)pp_u8.steps);
                     FORENSIC_LOG_ALGO("ed_bench_c78", "resim_energy",  model_rt);
                 }
                 FORENSIC_LOG_ALGO("ed_bench_c78", "model_rt",     model_rt);
@@ -2040,16 +2041,17 @@ int main(int argc, char** argv) {
                     model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                                ? base[i].pairing_norm : base[i].energy_eV;
                 } else {
-                    /* C83-ED-U8-FIX (EXT) : steps 500→5000, cohérent avec branche QMC */
+                    /* C83b-ED-U8-FIX (EXT) : simulate_problem_independent (long double)
+                     * avec steps nominaux, cohérent avec branche QMC */
                     problem_t pp_ext = probs[i];
                     pp_ext.u_eV  = br_rt->u;
-                    pp_ext.steps = 5000; /* C83 : 500→5000 */
+                    /* garder steps nominaux */
                     uint64_t seed_ext = g_run_seed_xor ^ (uint64_t)(br_rt->u * 1000.0) ^ 0xED22E770ULL;
-                    sim_result_t sr_ext = simulate_fullscale(&pp_ext, seed_ext, 10, NULL);
+                    sim_result_t sr_ext = simulate_problem_independent(&pp_ext, seed_ext, 10);
                     model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                                ? sr_ext.pairing_norm : sr_ext.energy_eV;
                     FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_u_eV",    br_rt->u);
-                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_steps",   5000.0); /* C83 */
+                    FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_steps",   (double)pp_ext.steps);
                     FORENSIC_LOG_ALGO("ed_bench_c78_ext", "resim_energy",  model_rt);
                 }
                 fprintf(lg, "%06d | C78_ED_FIX_EXT module=%s U_bench=%.4f U_sim=%.4f model=%.8f\n",
@@ -2288,7 +2290,8 @@ int main(int argc, char** argv) {
             pt_pairing_cold[i] = p_cold;
             pt_chi_sc[i]       = chi_sc;
             fprintf(lg,
-                "%06d | PT_MC problem=%s E_cold=%.6f pairing_cold=%.6f chi_sc=%.6f div_vs_mc=%.4f\n",
+                /* C82-CHI-SC-LOG : chi_sc=%.3e au lieu de %.6f — valeurs ~3e-8 s'affichaient 0.000000 */
+                "%06d | PT_MC problem=%s E_cold=%.6f pairing_cold=%.6f chi_sc=%.3e div_vs_mc=%.4f\n",
                 line++, probs[i].name, e_cold, p_cold, chi_sc, div);
         }
         if (ptcsv) fclose(ptcsv);

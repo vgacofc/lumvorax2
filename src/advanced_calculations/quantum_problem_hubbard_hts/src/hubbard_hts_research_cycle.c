@@ -1001,7 +1001,8 @@ int main(int argc, char** argv) {
     fprintf(prov, "root=%s\n", root);
 
     char baseline[128] = "";
-    if (latest_classic_run(results_root, baseline, sizeof(baseline)) == 0)
+    /* C87-BASELINE-EXCL (FS) : passer run_id pour exclure le run courant de la recherche */
+    if (latest_classic_run(results_root, run_id, baseline, sizeof(baseline)) == 0)
         fprintf(lg, "000003 | BASELINE latest_classic_run=%s\n", baseline);
     else
         fprintf(lg, "000003 | BASELINE latest_classic_run=NOT_FOUND\n");
