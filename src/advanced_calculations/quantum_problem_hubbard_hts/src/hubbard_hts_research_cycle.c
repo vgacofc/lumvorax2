@@ -271,6 +271,13 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
 
     /* BC-LV04 : point forensique — début simulation (nanoseconde CLOCK_MONOTONIC) */
     FORENSIC_LOG_MODULE_START("simulate_fs", p->name);
+    /* OPS-TRACE-FS §1 : opération qualitative — démarrage intégrateur RK2 champ moyen */
+    {
+        char _op_buf[96];
+        snprintf(_op_buf, sizeof(_op_buf), "sites=%d,steps=%" PRIu64 ",U=%.3f,T=%.1fK",
+                 sites, p->steps, p->u_eV, p->temp_K);
+        FORENSIC_LOG_MODULE_OPERATION("simulate_fs", "rk2_meanfield_start", _op_buf);
+    }
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "sites",      (double)sites);
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "steps",      (double)p->steps);
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "temp_K",     p->temp_K);
@@ -478,6 +485,13 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
      * bloc if(trace_csv). On mesure ici une valeur finale si encore à zéro. */
     if (r.cpu_peak <= 0.0) { double _c = cpu_percent(); if (_c > 0.0) r.cpu_peak = _c; }
     if (r.mem_peak <= 0.0) { double _m = mem_percent();  if (_m > 0.0) r.mem_peak = _m; }
+    /* OPS-TRACE-FS §2 : opération qualitative — convergence atteinte, fin intégrateur */
+    {
+        char _op_buf2[96];
+        snprintf(_op_buf2, sizeof(_op_buf2), "energy_eV=%.6f,pairing=%.6f,sign=%.4f",
+                 r.energy, r.pairing, r.sign_ratio);
+        FORENSIC_LOG_MODULE_OPERATION("simulate_fs", "rk2_meanfield_done", _op_buf2);
+    }
     /* BC-LV04 : point forensique — fin simulation, métriques finales */
     FORENSIC_LOG_MODULE_END("simulate_fs", p->name, true);
     FORENSIC_LOG_MODULE_METRIC("simulate_fs", "pairing_final", r.pairing);
@@ -1632,10 +1646,14 @@ int main(int argc, char** argv) {
             benchmark_row_t* br = &brow_rt[bench_offset_rt + i];
             int ip = find_problem_index(probs, nprobs, br->module);
             if (ip < 0) ip = 0;
-            double n_sites = (double)(probs[ip].lx * probs[ip].ly);
+            /* BUG-07-FIX : les références EXT (external_module_benchmarks_runtime.csv)
+             * sont en eV TOTAL (ex : hubbard_hts_core energy_eV ref=1.9856).
+             * La division par n_sites était erronée : elle produisait model~0.01
+             * au lieu de ~2.0. base[ip].energy est déjà l'énergie convergée en eV.
+             * N_sites = 14×14 = 196 → 1.992/196 = 0.010164 (bug confirmé run 1869). */
             double model = (strcmp(br->observable, "pairing") == 0)
                 ? base[ip].pairing
-                : base[ip].energy / (n_sites > 0 ? n_sites : 1.0);
+                : base[ip].energy;
             double abs_e = fabs(model - br->value);
             int ok_bar = (abs_e <= br->err) ? 1 : 0;
             fprintf(lg, "%06d | BENCH_EXT_ROW i=%d module=%s obs=%s ref=%.6f model=%.6f"

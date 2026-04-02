@@ -1032,6 +1032,14 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
     uint64_t t0 = now_ns();
 
     FORENSIC_LOG_MODULE_START("pt_mc", p->name);
+    /* OPS-TRACE-PTMC §1 : opération qualitative — initialisation Parallel Tempering */
+    {
+        char _ptmc_op[96];
+        snprintf(_ptmc_op, sizeof(_ptmc_op),
+                 "replicas=%d,sweeps=%d,therm=%d,T_min=%.1fK,T_ratio=%.1f",
+                 R, N_SW, PT_MC_N_THERMALIZE, p->temp_K, PT_MC_T_RATIO);
+        FORENSIC_LOG_MODULE_OPERATION("pt_mc", "parallel_tempering_init", _ptmc_op);
+    }
 
     if (write_header && out_csv)
         fprintf(out_csv,
@@ -1261,6 +1269,15 @@ static void pt_mc_run(const problem_t* p, uint64_t seed,
     /* Qubits effectifs = log2(dim Hilbert) = sites × log2(4) = 2×sites (Hubbard: 4 états/site) */
     double equiv_qubits = 2.0 * (double)sites;
 
+    /* OPS-TRACE-PTMC §2 : opération qualitative — résultat Parallel Tempering final */
+    {
+        char _ptmc_op2[128];
+        snprintf(_ptmc_op2, sizeof(_ptmc_op2),
+                 "E_cold=%.6f,accept_mc=%.4f,accept_swap=%.4f,elapsed_ms=%.1f",
+                 E_rep[0], avg_mc_accept, avg_swap_accept,
+                 (double)elapsed_total / 1e6);
+        FORENSIC_LOG_MODULE_OPERATION("pt_mc", "parallel_tempering_done", _ptmc_op2);
+    }
     FORENSIC_LOG_MODULE_END("pt_mc", p->name, true);
     FORENSIC_LOG_MODULE_METRIC("pt_mc", "avg_mc_accept",       avg_mc_accept);
     FORENSIC_LOG_MODULE_METRIC("pt_mc", "avg_swap_accept",     avg_swap_accept);
