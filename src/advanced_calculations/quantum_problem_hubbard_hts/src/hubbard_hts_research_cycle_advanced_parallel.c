@@ -1772,14 +1772,28 @@ typedef struct {
     uint64_t         seed;
     int              burn_scale;
     sim_result_t     result;
+    /* BUG-08 fix : mesure CPU réelle par thread via CLOCK_THREAD_CPUTIME_ID.
+     * cpu_percent() lit /proc/stat global → toujours 0 quand le thread principal
+     * est en pthread_join. Solution : chronométrer le thread lui-même. */
+    double           thread_cpu_sec;
+    double           thread_mem_peak;
 } c92_arg_t;
 
 static void* c92_sim_thread(void* arg) {
     c92_arg_t* a = (c92_arg_t*)arg;
+    /* BUG-08 fix : mesurer le CPU consommé par CE thread uniquement. */
+    struct timespec t_cpu0, t_cpu1;
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t_cpu0);
+    double mem_before = mem_percent();
     /* trace_csv=NULL : thread-safe — évite les accès concurrents sur raw.
      * La trace step-by-step LumVorax (rotation CSV 20 MB par module) reste
      * active via FORENSIC_LOG_MODULE_METRIC (mutex interne ultra_forensic_logger). */
     a->result = simulate_fullscale(a->prob, a->seed, a->burn_scale, NULL);
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t_cpu1);
+    double mem_after = mem_percent();
+    a->thread_cpu_sec  = (t_cpu1.tv_sec  - t_cpu0.tv_sec)
+                       + (t_cpu1.tv_nsec - t_cpu0.tv_nsec) * 1e-9;
+    a->thread_mem_peak = (mem_after > mem_before) ? mem_after : mem_before;
     return NULL;
 }
 
@@ -2090,6 +2104,17 @@ int main(int argc, char** argv) {
             if ((uintptr_t)c92_threads[i] != 0)
                 pthread_join(c92_threads[i], NULL);
             base[i] = c92_args[i].result;
+            /* BUG-08 fix : injecter cpu_peak/mem_peak mesurés dans le thread.
+             * cpu_peak = 100 × (CPU_thread_s / elapsed_wall_s) — utilisation réelle.
+             * mem_peak = mem_percent() pic capturé avant/après simulate_fullscale. */
+            if (c92_args[i].result.elapsed_ns > 0) {
+                double w_s = (double)c92_args[i].result.elapsed_ns * 1e-9;
+                base[i].cpu_peak = (w_s > 1e-9)
+                    ? 100.0 * c92_args[i].thread_cpu_sec / w_s
+                    : 0.0;
+            }
+            if (c92_args[i].thread_mem_peak > 0.0)
+                base[i].mem_peak = c92_args[i].thread_mem_peak;
         }
 
         fprintf(lg, "%06d | C92_PARALLEL_DONE nprobs=%d\n", line++, nprobs);
@@ -2104,6 +2129,39 @@ int main(int argc, char** argv) {
                     base[i].cpu_peak,  base[i].mem_peak,
                     (unsigned long long)base[i].elapsed_ns,
                     base[i].norm_deviation_max, base[i].energy_drift_metric);
+        }
+
+        /* BUG-10 fix : écrire observables normalisées dans det (normalized_observables_trace.csv).
+         * En mode C92, trace_csv=NULL → la boucle step-by-step (if trace_csv) ne s'exécute
+         * jamais → det reste vide (header seulement). Correction : une ligne C92_summary
+         * par module écrite ici, après pthread_join — toutes valeurs disponibles. */
+        for (int i = 0; i < nprobs && i < 16; ++i) {
+            fprintf(det, "%s,C92_summary,%.10f,%.10f,%.6f,%.2f,%.2f,%llu\n",
+                    probs[i].name,
+                    base[i].energy_eV,
+                    base[i].pairing_norm,
+                    base[i].sign_ratio,
+                    base[i].cpu_peak,
+                    base[i].mem_peak,
+                    (unsigned long long)base[i].elapsed_ns);
+        }
+
+        /* BUG-11 fix : écrire tests de stabilité numérique dans nstab (numerical_stability_suite.csv)
+         * pour TOUS les modules, pas seulement hubbard_hts_core.
+         * Tests : (1) finitude des observables, (2) norm_deviation < 1e-6, (3) |sign| ≤ 1. */
+        for (int i = 0; i < nprobs && i < 16; ++i) {
+            bool fin_ok  = isfinite(base[i].energy_eV) && isfinite(base[i].pairing_norm);
+            bool norm_ok = (base[i].norm_deviation_max < 1e-6);
+            bool sign_ok = (fabs(base[i].sign_ratio) <= 1.0 + 1e-9);
+            bool drift_ok= isfinite(base[i].energy_drift_metric) && (base[i].energy_drift_metric < 0.1);
+            fprintf(nstab, "c92_finiteness,%s,energy_pairing_finite,%.12e,%s,isfinite(energy)&&isfinite(pairing)\n",
+                    probs[i].name, base[i].energy_eV, fin_ok ? "PASS" : "FAIL");
+            fprintf(nstab, "c92_norm_deviation,%s,norm_dev_max,%.12e,%s,threshold_1e-6\n",
+                    probs[i].name, base[i].norm_deviation_max, norm_ok ? "PASS" : "WARN");
+            fprintf(nstab, "c92_sign_bound,%s,sign_ratio_abs,%.10f,%s,abs_leq_1\n",
+                    probs[i].name, base[i].sign_ratio, sign_ok ? "PASS" : "FAIL");
+            fprintf(nstab, "c92_energy_drift,%s,energy_drift_metric,%.10f,%s,threshold_0.1\n",
+                    probs[i].name, base[i].energy_drift_metric, drift_ok ? "PASS" : "WARN");
         }
     } /* fin bloc C92 */
 

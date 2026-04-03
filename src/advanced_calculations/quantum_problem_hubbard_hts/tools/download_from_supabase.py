@@ -182,7 +182,15 @@ def generate_problems_csv_from_supabase() -> bool:
     """
     Génère config/problems_cycle06.csv depuis la table research_modules_config sur Supabase.
     Appelé au démarrage de chaque session — source de vérité = Supabase.
+    RCS-GUARD : les modules listés dans EXTRA_MODULES_GUARD sont toujours injectés
+    si absents de Supabase (priorité #1 = random_circuit_sampling, 121 qubits > Willow).
     """
+    # RCS-GUARD : modules locaux garantis (non encore dans Supabase research_modules_config)
+    EXTRA_MODULES_GUARD = [
+        # name,lx,ly,t_eV,u_eV,mu_eV,temp_K,dt,steps
+        "random_circuit_sampling,11,11,1.000000,2.000000,0.000000,1.0,0.010000,5000",
+    ]
+
     resp = requests.get(
         _rest("research_modules_config?order=id.asc"),
         headers=_headers(), timeout=15
@@ -201,15 +209,24 @@ def generate_problems_csv_from_supabase() -> bool:
     out_path = config_dir / "problems_cycle06.csv"
 
     lines = ["name,lx,ly,t_eV,u_eV,mu_eV,temp_K,dt,steps"]
+    existing_names = set()
     for row in rows:
         lines.append(
             f"{row['module']},{row['lx']},{row['ly']},"
             f"{float(row['t_ev']):.6f},{float(row['u_ev']):.6f},{float(row['mu_ev']):.6f},"
             f"{float(row['temp_k']):.1f},{float(row['dt']):.6f},{int(row['steps'])}"
         )
+        existing_names.add(row['module'])
+
+    # RCS-GUARD : injecter les modules manquants après les lignes Supabase
+    for extra in EXTRA_MODULES_GUARD:
+        extra_name = extra.split(',')[0]
+        if extra_name not in existing_names:
+            lines.append(extra)
+            print(f"[DOWNLOAD-CFG] RCS-GUARD: module injecté (absent Supabase) → {extra_name}", flush=True)
 
     out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"[DOWNLOAD-CFG] problems_cycle06.csv généré ({len(rows)} modules) → {out_path}", flush=True)
+    print(f"[DOWNLOAD-CFG] problems_cycle06.csv généré ({len(lines)-1} modules) → {out_path}", flush=True)
     return True
 
 
