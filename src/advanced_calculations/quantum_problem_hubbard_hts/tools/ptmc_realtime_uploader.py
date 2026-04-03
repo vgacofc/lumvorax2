@@ -49,6 +49,10 @@ MAX_CSV_ROWS = 50_000
 
 _stop_flag = False
 
+# PGRST204-FIX : tables absentes détectées — on n'envoie plus vers elles après la première erreur
+# Évite le spam de WARN 400 PGRST204 dans les logs (colonne/table introuvable dans le schéma Supabase).
+_table_unavailable: set = set()
+
 def handle_signal(sig, frame):
     global _stop_flag
     print(f"[PTMC-WATCHER] Signal {sig} reçu — arrêt propre", flush=True)
@@ -71,6 +75,17 @@ def rest(endpoint: str) -> str:
     return f"{SUPABASE_URL}/rest/v1/{endpoint}"
 
 
+def _is_pgrst204(resp) -> bool:
+    """Retourne True si la réponse est une erreur PGRST204 (colonne/table absente du schéma)."""
+    if resp.status_code != 400:
+        return False
+    try:
+        body = resp.json()
+        return body.get("code") == "PGRST204"
+    except Exception:
+        return "PGRST204" in resp.text
+
+
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -80,21 +95,29 @@ def sha256_file(path: Path) -> str:
 
 
 def upsert_file_record(run_id: str, rel: str, ftype: str, size: int, sha: str):
+    table = "quantum_run_files"
+    if table in _table_unavailable:
+        return
     data = {"run_id": run_id, "file_path": rel, "file_type": ftype,
             "file_size_bytes": size, "sha256": sha}
     try:
         r = requests.post(
-            rest("quantum_run_files"),
+            rest(table),
             headers={**headers(), "Prefer": "resolution=merge-duplicates,return=minimal"},
             json=data, timeout=20)
         if r.status_code not in (200, 201, 204):
-            print(f"[PTMC-WATCHER] upsert_file_record WARN {r.status_code}: {r.text[:80]}", flush=True)
+            if _is_pgrst204(r):
+                _table_unavailable.add(table)
+                print(f"[PTMC-WATCHER] INFO table '{table}' absente du schéma Supabase — uploads désactivés pour cette table", flush=True)
+            else:
+                print(f"[PTMC-WATCHER] upsert_file_record WARN {r.status_code}: {r.text[:80]}", flush=True)
     except Exception as e:
         print(f"[PTMC-WATCHER] upsert_file_record ERR: {e}", flush=True)
 
 
 def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
     """Upload les lignes CSV en batches vers quantum_csv_rows. Retourne True si OK."""
+    table = "quantum_csv_rows"
     rows_inserted = 0
     batch = []
     try:
@@ -104,19 +127,38 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
                 if i >= MAX_CSV_ROWS:
                     print(f"[PTMC-WATCHER] {rel} tronqué à {MAX_CSV_ROWS} lignes", flush=True)
                     break
+                if table in _table_unavailable:
+                    # Table absente — on compte quand même les lignes pour le log final
+                    rows_inserted += 1
+                    continue
                 batch.append({"run_id": run_id, "file_path": rel,
                                "row_index": i, "row_json": row})
                 if len(batch) >= BATCH_SIZE:
-                    r = requests.post(rest("quantum_csv_rows"),
+                    r = requests.post(rest(table),
                                       headers=headers(), json=batch, timeout=30)
                     if r.status_code not in (200, 201, 204):
-                        print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:60]}", flush=True)
+                        if _is_pgrst204(r):
+                            _table_unavailable.add(table)
+                            print(f"[PTMC-WATCHER] INFO table '{table}' absente du schéma Supabase — uploads désactivés pour cette table", flush=True)
+                            rows_inserted += len(batch)
+                            batch = []
+                            continue
+                        else:
+                            print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:60]}", flush=True)
                     rows_inserted += len(batch)
                     batch = []
                     time.sleep(0.03)
-        if batch:
-            r = requests.post(rest("quantum_csv_rows"),
+        if batch and table not in _table_unavailable:
+            r = requests.post(rest(table),
                                headers=headers(), json=batch, timeout=30)
+            if r.status_code not in (200, 201, 204):
+                if _is_pgrst204(r):
+                    _table_unavailable.add(table)
+                    print(f"[PTMC-WATCHER] INFO table '{table}' absente du schéma Supabase — uploads désactivés pour cette table", flush=True)
+                else:
+                    print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:60]}", flush=True)
+            rows_inserted += len(batch)
+        elif batch:
             rows_inserted += len(batch)
     except Exception as e:
         print(f"[PTMC-WATCHER] CSV parse ERR {rel}: {e}", flush=True)
