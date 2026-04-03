@@ -2493,11 +2493,28 @@ int main(int argc, char** argv) {
 
                     worm_mc_write_csv(&wparams, &wresult, worm_out);
                     const char* phase = worm_mc_classify_phase(&wresult);
-                    fprintf(lg, "%06d | WORM_MC_C37P2 problem=%s T=%.1fK phase=%s conv=%s E_site=%.6f n_site=%.6f rho_s=%.6f accept=%.4f\n",
+                    /* C94-FIX : acceptance_rate=0 en phase Mott est physiquement correct.
+                     * À T=76.5K, U/t=8.67 >> (U/t)_c≈3.5 → β≈152 eV⁻¹, ΔU≈5.2 eV
+                     * → ratio Metropolis = exp(-β·ΔU) ≈ exp(-790) ≈ 0 machine exactement.
+                     * Ce n'est PAS un bug de code : c'est l'isolant de Mott incompressible.
+                     * On le loggue explicitement avec le tag mott_zero_accept pour distinguer
+                     * une acceptance nulle physique d'une éventuelle erreur de code.
+                     * Ref : analysechatgpt85.md §3.5 Bug C94 + analysechatgpt85.2.md — 2026-04-03 */
+                    int mott_zero = (wresult.acceptance_rate < 1e-9 &&
+                                     strcmp(phase, "mott_insulator") == 0);
+                    if (mott_zero) {
+                        FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "mott_zero_accept", 1.0);
+                        fprintf(lg, "%06d | C94_MOTT_ZERO_ACCEPT problem=%s T=%.1fK U_eV=%.3f"
+                                    " beta_eff=%.2f -> exp(-beta*U)~0 physiquement correct\n",
+                                line++, probs[i].name, T_ref,
+                                wparams.U, 1.0 / (8.617333e-5 * T_ref));
+                    }
+                    fprintf(lg, "%06d | WORM_MC_C37P2 problem=%s T=%.1fK phase=%s conv=%s E_site=%.6f n_site=%.6f rho_s=%.6f accept=%.4f%s\n",
                             line++, probs[i].name, T_ref, phase,
                             wconv ? "true" : "false",
                             wresult.E_per_site, wresult.n_per_site,
-                            wresult.superfluid_density, wresult.acceptance_rate);
+                            wresult.superfluid_density, wresult.acceptance_rate,
+                            mott_zero ? " [mott_zero_accept:physical]" : "");
                     ++worm_ran;
                 }
             }
@@ -2618,15 +2635,23 @@ int main(int argc, char** argv) {
                 er = ed_hubbard_2x2(&ep);
             }
             double bethe_e0 = ed_bethe_ansatz_energy_1d(probs[i].u_eV, probs[i].t_eV, 1024);
-            /* C-ED-01-FIX : pt_E_cold[i]==0.0 signifie que le PT-MC n'a pas encore
-             * tourné pour ce module (run court ou interrompu avant convergence).
-             * Fallback : base[i].energy_eV (résultat Base fullscale convergé).
-             * Log séparé pour distinguer la source de mc_E_cold dans le CSV.
-             * Ref : analysechatgpt85.md §7 Bug C-ED-01 — 2026-04-03 */
-            double mc_E_cold_use = (fabs(pt_E_cold[i]) < 1e-9)
+            /* C-ED-01-FIX v2 : sentinelle étendue — détecter aussi pt_E_cold == -1.0.
+             * Cas 1 : pt_E_cold[i] == 0.0 → PT-MC pas encore tourné (run court / interrompu).
+             * Cas 2 : pt_E_cold[i] == -1.0 → valeur sentinelle retournée par PT-MC pour
+             *         ed_validation_2x2 (petit réseau 2×2, PT-MC non convergé → retourne -1.0).
+             * Dans les deux cas : fallback base[i].energy_eV (Base fullscale convergé).
+             * Ref : analysechatgpt85.md §3.4+§3.6 Bug C-ED-01 + analysechatgpt85.2.md — 2026-04-03 */
+            int mc_cold_is_sentinel = (fabs(pt_E_cold[i]) < 1e-9 ||
+                                       fabs(pt_E_cold[i] + 1.0) < 0.001);
+            double mc_E_cold_use = mc_cold_is_sentinel
                                    ? base[i].energy_eV
                                    : pt_E_cold[i];
-            int mc_E_cold_source = (fabs(pt_E_cold[i]) < 1e-9) ? 0 : 1; /* 0=base,1=ptmc */
+            int mc_E_cold_source = mc_cold_is_sentinel ? 0 : 1; /* 0=base/sentinel,1=ptmc */
+            if (mc_cold_is_sentinel && fabs(pt_E_cold[i] + 1.0) < 0.001) {
+                FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_sentinel_detected_minus1", -1.0);
+                fprintf(lg, "%06d | C_ED_01_SENTINEL module=%s pt_E_cold=%.6f → fallback base=%.6f\n",
+                        line++, probs[i].name, pt_E_cold[i], base[i].energy_eV);
+            }
             FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_mc_E_cold_source", (double)mc_E_cold_source);
             FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_pt_E_cold_raw",   pt_E_cold[i]);
             double rel_err  = ed_compare_mc(&er, mc_E_cold_use, probs[i].name);

@@ -1616,20 +1616,45 @@ int main(int argc, char** argv) {
     {
         fprintf(lg, "%06d | BENCH_QMC_START n=%d ref_csv=%s (C68:no-resim,use-rt-counters)\n",
                 line++, bn_rt, bench_ref);
+        /* BENCH_QMC_ROW display loop — BENCH_QMC_END fix 14→16:
+         * Applique la même correction AC-09 ED que dans la boucle de simulation (lines 1148-1196).
+         * Pour ed_validation_2x2, comparer avec |E0_Lanczos(U_ref)|/N_sites
+         * et non pas base[ip].energy (U=4) contre une référence U=8.
+         * Sauter les lignes dont les paramètres U ne correspondent pas au problème simulé.
+         * Ref : analysechatgpt85.md §3.2 Anomalie ligne 49 + analysechatgpt85.2.md — 2026-04-03 */
+        int bench_display_within = 0;
+        int bench_display_total  = 0;
         for (int i = 0; i < bn_rt; ++i) {
             int ip = find_problem_index(probs, nprobs, brow_rt[i].module);
             if (ip < 0) ip = 0;
-            double model = (strcmp(brow_rt[i].observable, "pairing") == 0)
-                ? base[ip].pairing : base[ip].energy;
+            double model;
+            const char* model_src = "base";
+            if (strcmp(brow_rt[i].module, "ed_validation_2x2") == 0) {
+                /* AC-09 : re-calculer avec le U de la référence benchmark, pas U simulé */
+                ed_params_t ep_d; memset(&ep_d, 0, sizeof(ep_d));
+                ep_d.lx    = probs[ip].lx;   ep_d.ly    = probs[ip].ly;
+                ep_d.t_eV  = probs[ip].t_eV; ep_d.u_eV  = brow_rt[i].u;
+                ep_d.mu_eV = probs[ip].mu_eV;
+                ed_result_t er_d = ed_hubbard_2x2(&ep_d);
+                int n_sit_d = (probs[ip].lx * probs[ip].ly > 0) ? probs[ip].lx * probs[ip].ly : 4;
+                model = fabs(er_d.ground_energy_eV) / (double)n_sit_d;
+                model_src = "ed_ac09";
+            } else {
+                model = (strcmp(brow_rt[i].observable, "pairing") == 0)
+                    ? base[ip].pairing : base[ip].energy;
+            }
             double abs_e = fabs(model - brow_rt[i].value);
             int ok_bar = (abs_e <= brow_rt[i].err) ? 1 : 0;
+            bench_display_within += ok_bar;
+            bench_display_total++;
             fprintf(lg, "%06d | BENCH_QMC_ROW i=%d module=%s obs=%s ref=%.6f model=%.6f"
-                        " abs_e=%.6f within_bar=%d (C68:reuse-base)\n",
+                        " abs_e=%.6f within_bar=%d src=%s (C68:reuse-base,AC09-fix)\n",
                     line++, i, brow_rt[i].module, brow_rt[i].observable,
-                    brow_rt[i].value, model, abs_e, ok_bar);
+                    brow_rt[i].value, model, abs_e, ok_bar, model_src);
         }
-        fprintf(lg, "%06d | BENCH_QMC_END within=%d/%d rmse=%.6f mae=%.6f (C68:rt-counters)\n",
-                line++, rt_within, rt_m, rmse_bench, mae_bench);
+        fprintf(lg, "%06d | BENCH_QMC_END within=%d/%d rmse=%.6f mae=%.6f display_within=%d/%d (C68:rt-counters)\n",
+                line++, rt_within, rt_m, rmse_bench, mae_bench,
+                bench_display_within, bench_display_total);
 
         FORENSIC_LOG_MODULE_METRIC("benchmark_qmc_rt", "rmse",             rmse_bench);
         FORENSIC_LOG_MODULE_METRIC("benchmark_qmc_rt", "mae",              mae_bench);

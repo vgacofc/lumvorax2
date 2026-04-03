@@ -45,6 +45,13 @@ SESSION_LOG="$SESSION_LOG_DIR/research_cycle_session_${STAMP_UTC}.log"
 # ── C26-CHECKPOINT : fichier d'état persistant pour résumption automatique ──
 CHECKPOINT_FILE="$ROOT_DIR/.run_checkpoint"
 CHECKPOINT_PHASE_FILE="$ROOT_DIR/.run_current_phase"
+# Bug#4-FIX : fichier marqueur pour éviter le "résumption skip en boucle".
+# Le runner advanced_parallel crée un nouveau run_id à chaque démarrage, même si
+# toutes les phases sont terminées. Sans ce marqueur, chaque session Replit relance
+# le runner inutilement → séries de runs "SKIP" (76 KB, 5 lignes) qui consomment
+# disque et faussent les statistiques. Ce fichier est écrit après ADV_OK=1.
+# Ref : analysechatgpt85.md §1.1 (runs SKIP) + analysechatgpt85.2.md Bug#4 — 2026-04-03
+ADVANCED_DONE_FILE="$ROOT_DIR/.advanced_runner_done"
 
 # ── C26-RESUME : lire le dernier checkpoint si présent ──────────────────────
 RESUME_FROM_PHASE=0
@@ -410,8 +417,20 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] PID=$WATCHER_PID lancé 
 LUMVORAX_STREAM_PID=$!
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax PID=$LUMVORAX_STREAM_PID"
 
+# ── Bug#4-FIX : skip runner si déjà complété (évite les runs "SKIP" en boucle) ──
+# Si ADVANCED_DONE_FILE existe et RESUME_FROM_PHASE >= 10 → le runner a déjà fini.
+# Cas d'invalidation : RESUME_FROM_PHASE == 0 (nouveau cycle) → supprimer le marqueur.
+if [ "${RESUME_FROM_PHASE:-0}" -eq 0 ]; then
+    rm -f "$ADVANCED_DONE_FILE"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Nouveau cycle — marqueur ADVANCED_DONE supprimé"
+fi
+
 # ── C26-RUNNER-RETRY : relance automatique si le runner advanced_parallel est tué ─
 ADV_OK=0
+if [ -f "$ADVANCED_DONE_FILE" ] && [ "${RESUME_FROM_PHASE:-0}" -ge 10 ]; then
+    ADV_OK=1
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Runner advanced_parallel déjà complété (marqueur présent) — SKIP"
+else
 for _try in $(seq 1 $MAX_RUNNER_RETRY); do
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel — tentative ${_try}/${MAX_RUNNER_RETRY}"
     if [ "${LUMVORAX_SHELL_TRACE:-0}" = "1" ]; then
@@ -421,12 +440,16 @@ for _try in $(seq 1 $MAX_RUNNER_RETRY); do
     if "$ROOT_DIR/hubbard_hts_research_runner_advanced_parallel" "$ROOT_DIR"; then
         ADV_OK=1
         echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel terminé avec succès (tentative ${_try})"
+        # Bug#4-FIX : écrire le marqueur de complétion pour éviter les re-runs inutiles
+        touch "$ADVANCED_DONE_FILE"
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Marqueur ADVANCED_DONE écrit : $ADVANCED_DONE_FILE"
         break
     else
         echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel interrompu (exit=$?) — relance dans 2s..."
         sleep 2
     fi
 done
+fi  # Bug#4-FIX : fermeture du bloc else "skip si déjà complété"
 
 # Arrêt propre du watcher PTMC et du streamer LumVorax après fin du runner
 kill "$WATCHER_PID" 2>/dev/null || true
