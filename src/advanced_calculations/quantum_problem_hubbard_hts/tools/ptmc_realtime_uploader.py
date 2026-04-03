@@ -98,7 +98,8 @@ def upsert_file_record(run_id: str, rel: str, ftype: str, size: int, sha: str):
     table = "quantum_run_files"
     if table in _table_unavailable:
         return
-    data = {"run_id": run_id, "file_path": rel, "file_type": ftype,
+    data = {"run_id": run_id, "module": "ptmc_watcher",
+            "file_path": rel, "file_type": ftype,
             "file_size_bytes": size, "sha256": sha}
     try:
         r = requests.post(
@@ -131,8 +132,8 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
                     # Table absente — on compte quand même les lignes pour le log final
                     rows_inserted += 1
                     continue
-                batch.append({"run_id": run_id, "file_path": rel,
-                               "row_index": i, "row_json": row})
+                batch.append({"run_id": run_id, "file_name": rel,
+                               "row_number": i + 1, "data": row})
                 if len(batch) >= BATCH_SIZE:
                     r = requests.post(rest(table),
                                       headers=headers(), json=batch, timeout=30)
