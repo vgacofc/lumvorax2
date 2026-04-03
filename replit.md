@@ -1,57 +1,48 @@
-# LumVorax — Hubbard-HTS Quantum Research Visualisation
+# LUM/VORAX — Quantum Research Platform
 
-## Overview
-A quantum physics research visualization app for Hubbard model / High-Temperature Superconductor (HTS) simulations. The Flask backend serves real simulation data via a REST API, and the frontend uses Three.js to render interactive 3D visualisations.
+## Project Overview
+High-performance quantum simulation and research platform targeting Hubbard model / HTS physics. Combines a C99 computation engine with a Python/Flask visualization web server.
 
 ## Architecture
 
-- **`main.py`** — Entry point. Loads the Flask app from `src/visualization/server.py`.
-- **`src/visualization/server.py`** — Flask server exposing REST API endpoints at `/api/viz/*`, `/api/run/*`, `/api/benchmark_*`, `/api/problems`.
-- **`src/visualization/static/index.html`** — Three.js frontend with 5 visualisation modes:
-  1. Champs Scalaires — 3D volume heatmap
-  2. Trajectoires — Step-by-step curves
-  3. Réseau Hubbard — Lattice site instancing
-  4. Graphe d'Interaction — Nodes + edges (QMC/DMRG benchmarks)
-  5. Multi-Échelles LOD — Fractal multi-scale extrapolation
-- **`src/advanced_calculations/quantum_problem_hubbard_hts/`** — Quantum simulation C code and research cycle runner (`run_research_cycle.sh`).
+### Core Components
+- **C Engine** (`src/`): Multi-module quantum simulation framework
+  - `src/lum/` & `src/vorax/`: Core LUM/VORAX engines
+  - `src/advanced_calculations/quantum_problem_hubbard_hts/`: Main research cycle (C37)
+  - `src/physics/`: Relativistic physics (Kerr metric, black hole simulations)
+  - `src/optimization/`: SIMD/AVX performance optimizations
+  - `src/debug/`, `src/logging/`: Forensic memory and execution trackers
+  - `src/persistence/`: WAL-based data recovery
 
-## Workflows
+- **Visualization Server** (`src/visualization/`): Flask web app serving real-time simulation data
+  - `server.py`: REST API endpoints exposing simulation results as JSON
+  - `static/index.html`: Three.js-based 3D visualization frontend
+  - `static/three.min.js`: Three.js library
 
-- **Start application** — `gunicorn` on port 5000 (webview). Command uses the full nix Python 3.12 path to ensure `.pythonlibs` packages are accessible.
-- **Quantum Research Cycle C37** — Runs `run_research_cycle.sh` to execute quantum simulations and write results to `results/`, `benchmarks/`, and logs.
+- **Entry Point** (`main.py`): Loads libstdc++ then imports and runs the Flask visualization app
 
-## Data Flow
-Simulation runs write CSV and log files under `src/advanced_calculations/quantum_problem_hubbard_hts/results/research_*/`. The Flask server reads these files dynamically for each API call.
+### Workflows
+- **Start application**: Runs the Flask visualization server via gunicorn on port 5000
+  - Command: `PYTHONPATH=/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages .pythonlibs/bin/gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app`
+- **Quantum Research Cycle C37**: Background C simulation process (long-running)
 
-## Simulation Modules (16 modules — problems_cycle06.csv)
+## Key Technical Notes
+- Python packages are installed in `.pythonlibs/` — must set `PYTHONPATH` explicitly when invoking scripts
+- The visualization server was originally in `src/visualization.desactive/` (deactivated); activated at `src/visualization/`
+- C simulations write results to `src/advanced_calculations/quantum_problem_hubbard_hts/results/`
+- The Flask server reads those result files via CSV/log parsing to expose them through the API
 
-15 Hubbard/QCD/physics modules + 1 new RCS module (C91-RCS, 2026-04-02):
-- Modules 1–15: Hubbard, QCD, ED, fermionic sign, worm MC, topological, etc.
-- **Module 16**: `random_circuit_sampling` — Random Circuit Sampling (Google Willow/Sycamore protocol), 10×10 qubits, 5000 circuits, XEB benchmarking vs Porter-Thomas distribution.
+## Dependencies
+- **Python**: flask, flask-sqlalchemy, gunicorn, psycopg2, email-validator, numpy, scipy, etc.
+- **C**: gcc with -O3/-march=native/-flto, pthread, libm, librt
+- **Frontend**: Three.js (bundled in static/)
 
-### RCS Module Files
-- `src/random_circuit_sampling.h` — Types `rcs_result_t`, `rcs_problem_t`, API
-- `src/random_circuit_sampling.c` — Haar-random gates (1Q+CZ 2Q), XEB scoring, Porter-Thomas KL divergence, full FORENSIC_LOG_MODULE_METRIC op-level tracing
-- Makefile updated: `RCS_SRC := src/random_circuit_sampling.c` added to `SRC_RESEARCH_ADV`
-- STANDARD_NAMES.md v3.1: Section D added (module 16 canonical names)
-
-## Bug Status (2026-04-02)
-
-| Bug | Status |
-|-----|--------|
-| C83b/C83c burn_scale ignoré | ✅ Corrigé (acc_energy/acc_count post-burn-in) |
-| C89 gap spectral Lanczos | ✅ Corrigé (tridiag_two_lowest dans exact_diagonalization.c) |
-| CPU multicoeur 19–33% (séquentiel) | ✅ Corrigé C92 — pool pthread 16 threads dans advanced_parallel.c (Phase 1 : simulate_fullscale() en parallèle, Phase 2 : post-traitement séquentiel) |
-| Ops=0 opérations non loggées | ✅ Résolu par module RCS (pattern de référence) |
-
-## Key Environment Variables
-- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE8_API_URL` — Supabase integration (actif ✅)
-- `DOPPLER_TOKEN` — Doppler secrets management (actif ✅)
-- `KAGGLE_USERNAME`, `KAGGLE_API_TOKEN` — Kaggle datasets
-- `ARISTOTLE_API_KEY` — Aristotle API
-
-## Running the App
-The "Start application" workflow handles starting the server. After running the "Quantum Research Cycle C37" workflow to generate simulation data, the visualisation will populate with real data.
-
-## STANDARD_NAMES.md
-Registre canonique des noms (v3.1 — 2026-04-02). **Règle obligatoire** : chercher avant de créer tout nouveau nom (fonction C, macro, type, métrique). Jamais renommer les noms d'origine.
+## API Endpoints
+- `GET /` — Visualization dashboard
+- `GET /api/run/latest` — Latest simulation run results
+- `GET /api/benchmark_ref` — QMC/DMRG reference benchmarks
+- `GET /api/viz/scalar_field` — 3D scalar field data
+- `GET /api/viz/trajectories` — Step-by-step simulation trajectories
+- `GET /api/viz/lattice` — Hubbard lattice site data
+- `GET /api/viz/graph` — Module interaction graph
+- `GET /api/viz/multiscale` — Thermodynamic limit extrapolations

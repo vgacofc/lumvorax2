@@ -42,13 +42,13 @@ outputType = "console"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "/nix/store/h097imm3w6dpx10qynrd2sz9fks2wbq8-python3-3.12.11/bin/python3.12 -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PYTHONPATH=/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages .pythonlibs/bin/gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+waitForPort = 5000
 
 [nix]
 packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
