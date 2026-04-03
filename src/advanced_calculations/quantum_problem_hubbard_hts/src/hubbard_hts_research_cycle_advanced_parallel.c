@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <math.h>
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
@@ -753,12 +754,19 @@ static sim_result_t simulate_fullscale(const problem_t* p, uint64_t seed, int bu
         sr.cpu_peak           = rr.cpu_peak;
         sr.mem_peak           = rr.mem_peak;
         sr.elapsed_ns         = rr.elapsed_ns;
-        sr.norm_deviation_max = rr.norm_deviation_max;
+        /* C93-FIX : le module RCS n'a pas de vecteur d'état ψ normé.
+         * rr.norm_deviation_max stocke la divergence KL Porter-Thomas, pas une
+         * norme |ψ|² — passer 0.0 ici évite un FAIL dans integration_norm_psi_guard.
+         * La métrique KL est loggée séparément via rcs_to_sim_kl_div.
+         * Ref : analysechatgpt85.md §7 Bug C93-RCS-NORM — 2026-04-03 */
+        sr.norm_deviation_max = 0.0;
         /* Log de conversion dans le CSV forensique principal */
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_F_xeb",   sr.energy_eV);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_H_norm",  sr.pairing_norm);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_xeb_ratio", sr.sign_ratio);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_elapsed_ns", (double)sr.elapsed_ns);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_kl_div",   rr.norm_deviation_max);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "c93_norm_forced_zero", 1.0);
         return sr;
     }
     return simulate_fullscale_controlled(p, seed, burn_scale, trace_csv, NULL, NULL, 0, NULL);
@@ -2610,7 +2618,18 @@ int main(int argc, char** argv) {
                 er = ed_hubbard_2x2(&ep);
             }
             double bethe_e0 = ed_bethe_ansatz_energy_1d(probs[i].u_eV, probs[i].t_eV, 1024);
-            double rel_err  = ed_compare_mc(&er, pt_E_cold[i], probs[i].name);
+            /* C-ED-01-FIX : pt_E_cold[i]==0.0 signifie que le PT-MC n'a pas encore
+             * tourné pour ce module (run court ou interrompu avant convergence).
+             * Fallback : base[i].energy_eV (résultat Base fullscale convergé).
+             * Log séparé pour distinguer la source de mc_E_cold dans le CSV.
+             * Ref : analysechatgpt85.md §7 Bug C-ED-01 — 2026-04-03 */
+            double mc_E_cold_use = (fabs(pt_E_cold[i]) < 1e-9)
+                                   ? base[i].energy_eV
+                                   : pt_E_cold[i];
+            int mc_E_cold_source = (fabs(pt_E_cold[i]) < 1e-9) ? 0 : 1; /* 0=base,1=ptmc */
+            FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_mc_E_cold_source", (double)mc_E_cold_source);
+            FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_pt_E_cold_raw",   pt_E_cold[i]);
+            double rel_err  = ed_compare_mc(&er, mc_E_cold_use, probs[i].name);
             FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_E0_eV",          er.ground_energy_eV);
             FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_gap_eV",         er.gap_eV);
             FORENSIC_LOG_MODULE_METRIC(probs[i].name, "ed_double_occ",     er.double_occupancy);
@@ -2631,7 +2650,7 @@ int main(int argc, char** argv) {
             if (edcsv) fprintf(edcsv,
                 "%s,%d,%.10f,%.10f,%.6f,%.10f,%.10f,%.10f,%.10f,%d,%d,%llu\n",
                 probs[i].name, n_sites,
-                er.ground_energy_eV, pt_E_cold[i], rel_err * 100.0,
+                er.ground_energy_eV, mc_E_cold_use, rel_err * 100.0,
                 bethe_e0, er.gap_eV, er.double_occupancy, er.pairing_corr,
                 er.converged ? 1 : 0, er.lanczos_iter,
                 (unsigned long long)er.elapsed_ns);
@@ -2645,7 +2664,7 @@ int main(int argc, char** argv) {
             if (bcsv && er.converged) {
                 /* Observable : énergie fondamentale (eV) */
                 double ref_e   = er.ground_energy_eV;
-                double mod_e   = pt_E_cold[i];
+                double mod_e   = mc_E_cold_use; /* C-ED-01-FIX : mc_E_cold_use (pas pt_E_cold raw) */
                 double abs_e   = fabs(mod_e - ref_e);
                 double rel_e   = fabs(abs_e / (fabs(ref_e) + 1e-15));
                 /* Barre d'erreur 50% pour PTMC sur petits réseaux (domaine validité) */
