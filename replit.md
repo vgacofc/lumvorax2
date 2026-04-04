@@ -1,48 +1,47 @@
 # LUM/VORAX — Quantum Research Platform
 
 ## Project Overview
-High-performance quantum simulation and research platform targeting Hubbard model / HTS physics. Combines a C99 computation engine with a Python/Flask visualization web server.
+High-performance computational research engine targeting the AIMO3 (AI Mathematical Olympiad) competition and quantum physics simulations (Hubbard model / HTS, Kerr metric black hole dynamics). The core is a C99 multi-module engine compiled with AVX-512/AVX2 SIMD optimizations, with Python scripts for Kaggle integration and result analysis.
 
 ## Architecture
 
 ### Core Components
-- **C Engine** (`src/`): Multi-module quantum simulation framework
-  - `src/lum/` & `src/vorax/`: Core LUM/VORAX engines
+- **C Engine** (`src/`): 39+ module quantum simulation framework
+  - `src/lum/` & `src/vorax/`: Core LUM/VORAX computation engines
   - `src/advanced_calculations/quantum_problem_hubbard_hts/`: Main research cycle (C37)
   - `src/physics/`: Relativistic physics (Kerr metric, black hole simulations)
-  - `src/optimization/`: SIMD/AVX performance optimizations
-  - `src/debug/`, `src/logging/`: Forensic memory and execution trackers
+  - `src/optimization/`: SIMD/AVX-512 performance optimizations
+  - `src/debug/`, `src/logging/`: Forensic nanosecond-precision trackers
   - `src/persistence/`: WAL-based data recovery
+  - `src/spatial/`: Displacement metrics
+  - `src/network/`, `src/file_formats/`, `src/complex_modules/`: Additional modules
 
-- **Visualization Server** (`src/visualization/`): Flask web app serving real-time simulation data
-  - `server.py`: REST API endpoints exposing simulation results as JSON
-  - `static/index.html`: Three.js-based 3D visualization frontend
-  - `static/three.min.js`: Three.js library
+- **Python Scripts**: Kaggle kernel integration
+  - `aimo3_lum_v28_proof_kernel.py`: Main competition kernel
+  - `aimo3_lum_enhanced_kernel.py`: Enhanced kernel variant
+  - `deploy_to_kaggle.py`: Kaggle submission automation
 
-- **Entry Point** (`main.py`): Loads libstdc++ then imports and runs the Flask visualization app
+- **Shared Library**: `liblumvorax.so` — Python-callable shared library
+
+### Build System
+- `build.sh`: Main build script — auto-detects CPU (AVX-512/AVX2/SSE4.2), compiles all modules
+- `Makefile`: Full build rules for all binaries and test suites
+- Output: `bin/lum_vorax_complete`, `bin/test_forensic_complete_system`, `bin/test_integration_complete_39_modules`, `bin/test_quantum`
 
 ### Workflows
-- **Start application**: Runs the Flask visualization server via gunicorn on port 5000
-  - Command: `PYTHONPATH=/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages .pythonlibs/bin/gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app`
-- **Quantum Research Cycle C37**: Background C simulation process (long-running)
+- **Start application**: Builds the full project (`bash build.sh`) then runs the main simulation (`./bin/lum_vorax_complete`)
+- **Quantum Research Cycle C37**: Manual long-running research cycle in `src/advanced_calculations/quantum_problem_hubbard_hts/`
+  - Has an auto-start guard (`.c37_autorun_disabled` file) — requires manual launch: `C37_AUTORUN_ENABLED=1 bash run_research_cycle.sh`
 
 ## Key Technical Notes
-- Python packages are installed in `.pythonlibs/` — must set `PYTHONPATH` explicitly when invoking scripts
-- The visualization server was originally in `src/visualization.desactive/` (deactivated); activated at `src/visualization/`
-- C simulations write results to `src/advanced_calculations/quantum_problem_hubbard_hts/results/`
-- The Flask server reads those result files via CSV/log parsing to expose them through the API
+- **AVX-512**: Detected and used on Replit; produces fast vectorized builds
+- **`-fPIC` required**: All object files must be compiled with `-fPIC` for the shared library target
+- **`LUM_DISPLACEMENT_MAGIC`**: Defined in `src/common/magic_numbers.h` as `0xDEADC0DE`
+- **Test binary `test_integration_complete_39_modules`**: Requires `-lmvec -lm` due to vectorized `exp()` calls in neural network processor
+- **Makefile tabs**: Makefile uses tab indentation for recipe lines (standard make requirement)
+- **Kaggle config**: `KAGGLE_USERNAME=ndarray2000`, `KAGGLE_CONFIG_DIR=/home/runner/.kaggle`
 
-## Dependencies
-- **Python**: flask, flask-sqlalchemy, gunicorn, psycopg2, email-validator, numpy, scipy, etc.
-- **C**: gcc with -O3/-march=native/-flto, pthread, libm, librt
-- **Frontend**: Three.js (bundled in static/)
-
-## API Endpoints
-- `GET /` — Visualization dashboard
-- `GET /api/run/latest` — Latest simulation run results
-- `GET /api/benchmark_ref` — QMC/DMRG reference benchmarks
-- `GET /api/viz/scalar_field` — 3D scalar field data
-- `GET /api/viz/trajectories` — Step-by-step simulation trajectories
-- `GET /api/viz/lattice` — Hubbard lattice site data
-- `GET /api/viz/graph` — Module interaction graph
-- `GET /api/viz/multiscale` — Thermodynamic limit extrapolations
+## Environment
+- Language: C99 (gcc with AVX-512), Python 3.11/3.12
+- Nix packages: gcc, gnumake, arrow-cpp, cairo, ffmpeg-full, kaggle, postgresql, and more (see `.replit`)
+- Python libs: flask, flask-sqlalchemy, psycopg2, email_validator, gunicorn, numpy, pandas, torch, matplotlib, etc.

@@ -100,7 +100,7 @@ $(BIN_DIR)/test_forensic_complete_system: $(OBJECTS)
 
 # Test d'intégration complète 39 modules
 $(BIN_DIR)/test_integration_complete_39_modules: $(OBJECTS)
-	$(CC) $(CFLAGS) src/tests/test_integration_complete_39_modules.c $(OBJECTS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) src/tests/test_integration_complete_39_modules.c $(OBJECTS) -o $@ $(LDFLAGS) -lmvec -lm
 
 $(BIN_DIR)/test_quantum: $(OBJECTS)
 	$(CC) $(CFLAGS) src/tests/test_quantum_simulator_complete.c $(OBJECTS) -o $@ $(LDFLAGS)

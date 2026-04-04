@@ -8,4 +8,7 @@
  * d'intégrité des fichiers persistés (data_persistence.c §integrity). */
 #define LUM_GROUP_MAGIC          0x4C554D47  /* "LUMG" */
 
+/* LUM_DISPLACEMENT_MAGIC: protection des métriques de déplacement instantané */
+#define LUM_DISPLACEMENT_MAGIC   0xDEADC0DE
+
 #endif

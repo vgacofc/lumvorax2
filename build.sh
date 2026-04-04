@@ -19,7 +19,7 @@ else
 fi
 
 # Flags optimisation maximale
-export CFLAGS="-O3 -march=native -mtune=native $SIMD_FLAGS -funroll-loops -ffast-math -flto -g"
+export CFLAGS="-O3 -march=native -mtune=native $SIMD_FLAGS -funroll-loops -ffast-math -flto -fPIC -g"
 export LDFLAGS="-flto -O3"
 
 echo "Flags: $CFLAGS"
