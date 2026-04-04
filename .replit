@@ -40,15 +40,15 @@ outputType = "console"
 
 [[workflows.workflow]]
 name = "Start application"
-author = "agent"
 mode = "sequential"
-
-[workflows.workflow.metadata]
-outputType = "console"
+author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash build.sh && echo '=== BUILD OK ===' && ./bin/lum_vorax_complete"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [nix]
 packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
