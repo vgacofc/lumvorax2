@@ -274,6 +274,12 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             FORENSIC_LOG_HW_SAMPLE("random_circuit_sampling");
         }
 
+        /* Graine unique par circuit — DOIT être déclaré avant tout usage dans ce bloc
+         * BUG C40-FIX-001 (session 20260404T181350Z) : circ_seed était déclaré APRÈS
+         * son utilisation dans l'initialisation Porter-Thomas → erreur compilation
+         * "'circ_seed' undeclared". Correction : déclaration déplacée ici, avant §1. */
+        uint64_t circ_seed = seed ^ (circ * 0x9e3779b97f4a7c15ULL);
+
         /* 1. Initialisation Porter-Thomas (C40-RCS-A4 — 2026-04-04)
          *
          * PROBLÈME IDENTIFIÉ (rapport analysechatgpt88.md §3.2) :
@@ -318,7 +324,6 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
         }
 
         /* 2. Application des couches de portes (brick-wall) */
-        uint64_t circ_seed = seed ^ (circ * 0x9e3779b97f4a7c15ULL);
         for (int layer = 0; layer < circuit_depth; ++layer) {
 
             /* Log début couche — circuit 0 uniquement */
