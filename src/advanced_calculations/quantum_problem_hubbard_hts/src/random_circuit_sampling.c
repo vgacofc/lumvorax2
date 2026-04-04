@@ -283,16 +283,28 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             amp_im[q] = 0.0;
         }
 
-        /* Log opération élémentaire : initialisation */
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_init_state_circuit", (double)circ);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_init_inv_sqrt_n", inv_sqrt_n);
+        /* C39-PERF-LOG : logs d'opérations intra-boucle conditionnés au PREMIER circuit
+         * uniquement (circ == 0). La cause du timeout 300s identifiée dans analysechatgpt87.md
+         * §ANO-01 : 2458 appels FORENSIC/circuit × 5000 circuits = 12 290 000 appels I/O
+         * → 307 secondes de logging seul. Le calcul physique prend ~3 secondes.
+         * Correction : logs de bas niveau (portes, qubits) tracés pour le circuit 0 uniquement
+         * (traçabilité complète du premier circuit). Logs XEB/entropy tous les 100 circuits.
+         * Tous les logs finaux (F_xeb_mean, xeb_std, ...) restent complets. */
+
+        /* Log opération élémentaire : initialisation — circuit 0 uniquement */
+        if (circ == 0) {
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_init_state_circuit", (double)circ);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_init_inv_sqrt_n", inv_sqrt_n);
+        }
 
         /* 2. Application des couches de portes (brick-wall) */
         uint64_t circ_seed = seed ^ (circ * 0x9e3779b97f4a7c15ULL);
         for (int layer = 0; layer < circuit_depth; ++layer) {
 
-            /* Log début couche */
-            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_layer_start", (double)layer);
+            /* Log début couche — circuit 0 uniquement */
+            if (circ == 0) {
+                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_layer_start", (double)layer);
+            }
 
             /* a) Portes 1Q Haar-aléatoires sur tous les qubits */
             for (int q = 0; q < n_qubits; ++q) {
@@ -302,8 +314,10 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                 /* Projection sur base locale {|0⟩, |1⟩} du qubit q */
                 re1 = amp_re[(q + 1) % n_qubits];
                 im1 = amp_im[(q + 1) % n_qubits];
-                /* Log opération : porte 1Q */
-                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_1q_gate_qubit", (double)q);
+                /* Log opération porte 1Q — circuit 0 uniquement (traçabilité structure) */
+                if (circ == 0) {
+                    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_1q_gate_qubit", (double)q);
+                }
                 apply_haar_1q(&re0, &im0, &re1, &im1, &circ_seed);
                 amp_re[q]                = re0;
                 amp_im[q]                = im0;
@@ -316,9 +330,11 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             for (int q = offset; q < n_qubits - 1; q += 2) {
                 double effective_coupling = coupling_strength
                                           * (1.0 + 0.1 * entanglement_str * rcs_randn(&circ_seed));
-                /* Log opération : porte 2Q */
-                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_2q_cz_pair", (double)q);
-                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_2q_coupling", effective_coupling);
+                /* Log opération porte 2Q — circuit 0 uniquement */
+                if (circ == 0) {
+                    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_2q_cz_pair", (double)q);
+                    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_2q_coupling", effective_coupling);
+                }
                 apply_cz_2q(&amp_re[q], &amp_im[q],
                              &amp_re[q+1], &amp_im[q+1],
                              effective_coupling, &circ_seed);
@@ -343,17 +359,20 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             double norm = sqrt(norm2);
             double norm_dev = fabs(norm - 1.0);
             if (norm_dev > norm_dev_max) norm_dev_max = norm_dev;
-            /* Log normalisation : quoi, où, quand */
-            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:norm_before_renorm",   norm);
-            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:norm_dev_layer",       norm_dev);
+            /* Log normalisation — circuit 0 uniquement */
+            if (circ == 0) {
+                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:norm_before_renorm", norm);
+                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:norm_dev_layer",     norm_dev);
+            }
             if (norm > 1e-15) {
                 double inv_norm = 1.0 / norm;
                 for (int q = 0; q < n_qubits; ++q) {
-                    /* Log opération élémentaire : multiplication par scalaire (renorm) */
                     amp_re[q] *= inv_norm;
                     amp_im[q] *= inv_norm;
                 }
-                FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_renorm_factor", inv_norm);
+                if (circ == 0) {
+                    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_renorm_factor", inv_norm);
+                }
             }
         } /* fin boucle couches */
 
@@ -385,11 +404,13 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
         /* p_bitstring = exp(log_p) pour logging uniquement (peut être ~0 pour sim classique) */
         double p_bitstring = (log_p_bitstring > -700.0) ? exp(log_p_bitstring) : 0.0;
 
-        /* Log opération : calcul probabilité bitstring */
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_p_bitstring_circuit", (double)circ);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_bitstring",            p_bitstring);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_p_bitstring",        log_p_bitstring);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:entropy_circuit",        entropy_circuit);
+        /* Log XEB/entropy — tous les 100 circuits (granularité suffisante pour convergence) */
+        if (circ % 100 == 0) {
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_p_bitstring_circuit", (double)circ);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_bitstring",            p_bitstring);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_p_bitstring",        log_p_bitstring);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:entropy_circuit",        entropy_circuit);
+        }
 
         /* 4. Score XEB de ce circuit : D_eff × p_bitstring - 1 (en espace log pour stabilité)
          * xeb_log_arg = log(D) + log(p) = log_D + log_p_bitstring
@@ -408,9 +429,11 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             xeb_circuit = fmax(-1.0, fmin(1.0, xeb_circuit));
         }
 
-        /* Log XEB instantané */
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:xeb_circuit",  xeb_circuit);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:D_eff_log",    log_D);
+        /* Log XEB instantané — tous les 100 circuits */
+        if (circ % 100 == 0) {
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:xeb_circuit", xeb_circuit);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:D_eff_log",   log_D);
+        }
 
         /* 5. Accumulation et drift */
         double xeb_drift = (circ > 0) ? fabs(xeb_circuit - xeb_prev) : 0.0;
@@ -420,7 +443,7 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
         entropy_acc    += entropy_circuit;
         xeb_prev        = xeb_circuit;
 
-        /* Log opération élémentaire : addition accumulation */
+        /* Log accumulation — tous les 500 circuits */
         if (circ % 500 == 0) {
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_acc_xeb_running_mean",
                                        xeb_acc / (double)(circ + 1));
