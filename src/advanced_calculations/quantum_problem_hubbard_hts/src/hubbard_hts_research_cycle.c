@@ -264,6 +264,12 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
     double dt = (p->dt > 0.0) ? p->dt : 0.01;
     double h_scale_eV = fabs(p->t_eV) + fabs(p->u_eV) + fabs(p->mu_eV);
     double dt_scale = bounded_dt_scale(dt, h_scale_eV);
+    /* RENORM-04-FIX (2026-04-04) — research_cycle.c : T* dynamique (voir advanced_parallel.c).
+     * T_star_K [K] = 216 × t²/U. Plancher 1K. Identique aux 3 autres fonctions corrigées. */
+    double T_star_K = (fabs(p->u_eV) > 1e-9)
+                      ? 216.0 * fabs(p->t_eV) * fabs(p->t_eV) / fabs(p->u_eV)
+                      : 27.0;
+    if (T_star_K < 1.0) T_star_K = 1.0;
     seed ^= seed_from_module_name(p->name);
     for (int i = 0; i < sites; ++i) d[i] = (rand01(&seed) - 0.5) * 1e-3;
     normalize_state_vector(d, sites);
@@ -339,8 +345,8 @@ static sim_result_t simulate_fullscale_controlled(const problem_t* p,
             double n_up = 0.5 * (1.0 + d[i]);
             double n_dn = 0.5 * (1.0 - d[i]);
             double hopping_lr = -0.5 * d[i] * (d_left + d_right);
-            /* BC-05-H4 : constante physique corrigée 65→27 K (fit QMC/DMRG, RMSE≈0.007) */
-            double local_pair = exp(-fabs(d[i]) * p->temp_K / 27.0) * (1.0 + 0.08 * corr[i] * corr[i]);
+            /* BC-05-H4 / RENORM-04-FIX : T* calculé dynamiquement — voir T_star_K ci-dessus. */
+            double local_pair = exp(-fabs(d[i]) * p->temp_K / T_star_K) * (1.0 + 0.08 * corr[i] * corr[i]);
             /* C-FIX-RAM-02 : AGRÉGATION par-step au lieu de log par-site par-step.
              * AVANT : 8 FORENSIC_LOG × nSites par step = 128 logs/step → 1.79M logs/module → 3.8 GiB CSV.
              * APRÈS : accumulation en variables locales, log UNE fois après la boucle sites.
@@ -576,6 +582,13 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
     long double dt_ld = (p->dt > 0.0) ? (long double)p->dt : 0.01L;
     long double h_scale_ld = fabsl((long double)p->t_eV) + fabsl((long double)p->u_eV) + fabsl((long double)p->mu_eV);
     long double dt_scale_ld = (long double)bounded_dt_scale((double)dt_ld, (double)h_scale_ld);
+    /* RENORM-04-FIX long double — research_cycle.c simulate_problem_independent.
+     * T_star_K_ld [K] = 216 × t² / U. Plancher 1K. */
+    long double T_star_K_ld = (fabsl((long double)p->u_eV) > 1e-9L)
+                              ? 216.0L * fabsl((long double)p->t_eV) * fabsl((long double)p->t_eV)
+                                / fabsl((long double)p->u_eV)
+                              : 27.0L;
+    if (T_star_K_ld < 1.0L) T_star_K_ld = 1.0L;
     uint64_t t0 = now_ns();
     for (int i = 0; i < sites; ++i) d[i] = ((long double)rand01(&seed) - 0.5L) * 1e-3L;
     /* Normalisation initiale identique a simulate_fullscale_controlled */
@@ -616,8 +629,8 @@ static sim_result_t simulate_problem_independent(const problem_t* p, uint64_t se
             long double n_up = 0.5L * (1.0L + d[i]);
             long double n_dn = 0.5L * (1.0L - d[i]);
             long double hopping_lr = -0.5L * d[i] * (d_left + d_right);
-            /* BC-05-H4 : constante physique corrigée 65→27 K — version long double */
-            long double local_pair = expl(-fabsl(d[i]) * (long double)p->temp_K / 27.0L) * (1.0L + 0.08L * corr[i] * corr[i]);
+            /* BC-05-H4 / RENORM-04-FIX long double : T* dynamique — voir T_star_K_ld ci-dessus. */
+            long double local_pair = expl(-fabsl(d[i]) * (long double)p->temp_K / T_star_K_ld) * (1.0L + 0.08L * corr[i] * corr[i]);
             long double local_energy = (long double)p->u_eV * n_up * n_dn - (long double)p->t_eV * hopping_lr - (long double)p->mu_eV * (n_up + n_dn - 1.0L);
             step_energy += local_energy / (long double)sites;
             step_pairing += local_pair;
