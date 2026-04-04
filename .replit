@@ -43,12 +43,13 @@ name = "Start application"
 mode = "sequential"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "bash build.sh && echo '=== BUILD OK ===' && ./bin/lum_vorax_complete"
-
-[workflows.workflow.metadata]
-outputType = "console"
+args = "python -m gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+waitForPort = 5000
 
 [nix]
 packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
