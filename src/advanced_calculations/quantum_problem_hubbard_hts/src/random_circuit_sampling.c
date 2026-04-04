@@ -244,14 +244,16 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     }
 
     /* Accumulateurs XEB et entropie */
-    double xeb_acc         = 0.0;
-    double entropy_acc     = 0.0;
-    double xeb_sq_acc      = 0.0;  /* pour variance */
-    double xeb_prev        = 0.0;
-    double xeb_drift_acc   = 0.0;
-    double cpu_max         = 0.0;
-    double mem_max         = 0.0;
-    double norm_dev_max    = 0.0;
+    double xeb_acc            = 0.0;
+    double entropy_acc        = 0.0;
+    double xeb_sq_acc         = 0.0;  /* pour variance */
+    double xeb_prev           = 0.0;
+    double xeb_drift_acc      = 0.0;
+    double xeb_log_norm_acc   = 0.0;  /* C41-FIX-XEB : F_XEB log-normalisé sans overflow (ANO-C40-02) */
+    double log_p_acc          = 0.0;  /* accumulation log_p_bitstring pour métriques finales */
+    double cpu_max            = 0.0;
+    double mem_max            = 0.0;
+    double norm_dev_max       = 0.0;
 
     /* Dimension exacte de l'espace de Hilbert : D = 2^n_qubits
      * C40-RCS-A4 : log_D = n_qubits × ln(2) — CORRECT (D=2^n, pas D=n).
