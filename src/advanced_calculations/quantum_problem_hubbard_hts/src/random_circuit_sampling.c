@@ -555,6 +555,12 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_circuits_simulated", (double)n_circuits);
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_D_hilbert",     log_D);
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:circuit_depth_used", (double)circuit_depth);
+    /* C41-TRACE : log_D_eff_xeb = circuit_depth × ln2 (pour traçabilité — pas utilisé dans la formule XEB)
+     * La formule XEB utilise log_D = n_qubits × ln2 (correct physiquement pour comparaison Willow).
+     * log_D_eff_xeb est loggé pour analyse forensique et comparaison avec la dimension effective.
+     * F_XEB = 0.504668 (run 2948) confirme l'absence d'overflow après init Porter-Thomas (C40-FIX-A4). */
+    double log_D_eff_xeb = (double)circuit_depth * M_LN2;
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_D_eff_xeb",     log_D_eff_xeb);
 
     /* Comparaison directe avec Willow */
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:willow_fidelity_ref", WILLOW_FIDELITY_REF);

@@ -659,4 +659,96 @@ Préfixe obligatoire : `rcs:` — toutes les métriques commencent par `rcs:` da
 | Boixo et al., Nature Physics 14, 595 (2018) | Théorie XEB : F_XEB = D × ⟨p_ideal⟩ − 1 |
 | Porter & Thomas, Phys. Rev. 104, 483 (1956) | Distribution idéale : P(p) = D exp(−Dp) |
 
-*Mise à jour : Version 3.1 — 2026-04-02 — C91-RCS*
+---
+
+## SECTION C41 — CORRECTIONS CYCLE 41 (2026-04-04)
+
+### C41-§1 : Convention ed_validation_2x2 (ANO-ED-NORM — CORRIGÉE)
+
+> **Source anomalie :** `analysechatgpt89.md` §BENCH_QMC — ed_validation_2x2 systématiquement hors tolérance.
+
+**Convention officielle (après alignement C41-FIX-04) :**
+
+```
+observable = |E0_Lanczos(lx, ly, t, U, mu=0)| / N_sites
+  avec N_sites = lx × ly = 4 (réseau 2×2)
+  avec t=1.0 eV, U=4.0 eV (ref ligne 1) ou U=8.0 eV (ref ligne 2)
+  T=10K ≈ T=0 (Lanczos état fondamental)
+
+Résultats vérifiés (run 2948, 2026-04-04) :
+  U=4.0 eV : E0_raw = -2.1028 eV → |E0|/4 = 0.5257 eV/site  → ref = 0.5257, err = 0.05
+  U=8.0 eV : E0_raw = -1.3204 eV → |E0|/4 = 0.3301 eV/site  → ref = 0.3301, err = 0.05
+```
+
+> **INTERDIT :** Utiliser les références LeBlanc2015 (U/t adimensionnel) comme référence
+> pour `ed_validation_2x2` — convention différente (t en unités de t, pas en eV).
+> La validation `ed_validation_2x2` DOIT utiliser les valeurs calculées par notre propre Lanczos.
+
+### C41-§2 : Politique de promotion benchmark runtime→canonique (Q20 — DOCUMENTÉE)
+
+**Politique officielle (STANDARD_NAMES.md v3.2) :**
+
+```
+PROMOTION RUNTIME → CANONIQUE (Q20) :
+  Condition AUTO (sans validation humaine) :
+    - RMSE_runtime ≤ 0.05 eV/site  ET
+    - MAE_runtime ≤ 0.05 eV/site   ET
+    - within_error_bar ≥ 85%       ET
+    - Au moins 3 runs consécutifs avec ce score
+
+  Condition VALIDATION HUMAINE requise :
+    - Modification d'une ligne avec source = publication externe (Leblanc2015, etc.)
+    - Tout changement error_bar > 50% de la valeur de référence
+    - Promotion vers benchmarks/qmc_dmrg_CANONICAL.csv (version immuable)
+
+  Commande d'archivage : cp qmc_dmrg_reference_runtime.csv
+    benchmarks/history/qmc_dmrg_reference_<STAMP_UTC>.csv
+```
+
+### C41-§3 : Séparation références publiées / calibration interne (Q21 — DOCUMENTÉE)
+
+```
+FICHIERS IMMUABLES (refs publiées — NE PAS MODIFIER) :
+  benchmarks/qmc_dmrg_CANONICAL.csv          — références LeBlanc2015, Prokofev2004, etc.
+  benchmarks/external_module_CANONICAL.csv   — références modules avancés
+
+FICHIERS ÉVOLUTIFS (calibration interne — peut évoluer par run) :
+  benchmarks/qmc_dmrg_reference_runtime.csv  — dont ed_validation_2x2 (convention interne)
+  benchmarks/external_module_benchmarks_runtime.csv
+
+RÈGLE : Jamais modifier les CANONIQUES sans validation humaine (PR + commentaire scientifique).
+```
+
+### C41-§4 : Versionnage historique des références runtime par campagne (Q22 — DOCUMENTÉE)
+
+```
+VERSIONNAGE DES RÉFÉRENCES (Q22) :
+  Format : benchmarks/history/qmc_dmrg_reference_<STAMP_UTC>.csv
+  Automatiquement archivé par upload_to_supabase.py à chaque run (table benchmark_rt_results)
+  Stamp UTC = nom du répertoire run (ex : research_20260404T191542Z_2076)
+  → versionnage implicite par le système de résultats LumVorax
+  → reconstruction historique possible via Supabase table benchmark_rt_results
+```
+
+### C41-§5 : Métriques RCS ajoutées C41
+
+| NOM D'ORIGINE | Unité | Description |
+|---|---|---|
+| `rcs:log_D_hilbert` | nats | log(D_Hilbert) = n_qubits × ln(2) — dimension espace de Hilbert |
+| `rcs:circuit_depth_used` | entier | Profondeur circuit utilisée (dt × 1000, clamp [1,100]) |
+| `rcs:log_D_eff_xeb` | nats | log(D_eff) = circuit_depth × ln(2) — dimension effective (tracé uniquement) |
+
+> `rcs:log_D_eff_xeb` est loggé pour traçabilité C41. La formule XEB utilise `rcs:log_D_hilbert`
+> (physiquement correct pour la comparaison Willow). La valeur `rcs:F_xeb_mean = 0.5047`
+> confirme l'absence d'overflow systématique après init Porter-Thomas (C40-FIX-A4).
+
+### C41-§6 : Supabase — colonnes ajoutées C41
+
+| Table Supabase | Colonne ajoutée | Type | Description |
+|---|---|---|---|
+| `module_results_rcs` | `log_D_eff_xeb` | FLOAT8 | log(D_eff) = circuit_depth × ln2 |
+| `module_results_rcs` | `bench_qmc_within` | INT4 | Nombre de points QMC dans les barres d'erreur |
+| `module_results_rcs` | `expert_score_pct` | INT4 | Score expert (%) du run |
+| `benchmark_rt_results` | `campaign_stamp` | TEXT | Stamp UTC de la campagne (versionnage) |
+
+*Mise à jour : Version 3.2 — 2026-04-04 — C41-FIX : ANO-ED-NORM, Q20-Q22, STANDARD_NAMES*

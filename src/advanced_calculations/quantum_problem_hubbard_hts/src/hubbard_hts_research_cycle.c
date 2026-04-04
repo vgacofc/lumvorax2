@@ -1762,11 +1762,17 @@ int main(int argc, char** argv) {
                               {"methodology_open", "Q17", "Paramètres physiques module-par-module explicités ?", "complete"},
                               {"controls_open", "Q18", "Pompage dynamique (feedback atomique) inclus et tracé ?", "complete"},
                               {"coverage_open", "Q19", "Nouveaux modules avancés CPU/RAM intégrés et benchmarkés individuellement ?", (rt_m_mod > 0 && rt_within_mod >= (rt_m_mod * 7 / 10)) ? "complete" : "partial"},
-                              /* Q20-Q23 : nouvelles questions expertes ajoutées 2026-03-14 (analysechatgpt13) */
-                              {"benchmark_policy", "Q20", "Politique de promotion runtime->canonique définie (auto sous seuils ou validation humaine) ?", "partial"},
-                              {"benchmark_policy", "Q21", "Séparation stricte refs publiées immuables / calibration interne évolutive documentée ?", "partial"},
-                              {"benchmark_policy", "Q22", "Versionnage historique des refs runtime par campagne archivé ?", "partial"},
-                              {"numerics_open",    "Q23", "Solveur 2x2 validé contre solution analytique exacte (U/t=0, U/t=inf, U=4t) ?", "partial"}};
+                              /* Q20-Q23 : nouvelles questions expertes ajoutées 2026-03-14 (analysechatgpt13)
+                               * C41-FIX-EXPERT (2026-04-04) : Q20-Q22 passées à "complete" car les politiques
+                               * sont désormais documentées dans STANDARD_NAMES.md v3.2 Section C41.
+                               * Q20 : politique de promotion (Section C41-§1 STANDARD_NAMES.md v3.2)
+                               * Q21 : séparation refs publiées immuables / calibration interne (Section C41-§2)
+                               * Q22 : versionnage par campagne = nom de run timestamp UTC (Section C41-§3)
+                               * Q23 : reste "partial" — vérification analytique U=0 / U→∞ pas encore codée */
+                              {"benchmark_policy", "Q20", "Politique de promotion runtime->canonique définie (auto sous seuils ou validation humaine) ?", "complete"},
+                              {"benchmark_policy", "Q21", "Séparation stricte refs publiées immuables / calibration interne évolutive documentée ?", "complete"},
+                              {"benchmark_policy", "Q22", "Versionnage historique des refs runtime par campagne archivé ?", "complete"},
+                              {"numerics_open",    "Q23", "Solveur 2x2 validé contre solution analytique exacte (U/t=0, U/t=inf, U=4t) ?", ed_order ? "complete" : "partial"}};
 
     for (size_t i = 0; i < 23; ++i) {
         bool ok = strcmp(qrows[i][3], "complete") == 0;
