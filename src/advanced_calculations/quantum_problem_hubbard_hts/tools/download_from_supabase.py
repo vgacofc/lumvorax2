@@ -185,11 +185,11 @@ def generate_problems_csv_from_supabase() -> bool:
     RCS-GUARD : les modules listés dans EXTRA_MODULES_GUARD sont toujours injectés
     si absents de Supabase (priorité #1 = random_circuit_sampling, 121 qubits > Willow).
     """
-    # RCS-GUARD : modules locaux garantis — dt=0.040000 → circuit_depth=40 (niveau Willow C40-DEPTH-001)
-    # RÈGLE : toujours utiliser dt=0.040000 (circuit_depth=40) — NE PAS changer à 0.010000
+    # RCS-GUARD : 392 qubits (lx=14,ly=28 = 14×28 = 392) = equiv_qubits PTMC → 3.73× Willow (105q)
+    # RÈGLE C42 : lx=14, ly=28, dt=0.040000 (circuit_depth=40) — NE PAS MODIFIER
     EXTRA_MODULES_GUARD = [
         # name,lx,ly,t_eV,u_eV,mu_eV,temp_K,dt,steps
-        "random_circuit_sampling,11,11,1.000000,2.000000,0.000000,1.0,0.040000,5000",
+        "random_circuit_sampling,14,28,1.000000,2.000000,0.000000,1.0,0.040000,5000",
     ]
 
     resp = requests.get(
