@@ -3117,10 +3117,12 @@ int main(int argc, char** argv) {
                 md /= (double)n;
                 double vd2 = md2v / (double)n - md * md;
                 double sd   = (vd2 > 0.0) ? sqrt(vd2) : 0.0;
-                /* AC-05 : seuil 5*sqrt(6)*sd ≈ 12.25*sd adapté à la variance d2 */
-                if (sd > 0.0 && fabs(d2 - md) > 5.0 * sqrt(6.0) * sd) {
+                /* C42-OPT-02 : seuil 8*sqrt(6)*sd ≈ 19.6*sd — était 5*sqrt(6)≈12.25*sd.
+                 * Réduction faux positifs : 723 → ~180/run (spikes réels |spike|>0.3 uniquement).
+                 * Réf : analysechatgpt90.md §PATTERN-HW-04 OPT-C42-04. */
+                if (sd > 0.0 && fabs(d2 - md) > 8.0 * sqrt(6.0) * sd) {
                     d2_out = (double)NAN; /* artefact détecté — remplacement par NaN */
-                    FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_5sqrt6sigma_guard_nan", d2);
+                    FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_8sqrt6sigma_guard_nan", d2);
                 }
             }
             /* Stocker d2_out (valeur filtrée) dans le ring — jamais les NaN

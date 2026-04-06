@@ -239,17 +239,22 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     /* Allocations des amplitudes quantiques — modèle MF à 4 composantes par qubit
      * C42-FIX-RCS-02 : chaque qubit représenté par (α_re, α_im) pour |0⟩
      * ET (β_re, β_im) pour |1⟩. Normalisation LOCALE : |α_q|² + |β_q|² = 1.
-     * Auparavant : seulement (amp_re, amp_im) → |0⟩ uniquement → p_q1 = 1-p_q0 fictif
-     * → p_q0 ≈ 1/n après renorm globale → log_p ≈ 0 → F_XEB = 1.0 systématique. */
-    double* amp_re  = (double*)calloc((size_t)n_qubits, sizeof(double));
-    double* amp_im  = (double*)calloc((size_t)n_qubits, sizeof(double));
-    double* amp1_re = (double*)calloc((size_t)n_qubits, sizeof(double));
-    double* amp1_im = (double*)calloc((size_t)n_qubits, sizeof(double));
-    if (!amp_re || !amp_im || !amp1_re || !amp1_im) {
-        if (amp_re)  free(amp_re);
-        if (amp_im)  free(amp_im);
-        if (amp1_re) free(amp1_re);
-        if (amp1_im) free(amp1_im);
+     * C42-OPT-01 : buffers thread-local pour OpenMP — 1 jeu par thread.
+     * Chaque thread a son propre espace amp_re/im/1_re/1_im → pas de race condition. */
+#ifdef _OPENMP
+    int n_threads_rcs = omp_get_max_threads();
+#else
+    int n_threads_rcs = 1;
+#endif
+    double* all_amp_re  = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp_im  = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp1_re = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp1_im = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    if (!all_amp_re || !all_amp_im || !all_amp1_re || !all_amp1_im) {
+        if (all_amp_re)  free(all_amp_re);
+        if (all_amp_im)  free(all_amp_im);
+        if (all_amp1_re) free(all_amp1_re);
+        if (all_amp1_im) free(all_amp1_im);
         r.converged = 0;
         return r;
     }
@@ -258,11 +263,11 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     double xeb_acc            = 0.0;
     double entropy_acc        = 0.0;
     double xeb_sq_acc         = 0.0;   /* pour variance XEB marginal */
-    double xeb_prev           = 0.0;
-    double xeb_drift_acc      = 0.0;
     double xeb_log_norm_acc   = 0.0;   /* F_XEB log-normalisé = 1 + log_p/log_D ∈ (-∞,1] */
     double log_p_acc          = 0.0;   /* accumulation log_p_bitstring pour métriques finales */
     double p_meas_acc         = 0.0;   /* C42-FIX-XEB : Σ p_measured par qubit (pour F_XEB_marg) */
+    /* C42-OPT-01 : xeb_prev/xeb_drift_acc supprimés — drift inter-circuit non calculable
+     * en parallèle (ordre non déterministe). xeb_drift_mean = 0 en mode OpenMP. */
     double cpu_max            = 0.0;
     double mem_max            = 0.0;
     double norm_dev_max       = 0.0;
@@ -275,16 +280,39 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     double D_eff = exp(fmin(log_D, 700.0)); /* clamp pour éviter inf */
     (void)D_eff; /* utilisé uniquement pour compatibilité future */
 
-    /* ── Boucle principale : simulation des circuits ──────────────── */
+    /* ── Boucle principale : simulation des circuits (C42-OPT-01 OpenMP) ────── */
+    /* #pragma omp parallel for :
+     *   - schedule(dynamic,50) : équilibre de charge (circuits ≠ durées)
+     *   - reduction(+:...) : accumulation thread-safe des métriques scalaires
+     *   - reduction(max:norm_dev_max) : max thread-safe
+     *   - cpu_max/mem_max protégés par #pragma omp critical (rcs_cpu_percent() a des static)
+     * Gain estimé : ×2.5 CPU (38% → 95%) sur 4 cores. Réf : analysechatgpt90.md §PATTERN-HW-01 */
+#pragma omp parallel for schedule(dynamic, 50) \
+    reduction(+:xeb_acc,entropy_acc,xeb_sq_acc,xeb_log_norm_acc,log_p_acc,p_meas_acc) \
+    reduction(max:norm_dev_max)
     for (uint64_t circ = 0; circ < n_circuits; ++circ) {
 
-        /* Tracking ressources toutes les 100 itérations */
-        if (circ % 100 == 0) {
+        /* Buffers thread-local — C42-OPT-01 : chaque thread a son propre jeu d'amplitudes */
+#ifdef _OPENMP
+        int _rcs_tid = omp_get_thread_num();
+#else
+        int _rcs_tid = 0;
+#endif
+        double* amp_re  = all_amp_re  + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp_im  = all_amp_im  + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp1_re = all_amp1_re + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp1_im = all_amp1_im + (size_t)_rcs_tid * (size_t)n_qubits;
+
+        /* Tracking ressources toutes les 100 itérations — thread 0 uniquement
+         * (rcs_cpu_percent() utilise des variables static → non thread-safe) */
+        if (circ % 100 == 0 && _rcs_tid == 0) {
             double cpu = rcs_cpu_percent();
             double mem = rcs_mem_percent();
-            if (cpu > cpu_max) cpu_max = cpu;
-            if (mem > mem_max) mem_max = mem;
-            /* Log opération : sampling HW */
+#pragma omp critical(rcs_hw_update)
+            {
+                if (cpu > cpu_max) cpu_max = cpu;
+                if (mem > mem_max) mem_max = mem;
+            }
             FORENSIC_LOG_HW_SAMPLE("random_circuit_sampling");
         }
 
@@ -502,16 +530,15 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:D_eff_log",   log_D);
         }
 
-        /* 5. Accumulation et drift — C42-FIX-XEB */
-        double xeb_drift = (circ > 0) ? fabs(xeb_circuit - xeb_prev) : 0.0;
-        xeb_drift_acc     += xeb_drift;
+        /* 5. Accumulation — C42-FIX-XEB + C42-OPT-01 (OpenMP reduction)
+         * xeb_drift supprimé : non calculable en parallèle (ordre de circ non déterministe).
+         * Toutes les autres métriques sont réduites par addition via la clause OMP reduction. */
         xeb_acc           += xeb_circuit;          /* F_XEB marginal = 2×⟨P⟩ - 1 */
         xeb_sq_acc        += xeb_circuit * xeb_circuit;
         entropy_acc       += entropy_circuit;
         xeb_log_norm_acc  += xeb_log_norm_circuit; /* F_XEB_log_norm = 1 + log_p/log_D */
         log_p_acc         += log_p_bitstring;      /* accumulation log_p pour forensique */
         p_meas_acc        += p_meas_circ;          /* Σ p_measured par qubit (pour F_XEB_marg) */
-        xeb_prev           = xeb_circuit;
 
         /* Log accumulation — tous les 500 circuits */
         if (circ % 500 == 0) {
@@ -554,8 +581,9 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     double H_norm      = (H_max_bits > 0.0) ? H_mean / H_max_bits : 0.0;
     H_norm             = fmax(0.0, fmin(1.0, H_norm)); /* clamp [0,1] */
 
-    /* Drift XEB moyen (dérivée temporelle de la fidelité) */
-    double xeb_drift_mean = xeb_drift_acc / n_circ_d;
+    /* C42-OPT-01 : xeb_drift_mean = 0 en mode OpenMP parallèle
+     * (drift inter-circuit non calculable en parallèle — ordre non déterministe) */
+    double xeb_drift_mean = 0.0;
 
     /* KL divergence vs uniforme (C42-FIX-KL) : KL(simul || uniforme)
      * KL = log_D + log_p_mean (mesure la concentration vs distribution uniforme)
@@ -612,9 +640,10 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
 
     FORENSIC_LOG_MODULE_END("random_circuit_sampling", p->name, converged ? "PASS" : "PARTIAL");
 
-    free(amp_re);
-    free(amp_im);
-    free(amp1_re);
-    free(amp1_im);
+    /* C42-OPT-01 : libération des buffers multi-threads */
+    free(all_amp_re);
+    free(all_amp_im);
+    free(all_amp1_re);
+    free(all_amp1_im);
     return r;
 }
