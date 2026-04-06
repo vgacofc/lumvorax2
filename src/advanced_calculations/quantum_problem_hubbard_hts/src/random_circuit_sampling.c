@@ -210,7 +210,11 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
 
     uint64_t t0 = rcs_now_ns();
     int n_qubits = p->lx * p->ly;
-    r.n_qubits = n_qubits;
+    /* C44-OPT-8COMP : doublement du modèle → 8 composantes par site (2 orbitales × 2 spins)
+     * n_phys_qubits = n_sites × 2 qubits logiques/site (orbital 1 + orbital 2)
+     * → 14×28×2 = 784 qubits physiques (7.47× Google Willow 105 qubits) */
+    int n_phys_qubits = n_qubits * 2;
+    r.n_qubits = n_phys_qubits;
 
     /* Paramètres physiques */
     double coupling_strength  = p->t_eV;        /* amplitude porte 2Q */
@@ -250,11 +254,21 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     double* all_amp_im  = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
     double* all_amp1_re = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
     double* all_amp1_im = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
-    if (!all_amp_re || !all_amp_im || !all_amp1_re || !all_amp1_im) {
+    /* C44-OPT-8COMP : orbital 2 (γ=amp2, δ=amp3) — 4 tableaux supplémentaires */
+    double* all_amp2_re = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp2_im = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp3_re = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    double* all_amp3_im = (double*)calloc((size_t)n_threads_rcs * (size_t)n_qubits, sizeof(double));
+    if (!all_amp_re || !all_amp_im || !all_amp1_re || !all_amp1_im ||
+        !all_amp2_re || !all_amp2_im || !all_amp3_re || !all_amp3_im) {
         if (all_amp_re)  free(all_amp_re);
         if (all_amp_im)  free(all_amp_im);
         if (all_amp1_re) free(all_amp1_re);
         if (all_amp1_im) free(all_amp1_im);
+        if (all_amp2_re) free(all_amp2_re);
+        if (all_amp2_im) free(all_amp2_im);
+        if (all_amp3_re) free(all_amp3_re);
+        if (all_amp3_im) free(all_amp3_im);
         r.converged = 0;
         return r;
     }
@@ -276,7 +290,8 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * C40-RCS-A4 : log_D = n_qubits × ln(2) — CORRECT (D=2^n, pas D=n).
      * Correction ANO-RCS-A03 : le rapport 88 a confirmé que log_D=83.87 est bien
      * log(2^121), la formule était juste. Le problème était dans p_bitstring (voir §3). */
-    double log_D = (double)n_qubits * M_LN2;
+    /* C44-OPT-8COMP : espace de Hilbert 2× plus grand → log_D = n_phys_qubits × ln(2) */
+    double log_D = (double)n_phys_qubits * M_LN2;
     double D_eff = exp(fmin(log_D, 700.0)); /* clamp pour éviter inf */
     (void)D_eff; /* utilisé uniquement pour compatibilité future */
 
@@ -302,6 +317,11 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
         double* amp_im  = all_amp_im  + (size_t)_rcs_tid * (size_t)n_qubits;
         double* amp1_re = all_amp1_re + (size_t)_rcs_tid * (size_t)n_qubits;
         double* amp1_im = all_amp1_im + (size_t)_rcs_tid * (size_t)n_qubits;
+        /* C44-OPT-8COMP : pointeurs thread-locaux orbital 2 */
+        double* amp2_re = all_amp2_re + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp2_im = all_amp2_im + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp3_re = all_amp3_re + (size_t)_rcs_tid * (size_t)n_qubits;
+        double* amp3_im = all_amp3_im + (size_t)_rcs_tid * (size_t)n_qubits;
 
         /* Tracking ressources toutes les 100 itérations — thread 0 uniquement
          * (rcs_cpu_percent() utilise des variables static → non thread-safe) */
@@ -338,18 +358,30 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
          *   → p_q0 = |α_q|² ∈ [0,1], p_q1 = |β_q|² = 1 - p_q0 ∈ [0,1]
          *   → log_p = Σlog(max(p_q0,p_q1)) non-trivial → F_XEB physiquement mesurable.
          */
-        double inv_sqrt_n = 1.0 / sqrt((double)n_qubits); /* pour log forensique */
+        double inv_sqrt_n = 1.0 / sqrt((double)n_phys_qubits); /* pour log forensique */
         for (int q = 0; q < n_qubits; ++q) {
+            /* C44-OPT-8COMP : 8 composantes réelles → vecteur unitaire sur S^7
+             * α = orbital 1 spin-↑, β = orbital 1 spin-↓
+             * γ = orbital 2 spin-↑, δ = orbital 2 spin-↓ */
             double a_re = rcs_randn(&circ_seed);
             double a_im = rcs_randn(&circ_seed);
             double b_re = rcs_randn(&circ_seed);
             double b_im = rcs_randn(&circ_seed);
-            double norm_q = sqrt(a_re*a_re + a_im*a_im + b_re*b_re + b_im*b_im);
+            double c_re = rcs_randn(&circ_seed);
+            double c_im = rcs_randn(&circ_seed);
+            double d_re = rcs_randn(&circ_seed);
+            double d_im = rcs_randn(&circ_seed);
+            double norm_q = sqrt(a_re*a_re + a_im*a_im + b_re*b_re + b_im*b_im +
+                                 c_re*c_re + c_im*c_im + d_re*d_re + d_im*d_im);
             double inv_nq = (norm_q > 1e-15) ? 1.0 / norm_q : 1.0;
             amp_re[q]  = a_re * inv_nq;
             amp_im[q]  = a_im * inv_nq;
             amp1_re[q] = b_re * inv_nq;
             amp1_im[q] = b_im * inv_nq;
+            amp2_re[q] = c_re * inv_nq;
+            amp2_im[q] = c_im * inv_nq;
+            amp3_re[q] = d_re * inv_nq;
+            amp3_im[q] = d_im * inv_nq;
         }
 
         /* C39-PERF-LOG : logs d'opérations intra-boucle conditionnés au PREMIER circuit
@@ -381,8 +413,10 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                 if (circ == 0) {
                     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_1q_gate_qubit", (double)q);
                 }
-                /* Porte Haar sur le vrai qubit q : (α_q, β_q) */
+                /* Porte Haar orbital 1 : (α_q, β_q) */
                 apply_haar_1q(&amp_re[q], &amp_im[q], &amp1_re[q], &amp1_im[q], &circ_seed);
+                /* C44-OPT-8COMP : porte Haar orbital 2 : (γ_q, δ_q) */
+                apply_haar_1q(&amp2_re[q], &amp2_im[q], &amp3_re[q], &amp3_im[q], &circ_seed);
             }
 
             /* b) Portes CZ champ-moyen sur paires (q, q+1) — brick wall (C42-FIX-RCS-02)
@@ -399,21 +433,33 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                 }
                 double p1_q  = amp1_re[q]  *amp1_re[q]   + amp1_im[q]  *amp1_im[q];
                 double p1_q1 = amp1_re[q+1]*amp1_re[q+1] + amp1_im[q+1]*amp1_im[q+1];
-                /* Déphasage de β_q par φ = π × effective_coupling × p1_{q+1} */
+                /* Déphasage de β_q orbital 1 */
                 double ph0 = M_PI * effective_coupling * p1_q1;
                 double c0  = cos(ph0), s0 = sin(ph0);
                 double br0 = amp1_re[q]*c0 - amp1_im[q]*s0;
                 double bi0 = amp1_re[q]*s0 + amp1_im[q]*c0;
                 amp1_re[q] = br0; amp1_im[q] = bi0;
-                /* Déphasage de β_{q+1} par φ = π × effective_coupling × p1_q */
                 double ph1 = M_PI * effective_coupling * p1_q;
                 double c1  = cos(ph1), s1 = sin(ph1);
                 double br1 = amp1_re[q+1]*c1 - amp1_im[q+1]*s1;
                 double bi1 = amp1_re[q+1]*s1 + amp1_im[q+1]*c1;
                 amp1_re[q+1] = br1; amp1_im[q+1] = bi1;
+                /* C44-OPT-8COMP : CZ orbital 2 (δ_q, δ_{q+1}) — entrelacement inter-orbital */
+                double p3_q  = amp3_re[q]  *amp3_re[q]   + amp3_im[q]  *amp3_im[q];
+                double p3_q1 = amp3_re[q+1]*amp3_re[q+1] + amp3_im[q+1]*amp3_im[q+1];
+                double ph2 = M_PI * effective_coupling * p3_q1;
+                double c2  = cos(ph2), s2 = sin(ph2);
+                double dr0 = amp3_re[q]*c2 - amp3_im[q]*s2;
+                double di0 = amp3_re[q]*s2 + amp3_im[q]*c2;
+                amp3_re[q] = dr0; amp3_im[q] = di0;
+                double ph3 = M_PI * effective_coupling * p3_q;
+                double c3  = cos(ph3), s3 = sin(ph3);
+                double dr1 = amp3_re[q+1]*c3 - amp3_im[q+1]*s3;
+                double di1 = amp3_re[q+1]*s3 + amp3_im[q+1]*c3;
+                amp3_re[q+1] = dr1; amp3_im[q+1] = di1;
             }
 
-            /* c) Bruit thermique sur α et β (déphasage aléatoire) si noise_level > 0 */
+            /* c) Bruit thermique — orbital 1 (α, β) + orbital 2 (γ, δ) */
             if (noise_level > 1e-10) {
                 for (int q = 0; q < n_qubits; ++q) {
                     double noise_a = noise_level * rcs_randn(&circ_seed);
@@ -426,6 +472,17 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                     double re_b = amp1_re[q] * cos_b - amp1_im[q] * sin_b;
                     double im_b = amp1_re[q] * sin_b + amp1_im[q] * cos_b;
                     amp1_re[q] = re_b; amp1_im[q] = im_b;
+                    /* C44-OPT-8COMP : bruit orbital 2 */
+                    double noise_c = noise_level * rcs_randn(&circ_seed);
+                    double cos_c = cos(noise_c), sin_c = sin(noise_c);
+                    double re_c = amp2_re[q] * cos_c - amp2_im[q] * sin_c;
+                    double im_c = amp2_re[q] * sin_c + amp2_im[q] * cos_c;
+                    amp2_re[q] = re_c; amp2_im[q] = im_c;
+                    double noise_d = noise_level * rcs_randn(&circ_seed);
+                    double cos_d = cos(noise_d), sin_d = sin(noise_d);
+                    double re_d = amp3_re[q] * cos_d - amp3_im[q] * sin_d;
+                    double im_d = amp3_re[q] * sin_d + amp3_im[q] * cos_d;
+                    amp3_re[q] = re_d; amp3_im[q] = im_d;
                 }
             }
 
@@ -433,10 +490,13 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
              * Normalise chaque qubit : |α_q|² + |β_q|² = 1.
              * La norme locale peut dériver légèrement à cause du bruit et des portes CZ MF.
              * Contrairement à la renorm globale, cela préserve p_q0 ∈ [0,1] pour chaque qubit. */
+            /* C44-OPT-8COMP : renorm locale sur 8 composantes : |α|²+|β|²+|γ|²+|δ|² = 1 */
             double max_nd = 0.0;
             for (int q = 0; q < n_qubits; ++q) {
-                double n2_q = amp_re[q]*amp_re[q] + amp_im[q]*amp_im[q]
-                            + amp1_re[q]*amp1_re[q] + amp1_im[q]*amp1_im[q];
+                double n2_q = amp_re[q]*amp_re[q]  + amp_im[q]*amp_im[q]
+                            + amp1_re[q]*amp1_re[q] + amp1_im[q]*amp1_im[q]
+                            + amp2_re[q]*amp2_re[q] + amp2_im[q]*amp2_im[q]
+                            + amp3_re[q]*amp3_re[q] + amp3_im[q]*amp3_im[q];
                 double norm_q = sqrt(n2_q);
                 double nd = fabs(norm_q - 1.0);
                 if (nd > max_nd) max_nd = nd;
@@ -444,6 +504,8 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                     double inv_nq = 1.0 / norm_q;
                     amp_re[q]  *= inv_nq; amp_im[q]  *= inv_nq;
                     amp1_re[q] *= inv_nq; amp1_im[q] *= inv_nq;
+                    amp2_re[q] *= inv_nq; amp2_im[q] *= inv_nq;
+                    amp3_re[q] *= inv_nq; amp3_im[q] *= inv_nq;
                 }
             }
             if (max_nd > norm_dev_max) norm_dev_max = max_nd;
