@@ -1,7 +1,8 @@
 # Rapport Forensique LUM/VORAX — Session C45 (2026-04-07)
 
 **Version :** 91.0  
-**Date :** 2026-04-07T02:10:00Z  
+**Date :** 2026-04-07T02:10:00Z
+
 **Run de référence :** `research_20260407T020653Z_4411`  
 **Runs intermédiaires :** `research_20260407T015353Z_3185` (C44-FIX-NORM-01), `research_20260407T020652Z_4332` (transitoire)  
 **Binaire :** `hubbard_hts_research_runner_advanced_parallel` (C45-FIX-ED-03, C44-FIX-NORM-01, C44-FIX-ED-02)  
