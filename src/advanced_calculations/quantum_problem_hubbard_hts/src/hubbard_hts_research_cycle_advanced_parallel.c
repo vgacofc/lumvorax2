@@ -797,18 +797,22 @@ static sim_result_t simulate_fullscale(const problem_t* p, uint64_t seed, int bu
         sr.cpu_peak           = rr.cpu_peak;
         sr.mem_peak           = rr.mem_peak;
         sr.elapsed_ns         = rr.elapsed_ns;
-        /* C93-FIX : le module RCS n'a pas de vecteur d'état ψ normé.
-         * rr.norm_deviation_max stocke la divergence KL Porter-Thomas, pas une
-         * norme |ψ|² — passer 0.0 ici évite un FAIL dans integration_norm_psi_guard.
-         * La métrique KL est loggée séparément via rcs_to_sim_kl_div.
-         * Ref : analysechatgpt85.md §7 Bug C93-RCS-NORM — 2026-04-03 */
-        sr.norm_deviation_max = 0.0;
+        /* C44-FIX-NORM-01 : passer la vraie norm_deviation_max calculée par random_circuit_sampling.c
+         * (reduction OpenMP max sur les 8 composantes MF, lignes 495-511 rcs.c).
+         * SUPPRESSION C93-FIX : le forçage à 0.0 masquait la déviation réelle mesurée.
+         * rr.norm_deviation_max = max|‖ψ_q‖ - 1| sur tous les qubits et circuits.
+         * La divergence KL est loggée séparément via rcs_to_sim_kl_div.
+         * Source bug C93 : random_circuit_sampling_metrics.log ts 118759120521808/545988
+         * Ref correction : analysechatgpt90.9.md §5 C44-FIX-NORM-01 */
+        sr.norm_deviation_max = rr.norm_deviation_max;
         /* Log de conversion dans le CSV forensique principal */
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_F_xeb",     sr.energy_eV);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_H_norm",    sr.pairing_norm);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_xeb_score", sr.sign_ratio);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_elapsed_ns",(double)sr.elapsed_ns);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_kl_div",    rr.norm_deviation_max);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_F_xeb",       sr.energy_eV);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_H_norm",      sr.pairing_norm);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_xeb_score",   sr.sign_ratio);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_elapsed_ns",  (double)sr.elapsed_ns);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_kl_div",      rr.norm_deviation_max);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_norm_dev_max",rr.norm_deviation_max);
+        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs_to_sim_converged",   (double)rr.converged);
         /* ── ANO-C43-04 : TESTS FORENSIC EXPERTS ──────────────────────────────────
          * Test C44-ANO04-T1 : prouver que energy ≡ sign par construction (même source)
          * Test C44-ANO04-T2 : loguer le vrai ratio Willow (rr.sign_ratio, non bounded)
@@ -817,25 +821,19 @@ static sim_result_t simulate_fullscale(const problem_t* p, uint64_t seed, int bu
         double ano04_identity_delta = fabs(sr.sign_ratio - sr.energy_eV);
         double ano04_true_willow_ratio = rr.sign_ratio; /* F_xeb/2e-4 ≈ 1666 C43, ≈1666 C44 */
         double ano04_pairing_diff = fabs(sr.pairing_norm - sr.energy_eV); /* doit être > 0 */
-        /* T1 : l'égalité doit être quasi-parfaite (< 1e-12) — artefact d'assignation */
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_energy_eq_sign_delta", ano04_identity_delta);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_is_artifact",
-            (ano04_identity_delta < 1e-10) ? 1.0 : 0.0); /* 1.0 = artefact confirmé */
-        /* T2 : vrai ratio Willow = F_xeb/2e-4 (physiquement significatif) */
+            (ano04_identity_delta < 1e-10) ? 1.0 : 0.0);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_true_willow_ratio",    ano04_true_willow_ratio);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_true_willow_ratio_ok",
-            (ano04_true_willow_ratio > 1.0) ? 1.0 : 0.0); /* 1.0 = record battu */
-        /* T3 : pairing (entropie/H_norm) doit DIFFÉRER de energy (F_xeb) */
+            (ano04_true_willow_ratio > 1.0) ? 1.0 : 0.0);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_pairing_neq_energy_delta", ano04_pairing_diff);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_triplicite_confirmed",
             (ano04_identity_delta < 1e-10 && ano04_pairing_diff > 1e-6) ? 1.0 : 0.0);
-        /* T4 : ratio qubits physiques (C44=12320) vs Willow (105) vs Caltech (6160) */
         int ano04_n_phys_qubits = rcs_p.lx * rcs_p.ly * 2;
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_n_phys_qubits",   (double)ano04_n_phys_qubits);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_vs_willow_qubits",(double)ano04_n_phys_qubits / 105.0);
         FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "ano04_vs_caltech_qubits",(double)ano04_n_phys_qubits / 6160.0);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "c93_norm_forced_zero",  1.0);
-        FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "c93_norm_forced_zero", 1.0);
         return sr;
     }
     return simulate_fullscale_controlled(p, seed, burn_scale, trace_csv, NULL, NULL, 0, NULL);
@@ -1631,6 +1629,20 @@ static int basis_index(const state2x2_t* basis, int n, uint8_t up, uint8_t dn) {
     return -1;
 }
 
+/* C45-FIX-ED-03 : Signe de Jordan-Wigner pour apply_hamiltonian_2x2.
+ * Bug identifié : les bonds non-adjacents (0→2, 1→3) nécessitent un signe
+ * fermionique (-1)^(nb électrons au même spin entre les sites source et cible).
+ * Validation Python (2026-04-07) : sans J-W → E0(U=0)=-5.657 ❌, avec J-W → -4.000 ✅
+ *   U=4,t=1 : sans J-W → 0.6801 ❌, avec J-W → 0.5257 ✅ (réf Supabase run 2948)
+ *   U=8,t=1 : sans J-W → 0.3761 ❌, avec J-W → 0.3301 ✅
+ * Source : analysechatgpt90.9.md §1 BUG P0 + diagnostic C45-FIX-ED-03 2026-04-07 */
+static int jw_sign_2x2(uint8_t occ, int lo, int hi) {
+    /* Compte le nombre d'électrons occupés entre lo et hi (exclusif) */
+    int count = 0;
+    for (int k = lo + 1; k < hi; ++k) count += ((occ >> k) & 1);
+    return (count % 2 == 0) ? 1 : -1;
+}
+
 static void apply_hamiltonian_2x2(const state2x2_t* basis, int n, double t, double u, const double* v, double* out) {
     for (int i = 0; i < n; ++i) out[i] = 0.0;
 
@@ -1650,20 +1662,25 @@ static void apply_hamiltonian_2x2(const state2x2_t* basis, int n, double t, doub
             int a = edges[e][0], b = edges[e][1];
             for (int spin = 0; spin < 2; ++spin) {
                 uint8_t occ = (spin == 0) ? up : dn;
+                int lo = (a < b) ? a : b;
+                int hi = (a < b) ? b : a;
+                int sgn;
 
                 if (((occ >> a) & 1) && !((occ >> b) & 1)) {
                     uint8_t occ2 = (uint8_t)((occ & ~(1u << a)) | (1u << b));
                     uint8_t up2 = (spin == 0) ? occ2 : up;
                     uint8_t dn2 = (spin == 1) ? occ2 : dn;
                     int j = basis_index(basis, n, up2, dn2);
-                    if (j >= 0) out[j] += -t * v[i];
+                    sgn = jw_sign_2x2(occ, lo, hi);
+                    if (j >= 0) out[j] += -t * sgn * v[i];
                 }
                 if (((occ >> b) & 1) && !((occ >> a) & 1)) {
                     uint8_t occ2 = (uint8_t)((occ & ~(1u << b)) | (1u << a));
                     uint8_t up2 = (spin == 0) ? occ2 : up;
                     uint8_t dn2 = (spin == 1) ? occ2 : dn;
                     int j = basis_index(basis, n, up2, dn2);
-                    if (j >= 0) out[j] += -t * v[i];
+                    sgn = jw_sign_2x2(occ, lo, hi);
+                    if (j >= 0) out[j] += -t * sgn * v[i];
                 }
             }
         }
@@ -2325,27 +2342,31 @@ int main(int argc, char** argv) {
              * sur le même système 2×2 avec le bon U. */
             double model_rt;
             if (strcmp(brow_rt[bi].module, "ed_validation_2x2") == 0) {
-                /* C43-FIX-ED-01 : utiliser l'énergie ED exacte (Lanczos 2×2) normalisée par site.
-                 * DIAGNOSTIC forensic (log ed_bench_c78) :
-                 *   ed_energy_total_eV = -2.1027484835 → ed_per_site = -0.5257 (CORRECT)
-                 *   mais C78 utilisait base[i].energy_eV = 0.7392 (QMC champ moyen) ← BUG
-                 * CORRECTION : model = fabs(exact_ground_energy_2x2(t, U_bench) / 4.0)
-                 *   U=4 → 0.5257 eV/site ✅ (ref Supabase id=27)
-                 *   U=8 → 0.3301 eV/site ✅ (ref Supabase id=28)
-                 * IMPACT : RMSE QMC 0.2909 → ~0.007, score 87.5% → 100%. */
-                double ed_e_total = exact_ground_energy_2x2(probs[i].t_eV, brow_rt[bi].u);
+                /* C44-FIX-ED-02 : t canonique t=1.0 eV (référence Supabase) + U_bench explicite.
+                 * BUG C43-FIX-ED-01 identifié dans ed_bench_c43fix.log ts 119009477425279 :
+                 *   probs[i].t_eV = t_simulation ≠ 1.0 eV → ed_total=-2.7206 (attendu -2.1027)
+                 *   u_eV_sim=4.0 même pour U_bench=8 → ed_total=-1.5043 (attendu -1.3202)
+                 * CORRECTION : t_bench_canonical=1.0 eV (défini par refs Supabase id=27,28)
+                 *   U=4, t=1 → ed_total=-2.1027484835 → ed_site=0.5257 ✅
+                 *   U=8, t=1 → ed_total=-1.3202349583 → ed_site=0.3301 ✅
+                 * Source valeurs attendues : exact_diag_2x2.log ts 247034141338822/247034142634122 */
+                double t_bench_canonical = 1.0;          /* t=1.0 eV : valeur canonique refs Supabase */
+                double u_bench_canonical = brow_rt[bi].u; /* U=4 ou U=8 selon benchmark courant */
+                double ed_e_total = exact_ground_energy_2x2(t_bench_canonical, u_bench_canonical);
                 double ed_per_site = fabs(ed_e_total / 4.0); /* n_sites=4 pour réseau 2×2 */
                 model_rt = (strcmp(brow_rt[bi].observable, "pairing") == 0)
                            ? base[i].pairing_norm : ed_per_site;
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "ed_total_eV",    ed_e_total);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "ed_per_site_eV", ed_per_site);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "u_eV_bench",     brow_rt[bi].u);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "u_eV_sim",       probs[i].u_eV);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "model_rt",       model_rt);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix", "ref_supabase",   brow_rt[bi].value);
-                fprintf(lg, "%06d | C43_FIX_ED_QMC module=%s U_bench=%.4f U_sim=%.4f "
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "t_bench_canonical", t_bench_canonical);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "u_bench_canonical", u_bench_canonical);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "ed_total_eV",       ed_e_total);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "ed_per_site_eV",    ed_per_site);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "u_eV_bench",        brow_rt[bi].u);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "u_eV_sim",          probs[i].u_eV);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "model_rt",          model_rt);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix", "ref_supabase",      brow_rt[bi].value);
+                fprintf(lg, "%06d | C44_FIX_ED_QMC module=%s U_bench=%.4f t_canonical=%.4f "
                         "ed_total=%.8f ed_site=%.8f model=%.8f ref=%.8f\n",
-                        line++, brow_rt[bi].module, brow_rt[bi].u, probs[i].u_eV,
+                        line++, brow_rt[bi].module, brow_rt[bi].u, t_bench_canonical,
                         ed_e_total, ed_per_site, model_rt, brow_rt[bi].value);
             } else {
                 /* Cas général : utiliser résultat de la simulation principale */
@@ -2377,19 +2398,23 @@ int main(int argc, char** argv) {
              * pas ed_hubbard_2x2 (convention erronée détectée rapport 77 sect 4.2). */
             double model_rt;
             if (strcmp(br_rt->module, "ed_validation_2x2") == 0) {
-                /* C43-FIX-ED-01 (EXT) : même correction que branche QMC.
-                 * model = fabs(exact_ground_energy_2x2(t, U_bench) / 4.0) */
-                double ed_e_total_ext = exact_ground_energy_2x2(probs[i].t_eV, br_rt->u);
+                /* C44-FIX-ED-02 (EXT) : même correction que branche QMC.
+                 * t_bench_canonical=1.0 eV, u_bench_canonical=br_rt->u (4 ou 8) */
+                double t_bench_canonical_ext = 1.0;
+                double u_bench_canonical_ext = br_rt->u;
+                double ed_e_total_ext = exact_ground_energy_2x2(t_bench_canonical_ext, u_bench_canonical_ext);
                 double ed_per_site_ext = fabs(ed_e_total_ext / 4.0);
                 model_rt = (strcmp(br_rt->observable, "pairing") == 0)
                            ? base[i].pairing_norm : ed_per_site_ext;
-                FORENSIC_LOG_ALGO("ed_bench_c43fix_ext", "ed_total_eV",    ed_e_total_ext);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix_ext", "ed_per_site_eV", ed_per_site_ext);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix_ext", "u_eV_bench",     br_rt->u);
-                FORENSIC_LOG_ALGO("ed_bench_c43fix_ext", "model_rt",       model_rt);
-                fprintf(lg, "%06d | C43_FIX_ED_EXT module=%s U_bench=%.4f U_sim=%.4f "
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "t_bench_canonical", t_bench_canonical_ext);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "u_bench_canonical", u_bench_canonical_ext);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "ed_total_eV",       ed_e_total_ext);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "ed_per_site_eV",    ed_per_site_ext);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "u_eV_bench",        br_rt->u);
+                FORENSIC_LOG_ALGO("ed_bench_c44fix_ext", "model_rt",          model_rt);
+                fprintf(lg, "%06d | C44_FIX_ED_EXT module=%s U_bench=%.4f t_canonical=%.4f "
                         "ed_site=%.8f model=%.8f\n",
-                        line++, br_rt->module, br_rt->u, probs[i].u_eV,
+                        line++, br_rt->module, br_rt->u, t_bench_canonical_ext,
                         ed_per_site_ext, model_rt);
             } else {
                 model_rt = (strcmp(br_rt->observable, "pairing") == 0)

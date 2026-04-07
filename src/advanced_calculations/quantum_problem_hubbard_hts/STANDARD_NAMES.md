@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 3.1 — 2026-04-02 (C91-RCS : module Random Circuit Sampling)
+**Version :** 3.2 — 2026-04-07 (C44 : 8-composantes RCS, C44-FIX-ED-02, C44-FIX-NORM-01)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
@@ -638,6 +638,15 @@ Préfixe obligatoire : `rcs:` — toutes les métriques commencent par `rcs:` da
 | `rcs_to_sim_F_xeb` | sans unité | Conversion rcs_result_t → sim_result_t : F_XEB → energy_eV |
 | `rcs_to_sim_H_norm` | sans unité | Conversion : H_norm → pairing_norm |
 | `rcs_to_sim_xeb_ratio` | sans unité | Conversion : xeb_ratio → sign_ratio |
+| `rcs_to_sim_norm_dev_max` | sans unité | C44-FIX-NORM-01 : vraie norm_deviation_max (8-comp, non forcée) |
+| `rcs_to_sim_converged` | 0/1 | C44-FIX-NORM-01 : flag converged RCS transmis au runner principal |
+| `rcs:n_phys_qubits` | entier | **C44-OPT-8COMP** : qubits physiques totaux = n_sites × n_orbitales (784) |
+| `rcs:n_components` | entier | **C44-OPT-8COMP** : composantes MF par qubit (8 = 4 complexes par orbital) |
+| `rcs:n_orbitals_per_site` | entier | **C44-OPT-8COMP** : orbitales par site (2 = spin↑ + spin↓) |
+| `rcs:hilbert_factor_vs_c43` | sans unité | **C44-OPT-8COMP** : facteur expansion espace Hilbert vs C43 (×2) |
+| `rcs:log_D_8comp` | nats | **C44-OPT-8COMP** : log(D) = n_phys_qubits × ln2 = 543.43 pour 784 qubits |
+| `rcs:willow_ratio_n_qubits` | sans unité | **C44-OPT-8COMP** : n_phys_qubits / 105 (Willow) = 7.47 pour 784 qubits |
+| `rcs:caltech_ratio_n_qubits` | sans unité | **C44-OPT-8COMP** : n_phys_qubits / 6160 (Caltech) = 0.127 pour 784 qubits |
 
 ### Convention de conversion rcs_result_t → sim_result_t
 
@@ -751,4 +760,94 @@ VERSIONNAGE DES RÉFÉRENCES (Q22) :
 | `module_results_rcs` | `expert_score_pct` | INT4 | Score expert (%) du run |
 | `benchmark_rt_results` | `campaign_stamp` | TEXT | Stamp UTC de la campagne (versionnage) |
 
-*Mise à jour : Version 3.2 — 2026-04-04 — C41-FIX : ANO-ED-NORM, Q20-Q22, STANDARD_NAMES*
+### C44-§1 : Corrections C44-FIX-ED-02 et C44-FIX-NORM-01 (2026-04-07)
+
+**Source anomalie :** `CHAT/analysechatgpt90.9.md` §1 (BUG P0) et §5 (ALERTE P1)
+
+#### C44-FIX-ED-02 : t canonique t=1.0 eV dans ed_validation_2x2
+
+```
+BUG C43-FIX-ED-01 (identifié dans ed_bench_c43fix.log ts 119009477425279) :
+  probs[i].t_eV ≠ 1.0 eV → ed_total=-2.7206 (attendu -2.1027 pour t=1, U=4)
+  u_eV_sim=4.0 pour U_bench=8 → ed_total=-1.5043 (attendu -1.3202)
+
+CORRECTION C44-FIX-ED-02 (src/hubbard_hts_research_cycle_advanced_parallel.c lignes ~2339-2355) :
+  double t_bench_canonical = 1.0;          // t=1.0 eV canonique
+  double u_bench_canonical = brow_rt[bi].u; // U=4 ou U=8 selon benchmark
+  double ed_e_total = exact_ground_energy_2x2(t_bench_canonical, u_bench_canonical);
+
+RÉSULTAT ATTENDU :
+  U=4, t=1 → ed_site = 0.5257 eV/site ✅ (ref Supabase id=27)
+  U=8, t=1 → ed_site = 0.3301 eV/site ✅ (ref Supabase id=28)
+```
+
+**NOM D'ORIGINE du log forensic :** `ed_bench_c44fix` (remplace `ed_bench_c43fix`)
+
+| Métrique log | Unité | Description |
+|---|---|---|
+| `ed_bench_c44fix:t_bench_canonical` | eV | t=1.0 eV (toujours 1.0) |
+| `ed_bench_c44fix:u_bench_canonical` | eV | U du benchmark (4.0 ou 8.0) |
+| `ed_bench_c44fix:ed_total_eV` | eV | E0 Lanczos total 2×2 (attendu -2.1027 ou -1.3202) |
+| `ed_bench_c44fix:ed_per_site_eV` | eV | \|E0\|/4 (attendu 0.5257 ou 0.3301) |
+| `ed_bench_c44fix:model_rt` | eV | Valeur finale utilisée comme modèle |
+| `ed_bench_c44fix:ref_supabase` | eV | Valeur de référence Supabase |
+| `ed_bench_c44fix_ext:*` | eV | Idem pour la branche EXT |
+
+#### C44-FIX-NORM-01 : Suppression C93 — norm_deviation_max réelle
+
+```
+BUG C93 (identifié dans rcs_metrics.log ts 118759120521808) :
+  sr.norm_deviation_max = 0.0  ← forçage artificiel
+  c93_norm_forced_zero = 1.0   ← marqueur bug (×2)
+
+CORRECTION C44-FIX-NORM-01 (lignes ~803-810) :
+  sr.norm_deviation_max = rr.norm_deviation_max  ← valeur réelle (OpenMP reduction max)
+  SUPPRIMÉ : c93_norm_forced_zero (2 occurrences)
+  AJOUTÉ : rcs_to_sim_norm_dev_max, rcs_to_sim_converged dans les logs forensic
+```
+
+**NOM D'ORIGINE interdit (supprimé) :** `c93_norm_forced_zero` — ne plus utiliser, ne plus créer.
+
+### C44-§2 : Métriques C44-OPT-8COMP (2026-04-07)
+
+7 nouvelles métriques enregistrées dans la table métriques RCS (section Module 16 ci-dessus).  
+Source première apparition dans les logs : `random_circuit_sampling_metrics.log` ts 118759119887858 (PID 921, run `research_20260407T011756Z_921`)
+
+### C45-§1 : C45-FIX-ED-03 — Signe Jordan-Wigner dans apply_hamiltonian_2x2 (2026-04-07)
+
+**Source anomalie :** Diagnostic en-session C45 — `exact_ground_energy_2x2` donnait 0.6801 (U=4) au lieu de 0.5257.
+
+```
+BUG C45 (diagnostiqué ts 2026-04-07 par validation Python) :
+  apply_hamiltonian_2x2 dans hubbard_hts_research_cycle_advanced_parallel.c
+  omet le signe de Jordan-Wigner pour les bonds non-adjacents 0→2 et 1→3.
+  Les bonds adjacents (0→1, 1→3, 3→2, 2→0 dans le ring) ont sign=+1 toujours.
+  Mais 0→2 a site 1 entre eux, 1→3 a site 2 entre eux → sign=(-1)^n_occ.
+
+PREUVE Python (exact_diagonalization complète, base 36 états, Nup=2, Ndown=2) :
+  U=0, t=1 → SANS J-W : E0=-5.657 ❌ (attendu -4.000)
+             AVEC J-W : E0=-4.000 ✅
+  U=4, t=1 → SANS J-W : E0=-2.7206, |E0|/4=0.6801 ❌ (réf Supabase 0.5257)
+             AVEC J-W : E0=-2.1027, |E0|/4=0.5257 ✅
+  U=8, t=1 → SANS J-W : E0=-1.5043, |E0|/4=0.3761 ❌ (réf Supabase 0.3301)
+             AVEC J-W : E0=-1.3202, |E0|/4=0.3301 ✅
+
+CORRECTION C45-FIX-ED-03 (lignes ~1635-1691 après patch) :
+  Ajout de jw_sign_2x2(occ, lo, hi) dans apply_hamiltonian_2x2
+  signe = (-1)^(Σ_{k=lo+1}^{hi-1} occ[k])  pour chaque hop a→b ou b→a
+
+NOM D'ORIGINE interdit : commentaire erroné "Hirsch 1985 E0=-2.7206" dans
+  exact_diagonalization.c ligne 325 — cette valeur est celle SANS J-W (incorrecte).
+  La valeur correcte pour l'Hamiltonien de Hubbard 2×2 PBC t=1,U=4 est E0=-2.1027.
+```
+
+**Impact résultats :**
+
+| Métrique | Avant C45-FIX-ED-03 | Après C45-FIX-ED-03 | Réf Supabase |
+|---|---|---|---|
+| `ed_bench_c44fix:ed_per_site_eV` (U=4) | 0.6801 ❌ | **0.5257** ✅ | 0.5257 |
+| `ed_bench_c44fix:ed_per_site_eV` (U=8) | 0.3761 ❌ | **0.3301** ✅ | 0.3301 |
+| `ed_validation_2x2` BENCH_RT_QMC (U=4) | within=0 ❌ | **within=1** ✅ | — |
+| Score 26/26 potentiel | 24/26 (92.3%) | **26/26 (100%)** ✅ | — |
+
+*Mise à jour : Version 3.2 — 2026-04-07 — C44-FIX-ED-02, C44-FIX-NORM-01, C44-OPT-8COMP, C45-FIX-ED-03*
