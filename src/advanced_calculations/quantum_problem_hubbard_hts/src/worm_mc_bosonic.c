@@ -14,6 +14,11 @@
  */
 
 #include "../include/worm_mc_bosonic.h"
+/* C49-FIX-04 : include header forensique ultra-strict requis pour FORENSIC_LOG_MODULE_METRIC.
+ * L'agent précédent (session 20260407T215938Z) avait ajouté les appels FORENSIC_LOG_MODULE_METRIC
+ * sans cet include → erreur de compilation "implicit declaration of function".
+ * Source : research_cycle_session_20260407T215938Z.log ligne 65-68. */
+#include "../../../debug/ultra_forensic_logger.h"
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>

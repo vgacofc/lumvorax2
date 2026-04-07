@@ -1104,4 +1104,29 @@ C49-FIX-04 : FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "worm:mott_early_exit",
 
 ---
 
-*Mise à jour : Version 3.4 — 2026-04-07 — C49-FIX-01 (n_circuits=30000), C49-FIX-02 (log_p/qubit), C49-FIX-03 (XEB normalisation ÷2), C49-FIX-04 (mott_early_exit log)*
+### C49-§5 : Bug résiduel C49-FIX-03-GLOBAL — p_meas_global finale ÷ n_phys_qubits
+
+**Découvert lors de la finalisation C49** (session agent Replit 2026-04-07T22:xx) :
+
+L'agent précédent avait corrigé `p_meas_mean_circ` dans la boucle interne (`÷n_qubits`) mais
+**PAS** `p_meas_global` dans le calcul final des métriques :
+
+```c
+/* AVANT (bugué) — plateau −1/3 persistant même après C49-FIX-03 boucle */
+double p_meas_global = p_meas_acc / (n_circ_d * (double)n_phys_qubits);
+/* n_phys_qubits = 2×n_qubits → division ÷2 → p_global=1/3 → F_xeb=−1/3 */
+
+/* APRÈS (corrigé C49-FIX-03-GLOBAL) */
+double p_meas_global = p_meas_acc / (n_circ_d * (double)n_qubits);
+/* Résultat attendu C49 : p_global=2/3 → F_xeb_mean=+1/3 (Haar-aléatoire) */
+```
+
+| Métrique | C48 observé | C49 attendu |
+|---|---|---|
+| `rcs:p_meas_global` | 0.333 (bugué ÷2) | **0.667** (correct ÷n_qubits) |
+| `rcs:F_xeb_mean` | −0.333 (plateau artificiel) | **+0.333** (valeur Haar exacte) |
+| `rcs:converged` | 0 (var=1.28%) | **1** (attendu avec 30000 circuits + F_xeb=+1/3) |
+
+---
+
+*Mise à jour : Version 3.4 — 2026-04-07 — C49-FIX-01 (n_circuits=30000), C49-FIX-02 (log_p/qubit), C49-FIX-03 (XEB normalisation ÷2 boucle + global), C49-FIX-03-GLOBAL (bug résiduel p_meas_global), C49-FIX-04 (mott_early_exit log + include forensique manquant)*

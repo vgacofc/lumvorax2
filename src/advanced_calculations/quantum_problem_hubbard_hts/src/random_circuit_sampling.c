@@ -708,9 +708,17 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * Pour Haar-aléatoire : ⟨P⟩ = 3/4 → F_XEB = 0.5
      * Pour uniforme : ⟨P⟩ = 1/2 → F_XEB = 0.0 (bruit pur)
      * Pour classique : ⟨P⟩ = 1 → F_XEB = 1.0 */
-    /* C44-OPT-8COMP : dénominateur = n_phys_qubits (2 orbitales × n_sites) */
-    double p_meas_global = (n_circ_d * (double)n_phys_qubits > 0.0) ?
-                           (p_meas_acc / (n_circ_d * (double)n_phys_qubits)) : 0.5;
+    /* C49-FIX-03-GLOBAL : dénominateur = n_qubits (PAS n_phys_qubits).
+     * BUG RÉSIDUEL identifié lors de la finalisation C49 : l'agent précédent avait corrigé
+     * p_meas_mean_circ dans la boucle (÷n_qubits) mais PAS p_meas_global ici (÷n_phys_qubits).
+     * Or p_meas_acc = Σ_circuits p_meas_circ, avec p_meas_circ = Σ_{q=0}^{n_qubits-1} p_measured.
+     * Le dénominateur correct est n_circ_d × n_qubits (pas n_phys_qubits = 2×n_qubits).
+     * Division par n_phys_qubits → p_meas_global = (2/3) / 2 = 1/3 → F_xeb = 2×(1/3)−1 = −1/3
+     * (plateau artificiel C49-CRIT-01 persistant malgré la correction boucle).
+     * Division par n_qubits → p_meas_global = 2/3 → F_xeb = 2×(2/3)−1 = +1/3 (valeur physique Haar).
+     * Source : analysechatgpt91.3.md §ANOMALIE C49-CRIT-01 + §C49-FIX-03. */
+    double p_meas_global = (n_circ_d * (double)n_qubits > 0.0) ?
+                           (p_meas_acc / (n_circ_d * (double)n_qubits)) : 0.5;
     double F_xeb_mean = 2.0 * p_meas_global - 1.0;
     F_xeb_mean = fmax(-1.0, fmin(1.0, F_xeb_mean));
 

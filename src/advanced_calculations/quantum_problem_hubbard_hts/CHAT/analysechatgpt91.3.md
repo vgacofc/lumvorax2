@@ -378,7 +378,8 @@ Le résultat `acceptance_rate = 0.0` sur 100.8M propositions Worm-MC confirme qu
 ```
 PROCHAIN CYCLE (C49) — AUTO-PROMPT OBLIGATOIRE :
 
-Lire ce fichier (analysechatgpt91.3.md) + analysechatgpt91.2.md + analysechatgpt21.md.
+Lire ce fichier ligne par ligne de la premier a la dernier ligne !(analysechatgpt91.3.md, src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/analysechatgpt91.4.md) + analysechatgpt91.2.md + analysechatgpt21.md.
+
 
 CORRECTIONS PRIORITAIRES :
 1. C49-FIX-01 : RCS_MIN_N_CIRCUITS → 30000 (rcs:converged=1 garanti)
