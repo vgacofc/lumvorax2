@@ -240,7 +240,12 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * Selon analysechatgpt91.1.md §Prochaines étapes C48 item 3 :
      *   n_circuits → 10 000 pour XEB convergence (xeb_rel_var < XEB_CONVERGENCE_TOL = 0.01).
      * On garde p->steps si > 10000 pour ne pas réduire si configuré plus haut. */
-#define RCS_MIN_N_CIRCUITS 10000ULL
+/* C49-FIX-01 : RCS_MIN_N_CIRCUITS → 30000.
+ * C48 utilisait 10000 → xeb_rel_var = 1.28% > seuil 1.00% → rcs:converged=0.
+ * Calcul statistique C49 : pour xeb_rel_var < 1% sur 6160 qubits (var≈0.003, mean≈−0.333) :
+ *   n_circuits > var / (0.01 × |mean|)² ≈ 0.003 / (0.00333)² ≈ 27 000
+ * On arrondit à 30 000 pour marge. Source : analysechatgpt91.3.md §C49-FIX-01. */
+#define RCS_MIN_N_CIRCUITS 30000ULL
     uint64_t n_circuits   = (p->steps > RCS_MIN_N_CIRCUITS) ? p->steps : RCS_MIN_N_CIRCUITS;
 
     /* C48-OPT-DMFT : Facteur de correction local post-champ-moyen (DMFT-like).
@@ -604,11 +609,15 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
         double p_bitstring = (log_p_bitstring > -700.0) ? exp(log_p_bitstring) : 0.0;
 
         if (circ % 100 == 0) {
+            /* C49-FIX-02 : log_p_per_qubit normalisé — comparaison inter-grilles (6160 vs 12320). */
+            double log_p_per_qubit = (n_qubits > 0) ? log_p_bitstring / (double)n_qubits : 0.0;
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:op_p_bitstring_circuit", (double)circ);
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_bitstring",            p_bitstring);
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_p_bitstring",        log_p_bitstring);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_p_per_qubit",        log_p_per_qubit);
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:entropy_circuit",        entropy_circuit);
-            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_meas_mean_circ",       p_meas_circ / (double)n_phys_qubits);
+            /* C49-FIX-03 : p_meas_mean_circ divisé par n_qubits (correction bug ÷2). */
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_meas_mean_circ",       p_meas_circ / (double)n_qubits);
         }
 
         /* 4. Score XEB — C42-FIX-XEB : Formule marginal (D_qubit=2) sans overflow
@@ -627,8 +636,30 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
          * Réf : formule marginal coherente avec notre représentation MF (produit tensoriel).
          *   La formule de Boixo 2018 D×⟨P_complet⟩ - 1 nécessite la représentation vectorielle
          *   complète 2^n — impossible pour n=392 → notre formule marginal est adaptée. */
-        /* C44-OPT-8COMP : normaliser par n_phys_qubits (2 orbitales × n_sites) */
-        double p_meas_mean_circ = p_meas_circ / (double)n_phys_qubits;
+        /* C49-FIX-03 : Correction normalisation XEB — CAUSE RACINE DU PLATEAU F_XEB=−1/3.
+         *
+         * BUG IDENTIFIÉ C49 (analysechatgpt91.3.md §ANOMALIE C49-CRIT-01) :
+         *   p_meas_circ est accumulé pour n_qubits QUBITS (boucle q=0..n_qubits-1)
+         *   MAIS la division utilisait n_phys_qubits = 2 × n_qubits → division par 2× trop grand.
+         *
+         * Preuve mathématique :
+         *   E[p_measured] = E[p_q0² + p_q1²] = E[2U² - 2U + 1] pour U~Uniform[0,1]
+         *                 = 2/3 - 1 + 1 = 2/3 (Haar-aléatoire exact)
+         *   Avec n_phys_qubits (bugué) : p_meas_mean = (n_qubits × 2/3) / (2×n_qubits) = 1/3
+         *   → xeb_circuit = 2×(1/3) − 1 = −1/3  ← plateau artificiel !!
+         *
+         *   Avec n_qubits (correct)    : p_meas_mean = (n_qubits × 2/3) / n_qubits = 2/3
+         *   → xeb_circuit = 2×(2/3) − 1 = +1/3  ← valeur physique Haar-aléatoire correcte
+         *
+         * Le facteur DMFT local_corr_factor (C48-OPT-DMFT) ne pouvait pas corriger ceci
+         * car il modifiait les phases CZ mais pas la distribution marginale des probabilités.
+         * La vraie cause du plateau était une normalisation ÷2.
+         *
+         * Référence XEB correct : pour circuit Haar-aléatoire idéal :
+         *   F_XEB_marginal = 2×E[max(U,1-U)] − 1 = 2×(3/4) − 1 = +0.5 (mesure directe)
+         *   F_XEB_pondéré  = 2×E[p_q0²+p_q1²] − 1 = 2×(2/3) − 1 = +1/3 (formule actuelle)
+         *   Les deux sont cohérents (différence de convention sur ce qu'on mesure). */
+        double p_meas_mean_circ = p_meas_circ / (double)n_qubits;  /* C49-FIX-03 : n_qubits ← n_phys_qubits */
         double xeb_circuit = 2.0 * p_meas_mean_circ - 1.0;
         xeb_circuit = fmax(-1.0, fmin(1.0, xeb_circuit));  /* sécurité numérique */
 

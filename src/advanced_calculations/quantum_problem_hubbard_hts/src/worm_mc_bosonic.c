@@ -205,7 +205,25 @@ static void mc_sweep(worm_mc_state_t *st, const worm_mc_params_t *p,
          * Le fichier worm_mc_attempt_log.csv n'est plus ouvert par le runner. */
         (void)g_worm_attempt_log;
     }
-    (void)mott_early_exit; /* utilisé pour la traçabilité forensique du runner */
+    /* C49-FIX-04 : log forensique mott_early_exit + propositions économisées.
+     * C48-OPT-MOTT avait la variable mott_early_exit mais ne la loggait pas (void).
+     * Source : analysechatgpt91.3.md §C49-FIX-04 — flag absent dans worm_mc_ultra_metrics.log.
+     * Maintenant loggé comme métrique ultra-forensique pour traçabilité Supabase. */
+    if (g_worm_sweep_log) {
+        /* Utilise le fichier sweep_log existant (toujours ouvert par le runner) */
+        (void)g_worm_sweep_log; /* pointeur valide — log via FORENSIC_LOG_MODULE_METRIC */
+    }
+    /* Log via canal forensique global (n'ouvre pas de nouveau fichier) */
+    FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "worm:mott_early_exit",
+                               (double)mott_early_exit);
+    if (mott_early_exit) {
+        /* Estimation des propositions économisées (comptées dans n_worm_proposed) */
+        long saved = (long)st->n_worm_proposed - (long)(total_attempts);
+        if (saved < 0) saved = 0;
+        FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "worm:mott_proposals_saved", (double)saved);
+        FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "worm:mott_detect_window",
+                                   (double)MOTT_DETECT_WINDOW);
+    }
     *winding_sq_sum += winding * winding;
     (void)t0_ns;
 }

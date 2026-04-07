@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 3.3 — 2026-04-07 (C48 : DMFT-local-corr, bruit T2 physique, Mott précoce, Tc-0.1K, ED-per-site)
+**Version :** 3.4 — 2026-04-07 (C49 : BUG XEB-plateau-div2, n_circuits=30000, log_p/qubit, mott_early_exit log)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
@@ -1013,3 +1013,95 @@ Correction C48-TC-ULTRA :
 ---
 
 *Mise à jour : Version 3.3 — 2026-04-07 — C48-FIX-ED-BENCH, C48-OPT-MOTT, C48-OPT-DMFT, C48-OPT-NOISE, C48-OPT-CIRCUITS, C48-TC-ULTRA*
+
+---
+
+## SECTION O — CHANGELOG CYCLE C49 (v3.4 — 2026-04-07)
+
+### C49-§1 : BUG CRITIQUE — F_XEB = −1/3 (normalisation ÷2) — C49-FIX-03
+
+**Source découverte :** Analyse forensique brute C48 → `analysechatgpt91.3.md` §ANOMALIE C49-CRIT-01.
+
+```
+BUG C49-B1 (cause racine du plateau F_XEB = −1/3 persistant depuis C42) :
+  Dans run_rcs_sampling() (random_circuit_sampling.c) :
+  p_meas_circ est accumulé sur n_qubits qubits (boucle q=0..n_qubits-1)
+  MAIS division par n_phys_qubits = 2 × n_qubits
+  → p_meas_mean = (n_qubits × 2/3) / (2 × n_qubits) = 1/3
+  → xeb_circuit = 2×(1/3) − 1 = −1/3 par CONSTRUCTION mathématique
+
+PREUVE : E[p_measured] = E[p_q0² + p_q1²] = E[2U²−2U+1] pour U~U[0,1]
+  = 2/3 − 1 + 1 = 2/3 (valeur Haar-aléatoire exacte)
+  Avec n_phys_qubits (bugué) : p_mean = 2/3 / 2 = 1/3 → xeb = −1/3 ❌
+  Avec n_qubits (correct)    : p_mean = 2/3 / 1 = 2/3 → xeb = +1/3 ✅
+
+CORRECTION C49-FIX-03 :
+  p_meas_mean_circ = p_meas_circ / (double)n_qubits;   ← corrigé
+  (Ancienne ligne utilisait n_phys_qubits → division ÷2 erronée)
+
+IMPACT : F_XEB attendu C49 = +1/3 (Haar-aléatoire correct) au lieu de −1/3
+  Le facteur DMFT local_corr_factor (C48-OPT-DMFT) ne pouvait pas corriger
+  ce bug car il agit sur les phases CZ, pas sur la normalisation de la mesure.
+```
+
+**Noms canoniques C49-FIX-03 :**
+
+| Préfixe métrique | Description |
+|---|---|
+| `rcs:p_meas_mean_circ` | Mean p_measured (CORRIGÉ : /n_qubits) |
+| `rcs:xeb_circuit` | F_XEB par circuit (attendu C49 : +1/3 ← −1/3 corrigé) |
+| `rcs:op_acc_xeb_running_mean` | Moyenne courante F_XEB (attendu C49 : +1/3) |
+
+---
+
+### C49-§2 : n_circuits=30000 — C49-FIX-01
+
+**Source :** analysechatgpt91.3.md §C49-FIX-01 — `xeb_rel_var = 1.28% > 1.00%` malgré 10000 circuits.
+
+```
+C48 : n_circuits=10000 → xeb_rel_var=1.28% > XEB_CONVERGENCE_TOL=1% → rcs:converged=0
+C49 : RCS_MIN_N_CIRCUITS = 30000 (calcul statistique : n > 27000 pour la grille 6160Q)
+```
+
+| Macro | C48 | C49 |
+|---|---|---|
+| `RCS_MIN_N_CIRCUITS` | 10000 | **30000** |
+| `rcs:n_circuits_c49_min` | — | 30000.0 |
+
+---
+
+### C49-§3 : log_p_per_qubit normalisé — C49-FIX-02
+
+```
+Nouvelle métrique : rcs:log_p_per_qubit = log_p_bitstring / n_qubits
+C48 : log_p_bitstring ≈ −1550 (non-comparable entre grilles 6160 vs 12320)
+C49 : log_p_per_qubit ≈ −1550/6160 ≈ −0.252 bits/qubit (comparable entre grilles)
+```
+
+| Préfixe métrique | Description |
+|---|---|
+| `rcs:log_p_per_qubit` | log probabilité normalisée par qubit (bits/qubit) |
+| `rcs:log_p_bitstring` | log probabilité totale (non normalisée) — maintenu |
+
+---
+
+### C49-§4 : mott_early_exit forensique — C49-FIX-04
+
+**Source :** analysechatgpt91.3.md §C49-FIX-04 — flag absent dans worm_mc_ultra_metrics.log C48.
+
+```
+C48-OPT-MOTT : variable mott_early_exit déclarée mais (void) → non loggée
+C49-FIX-04 : FORENSIC_LOG_MODULE_METRIC("worm_mc_ultra", "worm:mott_early_exit", ...)
+             + "worm:mott_proposals_saved" si early exit actif
+             + "worm:mott_detect_window" (= 500)
+```
+
+| Préfixe métrique | Table Supabase | Description |
+|---|---|---|
+| `worm:mott_early_exit` | `module_results_worm_mc.mott_early_exit` | 0/1 flag sortie anticipée |
+| `worm:mott_proposals_saved` | `module_results_worm_mc.mott_proposals_saved` | nb propositions économisées |
+| `worm:mott_detect_window` | — | valeur du MOTT_DETECT_WINDOW (500) |
+
+---
+
+*Mise à jour : Version 3.4 — 2026-04-07 — C49-FIX-01 (n_circuits=30000), C49-FIX-02 (log_p/qubit), C49-FIX-03 (XEB normalisation ÷2), C49-FIX-04 (mott_early_exit log)*
