@@ -395,7 +395,7 @@ ANALYSES REQUISES C49 :
 
 NE JAMAIS MODIFIER : analysechatgpt21.md, analysechatgpt91.1.md, analysechatgpt91.2.md
 
-STANDARD_NAMES.md : mettre à jour en v3.4 pour C49-FIX-01 à 04
+STANDARD_NAMES.md : mettre à jour en v3.4 pour C49-FIX-01 à 04 et supabase si necesaire 
 ```
 
 ---
