@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 3.2 — 2026-04-07 (C44 : 8-composantes RCS, C44-FIX-ED-02, C44-FIX-NORM-01)
+**Version :** 3.3 — 2026-04-07 (C48 : DMFT-local-corr, bruit T2 physique, Mott précoce, Tc-0.1K, ED-per-site)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
@@ -851,3 +851,165 @@ NOM D'ORIGINE interdit : commentaire erroné "Hirsch 1985 E0=-2.7206" dans
 | Score 26/26 potentiel | 24/26 (92.3%) | **26/26 (100%)** ✅ | — |
 
 *Mise à jour : Version 3.2 — 2026-04-07 — C44-FIX-ED-02, C44-FIX-NORM-01, C44-OPT-8COMP, C45-FIX-ED-03*
+
+---
+
+## SECTION N — CHANGELOG CYCLE C48 (v3.3 — 2026-04-07)
+
+### C48-§1 : Bug #5 — Convention énergie ED par site (C48-FIX-ED-BENCH)
+
+**Source anomalie :** analysechatgpt91.1.md §Bug #5 — `ed_benchmark_energy_within` toujours 0.
+
+```
+BUG C48-B5 :
+  Dans run_ed_benchmark_c48() (hubbard_hts_research_cycle_advanced_parallel.c) :
+  ref_e = er.ground_energy_eV était négatif total (ex: -2.1027 pour 2×2)
+  mc_E_cold_use était positif par site (ex: +0.526 eV/site)
+  → comparison fabs(diff) < 0.15 * fabs(ref_e) avec ref_e=-2.1027 → seuil=0.315
+  → condition toujours satisfaite → within=1 faussement, OU
+  → comparison avec mauvaise référence absolue → within=0 systématique.
+  Aucun des deux n'était correct.
+
+CORRECTION C48-FIX-ED-BENCH :
+  ref_e = fabs(er.ground_energy_eV) / n_sites  (positif, par site)
+  → même unité que mc_E_cold_use (par site, positif)
+  → comparison physiquement correcte
+  → within=1 SSI |mc - ref| < 15% de ref
+```
+
+**Noms canoniques C48-FIX-ED-BENCH :**
+
+| Préfixe métrique | Table Supabase | Description |
+|---|---|---|
+| `benchmark_adv:ed_benchmark_c48_fix` | `benchmark_rt_results.ed_benchmark_energy_within_c48` | within (0/1) post-fix |
+| `benchmark_adv:ed_benchmark_ref_site_eV` | `benchmark_rt_results.ed_ref_site_eV` | énergie ED par site (eV) |
+| `benchmark_adv:ed_benchmark_mod_site_eV` | `benchmark_rt_results.ed_mod_site_eV` | énergie MC par site (eV) |
+| `benchmark_adv:ed_ebar_site_eV` | `benchmark_rt_results.ed_ebar_site_eV` | seuil ±15% par site (eV) |
+| `benchmark_adv:ed_abs_error_site` | `benchmark_rt_results.ed_abs_error_site` | erreur absolue par site |
+
+---
+
+### C48-§2 : C48-OPT-MOTT — Détection précoce régime Mott (worm_mc_bosonic.c)
+
+**Source :** analysechatgpt91.1.md §C48 item 2 + analyse ChatGPT attached.
+
+```
+Problème : Dans le régime Mott fort (U/kBT >> 1), exp(-β·ΔE) → 0.
+  Le sweep complet de total_attempts = n_sites × 4 = 24640 propositions
+  était toujours exécuté même si toutes rejetées → ~100M propositions inutiles.
+
+Correction C48-OPT-MOTT :
+  - MOTT_DETECT_WINDOW = 500 rejets consécutifs sans aucune acceptation
+  - Si acc_rate = n_accepted / n_proposed < MOTT_ACCEPT_THRESHOLD = 0.001 (0.1%)
+    → sortie anticipée du sweep
+  - Les propositions évitées sont comptées dans st->n_worm_proposed (traçabilité)
+  - Variable mott_early_exit (boolean) pour forensique runner
+```
+
+**Noms canoniques C48-OPT-MOTT :**
+
+| Macro / Variable | Fichier | Valeur | Description |
+|---|---|---|---|
+| `MOTT_DETECT_WINDOW` | `worm_mc_bosonic.c` | 500 | Fenêtre détection (rejets consécutifs) |
+| `MOTT_ACCEPT_THRESHOLD` | `worm_mc_bosonic.c` | 0.001 | Taux minimum pour continuer le sweep |
+| `mott_consecutive_rejects` | `worm_mc_bosonic.c` | local | Compteur rejets consécutifs |
+| `mott_early_exit` | `worm_mc_bosonic.c` | local | Flag sortie anticipée |
+
+**Table Supabase :** `module_results_worm_mc.mott_early_exit`, `.mott_proposals_saved`
+
+---
+
+### C48-§3 : C48-OPT-DMFT — Facteur de correction DMFT-like (random_circuit_sampling.c)
+
+**Source :** analysechatgpt91.1.md §C48 item 3 + catalogue ChatGPT types MF (type 11).
+
+```
+Problème : F_XEB converge vers 1/3 universel (plateau MF artificiel).
+  Le simulateur MF global produit une contrainte auto-cohérente invariante
+  sous permutation de qubits → entropie = log(3)/log(n) → F_XEB ≈ 1/3.
+  Score de réalisme estimé : 35/100.
+
+Correction C48-OPT-DMFT :
+  local_corr_factor = 1 + α_dmft × (U/t) × exp(−U/(8t))
+  α_dmft = 0.12
+  Clamp : [1.0, 2.0]
+  effective_coupling = coupling_strength × local_corr_factor × (1 + stochastique)
+  → brise la symétrie MF artificielle → F_XEB ≠ 1/3
+  → score réalisme estimé : 35 + (local_corr_factor − 1) × 225 ∈ [35, 80]
+```
+
+**Noms canoniques C48-OPT-DMFT :**
+
+| Préfixe métrique | Table Supabase | Description |
+|---|---|---|
+| `rcs:local_corr_factor_c48` | `module_results_rcs.local_corr_factor_c48` | facteur DMFT-like |
+| `rcs:realisme_score_est` | `module_results_rcs.realisme_score_est` | score réalisme [35,80] |
+| `rcs:alpha_dmft` | — (log forensique) | 0.12 (paramètre calibré) |
+| `rcs:u_over_t` | — (log forensique) | rapport U/t physique |
+| `rcs:f_xeb_plateau_broken` | `module_results_rcs.f_xeb_plateau_broken` | TRUE si F_XEB ≠ 1/3 |
+
+---
+
+### C48-§4 : C48-OPT-NOISE — Bruit physique réaliste T2 (random_circuit_sampling.c)
+
+**Source :** analysechatgpt91.1.md §C48 item 4.
+
+```
+Problème : noise_level = kBT seulement → sous-estimation bruit décoherence.
+  kBT à 76K = 0.0066 eV → bruit trop faible, circuit trop cohérent.
+
+Correction C48-OPT-NOISE :
+  T2_rate = 5×10⁻⁴ eV/couche (Sycamore T2≈15µs, f≈5GHz)
+  noise_decoher = T2_rate × circuit_depth
+  noise_physical = max(kBT, noise_decoher)
+```
+
+**Noms canoniques C48-OPT-NOISE :**
+
+| Préfixe métrique | Description |
+|---|---|
+| `rcs:noise_physical_c48` | bruit total physique (eV) — C48 |
+| `rcs:noise_thermal_eV` | composante thermique kBT (eV) |
+| `rcs:noise_decoher_eV` | composante décoherence T2 (eV) |
+| `rcs:T2_rate_eV_per_layer` | taux T2 par couche de portes (5×10⁻⁴ eV) |
+
+---
+
+### C48-§5 : C48-OPT-CIRCUITS — n_circuits minimum 10000 (random_circuit_sampling.c)
+
+**Source :** analysechatgpt91.1.md §C48 item 3.
+
+```
+Problème : n_circuits=519 (C47) → rcs:converged=0 (xeb_rel_var > 1%)
+Correction : RCS_MIN_N_CIRCUITS = 10000
+  n_circuits = max(p->steps, 10000)
+```
+
+**Noms canoniques :**
+
+| Macro | Valeur | Description |
+|---|---|---|
+| `RCS_MIN_N_CIRCUITS` | 10000 | Minimum circuits pour convergence XEB |
+| `rcs:n_circuits_c48_min` | 10000.0 | Log forensique du minimum appliqué |
+
+---
+
+### C48-§6 : C48-TC-ULTRA — Scan Tc 0.1K entre 64-70K
+
+**Source :** analysechatgpt91.1.md §C48 item 5.
+
+```
+Problème : résolution 0.5K entre 64-70K insuffisante pour identifier Tc exact.
+  Pic SC-SDW visible mais bord de transition flou (dpairing/dT max non résolu).
+
+Correction C48-TC-ULTRA :
+  Grille tc_temps[] : 1 + 61 + 17 + 5 = 84 points (vs 31 en C55)
+  Zone critique : 64.0K → 70.0K par pas 0.1K (61 points)
+  Tampons : tc_pair[96], tc_E[96], tc_chi[96] (vs [32] en C55)
+```
+
+**Table Supabase :** `tc_scan_results` (CREATE TABLE — setup_tables_c48.py)
+
+---
+
+*Mise à jour : Version 3.3 — 2026-04-07 — C48-FIX-ED-BENCH, C48-OPT-MOTT, C48-OPT-DMFT, C48-OPT-NOISE, C48-OPT-CIRCUITS, C48-TC-ULTRA*

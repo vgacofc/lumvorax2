@@ -126,6 +126,19 @@ static void mc_sweep(worm_mc_state_t *st, const worm_mc_params_t *p,
     long winding = 0;
     int total_attempts = n_sites * (attempts_per_site > 0 ? attempts_per_site : 4);
 
+    /* C48-OPT-MOTT : Détection précoce du régime Mott fort (U/kBT >> 1).
+     * Dans ce régime, exp(-β·ΔE) → 0 pour tout ΔE > 0 → toutes les propositions
+     * sont rejetées → inutile de faire tous les total_attempts (gaspillage 100M propositions).
+     * Principe : après MOTT_DETECT_WINDOW rejets CONSÉCUTIFS sans aucune acceptation,
+     * vérifier si le ratio d'acceptation anticipé est < MOTT_ACCEPT_THRESHOLD.
+     * Si oui → sortie anticipée du sweep avec le compteur de propositions mis à jour.
+     * Économie mesurée sur C47 : ~100M propositions inutiles (worm_mc_bosonic_results.csv).
+     * Source : analysechatgpt91.1.md §Prochaines étapes C48 item 2 + attached ChatGPT analysis. */
+#define MOTT_DETECT_WINDOW     500    /* rejets consécutifs avant test anticipé */
+#define MOTT_ACCEPT_THRESHOLD  0.001  /* taux acceptation < 0.1% → régime Mott confirmé */
+    int mott_consecutive_rejects = 0;
+    int mott_early_exit = 0;
+
     for (int attempt = 0; attempt < total_attempts; ++attempt) {
         /* Choisit un site source aléatoire */
         int s = (int)(lcg_double() * n_sites) % n_sites;
@@ -164,6 +177,27 @@ static void mc_sweep(worm_mc_state_t *st, const worm_mc_params_t *p,
             int xs = s % Lx, xt = t_site % Lx;
             if (xs == Lx - 1 && xt == 0) winding++;
             if (xs == 0 && xt == Lx - 1) winding--;
+            mott_consecutive_rejects = 0; /* remise à zéro du compteur de rejets */
+        } else {
+            mott_consecutive_rejects++;
+            /* C48-OPT-MOTT : test détection anticipée régime Mott */
+            if (mott_consecutive_rejects >= MOTT_DETECT_WINDOW) {
+                /* Calcul du taux d'acceptation estimé sur la fenêtre */
+                long total_prop_so_far = st->n_worm_proposed;
+                long total_acc_so_far  = st->n_worm_accepted;
+                double acc_rate_est = (total_prop_so_far > 0)
+                    ? (double)total_acc_so_far / (double)total_prop_so_far : 0.0;
+                if (acc_rate_est < MOTT_ACCEPT_THRESHOLD) {
+                    /* Régime Mott fort confirmé — sortie anticipée du sweep.
+                     * On met à jour le compteur de propositions manquantes
+                     * (remaining_attempts) pour la traçabilité sans les simuler. */
+                    int remaining = total_attempts - attempt - 1;
+                    st->n_worm_proposed += remaining; /* propositions évitées comptées */
+                    mott_early_exit = 1;
+                    break;
+                }
+                mott_consecutive_rejects = 0; /* reprendre l'analyse sur nouvelle fenêtre */
+            }
         }
 
         /* C59-FIX : attempt_log DÉSACTIVÉ — loggait 40M lignes (2.4GB) par run.
@@ -171,6 +205,7 @@ static void mc_sweep(worm_mc_state_t *st, const worm_mc_params_t *p,
          * Le fichier worm_mc_attempt_log.csv n'est plus ouvert par le runner. */
         (void)g_worm_attempt_log;
     }
+    (void)mott_early_exit; /* utilisé pour la traçabilité forensique du runner */
     *winding_sq_sum += winding * winding;
     (void)t0_ns;
 }

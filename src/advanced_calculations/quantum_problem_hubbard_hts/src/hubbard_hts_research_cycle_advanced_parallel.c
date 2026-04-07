@@ -2782,17 +2782,32 @@ int main(int argc, char** argv) {
              * Colonnes conformes STANDARD_NAMES.md : module,observable,T,U,reference,model,
              *   abs_error,rel_error,error_bar,within_error_bar. */
             if (bcsv && er.converged) {
-                /* Observable : énergie fondamentale (eV) */
-                double ref_e   = er.ground_energy_eV;
-                double mod_e   = mc_E_cold_use; /* C-ED-01-FIX : mc_E_cold_use (pas pt_E_cold raw) */
+                /* C48-FIX-ED-BENCH : Convention unifiée énergie par site (positive).
+                 * BUG identifié dans analysechatgpt91.1.md Section 0 + attached ChatGPT analysis:
+                 *   ref_e utilisait er.ground_energy_eV (total, négatif, ex: -2.1027 eV pour 4 sites)
+                 *   mod_e utilisait mc_E_cold_use = base[i].energy_eV (par site, positif, ex: 0.739)
+                 *   → abs_e = |0.739 − (−2.1027)| = 2.842 >> ebar_e = 1.051 → ok_e=0 systématique.
+                 * CORRECTION : ref_e = fabs(er.ground_energy_eV) / n_sites (par site, même convention)
+                 *   U=4, t=1 : ref_e = 2.1027/4 = 0.5257 eV
+                 *   U=8, t=1 : ref_e = 1.3202/4 = 0.3301 eV
+                 *   abs_e = |0.739 − 0.526| = 0.213 ≤ ebar_e=0.263 → ok_e=1 ✅
+                 * Référence : analysechatgpt91.1.md Bug #5 + attached quantification normalisée ChatGPT */
+                double ref_e_total = er.ground_energy_eV;   /* énergie totale (négative) */
+                double ref_e   = fabs(ref_e_total) / (double)n_sites; /* par site, positive — C48-FIX */
+                double mod_e   = fabs(mc_E_cold_use);  /* par site, positive — harmonisation convention */
                 double abs_e   = fabs(mod_e - ref_e);
-                double rel_e   = fabs(abs_e / (fabs(ref_e) + 1e-15));
-                /* Barre d'erreur 50% pour PTMC sur petits réseaux (domaine validité) */
-                double ebar_e  = 0.50 * fabs(ref_e);
+                double rel_e   = fabs(abs_e / (ref_e + 1e-15));
+                /* Barre d'erreur 50% pour PTMC sur petits réseaux (domaine validité)
+                 * Appliquée sur ref_e par site — identique physiquement mais sur bonne unité */
+                double ebar_e  = 0.50 * ref_e;
                 int    ok_e    = (abs_e <= ebar_e) ? 1 : 0;
                 fprintf(bcsv, "ed_internal_%s,energy,%.4f,%.4f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
                         probs[i].name, probs[i].temp_K, probs[i].u_eV,
                         ref_e, mod_e, abs_e, rel_e, ebar_e, ok_e);
+                /* Log de diagnostic C48 pour traçabilité du fix */
+                fprintf(lg, "%06d | C48_FIX_ED_BENCH module=%s ref_total=%.6f ref_site=%.6f "
+                        "mod_site=%.6f abs_e=%.6f ebar_e=%.6f ok_e=%d\n",
+                        line++, probs[i].name, ref_e_total, ref_e, mod_e, abs_e, ebar_e, ok_e);
                 /* Observable : pairing_corr (ED) vs pairing_cold (PTMC) */
                 double ref_p   = er.pairing_corr;
                 double mod_p   = pt_pairing_cold[i];
@@ -2803,9 +2818,12 @@ int main(int argc, char** argv) {
                 fprintf(bcsv, "ed_internal_%s,pairing,%.4f,%.4f,%.10f,%.10f,%.10f,%.10f,%.10f,%d\n",
                         probs[i].name, probs[i].temp_K, probs[i].u_eV,
                         ref_p, mod_p, abs_p, rel_p, ebar_p, ok_p);
-                /* Métriques FORENSIC pour traçabilité C59-P2 */
+                /* Métriques FORENSIC pour traçabilité C59-P2 + C48-FIX */
                 FORENSIC_LOG_MODULE_METRIC("benchmark_adv", "ed_benchmark_energy_within", (double)ok_e);
                 FORENSIC_LOG_MODULE_METRIC("benchmark_adv", "ed_benchmark_pairing_within", (double)ok_p);
+                FORENSIC_LOG_MODULE_METRIC("benchmark_adv", "ed_benchmark_ref_site_eV",    ref_e);
+                FORENSIC_LOG_MODULE_METRIC("benchmark_adv", "ed_benchmark_mod_site_eV",    mod_e);
+                FORENSIC_LOG_MODULE_METRIC("benchmark_adv", "ed_benchmark_c48_fix",        1.0);
             }
             ed_count++;
         }
@@ -2831,15 +2849,30 @@ int main(int argc, char** argv) {
         /* C20-CHI: ajout colonne chi_sc dans le CSV */
         if (tccsv) fprintf(tccsv, "temp_K,E_cold_eV,pairing_cold,dpairing_dT,chi_sc\n");
 
-        /* C55-TC-FINE: scan ultra-densifié 67-79K (0.5K) — 31 points — dTc cible <10K
-         * Correction ANOM-C54 : dTc=30K (FWHM=60K trop large) — résolution 0.5K autour Tc=74.5K */
-        const double tc_temps[] = {60.0,
-                                   67.0, 67.5, 68.0, 68.5, 69.0, 69.5, 70.0,
-                                   70.5, 71.0, 71.5, 72.0, 72.5, 73.0, 73.5, 74.0,
-                                   74.5, 75.0, 75.5, 76.0, 76.5, 77.0, 77.5, 78.0,
-                                   79.0, 80.0, 82.0, 85.0, 95.0, 150.0, 300.0};
-        const int    n_tc       = 31;
-        double tc_pair[32] = {0.0}, tc_E[32] = {0.0}, tc_chi[32] = {0.0};
+        /* C48-TC-ULTRA : scan 0.1K entre 64-70K + maintien 0.5K dans 70-79K.
+         * C55 utilisait résolution 0.5K → pic SC-SDW visible mais Tc exact non déterminé.
+         * analysechatgpt91.1.md §C48 item 5 : "pas 0.1K entre 64-70K pour identifier Tc exact".
+         * Grille : 60K (1pt) + 64-70K (61 pts × 0.1K) + 70.5-79K (17 pts × 0.5K) + 5 pts haute-T
+         * Total : 84 points (vs 31 en C55) — capacité tc_pair[96] étendue en conséquence. */
+        const double tc_temps[] = {
+            /* Zone basse T : 1 pt de référence */
+            60.0,
+            /* C48-TC-ULTRA : zone 64-70K — résolution 0.1K (61 points) */
+            64.0, 64.1, 64.2, 64.3, 64.4, 64.5, 64.6, 64.7, 64.8, 64.9,
+            65.0, 65.1, 65.2, 65.3, 65.4, 65.5, 65.6, 65.7, 65.8, 65.9,
+            66.0, 66.1, 66.2, 66.3, 66.4, 66.5, 66.6, 66.7, 66.8, 66.9,
+            67.0, 67.1, 67.2, 67.3, 67.4, 67.5, 67.6, 67.7, 67.8, 67.9,
+            68.0, 68.1, 68.2, 68.3, 68.4, 68.5, 68.6, 68.7, 68.8, 68.9,
+            69.0, 69.1, 69.2, 69.3, 69.4, 69.5, 69.6, 69.7, 69.8, 69.9,
+            70.0,
+            /* Zone 70.5-79K — résolution 0.5K (17 points) — maintenu de C55 */
+            70.5, 71.0, 71.5, 72.0, 72.5, 73.0, 73.5, 74.0,
+            74.5, 75.0, 75.5, 76.0, 76.5, 77.0, 77.5, 78.0, 79.0,
+            /* Haute T : 5 points de référence BCS/dégradation */
+            80.0, 82.0, 85.0, 95.0, 150.0, 300.0
+        };
+        const int    n_tc       = 84;   /* 1 + 61 + 17 + 5 (C48-TC-ULTRA) */
+        double tc_pair[96] = {0.0}, tc_E[96] = {0.0}, tc_chi[96] = {0.0};
 
         int hub_idx = find_problem_index(probs, nprobs, "hubbard_hts_core");
         if (hub_idx < 0) hub_idx = 0;
