@@ -555,7 +555,7 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_bitstring",            p_bitstring);
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_p_bitstring",        log_p_bitstring);
             FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:entropy_circuit",        entropy_circuit);
-            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_meas_mean_circ",       p_meas_circ / (double)n_qubits);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:p_meas_mean_circ",       p_meas_circ / (double)n_phys_qubits);
         }
 
         /* 4. Score XEB — C42-FIX-XEB : Formule marginal (D_qubit=2) sans overflow
@@ -574,7 +574,8 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
          * Réf : formule marginal coherente avec notre représentation MF (produit tensoriel).
          *   La formule de Boixo 2018 D×⟨P_complet⟩ - 1 nécessite la représentation vectorielle
          *   complète 2^n — impossible pour n=392 → notre formule marginal est adaptée. */
-        double p_meas_mean_circ = p_meas_circ / (double)n_qubits;
+        /* C44-OPT-8COMP : normaliser par n_phys_qubits (2 orbitales × n_sites) */
+        double p_meas_mean_circ = p_meas_circ / (double)n_phys_qubits;
         double xeb_circuit = 2.0 * p_meas_mean_circ - 1.0;
         xeb_circuit = fmax(-1.0, fmin(1.0, xeb_circuit));  /* sécurité numérique */
 
@@ -623,8 +624,9 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * Pour Haar-aléatoire : ⟨P⟩ = 3/4 → F_XEB = 0.5
      * Pour uniforme : ⟨P⟩ = 1/2 → F_XEB = 0.0 (bruit pur)
      * Pour classique : ⟨P⟩ = 1 → F_XEB = 1.0 */
-    double p_meas_global = (n_circ_d * (double)n_qubits > 0.0) ?
-                           (p_meas_acc / (n_circ_d * (double)n_qubits)) : 0.5;
+    /* C44-OPT-8COMP : dénominateur = n_phys_qubits (2 orbitales × n_sites) */
+    double p_meas_global = (n_circ_d * (double)n_phys_qubits > 0.0) ?
+                           (p_meas_acc / (n_circ_d * (double)n_phys_qubits)) : 0.5;
     double F_xeb_mean = 2.0 * p_meas_global - 1.0;
     F_xeb_mean = fmax(-1.0, fmin(1.0, F_xeb_mean));
 
@@ -639,7 +641,8 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
 
     /* Entropie normalisée : H / H_max */
     double H_mean      = entropy_acc / n_circ_d;
-    double H_max_bits  = (double)n_qubits * M_LN2; /* entropie max = n_qubits bits */
+    /* C44-OPT-8COMP : H_max = n_phys_qubits bits (784 qubits logiques pour 14×28) */
+    double H_max_bits  = (double)n_phys_qubits * M_LN2;
     double H_norm      = (H_max_bits > 0.0) ? H_mean / H_max_bits : 0.0;
     H_norm             = fmax(0.0, fmin(1.0, H_norm)); /* clamp [0,1] */
 
@@ -696,16 +699,30 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:circuit_depth_used",   (double)circuit_depth);
     double log_D_eff_xeb = (double)circuit_depth * M_LN2;
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_D_eff_xeb",        log_D_eff_xeb);
-    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_qubits_total",       (double)n_qubits);
+    /* C44-OPT-8COMP : n_qubits_total = n_phys_qubits (784 qubits logiques = 14×28×2) */
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_qubits_total",       (double)n_phys_qubits);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_sites",              (double)n_qubits);
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:willow_fidelity_ref",  WILLOW_FIDELITY_REF);
     FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:beats_willow",         (xeb_ratio > 1.0) ? 1.0 : 0.0);
+    /* C44-OPT-8COMP : métriques architecturales du modèle 8 composantes */
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_phys_qubits",        (double)n_phys_qubits);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_components",         8.0);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:n_orbitals_per_site",  2.0);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:hilbert_factor_vs_c43",2.0);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:log_D_8comp",          log_D);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:willow_ratio_n_qubits",(double)n_phys_qubits / 105.0);
+    FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:caltech_ratio_n_qubits",(double)n_phys_qubits / 6160.0);
 
     FORENSIC_LOG_MODULE_END("random_circuit_sampling", p->name, converged ? "PASS" : "PARTIAL");
 
-    /* C42-OPT-01 : libération des buffers multi-threads */
+    /* C42-OPT-01 + C44-OPT-8COMP : libération des 8 buffers multi-threads */
     free(all_amp_re);
     free(all_amp_im);
     free(all_amp1_re);
     free(all_amp1_im);
+    free(all_amp2_re);
+    free(all_amp2_im);
+    free(all_amp3_re);
+    free(all_amp3_im);
     return r;
 }
