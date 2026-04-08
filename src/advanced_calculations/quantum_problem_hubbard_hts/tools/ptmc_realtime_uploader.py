@@ -138,8 +138,11 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
                     # Table absente — on compte quand même les lignes pour le log final
                     rows_inserted += 1
                     continue
-                batch.append({"run_id": run_id, "file_name": rel,
-                               "row_number": i + 1, "data": row})
+                # C52-FIX-SUPABASE-SCHEMA : table quantum_csv_rows a colonnes id, run_id, row_json
+                # file_name/row_number/data n'existent PAS → on sérialise tout dans row_json
+                batch.append({"run_id": run_id, "row_json": json.dumps(
+                    {"file_name": rel, "row_number": i + 1, "data": row}
+                )})
                 if len(batch) >= BATCH_SIZE:
                     r = requests.post(rest(table),
                                       headers=headers(), json=batch, timeout=30)
