@@ -212,11 +212,24 @@ def watch_and_upload(run_dir: Path, sentinel: str = ""):
     print(f"[PTMC-WATCHER] Supabase URL={SUPABASE_URL}", flush=True)
 
     while not _stop_flag:
-        # Condition d'arrêt : research_execution.log existe et non vide
+        # C51-FIX-PTMCWATCHER : Condition d'arrêt corrigée.
+        # BUG C50 : le watcher s'arrêtait dès que research_execution.log était non vide,
+        # mais ce fichier est rempli dès le DÉBUT de la simulation (6 lignes d'init).
+        # CORRECTION : s'arrêter uniquement si un marqueur de FIN est détecté dans le fichier.
+        # Marqueurs de fin : "RUN_DONE", "SCORE_FINAL", "C60_SCORE", "phase_10", "phase 10",
+        #   "FINAL_UPLOAD", "END_OF_RUN" — écrits par run_research_cycle.sh en phase finale.
+        # Source : analysechatgpt91.8.md §SECTION 5 — C51-FIX-PTMCWATCHER.
         exec_log = run_dir / "logs" / "research_execution.log"
-        if exec_log.exists() and exec_log.stat().st_size > 0:
-            print("[PTMC-WATCHER] research_execution.log détecté non vide — arrêt watcher", flush=True)
-            break
+        if exec_log.exists() and exec_log.stat().st_size > 500:
+            try:
+                content = exec_log.read_text(encoding="utf-8", errors="replace")
+                END_MARKERS = ("RUN_DONE", "SCORE_FINAL", "C60_SCORE", "phase_10",
+                               "phase 10", "FINAL_UPLOAD", "END_OF_RUN", "DONE_UPLOAD")
+                if any(m in content for m in END_MARKERS):
+                    print("[PTMC-WATCHER] Marqueur de fin détecté → arrêt watcher", flush=True)
+                    break
+            except Exception:
+                pass
 
         # Condition d'arrêt : fichier sentinel .stop
         if sentinel and Path(sentinel + ".stop").exists():

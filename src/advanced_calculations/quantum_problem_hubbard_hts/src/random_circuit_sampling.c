@@ -232,9 +232,16 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * Total : noise_physical = max(noise_thermal, noise_decoher)
      * Source : analysechatgpt91.1.md §C48 item 4 + attached mean field types ChatGPT. */
     double noise_thermal  = p->temp_K * 8.617e-5;          /* kB × T en eV */
-    int    circuit_depth  = (int)(p->dt * 1000.0);          /* profondeur circuit */
-    if (circuit_depth < 1)  circuit_depth = 1;
-    if (circuit_depth > 100) circuit_depth = 100;
+    /* C51-FIX-DEPTH : profondeur synchronisée avec la taille du circuit (n_qubits).
+     * Physique des circuits aléatoires 2D : depth_scrambling ≈ √n_qubits (scrambling complet).
+     * Google Willow : 105 qubits, depth=25. LumVorax C50 : 6160 qubits → depth_opt≈78.
+     * Formule : depth = max(WILLOW_CIRCUIT_DEPTH, (int)sqrt((double)n_qubits))
+     * Cap : 200 couches maximum (limitation mémoire + décoherence T2 accumulée).
+     * Avant C51 : circuit_depth = (int)(dt × 1000) = 40 — fixe, indépendant de n_qubits.
+     * Source : analysechatgpt91.8.md §SECTION 7 — C51-FIX-DEPTH. */
+    int    circuit_depth  = (int)sqrt((double)n_qubits);    /* C51-FIX-DEPTH : ≈78 pour 6160Q */
+    if (circuit_depth < WILLOW_CIRCUIT_DEPTH) circuit_depth = WILLOW_CIRCUIT_DEPTH; /* min=25 */
+    if (circuit_depth > 200) circuit_depth = 200;           /* cap mémoire + décoherence */
     double T2_rate_eV     = 5.0e-4;                         /* décoherence T2 par couche (eV) */
     double noise_decoher  = T2_rate_eV * (double)circuit_depth;
     double noise_level    = (noise_decoher > noise_thermal) ? noise_decoher : noise_thermal;
@@ -355,6 +362,21 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
     (void)D_eff; /* utilisé uniquement pour compatibilité future */
 
     /* ── Boucle principale : simulation des circuits (C42-OPT-01 OpenMP) ────── */
+    /* C51-FIX-EARLYEXIT : early exit après convergence XEB.
+     * La boucle OpenMP est divisée en batches de RCS_CONV_BATCH circuits.
+     * Un break dans un #pragma omp parallel for est interdit (UB OpenMP).
+     * Solution : boucle while externe + for interne par batch → break légal sur le while.
+     * Après chaque batch (min RCS_CONV_MIN_CIRC circuits), la convergence est vérifiée.
+     * Si xeb_rel_var < XEB_CONVERGENCE_TOL → early exit, n_circuits mis à jour.
+     * Source : analysechatgpt91.8.md §SECTION 7 — C51-FIX-EARLYEXIT. */
+#define RCS_CONV_BATCH    500U    /* circuits par batch de test convergence */
+#define RCS_CONV_MIN_CIRC 5000U   /* minimum de circuits avant early exit */
+    uint64_t circ_done   = 0;
+    while (circ_done < n_circuits) {
+    uint64_t batch_start = circ_done;
+    uint64_t batch_end   = circ_done + RCS_CONV_BATCH;
+    if (batch_end > n_circuits) batch_end = n_circuits;
+
     /* #pragma omp parallel for :
      *   - schedule(dynamic,50) : équilibre de charge (circuits ≠ durées)
      *   - reduction(+:...) : accumulation thread-safe des métriques scalaires
@@ -364,7 +386,7 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
 #pragma omp parallel for schedule(dynamic, 50) \
     reduction(+:xeb_acc,entropy_acc,xeb_sq_acc,xeb_log_norm_acc,log_p_acc,p_meas_acc) \
     reduction(max:norm_dev_max)
-    for (uint64_t circ = 0; circ < n_circuits; ++circ) {
+    for (uint64_t circ = batch_start; circ < batch_end; ++circ) {
 
         /* Buffers thread-local — C42-OPT-01 : chaque thread a son propre jeu d'amplitudes */
 #ifdef _OPENMP
@@ -701,7 +723,36 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
                                        xeb_log_norm_acc / (double)(circ + 1));
         }
         (void)xeb_log_arg; /* info forensique - éviter warning unused */
-    } /* fin boucle circuits */
+    } /* fin for batch interne */
+
+    circ_done = batch_end;
+
+    /* C51-FIX-EARLYEXIT : test de convergence après chaque batch ─────────────
+     * Calcul inline de xeb_rel_var avec les accumulateurs courants.
+     * Ne teste que si circ_done >= RCS_CONV_MIN_CIRC (au moins 5000 circuits).
+     * Note : pas de mutex nécessaire — accumulateurs déjà réduits par OMP. */
+    if (circ_done >= RCS_CONV_MIN_CIRC) {
+        double n_circ_cur    = (double)circ_done;
+        double p_meas_cur    = (p_meas_acc > 0.0 && n_circ_cur * (double)n_qubits > 0.0)
+                               ? (p_meas_acc / (n_circ_cur * (double)n_qubits)) : 0.5;
+        double F_xeb_cur     = 2.0 * p_meas_cur - 1.0;
+        F_xeb_cur            = (F_xeb_cur < -1.0) ? -1.0 : ((F_xeb_cur > 1.0) ? 1.0 : F_xeb_cur);
+        double xeb_var_cur   = (xeb_sq_acc / n_circ_cur) - (F_xeb_cur * F_xeb_cur);
+        double xeb_std_cur   = (xeb_var_cur > 0.0) ? sqrt(xeb_var_cur) : 0.0;
+        double xeb_rl_v_cur  = (fabs(F_xeb_cur) > 1e-12)
+                               ? xeb_std_cur / fabs(F_xeb_cur) : 1.0;
+        if (xeb_rl_v_cur < XEB_CONVERGENCE_TOL) {
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:early_exit_circuit",
+                                       (double)circ_done);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:early_exit_rel_var",
+                                       xeb_rl_v_cur);
+            FORENSIC_LOG_MODULE_METRIC("random_circuit_sampling", "rcs:early_exit_F_xeb",
+                                       F_xeb_cur);
+            n_circuits = circ_done; /* mise à jour pour calculs finaux */
+            break; /* early exit du while → passe au module suivant */
+        }
+    }
+    } /* fin while batch */
 
     /* ── Calcul des résultats finaux ──────────────────────────────── */
     double n_circ_d = (n_circuits > 0) ? (double)n_circuits : 1.0;
