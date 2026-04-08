@@ -7,7 +7,7 @@ NOUVEAUX RUNS (à analyser en priorité) :
   src/advanced_calculations/quantum_problem_hubbard_hts/results/[DERNIER_RUN]/  ← NOUVEAU C50
   src/advanced_calculations/quantum_problem_hubbard_hts/logs/forensic/          ← EN PRIORITÉ ABSOLUE
 
-ANALYSES PRÉCÉDENTES (ne JAMAIS modifier) :
+ANALYSES PRÉCÉDENTES (ne JAMAIS modifier ou ecraser quelque soit le fichier, toujour verifier lanumerotation pour ne pas ecraser le rapport ou la reflexion dun autre agent) :
   src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/
 
 CORRECTIONS APPLIQUÉES EN C50 (depuis analysechatgpt91.6.md) :
