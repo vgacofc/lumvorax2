@@ -138,16 +138,26 @@ def send_to_vercel(run_id: str, events: list[dict]) -> bool:
 
     payload = {
         "run_id": run_id,
-        "cycle": "C50",
+        "cycle": "C52",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "n_events": len(events),
         "events": events,
     }
 
+    # C52-FIX-VERCEL-ENDPOINT : utilise VERCEL_URL_BASE/api/logs si disponible,
+    # sinon l'API Vercel Blob (https://blob.vercel-storage.com) comme fallback.
+    # L'ancien endpoint (https://api.vercel.com/v1/data-cache/config) était incorrect —
+    # c'est une API de configuration du cache, pas d'ingestion de logs.
+    if VERCEL_URL_BASE:
+        vercel_endpoint = f"{VERCEL_URL_BASE.rstrip('/')}/api/lumvorax-logs"
+    else:
+        log.warning("VERCEL_URL non défini — skip Vercel")
+        return False
+
     for attempt in range(MAX_RETRIES):
         try:
             r = requests.post(
-                "https://api.vercel.com/v1/data-cache/config",
+                vercel_endpoint,
                 headers=_get_headers_vercel(),
                 json=payload,
                 timeout=TIMEOUT_S,
@@ -156,7 +166,7 @@ def send_to_vercel(run_id: str, events: list[dict]) -> bool:
                 log.info(f"Vercel OK : {len(events)} events envoyés (run={run_id})")
                 return True
             else:
-                log.warning(f"Vercel HTTP {r.status_code}: {r.text[:200]}")
+                log.warning(f"Vercel HTTP {r.status_code} [{vercel_endpoint}]: {r.text[:200]}")
         except Exception as e:
             log.warning(f"Vercel tentative {attempt+1}/{MAX_RETRIES}: {e}")
             time.sleep(2 ** attempt)
@@ -255,12 +265,12 @@ def stream_run(run_dir: Path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Vercel Log Streamer — LumVorax C50")
+    global BATCH_SIZE  # C52-FIX-SYNTAX : déclaration avant tout usage (SyntaxError corrigé)
+    parser = argparse.ArgumentParser(description="Vercel Log Streamer — LumVorax C52")
     parser.add_argument("--run-dir", type=str, default=None, help="Répertoire du run (défaut: dernier run)")
     parser.add_argument("--batch", type=int, default=BATCH_SIZE, help="Taille batch")
     args = parser.parse_args()
 
-    global BATCH_SIZE
     BATCH_SIZE = args.batch
 
     if not VERCEL_API_KEY and not SUPABASE_URL:

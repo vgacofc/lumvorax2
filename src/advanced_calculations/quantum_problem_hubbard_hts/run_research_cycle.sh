@@ -417,6 +417,26 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] PID=$WATCHER_PID lancé 
 LUMVORAX_STREAM_PID=$!
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax PID=$LUMVORAX_STREAM_PID"
 
+# ── C80-VERCEL : streaming logs CSV → Vercel + Supabase DB1+DB2 en temps réel ──
+# C52 : vercel_log_streamer.py surveille les CSV du dernier run et les streame
+# vers Vercel (VERCEL_URL/api/lumvorax-logs) ET vers Supabase (table vercel_log_events).
+# Lance en background dès le démarrage, se connecte au dernier run_dir détecté.
+(
+    _VERCEL_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+    for _wv in $(seq 1 120); do
+        sleep 2
+        _NEW_RUN_VERCEL="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+        if [ -n "$_NEW_RUN_VERCEL" ] && [ "$_NEW_RUN_VERCEL" != "$_VERCEL_BEFORE" ]; then
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Run détecté: $_NEW_RUN_VERCEL"
+            python3 "$ROOT_DIR/tools/vercel_log_streamer.py" \
+                --run-dir "$_NEW_RUN_VERCEL"
+            break
+        fi
+    done
+) &
+VERCEL_STREAM_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Streamer Vercel PID=$VERCEL_STREAM_PID"
+
 # ── Bug#4-FIX : skip runner si déjà complété (évite les runs "SKIP" en boucle) ──
 # Si ADVANCED_DONE_FILE existe et RESUME_FROM_PHASE >= 10 → le runner a déjà fini.
 # Cas d'invalidation : RESUME_FROM_PHASE == 0 (nouveau cycle) → supprimer le marqueur.
@@ -458,6 +478,9 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Watcher PTMC arrêté"
 kill "$LUMVORAX_STREAM_PID" 2>/dev/null || true
 wait "$LUMVORAX_STREAM_PID" 2>/dev/null || true
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax arrêté"
+kill "$VERCEL_STREAM_PID" 2>/dev/null || true
+wait "$VERCEL_STREAM_PID" 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Streamer Vercel arrêté"
 [ "$ADV_OK" -eq 0 ] && echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] WARNING: Runner advanced_parallel non terminé après ${MAX_RUNNER_RETRY} tentatives — continuation quand même"
 print_progress "advanced parallel simulation"
 checkpoint_save 10

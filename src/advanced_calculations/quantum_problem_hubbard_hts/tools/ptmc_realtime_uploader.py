@@ -45,7 +45,13 @@ def _derive_url() -> str:
 
 SUPABASE_URL = _derive_url()
 BATCH_SIZE   = 200
-MAX_CSV_ROWS = 50_000
+MAX_CSV_ROWS = None   # C52-FIX-TRUNC : aucune limite — toutes les lignes sont uploadées.
+                      # EXPLICATION du "tronqué à 50000 lignes" :
+                      #   Chaque CSV fait ~20 MB = exactement 50000 lignes (cap de rotation).
+                      #   La limite était atteinte coïncidence → avertissement trompeur.
+                      #   Danger réel : si lignes plus courtes → plus de 50000 lignes →
+                      #   les lignes au-delà de 50000 auraient été perdues sans ce fix.
+                      #   Fix C52 : MAX_CSV_ROWS = None → aucune troncature possible.
 
 _stop_flag = False
 
@@ -125,8 +131,8 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
         with open(path, newline="", errors="replace") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
-                if i >= MAX_CSV_ROWS:
-                    print(f"[PTMC-WATCHER] {rel} tronqué à {MAX_CSV_ROWS} lignes", flush=True)
+                if MAX_CSV_ROWS is not None and i >= MAX_CSV_ROWS:
+                    print(f"[PTMC-WATCHER] {rel} tronqué à {MAX_CSV_ROWS} lignes (limite activée)", flush=True)
                     break
                 if table in _table_unavailable:
                     # Table absente — on compte quand même les lignes pour le log final

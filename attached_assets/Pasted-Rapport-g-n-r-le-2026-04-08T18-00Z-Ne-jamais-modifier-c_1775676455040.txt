@@ -1,0 +1,56 @@
+Rapport généré le 2026-04-08T18:00Z — Ne jamais modifier ce fichier. Prochain rapport : analysechatgpt91.12.md
+Add C52 columns
+Write
+
+ALTER TABLE public.module_results_rcs ADD COLUMN IF NOT EXISTS early_exit_rel_var_rm DOUBLE PRECISION,
+  ADD COLUMN IF NOT EXISTS early_exit_running_mean DOUBLE PRECISION,
+  ADD COLUMN IF NOT EXISTS conv_check_rl_v_rm_last DOUBLE PRECISION,
+  ADD COLUMN IF NOT EXISTS rcs_conv_min_circ_c52 BIGINT DEFAULT 10000,
+  ADD COLUMN IF NOT EXISTS xeb_conv_tol_c52 DOUBLE PRECISION DEFAULT 0.0006,
+  ADD COLUMN IF NOT EXISTS fix_conv_rm_applied BOOLEAN DEFAULT TRUE;
+
+Success. No rows returned
+✅ Colonnes C52 à ajouter — exécuté dans Supabase SQL Editor
+
+J’ai exécuté l’ALTER TABLE sur public.module_results_rcs pour ajouter (avec IF NOT EXISTS) :
+
+    early_exit_rel_var_rm DOUBLE PRECISION
+    early_exit_running_mean DOUBLE PRECISION
+    conv_check_rl_v_rm_last DOUBLE PRECISION
+    rcs_conv_min_circ_c52 BIGINT DEFAULT 10000
+    xeb_conv_tol_c52 DOUBLE PRECISION DEFAULT 0.0006
+    fix_conv_rm_applied BOOLEAN DEFAULT TRUE
+
+Validation rapide
+
+Confirme-moi juste : tu veux que je vérifie aussi que toutes les colonnes apparaissent bien dans module_results_rcs (via un \d public.module_results_rcs / requête information_schema) ?
+
+verifie tout
+Verify C52 columns
+
+SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE table_schema='public'
+  AND table_name='module_results_rcs'
+  AND column_name IN (
+    'early_exit_rel_var_rm',
+    'early_exit_running_mean',
+    'conv_check_rl_v_rm_last',
+    'rcs_conv_min_circ_c52',
+    'xeb_conv_tol_c52',
+    'fix_conv_rm_applied'
+  )
+ORDER BY column_name;
+
+✅ Vérification des colonnes C52 (module_results_rcs)
+
+Je viens de vérifier dans public.module_results_rcs via information_schema.columns. Les 6 colonnes existent bien :
+
+    early_exit_rel_var_rm — double precision
+    early_exit_running_mean — double precision
+    conv_check_rl_v_rm_last — double precision
+    rcs_conv_min_circ_c52 — bigint DEFAULT 10000
+    xeb_conv_tol_c52 — double precision DEFAULT 0.0006
+    fix_conv_rm_applied — boolean DEFAULT true
+
+✅ Tout est en place côté Supabase.
