@@ -254,7 +254,7 @@ Recommandation : augmenter n_steps à ≥ 100 000 pour réduire σ_mc sous 10⁻
 
 **ptmc_realtime_uploader.py** :
 - Structure INSERT corrigée : `{"run_id": ..., "row_json": json.dumps({...})}` ✅
-- MAX_CSV_ROWS = None (aucune troncature) ✅
+
 
 ---
 
@@ -314,7 +314,7 @@ Recommandation : augmenter n_steps à ≥ 100 000 pour réduire σ_mc sous 10⁻
 | ~12 000 | early_exit_circuit (convergence σ < 0.0006) |
 | Fin | research_execution.log écrit → PTMC-WATCHER upload Supabase |
 
----
+--
 
 ## SECTION 9 — RÉSUMÉ EXÉCUTIF
 

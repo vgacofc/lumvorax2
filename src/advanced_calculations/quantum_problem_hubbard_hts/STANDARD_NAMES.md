@@ -1130,3 +1130,69 @@ double p_meas_global = p_meas_acc / (n_circ_d * (double)n_qubits);
 ---
 
 *Mise à jour : Version 3.4 — 2026-04-07 — C49-FIX-01 (n_circuits=30000), C49-FIX-02 (log_p/qubit), C49-FIX-03 (XEB normalisation ÷2 boucle + global), C49-FIX-03-GLOBAL (bug résiduel p_meas_global), C49-FIX-04 (mott_early_exit log + include forensique manquant)*
+
+---
+
+## SECTION J — MISES À JOUR C52–C53 (2026-04-08)
+
+### C52 — Corrections binaire (compilé 2026-04-08T22:07Z)
+
+| ID Correction | Paramètre / Fichier | Ancien | Nouveau | Raison |
+|---|---|---|---|---|
+| C52-FIX-CONV-RM | `random_circuit_sampling.c` formule variance | `xeb_std/\|F\|` (var individuelle — constante 22%) | `xeb_std/(|F|×√n)` (var running mean — décroît en 1/√n) | Ancienne formule ne convergeait jamais |
+| C52-FIX-TOL | `#define XEB_CONVERGENCE_TOL` | (ancienne valeur) | `0.0006` | Calibré pour convergence ~12000 circuits |
+| C52-FIX-MIN | `#define RCS_CONV_MIN_CIRC` | (ancienne valeur) | `10000U` | Remplacé en C53 par 100U |
+| C52-FIX-TRUNC | `ptmc_realtime_uploader.py` `MAX_CSV_ROWS` | `50000` | `None` | Troncature silencieuse des CSV |
+| C52-FIX-SYNTAX | `tools/vercel_log_streamer.py` | SyntaxError Python | corrigé | Bloc C80-VERCEL non fonctionnel |
+| C52-VERCEL-INTEG | `run_research_cycle.sh` | absent | Bloc C80-VERCEL ajouté | Streaming vers Vercel non implémenté |
+| C52-SECRET | Replit Secrets | absent | `SUPABASE_PROJECT_REF=auytumghnaguqscehyas` | Auth Supabase manquante |
+
+### C53 — Corrections session 2026-04-08T22h–00h
+
+| ID Correction | Fichier | Ancien | Nouveau | Raison |
+|---|---|---|---|---|
+| **C53-FIX-MINCIRC** | `src/random_circuit_sampling.c` `RCS_CONV_MIN_CIRC` | `10000U` | **`100U`** | Tracer conv_check de A à Z depuis circuit 100 (objectif forensique complet) |
+| C53-VERCEL-DEPLOY | Vercel projet `lumvorax-hts-api` | absent/error | Node.js 20.x, @vercel/node, READY | 4 tentatives → 3 erreurs corrigées (ESM, Next.js, 18.x) |
+| C53-VERCEL-SSO-OFF | Vercel project settings | ssoProtection activé | `null` (public) | Endpoint inaccessible sans auth |
+| C53-VERCEL-URL | `tools/vercel_log_streamer.py` | `VERCEL_URL` env vide → skip | `_VERCEL_URL_DEFAULT` fallback hardcodé | URL non définie = streamer inactif |
+| C53-SUPABASE-SCHEMA | `quantum_csv_rows` colonnes | `file_name`, `data`, `row_number` (ABSENTES) | `id`, `run_id`, `row_json` (réelles) | PGRST204 silencieux → 0 uploads |
+| C53-PTMC-FIX | `tools/ptmc_realtime_uploader.py` INSERT | `{"file_name":...,"data":...}` | `{"run_id":...,"row_json":json.dumps({...})}` | Colonnes inexistantes → PGRST204 |
+
+### C53 — Nouvelles métriques forensiques découvertes
+
+| Préfixe métrique | Log forensic | Description |
+|---|---|---|
+| `sign_ratio_measured` | `sign_problem_module_metrics.log` | Ratio signe mesuré (0.0139 = 1/72 pour U/t=14) |
+| `N_eff_sign_corrected` | `sign_problem_module_metrics.log` | N effectif après correction signe (0.241 = 24% samples utiles) |
+| `sign_problem_active` | `sign_problem_module_metrics.log` | Flag 0/1 problème du signe actif |
+| `U_t_ratio` | `sign_problem_module_metrics.log` | Ratio U/t du run (14.0 pour module sign) |
+| `ckpt_step` | `simulate_fs_metrics.log` | Étape checkpoint simulate_fs |
+| `ckpt_energy_eV` | `simulate_fs_metrics.log` | Énergie checkpoint en eV |
+| `ckpt_pairing` | `simulate_fs_metrics.log` | Pairing checkpoint |
+| `ckpt_sign` | `simulate_fs_metrics.log` | Signe checkpoint |
+
+### C53 — Vercel endpoint production
+
+| Paramètre | Valeur |
+|---|---|
+| URL endpoint | `https://lumvorax-hts-ks02ngkt3-vgac4237-8522s-projects.vercel.app/api/lumvorax-logs` |
+| Deployment ID | `dpl_AJ2LEiNdtsgoc2huS9ogsXTN3FBA` |
+| Runtime | `@vercel/node`, Node.js 20.x |
+| Méthodes | POST (ingestion) + GET (lecture 100 derniers logs) |
+| Auth | PUBLIQUE (SSO désactivé) |
+
+### C53 — Supabase table quantum_csv_rows (schéma réel)
+
+| Colonne | Type | Présent |
+|---|---|---|
+| `id` | BIGSERIAL | ✅ |
+| `run_id` | TEXT | ✅ |
+| `row_json` | TEXT/JSONB | ✅ |
+| `file_name` | — | ❌ ABSENTE |
+| `data` | — | ❌ ABSENTE |
+| `row_number` | — | ❌ ABSENTE |
+| `created_at` | — | ❌ ABSENTE |
+
+---
+
+*Mise à jour : Version 3.5 — 2026-04-08 — C52 (7 corrections binaire + tools), C53 (6 corrections Vercel/Supabase/RCS_CONV_MIN_CIRC)*

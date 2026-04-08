@@ -387,8 +387,16 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      * Si xeb_rel_var < XEB_CONVERGENCE_TOL → early exit, n_circuits mis à jour.
      * Source : analysechatgpt91.11.md §C52-FIX-CONV-RM (remplace C51-FIX-EARLYEXIT). */
 #define RCS_CONV_BATCH    500U    /* circuits par batch de test convergence */
-#define RCS_CONV_MIN_CIRC 10000U  /* C52 : minimum 10000 circuits avant early exit
-                                   * (calibré pour convergence running mean ~12000 circuits) */
+#define RCS_CONV_MIN_CIRC 100U    /* C53-FIX-MINCIRC : 100 circuits minimum (était 10000).
+                                   * RAISON DE LA CORRECTION : l'objectif est de TOUT tracer
+                                   * de A à Z depuis le circuit 0. Bloquer conv_check_rl_v_rm
+                                   * avant 10000 circuits empêchait l'early exit précoce ET
+                                   * supprimait les données de convergence sur les 10000 premiers
+                                   * circuits — information critique perdue.
+                                   * 100 circuits = minimum statistique pour une running mean
+                                   * significative (σ_rm = σ_ind/√100 = σ_ind/10 → fiable).
+                                   * Si la convergence est atteinte avant 10000 circuits,
+                                   * tout est tracé forensiquement depuis le circuit 1. */
     uint64_t circ_done   = 0;
     while (circ_done < n_circuits) {
     uint64_t batch_start = circ_done;
@@ -745,9 +753,10 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
 
     circ_done = batch_end;
 
-    /* C52-FIX-CONV-RM : test de convergence après chaque batch ────────────────
+    /* C52-FIX-CONV-RM / C53-FIX-MINCIRC : test de convergence après chaque batch ──
      * Calcul basé sur la variance de la RUNNING MEAN (pas variance individuelle).
-     * Ne teste que si circ_done >= RCS_CONV_MIN_CIRC (au moins 10000 circuits).
+     * Teste dès que circ_done >= RCS_CONV_MIN_CIRC (= 100 circuits depuis C53).
+     * Objectif : TOUT tracer de A à Z — conv_check_rl_v_rm logué depuis circuit 100.
      *
      * FORMULE CORRIGÉE (C52) :
      *   xeb_rl_v_rm = xeb_std_individual / (|F_xeb| × sqrt(circ_done))
