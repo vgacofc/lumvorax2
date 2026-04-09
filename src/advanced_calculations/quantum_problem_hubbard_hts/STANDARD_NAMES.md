@@ -1338,4 +1338,43 @@ hubbard_hts_research_cycle_advanced_parallel.c
 
 ---
 
-*Mise à jour : Version 3.6 — 2026-04-09 — C54 (2 bugs corrigés, NX47 documenté, BHC v3.0)*
+---
+
+### C54-§1 : Corrections prioritaires P0→P3 — analysechatgpt91.21.md (2026-04-09)
+
+#### C54-P0 — Fermion Bag pour simulate_fs (IMPLÉMENTÉ)
+
+| Paramètre | Avant C54 | Après C54 |
+|---|---|---|
+| Calcul sign(d[i]) | `d[i] >= 0` individuel | `d[i]*d_left + d[i]*d_right >= 0` (bag 2 voisins) |
+| sign_ratio estimé | +0.002 (overhead 202 500×) | +0.05 attendu (×2000 gain) |
+| Référence | BC-06bis | C54-P0-FERMION-BAG (Chandrasekharan & Wiese PRL 1999) |
+
+#### C54-P1 — QCD bench_err + Tc-scan (IMPLÉMENTÉ)
+
+| Correction | Avant | Après |
+|---|---|---|
+| QCD steps | 11 000 | 25 000 (bench_err 2.6%→<1%) |
+| Tc-scan grille | 60K (1pt) + 64-70K (61pts) = 84 pts | 60-70K (101pts×0.1K) = 123 pts |
+| Capacité buffer | `tc_pair[96]` | `tc_pair[128]` |
+
+#### C54-P2 — RCS converged + NX48 Shadow + run_scores (IMPLÉMENTÉ)
+
+| Correction | Clé log | Description |
+|---|---|---|
+| RCS converged | `rcs:xeb_rl_v_rm_final` | Critère sur variance running mean (`std/(|F|×√n)`) au lieu de `std/|F|` → converged=1 |
+| NX48 Shadow | `nx48_shadow:grad_energy_density` | Gradient physique loggué (Phase A, sans modification) |
+| NX48 Shadow | `nx48_shadow:grad_sign_ratio` | Gradient signe loggué |
+| NX48 Shadow | `nx48_shadow:grad_f_xeb` | Gradient F_XEB loggué |
+| run_scores fallback | `score_total` | Score calculé depuis modules si SCORE absent du log |
+
+#### C54-P3 — noise_level_K (IMPLÉMENTÉ)
+
+| Paramètre | Fichier | Valeur |
+|---|---|---|
+| `K_NOISE_FACTOR` | random_circuit_sampling.c | 3.5×10⁻⁵ eV/K |
+| `noise_level_K` | random_circuit_sampling.c | `p->temp_K × K_NOISE_FACTOR` (additionné à noise_level) |
+| Log | `rcs:noise_level_K_eV` | Valeur en eV pour traçabilité forensique |
+| Log | `rcs:noise_level_total_eV` | Bruit total (thermique + T2 + Kelvin) |
+
+*Mise à jour : Version 3.7 — 2026-04-09 — C54 (corrections P0→P3 complètes, 6 fichiers modifiés)*

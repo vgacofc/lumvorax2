@@ -372,6 +372,19 @@ nx48c_sample_t nx48_ctrl_build_sample(
     /* Recalcul gradient avec feature [19] mise à jour */
     s.grad_x[NX48F_GRAD_ENERGY] = 0.0;   /* auto-référence → 0 */
 
+    /* C54-P2-NX48-SHADOW : Phase A — logging des gradients physiques (sans modification).
+     * Shadow Mode = observation pure, les paramètres ne sont PAS modifiés ici.
+     * Le NX48 calcule grad_x = ∂feature/∂step via l'historique circulaire (NX47 ARC).
+     * Ces logs permettent de valider la sensibilité du contrôleur avant Phase B (actif).
+     * Source : analysechatgpt91.21.md §PRIORITÉS C54 P2 — NX48 Phase A Shadow Mode. */
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "grad_energy_density", s.grad_x[NX48F_ENERGY_DENSITY]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "grad_sign_ratio",     s.grad_x[NX48F_SIGN_RATIO]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "grad_pairing",        s.grad_x[NX48F_PAIRING]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "grad_bench_err",      s.grad_x[NX48F_BENCH_ERR_LOG]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "grad_f_xeb",          s.grad_x[NX48F_F_XEB_RM]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "x_energy_density",    s.x[NX48F_ENERGY_DENSITY]);
+    FORENSIC_LOG_MODULE_METRIC("nx48_shadow", "x_sign_ratio",        s.x[NX48F_SIGN_RATIO]);
+
     /* Enregistrement dans historique circulaire */
     c->history[c->hist_head] = s;
     c->hist_head = (c->hist_head + 1) % NX48C_HISTORY_LEN;

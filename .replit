@@ -31,12 +31,12 @@ args = "git fetch origin git reset --hard origin/main"
 name = "Quantum Research Cycle C37"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd src/advanced_calculations/quantum_problem_hubbard_hts && bash run_research_cycle.sh"
-
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd src/advanced_calculations/quantum_problem_hubbard_hts && LUMVORAX_CYCLE_ID=C55 C37_AUTORUN_ENABLED=1 bash run_research_cycle.sh"
 
 [[workflows.workflow]]
 name = "Start application"

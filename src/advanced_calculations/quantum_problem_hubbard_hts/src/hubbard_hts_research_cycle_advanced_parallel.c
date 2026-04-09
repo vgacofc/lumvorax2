@@ -2906,15 +2906,19 @@ int main(int argc, char** argv) {
         /* C20-CHI: ajout colonne chi_sc dans le CSV */
         if (tccsv) fprintf(tccsv, "temp_K,E_cold_eV,pairing_cold,dpairing_dT,chi_sc\n");
 
-        /* C48-TC-ULTRA : scan 0.1K entre 64-70K + maintien 0.5K dans 70-79K.
-         * C55 utilisait résolution 0.5K → pic SC-SDW visible mais Tc exact non déterminé.
-         * analysechatgpt91.1.md §C48 item 5 : "pas 0.1K entre 64-70K pour identifier Tc exact".
-         * Grille : 60K (1pt) + 64-70K (61 pts × 0.1K) + 70.5-79K (17 pts × 0.5K) + 5 pts haute-T
-         * Total : 84 points (vs 31 en C55) — capacité tc_pair[96] étendue en conséquence. */
+        /* C54-TC-FULL : scan 0.1K sur toute la zone 60-70K + maintien 0.5K dans 70-79K.
+         * C48 utilisait 60K (1pt) + 64-70K (61 pts) → manquait 60.1-63.9K (39 pts).
+         * analysechatgpt91.21.md §PRIORITÉS C54 P1 : "Tc-scan résolution 0.1K entre 60-70K".
+         * Oscillation chi_sc détectée à 67-68.5K (compétition SC-SDW) nécessite couverture complète.
+         * Grille : 60-70K (101 pts × 0.1K) + 70.5-79K (17 pts × 0.5K) + 5 pts haute-T
+         * Total : 123 points — capacité tc_pair[128] étendue en conséquence.
+         * STANDARD_NAMES.md §C54-TC-FULL : tc:T_K, tc:E_cold_eV, tc:pairing_cold, tc:chi_sc */
         const double tc_temps[] = {
-            /* Zone basse T : 1 pt de référence */
-            60.0,
-            /* C48-TC-ULTRA : zone 64-70K — résolution 0.1K (61 points) */
+            /* C54-TC-FULL : zone 60-70K — résolution 0.1K (101 points) */
+            60.0, 60.1, 60.2, 60.3, 60.4, 60.5, 60.6, 60.7, 60.8, 60.9,
+            61.0, 61.1, 61.2, 61.3, 61.4, 61.5, 61.6, 61.7, 61.8, 61.9,
+            62.0, 62.1, 62.2, 62.3, 62.4, 62.5, 62.6, 62.7, 62.8, 62.9,
+            63.0, 63.1, 63.2, 63.3, 63.4, 63.5, 63.6, 63.7, 63.8, 63.9,
             64.0, 64.1, 64.2, 64.3, 64.4, 64.5, 64.6, 64.7, 64.8, 64.9,
             65.0, 65.1, 65.2, 65.3, 65.4, 65.5, 65.6, 65.7, 65.8, 65.9,
             66.0, 66.1, 66.2, 66.3, 66.4, 66.5, 66.6, 66.7, 66.8, 66.9,
@@ -2928,8 +2932,8 @@ int main(int argc, char** argv) {
             /* Haute T : 5 points de référence BCS/dégradation */
             80.0, 82.0, 85.0, 95.0, 150.0, 300.0
         };
-        const int    n_tc       = 84;   /* 1 + 61 + 17 + 5 (C48-TC-ULTRA) */
-        double tc_pair[96] = {0.0}, tc_E[96] = {0.0}, tc_chi[96] = {0.0};
+        const int    n_tc       = 123;  /* 101 + 17 + 5 (C54-TC-FULL) */
+        double tc_pair[128] = {0.0}, tc_E[128] = {0.0}, tc_chi[128] = {0.0};
 
         int hub_idx = find_problem_index(probs, nprobs, "hubbard_hts_core");
         if (hub_idx < 0) hub_idx = 0;
