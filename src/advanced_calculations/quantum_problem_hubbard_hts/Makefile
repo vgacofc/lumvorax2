@@ -6,7 +6,7 @@ LDLIBS ?= -lm -lpthread -lgomp
 LUM_ROOT := ../../
 LUM_INC  := -I$(LUM_ROOT)
 LUM_SRC  := $(LUM_ROOT)debug/ultra_forensic_logger.c \
-        $(LUM_ROOT)debug/memory_tracker.c
+	$(LUM_ROOT)debug/memory_tracker.c
 
 BIN_MAIN          := hubbard_hts_runner
 BIN_RESEARCH      := hubbard_hts_research_runner
@@ -16,7 +16,7 @@ SRC_MAIN          := src/main.c src/hubbard_hts_module.c
 ED_SRC            := src/exact_diagonalization.c
 WORM_SRC          := src/worm_mc_bosonic.c
 RCS_SRC           := src/random_circuit_sampling.c
-NX48_SRC          := src/nx48_sign_predictor.c
+NX48_SRC          := src/nx48_sign_predictor.c src/nx48_adaptive_controller.c
 SRC_RESEARCH      := src/hubbard_hts_research_cycle.c $(ED_SRC) $(LUM_SRC)
 SRC_RESEARCH_ADV  := src/hubbard_hts_research_cycle_advanced_parallel.c $(ED_SRC) $(WORM_SRC) $(RCS_SRC) $(NX48_SRC) $(LUM_SRC)
 

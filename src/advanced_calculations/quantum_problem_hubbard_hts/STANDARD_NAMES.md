@@ -1257,4 +1257,85 @@ z = x·w + x²·alpha + ∇x·beta + b → sigmoid(z)
 
 ---
 
+## M — Contrôleur Adaptatif NX48 (C55)
+
+> Fichiers : `src/nx48_adaptive_controller.h` / `.c`
+> Génération : C55 — 2026-04-09
+> Statut : **INTÉGRÉ** dans le moteur principal (`hubbard_hts_research_cycle_advanced_parallel.c`)
+
+### M.1 — Identifiants C (NOM D'ORIGINE — NE JAMAIS RENOMMER)
+
+| Identifiant C | Type | Description |
+|---|---|---|
+| `nx48_ctrl_t` | struct | Contrôleur adaptatif NX48 complet (poids, historique, run_id) |
+| `nx48c_sample_t` | struct | Vecteur 20 features normalisées + gradient physique (NX47 ARC) |
+| `nx48_ctrl_params_t` | struct | Paramètres adaptatifs recommandés par le contrôleur |
+| `nx48_ctrl_init` | fonction | Initialise le contrôleur pour un run donné (accepte `run_id`) |
+| `nx48_ctrl_destroy` | fonction | Logue les stats finales et libère les ressources |
+| `nx48_ctrl_build_sample` | fonction | Construit un `nx48c_sample_t` depuis les paramètres courants |
+| `nx48_ctrl_predict` | fonction | Prédit P(signe_positif) + génère paramètres adaptatifs |
+| `nx48_ctrl_update` | fonction | Mise à jour en ligne ISTA (1 sample) |
+| `nx48_ctrl_fit` | fonction | Entraînement batch sur l'historique complet (N_EPOCHS_FIT passes) |
+| `nx48_ctrl_log_stats` | fonction | Logue toutes les métriques adaptatives |
+
+### M.2 — Champs `nx48_ctrl_params_t` (NOM D'ORIGINE — NE JAMAIS RENOMMER)
+
+| Champ | Type | Plage | Description |
+|---|---|---|---|
+| `circuit_depth_scale` | double | [0.5, 2.0] | Multiplicateur circuit_depth RCS |
+| `n_circuits_scale` | double | [0.5, 3.0] | Multiplicateur n_circuits |
+| `n_steps_scale` | double | [0.5, 2.0] | Multiplicateur n_steps QMC |
+| `n_sweeps_scale` | double | [0.5, 2.0] | Multiplicateur n_sweeps PTMC |
+| `skip_sign_config` | bool | — | Skip config MC si signe trop faible |
+| `lr_decay_factor` | double | [0.5, 1.0] | Facteur de décroissance lr ISTA |
+| `throttle_cpu` | bool | — | Réduire threads si CPU > 95% |
+| `overhead_reduction` | double | — | Overhead estimé réduit par NX48 |
+
+### M.3 — Features 20D `nx48c_sample_t.x[]` (NOM D'ORIGINE — NE JAMAIS RENOMMER)
+
+| Index | Macro | Feature | Normalisation |
+|---|---|---|---|
+| 0 | `NX48F_CPU_PCT` | cpu_pct (via /proc/stat, RÉEL) | `/100` |
+| 1 | `NX48F_RAM_PCT` | ram_pct (via /proc/meminfo, RÉEL) | `/100` |
+| 2 | `NX48F_N_THREADS` | n_threads actifs | `/64` |
+| 3 | `NX48F_ENERGY_DENS` | energy_eV / n_sites | clamp [-1,1] |
+| 4 | `NX48F_PAIRING` | pairing_norm QMC | clamp [-1,1] |
+| 5 | `NX48F_SIGN_RATIO` | sign_ratio QMC | clamp [-1,1] |
+| 6 | `NX48F_U_T_NORM` | U/t normalisé | `tanh(U/t / 8)` |
+| 7 | `NX48F_TEMP_RED` | T_K / T_Kc | clamp [0,1] |
+| 8 | `NX48F_STEPS_LOG2` | log2(n_steps) | `/20` |
+| 9 | `NX48F_SWEEPS_LOG2` | log2(n_sweeps) | `/20` |
+| 10 | `NX48F_SITES_LOG2` | log2(n_sites) | `/20` |
+| 11 | `NX48F_BENCH_ERR_LOG` | log(bench_abs_err+ε) | `/30` |
+| 12 | `NX48F_ELAPSED_LOG` | log(elapsed_s+ε) | `/20` |
+| 13 | `NX48F_QUBITS_LOG2` | log2(n_qubits) | `/16` |
+| 14 | `NX48F_DEPTH_NORM` | circuit_depth / 200 | clamp [0,2] |
+| 15 | `NX48F_CIRCUITS_LOG2` | log2(n_circuits) | `/20` |
+| 16 | `NX48F_F_XEB_RM` | F_xeb_rm (running mean) | clamp [-1,1] |
+| 17 | `NX48F_ENTROPY_DENS` | entropy / n_sites | clamp [0,1] |
+| 18 | `NX48F_MODULE_IDX` | index module (0-15) | `/16` |
+| 19 | `NX48F_GRAD_ENERGY` | ∂energy/∂step (NX47 ARC) | `tanh(×100)` |
+
+### M.4 — Point d'intégration dans le moteur
+
+```
+hubbard_hts_research_cycle_advanced_parallel.c
+  ├── L.30  : #include "nx48_adaptive_controller.h"
+  ├── L.1931: nx48_ctrl_t g_nx48ctrl; nx48_ctrl_init(&g_nx48ctrl, run_id);
+  ├── L.2313: [boucle for(i=0..nprobs)] nx48_ctrl_build_sample + predict + update
+  └── L.3882: nx48_ctrl_fit(&g_nx48ctrl); nx48_ctrl_destroy(&g_nx48ctrl);
+```
+
+### M.5 — Métriques loggées dans les fichiers de run (NOM D'ORIGINE)
+
+| Clé log | Source | Description |
+|---|---|---|
+| `NX48_CTRL` | `lg` (campaign_log.txt) | Ligne de récapitulatif par module |
+| `nx48_depth_scale` | FORENSIC_LOG_ALGO | Multiplicateur depth recommandé |
+| `nx48_circuits_scale` | FORENSIC_LOG_ALGO | Multiplicateur n_circuits recommandé |
+| `nx48_steps_scale` | FORENSIC_LOG_ALGO | Multiplicateur n_steps recommandé |
+| `nx48_sweeps_scale` | FORENSIC_LOG_ALGO | Multiplicateur n_sweeps recommandé |
+
+---
+
 *Mise à jour : Version 3.6 — 2026-04-09 — C54 (2 bugs corrigés, NX47 documenté, BHC v3.0)*

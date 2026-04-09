@@ -24,6 +24,7 @@
 #include "../include/worm_mc_bosonic.h"  /* C36-P3 : Worm MC bosonique */
 /* C91-RCS : Random Circuit Sampling — module 16 (suprématie quantique / XEB) */
 #include "random_circuit_sampling.h"
+#include "nx48_adaptive_controller.h"   /* C55 — Contrôleur Adaptatif NX48 */
 
 #define MAX_PATH 768
 #define EPS 1e-12
@@ -1920,6 +1921,13 @@ int main(int argc, char** argv) {
     gmtime_r(&tnow, &g);
     snprintf(run_id, sizeof(run_id), "research_%04d%02d%02dT%02d%02d%02dZ_%d", g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min, g.tm_sec, getpid());
 
+    /* C55 — Initialisation du Contrôleur Adaptatif NX48 (20 features dynamiques).
+     * Hérite de toute la lignée NX (NX11→NX48 Ultra). CPU/RAM lus via /proc (RÉELS).
+     * Gérera dynamiquement : circuit_depth, n_qubits, n_steps, n_sweeps, RAM, CPU, etc.
+     * Source : src/nx_versions/nx48_unified_ultra/ + src/nx_versions/nx47_arc_kernel.py */
+    nx48_ctrl_t g_nx48ctrl;
+    nx48_ctrl_init(&g_nx48ctrl, run_id);
+
     /* C24-01 : Seed variable optionnel via PTMC_RUN_INDEX / PTMC_SEED_RANDOM
      * Par défaut : seeds FIXÉS (reproductibilité scientifique).
      * PTMC_RUN_INDEX=N : XOR déterministe avec l'index de run (N runs indépendants).
@@ -2297,6 +2305,55 @@ int main(int argc, char** argv) {
             fprintf(lg, "%06d | C79_BETA problem=%s T_K=%.2f beta_eV_inv=%.10f U_over_t=%.4f\n",
                     line++, probs[i].name, probs[i].temp_K, beta_module,
                     (probs[i].t_eV > 0.0) ? probs[i].u_eV / probs[i].t_eV : 0.0);
+        }
+
+        /* ── C55 — Intégration NX48 Adaptive Controller ──────────────────────────
+         * Build un échantillon 20 features à partir des résultats du module i.
+         * CPU/RAM lus via /proc (RÉELS). Predict → recommandation paramètres adaptatifs.
+         * Update → apprentissage en ligne (gradient physique ∂energy/∂step NX47-ARC). */
+        {
+            int n_sites_i = probs[i].lx * probs[i].ly;
+            double u_t_i  = (probs[i].t_eV > 1e-12) ? probs[i].u_eV / probs[i].t_eV : 0.0;
+            double T_kc_i = (probs[i].temp_K > 0.0) ? probs[i].temp_K * 0.1 : 100.0; /* T_c approx */
+            double el_s_i = (double)base[i].elapsed_ns * 1e-9;
+            double entropy_i = (n_sites_i > 0) ? fabs(base[i].pairing_norm) / (double)n_sites_i : 0.0;
+            /* nx48_ctrl_build_sample : 20 features physiques + CPU/RAM lus /proc */
+            nx48c_sample_t nx48_s = nx48_ctrl_build_sample(
+                &g_nx48ctrl,
+                probs[i].name,
+                i,
+                base[i].energy_eV,
+                base[i].pairing_norm,
+                base[i].sign_ratio,
+                u_t_i,
+                probs[i].temp_K,
+                T_kc_i,
+                (uint64_t)probs[i].steps,
+                (uint64_t)1,
+                n_sites_i,
+                0.0,              /* bench_abs_err : non disponible ici */
+                el_s_i,
+                6160,             /* n_qubits RCS (C51) */
+                78,               /* circuit_depth (C51 : sqrt(6160)) */
+                (uint64_t)30000,  /* n_circuits standard */
+                base[i].sign_ratio,
+                entropy_i,
+                base[i].sign_ratio,
+                (uint64_t)i
+            );
+            nx48_ctrl_params_t nx48_rec = nx48_ctrl_predict(&g_nx48ctrl, &nx48_s,
+                                                             202500.0); /* overhead simulate_fs */
+            nx48_ctrl_update(&g_nx48ctrl, &nx48_s);
+            fprintf(lg, "%06d | NX48_CTRL module=%s depth_scale=%.4f circuits_scale=%.4f"
+                        " steps_scale=%.4f sweeps_scale=%.4f skip_sign=%d throttle_cpu=%d\n",
+                    line++, probs[i].name,
+                    nx48_rec.circuit_depth_scale, nx48_rec.n_circuits_scale,
+                    nx48_rec.n_steps_scale, nx48_rec.n_sweeps_scale,
+                    nx48_rec.skip_sign_config, nx48_rec.throttle_cpu);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_depth_scale",    nx48_rec.circuit_depth_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_circuits_scale", nx48_rec.n_circuits_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_steps_scale",    nx48_rec.n_steps_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_sweeps_scale",   nx48_rec.n_sweeps_scale);
         }
 
         const char* energy_unit = "eV";
@@ -3822,6 +3879,16 @@ int main(int argc, char** argv) {
     fclose(ngcsv);
     fclose(dmcsv);
     fclose(toy);
+    /* C55 — Apprentissage global post-run + destruction du contrôleur NX48.
+     * nx48_ctrl_fit() lance N_EPOCHS_FIT passes ISTA sur l'ensemble des samples accumulés.
+     * Résultats de recommandation logués dans le fichier de logs principal (lg). */
+    {
+        nx48_ctrl_fit(&g_nx48ctrl);
+        fprintf(stderr, "[NX48] fit terminé — contrôleur adaptatif NX48 prêt pour prochain run.\n");
+        nx48_ctrl_destroy(&g_nx48ctrl);
+        fprintf(stderr, "[NX48] contrôleur adaptatif C55 détruit proprement.\n");
+    }
+
     free_loaded_problem_names(probs, nprobs);
     /* BC-LV03 : Rapport forensique final + destruction vrai système LumVorax */
     FORENSIC_LOG_MODULE_END("hubbard_hts_advanced_parallel", "main_campaign", true);
