@@ -100,6 +100,16 @@ fi
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] run_research_cycle start stamp=${STAMP_UTC}"
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}"
 
+# ── NX48-SUPERMEMORY-INIT : mémoire persistante du neurone NX48 ──────────────
+# Récupère les apprentissages des sessions précédentes depuis Supermemory.
+# Le cache local (.nx48_memory_cache.json) NE DOIT JAMAIS ÊTRE SUPPRIMÉ.
+# Si le cache local est absent, Supermemory est la source de vérité inter-sessions.
+export LUMVORAX_CYCLE_ID="${LUMVORAX_CYCLE_ID:-C54}"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Initialisation mémoire persistante (run=${STAMP_UTC}, cycle=${LUMVORAX_CYCLE_ID})"
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --init "${STAMP_UTC}" 2>&1 | sed "s/^/[NX48-MEM] /" || true
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --seed 2>&1 | sed "s/^/[NX48-SEED] /" || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Mémoire initialisée"
+
 # ── C60-SUPABASE-DOWNLOAD : récupération des fichiers depuis Supabase au démarrage ──
 # Garantit que chaque nouvelle session Replit dispose des benchmarks et du dernier run
 # même si LFS est désactivé et que les fichiers locaux ont disparu après un push.
@@ -694,6 +704,11 @@ fi
 print_progress "supabase upload + nettoyage local"
 
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] ===== run_research_cycle.sh TERMINÉ AVEC SUCCÈS ====="
+
+# ── NX48-SUPERMEMORY-END : persistance du résumé de run dans Supermemory ─────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Envoi résumé final run=${STAMP_UTC} vers Supermemory..."
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --init "${STAMP_UTC}" 2>&1 | sed "s/^/[NX48-END] /" || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Mémoire persistante mise à jour — inter-sessions conservée"
 
 # ── GUARD : Recréation automatique après run complet ─────────────────────────
 # Empêche le relancement automatique non voulu au prochain démarrage Replit.

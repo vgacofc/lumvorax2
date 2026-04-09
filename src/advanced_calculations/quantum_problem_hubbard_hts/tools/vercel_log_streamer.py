@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 vercel_log_streamer.py — Streaming logs LumVorax vers Vercel en temps réel
-Conforme STANDARD_NAMES.md v3.4 — Cycle C50
+Conforme STANDARD_NAMES.md v3.4 — Cycle C54+ (label dynamique via LUMVORAX_CYCLE_ID)
 
 Architecture :
   - Surveille les nouveaux fichiers CSV Lumvorax (rotation toutes les 20 MB)
@@ -70,6 +70,23 @@ else:
 SUPABASE_URL      = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_URL2     = os.getenv("SUPABASE_URL2", "").rstrip("/")
 SUPABASE_KEY      = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_ANON_KEY", ""))
+
+# C54-FIX-CYCLE-LABEL : Label cycle dynamique — lit LUMVORAX_CYCLE_ID depuis l'env.
+# Si absent, dérive depuis le répertoire de run courant ou fallback "C54".
+# NE PLUS HARDCODER "C50", "C52" etc. dans les payloads.
+def _resolve_cycle_label() -> str:
+    env_label = os.getenv("LUMVORAX_CYCLE_ID", "").strip()
+    if env_label:
+        return env_label
+    runs = sorted(Path(__file__).resolve().parent.parent.glob("results/research_*"), reverse=True)
+    if runs:
+        import re
+        m = re.search(r'research_(\d{8}T\d{6}Z)_(\d+)', runs[0].name)
+        if m:
+            return f"C54-{m.group(1)}"
+    return "C54"
+
+CYCLE_LABEL = _resolve_cycle_label()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 RESULTS_DIR = BASE_DIR / "results"
@@ -155,7 +172,7 @@ def send_to_vercel(run_id: str, events: list[dict]) -> bool:
 
     payload = {
         "run_id": run_id,
-        "cycle": "C52",
+        "cycle": CYCLE_LABEL,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "n_events": len(events),
         "events": events,
@@ -202,7 +219,7 @@ def send_to_supabase(run_id: str, events: list[dict]) -> bool:
     for ev in events:
         rows.append({
             "run_id": run_id,
-            "cycle": "C50",
+            "cycle": CYCLE_LABEL,
             "timestamp_ns": ev["ts_ns"],
             "module": ev["module"],
             "metric": ev["metric"],
