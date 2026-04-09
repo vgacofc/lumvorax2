@@ -1195,4 +1195,66 @@ double p_meas_global = p_meas_acc / (n_circ_d * (double)n_qubits);
 
 ---
 
-*Mise à jour : Version 3.5 — 2026-04-08 — C52 (7 corrections binaire + tools), C53 (6 corrections Vercel/Supabase/RCS_CONV_MIN_CIRC)*
+## SECTION K — CORRECTIONS C54 (2026-04-09)
+
+### K.1 — Bugs identifiés et corrigés en C54
+
+| ID Correction | Fichier | Bug | Fix |
+|---|---|---|---|
+| C54-FIX-VERCEL-SCHEME | vercel_log_streamer.py | `VERCEL_URL` sans `https://` → 100% échecs | Ajout auto `https://` si manquant |
+| C54-FIX-PTMC-LOG-200 | ptmc_realtime_uploader.py | Erreur 23502 tronquée à 60 chars (impossible à diagnostiquer) | Augmentation à 200 chars |
+
+### K.2 — Neurone NX47 — Modèle propriétaire LumVorax
+
+**Version la plus avancée** : `RAPPORT-VESUVIUS/notebook-version-NX47-V144.3/nx47-vesu-kernel-new-v144-3.py`
+(98KB Python pur, 2042 lignes, 2026-02)
+
+**Architecture NX47AtomNeuron** :
+```
+z = x·w + x²·alpha + ∇x·beta + b → sigmoid(z)
+```
+- `w` : poids linéaires
+- `alpha` : poids quadratiques (non-linéarité sans couches cachées)
+- `beta` : poids de gradient (∇x — variations de phase → signe QMC)
+- Apprentissage : **fit_prox** (ISTA proximal, L1+L2) — sans rétropropagation
+
+**"Sans système de points"** = sans backpropagation — gradient proximal local direct
+
+**Usage prévu dans LumVorax** :
+- Prédire P(signe_positif | features_QMC) avant le calcul Monte Carlo
+- Réduire l'overhead de simulate_fs : 202500× → ~1000×
+- Features : energy_density, pairing, U_t, temperature, grad_energy
+
+### K.3 — Variables d'environnement Vercel (état réel)
+
+| Variable | Valeur actuelle | Valeur correcte | Action |
+|---|---|---|---|
+| `VERCEL_URL` | `vercel.com/vgac4237-8522s-projects` (INCORRECT) | — | Supprimer ou corriger |
+| `VERCEL_TOKEN` | `vcp_36e7...` | Valide | Garder |
+| URL production | Hardcodée dans le code | `https://lumvorax-hts-ks02ngkt3-vgac4237-8522s-projects.vercel.app` | OK si VERCEL_URL supprimée |
+
+**Recommandation** : Supprimer `VERCEL_URL` des secrets Replit → le code utilisera le défaut correct.
+
+### K.4 — Supabase 23502 (en investigation)
+
+**Erreur** : `{"code":"23502","details":"Failing row contains (ID, resea..."}` sur table `quantum_csv_rows`
+**Colonnes** : `id (BIGSERIAL), run_id (TEXT), row_json (TEXT/JSONB NOT NULL)`
+**Cause probable** : `row_json` NULL ou colonne supplémentaire NOT NULL non documentée
+**État** : En investigation → message complet disponible après C54-FIX-PTMC-LOG-200
+
+### K.5 — BHC.md v3.0 mis à jour
+
+| Section BHC | Contenu |
+|---|---|
+| Section 2 | Benchpress IBM/Qiskit (pas de GPU) |
+| Section 3 | QMC state-of-art + gaps (CPU uniquement) |
+| Section 4 | **NX47 AtomNeuron** — architecture + intégration QMC |
+| Section 5 | RCS vs Google/IBM + C53-FIX-MINCIRC |
+| Section 6 | Problème du signe (16 modules) |
+| Section 7 | **Bugs C54** (Vercel scheme + 23502) |
+| Section 8 | État plateformes C54 |
+| Section 9 | Score global 75% + feuille route |
+
+---
+
+*Mise à jour : Version 3.6 — 2026-04-09 — C54 (2 bugs corrigés, NX47 documenté, BHC v3.0)*

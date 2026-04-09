@@ -154,7 +154,7 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
                             batch = []
                             continue
                         else:
-                            print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:60]}", flush=True)
+                            print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:200]}", flush=True)
                     rows_inserted += len(batch)
                     batch = []
                     time.sleep(0.03)
@@ -166,7 +166,7 @@ def upload_csv_rows(run_id: str, rel: str, path: Path) -> bool:
                     _table_unavailable.add(table)
                     print(f"[PTMC-WATCHER] INFO table '{table}' absente du schéma Supabase — uploads désactivés pour cette table", flush=True)
                 else:
-                    print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:60]}", flush=True)
+                    print(f"[PTMC-WATCHER] batch WARN {r.status_code}: {r.text[:200]}", flush=True)
             rows_inserted += len(batch)
         elif batch:
             rows_inserted += len(batch)

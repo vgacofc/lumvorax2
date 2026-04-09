@@ -53,6 +53,10 @@ VERCEL_API_KEY    = os.getenv("VERCEL_TOKEN", os.getenv("VERCEL_API_KEY", "")).s
 # Si VERCEL_URL n'est pas défini dans l'env, on utilise l'URL déployée en dur comme fallback.
 _VERCEL_URL_DEFAULT = "https://lumvorax-hts-ks02ngkt3-vgac4237-8522s-projects.vercel.app"
 VERCEL_URL_BASE   = os.getenv("VERCEL_URL", _VERCEL_URL_DEFAULT).strip()
+# C54-FIX-VERCEL-SCHEME : forcer https:// si VERCEL_URL ne commence pas par http
+# Bug: VERCEL_URL="vercel.com/..." (sans scheme) → "Invalid URL 'vercel.com/...': No scheme supplied"
+if VERCEL_URL_BASE and not VERCEL_URL_BASE.startswith("http"):
+    VERCEL_URL_BASE = "https://" + VERCEL_URL_BASE
 SUPABASE_URL      = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_URL2     = os.getenv("SUPABASE_URL2", "").rstrip("/")
 SUPABASE_KEY      = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_ANON_KEY", ""))
