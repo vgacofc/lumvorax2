@@ -50,13 +50,23 @@ log = logging.getLogger("vercel_streamer")
 
 VERCEL_API_KEY    = os.getenv("VERCEL_TOKEN", os.getenv("VERCEL_API_KEY", "")).strip()
 # C53-FIX-VERCEL-URL : URL de production déployée (Node.js 20.x, @vercel/node, ID dpl_AJ2LEiNdtsgoc2huS9ogsXTN3FBA)
-# Si VERCEL_URL n'est pas défini dans l'env, on utilise l'URL déployée en dur comme fallback.
+# Endpoint de production LumVorax — seule URL valide pour l'API /api/lumvorax-logs
 _VERCEL_URL_DEFAULT = "https://lumvorax-hts-ks02ngkt3-vgac4237-8522s-projects.vercel.app"
-VERCEL_URL_BASE   = os.getenv("VERCEL_URL", _VERCEL_URL_DEFAULT).strip()
-# C54-FIX-VERCEL-SCHEME : forcer https:// si VERCEL_URL ne commence pas par http
-# Bug: VERCEL_URL="vercel.com/..." (sans scheme) → "Invalid URL 'vercel.com/...': No scheme supplied"
-if VERCEL_URL_BASE and not VERCEL_URL_BASE.startswith("http"):
-    VERCEL_URL_BASE = "https://" + VERCEL_URL_BASE
+# C55-FIX-VERCEL-URL : ignorer VERCEL_URL si ce n'est pas l'hostname de l'API LumVorax.
+# Bug C54 : VERCEL_URL="vercel.com/vgac4237-8522s-projects" overridait le défaut correct
+#   → après ajout https:// : "https://vercel.com/vgac4237-8522s-projects/api/lumvorax-logs"
+#   → c'est une page projet Vercel, PAS l'endpoint API → 100% échecs
+# Solution C55 : utiliser VERCEL_URL seulement si il contient "lumvorax-hts" (l'hostname prod)
+_env_url = os.getenv("VERCEL_URL", "").strip()
+if _env_url:
+    if not _env_url.startswith("http"):
+        _env_url = "https://" + _env_url
+    if "lumvorax-hts" in _env_url:
+        VERCEL_URL_BASE = _env_url      # URL env valide → on l'utilise
+    else:
+        VERCEL_URL_BASE = _VERCEL_URL_DEFAULT   # URL env invalide → on ignore, fallback prod
+else:
+    VERCEL_URL_BASE = _VERCEL_URL_DEFAULT       # VERCEL_URL absent → fallback prod
 SUPABASE_URL      = os.getenv("SUPABASE_URL", "").rstrip("/")
 SUPABASE_URL2     = os.getenv("SUPABASE_URL2", "").rstrip("/")
 SUPABASE_KEY      = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_ANON_KEY", ""))

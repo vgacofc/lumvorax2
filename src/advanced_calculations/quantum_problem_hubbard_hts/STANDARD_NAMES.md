@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 3.4 — 2026-04-07 (C49 : BUG XEB-plateau-div2, n_circuits=30000, log_p/qubit, mott_early_exit log)
+**Version :** 3.7 — 2026-04-09 (C55 : NX48 module C natif, C55-FIX-VERCEL-URL, upload run_scores/module_results_rcs)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
