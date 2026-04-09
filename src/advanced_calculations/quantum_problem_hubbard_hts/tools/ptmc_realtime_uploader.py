@@ -82,14 +82,17 @@ def rest(endpoint: str) -> str:
 
 
 def _is_pgrst204(resp) -> bool:
-    """Retourne True si la réponse est une erreur PGRST204 (colonne/table absente du schéma)."""
+    """Retourne True si la réponse est une erreur de schéma (PGRST204 ou 23502 NOT NULL).
+    C55-FIX-23502 : code 23502 = NOT NULL violation → table schema incompatible,
+    on désactive les uploads vers cette table pour stopper le spam de WARN 400."""
     if resp.status_code != 400:
         return False
     try:
         body = resp.json()
-        return body.get("code") == "PGRST204"
+        code = body.get("code", "")
+        return code in ("PGRST204", "23502")
     except Exception:
-        return "PGRST204" in resp.text
+        return "PGRST204" in resp.text or "23502" in resp.text
 
 
 def sha256_file(path: Path) -> str:
