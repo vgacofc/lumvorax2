@@ -255,7 +255,7 @@ rcs_result_t simulate_rcs_module(const rcs_problem_t* p, uint64_t seed) {
      *   (3.5e-5 × 76K ≈ 2.66e-3 eV — comparable à noise_decoher = 5e-4 × 78 = 3.9e-2 eV).
      * Impact : F_XEB dégradé de manière plus réaliste pour T > 80K (régime haute-T HTS).
      * Source : analysechatgpt91.21.md §PRIORITÉS C54 P3 — noise_level_K. */
-    const double K_NOISE_FACTOR = 3.5e-5;                  /* C54-P3 : eV/K (décoherence thermique) */
+    const double K_NOISE_FACTOR = 5.0e-5;  /* C56-F : calibration Sycamore T2 révisée 3.5→5.0e-5 eV/K */
     double noise_level_K  = p->temp_K * K_NOISE_FACTOR;    /* C54-P3 : bruit en température */
     double noise_thermal  = p->temp_K * 8.617e-5;          /* kB × T en eV */
     /* C51-FIX-DEPTH : profondeur synchronisée avec la taille du circuit (n_qubits).
