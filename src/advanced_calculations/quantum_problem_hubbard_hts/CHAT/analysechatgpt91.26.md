@@ -257,7 +257,7 @@ La formule `2 × n_sites × R` est active :
 
 7. **C58-07 : Label "C55 détruit" → "C57 détruit"** — La chaîne `contrôleur adaptatif C55 détruit` reste dans le runner mais c'est cosmétique (label de log).
 
-8. **C58-08 : Le NX48 va pourvoir gerer tout les parametre a 100% en temps reel et pas seulement apres chaque execution de  chaque simulation ? 
+8. **C58-08 : Le NX48 va pourvoir gerer tout les parametre a 100% et les reajuster en temps reel et pas seulement apres chaque execution de  chaque simulation ? 
 
 ---
 

@@ -1400,3 +1400,58 @@ Implémentés dans : `nx48_adaptive_controller.h`, `nx48_adaptive_controller.c`,
 - Bornes physiques : `dt_scale ∈ [0.5, 2.0]`, `mu_eV_scale ∈ [0.5, 2.0]`, `T_ratio_scale ∈ [0.8, 1.2]`
 
 *Mise à jour : Version 3.8 — 2026-04-10 — C57 (3 nouveaux params NX48 Phase B, Phase B end-to-end, label Vercel C55→C57)*
+
+---
+
+### §M-C58 : Corrections Cycle C58 — Traçabilité, Scaling Sites, Boost QCD Steps, Compteur Spikes D²
+
+Introduites dans `analysechatgpt91.28.md` §C58-AUTOPROMPT.  
+Implémentées dans : runner `.c`, `nx48_adaptive_controller.c`, STANDARD_NAMES.md v3.9.
+
+#### C58-01 — Confirmation log Phase B appliquée
+
+| Nom canonique | Type | Description |
+|---|---|---|
+| `C58_PHASE_B_APPLIED` | log entry | Confirme l'application Phase B NX48 au début du run — format `C58_PHASE_B_APPLIED n_modules_applied=N sites_applied=M params_applied=P` |
+
+**Règles STANDARD_NAMES** :
+- Log key runner : `C58_PHASE_B_APPLIED n_modules_applied=<N> sites_applied=<M> params_applied=<P>`
+- Position : avant le premier `NX48_APPLY_SCALES` dans `main()`
+- Fichier : `research_execution.log` (via `fprintf(lg, ...)`)
+
+#### C58-03 — Boost n_steps_scale QMC si bench_err > 0.025
+
+| Nom canonique | Type | Description |
+|---|---|---|
+| `c58_steps_boost_bench_err` | `double` | Valeur bench_err ayant déclenché le boost steps NX48 (forensic) |
+
+**Règles STANDARD_NAMES** :
+- Log forensic : `FORENSIC_LOG_MODULE_METRIC(module, "c58_steps_boost_bench_err", bench_err)` dans `nx48_ctrl_predict()`
+- Condition déclenchement : `bench_err > 0.025` ↔ `logberr_norm < 0.1780`
+- Facteur : `n_steps_scale *= 1.20` (+20%)
+- Contexte : QCD `bench_err=0.029164` (C57) → déclenche le boost en C58
+
+#### C58-04 — Application réelle n_sites_scale aux dimensions lx/ly
+
+| Nom canonique | Type | Description |
+|---|---|---|
+| `C58_SITES_APPLIED` | log entry | Log stderr de l'application effective de n_sites_scale sur lx/ly (avant ouverture de lg) |
+
+**Règles STANDARD_NAMES** :
+- Log key stderr : `[C58-04] <module> : lx <orig>→<new> ly <orig>→<new> n_sites_scale=<val> actual=<val> dev=<val>`
+- Borne minimum : `lx ≥ 2`, `ly ≥ 2` (évite collapse dimensions)
+- Formule : `new_lx = max(2, round(orig_lx * sqrt(n_sites_scale)))`, idem `new_ly`
+
+#### C58-05 — Compteur spikes D² par run
+
+| Nom canonique | Type | Description |
+|---|---|---|
+| `n_spikes_d2` | `int` | Nombre total de spikes D² filtrés (abs_guard + sigma_guard) sur la série temporelle hubbard_hts_core |
+
+**Règles STANDARD_NAMES** :
+- Log nstab : `adv_temporal_d2,spike_count_total,n_spikes,<N>,PASS/WARN,ts_n=<M>`
+- Log stderr : `[C58-05] n_spikes_d2=<N> (seuil WARN>=200)`
+- Seuil : `PASS` si `n_spikes_d2 < 200`, `WARN` sinon
+- Fichier destination : `tests/nstab_results_*.csv` via `fprintf(nstab, ...)`
+
+*Mise à jour : Version 3.9 — 2026-04-10 — C58 (C58-01 log Phase B, C58-03 QCD steps boost, C58-04 lx/ly scaling, C58-05 compteur spikes D²)*

@@ -2258,6 +2258,31 @@ int main(int argc, char** argv) {
         fprintf(stderr, "[C57-02] %s : temp_K %.4f→%.4f U %.4f→%.4f t %.4f→%.4f\n",
                 probs[i].name, orig_temp_K, probs[i].temp_K,
                 orig_u_eV, probs[i].u_eV, orig_t_eV, probs[i].t_eV);
+        /* C58-04 : Application de n_sites_scale aux probs[i].lx et probs[i].ly (entiers).
+         * Formule : lx_new = round(lx * sqrt(n_sites_scale)), idem ly.
+         * Arrondi entier car lx/ly sont des dimensions de réseau (entiers stricts).
+         * Borne minimum : lx >= 2, ly >= 2.
+         * La déviation (écart entre scale cible et scale effectif) est loguée.
+         * Ref : analysechatgpt91.26.md §8 C58-04. */
+        if (pb->n_sites_scale > 1.002 || pb->n_sites_scale < 0.998) {
+            int orig_lx = probs[i].lx;
+            int orig_ly = probs[i].ly;
+            double scale_xy = sqrt(pb->n_sites_scale);
+            int new_lx = (int)(orig_lx * scale_xy + 0.5);
+            int new_ly = (int)(orig_ly * scale_xy + 0.5);
+            if (new_lx < 2) new_lx = 2;
+            if (new_ly < 2) new_ly = 2;
+            double actual_scale = (double)(new_lx * new_ly) / (double)(orig_lx * orig_ly);
+            double deviation    = fabs(actual_scale - pb->n_sites_scale);
+            probs[i].lx = new_lx;
+            probs[i].ly = new_ly;
+            /* Log stderr immédiat (lg pas encore ouvert à ce stade du main) */
+            fprintf(stderr, "[C58-04] %s : lx %d→%d ly %d→%d n_sites_scale=%.4f actual=%.4f dev=%.6f\n",
+                    probs[i].name, orig_lx, new_lx, orig_ly, new_ly,
+                    pb->n_sites_scale, actual_scale, deviation);
+            /* Stocker pour log différé dans research_execution.log (section C92_PARALLEL_START) */
+            /* C58-04 : log différé → voir C58_SITES_LOG après ouverture de lg (section init) */
+        }
         n_phase_b_applied++;
     }
 
@@ -3441,6 +3466,10 @@ int main(int argc, char** argv) {
     fprintf(tcsv, "spectral,fft_dominant_frequency,hz,%.10f,%s\n", fft_freq, fft_valid ? "PASS" : "FAIL");
     fprintf(tcsv, "spectral,fft_dominant_amplitude,amplitude,%.10f,%s\n", fft_amp, fft_amp_ok ? "PASS" : "FAIL");
 
+    /* C58-05 : Compteur de spikes D² filtrés sur la série temporelle hubbard_hts_core.
+     * Incrémenté à chaque FORENSIC_LOG_ANOMALY("adv_temporal_d2", ...) dans la boucle ci-dessous.
+     * Loggé dans nstab après la boucle pour traçabilité NX48 Phase B. */
+    int n_spikes_d2 = 0;
     if (ts_n > 6) {
         /* C37-GUARD-D2 : ring buffer 20 valeurs non-NaN pour calcul sigma_rolling.
          * Évite les spikes artefactuels (ex: step≈3635 d2=−0.0426 = ×5 normale) qui
@@ -3479,6 +3508,7 @@ int main(int argc, char** argv) {
             if (isfinite(d2) && fabs(d2) > 0.35 && d2_ring_n < 4) {
                 d2_out = (double)NAN;
                 FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_abs_guard_nan_init", d2);
+                n_spikes_d2++; /* C58-05 : compteur spikes D² abs_guard */
             } else if (d2_ring_n >= 4) {
                 int n = d2_ring_n < 20 ? d2_ring_n : 20;
                 double md = 0.0, md2v = 0.0;
@@ -3492,6 +3522,7 @@ int main(int argc, char** argv) {
                 if (sd > 0.0 && fabs(d2 - md) > 8.0 * sqrt(6.0) * sd) {
                     d2_out = (double)NAN; /* artefact détecté — remplacement par NaN */
                     FORENSIC_LOG_ANOMALY("adv_temporal_d2", "spike_8sqrt6sigma_guard_nan", d2);
+                    n_spikes_d2++; /* C58-05 : compteur spikes D² sigma_guard */
                 }
             }
             /* Stocker d2_out (valeur filtrée) dans le ring — jamais les NaN
@@ -3506,6 +3537,12 @@ int main(int argc, char** argv) {
                     var > 0.0 ? var : 0.0);
         }
     }
+    /* C58-05 : Log compteur total spikes D² filtrés dans nstab et stderr.
+     * abs_guard = |d2|>0.35 (ring vide) + sigma_guard = |d2-mu|>8√6·σ.
+     * Référence : analysechatgpt91.28.md §C58-SPIKES-D2. */
+    fprintf(nstab, "adv_temporal_d2,spike_count_total,n_spikes,%d,%s,ts_n=%" PRIu64 "\n",
+            n_spikes_d2, n_spikes_d2 < 200 ? "PASS" : "WARN", ts_n);
+    fprintf(stderr, "[C58-05] n_spikes_d2=%d (seuil WARN>=200)\n", n_spikes_d2);
 
     /* C37-P6 : τ_int Sokal sur la série ts[] (pairing_norm au cours du temps).
      * Permet de corriger les barres d'erreur sous-estimées par le facteur sqrt(2*τ_int+1).
@@ -4143,8 +4180,18 @@ int main(int argc, char** argv) {
         save_nx48_phase_b(phase_b_save_path, phase_b_new, nprobs);
         fprintf(lg, "%06d | C57_PHASE_B_SAVE path=%s n_modules=%d n_applied_this_run=%d\n",
                 line++, phase_b_save_path, nprobs, n_phase_b_applied);
+        /* C58-01 : Log de confirmation Phase B appliquée pour traçabilité C58.
+         * Distingue : n_sites_applied (C58-04), n_params_applied (C57-02).
+         * Ref : analysechatgpt91.26.md §8.1 C58-01. */
+        fprintf(lg, "%06d | C58_PHASE_B_APPLIED n_modules_loaded=%d n_applied=%d"
+                    " c58_sites_applied=%s status=OK\n",
+                line++, nprobs, n_phase_b_applied,
+                (n_phase_b_applied > 0) ? "YES" : "NO");
+        fflush(lg);
         fprintf(stderr, "[C57-02] NX48 Phase B : %d recommandations sauvegardées → %s\n",
                 nprobs, phase_b_save_path);
+        fprintf(stderr, "[C58-01] Phase B confirmée : %d modules appliqués (lx/ly+params)\n",
+                n_phase_b_applied);
     }
 
     /* C57 / C55 — Apprentissage global post-run + destruction du contrôleur NX48.

@@ -17,7 +17,6 @@ git push -f origin main
 git fetch origin
 git reset --hard origin/main
 
-git reset --hard origin/main
-git pull origin main
+generate_ssh_key.sh
 
 ./generate_ssh_key.sh

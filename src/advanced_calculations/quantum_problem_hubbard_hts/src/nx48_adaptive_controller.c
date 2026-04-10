@@ -457,6 +457,22 @@ nx48_ctrl_params_t nx48_ctrl_predict(nx48_ctrl_t *c,
                                       NX48C_SCALE_MIN,
                                       NX48C_SCALE_MAX_STD);
 
+    /* 4b. C58-03 : boost steps si bench_err > 0.025 (convergence insuffisante).
+     * NX48F_BENCH_ERR_LOG = -log10(bench_err) / 9.
+     * Seuil 0.025 ↔ logberr_normalized = -log10(0.025)/9 ≈ 0.1780.
+     * Réf : analysechatgpt91.27.md §QCD_BENCH_ERR=0.029164 > 0.025.
+     * Facteur prudent 1.20 : +20% steps sans explosion mémoire.
+     * Réf : analysechatgpt91.28.md §C58-QCD-STEPS. */
+    {
+        double logberr_norm = s->x[NX48F_BENCH_ERR_LOG];
+        /* bench_err = 10^(-logberr_norm * 9) ; seuil 0.025 → logberr_norm < 0.1780 */
+        if (logberr_norm > 1e-9 && logberr_norm < 0.1780) {
+            p.n_steps_scale *= 1.20;
+            FORENSIC_LOG_MODULE_METRIC(s->module_name, "c58_steps_boost_bench_err",
+                                       pow(10.0, -logberr_norm * 9.0));
+        }
+    }
+
     /* 5. n_sweeps Worm MC : similaire à steps */
     p.n_sweeps_scale = adaptive_scale(prob,
                                        NX48C_SCALE_MIN,
