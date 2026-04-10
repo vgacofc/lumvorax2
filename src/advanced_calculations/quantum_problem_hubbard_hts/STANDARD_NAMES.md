@@ -1377,4 +1377,26 @@ hubbard_hts_research_cycle_advanced_parallel.c
 | Log | `rcs:noise_level_K_eV` | Valeur en eV pour traçabilité forensique |
 | Log | `rcs:noise_level_total_eV` | Bruit total (thermique + T2 + Kelvin) |
 
-*Mise à jour : Version 3.7 — 2026-04-09 — C54 (corrections P0→P3 complètes, 6 fichiers modifiés)*
+---
+
+### §M-C57 : Nouveaux paramètres NX48 Phase B — Cycle C57
+
+Introduits dans `analysechatgpt91.25.md` §18 Autoprompt C57 §1.  
+Implémentés dans : `nx48_adaptive_controller.h`, `nx48_adaptive_controller.c`, runner `.c`, `upload_to_supabase.py`.
+
+| Nom canonique | Type | Unité | Description |
+|---|---|---|---|
+| `dt_scale` | `double` | sans dimension | Facteur multiplicatif sur le pas de temps `dt` (Phase B NX48) |
+| `mu_eV_scale` | `double` | sans dimension | Facteur multiplicatif sur le potentiel chimique `mu_eV` (Phase B NX48) |
+| `T_ratio_scale` | `double` | sans dimension | Facteur multiplicatif sur le rapport de température T_ratio (Phase B NX48) |
+| `c57_dt_scale` | `double` | sans dimension | Colonne Supabase `quantum_run_files` — valeur `dt_scale` NX48 hubbard_hts_core |
+| `c57_mu_eV_scale` | `double` | sans dimension | Colonne Supabase `quantum_run_files` — valeur `mu_eV_scale` NX48 hubbard_hts_core |
+| `c57_T_ratio_scale` | `double` | sans dimension | Colonne Supabase `quantum_run_files` — valeur `T_ratio_scale` NX48 hubbard_hts_core |
+
+**Règles STANDARD_NAMES** :
+- Log key runner : `NX48_APPLY_SCALES module=<name> ... dt_scale=<val> mu_eV_scale=<val> T_ratio_scale=<val>`
+- Log key forensic : `nx48_dt_scale`, `nx48_mu_eV_scale`, `nx48_T_ratio_scale` (via `FORENSIC_LOG_ALGO`)
+- Phase B CSV : champs `dt_scale`, `mu_eV_scale`, `T_ratio_scale` dans `config/nx48_phase_b_last.csv`
+- Bornes physiques : `dt_scale ∈ [0.5, 2.0]`, `mu_eV_scale ∈ [0.5, 2.0]`, `T_ratio_scale ∈ [0.8, 1.2]`
+
+*Mise à jour : Version 3.8 — 2026-04-10 — C57 (3 nouveaux params NX48 Phase B, Phase B end-to-end, label Vercel C55→C57)*

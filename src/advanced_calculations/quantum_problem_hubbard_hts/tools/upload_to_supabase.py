@@ -140,11 +140,16 @@ def check_tables():
     return ok
 
 def _parse_research_log(log_path: Path):
-    """Parse research_execution.log → dict avec module principal + liste BASE_RESULT + SCORE."""
+    """Parse research_execution.log → dict avec module principal + liste BASE_RESULT + SCORE.
+    C57 : parse aussi NX48_APPLY_SCALES pour extraire dt_scale, mu_eV_scale, T_ratio_scale
+    pour hubbard_hts_core (colonnes c57_dt_scale, c57_mu_eV_scale, c57_T_ratio_scale).
+    """
     main_module = {}
     all_modules = []
     score = {}
     runner = "unknown"
+    # C57 — NX48 Phase B scales pour hubbard_hts_core
+    c57_scales = {"dt_scale": 1.0, "mu_eV_scale": 1.0, "T_ratio_scale": 1.0}
     if not log_path.exists():
         return main_module, all_modules, score, runner
     pattern = re.compile(
@@ -152,6 +157,10 @@ def _parse_research_log(log_path: Path):
         r' cpu_peak=([\d.]+) mem_peak=([\d.]+)'
     )
     score_pat = re.compile(r'SCORE iso=(\d+) trace=(\d+) repr=(\d+) robust=(\d+) phys=(\d+) expert=(\d+)')
+    # C57 : pattern NX48_APPLY_SCALES pour les 3 nouveaux paramètres
+    nx48_pat = re.compile(
+        r'NX48_APPLY_SCALES module=(\S+).*?dt_scale=([\d.]+).*?mu_eV_scale=([\d.]+).*?T_ratio_scale=([\d.]+)'
+    )
     for line in log_path.read_text(errors="replace").splitlines():
         m = pattern.search(line)
         if m:
@@ -169,6 +178,16 @@ def _parse_research_log(log_path: Path):
                 ["iso", "trace", "repr", "robust", "phys", "expert"],
                 [s.group(i) for i in range(1, 7)]
             )}
+        # C57 : extraction des scales NX48 Phase B pour hubbard_hts_core
+        n = nx48_pat.search(line)
+        if n and n.group(1) == "hubbard_hts_core":
+            c57_scales["dt_scale"]       = float(n.group(2))
+            c57_scales["mu_eV_scale"]    = float(n.group(3))
+            c57_scales["T_ratio_scale"]  = float(n.group(4))
+    if main_module:
+        main_module["c57_dt_scale"]      = c57_scales["dt_scale"]
+        main_module["c57_mu_eV_scale"]   = c57_scales["mu_eV_scale"]
+        main_module["c57_T_ratio_scale"] = c57_scales["T_ratio_scale"]
     return main_module, all_modules, score, runner
 
 def upload_run_file(run_id: str, main_module: dict):
@@ -186,6 +205,11 @@ def upload_run_file(run_id: str, main_module: dict):
         "sign_ratio":   main_module.get("sign_ratio", 0.0),
         "cpu_percent":  main_module.get("cpu_percent", 0.0),
         "ram_percent":  main_module.get("ram_percent", 0.0),
+        # C57 — NX48 Phase B : 3 nouveaux paramètres (dt_scale, mu_eV, T_ratio)
+        # Ref : analysechatgpt91.25.md §18 Autoprompt C57 §3 + STANDARD_NAMES.md §M-C57
+        "c57_dt_scale":      main_module.get("c57_dt_scale", 1.0),
+        "c57_mu_eV_scale":   main_module.get("c57_mu_eV_scale", 1.0),
+        "c57_T_ratio_scale": main_module.get("c57_T_ratio_scale", 1.0),
     }
     ok = _post("quantum_run_files", row)
     print(f"  [quantum_run_files] {run_id[-4:]}: {'OK' if ok else 'FAIL'}")

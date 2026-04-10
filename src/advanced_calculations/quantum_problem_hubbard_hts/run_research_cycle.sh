@@ -104,7 +104,9 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}
 # Récupère les apprentissages des sessions précédentes depuis Supermemory.
 # Le cache local (.nx48_memory_cache.json) NE DOIT JAMAIS ÊTRE SUPPRIMÉ.
 # Si le cache local est absent, Supermemory est la source de vérité inter-sessions.
-export LUMVORAX_CYCLE_ID="${LUMVORAX_CYCLE_ID:-C54}"
+# C57-FIX-CYCLE-ID : fallback mis à jour C54→C57 (label de traçabilité NX48 + Vercel)
+# Si LUMVORAX_CYCLE_ID est passé explicitement par le workflow, il prend la priorité.
+export LUMVORAX_CYCLE_ID="${LUMVORAX_CYCLE_ID:-C57}"
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Initialisation mémoire persistante (run=${STAMP_UTC}, cycle=${LUMVORAX_CYCLE_ID})"
 python3 "$ROOT_DIR/tools/nx48_supermemory.py" --init "${STAMP_UTC}" 2>&1 | sed "s/^/[NX48-MEM] /" || true
 python3 "$ROOT_DIR/tools/nx48_supermemory.py" --seed 2>&1 | sed "s/^/[NX48-SEED] /" || true

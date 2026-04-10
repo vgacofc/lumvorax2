@@ -128,6 +128,10 @@ typedef struct {
     double temp_K_scale;         /* multiplicateur température (0.85→1.15) — exploration T */
     double U_eV_scale;           /* multiplicateur U (0.90→1.10) — modulation couplage Hubbard */
     double t_eV_scale;           /* multiplicateur t (0.90→1.10) — modulation hopping */
+    /* C57 — 3 paramètres supplémentaires (STANDARD_NAMES.md §M-C57) */
+    double dt_scale;             /* multiplicateur pas de temps (0.5→1.5) — stabilité RK2 adaptative */
+    double mu_eV_scale;          /* multiplicateur potentiel chimique (0.8→1.2) — doping dynamique */
+    double T_ratio_scale;        /* multiplicateur T_max/T_min PT-MC (0.7→1.5) — 50.0 fixe → adaptatif */
 } nx48_ctrl_params_t;
 
 /* ── Feature vector étendu ────────────────────────────────────────────── */

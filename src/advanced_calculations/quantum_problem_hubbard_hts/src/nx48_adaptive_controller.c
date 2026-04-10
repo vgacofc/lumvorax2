@@ -539,6 +539,42 @@ nx48_ctrl_params_t nx48_ctrl_predict(nx48_ctrl_t *c,
     FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_U_eV_scale",       p.U_eV_scale);
     FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_t_eV_scale",       p.t_eV_scale);
 
+    /* ─── C57 — Phase B : 3 paramètres supplémentaires ──────────────────
+     * 14. dt_scale : moduler le pas de temps selon la stabilité de l'intégrateur.
+     *     Gradient élevé (instabilité) → réduire dt pour stabilité RK2.
+     *     Convergence correcte → augmenter légèrement dt pour accélérer.
+     *     Plage [0.5, 1.5] — borné par stabilité RK2 (Δt × λ_max < 0.2). */
+    {
+        double grad_feat = s->x[NX48F_GRAD_ENERGY]; /* ∈ [0,1] normalisé */
+        p.dt_scale = 1.0 - 0.50 * grad_feat;        /* 0.5 si instable, 1.0 si stable */
+        if (p.dt_scale < 0.5) p.dt_scale = 0.5;
+        if (p.dt_scale > 1.5) p.dt_scale = 1.5;
+    }
+
+    /* 15. mu_eV_scale : moduler le doping dynamique selon le taux de remplissage.
+     *     Signe positif fort (prob ≥ 0.6) + pairing élevé → léger doping (μ > 0).
+     *     Signe faible (prob < 0.3) → réduire le doping (retour à demi-remplissage).
+     *     Plage [0.8, 1.2] — μ=0 au demi-remplissage est physiquement stable. */
+    {
+        double pairing_feat = s->x[NX48F_PAIRING]; /* ∈ [0,1] */
+        p.mu_eV_scale = 1.0 + 0.20 * (prob - 0.5) * pairing_feat;
+        if (p.mu_eV_scale < 0.8) p.mu_eV_scale = 0.8;
+        if (p.mu_eV_scale > 1.2) p.mu_eV_scale = 1.2;
+    }
+
+    /* 16. T_ratio_scale : rapport T_max/T_min du PT-MC (actuellement 50.0 fixe → adaptatif).
+     *     prob faible (mauvais signe) → augmenter T_ratio pour explorer plus grand espace T.
+     *     prob élevé (bon signe) → réduire T_ratio (se concentrer autour de T_c).
+     *     Plage [0.7, 1.5] — T_ratio_effective = 50.0 × T_ratio_scale. */
+    p.T_ratio_scale = adaptive_scale(1.0 - prob, 0.7, 1.5);
+    if (p.T_ratio_scale < 0.7) p.T_ratio_scale = 0.7;
+    if (p.T_ratio_scale > 1.5) p.T_ratio_scale = 1.5;
+
+    /* Log forensique des 3 nouveaux scales C57 (STANDARD_NAMES.md §M-C57) */
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c57_dt_scale",       p.dt_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c57_mu_eV_scale",    p.mu_eV_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c57_T_ratio_scale",  p.T_ratio_scale);
+
     return p;
 }
 

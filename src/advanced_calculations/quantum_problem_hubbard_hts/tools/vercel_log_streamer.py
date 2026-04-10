@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 vercel_log_streamer.py — Streaming logs LumVorax vers Vercel en temps réel
-Conforme STANDARD_NAMES.md v3.4 — Cycle C54+ (label dynamique via LUMVORAX_CYCLE_ID)
+Conforme STANDARD_NAMES.md v3.4 — Cycle C57+ (label dynamique via LUMVORAX_CYCLE_ID)
 
 Architecture :
   - Surveille les nouveaux fichiers CSV Lumvorax (rotation toutes les 20 MB)
@@ -83,8 +83,8 @@ def _resolve_cycle_label() -> str:
         import re
         m = re.search(r'research_(\d{8}T\d{6}Z)_(\d+)', runs[0].name)
         if m:
-            return f"C54-{m.group(1)}"
-    return "C54"
+            return f"C57-{m.group(1)}"
+    return "C57"
 
 CYCLE_LABEL = _resolve_cycle_label()
 

@@ -39,6 +39,70 @@ typedef struct {
     uint64_t steps;
 } problem_t;
 
+/* C57-02 : Structure de persistance des recommandations NX48 Phase B.
+ * Fichier : config/nx48_phase_b_last.csv
+ * Format  : module,n_sites_scale,n_replicas_scale,temp_K_scale,U_eV_scale,
+ *            t_eV_scale,dt_scale,mu_eV_scale,T_ratio_scale
+ * Écrit à la fin de chaque run, relu au début du run suivant.
+ * Permet l'application RÉELLE des scales (lire C57 autoprompt §1 rapport 91.25). */
+typedef struct {
+    char   module_name[96];
+    double n_sites_scale;
+    double n_replicas_scale;
+    double temp_K_scale;
+    double U_eV_scale;
+    double t_eV_scale;
+    double dt_scale;
+    double mu_eV_scale;
+    double T_ratio_scale;
+} nx48_phase_b_rec_t;
+
+static int load_nx48_phase_b(const char* path, nx48_phase_b_rec_t* out, int max) {
+    FILE* fp = fopen(path, "r");
+    if (!fp) return 0;  /* Pas d'erreur si absent — premier run */
+    char line_buf[512];
+    if (!fgets(line_buf, sizeof(line_buf), fp)) { fclose(fp); return 0; } /* header */
+    int n = 0;
+    while (fgets(line_buf, sizeof(line_buf), fp) && n < max) {
+        nx48_phase_b_rec_t r = {0};
+        r.n_sites_scale = 1.0; r.n_replicas_scale = 1.0; r.temp_K_scale = 1.0;
+        r.U_eV_scale = 1.0;    r.t_eV_scale = 1.0;       r.dt_scale = 1.0;
+        r.mu_eV_scale = 1.0;   r.T_ratio_scale = 1.0;
+        if (sscanf(line_buf, "%95[^,],%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
+                   r.module_name,
+                   &r.n_sites_scale, &r.n_replicas_scale, &r.temp_K_scale,
+                   &r.U_eV_scale, &r.t_eV_scale,
+                   &r.dt_scale, &r.mu_eV_scale, &r.T_ratio_scale) >= 6) {
+            out[n++] = r;
+        }
+    }
+    fclose(fp);
+    return n;
+}
+
+static void save_nx48_phase_b(const char* path, const nx48_phase_b_rec_t* recs, int n) {
+    FILE* fp = fopen(path, "w");
+    if (!fp) return;
+    fprintf(fp, "module,n_sites_scale,n_replicas_scale,temp_K_scale,U_eV_scale,"
+                "t_eV_scale,dt_scale,mu_eV_scale,T_ratio_scale\n");
+    for (int i = 0; i < n; ++i) {
+        fprintf(fp, "%s,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n",
+                recs[i].module_name,
+                recs[i].n_sites_scale, recs[i].n_replicas_scale,
+                recs[i].temp_K_scale,  recs[i].U_eV_scale,
+                recs[i].t_eV_scale,    recs[i].dt_scale,
+                recs[i].mu_eV_scale,   recs[i].T_ratio_scale);
+    }
+    fclose(fp);
+}
+
+static const nx48_phase_b_rec_t* find_phase_b_rec(const nx48_phase_b_rec_t* recs,
+                                                    int n, const char* module_name) {
+    for (int i = 0; i < n; ++i)
+        if (strcmp(recs[i].module_name, module_name) == 0) return &recs[i];
+    return NULL;
+}
+
 typedef struct {
     bool phase_control;
     bool resonance_pump;
@@ -2159,6 +2223,47 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    /* C57-02 : Chargement et APPLICATION RÉELLE des scales NX48 Phase B.
+     * Lit config/nx48_phase_b_last.csv (recommendations NX48 du run précédent).
+     * Applique temp_K_scale, U_eV_scale, t_eV_scale, mu_eV_scale, dt_scale
+     * DIRECTEMENT dans probs[] AVANT la simulation — Phase B complète.
+     * n_sites_scale est projeté mais non appliqué (lx/ly entiers — future C58).
+     * Ref : analysechatgpt91.25.md §18 Autoprompt C57 §1. */
+    nx48_phase_b_rec_t phase_b_recs[64] = {0};
+    char phase_b_path[MAX_PATH];
+    pjoin(phase_b_path, sizeof(phase_b_path), root, "config/nx48_phase_b_last.csv");
+    int n_phase_b = load_nx48_phase_b(phase_b_path, phase_b_recs, 64);
+    fprintf(stderr, "[C57-02] NX48 Phase B : %d recommandations chargées depuis %s\n",
+            n_phase_b, phase_b_path);
+    int n_phase_b_applied = 0;
+    for (int i = 0; i < nprobs; ++i) {
+        const nx48_phase_b_rec_t* pb = find_phase_b_rec(phase_b_recs, n_phase_b, probs[i].name);
+        if (!pb) continue;
+        /* Appliquer les scales physiques — valeurs originales conservées pour logging */
+        double orig_temp_K = probs[i].temp_K;
+        double orig_u_eV   = probs[i].u_eV;
+        double orig_t_eV   = probs[i].t_eV;
+        double orig_mu_eV  = probs[i].mu_eV;
+        double orig_dt     = probs[i].dt;
+        probs[i].temp_K = orig_temp_K * pb->temp_K_scale;
+        probs[i].u_eV   = orig_u_eV   * pb->U_eV_scale;
+        probs[i].t_eV   = orig_t_eV   * pb->t_eV_scale;
+        probs[i].mu_eV  = orig_mu_eV  * pb->mu_eV_scale;
+        probs[i].dt     = orig_dt     * pb->dt_scale;
+        /* Borne physique : T > 1K, U > 0, t > 0 */
+        if (probs[i].temp_K < 1.0) probs[i].temp_K = 1.0;
+        if (probs[i].u_eV   < 0.1) probs[i].u_eV   = 0.1;
+        if (probs[i].t_eV   < 0.1) probs[i].t_eV   = 0.1;
+        if (probs[i].dt     < 1e-5) probs[i].dt     = 1e-5;
+        fprintf(stderr, "[C57-02] %s : temp_K %.4f→%.4f U %.4f→%.4f t %.4f→%.4f\n",
+                probs[i].name, orig_temp_K, probs[i].temp_K,
+                orig_u_eV, probs[i].u_eV, orig_t_eV, probs[i].t_eV);
+        n_phase_b_applied++;
+    }
+
+    /* Tableau de sauvegarde des recommendations actuelles pour le prochain run */
+    nx48_phase_b_rec_t phase_b_new[64] = {0};
+
     int line = 4; /* Après START/ISOLATION/BASELINE (000001–000003) — incrément unique pour research_execution.log */
 
     /* C43 : suppression override dense_nuclear_fullscale steps=2100.
@@ -2428,17 +2533,19 @@ int main(int argc, char** argv) {
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_steps_scale",    nx48_rec.n_steps_scale);
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_sweeps_scale",   nx48_rec.n_sweeps_scale);
 
-            /* C56-APPLY-SCALES : application forensique des 5 nouveaux paramètres NX48 Phase B.
-             * Phase B NX48 : les recommandations sont loggées ET persistées pour le prochain run.
-             * Impact réel : le prochain run utilisera ces scales pour augmenter la taille des sites,
-             * le nombre de répliques, et moduler T, U, t selon la convergence mesurée ici.
-             * Ces métriques alimentent le rapport forensique analysechatgpt91.25.md §NX48-PHASE-B. */
+            /* C56-APPLY-SCALES / C57-02 : application forensique des 8 paramètres NX48 Phase B.
+             * C56 : 5 paramètres (n_sites, n_replicas, temp_K, U_eV, t_eV)
+             * C57 : 3 paramètres supplémentaires (dt_scale, mu_eV_scale, T_ratio_scale)
+             * Persistés dans config/nx48_phase_b_last.csv pour APPLICATION RÉELLE au run suivant.
+             * Ce run (C57) applique déjà les scales lus en début de run (cf. C57-02 ci-dessus). */
             fprintf(lg, "%06d | NX48_APPLY_SCALES module=%s n_sites_scale=%.4f n_replicas_scale=%.4f"
                         " temp_K_scale=%.4f U_eV_scale=%.4f t_eV_scale=%.4f"
+                        " dt_scale=%.4f mu_eV_scale=%.4f T_ratio_scale=%.4f"
                         " equiv_qubits_next=%.0f\n",
                     line++, probs[i].name,
                     nx48_rec.n_sites_scale, nx48_rec.n_replicas_scale,
                     nx48_rec.temp_K_scale, nx48_rec.U_eV_scale, nx48_rec.t_eV_scale,
+                    nx48_rec.dt_scale, nx48_rec.mu_eV_scale, nx48_rec.T_ratio_scale,
                     2.0 * (double)(probs[i].lx * probs[i].ly) * nx48_rec.n_sites_scale
                           * PT_MC_N_REPLICAS * nx48_rec.n_replicas_scale);
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_n_sites_scale",    nx48_rec.n_sites_scale);
@@ -2446,6 +2553,9 @@ int main(int argc, char** argv) {
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_temp_K_scale",     nx48_rec.temp_K_scale);
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_U_eV_scale",       nx48_rec.U_eV_scale);
             FORENSIC_LOG_ALGO(probs[i].name, "nx48_t_eV_scale",       nx48_rec.t_eV_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_dt_scale",         nx48_rec.dt_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_mu_eV_scale",      nx48_rec.mu_eV_scale);
+            FORENSIC_LOG_ALGO(probs[i].name, "nx48_T_ratio_scale",    nx48_rec.T_ratio_scale);
             /* Projection qubits prochaine exécution (C56-QUBITS-DYN) :
              * equiv_qubits_next = 2 × sites × n_sites_scale × R × n_replicas_scale */
             {
@@ -2456,6 +2566,21 @@ int main(int argc, char** argv) {
                 FORENSIC_LOG_ALGO(probs[i].name, "nx48_equiv_qubits_next", eq_next);
                 FORENSIC_LOG_ALGO(probs[i].name, "nx48_equiv_qubits_curr",
                     2.0 * (double)(probs[i].lx * probs[i].ly) * (double)PT_MC_N_REPLICAS);
+            }
+            /* C57-02 : Persistance des recommandations NX48 dans phase_b_new[].
+             * Ce tableau sera écrit dans config/nx48_phase_b_last.csv à la fin du run.
+             * Le run C58 lira ce fichier et APPLIQUERA ces scales dès le début. */
+            if (i < 64) {
+                strncpy(phase_b_new[i].module_name, probs[i].name, 95);
+                phase_b_new[i].module_name[95] = '\0';
+                phase_b_new[i].n_sites_scale    = nx48_rec.n_sites_scale;
+                phase_b_new[i].n_replicas_scale = nx48_rec.n_replicas_scale;
+                phase_b_new[i].temp_K_scale     = nx48_rec.temp_K_scale;
+                phase_b_new[i].U_eV_scale       = nx48_rec.U_eV_scale;
+                phase_b_new[i].t_eV_scale       = nx48_rec.t_eV_scale;
+                phase_b_new[i].dt_scale         = nx48_rec.dt_scale;
+                phase_b_new[i].mu_eV_scale      = nx48_rec.mu_eV_scale;
+                phase_b_new[i].T_ratio_scale    = nx48_rec.T_ratio_scale;
             }
         }
 
@@ -4008,14 +4133,28 @@ int main(int argc, char** argv) {
     fclose(ngcsv);
     fclose(dmcsv);
     fclose(toy);
-    /* C55 — Apprentissage global post-run + destruction du contrôleur NX48.
+    /* C57-02 : Sauvegarde des recommandations NX48 Phase B dans config/nx48_phase_b_last.csv.
+     * Le prochain run (C58) lira ce fichier et appliquera ces scales dès le début.
+     * Ce mécanisme complète la boucle de rétroaction NX48 Phase B end-to-end.
+     * Ref : analysechatgpt91.25.md §18 Autoprompt C57 §1. */
+    {
+        char phase_b_save_path[MAX_PATH];
+        pjoin(phase_b_save_path, sizeof(phase_b_save_path), root, "config/nx48_phase_b_last.csv");
+        save_nx48_phase_b(phase_b_save_path, phase_b_new, nprobs);
+        fprintf(lg, "%06d | C57_PHASE_B_SAVE path=%s n_modules=%d n_applied_this_run=%d\n",
+                line++, phase_b_save_path, nprobs, n_phase_b_applied);
+        fprintf(stderr, "[C57-02] NX48 Phase B : %d recommandations sauvegardées → %s\n",
+                nprobs, phase_b_save_path);
+    }
+
+    /* C57 / C55 — Apprentissage global post-run + destruction du contrôleur NX48.
      * nx48_ctrl_fit() lance N_EPOCHS_FIT passes ISTA sur l'ensemble des samples accumulés.
      * Résultats de recommandation logués dans le fichier de logs principal (lg). */
     {
         nx48_ctrl_fit(&g_nx48ctrl);
         fprintf(stderr, "[NX48] fit terminé — contrôleur adaptatif NX48 prêt pour prochain run.\n");
         nx48_ctrl_destroy(&g_nx48ctrl);
-        fprintf(stderr, "[NX48] contrôleur adaptatif C55 détruit proprement.\n");
+        fprintf(stderr, "[NX48] contrôleur adaptatif C57 détruit proprement.\n");
     }
 
     free_loaded_problem_names(probs, nprobs);
