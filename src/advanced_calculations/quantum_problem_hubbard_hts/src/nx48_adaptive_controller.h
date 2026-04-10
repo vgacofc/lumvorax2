@@ -122,6 +122,12 @@ typedef struct {
     double lr_decay_factor;      /* facteur lr_decay [0.5, 1.0] */
     bool   throttle_cpu;         /* réduire threads (CPU > 95%) */
     double overhead_reduction;   /* overhead estimé réduit (NX48 skip) */
+    /* C56 — 5 paramètres dynamiques Phase B (NX48 Phase B active) */
+    double n_sites_scale;        /* multiplicateur n_sites (1.0→1.5) — augmente l'espace Hilbert */
+    double n_replicas_scale;     /* multiplicateur répliques PT-MC (1.0→2.0) — couverture T accrue */
+    double temp_K_scale;         /* multiplicateur température (0.85→1.15) — exploration T */
+    double U_eV_scale;           /* multiplicateur U (0.90→1.10) — modulation couplage Hubbard */
+    double t_eV_scale;           /* multiplicateur t (0.90→1.10) — modulation hopping */
 } nx48_ctrl_params_t;
 
 /* ── Feature vector étendu ────────────────────────────────────────────── */

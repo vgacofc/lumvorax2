@@ -482,6 +482,63 @@ nx48_ctrl_params_t nx48_ctrl_predict(nx48_ctrl_t *c,
         c->overhead_total_reduced += oh_reduced;
     }
 
+    /* ─── C56 — Phase B : 5 paramètres dynamiques additionnels ───────────
+     *
+     * 9. n_sites_scale : prob élevé (signe positif, bon signal) → augmenter les sites.
+     *    Plage [1.0, 1.5] — prudent pour éviter explosion RAM sur 14×14.
+     *    Basé sur NX48F_SITES_LOG2 : si log2(n_sites)/20 < 0.4 → encore marge de montée. */
+    {
+        double sites_headroom = 1.0 - s->x[NX48F_SITES_LOG2]; /* 0 si sites max, 1 si petit */
+        p.n_sites_scale = 1.0 + (adaptive_scale(prob, 0.0, 0.5) * sites_headroom);
+        if (p.n_sites_scale > 1.5) p.n_sites_scale = 1.5;
+        if (p.n_sites_scale < 1.0) p.n_sites_scale = 1.0;
+    }
+
+    /* 10. n_replicas_scale : prob faible (signe problématique) → plus de répliques PT-MC.
+     *     Raisonnement : plus de répliques = meilleure couverture de l'espace T → aide le signe.
+     *     Plage [1.0, 2.0] — échange répliques contre précision. */
+    p.n_replicas_scale = adaptive_scale(1.0 - prob, 1.0, 2.0);
+    if (p.n_replicas_scale < 1.0) p.n_replicas_scale = 1.0;
+    if (p.n_replicas_scale > 2.0) p.n_replicas_scale = 2.0;
+
+    /* 11. temp_K_scale : moduler la température selon la convergence du signe.
+     *     prob < 0.3 (mauvais signe) → baisser T (refroidissement, meilleur ordre SC).
+     *     prob ≥ 0.6 (bon signe)     → monter T légèrement (exploration thermique).
+     *     Plage [0.85, 1.15]. */
+    if      (prob < 0.3) p.temp_K_scale = 0.88;
+    else if (prob < 0.5) p.temp_K_scale = 0.94;
+    else if (prob < 0.7) p.temp_K_scale = 1.00;
+    else                 p.temp_K_scale = 1.08;
+
+    /* 12. U_eV_scale : moduler U selon le ratio U/t (feature NX48F_U_T_NORM = U/t / 20).
+     *     U/t élevé (feature > 0.5 → U/t > 10) → légère réduction U pour améliorer signe.
+     *     U/t faible → légère hausse U pour explorer le gap de Mott.
+     *     Plage [0.90, 1.10]. */
+    {
+        double u_t_feat = s->x[NX48F_U_T_NORM]; /* ∈ [0, 1] */
+        p.U_eV_scale = 1.0 + 0.10 * (0.5 - u_t_feat); /* 0.95→1.05 selon U/t */
+        if (p.U_eV_scale < 0.90) p.U_eV_scale = 0.90;
+        if (p.U_eV_scale > 1.10) p.U_eV_scale = 1.10;
+    }
+
+    /* 13. t_eV_scale : moduler t selon la stabilité de l'énergie (gradient NX47 ARC).
+     *     Gradient élevé (feature NX48F_GRAD_ENERGY > 0.5) → instabilité → réduire t.
+     *     Gradient faible (convergé) → monter légèrement t pour explorer.
+     *     Plage [0.90, 1.10]. */
+    {
+        double grad_feat = s->x[NX48F_GRAD_ENERGY]; /* ∈ [0, 1] normalisé */
+        p.t_eV_scale = 1.0 - 0.10 * grad_feat;     /* 0.90 si instable, 1.00 si stable */
+        if (p.t_eV_scale < 0.90) p.t_eV_scale = 0.90;
+        if (p.t_eV_scale > 1.10) p.t_eV_scale = 1.10;
+    }
+
+    /* Log forensique des nouveaux scales C56 */
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_n_sites_scale",    p.n_sites_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_n_replicas_scale", p.n_replicas_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_temp_K_scale",     p.temp_K_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_U_eV_scale",       p.U_eV_scale);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c56_t_eV_scale",       p.t_eV_scale);
+
     return p;
 }
 
