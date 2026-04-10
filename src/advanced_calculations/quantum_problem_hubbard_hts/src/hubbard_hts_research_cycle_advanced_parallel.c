@@ -2288,6 +2288,13 @@ int main(int argc, char** argv) {
 
     /* Tableau de sauvegarde des recommendations actuelles pour le prochain run */
     nx48_phase_b_rec_t phase_b_new[64] = {0};
+    /* C59-REALTIME : path calculé ici pour écriture temps réel après chaque module.
+     * Protège contre arrêt anticipé (SIGTERM, crash, timeout) — le fichier est toujours
+     * à jour après chaque module NX48_APPLY_SCALES, pas seulement en fin de run.
+     * Ref : analysechatgpt91.28.md §C59-REALTIME-PHASE-B. */
+    char phase_b_save_path[MAX_PATH] = {0};
+    pjoin(phase_b_save_path, sizeof(phase_b_save_path), root, "config/nx48_phase_b_last.csv");
+    int n_phase_b_rt_saved = 0; /* compteur de sauvegardes temps réel */
 
     int line = 4; /* Après START/ISOLATION/BASELINE (000001–000003) — incrément unique pour research_execution.log */
 
@@ -2593,8 +2600,10 @@ int main(int argc, char** argv) {
                     2.0 * (double)(probs[i].lx * probs[i].ly) * (double)PT_MC_N_REPLICAS);
             }
             /* C57-02 : Persistance des recommandations NX48 dans phase_b_new[].
-             * Ce tableau sera écrit dans config/nx48_phase_b_last.csv à la fin du run.
-             * Le run C58 lira ce fichier et APPLIQUERA ces scales dès le début. */
+             * C59-REALTIME : Sauvegarde immédiate après chaque module — protège contre
+             * arrêt anticipé (SIGTERM, timeout, crash). Chaque module sauvegardé est
+             * disponible pour le run suivant même si le run courant est interrompu.
+             * Ref : analysechatgpt91.28.md §C59-REALTIME-PHASE-B. */
             if (i < 64) {
                 strncpy(phase_b_new[i].module_name, probs[i].name, 95);
                 phase_b_new[i].module_name[95] = '\0';
@@ -2606,6 +2615,11 @@ int main(int argc, char** argv) {
                 phase_b_new[i].dt_scale         = nx48_rec.dt_scale;
                 phase_b_new[i].mu_eV_scale      = nx48_rec.mu_eV_scale;
                 phase_b_new[i].T_ratio_scale    = nx48_rec.T_ratio_scale;
+                /* C59-REALTIME : écriture immédiate du CSV avec i+1 modules connus */
+                save_nx48_phase_b(phase_b_save_path, phase_b_new, i + 1);
+                n_phase_b_rt_saved = i + 1;
+                fprintf(stderr, "[C59-RT] Phase B sauvegardée temps réel : %d/%d modules → %s\n",
+                        n_phase_b_rt_saved, nprobs, phase_b_save_path);
             }
         }
 
@@ -4170,16 +4184,17 @@ int main(int argc, char** argv) {
     fclose(ngcsv);
     fclose(dmcsv);
     fclose(toy);
-    /* C57-02 : Sauvegarde des recommandations NX48 Phase B dans config/nx48_phase_b_last.csv.
-     * Le prochain run (C58) lira ce fichier et appliquera ces scales dès le début.
-     * Ce mécanisme complète la boucle de rétroaction NX48 Phase B end-to-end.
-     * Ref : analysechatgpt91.25.md §18 Autoprompt C57 §1. */
+    /* C57-02 : Sauvegarde finale des recommandations NX48 Phase B dans config/nx48_phase_b_last.csv.
+     * C59-REALTIME : La sauvegarde temps réel a déjà été faite après chaque module.
+     * Ce bloc fait la sauvegarde finale complète (nprobs modules) pour cohérence.
+     * Le path phase_b_save_path a été calculé au début de main() (C59-REALTIME).
+     * Ref : analysechatgpt91.25.md §18 Autoprompt C57 §1, analysechatgpt91.28.md §C59-REALTIME. */
     {
-        char phase_b_save_path[MAX_PATH];
-        pjoin(phase_b_save_path, sizeof(phase_b_save_path), root, "config/nx48_phase_b_last.csv");
+        /* C59-REALTIME : path déjà calculé — sauvegarde finale complète */
         save_nx48_phase_b(phase_b_save_path, phase_b_new, nprobs);
-        fprintf(lg, "%06d | C57_PHASE_B_SAVE path=%s n_modules=%d n_applied_this_run=%d\n",
-                line++, phase_b_save_path, nprobs, n_phase_b_applied);
+        fprintf(lg, "%06d | C57_PHASE_B_SAVE path=%s n_modules=%d n_applied_this_run=%d"
+                    " rt_saves=%d\n",
+                line++, phase_b_save_path, nprobs, n_phase_b_applied, n_phase_b_rt_saved);
         /* C58-01 : Log de confirmation Phase B appliquée pour traçabilité C58.
          * Distingue : n_sites_applied (C58-04), n_params_applied (C57-02).
          * Ref : analysechatgpt91.26.md §8.1 C58-01. */
