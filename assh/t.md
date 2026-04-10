@@ -8,9 +8,9 @@ git remote set-url origin git@github.com:vgacofc/lumvorax2.git
 
 # Afficher la nouvelle clé publique
 cat github_ssh_key.txt
-
+ssh -T git@github.com
 git add .
-git commit -m "chat91.21"
+git commit -m "chat91.25"
 git push -f origin main
 
 git fetch origin
