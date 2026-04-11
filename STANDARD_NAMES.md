@@ -624,3 +624,49 @@
 2026-03-09 20:05 - monte_carlo_step + Hook forensic itération Monte Carlo
 2026-03-09 20:06 - matrix_update + Hook forensic mise à jour matrice état
 2026-03-09 20:07 - state_hash + Empreinte d'état simulation pour chaîne de garde forensic
+
+2026-04-11 22:10 - BTC_QM_ENGINE + Nom canonique Module 17 Bitcoin Quantum Mining Engine (§M-BTC17)
+2026-04-11 22:10 - btc_qm_engine + Nom module pour FORENSIC_LOG_MODULE_METRIC (Module 17)
+2026-04-11 22:10 - btc_YYYYMMDDTHHMMSSZ_PID + Format run_id Module 17 (conforme §C)
+2026-04-11 22:10 - BTC_FORENSIC_HASH + Macro forensic : log nonce + leading_zeros + elapsed_ns
+2026-04-11 22:10 - BTC_FORENSIC_PTMC_SWAP + Macro forensic : log échange PT répliques
+2026-04-11 22:10 - BTC_FORENSIC_NX48_ADAPT + Macro forensic : log adaptation NX48 BTC
+2026-04-11 22:10 - btc_sha256_nonce + Métrique canonique : nonce testé (uint32)
+2026-04-11 22:10 - btc_leading_zeros + Métrique canonique : zéros de tête (int)
+2026-04-11 22:10 - btc_sha256_elapsed_ns + Métrique canonique : durée double-SHA256 (uint64 ns)
+2026-04-11 22:10 - btc_hashrate_mhs + Métrique canonique : hashrate MH/s (double)
+2026-04-11 22:10 - btc_ptmc_swap_rate + Métrique canonique : taux échange PT (double)
+2026-04-11 22:10 - btc_nx48_delta_nonce + Métrique canonique : rayon voisinage NX48 (double)
+2026-04-11 22:10 - btc_block_valid + Métrique canonique : bloc valide 0/1 (int)
+2026-04-11 22:10 - btc_ptmc_replicas + Métrique canonique : nombre répliques PT (int)
+2026-04-11 22:10 - btc_ptmc_rep_hot + Métrique canonique : indice réplique chaude (int)
+2026-04-11 22:10 - btc_ptmc_rep_cold + Métrique canonique : indice réplique froide (int)
+2026-04-11 22:10 - btc_ptmc_accept + Métrique canonique : acceptance Metropolis (double)
+2026-04-11 22:10 - btc_nonces_total + Métrique canonique : total nonces testés (uint64)
+2026-04-11 22:10 - btc_nonce_coverage_pct + Métrique canonique : % espace nonce couvert (double)
+2026-04-11 22:10 - btc_best_leading_zeros + Métrique canonique : record leading_zeros (int)
+2026-04-11 22:10 - btc_target_hex + Métrique canonique : target difficulté (string hex)
+2026-04-11 22:10 - btc_run_mode + Métrique canonique : TESTNET/MAINNET/BENCHMARK (string)
+2026-04-11 22:10 - BTC_SHA256_INTEGRITY_GATE + Gate CI : vecteur test SHA-256 NIST ✅ PASS
+2026-04-11 22:10 - BTC_FORENSIC_COMPLETENESS_GATE + Gate CI : complétude métriques CSV
+2026-04-11 22:10 - BTC_MEMORY_LEAK_GATE + Gate CI : zéro fuite mémoire LV_MALLOC/LV_FREE
+2026-04-11 22:10 - BTC_THREAD_SAFETY_GATE + Gate CI : zéro race condition détectée
+2026-04-11 22:10 - BTC_NX48_CONVERGENCE_GATE + Gate CI : delta_nonce_scale ∈ [0.5, 2.0]
+2026-04-11 22:10 - BTC_HASHRATE_GATE + Gate CI : hashrate ≥ 100 MH/s (seuil minimum)
+2026-04-11 22:10 - sha256_lumvorax.c + SHA-256 forensic complet — BTC_SHA256_INTEGRITY_GATE PASS ✓ C63
+2026-04-11 22:10 - lv_sha256_init + Initialisation contexte SHA-256 forensic LumVorax
+2026-04-11 22:10 - lv_sha256_update + Mise à jour buffer SHA-256 (streaming)
+2026-04-11 22:10 - lv_sha256_final + Finalisation + padding big-endian 64-bit CORRECT C63
+2026-04-11 22:10 - lv_sha256_self_test + Gate NIST : SHA-256("abc") = ba7816bf... ✅
+2026-04-11 22:10 - lv_sha256d_midstate + Double-SHA256 avec midstate pré-calculé (×2 perf)
+2026-04-11 22:10 - lv_sha256d_block + Double-SHA256 bloc complet 80 octets
+2026-04-11 22:10 - lv_sha256_count_leading_zeros + Compteur bits zéros de tête digest
+2026-04-11 22:10 - lv_sha256_below_target + Comparaison digest < target Bitcoin
+2026-04-11 22:10 - lv_sha256_pool_create + Pool contextes SHA-256 multi-thread
+2026-04-11 22:10 - lv_sha256_pool_destroy + Destruction pool + free mémoire tracée
+2026-04-11 22:10 - nx48_btc_controller + Contrôleur NX48 adapté nonce-space Bitcoin
+2026-04-11 22:10 - btc_mining_engine + Moteur PT-MC 8 répliques exploration nonce
+2026-04-11 22:10 - btc_mining_runner + Binaire exécutable Module 17 (95K) C63
+2026-04-11 22:10 - C63-BTC + Identifiant cycle correction Module 17 + intégration Phase 37
+2026-04-11 22:10 - Phase37_BTC_QM_ENGINE + Phase 37 run_research_cycle.sh — Module 17 parallèle
+2026-04-11 22:10 - DOPPLER_PUSH_C63 + Push 33 secrets LumVorax → Doppler projet=lumvorax config=dev_lumvorax

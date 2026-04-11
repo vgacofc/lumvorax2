@@ -702,6 +702,34 @@ print_progress "optical conductivity sigma(omega)"
 lv_wrap 36 python3 "$ROOT_DIR/tools/post_run_autocorr.py" --run-dir "$RUN_DIR" --output "$RUN_DIR/tests/autocorr_tau_int_sokal.csv" --c-factor 6.0 --max-window 5000
 print_progress "autocorr tau_int Sokal"
 
+# ── Phase 37 — Module 17 BTC_QM_ENGINE (STANDARD_NAMES.md §M-BTC17) ──────────
+# Conforme analysechatgpt91.32.md + analysechatgpt91.33.md (C63 — Cycle C37)
+# Exécution en parallèle — ne bloque pas la simulation Hubbard
+# Gate BTC_SHA256_INTEGRITY_GATE : SHA-256("abc") = NIST vecteur OK ✓
+# ─────────────────────────────────────────────────────────────────────────────
+_BTC_DIR="$ROOT_DIR/../bitcoin_quantum_mining"
+if [ -f "$_BTC_DIR/btc_mining_runner" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Lancement Module 17 Bitcoin Quantum Mining Engine"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] run_id=${STAMP_UTC} — mode=BENCHMARK — threads=4 — duration=60s"
+    (
+        cd "$_BTC_DIR" && \
+        ./btc_mining_runner \
+            --mode BENCHMARK \
+            --duration-s 60 \
+            --threads 4 \
+            --nx48-csv config/btc_nx48_last.csv \
+            --log-dir logs/forensic \
+        2>&1 | sed "s/^/[BTC17] /"
+    ) &
+    BTC_PID=$!
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Module 17 lancé en background — PID=${BTC_PID}"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] btc_mining_runner non trouvé — recompilation requise"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] Exécuter : cd src/advanced_calculations/bitcoin_quantum_mining && make all"
+    BTC_PID=""
+fi
+print_progress "Module 17 BTC_QM_ENGINE lancé"
+
 write_checksums "$RUN_DIR"
 print_progress "checksums"
 write_global_sha512 "$RUN_DIR"
@@ -731,6 +759,19 @@ echo "Fullscale run: $FULLSCALE_RUN_DIR"
 echo "Advanced run: $ADV_RUN_DIR"
 echo "Campaign artifacts: $CAMPAIGN_DIR"
 echo "Session log: $SESSION_LOG"
+
+# ── Phase 37 — Attente Module 17 BTC_QM_ENGINE (wait PID) ────────────────────
+if [ -n "${BTC_PID:-}" ] && kill -0 "$BTC_PID" 2>/dev/null; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Attente fin Module 17 (PID=${BTC_PID})..."
+    wait "$BTC_PID"
+    BTC_EXIT=$?
+    if [ "$BTC_EXIT" -eq 0 ]; then
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Module 17 terminé avec succès (exit=0)"
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] Module 17 terminé exit=${BTC_EXIT}"
+    fi
+fi
+print_progress "Module 17 BTC_QM_ENGINE terminé"
 
 if [ "${LUMVORAX_FULLSCALE_STRICT:-1}" = "1" ]; then
   "$ROOT_DIR/run_fullscale_strict_protocol.sh" "$RUN_DIR"
