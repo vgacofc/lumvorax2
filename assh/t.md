@@ -11,12 +11,13 @@ cat github_ssh_key.txt
 git remote set-url origin git@github.com:vgacofc/lumvorax2.git
 ssh -T git@github.com
 git add .
-git commit -m "chat91.29"
+git commit -m "chat91.25"
 git push -f origin main
 
 git fetch origin
 git reset --hard origin/main
 
-generate_ssh_key.sh
+git reset --hard origin/main
+git pull origin main
 
 ./generate_ssh_key.sh
