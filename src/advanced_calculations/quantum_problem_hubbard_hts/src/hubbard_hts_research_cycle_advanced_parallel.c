@@ -1005,10 +1005,10 @@ static von_neumann_result_t von_neumann_fullscale(const problem_t* p, const cont
  *           évite que swap_accept_rate=1.000 au sweep=0 (répliques identiques)
  *   PT-06 : N_SWEEPS 200→2000 (P1-C19-03) — temps estimé ~26s total 13 modules
  * ==================================================================== */
-#define PT_MC_N_REPLICAS       8      /* C43 : 6→8 répliques (meilleure couverture T) */
-#define PT_MC_T_RATIO          50.0   /* P1-C19-01 : ratio 5→50, T_max/T_min=50 */
+#define PT_MC_N_REPLICAS       12     /* C64-FIX-B8 : 8→12 répliques (NX48 n_replicas_scale=1.52 demandé, meilleure couverture T) */
+#define PT_MC_T_RATIO          20.0   /* C64-FIX-B8 : 50→20, avg_swap_accept 0.2365→cible≥0.30 (Ref: analysechatgpt91.33.md B8) */
 #define PT_MC_N_SWEEPS         200000 /* C59-P3 : 20000→200000 sweeps (×10, N_eff≥30 garanti) */
-#define PT_MC_N_THERMALIZE     40000  /* C59-P3 : 4000→40000 (20% de N_SWEEPS, équilibration complète) */
+#define PT_MC_N_THERMALIZE     80000  /* C64-FIX-B9 : 40000→80000 (40% de N_SWEEPS, delta_mc_final 0.864→cible≤0.4) */
 #define PT_MC_STEPS_PER_SWEEP  500    /* C43 : 200→500 (×2.5, statistiques améliorées) */
 #define PT_MC_DELTA_MC_INIT    0.20
 #define PT_MC_DIVERGENCE_THR   0.5   /* C43 BUG-PTMC-DIV-FIX : 2.0→0.5 eV/site (normalisé) */

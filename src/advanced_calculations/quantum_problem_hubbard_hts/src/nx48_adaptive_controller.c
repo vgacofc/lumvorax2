@@ -612,7 +612,12 @@ double nx48_ctrl_update(nx48_ctrl_t *c, const nx48c_sample_t *s) {
      * bench_good = 1 si bench_err→0, 0 si bench_err>>0.025 (seuil C58).
      * Ref : analysechatgpt91.30.md §5.2 PATTERN-GRADIENTS-BENCH-NULS.     */
     double logberr_norm = s->x[NX48F_BENCH_ERR_LOG]; /* ∈ [0,1] normalisé */
-    double bench_good   = (logberr_norm > 0.5) ? 1.0 : (logberr_norm * 2.0);
+    /* C64-FIX-B2 : inversion logique corrigée.
+     * logberr_norm=0 → bench parfait → bench_good=1.0 (récompense max)
+     * logberr_norm>0.5 → bench mauvais → bench_good=0.0 (pénalité max)
+     * Avant : (logberr_norm>0.5)?1.0 était INVERSÉ → grad_bench_err=0 systématique.
+     * Ref : analysechatgpt91.33.md BUG B2 — 2026-04-11 */
+    double bench_good   = (logberr_norm > 0.5) ? 0.0 : (1.0 - logberr_norm * 2.0);
     double label_eff    = s->label * 0.80 + bench_good * 0.20;
     if (label_eff < 0.0) label_eff = 0.0;
     if (label_eff > 1.0) label_eff = 1.0;

@@ -198,11 +198,24 @@ void nx48_btc_update(
     else if (s->loss_curr < s->loss_prev * 0.95) {
         s->delta_nonce_scale *= 0.95;
         s->exploration_bias   = clamp(s->exploration_bias - 0.03, 0.0, 1.0);
+    } else {
+        /* C64-FIX-B-NX48 : mise à jour delta_nonce même sans changement de loss.
+         * Avant : delta_nonce figé à 0.950 si loss stable (ne bougeait pas sans record).
+         * Maintenant : oscillation légère ±2% autour de la valeur courante pour
+         * maintenir l'exploration même en période de stagnation (loss ±5%).
+         * Ref : analysechatgpt91.36.md BUG B-NX48 — 2026-04-11 */
+        double oscillation = (s->update_count % 2 == 0) ? 1.02 : 0.98;
+        s->delta_nonce_scale *= oscillation;
     }
 
-    /* Batch size : augmente si hashrate sous-optimal */
-    if (hashrate_mhs > 0 && hashrate_mhs < 100.0)
-        s->batch_size_scale = clamp(s->batch_size_scale * 1.05, 0.5, 4.0);
+    /* Batch size : adaptatif selon grad_norm (C64-FIX-B-BATCH).
+     * Avant : croissance géométrique fixe ×1.05 non-adaptatif.
+     * Maintenant : taux adaptatif fonction du gradient (grad_norm fort = grands pas).
+     * Ref : analysechatgpt91.36.md BUG B-BATCH — 2026-04-11 */
+    if (hashrate_mhs > 0 && hashrate_mhs < 100.0) {
+        double adapt_rate = (s->grad_norm > 0.20) ? 1.08 : 1.02;
+        s->batch_size_scale = clamp(s->batch_size_scale * adapt_rate, 0.5, 4.0);
+    }
 
     /* Mise à jour record leading_zeros */
     if (best_leading_zeros > s->best_leading_zeros) {

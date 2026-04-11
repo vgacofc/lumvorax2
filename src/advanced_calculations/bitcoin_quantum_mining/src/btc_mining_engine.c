@@ -200,6 +200,12 @@ static void engine_ptmc_swap(btc_engine_t* eng) {
             r1->swaps_accepted++;
             r2->swaps_accepted++;
             BTC_FORENSIC_PTMC_SWAP(r + 1, r, accept);
+        } else {
+            /* C64-FIX-B-PTMC : logger aussi les swaps rejetés pour traçabilité forensique.
+             * Avant : swap rejeté = absent du log → "swap manquant hot=3/cold=2" apparent.
+             * Maintenant : accept négatif dans le log signale un swap tenté mais rejeté.
+             * Ref : analysechatgpt91.36.md BUG B-PTMC — 2026-04-11 */
+            BTC_FORENSIC_PTMC_SWAP(r + 1, r, -accept);
         }
 
         pthread_mutex_unlock(&r2->mutex);
@@ -374,7 +380,9 @@ static void* btc_mining_thread(void* arg) {
         }
 
         /* Échange répliques PT-MC (thread 0 uniquement) */
-        if (work->thread_id == 0 && ts_now2 - ts_last_swap > 500000000ULL) {
+        /* C64-FIX-B-PTMC : intervalle swap réduit 500ms→100ms pour plus d'échanges thermiques.
+         * Ref : analysechatgpt91.36.md BUG B-PTMC — 2026-04-11 */
+        if (work->thread_id == 0 && ts_now2 - ts_last_swap > 100000000ULL) {
             ts_last_swap = ts_now2;
             engine_ptmc_swap(eng);
         }

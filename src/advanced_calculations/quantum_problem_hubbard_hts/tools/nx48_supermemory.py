@@ -180,44 +180,65 @@ def search_memories(query: str, limit: int = 20) -> list[dict]:
 
 def list_memories(limit: int = 50) -> list[dict]:
     """Liste toutes les mémoires du conteneur NX48.
-    Tente d'abord un GET sans query (liste brute), puis fallback
-    avec une recherche générique si la liste est vide — nécessaire
-    car l'API Supermemory v3 peut exiger un paramètre 'q' non vide.
+    C64-FIX-SUPERMEMORY : l'API v3 retourne 404 si q est absent ou vide.
+    Stratégie multi-endpoint :
+      1. GET /v3/memories/search  (endpoint de recherche dédié v3)
+      2. GET /v3/memories          avec q=lumvorax (endpoint legacy)
+      3. GET /v3/memories          avec q=NX48, cycle, etc. (fallbacks)
+      4. Si tout échoue → retourner le cache local (ne jamais planter).
+    Ref : analysechatgpt91.33.md §BUG list_memories HTTP 404 — 2026-04-11
     """
     if not SUPERMEMORY_API_KEY:
-        return []
+        log.warning("SUPERMEMORY_API_KEY absent — list_memories retourne cache local")
+        cache = _load_cache()
+        return cache.get("memories", [])
 
-    for q_val in [None, "lumvorax", "cycle", "NX48"]:
-        params: dict = {"containerTags": CONTAINER_TAG, "limit": limit}
-        if q_val is not None:
-            params["q"] = q_val
+    # Stratégie 1 : endpoint /v3/memories/search (v3 dédié)
+    for q_val in ["lumvorax", "NX48", "cycle", "hubbard", "bitcoin"]:
+        try:
+            r = requests.get(
+                f"{SUPERMEMORY_BASE_URL}/memories/search",
+                headers=_headers(),
+                params={"q": q_val, "containerTags": CONTAINER_TAG, "limit": limit},
+                timeout=TIMEOUT_S,
+            )
+            if r.status_code == 200:
+                data = r.json()
+                results = data.get("results", data.get("memories", data if isinstance(data, list) else []))
+                if results:
+                    log.info(f"list_memories (/search q='{q_val}'): {len(results)} mémoires")
+                    return results
+            elif r.status_code not in (404, 422):
+                log.warning(f"list_memories /search HTTP {r.status_code} : {r.text[:200]}")
+        except Exception as e:
+            log.warning(f"list_memories /search erreur : {e}")
+        time.sleep(0.2)
+
+    # Stratégie 2 : endpoint /v3/memories avec q obligatoire
+    for q_val in ["lumvorax", "NX48", "cycle"]:
         try:
             r = requests.get(
                 f"{SUPERMEMORY_BASE_URL}/memories",
                 headers=_headers(),
-                params=params,
+                params={"q": q_val, "containerTags": CONTAINER_TAG, "limit": limit},
                 timeout=TIMEOUT_S,
             )
             if r.status_code == 200:
                 data = r.json()
                 results = data.get("results", data.get("memories", []))
                 if results:
-                    if q_val is not None:
-                        log.info(f"list_memories: {len(results)} mémoires via fallback q='{q_val}'")
+                    log.info(f"list_memories (/memories q='{q_val}'): {len(results)} mémoires")
                     return results
-                # réponse 200 mais vide → essayer le prochain fallback
             else:
                 log.warning(f"list_memories HTTP {r.status_code} (q={q_val!r}) : {r.text[:200]}")
-                # C64-FIX : q=None retourne 404 sur l'API Supermemory v3 (requiert un q).
-                # On ne fait pas break ici — on laisse les fallbacks (q="lumvorax" etc.) s'exécuter.
-                # break uniquement si q_val est défini et l'erreur est inattendue (≠404).
-                if q_val is not None and r.status_code != 404:
-                    break  # erreur HTTP inattendue sur un vrai paramètre → stop
         except Exception as e:
             log.warning(f"list_memories erreur (q={q_val!r}) : {e}")
-            if q_val is not None:
-                break
-    return []
+        time.sleep(0.2)
+
+    # Stratégie 3 : retour cache local (ne jamais lever d'exception)
+    log.warning("list_memories : tous les endpoints ont échoué → cache local")
+    cache = _load_cache()
+    return cache.get("memories", [])
 
 
 # ── Initialisation au démarrage ───────────────────────────────────────────────

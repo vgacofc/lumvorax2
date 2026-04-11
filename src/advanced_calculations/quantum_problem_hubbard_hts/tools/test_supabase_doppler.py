@@ -37,14 +37,23 @@ SERVICE_KEY     = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
 DOPPLER_TOKEN   = os.environ.get("DOPPLER_TOKEN", "").strip()
 
 def _derive_url():
+    # C64-FIX-SUPABASE : SUPABASE8_API_URL peut être postgresql:// → invalide pour REST.
+    # Priorité : 1) URL HTTPS explicite, 2) dérivée de SUPABASE_DB_HOST, 3) puburl.
     u = (os.environ.get("SUPABASE8_API_URL") or
          os.environ.get("SUPABASE_URL_HTTP") or "").strip().rstrip("/")
     if u.startswith("https://") and "supabase.co" in u:
         return u
+    # Dérivation depuis SUPABASE_DB_HOST (db.<project_id>.supabase.co → https://<project_id>.supabase.co)
     db = os.environ.get("SUPABASE_DB_HOST","").strip()
     if db.startswith("db.") and ".supabase.co" in db:
         pid = db[3:].replace(".supabase.co","")
         return f"https://{pid}.supabase.co"
+    # Fallback : dériver depuis SUPABASE_DB_HOST sans préfixe "db."
+    if ".supabase.co" in db:
+        parts = db.split(".")
+        if len(parts) >= 3:
+            pid = parts[-3] if parts[0] == "db" else parts[0]
+            return f"https://{pid}.supabase.co"
     return ""
 
 SUPABASE_URL = _derive_url()
@@ -411,6 +420,73 @@ if "--create-tables" in sys.argv and pg_ok and pg_conn_params:
                     enabled    BOOLEAN DEFAULT TRUE,
                     created_at TIMESTAMPTZ DEFAULT now()
                 );
+            """,
+            "btc_mining_runs": """
+                CREATE TABLE IF NOT EXISTS btc_mining_runs (
+                    id                   BIGSERIAL PRIMARY KEY,
+                    run_id               TEXT NOT NULL UNIQUE,
+                    cycle_id             TEXT,
+                    network              TEXT DEFAULT 'TESTNET3',
+                    n_threads            INT,
+                    duration_s           DOUBLE PRECISION,
+                    nonces_total         BIGINT,
+                    hashrate_mhs_final   DOUBLE PRECISION,
+                    best_leading_zeros   INT,
+                    best_nonce           BIGINT,
+                    block_valid          BOOLEAN DEFAULT FALSE,
+                    btc_ptmc_n_replicas  INT,
+                    btc_ptmc_swap_rate   DOUBLE PRECISION,
+                    nx48_update_count    INT,
+                    nx48_delta_nonce_scale DOUBLE PRECISION,
+                    nx48_exploration_bias  DOUBLE PRECISION,
+                    nx48_loss_final      DOUBLE PRECISION,
+                    nx48_grad_norm       DOUBLE PRECISION,
+                    sha256_timing_ns_avg DOUBLE PRECISION,
+                    sha256_timing_ns_end DOUBLE PRECISION,
+                    sha256_drift_pct     DOUBLE PRECISION,
+                    near_miss_count      INT,
+                    memory_peak_kb       BIGINT,
+                    cpu_delta_pct        DOUBLE PRECISION,
+                    wallet_address_bech32 TEXT,
+                    wallet_address_p2pkh  TEXT,
+                    created_at           TIMESTAMPTZ DEFAULT now()
+                );
+                CREATE INDEX IF NOT EXISTS idx_btc_runs_run_id ON btc_mining_runs(run_id);
+                CREATE INDEX IF NOT EXISTS idx_btc_runs_leading_zeros ON btc_mining_runs(best_leading_zeros DESC);
+                CREATE INDEX IF NOT EXISTS idx_btc_runs_cycle ON btc_mining_runs(cycle_id);
+            """,
+            "hts_run_metrics": """
+                CREATE TABLE IF NOT EXISTS hts_run_metrics (
+                    id                   BIGSERIAL PRIMARY KEY,
+                    run_id               TEXT NOT NULL,
+                    cycle_id             TEXT,
+                    module               TEXT NOT NULL,
+                    energy_ev            DOUBLE PRECISION,
+                    pairing              DOUBLE PRECISION,
+                    sign_ratio           DOUBLE PRECISION,
+                    rmse_qmc             DOUBLE PRECISION,
+                    rmse_ext_mod         DOUBLE PRECISION,
+                    avg_swap_accept      DOUBLE PRECISION,
+                    avg_mc_accept        DOUBLE PRECISION,
+                    delta_mc_final       DOUBLE PRECISION,
+                    chi_sc               DOUBLE PRECISION,
+                    nx48_qubits_next     DOUBLE PRECISION,
+                    nx48_qubits_curr     DOUBLE PRECISION,
+                    nx48_t_ratio_scale   DOUBLE PRECISION,
+                    nx48_n_replicas_scale DOUBLE PRECISION,
+                    bench_good           DOUBLE PRECISION,
+                    grad_bench_err       DOUBLE PRECISION,
+                    pt_mc_t_ratio        DOUBLE PRECISION,
+                    pt_mc_n_thermalize   INT,
+                    pt_mc_n_replicas     INT,
+                    elapsed_ns           BIGINT,
+                    cpu_peak_pct         DOUBLE PRECISION,
+                    mem_peak_pct         DOUBLE PRECISION,
+                    created_at           TIMESTAMPTZ DEFAULT now()
+                );
+                CREATE INDEX IF NOT EXISTS idx_hts_metrics_run_id ON hts_run_metrics(run_id);
+                CREATE INDEX IF NOT EXISTS idx_hts_metrics_module ON hts_run_metrics(module);
+                CREATE INDEX IF NOT EXISTS idx_hts_metrics_cycle ON hts_run_metrics(cycle_id);
             """,
         }
 
