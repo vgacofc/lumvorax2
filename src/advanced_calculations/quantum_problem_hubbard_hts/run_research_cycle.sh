@@ -168,6 +168,24 @@ else
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL-WARN] Download partiel ou pas de connexion — continue sans"
 fi
 
+# ── C61-P0 : Rotation automatique logs forensics > 100 MB ────────────────────
+# Prévient la saturation disque (pattern C60 : 50 GB atteints avant cleaning).
+# Supprime uniquement les fichiers volatils > 100 MB, jamais le cache NX48.
+_ROT_COUNT=0
+for _ROT_DIR in "$ROOT_DIR/logs/forensic" "$ROOT_DIR/logs" "$ROOT_DIR/results"; do
+    if [ -d "$_ROT_DIR" ]; then
+        while IFS= read -r -d '' _F; do
+            rm -f "$_F" 2>/dev/null && _ROT_COUNT=$((_ROT_COUNT+1))
+        done < <(find "$_ROT_DIR" \
+            \( -name "pt_mc_swap_detail_*" -o -name "simulate_adv_*" \
+               -o -name "simulate_fs_*" -o -name "worm_mc_ultra_*" \
+               -o -name "ultra_forensic_*.log" -o -name "lumvorax_module_*" \) \
+            -size +100M -print0 2>/dev/null)
+    fi
+done
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C61-ROT] ${_ROT_COUNT} fichier(s) forensics > 100MB supprimés (prévention saturation disque)"
+unset _ROT_COUNT _ROT_DIR _F
+
 # ── BC-LV04 fix : Suppression TOTALE de toutes les restrictions de ressources ──
 # Aucun ulimit RAM/CPU — test jusqu'aux limites hardware réelles (99% dynamique)
 ulimit -v unlimited 2>/dev/null || true
@@ -524,6 +542,25 @@ checkpoint_save 10
 
 LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
 ADV_RUN_DIR="$ROOT_DIR/results/$LATEST_ADV_RUN"
+
+# ── C61-P1 : Archivage anomalies D² par run_id ──────────────────────────────
+# Copie le fichier d'anomalies temporelles D² dans le répertoire du run courant.
+# Évite l'accumulation multi-runs (489 lignes cumulées C60) et permet la traçabilité.
+# Ref : analysechatgpt91.30.md §5.3 PATTERN-D2-ANOMALIES-MULTI-RUNS.
+if [ -n "$LATEST_ADV_RUN" ] && [ -d "$ADV_RUN_DIR" ]; then
+    for _D2F in \
+        "$ROOT_DIR/logs/forensic/anomalies/temporal_d2_anomalies.log" \
+        "$ROOT_DIR/logs/forensic/temporal_d2_anomalies.log" \
+        "$ROOT_DIR/logs/temporal_d2_anomalies.log"; do
+        if [ -f "$_D2F" ]; then
+            cp "$_D2F" "$ADV_RUN_DIR/temporal_d2_anomalies_${LATEST_ADV_RUN}.log" 2>/dev/null || true
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C61-D2-ARCHIVE] temporal_d2_anomalies.log → $ADV_RUN_DIR (run_id=$LATEST_ADV_RUN)"
+            > "$_D2F" 2>/dev/null || true
+            break
+        fi
+    done
+fi
+unset _D2F
 
 # ── C37-SPLITLOG : séparation lumvorax par module (runner advanced_parallel) ──
 echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SPLITLOG] Split lumvorax → modules individuels : $ADV_RUN_DIR"

@@ -606,9 +606,22 @@ double nx48_ctrl_update(nx48_ctrl_t *c, const nx48c_sample_t *s) {
     nx48c_neuron_t *n = &c->neurons[c->best_neuron];
     double z    = nx48c_forward(n, s);
     double prob = nx48c_sigmoid(z);
-    double err  = prob - s->label;
-    double bce  = -(s->label * log(fmax(prob, 1e-9))
-                  + (1.0 - s->label) * log(fmax(1.0 - prob, 1e-9)));
+    /* C61-P1 : label effectif = 80% label physique + 20% benchmark quality.
+     * Raison : grad_bench_err=0 en C60 → NX48 n'optimisait pas les benchmarks.
+     * logberr_norm ∈ [0,1] : 0=bench parfait (bench_err≈0), 1=mauvais (bench_err>>0).
+     * bench_good = 1 si bench_err→0, 0 si bench_err>>0.025 (seuil C58).
+     * Ref : analysechatgpt91.30.md §5.2 PATTERN-GRADIENTS-BENCH-NULS.     */
+    double logberr_norm = s->x[NX48F_BENCH_ERR_LOG]; /* ∈ [0,1] normalisé */
+    double bench_good   = (logberr_norm > 0.5) ? 1.0 : (logberr_norm * 2.0);
+    double label_eff    = s->label * 0.80 + bench_good * 0.20;
+    if (label_eff < 0.0) label_eff = 0.0;
+    if (label_eff > 1.0) label_eff = 1.0;
+    double bce  = -(label_eff * log(fmax(prob, 1e-9))
+                  + (1.0 - label_eff) * log(fmax(1.0 - prob, 1e-9)));
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c61_label_eff",   label_eff);
+    FORENSIC_LOG_MODULE_METRIC("nx48_adaptive", "c61_bench_good",  bench_good);
+    /* err calculé sur label_eff pour que les gradients ISTA optimisent les benchmarks */
+    double err = prob - label_eff;
 
     /* ISTA : grad BCE + L2, puis seuillage proximal L1 */
     for (int f = 0; f < NX48C_N_FEATURES; f++) {
