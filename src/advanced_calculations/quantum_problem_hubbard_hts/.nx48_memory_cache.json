@@ -1751,8 +1751,50 @@
       "content": "[C61] [BUG] simulate_fs : sign_ratio=0.002, overhead 202500×. Solution recommandée : Fermion Bag Algorithm (gain +30% score global). Label cycle vercel_log_streamer.py corrigé C54 : label dynamique LUMVORAX_CYCLE_ID.",
       "category": "bug",
       "timestamp": "2026-04-11T18:24:48.406799+00:00"
+    },
+    {
+      "id": "bLceR1ojSLVZkbH4ufBwwH",
+      "content": "[C61] Session démarrée — run_id=20260411T183228Z à 2026-04-11T18:32:29.455505+00:00. Grille RCS : 56×110 = 12320 qubits physiques. NX48 neurone actif. Mémoires locales : 292.",
+      "type": "session_start",
+      "timestamp": "2026-04-11T18:32:30.941095+00:00"
+    },
+    {
+      "id": "bVSi9XsaXBsvKeSdwkUzgF",
+      "content": "[C61] [ANOMALIE] F_XEB converge vers 1/3 universel indépendamment de la taille de grille. C43=0.3332 (392 qubits), C47=0.3333 (6160 qubits), C53=0.3330 (6160 qubits). Facteur 16× en qubits, Δ F_XEB < 0.05%. Point fixe Hubbard-Porter-Thomas — absent de la littérature XEB. Hypothèse : D × (1/D + 1/(3D)) - 1 → 1/3 dans la limite MF thermodynamique.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:32:32.877333+00:00"
+    },
+    {
+      "id": "MmPiCtZmHjMdRwpaerk7VJ",
+      "content": "[C61] [PHYSIQUE] pairing_corr = 1/3 exact pour réseau 2×2, U=8 eV (Lanczos exact_diag). Correspond au singulet Heisenberg J=4t²/U. pairing_corr = 1/2 pour U=4 eV. Fractions exactes confirment la validité du code.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:32:34.570702+00:00"
+    },
+    {
+      "id": "ukbpLzZg5pZMn8g43kEF7r",
+      "content": "[C61] [ANOMALIE] log_D_eff_xeb = 40×ln(2) = 27.7259 nats — identique entre C45 et C47. La dimension effective XEB est depth-limited (profondeur=40), pas size-limited. Implication : XEB ne croît pas avec n_qubits dans notre simulateur MF.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:32:36.304055+00:00"
+    },
+    {
+      "id": "G4fLWYysVvfTAJXajwsARo",
+      "content": "[C61] [PHYSIQUE] Tc-scan Hubbard HTS (U=8, t=1, mu=0.2) : oscillation chi_sc à 67-68.5K. Pic local chi_sc=4.75e-8 à 67.5K, creux à 67K (4.05e-8). Signature possible de compétition SC-SDW. Tc estimée ≈ 63-65K.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:32:38.160197+00:00"
+    },
+    {
+      "id": "YxiwVLQ8cWPxPSV27yqHtR",
+      "content": "[C61] [BUG] ed_benchmark_energy_within=0 dans advanced_parallel — ED hors tolérance artéfactiel. Cause : tolérance non définie pour ED avancé. Le benchmark temps réel (C68) est correct. Bug#5 : u_eV_sim=4.0 utilisé pour benchmark U=8 dans ed_bench_c44fix.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:32:39.720137+00:00"
+    },
+    {
+      "id": "RTpfCe3LbxiYyU4uz7ZKNb",
+      "content": "[C61] [OPTIMISATION] Worm-MC: 100.8M propositions rejetées pour Mott insulator (n_accepted=0). Optimisation: détection Mott en 1000 propositions, arrêt anticipé. Économie estimée: 99.999% du temps Worm-MC.",
+      "category": "optimisation",
+      "timestamp": "2026-04-11T18:32:41.484468+00:00"
     }
   ],
   "last_sync_utc": null,
-  "total_sent": 292
+  "total_sent": 299
 }
