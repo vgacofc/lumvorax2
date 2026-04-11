@@ -518,13 +518,17 @@ nx48_ctrl_params_t nx48_ctrl_predict(nx48_ctrl_t *c,
     if (p.n_replicas_scale > 2.0) p.n_replicas_scale = 2.0;
 
     /* 11. temp_K_scale : moduler la température selon la convergence du signe.
-     *     prob < 0.3 (mauvais signe) → baisser T (refroidissement, meilleur ordre SC).
-     *     prob ≥ 0.6 (bon signe)     → monter T légèrement (exploration thermique).
-     *     Plage [0.85, 1.15]. */
-    if      (prob < 0.3) p.temp_K_scale = 0.88;
-    else if (prob < 0.5) p.temp_K_scale = 0.94;
+     *     C60-BENCHFIX : Borne stricte ±3% pour préserver la calibration benchmark.
+     *     Raison empirique : C59/C60 démontrent que scale=0.94 (−6%) → RMSE ×4.
+     *     Les benchmarks (qmc_dmrg_reference_runtime.csv) sont définis aux T_base
+     *     invariantes. Tout écart > ±3% décale les points d'opération hors référence.
+     *     Plage réduite [0.97, 1.03] : adaptation thermique minimale sûre.
+     *     Ref : analysechatgpt91.29.md §6.1 CAUSE PRINCIPALE RÉGRESSION RMSE C59/C60.
+     *     Chaque module reçoit son scale indépendant via nx48_ctrl_predict() → CSV. */
+    if      (prob < 0.3) p.temp_K_scale = 0.97;
+    else if (prob < 0.5) p.temp_K_scale = 0.99;
     else if (prob < 0.7) p.temp_K_scale = 1.00;
-    else                 p.temp_K_scale = 1.08;
+    else                 p.temp_K_scale = 1.02;
 
     /* 12. U_eV_scale : moduler U selon le ratio U/t (feature NX48F_U_T_NORM = U/t / 20).
      *     U/t élevé (feature > 0.5 → U/t > 10) → légère réduction U pour améliorer signe.

@@ -457,6 +457,31 @@ if [ "${RESUME_FROM_PHASE:-0}" -eq 0 ]; then
     echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Nouveau cycle — marqueur ADVANCED_DONE supprimé"
 fi
 
+# ── C60-OPENML-RT-WATCHER : surveillance du signal JSON OpenML en temps réel ─
+# Ce watcher bash lit config/nx48_openml_rt.json (écrit par C60_OPENML_RT dans le
+# runner C) et affiche l'avancement en % dans les logs du workflow.
+# Chaque module NX48 traité met à jour le fichier JSON, ce watcher l'affiche.
+# Fréquence de polling : 10 secondes (compromis entre réactivité et overhead).
+OPENML_SIGNAL="$ROOT_DIR/config/nx48_openml_rt.json"
+_last_module_seen=""
+(
+  while true; do
+    sleep 10
+    if [ -f "$OPENML_SIGNAL" ]; then
+      _pct=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('pct',0))" 2>/dev/null || echo "?")
+      _mod=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('module','?'))" 2>/dev/null || echo "?")
+      _adv=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(str(d.get('avancement','?'))+'/'+str(d.get('total','?')))" 2>/dev/null || echo "?/?")
+      _tscale=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('temp_K_scale',0))" 2>/dev/null || echo "?")
+      if [ "$_mod" != "$_last_module_seen" ]; then
+        echo "[C60-OPENML-RT-WATCHER] $(date -u +%Y-%m-%dT%H:%M:%SZ) AVANCEMENT=${_pct}% — module=${_mod} (${_adv}) temp_K_scale=${_tscale}"
+        _last_module_seen="$_mod"
+      fi
+    fi
+  done
+) &
+OPENML_WATCHER_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-OPENML-RT-WATCHER] Watcher démarré PID=$OPENML_WATCHER_PID"
+
 # ── C26-RUNNER-RETRY : relance automatique si le runner advanced_parallel est tué ─
 ADV_OK=0
 if [ -f "$ADVANCED_DONE_FILE" ] && [ "${RESUME_FROM_PHASE:-0}" -ge 10 ]; then

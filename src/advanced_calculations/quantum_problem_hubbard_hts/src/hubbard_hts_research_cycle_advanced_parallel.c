@@ -2620,6 +2620,47 @@ int main(int argc, char** argv) {
                 n_phase_b_rt_saved = i + 1;
                 fprintf(stderr, "[C59-RT] Phase B sauvegardée temps réel : %d/%d modules → %s\n",
                         n_phase_b_rt_saved, nprobs, phase_b_save_path);
+
+                /* C60-OPENML-RT : Signal temps réel OpenML intra-run.
+                 * Écrit config/nx48_openml_rt.json après chaque module NX48 traité.
+                 * Permet monitoring externe (Vercel/Supabase) et lecture par le watcher
+                 * bash. Chaque module est indépendant : ses scales NX48 sont calculés
+                 * séparément par nx48_ctrl_predict() puis persistés dans le CSV et le JSON.
+                 * Ref : analysechatgpt91.29.md §7.1 P3 — NX48 OpenML temps réel actif. */
+                {
+                    int pct_done = (int)(100.0 * (i + 1) / nprobs);
+                    fprintf(lg, "%06d | C60_OPENML_RT module=%s avancement=%d/%d pct=%d"
+                                " temp_K_scale=%.4f n_sites_scale=%.4f n_replicas_scale=%.4f\n",
+                            line++, probs[i].name, i + 1, nprobs, pct_done,
+                            nx48_rec.temp_K_scale, nx48_rec.n_sites_scale,
+                            nx48_rec.n_replicas_scale);
+                    /* Fichier JSON signal pour monitoring Vercel/Supabase */
+                    char openml_sig[MAX_PATH] = {0};
+                    pjoin(openml_sig, sizeof(openml_sig), root, "config/nx48_openml_rt.json");
+                    FILE *fsig = fopen(openml_sig, "w");
+                    if (fsig) {
+                        fprintf(fsig,
+                            "{\"run_id\":\"%s\","
+                            "\"module\":\"%s\","
+                            "\"avancement\":%d,"
+                            "\"total\":%d,"
+                            "\"pct\":%d,"
+                            "\"temp_K_scale\":%.6f,"
+                            "\"n_sites_scale\":%.6f,"
+                            "\"n_replicas_scale\":%.6f,"
+                            "\"U_eV_scale\":%.6f,"
+                            "\"status\":\"RUNNING\"}\n",
+                            run_id, probs[i].name, i + 1, nprobs, pct_done,
+                            nx48_rec.temp_K_scale, nx48_rec.n_sites_scale,
+                            nx48_rec.n_replicas_scale, nx48_rec.U_eV_scale);
+                        fclose(fsig);
+                    }
+                    fprintf(stderr, "[C60-OPENML-RT] %d%% — module %d/%d : %s"
+                                    " temp_K=%.4f sites=%.4f replicas=%.4f\n",
+                            pct_done, i + 1, nprobs, probs[i].name,
+                            nx48_rec.temp_K_scale, nx48_rec.n_sites_scale,
+                            nx48_rec.n_replicas_scale);
+                }
             }
         }
 
