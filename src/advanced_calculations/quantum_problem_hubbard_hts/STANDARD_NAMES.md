@@ -1,6 +1,6 @@
 # STANDARD_NAMES.md — Registre canonique des noms du projet LumVorax / Hubbard-HTS
 
-**Version :** 4.0 — 2026-04-11 (C61 : clamp temp_K_scale [0.97,1.03] + bench_err dans loss NX48 + DMFT local Σ(ω=0) + rotation logs forensics > 100MB + archivage anomalies D² par run_id)
+**Version :** 4.1 — 2026-04-11 (C62 : §M-BTC17 ajouté — Module 17 Bitcoin Quantum Mining Engine compilé et validé)
 **Langue obligatoire :** TOUJOURS répondre et rédiger EN FRANÇAIS dans cette session de chat.
 
 ---
