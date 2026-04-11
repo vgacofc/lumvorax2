@@ -179,23 +179,39 @@ def search_memories(query: str, limit: int = 20) -> list[dict]:
 
 
 def list_memories(limit: int = 50) -> list[dict]:
-    """Liste toutes les mémoires du conteneur NX48."""
+    """Liste toutes les mémoires du conteneur NX48.
+    Tente d'abord un GET sans query (liste brute), puis fallback
+    avec une recherche générique si la liste est vide — nécessaire
+    car l'API Supermemory v3 peut exiger un paramètre 'q' non vide.
+    """
     if not SUPERMEMORY_API_KEY:
         return []
 
-    params = {"containerTags": CONTAINER_TAG, "limit": limit}
-    try:
-        r = requests.get(
-            f"{SUPERMEMORY_BASE_URL}/memories",
-            headers=_headers(),
-            params=params,
-            timeout=TIMEOUT_S,
-        )
-        if r.status_code == 200:
-            data = r.json()
-            return data.get("results", data.get("memories", []))
-    except Exception as e:
-        log.warning(f"list_memories erreur : {e}")
+    for q_val in [None, "lumvorax", "cycle", "NX48"]:
+        params: dict = {"containerTags": CONTAINER_TAG, "limit": limit}
+        if q_val is not None:
+            params["q"] = q_val
+        try:
+            r = requests.get(
+                f"{SUPERMEMORY_BASE_URL}/memories",
+                headers=_headers(),
+                params=params,
+                timeout=TIMEOUT_S,
+            )
+            if r.status_code == 200:
+                data = r.json()
+                results = data.get("results", data.get("memories", []))
+                if results:
+                    if q_val is not None:
+                        log.info(f"list_memories: {len(results)} mémoires via fallback q='{q_val}'")
+                    return results
+                # réponse 200 mais vide → essayer le prochain fallback
+            else:
+                log.warning(f"list_memories HTTP {r.status_code} (q={q_val!r}) : {r.text[:200]}")
+                break  # erreur HTTP → inutile de réessayer
+        except Exception as e:
+            log.warning(f"list_memories erreur (q={q_val!r}) : {e}")
+            break
     return []
 
 
