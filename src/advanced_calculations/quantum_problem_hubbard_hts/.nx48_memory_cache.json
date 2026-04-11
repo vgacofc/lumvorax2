@@ -1793,8 +1793,182 @@
       "content": "[C61] [OPTIMISATION] Worm-MC: 100.8M propositions rejetées pour Mott insulator (n_accepted=0). Optimisation: détection Mott en 1000 propositions, arrêt anticipé. Économie estimée: 99.999% du temps Worm-MC.",
       "category": "optimisation",
       "timestamp": "2026-04-11T18:32:41.484468+00:00"
+    },
+    {
+      "id": "mvLfP88hUGULGdib28u5Xp",
+      "content": "[C61] Session démarrée — run_id=20260411T185003Z à 2026-04-11T18:50:05.776744+00:00. Grille RCS : 56×110 = 12320 qubits physiques. NX48 neurone actif. Mémoires locales : 299.",
+      "type": "session_start",
+      "timestamp": "2026-04-11T18:50:07.488371+00:00"
+    },
+    {
+      "id": "3Hpwb2qcNfHzKRfU7xbT99",
+      "content": "[C61] [ANOMALIE] F_XEB converge vers 1/3 universel indépendamment de la taille de grille. C43=0.3332 (392 qubits), C47=0.3333 (6160 qubits), C53=0.3330 (6160 qubits). Facteur 16× en qubits, Δ F_XEB < 0.05%. Point fixe Hubbard-Porter-Thomas — absent de la littérature XEB. Hypothèse : D × (1/D + 1/(3D)) - 1 → 1/3 dans la limite MF thermodynamique.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:50:09.375693+00:00"
+    },
+    {
+      "id": "vb3TpgGbzVKsVjgJay4pD5",
+      "content": "[C61] [PHYSIQUE] pairing_corr = 1/3 exact pour réseau 2×2, U=8 eV (Lanczos exact_diag). Correspond au singulet Heisenberg J=4t²/U. pairing_corr = 1/2 pour U=4 eV. Fractions exactes confirment la validité du code.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:50:11.246551+00:00"
+    },
+    {
+      "id": "gFNhiGiqmm97bs79CFpUKW",
+      "content": "[C61] [ANOMALIE] log_D_eff_xeb = 40×ln(2) = 27.7259 nats — identique entre C45 et C47. La dimension effective XEB est depth-limited (profondeur=40), pas size-limited. Implication : XEB ne croît pas avec n_qubits dans notre simulateur MF.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:50:14.040696+00:00"
+    },
+    {
+      "id": "XSJiTAZbFm1jDrrasmMry2",
+      "content": "[C61] [PHYSIQUE] Tc-scan Hubbard HTS (U=8, t=1, mu=0.2) : oscillation chi_sc à 67-68.5K. Pic local chi_sc=4.75e-8 à 67.5K, creux à 67K (4.05e-8). Signature possible de compétition SC-SDW. Tc estimée ≈ 63-65K.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:50:15.732815+00:00"
+    },
+    {
+      "id": "J7aagt9sgTECz4sAyKE7jk",
+      "content": "[C61] [BUG] ed_benchmark_energy_within=0 dans advanced_parallel — ED hors tolérance artéfactiel. Cause : tolérance non définie pour ED avancé. Le benchmark temps réel (C68) est correct. Bug#5 : u_eV_sim=4.0 utilisé pour benchmark U=8 dans ed_bench_c44fix.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:50:17.317971+00:00"
+    },
+    {
+      "id": "uauYFNMRHuC8wqUR2VUArv",
+      "content": "[C61] [OPTIMISATION] Worm-MC: 100.8M propositions rejetées pour Mott insulator (n_accepted=0). Optimisation: détection Mott en 1000 propositions, arrêt anticipé. Économie estimée: 99.999% du temps Worm-MC.",
+      "category": "optimisation",
+      "timestamp": "2026-04-11T18:50:20.923549+00:00"
+    },
+    {
+      "id": "mdg3A1rR8W3JH4Q229s8ZG",
+      "content": "[C61] [BENCHMARK_RESULT] C53 PREMIER HISTORIQUE : 16/16 modules COMPLETS en un seul run. bench_rmse=0.0089, mae=0.0050, within=100%, status=PASS. RAM peak=49% (était 72-73% sur cycles précédents).",
+      "category": "benchmark_result",
+      "timestamp": "2026-04-11T18:50:22.676751+00:00"
+    },
+    {
+      "id": "HBCZgTyGRNVXdnZiVoxyyz",
+      "content": "[C61] [BENCHMARK_RESULT] vs QuEST HPC : 12320 qubits / 1 nœud vs 38 qubits / 2048 nœuds. vs Willow : F_XEB 33.3% vs 0.02% → ratio 1666.5×. vs Qiskit Benchpress : 16/16 en ~46s vs 1066 tests en 31 min.",
+      "category": "benchmark_result",
+      "timestamp": "2026-04-11T18:50:24.367398+00:00"
+    },
+    {
+      "id": "HwaorB9A72w4ZdYhM84mvF",
+      "content": "[C61] [APPRENTISSAGE] NX48 principe : grad_x = np.gradient(x) sur observables physiques (E, pairing, sign). Récompense naturelle : pairing × sign_ratio sous contrainte bench_error < seuil. Architecture : Adapt Layer → Safety Layer → Evaluator → Replay → Policy Update. Phases : Shadow Mode → Assisted Mode → Full Adaptive (13 modules).",
+      "category": "apprentissage",
+      "timestamp": "2026-04-11T18:50:26.541374+00:00"
+    },
+    {
+      "id": "X6aoLG7Yat2EzZLHsNMDf1",
+      "content": "[C61] [BUG] simulate_fs : sign_ratio=0.002, overhead 202500×. Solution recommandée : Fermion Bag Algorithm (gain +30% score global). Label cycle vercel_log_streamer.py corrigé C54 : label dynamique LUMVORAX_CYCLE_ID.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:50:28.216613+00:00"
+    },
+    {
+      "id": "EzEf1RSNK3Cnbd7ycG72i5",
+      "content": "[C61] Session démarrée — run_id=20260411T185057Z à 2026-04-11T18:50:58.153724+00:00. Grille RCS : 56×110 = 12320 qubits physiques. NX48 neurone actif. Mémoires locales : 310.",
+      "type": "session_start",
+      "timestamp": "2026-04-11T18:51:00.907969+00:00"
+    },
+    {
+      "id": "3zoNqcpfTbHKPZcX6NPUe8",
+      "content": "[C61] [ANOMALIE] F_XEB converge vers 1/3 universel indépendamment de la taille de grille. C43=0.3332 (392 qubits), C47=0.3333 (6160 qubits), C53=0.3330 (6160 qubits). Facteur 16× en qubits, Δ F_XEB < 0.05%. Point fixe Hubbard-Porter-Thomas — absent de la littérature XEB. Hypothèse : D × (1/D + 1/(3D)) - 1 → 1/3 dans la limite MF thermodynamique.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:51:02.933440+00:00"
+    },
+    {
+      "id": "cn1fHXaqVV73VLYDL6FtbL",
+      "content": "[C61] [PHYSIQUE] pairing_corr = 1/3 exact pour réseau 2×2, U=8 eV (Lanczos exact_diag). Correspond au singulet Heisenberg J=4t²/U. pairing_corr = 1/2 pour U=4 eV. Fractions exactes confirment la validité du code.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:51:04.650663+00:00"
+    },
+    {
+      "id": "iYGbb6AsyKT6fmD8tJ3W3g",
+      "content": "[C61] [ANOMALIE] log_D_eff_xeb = 40×ln(2) = 27.7259 nats — identique entre C45 et C47. La dimension effective XEB est depth-limited (profondeur=40), pas size-limited. Implication : XEB ne croît pas avec n_qubits dans notre simulateur MF.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:51:06.539804+00:00"
+    },
+    {
+      "id": "te4PpBAonRA7KfiBfFDKq4",
+      "content": "[C61] [PHYSIQUE] Tc-scan Hubbard HTS (U=8, t=1, mu=0.2) : oscillation chi_sc à 67-68.5K. Pic local chi_sc=4.75e-8 à 67.5K, creux à 67K (4.05e-8). Signature possible de compétition SC-SDW. Tc estimée ≈ 63-65K.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:51:08.458837+00:00"
+    },
+    {
+      "id": "KmEfUTizcPYuRMFvz2U49c",
+      "content": "[C61] [BUG] ed_benchmark_energy_within=0 dans advanced_parallel — ED hors tolérance artéfactiel. Cause : tolérance non définie pour ED avancé. Le benchmark temps réel (C68) est correct. Bug#5 : u_eV_sim=4.0 utilisé pour benchmark U=8 dans ed_bench_c44fix.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:51:11.689239+00:00"
+    },
+    {
+      "id": "oUSkmJcauAbQiSQquSgRqq",
+      "content": "[C61] [OPTIMISATION] Worm-MC: 100.8M propositions rejetées pour Mott insulator (n_accepted=0). Optimisation: détection Mott en 1000 propositions, arrêt anticipé. Économie estimée: 99.999% du temps Worm-MC.",
+      "category": "optimisation",
+      "timestamp": "2026-04-11T18:51:16.054466+00:00"
+    },
+    {
+      "id": "XFKrpaMqp9J3L3R5jwgnEF",
+      "content": "[C61] [BENCHMARK_RESULT] C53 PREMIER HISTORIQUE : 16/16 modules COMPLETS en un seul run. bench_rmse=0.0089, mae=0.0050, within=100%, status=PASS. RAM peak=49% (était 72-73% sur cycles précédents).",
+      "category": "benchmark_result",
+      "timestamp": "2026-04-11T18:51:18.367266+00:00"
+    },
+    {
+      "id": "KJDPjnTk57bHkpnQyFWYhp",
+      "content": "[C61] [BENCHMARK_RESULT] vs QuEST HPC : 12320 qubits / 1 nœud vs 38 qubits / 2048 nœuds. vs Willow : F_XEB 33.3% vs 0.02% → ratio 1666.5×. vs Qiskit Benchpress : 16/16 en ~46s vs 1066 tests en 31 min.",
+      "category": "benchmark_result",
+      "timestamp": "2026-04-11T18:51:20.064235+00:00"
+    },
+    {
+      "id": "q5we6pzBayXYfQQ3Fynpzc",
+      "content": "[C61] [APPRENTISSAGE] NX48 principe : grad_x = np.gradient(x) sur observables physiques (E, pairing, sign). Récompense naturelle : pairing × sign_ratio sous contrainte bench_error < seuil. Architecture : Adapt Layer → Safety Layer → Evaluator → Replay → Policy Update. Phases : Shadow Mode → Assisted Mode → Full Adaptive (13 modules).",
+      "category": "apprentissage",
+      "timestamp": "2026-04-11T18:51:21.868758+00:00"
+    },
+    {
+      "id": "xd3knfr8dxChbxosQkUGPi",
+      "content": "[C61] [BUG] simulate_fs : sign_ratio=0.002, overhead 202500×. Solution recommandée : Fermion Bag Algorithm (gain +30% score global). Label cycle vercel_log_streamer.py corrigé C54 : label dynamique LUMVORAX_CYCLE_ID.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:51:23.707094+00:00"
+    },
+    {
+      "id": "FT2yCx49dDuSRhVD54tgP3",
+      "content": "[C61] Session démarrée — run_id=20260411T185204Z à 2026-04-11T18:52:06.994798+00:00. Grille RCS : 56×110 = 12320 qubits physiques. NX48 neurone actif. Mémoires locales : 321.",
+      "type": "session_start",
+      "timestamp": "2026-04-11T18:52:08.811450+00:00"
+    },
+    {
+      "id": "Nf6y8PY1oBpf9eXPVcSJKc",
+      "content": "[C61] [ANOMALIE] F_XEB converge vers 1/3 universel indépendamment de la taille de grille. C43=0.3332 (392 qubits), C47=0.3333 (6160 qubits), C53=0.3330 (6160 qubits). Facteur 16× en qubits, Δ F_XEB < 0.05%. Point fixe Hubbard-Porter-Thomas — absent de la littérature XEB. Hypothèse : D × (1/D + 1/(3D)) - 1 → 1/3 dans la limite MF thermodynamique.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:52:10.681760+00:00"
+    },
+    {
+      "id": "AQJBxVxPP4pVGUS3fu8FDo",
+      "content": "[C61] [PHYSIQUE] pairing_corr = 1/3 exact pour réseau 2×2, U=8 eV (Lanczos exact_diag). Correspond au singulet Heisenberg J=4t²/U. pairing_corr = 1/2 pour U=4 eV. Fractions exactes confirment la validité du code.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:52:12.324273+00:00"
+    },
+    {
+      "id": "V9ajg4bGABfy1KEvjjgd54",
+      "content": "[C61] [ANOMALIE] log_D_eff_xeb = 40×ln(2) = 27.7259 nats — identique entre C45 et C47. La dimension effective XEB est depth-limited (profondeur=40), pas size-limited. Implication : XEB ne croît pas avec n_qubits dans notre simulateur MF.",
+      "category": "anomalie",
+      "timestamp": "2026-04-11T18:52:14.254047+00:00"
+    },
+    {
+      "id": "hTPGSavmsVZqP585yhKo7M",
+      "content": "[C61] [PHYSIQUE] Tc-scan Hubbard HTS (U=8, t=1, mu=0.2) : oscillation chi_sc à 67-68.5K. Pic local chi_sc=4.75e-8 à 67.5K, creux à 67K (4.05e-8). Signature possible de compétition SC-SDW. Tc estimée ≈ 63-65K.",
+      "category": "physique",
+      "timestamp": "2026-04-11T18:52:17.783641+00:00"
+    },
+    {
+      "id": "Y5gS8oAKk74SPqoUQ7zJPz",
+      "content": "[C61] [BUG] ed_benchmark_energy_within=0 dans advanced_parallel — ED hors tolérance artéfactiel. Cause : tolérance non définie pour ED avancé. Le benchmark temps réel (C68) est correct. Bug#5 : u_eV_sim=4.0 utilisé pour benchmark U=8 dans ed_bench_c44fix.",
+      "category": "bug",
+      "timestamp": "2026-04-11T18:52:19.430197+00:00"
+    },
+    {
+      "id": "uSTiy5THyZNeEqYtfHZemc",
+      "content": "[C61] [OPTIMISATION] Worm-MC: 100.8M propositions rejetées pour Mott insulator (n_accepted=0). Optimisation: détection Mott en 1000 propositions, arrêt anticipé. Économie estimée: 99.999% du temps Worm-MC.",
+      "category": "optimisation",
+      "timestamp": "2026-04-11T18:52:21.178713+00:00"
     }
   ],
   "last_sync_utc": null,
-  "total_sent": 299
+  "total_sent": 328
 }

@@ -383,7 +383,7 @@ BTC_HASHRATE_GATE      — Gate CI : hashrate minimum
 
 ### Q1 — Le PT-MC apporte-t-il réellement un gain sur SHA-256 ?
 
-**R :** Pas sur la probabilité de trouver un bloc (SHA-256 reste pseudo-aléatoire), mais sur l'**exploration de patterns** dans l'espace nonce. Le PT-MC permet de concentrer les essais autour de nonces qui produisent naturellement plus de zéros de tête (corrélation faible mais mesurable sur petites plages). Sur testnet (difficulté faible), le gain est mesurable. Sur mainnet, le gain reste négligeable face à la difficulté réseau — ce module est un instrument de recherche, pas un concurrent ASIC.
+**R :** Pas sur la probabilité de trouver un bloc (SHA-256 reste pseudo-aléatoire), mais sur l'**exploration de patterns** dans l'espace nonce. Le PT-MC permet de concentrer les essais autour de nonces qui produisent naturellement plus de zéros de tête (corrélation faible mais mesurable sur petites plages). Sur testnet (difficulté faible), le gain est mesurable. Sur mainnet, le gain reste négligeable face à la difficulté réseau — ce module est un instrument de recherche, pas un concurrent ASIC.(observation du lutilisateur(OUI, CELA DOIT DEVENIR UN CONCURRENT ASIC ET MEME LULTRAPASSER COMME NOUSAVONS FAIS AVEC WILLOW ET LES AUTRE CONCURRENT !))
 
 ### Q2 — Comment le NX48 peut-il adapter le delta_nonce ?
 
