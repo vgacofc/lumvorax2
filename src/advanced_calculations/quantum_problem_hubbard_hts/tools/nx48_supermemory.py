@@ -208,10 +208,15 @@ def list_memories(limit: int = 50) -> list[dict]:
                 # réponse 200 mais vide → essayer le prochain fallback
             else:
                 log.warning(f"list_memories HTTP {r.status_code} (q={q_val!r}) : {r.text[:200]}")
-                break  # erreur HTTP → inutile de réessayer
+                # C64-FIX : q=None retourne 404 sur l'API Supermemory v3 (requiert un q).
+                # On ne fait pas break ici — on laisse les fallbacks (q="lumvorax" etc.) s'exécuter.
+                # break uniquement si q_val est défini et l'erreur est inattendue (≠404).
+                if q_val is not None and r.status_code != 404:
+                    break  # erreur HTTP inattendue sur un vrai paramètre → stop
         except Exception as e:
             log.warning(f"list_memories erreur (q={q_val!r}) : {e}")
-            break
+            if q_val is not None:
+                break
     return []
 
 
@@ -227,13 +232,18 @@ def init_session(run_id: str) -> dict:
     log.info(f"=== NX48 SUPERMEMORY INIT — run={run_id} cycle={_current_cycle()} ===")
     cache = _load_cache()
 
-    needs_remote_fetch = (
-        len(cache.get("memories", [])) == 0 or
-        cache.get("last_sync_utc") is None
-    )
+    # C64-FIX : ne déclencher le fetch distant QUE si le cache local est vraiment vide.
+    # last_sync_utc absent ne justifie pas un fetch quand les mémoires locales existent.
+    # Si le cache a des mémoires mais pas last_sync_utc, on le corrige sans fetch distant.
+    if cache.get("memories") and not cache.get("last_sync_utc"):
+        cache["last_sync_utc"] = datetime.now(timezone.utc).isoformat()
+        _save_cache(cache)
+        log.info(f"Cache local présent ({len(cache['memories'])} mémoires) — last_sync_utc initialisé, pas de fetch distant")
+
+    needs_remote_fetch = len(cache.get("memories", [])) == 0
 
     if needs_remote_fetch:
-        log.info("Cache local vide — récupération depuis Supermemory...")
+        log.info("Cache local absent — récupération initiale depuis Supermemory...")
         remote_memories = list_memories(limit=100)
         if remote_memories:
             cache["memories"] = remote_memories
