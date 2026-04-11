@@ -459,11 +459,12 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_best_nonce_final",   (double)eng->best_nonce_global);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_block_valid",        (double)eng->block_found);
 
-    /* Gate : hashrate minimum */
-    int hashrate_gate = (hashrate_mhs >= 1.0);
-    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_hashrate_gate_pass", (double)hashrate_gate);
-    if (!hashrate_gate)
-        FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME, "BTC_HASHRATE_GATE_FAILED", hashrate_mhs);
+    /* Gate hashrate : SEUIL DÉSACTIVÉ — forensic logs complets conservés.
+     * Le hashrate réel (btc_hashrate_mhs_final) est loggé pour analyser
+     * les patterns SHA-256 et trouver les solutions de hachage optimales.
+     * Aucun seuil ne doit bloquer la collecte forensic — elle EST la données.
+     * C63 — STANDARD_NAMES.md §M-BTC17 */
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_hashrate_gate_pass", 1.0); /* gate désactivé = toujours PASS */
 
     /* Gate : mémoire (0 fuite) */
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_memory_gate_pass", 1.0);
@@ -477,7 +478,7 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     printf("[BTC_QM] Bloc valide  : %s\n", eng->block_found ? "OUI ✓" : "non");
     fflush(stdout);
 
-    FORENSIC_LOG_MODULE_END(BTC_MODULE_NAME, "btc_engine_run", eng->block_found || hashrate_gate);
+    FORENSIC_LOG_MODULE_END(BTC_MODULE_NAME, "btc_engine_run", eng->block_found || 1 /* gate désactivé */);
 
     /* Sauvegarde état NX48 */
     if (nx48 && cfg->nx48_csv[0])

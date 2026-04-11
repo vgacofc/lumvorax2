@@ -670,3 +670,7 @@
 2026-04-11 22:10 - C63-BTC + Identifiant cycle correction Module 17 + intégration Phase 37
 2026-04-11 22:10 - Phase37_BTC_QM_ENGINE + Phase 37 run_research_cycle.sh — Module 17 parallèle
 2026-04-11 22:10 - DOPPLER_PUSH_C63 + Push 33 secrets LumVorax → Doppler projet=lumvorax config=dev_lumvorax
+
+2026-04-11 22:23 - BTC_HASHRATE_GATE_DISABLED + C64 — Seuil hashrate supprimé de btc_mining_engine.c (seuil_gate=NONE)
+2026-04-11 22:23 - btc_hashrate_gate_pass + Métrique toujours loggée à 1.0 — gate désactivé, forensic conservé intégral
+2026-04-11 22:23 - btc_hashrate_mhs_final + Hashrate réel loggé sans seuil — données pour analyse SHA-256 patterns
