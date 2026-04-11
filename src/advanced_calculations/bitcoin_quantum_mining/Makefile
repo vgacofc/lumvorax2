@@ -12,20 +12,24 @@
 
 CC      ?= gcc
 CFLAGS  ?= -O3 -std=c11 -Wall -Wextra \
-           -D_POSIX_C_SOURCE=200809L \
-           -DLUMVORAX_ENABLED=1 \
-           -march=native \
-           -ftree-vectorize \
-           -fopenmp
+	-D_POSIX_C_SOURCE=200809L \
+	-DLUMVORAX_ENABLED=1 \
+	-march=native \
+	-ftree-vectorize \
+	-fopenmp
 
 # AVX2 pour SHA-256 8-way (si CPU le supporte — détection auto make)
 HAVE_AVX2 := $(shell echo | gcc -mavx2 -dM -E - 2>/dev/null | grep -c '__AVX2__')
 ifeq ($(HAVE_AVX2),1)
 CFLAGS += -mavx2 -DBTC_HAVE_AVX2=1
 endif
+# Supprimer les warnings OpenSSL 3.x API dépréciée (EC_KEY → EVP migration)
+CFLAGS += -Wno-deprecated-declarations
 
 LDFLAGS = -Wl,-Bdynamic,--as-needed
-LDLIBS  = -lm -lpthread -lgomp
+# OpenSSL — chemin déterminé dynamiquement via pkg-config (compatibilité Nix/standard)
+OPENSSL_LIBS := $(shell pkg-config --libs openssl 2>/dev/null || echo "-lcrypto -lssl")
+LDLIBS  = -lm -lpthread -lgomp $(OPENSSL_LIBS)
 
 # Racine LumVorax :
 #   bitcoin_quantum_mining/ -> advanced_calculations/ -> src/
@@ -37,16 +41,18 @@ HTS_ROOT := $(LUM_ROOT)advanced_calculations/quantum_problem_hubbard_hts/
 
 # Sources forensic LumVorax partagées (ultra_forensic_logger + memory_tracker)
 LUM_SRC  := $(LUM_ROOT)debug/ultra_forensic_logger.c \
-             $(LUM_ROOT)debug/memory_tracker.c
+	$(LUM_ROOT)debug/memory_tracker.c
 
 # Chemin include lumvorax_integration.c si nécessaire
 LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
 
 # Sources Module 17
 BTC_SRC  := src/sha256_lumvorax.c \
-             src/nx48_btc_controller.c \
-             src/btc_mining_engine.c \
-             src/main_btc_mining.c
+	src/nx48_btc_controller.c \
+	src/btc_mining_engine.c \
+	src/btc_wallet.c \
+	src/btc_block_validator.c \
+	src/main_btc_mining.c
 
 # Binaire principal
 BIN := btc_mining_runner
@@ -56,15 +62,15 @@ BIN := btc_mining_runner
 #   -I$(HTS_ROOT)include             → workspace/src/advanced_calculations/quantum_problem_hubbard_hts/include/
 #                                      → trouve lumvorax_integration.h
 INCLUDES := -I$(LUM_ROOT) \
-            -I$(HTS_ROOT)include \
-            -Iinclude \
-            -Isrc
+	-I$(HTS_ROOT)include \
+	-Iinclude \
+	-Isrc
 
 all: $(BIN)
 
 $(BIN): $(BTC_SRC) $(LUM_SRC)
 	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) \
-	      -o $@ $(BTC_SRC) $(LUM_SRC) $(LDLIBS)
+	-o $@ $(BTC_SRC) $(LUM_SRC) $(LDLIBS)
 	@echo "[MODULE 17] Compilation OK → $(BIN)"
 	@ls -lh $(BIN)
 

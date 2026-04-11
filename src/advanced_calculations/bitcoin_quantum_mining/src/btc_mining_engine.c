@@ -263,9 +263,15 @@ static void* btc_mining_thread(void* arg) {
                                - dn64 / 2;
                 nonce = (uint32_t)((int64_t)rep->best_nonce + offset);
             } else {
-                /* Exploration : nonce aléatoire dans la plage */
-                nonce = cfg->nonce_start + (uint32_t)(rng_next()
-                    % (uint64_t)(cfg->nonce_end - cfg->nonce_start + 1));
+                /* Exploration : nonce aléatoire dans la plage
+                 * CORRECTION SIGFPE C63 : cast explicite uint64_t AVANT
+                 * la soustraction pour éviter overflow uint32_t → modulo 0 */
+                {
+                    uint64_t range = (uint64_t)cfg->nonce_end
+                                   - (uint64_t)cfg->nonce_start + 1ULL;
+                    if (range == 0) range = 1;
+                    nonce = cfg->nonce_start + (uint32_t)(rng_next() % range);
+                }
             }
             pthread_mutex_unlock(&rep->mutex);
 

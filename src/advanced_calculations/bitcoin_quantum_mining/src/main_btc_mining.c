@@ -2,7 +2,7 @@
  * LumVorax — Module 17 — Bitcoin Quantum Mining Engine
  * main_btc_mining.c — Point d'entrée du Module 17
  *
- * STANDARD_NAMES.md v4.1 §M-BTC17 — Cycle C62 — 2026-04-11
+ * STANDARD_NAMES.md v4.2 §M-BTC17-WALLET — Cycle C63 — 2026-04-11
  *
  * Usage :
  *   ./btc_mining_runner [OPTIONS]
@@ -27,6 +27,8 @@
 #include "sha256_lumvorax.h"
 #include "nx48_btc_controller.h"
 #include "../include/btc_mining_forensic.h"
+#include "../include/btc_wallet.h"
+#include "../include/btc_block_validator.h"
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
 #include "debug/memory_tracker.h"
@@ -212,6 +214,29 @@ int main(int argc, char* argv[]) {
     printf("OK ✓\n");
     fflush(stdout);
 
+    /* ── Création wallet Bitcoin RÉEL (secp256k1/OpenSSL) ───────── */
+    btc_network_e btc_net = BTC_NETWORK_TESTNET3;
+    if (strncmp(cfg.run_mode, "MAINNET", 7) == 0)
+        btc_net = BTC_NETWORK_MAINNET;
+
+    printf("[BTC_QM] Génération wallet Bitcoin réel (secp256k1)…\n");
+    fflush(stdout);
+
+    lv_btc_wallet_t* wallet = btc_wallet_create(btc_net, cfg.run_id);
+    if (!wallet) {
+        fprintf(stderr, "[BTC_QM] AVERTISSEMENT: wallet Bitcoin non créé "
+                "(OpenSSL secp256k1 indisponible — minage continue sans wallet)\n");
+    } else {
+        btc_wallet_print(wallet);
+        /* Sauvegarder wallet en JSON (sans clé privée) */
+        char wallet_path[512];
+        snprintf(wallet_path, sizeof(wallet_path), "%s/wallet_%s.json",
+                 cfg.log_dir, cfg.run_id);
+        btc_wallet_save_json(wallet, wallet_path, 0);
+        printf("[BTC_QM] Wallet sauvegardé → %s\n", wallet_path);
+        fflush(stdout);
+    }
+
     /* ── Lancement du moteur de minage ──────────────────────────── */
     printf("[BTC_QM] Lancement du moteur PT-MC…\n");
     fflush(stdout);
@@ -220,6 +245,25 @@ int main(int argc, char* argv[]) {
 
     /* ── Rapport final ──────────────────────────────────────────── */
     printf("\n[BTC_QM] Module 17 terminé — résultat=%d\n", result);
+
+    /* ── Si bloc valide trouvé → validation forensic ────────────── */
+    if (result == 1 && wallet) {
+        printf("[BTC_QM] BLOC TROUVÉ — Lancement validation forensic…\n");
+        fflush(stdout);
+        /* Le header avec le nonce gagnant est dans cfg.header_template
+         * (mis à jour par le moteur lors d'un bloc valide) */
+        lv_btc_validated_block_t* vblock = btc_block_validate(
+            &cfg.header_template,
+            cfg.target,
+            wallet,
+            cfg.run_id);
+        if (vblock) {
+            btc_block_print_report(vblock);
+            btc_block_save_report(vblock, cfg.log_dir, cfg.run_id);
+            btc_validated_block_destroy(vblock);
+        }
+    }
+
     printf("[BTC_QM] Sauvegarde NX48 → %s\n", cfg.nx48_csv);
     nx48_btc_save_csv(nx48, cfg.nx48_csv);
 
@@ -228,6 +272,7 @@ int main(int argc, char* argv[]) {
     FORENSIC_LOG_MODULE_END(BTC_MODULE_NAME, "main_btc_mining", result >= 0);
 
     /* ── Libération ─────────────────────────────────────────────── */
+    if (wallet) btc_wallet_destroy(wallet);
     nx48_btc_destroy(nx48);
     ultra_forensic_logger_destroy();
 
