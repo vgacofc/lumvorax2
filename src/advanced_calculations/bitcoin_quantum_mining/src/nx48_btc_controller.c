@@ -27,6 +27,66 @@
 #include <time.h>
 #include <inttypes.h>
 
+/* ── Xoshiro256++ — PRNG état de l'art (Blackman & Vigna 2019) ────────────────
+ * Période 2^256 - 1, quality statistique extrême (passe toutes les suites BigCrush).
+ * Remplace l'oscillation déterministe ±2% par un vrai bruit stochastique.
+ * Ref : C65-FIX-PRNG — analysechatgpt91.38.md §2.2 — 2026-04-12
+ * ─────────────────────────────────────────────────────────────────────────────*/
+static uint64_t xosh_s[4];  /* État 256 bits du PRNG — initialisé via /dev/urandom */
+
+static void xosh_seed(void) {
+    /* Initialisation par /dev/urandom — graine véritablement aléatoire */
+    FILE* urnd = fopen("/dev/urandom", "rb");
+    if (urnd) {
+        size_t n = fread(xosh_s, sizeof(uint64_t), 4, urnd);
+        fclose(urnd);
+        if (n == 4 && (xosh_s[0] | xosh_s[1] | xosh_s[2] | xosh_s[3]) != 0) return;
+    }
+    /* Fallback : clock + PID (entropie faible mais non-zéro) */
+    xosh_s[0] = (uint64_t)time(NULL) ^ 0x6C62272E07BB0142ULL;
+    xosh_s[1] = (uint64_t)clock()    ^ 0x62B821756295C58DULL;
+    xosh_s[2] = xosh_s[0] ^ (xosh_s[0] >> 33);
+    xosh_s[3] = xosh_s[1] ^ (xosh_s[1] >> 17);
+}
+
+static inline uint64_t xosh_rotl(uint64_t x, int k) {
+    return (x << k) | (x >> (64 - k));
+}
+
+/* Génère un uint64_t uniforme (Xoshiro256++) */
+static inline uint64_t xosh_next(void) {
+    const uint64_t result = xosh_rotl(xosh_s[0] + xosh_s[3], 23) + xosh_s[0];
+    const uint64_t t = xosh_s[1] << 17;
+    xosh_s[2] ^= xosh_s[0];
+    xosh_s[3] ^= xosh_s[1];
+    xosh_s[1] ^= xosh_s[2];
+    xosh_s[0] ^= xosh_s[3];
+    xosh_s[2] ^= t;
+    xosh_s[3] = xosh_rotl(xosh_s[3], 45);
+    return result;
+}
+
+/* Génère un double uniforme dans [0, 1) */
+static inline double xosh_uniform(void) {
+    return (double)(xosh_next() >> 11) * (1.0 / 9007199254740992.0); /* 2^53 */
+}
+
+/* Génère un bruit gaussien N(0,σ) via la méthode Ziggurat simplifiée (Box-Muller) */
+static double xosh_gaussian(double sigma) {
+    /* Box-Muller transform — qualité statistique excellente */
+    static int have_extra = 0;
+    static double extra = 0.0;
+    if (have_extra) { have_extra = 0; return extra * sigma; }
+    double u1, u2;
+    do { u1 = xosh_uniform(); } while (u1 < 1e-300);
+    u2 = xosh_uniform();
+    double mag  = sqrt(-2.0 * log(u1));
+    double angle = 2.0 * 3.14159265358979323846 * u2;
+    extra = mag * sin(angle);
+    have_extra = 1;
+    return mag * cos(angle) * sigma;
+}
+
 /* ── Valeurs par défaut poids NX48_BTC ──────────────────────────── */
 static const double NX48_BTC_WEIGHTS_DEFAULT[NX48_BTC_N_FEATURES] = {
     0.35,   /* btc_best_leading_zeros — feature la plus importante */
@@ -75,6 +135,9 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
         s->best_leading_zeros = 0;
         s->best_nonce         = 0;
     }
+
+    /* C65-FIX-PRNG : graine Xoshiro256++ depuis /dev/urandom à chaque session */
+    xosh_seed();
 
     strncpy(s->run_id, run_id ? run_id : "unknown", sizeof(s->run_id)-1);
     s->run_id[sizeof(s->run_id)-1] = '\0';
@@ -152,9 +215,18 @@ void nx48_btc_update(
     int best_leading_zeros,
     double hashrate_mhs)
 {
-    /* Label cible : proportionnel au meilleur leading_zeros courant */
-    /* Plus on est proche d'un bloc (leading_zeros élevé), plus label → 1.0 */
-    double label = clamp((double)best_leading_zeros / 32.0, 0.0, 1.0);
+    /* C65-FIX-LABEL : Label exponentiel — mesure de proximité réaliste.
+     * AVANT : label = leading_zeros / 32.0 — seuil arbitraire (32 bits),
+     *         non lié à la réalité Bitcoin (un bloc requiert ~75 bits actuellement).
+     *         Pire : label saturation dès 32 bits → pas d'apprentissage au-delà.
+     *
+     * APRÈS : 1.0 - exp(-λ × leading_zeros), λ = 0.15
+     *         → label ≈ 0.26 pour 2 bits, ≈ 0.52 pour 5 bits, ≈ 0.95 pour 20 bits
+     *         → croissance monotone continue — jamais saturé dans nos plages
+     *         → le gradient NX48 RESTE ACTIF même à 20+ bits (pas de plateau)
+     *
+     * Ref : analysechatgpt91.38.md §BUG-LABEL — 2026-04-12 */
+    double label = 1.0 - exp(-0.15 * (double)best_leading_zeros);
 
     /* BCE loss */
     double eps = 1e-12;
@@ -189,31 +261,71 @@ void nx48_btc_update(
     double old_delta  = s->delta_nonce_scale;
     double old_batch  = s->batch_size_scale;
 
-    /* Si stagnation (loss augmente) → explorer plus (delta_nonce ×1.1) */
-    if (s->loss_curr > s->loss_prev * 1.05) {
-        s->delta_nonce_scale *= 1.10;
-        s->exploration_bias   = clamp(s->exploration_bias + 0.05, 0.0, 1.0);
-    }
-    /* Si amélioration → exploiter localement (delta_nonce ×0.95) */
-    else if (s->loss_curr < s->loss_prev * 0.95) {
-        s->delta_nonce_scale *= 0.95;
-        s->exploration_bias   = clamp(s->exploration_bias - 0.03, 0.0, 1.0);
-    } else {
-        /* C64-FIX-B-NX48 : mise à jour delta_nonce même sans changement de loss.
-         * Avant : delta_nonce figé à 0.950 si loss stable (ne bougeait pas sans record).
-         * Maintenant : oscillation légère ±2% autour de la valeur courante pour
-         * maintenir l'exploration même en période de stagnation (loss ±5%).
-         * Ref : analysechatgpt91.36.md BUG B-NX48 — 2026-04-11 */
-        double oscillation = (s->update_count % 2 == 0) ? 1.02 : 0.98;
-        s->delta_nonce_scale *= oscillation;
+    /* ── C65-FIX-ADAPT : Adaptation delta_nonce avec bruit gaussien Xoshiro256++
+     *
+     * AVANT (C64) : oscillation déterministe ×1.02 / ×0.98 selon update_count%2
+     *   → exploration CORRÉLÉE (alternance fixe) ≠ recuit simulé
+     *   → identique à une sinusoïde de période 2 → biais systématique
+     *
+     * APRÈS (C65) : perturbation gaussienne N(0, σ) + signal gradient signé
+     *   → décalage proportionnel à loss_delta (signal) + bruit stochastique (σ)
+     *   → σ augmente quand le système stagne longtemps (exploration adaptative)
+     *   → σ diminue quand loss s'améliore (exploitation locale renforcée)
+     *
+     * Formulation mathématique :
+     *   σ = σ_base × exp(stagnation_pct × ln(σ_max/σ_base))
+     *   perturbation = N(0, σ)
+     *   delta_nonce_new = delta_nonce_old × exp(α × loss_delta + perturbation)
+     *
+     * Ref : analysechatgpt91.38.md §C65-FIX-ADAPT — 2026-04-12
+     */
+    {
+        double loss_delta = (s->loss_prev > 1e-12)
+            ? (s->loss_curr - s->loss_prev) / s->loss_prev : 0.0;
+
+        /* Stagnation normalisée [0,1] : 1 = stagnation absolue, 0 = amélioration */
+        double stagnation = clamp(loss_delta * 10.0, 0.0, 1.0);
+
+        /* Sigma adaptatif : σ_base=0.05 quand performance optimale, σ_max=0.25 en stagnation */
+        double sigma_base = 0.05;
+        double sigma_max  = 0.25;
+        double sigma = sigma_base * exp(stagnation * log(sigma_max / sigma_base));
+
+        /* Perturbation gaussienne pure */
+        double noise = xosh_gaussian(sigma);
+
+        /* Gradient signé : si loss augmente → explorer plus (positif) */
+        double alpha = 0.8;   /* gain adaptatif */
+        double push  = alpha * (-loss_delta);  /* négatif si stagnation → agrandit espace */
+
+        /* Mise à jour log-normale (multiplicative → toujours positif) */
+        s->delta_nonce_scale *= exp(push + noise);
+
+        /* Exploration_bias : monte quand stagnation, descend quand amélioration */
+        if (loss_delta > 0.02)
+            s->exploration_bias = clamp(s->exploration_bias + 0.04, 0.0, 1.0);
+        else if (loss_delta < -0.02)
+            s->exploration_bias = clamp(s->exploration_bias - 0.02, 0.0, 1.0);
+        /* sinon : bruit gaussien léger sur exploration_bias */
+        else
+            s->exploration_bias = clamp(s->exploration_bias + xosh_gaussian(0.01), 0.0, 1.0);
     }
 
-    /* Batch size : adaptatif selon grad_norm (C64-FIX-B-BATCH).
-     * Avant : croissance géométrique fixe ×1.05 non-adaptatif.
-     * Maintenant : taux adaptatif fonction du gradient (grad_norm fort = grands pas).
-     * Ref : analysechatgpt91.36.md BUG B-BATCH — 2026-04-11 */
+    /* ── C65-FIX-BATCH : Scheduling continu du learning rate batch
+     *
+     * AVANT (C64) : seuil binaire unique — grad_norm > 0.20 ? ×1.08 : ×1.02
+     *   → transition brutale, calibration arbitraire, non différentiable
+     *
+     * APRÈS (C65) : interpolation lisse via tanh (Universal Approximation)
+     *   adapt_rate = 1.0 + 0.10 × tanh(5.0 × grad_norm)
+     *   → 1.00 quand grad_norm → 0   (plateau absolu → pas de croissance)
+     *   → 1.10 quand grad_norm → ∞   (signal fort → expansion maximale)
+     *   → transition douce centrée en grad_norm = 0.20 (tanh(1.0) ≈ 0.76)
+     *
+     * Ref : analysechatgpt91.38.md §C65-FIX-BATCH — 2026-04-12
+     */
     if (hashrate_mhs > 0 && hashrate_mhs < 100.0) {
-        double adapt_rate = (s->grad_norm > 0.20) ? 1.08 : 1.02;
+        double adapt_rate = 1.0 + 0.10 * tanh(5.0 * s->grad_norm);
         s->batch_size_scale = clamp(s->batch_size_scale * adapt_rate, 0.5, 4.0);
     }
 

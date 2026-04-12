@@ -202,10 +202,38 @@ void lv_sha256_compute_midstate(
 }
 
 /* ── Double-SHA256 avec midstate ────────────────────────────────── */
+/*
+ * C65-FIX-MIDSTATE : Correction de l'erreur cryptographique dans la construction
+ * du bloc "tail" (octets 64..79 du header Bitcoin 80 octets).
+ *
+ * Structure du header Bitcoin (80 octets, little-endian) :
+ *   [0.. 3] version         (4 octets)   ─┐ couverts par le midstate
+ *   [4..35] prev_block_hash (32 octets)   │ (sha256_transform sur les
+ *   [36..67] merkle_root    (32 octets)  ─┘  64 premiers octets)
+ *
+ *   [64..67] merkle_root[28..31] (4 derniers octets de merkle_root)  ─┐
+ *   [68..71] timestamp           (4 octets LE)                        │ ces 16 octets
+ *   [72..75] bits                (4 octets LE)                        │ forment la "tail"
+ *   [76..79] nonce               (4 octets LE)  ← VARIE              ─┘
+ *
+ * ERREUR ANTÉRIEURE : tail[0..3] = timestamp (incorrect — merkle[28..31] était absent)
+ *                     tail[4..11] = zeros     (bits absent)
+ *                     tail[12..15] = nonce    (correct en position)
+ *
+ * CORRECTION C65 :
+ *   tail[0..3]  = merkle_root[28..31] (mémoire cast depuis le struct packed)
+ *   tail[4..7]  = timestamp (LE)
+ *   tail[8..11] = bits (LE)
+ *   tail[12..15]= nonce (LE) — seul champ variable par itération
+ *   tail[16]    = 0x80 (padding)
+ *   tail[62..63]= 0x02, 0x80 (640 bits = 80×8 en big-endian sur 16 bits)
+ *
+ * Ref : analysechatgpt91.38.md §BUG-MIDSTATE — 2026-04-12
+ */
 lv_sha256_result_t lv_sha256d_midstate(
     const uint32_t midstate[LV_SHA256_MIDSTATE_WORDS],
+    const lv_btc_block_header_t* header,
     uint32_t nonce,
-    uint32_t timestamp,
     const uint8_t target[32],
     const char* run_id,
     uint64_t hash_id)
@@ -216,26 +244,44 @@ lv_sha256_result_t lv_sha256d_midstate(
 
     uint64_t t0 = btc_ts_ns();
 
-    /* Bloc partiel [64..79] = merkle[32..] + timestamp + bits + nonce */
-    /* En pratique pour testnet on fait un SHA256d du bloc 80 octets */
-    /* Ici : deuxième moitié du bloc (16 octets padding SHA-256 + nonce) */
+    /* Construction du tail : octets [64..79] du header Bitcoin.
+     * La structure est __attribute__((packed)) → cast direct en uint8_t* valide. */
+    const uint8_t* hdr_bytes = (const uint8_t*)header;
+
     uint8_t tail[64];
     memset(tail, 0, sizeof(tail));
-    /* timestamp LE */
-    tail[0] = (timestamp)       & 0xFF;
-    tail[1] = (timestamp >> 8)  & 0xFF;
-    tail[2] = (timestamp >> 16) & 0xFF;
-    tail[3] = (timestamp >> 24) & 0xFF;
-    /* nonce LE */
+
+    /* tail[0..3] = merkle_root[28..31] = header_bytes[64..67] */
+    tail[0] = hdr_bytes[64];
+    tail[1] = hdr_bytes[65];
+    tail[2] = hdr_bytes[66];
+    tail[3] = hdr_bytes[67];
+
+    /* tail[4..7] = timestamp (little-endian) */
+    tail[4] = (header->timestamp)       & 0xFF;
+    tail[5] = (header->timestamp >> 8)  & 0xFF;
+    tail[6] = (header->timestamp >> 16) & 0xFF;
+    tail[7] = (header->timestamp >> 24) & 0xFF;
+
+    /* tail[8..11] = bits (little-endian) */
+    tail[8]  = (header->bits)       & 0xFF;
+    tail[9]  = (header->bits >> 8)  & 0xFF;
+    tail[10] = (header->bits >> 16) & 0xFF;
+    tail[11] = (header->bits >> 24) & 0xFF;
+
+    /* tail[12..15] = nonce (little-endian) — seule valeur variable */
     tail[12] = (nonce)       & 0xFF;
     tail[13] = (nonce >> 8)  & 0xFF;
     tail[14] = (nonce >> 16) & 0xFF;
     tail[15] = (nonce >> 24) & 0xFF;
-    /* padding SHA-256 du bloc 80 octets */
-    tail[16] = 0x80;
-    tail[62] = 0x02; tail[63] = 0x80; /* 640 bits = 80*8 en big-endian 16 bits */
 
-    /* Première passe avec midstate */
+    /* Padding SHA-256 du bloc 80 octets (640 bits) */
+    tail[16] = 0x80;
+    /* Longueur : 640 bits = 0x0280 en big-endian sur 64 bits → octets [56..63] */
+    tail[62] = 0x02;
+    tail[63] = 0x80;
+
+    /* Première passe avec midstate (état après les 64 premiers octets du header) */
     uint32_t state1[8];
     memcpy(state1, midstate, 32);
     sha256_transform(state1, tail);

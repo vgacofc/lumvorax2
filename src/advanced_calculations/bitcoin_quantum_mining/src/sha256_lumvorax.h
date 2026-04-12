@@ -101,11 +101,15 @@ void lv_sha256_compute_midstate(
     uint32_t midstate_out[LV_SHA256_MIDSTATE_WORDS]
 );
 
-/* Double-SHA256 avec midstate pré-calculé (×2 plus rapide) */
+/* Double-SHA256 avec midstate pré-calculé (×2 plus rapide).
+ * C65-FIX-MIDSTATE : La queue du header (octets [64..79]) doit inclure
+ * merkle_root[28..31] + timestamp + bits + nonce dans le bon ordre.
+ * Le header complet est passé pour accéder à TOUS les champs nécessaires.
+ * Ref : analysechatgpt91.38.md §BUG-MIDSTATE — 2026-04-12 */
 lv_sha256_result_t lv_sha256d_midstate(
     const uint32_t midstate[LV_SHA256_MIDSTATE_WORDS],
-    uint32_t nonce,
-    uint32_t timestamp,
+    const lv_btc_block_header_t* header,   /* Header complet pour tail correct */
+    uint32_t nonce,                        /* Nonce à tester (remplace header.nonce) */
     const uint8_t target[32],
     const char* run_id,
     uint64_t hash_id
