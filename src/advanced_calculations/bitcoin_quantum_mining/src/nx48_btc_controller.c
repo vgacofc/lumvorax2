@@ -363,9 +363,11 @@ void nx48_btc_update(
 }
 
 /* ── Clamp des scales dans les bornes physiques ─────────────────── */
+/* C39 : delta_nonce_scale max étendu 10.0 → 50.0 pour run infini.
+ * Sur run illimité, le moteur doit pouvoir explorer l'espace nonce en entier.
+ * Ref : analysechatgpt91.38.md §P3 — 2026-04-12 */
 void nx48_btc_clamp_scales(nx48_btc_state_t* s) {
-    /* Bornes conformes §M-BTC17 */
-    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  10.0);
+    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  50.0);
     s->n_replicas_scale   = clamp(s->n_replicas_scale,   1.0,   2.0);
     s->swap_temp_scale    = clamp(s->swap_temp_scale,    0.5,   3.0);
     s->batch_size_scale   = clamp(s->batch_size_scale,   0.5,   4.0);

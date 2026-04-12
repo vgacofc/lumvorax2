@@ -190,12 +190,16 @@ int main(int argc, char* argv[]) {
     printf("\n");
     printf("╔══════════════════════════════════════════════════════════╗\n");
     printf("║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║\n");
-    printf("║  Version : 1.0.0-C62 | Standard : STANDARD_NAMES v4.1  ║\n");
+    printf("║  Version : 1.0.0-C39 | Standard : STANDARD_NAMES v4.2  ║\n");
+    printf("║  C39 : mutex PT-MC, orbital 50k, threshold 22, OGY, Leb ║\n");
     printf("╚══════════════════════════════════════════════════════════╝\n");
     printf("[BTC_QM] run_id    = %s\n", cfg.run_id);
     printf("[BTC_QM] mode      = %s\n", cfg.run_mode);
     printf("[BTC_QM] threads   = %d\n", cfg.n_threads);
-    printf("[BTC_QM] duration  = %.0f s\n", (double)cfg.duration_ns / 1e9);
+    if (cfg.duration_ns == 0)
+        printf("[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)\n");
+    else
+        printf("[BTC_QM] duration  = %.0f s\n", (double)cfg.duration_ns / 1e9);
     printf("[BTC_QM] nx48 csv  = %s\n", cfg.nx48_csv);
     printf("[BTC_QM] log dir   = %s\n", cfg.log_dir);
     fflush(stdout);
