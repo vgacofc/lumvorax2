@@ -62,6 +62,32 @@ extern int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48
 /* Forward declaration helper */
 static unsigned long atoul_stub(const char* s);
 
+/* ── Parse 160 hex chars (80 bytes) → vrai header Bitcoin ──────── */
+static int parse_real_btc_header(lv_btc_block_header_t* h, const char* hex) {
+    if (!hex || strlen(hex) < 160) return 0;
+    uint8_t raw[80];
+    for (int k = 0; k < 80; k++) {
+        unsigned int byte = 0;
+        if (sscanf(hex + 2*k, "%02x", &byte) != 1) return 0;
+        raw[k] = (uint8_t)byte;
+    }
+    /* Structure Bitcoin (little-endian) :
+     *   bytes  0- 3 : version
+     *   bytes  4-35 : prev_block_hash
+     *   bytes 36-67 : merkle_root
+     *   bytes 68-71 : timestamp
+     *   bytes 72-75 : bits
+     *   bytes 76-79 : nonce (sera remplacé par le moteur)
+     */
+    memcpy(&h->version,         raw + 0,  4);
+    memcpy(h->prev_block_hash,  raw + 4,  32);
+    memcpy(h->merkle_root,      raw + 36, 32);
+    memcpy(&h->timestamp,       raw + 68, 4);
+    memcpy(&h->bits,            raw + 72, 4);
+    h->nonce = 0; /* Le moteur explore l'espace nonce complet */
+    return 1;
+}
+
 /* ── Génère un run_id LumVorax Module 17 ────────────────────────── */
 static void make_run_id(char* out, size_t n) {
     time_t now = time(NULL);
@@ -107,6 +133,7 @@ int main(int argc, char* argv[]) {
     strncpy(cfg.nx48_csv,  "config/btc_nx48_last.csv",   sizeof(cfg.nx48_csv)-1);
     strncpy(cfg.log_dir,   "logs/forensic",              sizeof(cfg.log_dir)-1);
     uint32_t bits = 0x1d00ffffu; /* testnet difficulty minimale */
+    int use_real_header = 0;     /* 1 si --header-hex fourni (pas de fill_testnet_header) */
 
     /* ── Parsing arguments CLI ──────────────────────────────────── */
     for (int i = 1; i < argc; i++) {
@@ -128,6 +155,20 @@ int main(int argc, char* argv[]) {
             strncpy(cfg.log_dir, argv[++i], sizeof(cfg.log_dir)-1);
         else if (strcmp(argv[i], "--bits")         == 0 && i+1 < argc)
             bits = (uint32_t)strtoul(argv[++i], NULL, 0);
+        else if (strcmp(argv[i], "--header-hex")   == 0 && i+1 < argc) {
+            /* Vrai block header Bitcoin (160 hex chars = 80 bytes)
+             * Obtenu via : python3 scripts/fetch_btc_real_pow.py
+             * Ref : analysechatgpt91.38.md §C38-REAL-POW — 2026-04-12 */
+            if (parse_real_btc_header(&cfg.header_template, argv[++i])) {
+                bits = cfg.header_template.bits;
+                use_real_header = 1;
+                printf("[BTC_QM] Vrai header Bitcoin chargé — bits=0x%08x version=%u\n",
+                       bits, cfg.header_template.version);
+            } else {
+                fprintf(stderr, "[BTC_QM] ERREUR --header-hex : format invalide "
+                                "(attendu 160 hex chars = 80 bytes)\n");
+            }
+        }
     }
 
     /* Génère run_id si absent */
@@ -165,7 +206,10 @@ int main(int argc, char* argv[]) {
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_module_version", 17.0);
 
     /* ── Préparation header et target ───────────────────────────── */
-    fill_testnet_header(&cfg.header_template, bits);
+    /* Si --header-hex fourni → conserver le vrai header Bitcoin.
+     * Sinon → générer un header testnet synthétique (benchmark mode). */
+    if (!use_real_header)
+        fill_testnet_header(&cfg.header_template, bits);
     lv_sha256_bits_to_target(bits, cfg.target);
 
     /* Log target */

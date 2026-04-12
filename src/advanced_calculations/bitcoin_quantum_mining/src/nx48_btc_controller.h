@@ -59,6 +59,11 @@ typedef struct {
 
     /* run_id courant */
     char run_id[64];
+
+    /* C38-FIX-B-NX48 : compteur de stagnation (updates sans nouveau record)
+     * Si stall_count >= 2 → delta_nonce_scale ×1.05 pour forcer l'exploration.
+     * Ref : analysechatgpt91.37.md §4.2 BUG B-NX48 — 2026-04-12 */
+    int stall_count;
 } nx48_btc_state_t;
 
 /* ── Configuration NX48_BTC ─────────────────────────────────────── */

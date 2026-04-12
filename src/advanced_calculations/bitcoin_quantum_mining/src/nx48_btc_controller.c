@@ -215,18 +215,20 @@ void nx48_btc_update(
     int best_leading_zeros,
     double hashrate_mhs)
 {
-    /* C65-FIX-LABEL : Label exponentiel — mesure de proximité réaliste.
-     * AVANT : label = leading_zeros / 32.0 — seuil arbitraire (32 bits),
-     *         non lié à la réalité Bitcoin (un bloc requiert ~75 bits actuellement).
-     *         Pire : label saturation dès 32 bits → pas d'apprentissage au-delà.
+    /* C38-FIX-LABEL-256 : Label linéaire sur [0, 256] — objectif 256 bits.
+     * AVANT (C65) : 1.0 - exp(-0.15 × lz) → sature à 0.95 dès 20 bits !
+     *               Gradient quasi nul au-delà de 20 bits → stagnation garantie.
      *
-     * APRÈS : 1.0 - exp(-λ × leading_zeros), λ = 0.15
-     *         → label ≈ 0.26 pour 2 bits, ≈ 0.52 pour 5 bits, ≈ 0.95 pour 20 bits
-     *         → croissance monotone continue — jamais saturé dans nos plages
-     *         → le gradient NX48 RESTE ACTIF même à 20+ bits (pas de plateau)
+     * APRÈS (C38) : label = lz / 256.0 (linéaire)
+     *   → label(20)  = 0.078 — gradient fort vers l'objectif 256 bits
+     *   → label(64)  = 0.250 — gradient significatif (niveau réseau Bitcoin ~75 bits)
+     *   → label(256) = 1.000 — objectif atteint (256 leading zeros)
+     *   → gradient ISTA reste actif sur TOUTE la plage [0, 256]
+     *   → pousse continuellement vers le maximum théorique SHA-256
      *
-     * Ref : analysechatgpt91.38.md §BUG-LABEL — 2026-04-12 */
-    double label = 1.0 - exp(-0.15 * (double)best_leading_zeros);
+     * Conformité : STANDARD_NAMES.md v4.2 §M-BTC17-C38
+     * Ref : analysechatgpt91.37.md §4.2 objectif NX48 256 bits — 2026-04-12 */
+    double label = clamp((double)best_leading_zeros / 256.0, 0.0, 1.0);
 
     /* BCE loss */
     double eps = 1e-12;
@@ -329,11 +331,24 @@ void nx48_btc_update(
         s->batch_size_scale = clamp(s->batch_size_scale * adapt_rate, 0.5, 4.0);
     }
 
-    /* Mise à jour record leading_zeros */
+    /* C38-FIX-B-NX48 : Correction stagnation delta_nonce.
+     * AVANT : si aucun nouveau record, delta_nonce reste figé indéfiniment.
+     * APRÈS : stall_count++ à chaque update sans record.
+     *         Si stall_count ≥ 2 → delta_nonce_scale ×1.05 (exploration forcée).
+     * Ref : analysechatgpt91.37.md §4.2 BUG B-NX48 delta_nonce figé 0.950 — 2026-04-12 */
     if (best_leading_zeros > s->best_leading_zeros) {
         s->best_leading_zeros = best_leading_zeros;
+        s->stall_count = 0;
         FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
             "btc_nx48_new_record_leading_zeros", (double)best_leading_zeros);
+    } else {
+        s->stall_count++;
+        if (s->stall_count >= 2) {
+            s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 10.0);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_nx48_stall_count", (double)s->stall_count);
+            s->stall_count = 0;
+        }
     }
 
     nx48_btc_clamp_scales(s);
