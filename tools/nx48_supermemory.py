@@ -1,137 +1,419 @@
 #!/usr/bin/env python3
 """
 LumVorax — Module 17 — Supermemory Integration
-tools/nx48_supermemory.py — Mémoire persistante NX48 inter-sessions
+tools/nx48_supermemory.py — Vraie mémoire persistante NX48 inter-sessions
 
-URL correcte (validée C41): https://api.supermemory.ai/v3/documents
-                             (redirect 308 depuis /v3/memories)
+RÔLE : Supermemory est la MÉMOIRE CENTRALE de NX48.
+  - Au démarrage (--init) : récupère le meilleur état NX48 connu TOUTES sessions confondues
+    et met à jour config/btc_nx48_last.csv si Supermemory a un meilleur record.
+  - Après chaque run (--store-run) : envoie TOUTES les formules, calculs,
+    paramètres NX48 et records vers Supermemory pour mémoire inter-sessions.
+  - Accessible depuis TOUS les comptes qui partagent la même clé API Supermemory.
 
-Usage:
-  python3 tools/nx48_supermemory.py --init <stamp>
-  python3 tools/nx48_supermemory.py --store "découverte" --cycle C41 --run-id <run_id>
-  python3 tools/nx48_supermemory.py --recall --query "btc record"
+URL validée C42: POST https://api.supermemory.ai/v3/documents
+Container: lumvorax_nx48
 
-STANDARD_NAMES.md v4.2 — Cycle C41 — 2026-04-13
+STANDARD_NAMES.md v4.2 §M-BTC17-C42 — 2026-04-13
 """
 
-import os, sys, json, argparse, urllib.request, urllib.error, time
+import os, sys, json, argparse, urllib.request, urllib.error, urllib.parse, time, csv
 
-SUPERMEMORY_URL = "https://api.supermemory.ai/v3/documents"
+SUPERMEMORY_URL        = "https://api.supermemory.ai/v3/documents"
 SUPERMEMORY_SEARCH_URL = "https://api.supermemory.ai/v3/search"
-FALLBACK_CACHE = "/tmp/lumvorax_supermemory_cache.jsonl"
-# Container tag validé depuis console.supermemory.ai — 662 docs / 237 mémoires
-SUPERMEMORY_CONTAINER = "lumvorax_nx48"
+SUPERMEMORY_CONTAINER  = "lumvorax_nx48"
+FALLBACK_CACHE         = "/tmp/lumvorax_supermemory_cache.jsonl"
+
+# ── Paramètres NX48 complets (C42) ───────────────────────────────
+NX48_PARAMS_C42 = [
+    "delta_nonce_scale",   # Rayon d'exploration [0.1, 50.0]
+    "n_replicas_scale",    # Échelle répliques PT-MC [1.0, 2.0]
+    "swap_temp_scale",     # Température swap [0.5, 3.0]
+    "batch_size_scale",    # Taille lot [0.5, 4.0]
+    "exploration_bias",    # Biais exploration [0.0, 1.0]
+    "best_leading_zeros",  # Record bits leading zeros
+    "best_nonce",          # Nonce champion (ancre scan orbital)
+    "update_count",        # Total updates gradient ISTA
+    "loss_curr",           # Perte BCE courante
+    "grad_norm",           # Norme gradient
+    "w0","w1","w2","w3","w4","w5","w6","w7",  # Poids réseau (C42-WEIGHTS-PERSIST)
+    "bias",                # Biais neurone (C42-WEIGHTS-PERSIST)
+]
+
+NX48_FEATURES = [
+    ("F0", "btc_best_leading_zeros",  "best_leading_zeros / 256.0"),
+    ("F1", "btc_hashrate_norm",       "hashrate_mhs / hashrate_max"),
+    ("F2", "btc_ptmc_swap_rate",      "swaps_accepted / swaps_attempted"),
+    ("F3", "btc_time_stall",          "log10(1 + time_since_improvement_s)"),
+    ("F4", "btc_nonce_coverage",      "nonce_coverage_pct / 100.0"),
+    ("F5", "btc_delta_nonce_norm",    "delta_nonce / 4294967296.0"),
+    ("F6", "btc_thread_eff",          "hashes_done / hashes_expected"),
+    ("F7", "btc_temp_ratio",          "(T_hot / T_cold) / 100.0"),
+]
+
+NX48_FORMULAS = """
+FORMULES NX48_BTC (Cycle C42 — STANDARD_NAMES.md v4.2) :
+
+1. PRÉDICTION (sigmoid product):
+   z = bias + sum(weights[i] * features[i] for i in 0..7)
+   prob = sigmoid(z) = 1 / (1 + exp(-z))
+
+2. LABEL (linéaire sur 256 bits — C38-FIX-LABEL-256):
+   label = best_leading_zeros / 256.0
+   → label(28)=0.109 | label(32)=0.125 | label(256)=1.0 (objectif)
+
+3. BCE LOSS:
+   bce = -(label * log(prob) + (1-label) * log(1-prob))
+
+4. GRADIENT ISTA (déroulage 8 features — C41-SIMD-ISTA):
+   err = prob - label
+   w[i]_new = soft_threshold(w[i] - lr * err * features[i], lambda_L1)
+   bias_new = bias - lr * err
+   lr=0.01, lambda_L1=0.001
+
+5. DELTA_NONCE ADAPTATIF (Xoshiro256++ — C65-FIX-ADAPT):
+   loss_delta = (loss_curr - loss_prev) / loss_prev
+   sigma = sigma_base * exp(stagnation * log(sigma_max / sigma_base))
+   perturbation = N(0, sigma)  [Xoshiro256++]
+   delta_nonce_new = delta_nonce_old * exp(alpha * (-loss_delta) + perturbation)
+   alpha=0.8 | sigma_base=0.05 | sigma_max=0.25
+
+6. BATCH SCHEDULING (tanh continu — C65-FIX-BATCH):
+   adapt_rate = 1.0 + 0.10 * tanh(5.0 * grad_norm)
+   batch_size_scale_new = batch_size_scale * adapt_rate  [clamp: 0.5, 4.0]
+
+7. SCAN ORBITAL (30% des threads — C39-P3):
+   Si best_leading >= 20 et U < 0.30:
+     offset = gauss(0, ORBITAL_RADIUS / 0.577)  [ORBITAL_RADIUS = 50000]
+     nonce = best_nonce + offset
+
+8. LEBESGUE SCAN (25% des threads — C39-P5):
+   level = randint(0, best_leading)
+   weight = (level + 1) / (best_leading + 1)
+   leb_radius = ORBITAL_RADIUS * (1 + (1 - weight) * 4)
+   nonce = best_nonce ± randint(0, leb_radius)
+"""
+
 
 def get_key():
-    # Priorité 1: Doppler via env DOPPLER_TOKEN + projet lumvorax
     key = os.environ.get("SUPERMEMORY_API_KEY", "")
     if not key:
-        print("[NX48-MEM] WARN: SUPERMEMORY_API_KEY absent")
+        print("[NX48-MEM] WARN: SUPERMEMORY_API_KEY absent — Supermemory désactivé")
     return key
 
+
 def _post_document(key, content, metadata=None):
-    """POST un document vers Supermemory /v3/documents avec container lumvorax_nx48"""
     payload = {
         "content": content,
         "metadata": metadata or {},
         "containerTags": [SUPERMEMORY_CONTAINER]
     }
-    data = json.dumps(payload).encode()
     req = urllib.request.Request(
         SUPERMEMORY_URL,
-        data=data,
-        headers={
-            "Authorization": f"Bearer {key}",
-            "Content-Type": "application/json",
-        },
+        data=json.dumps(payload).encode(),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         method="POST"
     )
     try:
-        with urllib.request.urlopen(req, timeout=10) as r:
-            resp = json.loads(r.read())
-            return True, resp
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return True, json.loads(r.read())
     except urllib.error.HTTPError as e:
         body = e.read().decode()[:300]
         return False, {"error": e.code, "body": body}
     except Exception as e:
         return False, {"error": str(e)}
 
-def _search(key, query):
-    """GET recherche dans Supermemory"""
-    url = f"{SUPERMEMORY_SEARCH_URL}?q={urllib.parse.quote(query)}&limit=5"
+
+def _search(key, query, limit=10):
+    url = f"{SUPERMEMORY_SEARCH_URL}?q={urllib.parse.quote(query)}&limit={limit}"
     req = urllib.request.Request(
         url,
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     )
     try:
-        with urllib.request.urlopen(req, timeout=10) as r:
+        with urllib.request.urlopen(req, timeout=15) as r:
             return True, json.loads(r.read())
     except Exception as e:
         return False, {"error": str(e)}
 
+
 def _fallback_save(content, metadata):
-    """Sauvegarde locale si Supermemory injoignable"""
     entry = {"timestamp": time.time(), "content": content, "metadata": metadata}
     with open(FALLBACK_CACHE, "a") as f:
         f.write(json.dumps(entry) + "\n")
-    print(f"[NX48-MEM] Fallback cache local: {FALLBACK_CACHE}")
+    print(f"[NX48-MEM] Fallback local: {FALLBACK_CACHE}")
+
+
+def read_csv(csv_path):
+    """Lit le CSV NX48 et retourne un dict de paramètres."""
+    if not csv_path or not os.path.exists(csv_path):
+        return {}
+    try:
+        with open(csv_path, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                return dict(row)  # première ligne
+    except Exception as e:
+        print(f"[NX48-MEM] WARN: lecture CSV {csv_path}: {e}")
+    return {}
+
+
+def write_csv(csv_path, params):
+    """Écrit le CSV NX48 depuis un dict de paramètres."""
+    if not csv_path:
+        return False
+    os.makedirs(os.path.dirname(csv_path) if os.path.dirname(csv_path) else ".", exist_ok=True)
+    try:
+        fieldnames = ["run_id", "delta_nonce_scale", "n_replicas_scale", "swap_temp_scale",
+                      "batch_size_scale", "exploration_bias", "best_leading_zeros",
+                      "best_nonce", "update_count", "loss_curr", "grad_norm",
+                      "w0","w1","w2","w3","w4","w5","w6","w7","bias"]
+        with open(csv_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerow(params)
+        return True
+    except Exception as e:
+        print(f"[NX48-MEM] WARN: écriture CSV {csv_path}: {e}")
+        return False
+
+
+def init_session(stamp, csv_path=None):
+    """
+    C42-SUPRA-INIT : Récupère le meilleur état NX48 depuis Supermemory.
+    Si Supermemory contient un record >= celui du CSV local → mise à jour CSV.
+    Ceci garantit que même après un reset, NX48 repart de son meilleur état connu.
+    """
+    key = get_key()
+    if not key:
+        return
+
+    print(f"[NX48-MEM] Init session C42 — stamp={stamp}")
+
+    # Lire état CSV local actuel
+    local_params = read_csv(csv_path) if csv_path else {}
+    local_best = int(local_params.get("best_leading_zeros", 0))
+    print(f"[NX48-MEM] État local CSV: best_leading={local_best} nonce={local_params.get('best_nonce','?')}")
+
+    # Chercher le meilleur état dans Supermemory
+    queries = [
+        "LumVorax NX48 best_leading_zeros record C42",
+        "LumVorax BTC quantum mining record leading zeros",
+        "nx48_btc_state best nonce weights"
+    ]
+
+    sm_best = 0
+    sm_best_params = {}
+
+    for q in queries:
+        ok, data = _search(key, q, limit=5)
+        if not ok:
+            print(f"[NX48-MEM] Recherche FAIL: {data}")
+            continue
+        # Analyser les résultats pour trouver le meilleur record
+        results = data if isinstance(data, list) else data.get("results", [])
+        for item in results:
+            content = item.get("content", "") if isinstance(item, dict) else str(item)
+            # Extraire best_leading_zeros du contenu
+            for line in content.split("\n"):
+                if "best_leading_zeros" in line and "=" in line:
+                    try:
+                        val = int(line.split("=")[1].strip().split()[0].replace(",",""))
+                        if val > sm_best:
+                            sm_best = val
+                            # Extraire tous les paramètres disponibles
+                            for param_line in content.split("\n"):
+                                if "=" in param_line:
+                                    k, _, v = param_line.partition("=")
+                                    k = k.strip().lower().replace("-","_")
+                                    v = v.strip().split()[0].replace(",","")
+                                    sm_best_params[k] = v
+                    except (ValueError, IndexError):
+                        pass
+
+    print(f"[NX48-MEM] Meilleur état Supermemory: best_leading={sm_best}")
+
+    # Mettre à jour le CSV si Supermemory a un meilleur record
+    if sm_best > local_best and sm_best_params and csv_path:
+        print(f"[NX48-MEM] ✅ Supermemory > CSV ({sm_best} > {local_best}) — mise à jour CSV")
+        # Merger: garder les paramètres locaux, mettre à jour ceux de Supermemory
+        merged = dict(local_params)
+        for k, v in sm_best_params.items():
+            if k in NX48_PARAMS_C42 or k == "run_id":
+                merged[k] = v
+        if "run_id" not in merged:
+            merged["run_id"] = f"sm_restored_{stamp}"
+        write_csv(csv_path, merged)
+        print(f"[NX48-MEM] CSV mis à jour avec état Supermemory (best_leading={sm_best})")
+    else:
+        print(f"[NX48-MEM] CSV local à jour (best_leading={local_best} >= SM={sm_best})")
+
+    # Envoyer confirmation de démarrage à Supermemory
+    ram_mb = 0
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                if "MemAvailable" in line:
+                    ram_mb = int(line.split()[1]) // 1024
+                    break
+    except Exception:
+        pass
+
+    content = (
+        f"LumVorax NX48 Session Init — stamp={stamp} cycle=C42\n"
+        f"CSV local: best_leading_zeros={local_best} nonce={local_params.get('best_nonce','?')}\n"
+        f"Supermemory best: best_leading_zeros={sm_best}\n"
+        f"RAM disponible: {ram_mb}MB\n"
+        f"STANDARD_NAMES.md v4.2 §M-BTC17-C42"
+    )
+    metadata = {
+        "source": "LumVorax", "module": "btc_quantum_mining",
+        "cycle": "C42", "event": "session_start", "stamp": stamp,
+        "best_leading_zeros_local": local_best,
+        "best_leading_zeros_sm": sm_best,
+        "standard": "STANDARD_NAMES_v4.2"
+    }
+    ok, resp = _post_document(key, content, metadata)
+    if ok:
+        print(f"[NX48-MEM] ✅ Init envoyé Supermemory: {json.dumps(resp)[:150]}")
+    else:
+        print(f"[NX48-MEM] ⚠️ Init Supermemory FAIL: {resp}")
+        _fallback_save(content, metadata)
+
+
+def store_run(csv_path, cycle, run_id):
+    """
+    Envoie l'état complet NX48 + formules + calculs vers Supermemory après un run.
+    C'est ici que TOUTE la connaissance accumulée est persistée inter-sessions.
+    """
+    key = get_key()
+    if not key:
+        return
+
+    params = read_csv(csv_path) if csv_path else {}
+    if not params:
+        print("[NX48-MEM] CSV vide — rien à envoyer")
+        return
+
+    best_leading = params.get("best_leading_zeros", "?")
+    best_nonce   = params.get("best_nonce", "?")
+    update_count = params.get("update_count", "?")
+    loss         = params.get("loss_curr", "?")
+    delta        = params.get("delta_nonce_scale", "?")
+    expl         = params.get("exploration_bias", "?")
+
+    # Calcul de delta_nonce absolu (en nonces)
+    try:
+        delta_nonce_abs = int(float(delta) * 65536)
+    except Exception:
+        delta_nonce_abs = "?"
+
+    # État complet des weights
+    weights_str = ""
+    for i in range(8):
+        w = params.get(f"w{i}", "?")
+        features_names = ["btc_best_leading_zeros/256", "hashrate_norm", "ptmc_swap_rate",
+                          "time_stall", "nonce_coverage", "delta_nonce_norm", "thread_eff", "temp_ratio"]
+        fname = features_names[i] if i < len(features_names) else f"f{i}"
+        weights_str += f"  w{i}={w} ({fname})\n"
+    bias_val = params.get("bias", "?")
+
+    content = f"""LumVorax NX48 État Complet — Cycle {cycle} — Run {run_id}
+================================================
+
+RECORD :
+  best_leading_zeros = {best_leading}
+  best_nonce         = {best_nonce}
+  update_count       = {update_count}
+
+HYPERPARAMÈTRES D'EXPLORATION :
+  delta_nonce_scale  = {delta}  → rayon absolu = {delta_nonce_abs} nonces
+  n_replicas_scale   = {params.get('n_replicas_scale','?')}
+  swap_temp_scale    = {params.get('swap_temp_scale','?')}
+  batch_size_scale   = {params.get('batch_size_scale','?')}
+  exploration_bias   = {expl}
+
+NEURONE NX48 (C42-WEIGHTS-PERSIST) :
+  bias = {bias_val}
+{weights_str}
+ÉTAT APPRENTISSAGE :
+  loss_curr  = {loss}
+  grad_norm  = {params.get('grad_norm','?')}
+
+{NX48_FORMULAS}
+
+FEATURES (8 entrées du neurone) :
+""" + "\n".join(f"  {fid}: {fname} = {formula}" for fid, fname, formula in NX48_FEATURES) + f"""
+
+STANDARD_NAMES.md v4.2 §M-BTC17-C42
+Enregistré: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
+"""
+
+    metadata = {
+        "source": "LumVorax", "module": "btc_quantum_mining",
+        "cycle": cycle, "run_id": run_id,
+        "event": "run_complete",
+        "best_leading_zeros": int(best_leading) if str(best_leading).isdigit() else 0,
+        "best_nonce": str(best_nonce),
+        "update_count": str(update_count),
+        "standard": "STANDARD_NAMES_v4.2",
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+
+    print(f"[NX48-MEM] Envoi état complet NX48 → Supermemory (best_leading={best_leading})")
+    ok, resp = _post_document(key, content, metadata)
+    if ok:
+        doc_id = resp.get("id", "?") if isinstance(resp, dict) else "?"
+        print(f"[NX48-MEM] ✅ État NX48 persisté — ID: {doc_id} — best_leading={best_leading}")
+    else:
+        print(f"[NX48-MEM] ⚠️ Supermemory FAIL: {resp}")
+        _fallback_save(content, metadata)
+
 
 def store_discovery(cycle, run_id, content, extra_meta=None):
-    """Envoie une découverte vers Supermemory + fallback local"""
     key = get_key()
+    if not key:
+        return None
     metadata = {
-        "source": "LumVorax",
-        "module": "btc_quantum_mining",
-        "cycle": cycle,
-        "run_id": run_id,
+        "source": "LumVorax", "module": "btc_quantum_mining",
+        "cycle": cycle, "run_id": run_id,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "standard": "STANDARD_NAMES_v4.2",
         **(extra_meta or {})
     }
-    print(f"[NX48-MEM] Envoi Supermemory: cycle={cycle} run={run_id}")
+    print(f"[NX48-MEM] Envoi découverte: cycle={cycle} run={run_id}")
     ok, resp = _post_document(key, content, metadata)
     if ok:
-        print(f"[NX48-MEM] ✅ Supermemory OK: {json.dumps(resp)[:200]}")
+        print(f"[NX48-MEM] ✅ OK: {json.dumps(resp)[:200]}")
         return resp
     else:
-        print(f"[NX48-MEM] ⚠️ Supermemory FAIL: {resp}")
+        print(f"[NX48-MEM] ⚠️ FAIL: {resp}")
         _fallback_save(content, metadata)
         return None
 
-def init_session(stamp):
-    """Initialise la session: charge mémoires précédentes + envoie état init"""
-    key = get_key()
-    print(f"[NX48-MEM] Init session stamp={stamp}")
-    # Rappel des mémoires BTC précédentes
-    ok, data = _search(key, "LumVorax BTC record leading zeros")
-    if ok:
-        print(f"[NX48-MEM] Mémoires récupérées: {json.dumps(data)[:300]}")
-    else:
-        print(f"[NX48-MEM] Recherche FAIL: {data}")
-
-    # Envoie l'état init de la session
-    content = f"LumVorax Session Init {stamp} - Module BTC Quantum Mining - Cycle C41"
-    store_discovery("C41", f"init_{stamp}", content, {"event": "session_start"})
 
 def main():
-    import urllib.parse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--init", metavar="STAMP")
-    parser.add_argument("--store", metavar="CONTENT")
-    parser.add_argument("--cycle", default="C41")
-    parser.add_argument("--run-id", default="unknown")
-    parser.add_argument("--recall", action="store_true")
-    parser.add_argument("--query", default="LumVorax BTC")
+    parser = argparse.ArgumentParser(description="LumVorax NX48 Supermemory C42")
+    parser.add_argument("--init",       metavar="STAMP",   help="Init session (récupère état depuis SM)")
+    parser.add_argument("--csv",        metavar="CSV_PATH", help="Chemin CSV NX48 (config/btc_nx48_last.csv)")
+    parser.add_argument("--store-run",  action="store_true", help="Envoie état NX48 complet à Supermemory")
+    parser.add_argument("--store",      metavar="CONTENT",  help="Envoie une découverte")
+    parser.add_argument("--cycle",      default="C42")
+    parser.add_argument("--run-id",     default="unknown")
+    parser.add_argument("--recall",     action="store_true")
+    parser.add_argument("--query",      default="LumVorax NX48 BTC")
     args = parser.parse_args()
 
     if args.init:
-        init_session(args.init)
+        init_session(args.init, csv_path=args.csv)
+    elif args.store_run:
+        store_run(args.csv, args.cycle, args.run_id)
     elif args.store:
         store_discovery(args.cycle, args.run_id, args.store)
     elif args.recall:
         key = get_key()
         ok, data = _search(key, args.query)
-        print("RECALL:", json.dumps(data, indent=2)[:1000])
+        print("RECALL:", json.dumps(data, indent=2)[:2000])
+
 
 if __name__ == "__main__":
     main()

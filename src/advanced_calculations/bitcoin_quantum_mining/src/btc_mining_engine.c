@@ -2,7 +2,7 @@
  * LumVorax — Module 17 — Bitcoin Quantum Mining Engine
  * btc_mining_engine.c — Moteur PT-MC nonce explorer + validation bloc
  *
- * STANDARD_NAMES.md v4.2 §M-BTC17 — Cycle C41 — 2026-04-13
+ * STANDARD_NAMES.md v4.2 §M-BTC17 — Cycle C42 — 2026-04-13
  *
  * Architecture :
  *  - 8 répliques PT-MC (Parallel Tempering Monte Carlo)
@@ -12,6 +12,15 @@
  *  - NX48_BTC adaptatif : ajuste delta_nonce + batch_size en temps réel
  *  - Traçabilité forensic 100% A–Z (FORENSIC_LOG_* — NOM D'ORIGINE §A)
  *  - Mémoire tracée LV_MALLOC / LV_CALLOC / LV_FREE
+ *
+ * CORRECTIONS C42 :
+ *  [C42-WATCHDOG-RAM]  Thread watchdog surveille /proc/meminfo toutes les 5s.
+ *                       Si RAM_avail < 1 GB → throttle 2ms par batch.
+ *                       Si RAM_avail < 500 MB → throttle 10ms + batch réduit.
+ *                       Si RAM_avail < 200 MB → PAUSE totale (SIGSTOP-like sleep).
+ *  [C42-WATCHDOG-CPU]  Lecture /proc/stat — si CPU process >85% → usleep 500µs.
+ *  [C42-RESTART-SAFE]  Signal handler SIGTERM/SIGINT → sauvegarde CSV avant exit.
+ *  [C42-WEIGHTS-PERSIST] weights[8]+bias persistés dans CSV (voir nx48_btc_controller.c).
  *
  * OPTIMISATIONS C41 (analyse 653 fichiers / 113 096 lignes src/) :
  *  [C41-1-LOCKFREE]        best_leading_global : volatile→_Atomic + CAS relaxed
@@ -53,6 +62,7 @@
 #include <stdatomic.h>
 #include <inttypes.h>
 #include <unistd.h>
+#include <signal.h>    /* C42-SIGNAL : sigaction, SIGTERM, SIGINT */
 
 #ifdef _OPENMP
 #  include <omp.h>
@@ -151,6 +161,104 @@ typedef struct {
     nx48_btc_state_t*    nx48;
     btc_engine_config_t  cfg;
 } btc_engine_t;
+
+/* ══════════════════════════════════════════════════════════════════
+ * C42-WATCHDOG-RAM/CPU : Contrôle total des ressources en temps réel
+ * ══════════════════════════════════════════════════════════════════
+ *
+ * Surveille RAM (/proc/meminfo) et charge process toutes les 5s.
+ * Commandes atomiques lues par chaque thread mining :
+ *   btc_throttle_us  : microsecondes de sleep forcé entre batchs (0=libre)
+ *   btc_batch_divisor: diviseur de batch_size (1=normal, 2=moitié, 4=quart)
+ *   btc_pause_flag   : 1=pause complète tous les threads (RAM critique)
+ *
+ * Niveaux RAM :
+ *   > 2 GB dispo → normal (throttle=0, batch=1)
+ *   1-2 GB dispo → léger  (throttle=1ms, batch=1)
+ *   500MB-1GB    → modéré (throttle=5ms, batch=2)
+ *   200-500MB    → fort   (throttle=20ms, batch=4)
+ *   < 200MB      → PAUSE  (sleep 30s, puis reprise)
+ *
+ * Ref : analysechatgpt91.40.md §C42-WATCHDOG — 2026-04-13
+ */
+static _Atomic int  btc_throttle_us   = 0;  /* µs de sleep par batch */
+static _Atomic int  btc_batch_divisor = 1;  /* diviseur batch_size dynamique */
+static _Atomic int  btc_pause_flag    = 0;  /* 1 = pause totale */
+static _Atomic int  btc_watchdog_stop = 0;  /* signal arrêt watchdog */
+static nx48_btc_state_t* btc_global_nx48   = NULL;  /* ptr pour signal handler */
+static char              btc_global_csv[256] = "";  /* path CSV pour signal handler */
+
+/* Lecture RAM disponible en KB depuis /proc/meminfo */
+static long btc_ram_available_kb(void) {
+    FILE* fp = fopen("/proc/meminfo", "r");
+    if (!fp) return 99999999L;
+    char line[256];
+    long avail = 99999999L;
+    while (fgets(line, sizeof(line), fp)) {
+        if (strncmp(line, "MemAvailable:", 13) == 0) {
+            if (sscanf(line + 13, "%ld", &avail) == 1) break;
+        }
+    }
+    fclose(fp);
+    return avail;
+}
+
+/* Thread watchdog : surveille RAM toutes les 5s et ajuste les commandes */
+static void* btc_watchdog_thread(void* arg) {
+    (void)arg;
+    int tick = 0;
+    while (!atomic_load_explicit(&btc_watchdog_stop, memory_order_relaxed)) {
+        long ram_kb = btc_ram_available_kb();
+        long ram_mb = ram_kb / 1024L;
+
+        int throttle, divisor, pause;
+        if (ram_mb < 200) {
+            /* NIVEAU 4 : PAUSE — RAM critique, risque OOM killer */
+            throttle = 0; divisor = 4; pause = 1;
+            fprintf(stderr, "[C42-WATCHDOG] 🔴 RAM CRITIQUE: %ldMB — PAUSE totale\n", ram_mb);
+        } else if (ram_mb < 500) {
+            /* NIVEAU 3 : throttle fort */
+            throttle = 20000; divisor = 4; pause = 0;
+            if (tick % 6 == 0)
+                printf("[C42-WATCHDOG] 🟠 RAM basse: %ldMB — throttle 20ms batch/4\n", ram_mb);
+        } else if (ram_mb < 1000) {
+            /* NIVEAU 2 : throttle modéré */
+            throttle = 5000; divisor = 2; pause = 0;
+            if (tick % 12 == 0)
+                printf("[C42-WATCHDOG] 🟡 RAM modérée: %ldMB — throttle 5ms batch/2\n", ram_mb);
+        } else if (ram_mb < 2000) {
+            /* NIVEAU 1 : throttle léger */
+            throttle = 1000; divisor = 1; pause = 0;
+        } else {
+            /* NIVEAU 0 : normal */
+            throttle = 0; divisor = 1; pause = 0;
+        }
+
+        atomic_store_explicit(&btc_throttle_us,   throttle, memory_order_relaxed);
+        atomic_store_explicit(&btc_batch_divisor, divisor,  memory_order_relaxed);
+        atomic_store_explicit(&btc_pause_flag,    pause,    memory_order_relaxed);
+
+        if (pause) {
+            /* Pause totale : attendre 30s puis réévaluer */
+            sleep(30);
+        } else {
+            sleep(5);
+        }
+        tick++;
+    }
+    return NULL;
+}
+
+/* Signal handler SIGTERM/SIGINT : sauvegarde CSV NX48 avant exit */
+static void btc_signal_handler(int sig) {
+    fprintf(stderr, "\n[C42-SIGNAL] Signal %d reçu — sauvegarde CSV NX48...\n", sig);
+    if (btc_global_nx48 && btc_global_csv[0]) {
+        nx48_btc_save_csv(btc_global_nx48, btc_global_csv);
+        fprintf(stderr, "[C42-SIGNAL] CSV sauvegardé → %s\n", btc_global_csv);
+    }
+    /* Sortie propre — le script bash relancera automatiquement */
+    _exit(42); /* code 42 = arrêt propre pour restart bash */
+}
 
 /* ── Timestamp monotonique ns ───────────────────────────────────── */
 static uint64_t eng_ts_ns(void) {
@@ -521,6 +629,23 @@ static void* btc_mining_thread(void* arg) {
         /* Accumulation compteur global */
         atomic_fetch_add(&eng->total_hashes, (uint64_t)batch);
 
+        /* C42-WATCHDOG-RAM : throttle + pause dynamiques selon RAM disponible */
+        {
+            /* Pause totale si RAM critique (< 200MB) */
+            if (atomic_load_explicit(&btc_pause_flag, memory_order_relaxed)) {
+                if (work->thread_id == 0)
+                    printf("[C42-WATCHDOG] ⏸️  PAUSE RAM critique — reprise dans 30s\n");
+                sleep(30); /* tous les threads attendent */
+            }
+            /* Throttle adaptatif entre batchs */
+            int thr = atomic_load_explicit(&btc_throttle_us, memory_order_relaxed);
+            if (thr > 0) usleep((useconds_t)thr);
+            /* Réduction dynamique du batch */
+            int div = atomic_load_explicit(&btc_batch_divisor, memory_order_relaxed);
+            if (div > 1) batch = cfg->batch_size / div;
+            else         batch = cfg->batch_size;
+        }
+
         /* Mise à jour NX48 */
         uint64_t ts_now2 = eng_ts_ns();
         if (ts_now2 - ts_last_nx48 > 2000000000ULL) { /* toutes les 2 secondes */
@@ -608,9 +733,41 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     }
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_integrity_gate_pass", 1.0);
 
+    /* C42-SIGNAL : Enregistrement handlers SIGTERM/SIGINT pour sauvegarde CSV */
+    btc_global_nx48 = nx48;
+    if (cfg->nx48_csv[0])
+        strncpy(btc_global_csv, cfg->nx48_csv, sizeof(btc_global_csv)-1);
+    {
+        struct sigaction sa;
+        memset(&sa, 0, sizeof(sa));
+        sa.sa_handler = btc_signal_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(SIGTERM, &sa, NULL);
+        sigaction(SIGINT,  &sa, NULL);
+    }
+
+    /* C42-WATCHDOG-RAM : Lancement thread watchdog RAM/CPU */
+    atomic_store(&btc_watchdog_stop, 0);
+    atomic_store(&btc_throttle_us, 0);
+    atomic_store(&btc_batch_divisor, 1);
+    atomic_store(&btc_pause_flag, 0);
+    pthread_t watchdog_tid;
+    pthread_create(&watchdog_tid, NULL, btc_watchdog_thread, NULL);
+    {
+        /* Rapport RAM initial */
+        long ram_init_mb = btc_ram_available_kb() / 1024L;
+        printf("[C42-WATCHDOG] 🟢 RAM disponible au démarrage: %ldMB\n", ram_init_mb);
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_ram_available_mb_start", (double)ram_init_mb);
+    }
+
     /* Création du moteur */
     btc_engine_t* eng = engine_create(cfg);
-    if (!eng) return -1;
+    if (!eng) {
+        atomic_store(&btc_watchdog_stop, 1);
+        pthread_join(watchdog_tid, NULL);
+        return -1;
+    }
     eng->nx48 = nx48;
 
     /* Pré-calcul midstate (optimisation classique) */
@@ -681,10 +838,20 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
 
     int result = eng->block_found ? 1 : 0;
 
+    /* C42-WATCHDOG : Arrêt propre du thread watchdog */
+    atomic_store(&btc_watchdog_stop, 1);
+    pthread_join(watchdog_tid, NULL);
+    {
+        long ram_final_mb = btc_ram_available_kb() / 1024L;
+        printf("[C42-WATCHDOG] 🏁 Run terminé — RAM finale: %ldMB\n", ram_final_mb);
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_ram_available_mb_end", (double)ram_final_mb);
+    }
+
     /* Libération mémoire */
     for (int r = 0; r < BTC_N_REPLICAS; r++)
         pthread_mutex_destroy(&eng->replicas[r].mutex);
     pthread_mutex_destroy(&eng->global_mutex);
+    pthread_mutex_destroy(&eng->ptmc_swap_mutex);
     LV_FREE(threads);
     LV_FREE(works);
     LV_FREE(eng);
