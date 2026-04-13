@@ -190,8 +190,8 @@ int main(int argc, char* argv[]) {
     printf("\n");
     printf("╔══════════════════════════════════════════════════════════╗\n");
     printf("║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║\n");
-    printf("║  Version : 1.0.0-C39 | Standard : STANDARD_NAMES v4.2  ║\n");
-    printf("║  C39 : mutex PT-MC, orbital 50k, threshold 22, OGY, Leb ║\n");
+    printf("║  Version : 1.0.0-C40 | Standard : STANDARD_NAMES v4.2  ║\n");
+    printf("║  C40 : wallet fixe secrets, CSV record immediat, delta50 ║\n");
     printf("╚══════════════════════════════════════════════════════════╝\n");
     printf("[BTC_QM] run_id    = %s\n", cfg.run_id);
     printf("[BTC_QM] mode      = %s\n", cfg.run_mode);
@@ -263,20 +263,54 @@ int main(int argc, char* argv[]) {
     fflush(stdout);
 
     /* ── Création wallet Bitcoin RÉEL (secp256k1/OpenSSL) ───────── */
+    /* C40-WALLET-FIXED : Réutiliser le wallet fixe depuis les secrets Replit
+     * si BTC_WALLET_PRIV_HEX est défini → btc_wallet_from_privkey() (persistant).
+     * Sinon → génération aléatoire par run (comportement C39 et antérieur).
+     *
+     * Avantages wallet fixe :
+     *  - Une seule adresse de destination pour tous les runs
+     *  - Aucune accumulation de wallets JSON
+     *  - Clé privée centralisée dans les secrets Replit (jamais dans les logs)
+     *
+     * Secrets attendus : BTC_WALLET_PRIV_HEX (64 hex chars, 32 bytes secp256k1)
+     * Ref : rapport forensique C40 §4.WALLET — 2026-04-13 */
     btc_network_e btc_net = BTC_NETWORK_TESTNET3;
     if (strncmp(cfg.run_mode, "MAINNET", 7) == 0)
         btc_net = BTC_NETWORK_MAINNET;
 
-    printf("[BTC_QM] Génération wallet Bitcoin réel (secp256k1)…\n");
-    fflush(stdout);
+    lv_btc_wallet_t* wallet = NULL;
 
-    lv_btc_wallet_t* wallet = btc_wallet_create(btc_net, cfg.run_id);
+    const char* env_priv_hex = getenv("BTC_WALLET_PRIV_HEX");
+    if (!env_priv_hex || strlen(env_priv_hex) < 64)
+        env_priv_hex = getenv("PRIVATE_KEY_HEX");
+
+    if (env_priv_hex && strlen(env_priv_hex) >= 64) {
+        /* Décoder hex → 32 bytes */
+        uint8_t priv_bytes[32];
+        int ok = 1;
+        for (int k = 0; k < 32 && ok; k++) {
+            unsigned int byte = 0;
+            if (sscanf(env_priv_hex + 2*k, "%02x", &byte) != 1) ok = 0;
+            else priv_bytes[k] = (uint8_t)byte;
+        }
+        if (ok) {
+            wallet = btc_wallet_from_privkey(priv_bytes, btc_net, cfg.run_id);
+            if (wallet)
+                printf("[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓\n");
+        }
+    }
+
+    if (!wallet) {
+        printf("[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…\n");
+        wallet = btc_wallet_create(btc_net, cfg.run_id);
+    }
+
     if (!wallet) {
         fprintf(stderr, "[BTC_QM] AVERTISSEMENT: wallet Bitcoin non créé "
                 "(OpenSSL secp256k1 indisponible — minage continue sans wallet)\n");
     } else {
         btc_wallet_print(wallet);
-        /* Sauvegarder wallet en JSON (sans clé privée) */
+        /* Sauvegarder wallet en JSON (sans clé privée) — une seule fois si fixe */
         char wallet_path[512];
         snprintf(wallet_path, sizeof(wallet_path), "%s/wallet_%s.json",
                  cfg.log_dir, cfg.run_id);

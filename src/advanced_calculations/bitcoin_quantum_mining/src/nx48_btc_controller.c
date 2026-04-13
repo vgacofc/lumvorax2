@@ -344,7 +344,11 @@ void nx48_btc_update(
     } else {
         s->stall_count++;
         if (s->stall_count >= 2) {
-            s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 10.0);
+            /* C40-DELTA-MAX : Cap corrigé 10.0 → 50.0 cohérent avec nx48_btc_clamp_scales().
+             * AVANT C40 : stall_count cap à 10.0 → delta ne dépassait jamais 10 dans ce branch.
+             * APRÈS C40 : cohérent avec le clamp global (max=50.0) pour run infini.
+             * Ref : rapport forensique C40 §DELTA — 2026-04-13 */
+            s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 50.0);
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                 "btc_nx48_stall_count", (double)s->stall_count);
             s->stall_count = 0;
