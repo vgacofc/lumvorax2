@@ -15,7 +15,10 @@ for _p in _lib_paths:
             pass
         break
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src", "visualization"))
+_viz_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src", "visualization")
+if _viz_dir not in sys.path:
+    sys.path.insert(0, _viz_dir)
+
 from server import app
 
 if __name__ == "__main__":
