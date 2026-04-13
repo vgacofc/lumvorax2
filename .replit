@@ -52,7 +52,7 @@ args = "python main.py"
 waitForPort = 5000
 
 [nix]
-packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
+packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib", "python313Packages.pyngrok"]
 channel = "stable-25_05"
 
 [deployment]
@@ -73,3 +73,7 @@ KAGGLE_CONFIG_DIR = "/home/runner/.kaggle"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
