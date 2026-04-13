@@ -1,7 +1,17 @@
-# LUMVORAX — Hubbard-HTS Visualisation
+# LUMVORAX — Module 17 BTC Quantum Mining + Hubbard-HTS
 
 ## Project Overview
-A high-performance scientific simulation framework (LUMVORAX) focused on black hole physics (Kerr metric), forensic logging, and quantum simulation. The project includes a Flask-based web visualization server for Hubbard-HTS quantum simulation results.
+LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin expérimental (NX48), simulation Hubbard-HTS, forensic logging ultra-précis, et intégrations Supabase/Supermemory/Aristocle.
+
+### MODULE ACTIF : Bitcoin Quantum Mining (Module 17)
+- **Binaire** : `src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner` — v1.0.0-C41 (106K)
+- **Record absolu** : 32 bits leading zeros — nonce 2 044 645 236 — cycle C41
+- **Workflow** : "Quantum Research Cycle C37" — RUN INFINI vers 256 bits
+- **Secrets** : Doppler (priorité) → Replit (fallback) — projet lumvorax / dev_lumvorax
+- **Supermemory** : container lumvorax_nx48 (662+ docs) — endpoint POST /v3/documents
+- **Supabase** : tables btc_mining_runs, btc_records, btc_metrics_realtime
+- **Aristocle** : ARISTOCLE_IA_API_KEY — URL aristotle.harmonic.fun (à confirmer)
+- **Rapport** : src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.39.md
 
 ## Architecture
 

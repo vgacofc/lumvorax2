@@ -71,27 +71,29 @@ if [ -f "$SUPERMEMORY_SCRIPT" ]; then
         sed 's/^/[NX48-MEM] /' || true
 fi
 
-# ── Enregistrement démarrage dans Supabase ───────────────────────
-python3 - "$CYCLE" "$VERSION" "$N_THREADS" << 'PYEOF' 2>&1 | sed 's/^/[SUPABASE] /' || true
-import os, sys, psycopg2
-cycle, version, threads = sys.argv[1], sys.argv[2], sys.argv[3]
+# ── Enregistrement démarrage dans Supabase (REST API — pas psycopg2) ─
+python3 - "$CYCLE" "$VERSION" "$N_THREADS" "$STAMP" << 'PYEOF' 2>&1 | sed 's/^/[SUPABASE] /' || true
+import os, sys, json, urllib.request
+from datetime import datetime, timezone
+cycle, version, threads, stamp = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+import os as _os
+pid = str(_os.getpid())
+run_id = f"btc_{stamp.replace('-','').replace(':','').replace('T','T').replace('Z','Z')}_{pid}"
+supa_url = os.environ.get("SUPABASE_URL","")
+supa_key = os.environ.get("SUPABASE_KEY","") or os.environ.get("SUPABASE_ANON_KEY","")
+if not supa_url or not supa_key:
+    print("SUPABASE_URL/KEY manquant — skip"); sys.exit(0)
+headers = {"apikey": supa_key, "Authorization": f"Bearer {supa_key}",
+           "Content-Type": "application/json", "Prefer": "return=minimal"}
+payload = {"run_id": run_id, "cycle": cycle, "version": version,
+           "mode": "BENCHMARK", "network": "MAINNET", "threads": int(threads),
+           "batch_size": 512, "wallet_address": os.environ.get("BTC_WALLET_ADDRESS_TESTNET","unknown"),
+           "started_at": datetime.now(timezone.utc).isoformat()}
 try:
-    conn = psycopg2.connect(os.environ["DATABASE_URL"])
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO btc_mining_runs
-            (run_id, cycle, version, mode, network, threads, batch_size,
-             wallet_address, wallet_address_bech32, started_at)
-        VALUES (
-            'btc_' || to_char(NOW() AT TIME ZONE 'UTC', 'YYYYMMDD"T"HH24MISS"Z"') || '_' || pg_backend_pid(),
-            %s, %s, 'BENCHMARK', 'MAINNET', %s, 512,
-            COALESCE(current_setting('my.wallet_addr', true), 'unknown'),
-            COALESCE(current_setting('my.wallet_bech32', true), 'unknown'),
-            NOW()
-        )
-    """, (cycle, version, int(threads)))
-    conn.commit(); conn.close()
-    print("Run inscrit OK dans btc_mining_runs")
+    req = urllib.request.Request(f"{supa_url}/rest/v1/btc_mining_runs",
+        data=json.dumps(payload).encode(), headers=headers, method="POST")
+    with urllib.request.urlopen(req, timeout=10) as r:
+        print(f"Run inscrit OK dans btc_mining_runs — {r.status}")
 except Exception as e:
     print(f"WARN: {e}")
 PYEOF
