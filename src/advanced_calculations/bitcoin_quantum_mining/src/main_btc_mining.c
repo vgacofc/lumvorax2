@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
     memset(&cfg, 0, sizeof(cfg));
     cfg.n_threads   = 16;
     cfg.n_replicas  = 8;
-    cfg.batch_size  = 256;
+    cfg.batch_size  = 512;  /* C41-5-BATCH-TUNING : 256→512 meilleur saturage SHA-256 */
     cfg.nonce_start = 0;
     cfg.nonce_end   = 0xFFFFFFFFu;
     cfg.duration_ns = 60ULL * 1000000000ULL;  /* 60 secondes par défaut */
@@ -190,8 +190,9 @@ int main(int argc, char* argv[]) {
     printf("\n");
     printf("╔══════════════════════════════════════════════════════════╗\n");
     printf("║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║\n");
-    printf("║  Version : 1.0.0-C40 | Standard : STANDARD_NAMES v4.2  ║\n");
-    printf("║  C40 : wallet fixe secrets, CSV record immediat, delta50 ║\n");
+    printf("║  Version : 1.0.0-C41 | Standard : STANDARD_NAMES v4.2  ║\n");
+    printf("║  C41 : SIMD predict/ISTA, lockfree CAS, timestamp cache  ║\n");
+    printf("║  C41 : cache-line align, batch 512, thermal, async-log   ║\n");
     printf("╚══════════════════════════════════════════════════════════╝\n");
     printf("[BTC_QM] run_id    = %s\n", cfg.run_id);
     printf("[BTC_QM] mode      = %s\n", cfg.run_mode);

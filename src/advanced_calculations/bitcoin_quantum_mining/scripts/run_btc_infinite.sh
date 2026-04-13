@@ -2,25 +2,28 @@
 # LumVorax — Module 17 — Bitcoin Quantum Mining Engine
 # scripts/run_btc_infinite.sh — Run INFINI vers 256 bits
 #
-# Usage:
-#   bash scripts/run_btc_infinite.sh
+# Version C41 — STANDARD_NAMES.md v4.2 §M-BTC17-C41 — 2026-04-13
 #
-# Description:
-#   1. Récupère le vrai header Bitcoin depuis blockstream.info (API publique)
-#   2. Lance btc_mining_runner en mode ILLIMITÉ (--duration-s 0)
-#   3. Le moteur s'arrête uniquement si :
-#      - Un bloc valide est trouvé (256 bits de leading zeros)
-#      - L'utilisateur envoie SIGTERM/SIGINT (Ctrl+C)
+# Corrections C41 actives :
+#   [C41-1] Lockfree CAS atomique best_leading_global
+#   [C41-2] Timestamp cache 1ms thread-local (8× moins de syscalls)
+#   [C41-3] Cache-line align 64B btc_ptmc_replica_t (zéro false sharing)
+#   [C41-4] Mutex orbital éliminé → atomic_load_relaxed
+#   [C41-5] Batch 512 (vs 256) + nx48_every 200k (vs 100k)
+#   [C41-6] Thermal throttle usleep 500µs si CPU>90%
+#   [C41-7] FORENSIC_LOG hors record = no-op (0 I/O hot path)
+#   [C41-8] btc_thread_work_t aligned(64)
+#   [C41-SIMD-PREDICT] nx48_btc_predict déroulé 8 features (AVX2 vectorisé)
+#   [C41-SIMD-ISTA]    ISTA gradient déroulé 8 features (AVX2 vectorisé)
 #
-# Corrections C39 actives :
-#   - mutex PT-MC global (C39-P2)
-#   - Orbital radius 50k, threshold 22 bits (C39-P3)
-#   - Micro-perturbations OGY (C39-P4)
-#   - Focused Scan Lebesgue (C39-P5)
-#   - delta_nonce_scale max 50.0 (C39)
+# Système secrets :
+#   Priorité 1 : Doppler (projet=lumvorax, config=dev_lumvorax)
+#   Priorité 2 : Secrets Replit (fallback automatique)
 #
-# Conformité : STANDARD_NAMES.md v4.2 §M-BTC17-C38
-# Ref : analysechatgpt91.38.md §10 Plan C39 — 2026-04-12
+# Intégrations :
+#   Supermemory : container lumvorax_nx48 (662 docs / 237 mémoires)
+#   Supabase    : tables btc_mining_runs, btc_records, btc_metrics_realtime
+#   Aristocle   : envoi découvertes inconnues (fallback local si DNS fail)
 
 set -e
 cd "$(dirname "$0")/.."  # Se positionne dans bitcoin_quantum_mining/
@@ -28,6 +31,24 @@ cd "$(dirname "$0")/.."  # Se positionne dans bitcoin_quantum_mining/
 BINARY="./btc_mining_runner"
 SCRIPT_POW="scripts/fetch_btc_real_pow.py"
 N_THREADS=8
+CYCLE="C41"
+VERSION="1.0.0-C41"
+STAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+
+# ── Système de secrets : Doppler priorité → Replit fallback ──────
+if [ -n "${DOPPLER_TOKEN:-}" ] && command -v doppler &>/dev/null; then
+    echo "[BTC_RUN] Chargement secrets Doppler (lumvorax/dev_lumvorax)..."
+    _DOPPLER_ENV=$(doppler secrets download \
+        --token "$DOPPLER_TOKEN" \
+        --project lumvorax \
+        --config dev_lumvorax \
+        --no-file --format env 2>/dev/null) && \
+    eval "$_DOPPLER_ENV" && \
+    echo "[BTC_RUN] Secrets Doppler OK" || \
+    echo "[BTC_RUN] Doppler FAIL — secrets Replit utilisés"
+else
+    echo "[BTC_RUN] Secrets Replit actifs (Doppler indisponible)"
+fi
 
 # Vérification du binaire
 if [ ! -x "$BINARY" ]; then
@@ -37,26 +58,60 @@ fi
 
 echo "============================================================"
 echo " LumVorax — Module 17 — Run INFINI vers 256 bits"
-echo " $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-echo " Corrections : C39-P2 mutex | C39-P3 orbital 50k | C39-P4 OGY | C39-P5 Lebesgue"
+echo " $STAMP"
+echo " Version : $VERSION | Cycle : $CYCLE | Threads : $N_THREADS"
+echo " C41: SIMD AVX2 | Lockfree | Cache-line 64B | Batch 512"
 echo "============================================================"
 
-# Récupération du vrai header Bitcoin
-echo "[BTC_RUN] Récupération du vrai header Bitcoin (blockstream.info)..."
+# ── Supermemory : init session ───────────────────────────────────
+SUPERMEMORY_SCRIPT="../../tools/nx48_supermemory.py"
+[ ! -f "$SUPERMEMORY_SCRIPT" ] && SUPERMEMORY_SCRIPT="$(pwd)/../../tools/nx48_supermemory.py"
+if [ -f "$SUPERMEMORY_SCRIPT" ]; then
+    python3 "$SUPERMEMORY_SCRIPT" --init "$STAMP" 2>&1 | \
+        sed 's/^/[NX48-MEM] /' || true
+fi
+
+# ── Enregistrement démarrage dans Supabase ───────────────────────
+python3 - "$CYCLE" "$VERSION" "$N_THREADS" << 'PYEOF' 2>&1 | sed 's/^/[SUPABASE] /' || true
+import os, sys, psycopg2
+cycle, version, threads = sys.argv[1], sys.argv[2], sys.argv[3]
+try:
+    conn = psycopg2.connect(os.environ["DATABASE_URL"])
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO btc_mining_runs
+            (run_id, cycle, version, mode, network, threads, batch_size,
+             wallet_address, wallet_address_bech32, started_at)
+        VALUES (
+            'btc_' || to_char(NOW() AT TIME ZONE 'UTC', 'YYYYMMDD"T"HH24MISS"Z"') || '_' || pg_backend_pid(),
+            %s, %s, 'BENCHMARK', 'MAINNET', %s, 512,
+            COALESCE(current_setting('my.wallet_addr', true), 'unknown'),
+            COALESCE(current_setting('my.wallet_bech32', true), 'unknown'),
+            NOW()
+        )
+    """, (cycle, version, int(threads)))
+    conn.commit(); conn.close()
+    print("Run inscrit OK dans btc_mining_runs")
+except Exception as e:
+    print(f"WARN: {e}")
+PYEOF
+
+# ── Récupération du vrai header Bitcoin ──────────────────────────
+echo "[BTC_RUN] Recuperation header Bitcoin (blockstream.info)..."
 REAL_HEADER=$(python3 "$SCRIPT_POW" 2>/dev/null | grep '^[0-9a-f]' | head -1)
 
 if [ -z "$REAL_HEADER" ] || [ ${#REAL_HEADER} -lt 160 ]; then
-    echo "[BTC_RUN] AVERTISSEMENT: API blockstream inaccessible — header testnet synthétique"
-    echo "[BTC_RUN] Lancement sans --header-hex (difficulté testnet minimale)"
+    echo "[BTC_RUN] WARN: API blockstream inaccessible — header testnet synthetique"
     exec "$BINARY" \
         --mode BENCHMARK \
         --threads "$N_THREADS" \
         --duration-s 0
 else
-    echo "[BTC_RUN] Header Bitcoin réel récupéré (${#REAL_HEADER} chars)"
+    echo "[BTC_RUN] Header Bitcoin reel recupere (${#REAL_HEADER} chars)"
     echo "[BTC_RUN] Premiers 40 chars: ${REAL_HEADER:0:40}..."
-    echo "[BTC_RUN] Lancement moteur NX48 — $N_THREADS threads — DURÉE : INFINIE"
-    echo "[BTC_RUN] Objectif : 256 bits de leading zeros"
+    echo "[BTC_RUN] Lancement moteur NX48 — $N_THREADS threads — DUREE : INFINIE"
+    echo "[BTC_RUN] Objectif : bloc Bitcoin valide (recompense reelle si trouve)"
+    echo "[BTC_RUN] Wallet: ${BTC_WALLET_ADDRESS_TESTNET:-mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj}"
     echo "------------------------------------------------------------"
     exec "$BINARY" \
         --mode BENCHMARK \
