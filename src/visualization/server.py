@@ -519,6 +519,22 @@ def static_files(filename):
     return send_from_directory("static", filename)
 
 
+def _register_app_api_aliases():
+    for rule in list(app.url_map.iter_rules()):
+        if rule.rule.startswith("/api/"):
+            endpoint = f"app_api_{rule.endpoint}"
+            if endpoint not in app.view_functions:
+                app.add_url_rule(
+                    f"/app-api{rule.rule[4:]}",
+                    endpoint=endpoint,
+                    view_func=app.view_functions[rule.endpoint],
+                    methods=rule.methods,
+                )
+
+
+_register_app_api_aliases()
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)

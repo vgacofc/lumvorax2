@@ -12,10 +12,6 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Quantum Research Cycle C37"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Start application"
 
 [[workflows.workflow]]
@@ -28,17 +24,6 @@ task = "shell.exec"
 args = "git fetch origin git reset --hard origin/main"
 
 [[workflows.workflow]]
-name = "Quantum Research Cycle C37"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd src/advanced_calculations/bitcoin_quantum_mining && bash scripts/run_btc_infinite.sh"
-
-[[workflows.workflow]]
 name = "Start application"
 mode = "sequential"
 author = "agent"
@@ -48,11 +33,11 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python main.py"
+args = "python -m gunicorn --bind 0.0.0.0:5000 main:app"
 waitForPort = 5000
 
 [nix]
-packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib", "python313Packages.pyngrok"]
+packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
 channel = "stable-25_05"
 
 [deployment]
@@ -73,7 +58,3 @@ KAGGLE_CONFIG_DIR = "/home/runner/.kaggle"
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 8080
-externalPort = 8080
