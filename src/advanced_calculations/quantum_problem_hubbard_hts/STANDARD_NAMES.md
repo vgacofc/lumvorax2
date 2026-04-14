@@ -1545,3 +1545,39 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 - Objectif score physique : ~35/100 (QMC simple) → ~55-65/100 (avec DMFT approx)
 
 *Mise à jour : Version 4.0 — 2026-04-11 — C61 (clamp temp_K_scale, bench_err loss NX48, DMFT local Σ, rotation forensics > 100MB, archivage D² par run_id)*
+
+---
+
+### §M-BTC17-C42PLUS : Module 17 BTC — mémoire dual-agent, Supabase service_role, pont modules src
+
+| Nom canonique | Type | Fichier | Description |
+|---|---|---|---|
+| `BTC_NX48_AGENT1_REALTIME` | agent logique | `src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c` | Mémoire courte durée : neurone NX48 temps réel, gradient ISTA, weights[8]+bias, CSV `config/btc_nx48_last.csv` |
+| `BTC_NX48_AGENT2_LONGTERM` | agent logique | `tools/nx48_supermemory.py` | Mémoire longue durée : restauration/archivage inter-sessions via Supermemory `lumvorax_nx48` et Supabase |
+| `tools/nx48_supermemory.py` | script officiel BTC | `tools/nx48_supermemory.py` | Script C42+ appelé par `run_btc_infinite.sh` pour `--init`, `--store-run`, `--recall` |
+| `tools/nx48_module_bridge.py` | script officiel BTC | `tools/nx48_module_bridge.py` | Génère `config/btc_module_bridge_manifest.json` et expose les modules `src/` au moteur BTC |
+| `LUMVORAX_BTC_MODULE_BRIDGE_MANIFEST` | variable env | `btc_mining_engine.c` | Chemin du manifeste JSON chargé par le runner et loggé par le moteur BTC |
+| `LUMVORAX_BTC_MODULE_BRIDGE_COUNT` | variable env | `btc_mining_engine.c` | Nombre de modules `src/` connectés/loggés dans `btc_module_bridge_count` |
+| `btc_module_bridge_count` | métrique forensic | `btc_mining_engine.c` | Compteur de modules du manifeste branché au moteur BTC |
+
+#### Dépendances externes exactes Module 17 BTC
+
+| Service | URL / Endpoint | Version / mode | Secret requis | Usage |
+|---|---|---|---|---|
+| Supabase REST PostgREST | `${SUPABASE_URL}/rest/v1` ou `${SUPABASE8_API_URL}/rest/v1` | REST v1 | `SUPABASE_SERVICE_ROLE_KEY` | INSERT `btc_mining_runs`, `btc_records`, `btc_metrics_realtime` |
+| Supermemory | `https://api.supermemory.ai/v3/documents` | API v3 documents | `SUPERMEMORY_API_KEY` | Mémoire longue durée NX48, container `lumvorax_nx48` |
+| Supermemory Search | `https://api.supermemory.ai/v3/search` | API v3 search | `SUPERMEMORY_API_KEY` | Rappel du meilleur état connu NX48 |
+| Doppler | CLI `doppler secrets download --project lumvorax --config dev_lumvorax --format env` | CLI Doppler | `DOPPLER_TOKEN` | Source prioritaire des secrets au démarrage du runner |
+| Blockstream | `https://blockstream.info/api/blocks/tip/hash` et endpoints associés dans `fetch_btc_real_pow.py` | API publique Bitcoin mainnet | aucun | Header Bitcoin réel pour validation POW |
+| Aristocle / Aristotle | `https://aristotle.harmonic.fun/api/v2` | Endpoint à confirmer | `ARISTOCLE_IA_API_KEY` | Certification Lean4, fallback local `logs/aristocle_pending_discoveries.jsonl` |
+| Vercel | API Vercel v13 | REST | `VERCEL_TOKEN` | Publication/streaming externe si activé hors runner BTC |
+
+#### Tables Supabase BTC officielles
+
+| Table | Rôle | Clé obligatoire |
+|---|---|---|
+| `btc_mining_runs` | Démarrage de session runner BTC | `SUPABASE_SERVICE_ROLE_KEY` |
+| `btc_records` | Archive records NX48/nonce/leading zeros | `SUPABASE_SERVICE_ROLE_KEY` |
+| `btc_metrics_realtime` | Miroir temps réel des métriques NX48 BTC | `SUPABASE_SERVICE_ROLE_KEY` |
+
+*Mise à jour : Version 4.2-C42PLUS — 2026-04-14 — Module 17 BTC dual-agent, service_role Supabase, pont modules `src/`*

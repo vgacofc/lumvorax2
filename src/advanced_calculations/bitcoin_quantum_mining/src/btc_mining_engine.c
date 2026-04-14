@@ -733,6 +733,14 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     }
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_integrity_gate_pass", 1.0);
 
+    const char* bridge_manifest = getenv("LUMVORAX_BTC_MODULE_BRIDGE_MANIFEST");
+    const char* bridge_count = getenv("LUMVORAX_BTC_MODULE_BRIDGE_COUNT");
+    if (bridge_manifest && bridge_manifest[0]) {
+        double count = bridge_count ? atof(bridge_count) : 0.0;
+        printf("[BTC_QM] Pont modules LumVorax actif: %.0f modules — %s\n", count, bridge_manifest);
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_module_bridge_count", count);
+    }
+
     /* C42-SIGNAL : Enregistrement handlers SIGTERM/SIGINT pour sauvegarde CSV */
     btc_global_nx48 = nx48;
     if (cfg->nx48_csv[0])

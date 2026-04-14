@@ -4,12 +4,13 @@
 LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin expérimental (NX48), simulation Hubbard-HTS, forensic logging ultra-précis, et intégrations Supabase/Supermemory/Aristocle.
 
 ### MODULE ACTIF : Bitcoin Quantum Mining (Module 17)
-- **Binaire** : `src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner` — v1.0.0-C41 (106K)
-- **Record absolu** : 32 bits leading zeros — nonce 2 044 645 236 — cycle C41
-- **Workflow** : "Quantum Research Cycle C37" — RUN INFINI vers 256 bits
+- **Binaire** : `src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner` — v1.0.0-C42+
+- **Record absolu** : 32 bits leading zeros — nonce 2 044 645 236 — cycle C41/C42 forensic
+- **Workflow preview** : ne pas relancer pendant les travaux BTC C42+
 - **Secrets** : Doppler (priorité) → Replit (fallback) — projet lumvorax / dev_lumvorax
-- **Supermemory** : container lumvorax_nx48 (662+ docs) — endpoint POST /v3/documents
-- **Supabase** : tables btc_mining_runs, btc_records, btc_metrics_realtime
+- **Mémoire dual-agent NX48** : Agent1 temps réel C (`nx48_btc_controller.c`) + Agent2 long terme (`tools/nx48_supermemory.py`)
+- **Supermemory** : container lumvorax_nx48 — endpoint POST /v3/documents
+- **Supabase** : tables btc_mining_runs, btc_records, btc_metrics_realtime via SUPABASE_SERVICE_ROLE_KEY uniquement
 - **Aristocle** : ARISTOCLE_IA_API_KEY — URL aristotle.harmonic.fun (à confirmer)
 - **Rapport** : src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.39.md
 
@@ -28,6 +29,8 @@ LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin e
 
 ### Key Directories
 - `src/advanced_calculations/quantum_problem_hubbard_hts/` — Quantum simulation module
+- `tools/nx48_supermemory.py` — mémoire longue durée NX48 BTC Supermemory/Supabase
+- `tools/nx48_module_bridge.py` — manifeste de pont modules `src/` vers le moteur BTC
 - `logs/`, `evidence/` — Simulation output and forensic audit trails
 - `docs/` — Documentation and Doxygen configs
 

@@ -52,40 +52,43 @@ else
     echo "[BTC_RUN] Secrets Replit actifs (Doppler indisponible)"
 fi
 
-# ── C42-WIF-DECODE : Convertir BTC_WALLET_WIF → BTC_WALLET_PRIV_HEX ──
-# Le code C lit BTC_WALLET_PRIV_HEX. Les secrets contiennent BTC_WALLET_WIF.
-# Ce bloc Python décode le WIF en hex et l'exporte pour le processus enfant.
 if [ -n "${BTC_WALLET_WIF:-}" ] && [ -z "${BTC_WALLET_PRIV_HEX:-}" ]; then
     echo "[BTC_RUN] Décodage BTC_WALLET_WIF → BTC_WALLET_PRIV_HEX..."
     _PRIV_HEX=$(python3 - "$BTC_WALLET_WIF" << 'WIFEOF' 2>/dev/null
-import sys, base64, hashlib
+import sys, hashlib
 def wif_to_hex(wif):
+    BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
     try:
         import base58  # si disponible
         decoded = base58.b58decode(wif)
     except ImportError:
-        # Décodage base58 manuel
-        BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
         n = 0
         for ch in wif:
+            if ch not in BASE58:
+                return None
             n = n * 58 + BASE58.index(ch)
-        # Convertir en bytes
         h = format(n, 'x')
         if len(h) % 2: h = '0' + h
         decoded = bytes.fromhex(h)
-    # Format : version(1) + privkey(32) + [compressed_flag(1)] + checksum(4)
     if len(decoded) < 37:
         return None
-    # Enlever version (1 byte) et checksum (4 bytes)
+    checksum = hashlib.sha256(hashlib.sha256(decoded[:-4]).digest()).digest()[:4]
+    if decoded[-4:] != checksum:
+        return None
     payload = decoded[:-4]
+    if payload[0] not in (0x80, 0xEF):
+        return None
+    if len(payload) == 34 and payload[-1] != 0x01:
+        return None
     privkey_bytes = payload[1:33]  # 32 bytes clé privée
-    return privkey_bytes.hex()
+    out = privkey_bytes.hex()
+    return out if len(out) == 64 else None
 wif = sys.argv[1] if len(sys.argv) > 1 else ""
 result = wif_to_hex(wif) if wif else None
 print(result if result else "")
 WIFEOF
 )
-    if [ -n "$_PRIV_HEX" ] && [ ${#_PRIV_HEX} -ge 64 ]; then
+    if [ -n "$_PRIV_HEX" ] && [ ${#_PRIV_HEX} -eq 64 ]; then
         export BTC_WALLET_PRIV_HEX="$_PRIV_HEX"
         echo "[BTC_RUN] Wallet WIF décodé → PRIV_HEX OK (${#_PRIV_HEX} chars)"
     else
@@ -112,14 +115,44 @@ if [ ! -x "$BINARY" ]; then
     fi
 fi
 
-# ── Supermemory : init session — récupère le dernier état NX48 ───
-SUPERMEMORY_SCRIPT="../../tools/nx48_supermemory.py"
-[ ! -f "$SUPERMEMORY_SCRIPT" ] && SUPERMEMORY_SCRIPT="$(pwd)/../../tools/nx48_supermemory.py"
+SUPERMEMORY_SCRIPT=""
+for candidate in "../../../tools/nx48_supermemory.py" "../quantum_problem_hubbard_hts/tools/nx48_supermemory.py" "../../tools/nx48_supermemory.py"; do
+    if [ -f "$candidate" ]; then
+        SUPERMEMORY_SCRIPT="$candidate"
+        break
+    fi
+done
 if [ -f "$SUPERMEMORY_SCRIPT" ]; then
     STAMP_INIT=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
     echo "[BTC_RUN] Supermemory --init : récupération état NX48 précédent..."
     python3 "$SUPERMEMORY_SCRIPT" --init "$STAMP_INIT" --csv "$NX48_CSV" 2>&1 | \
         sed 's/^/[NX48-MEM] /' || true
+else
+    echo "[BTC_RUN] WARN: nx48_supermemory.py introuvable — mémoire longue désactivée"
+fi
+
+MODULE_BRIDGE_SCRIPT=""
+for candidate in "../../../tools/nx48_module_bridge.py" "../../tools/nx48_module_bridge.py"; do
+    if [ -f "$candidate" ]; then
+        MODULE_BRIDGE_SCRIPT="$candidate"
+        break
+    fi
+done
+if [ -f "$MODULE_BRIDGE_SCRIPT" ]; then
+    MODULE_BRIDGE_JSON="config/btc_module_bridge_manifest.json"
+    python3 "$MODULE_BRIDGE_SCRIPT" \
+        --src-root "../../../src" \
+        --output "$MODULE_BRIDGE_JSON" 2>&1 | sed 's/^/[BTC-MODULE-BRIDGE] /' || true
+    if [ -f "$MODULE_BRIDGE_JSON" ]; then
+        export LUMVORAX_BTC_MODULE_BRIDGE_MANIFEST="$MODULE_BRIDGE_JSON"
+        export LUMVORAX_BTC_MODULE_BRIDGE_COUNT="$(python3 - "$MODULE_BRIDGE_JSON" <<'PYEOF' 2>/dev/null
+import json, sys
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+    print(len(json.load(f).get("modules", [])))
+PYEOF
+)"
+        echo "[BTC_RUN] Pont modules src actif: ${LUMVORAX_BTC_MODULE_BRIDGE_COUNT:-0} modules → $MODULE_BRIDGE_JSON"
+    fi
 fi
 
 # ── RAM dispo au démarrage ────────────────────────────────────────
@@ -166,10 +199,10 @@ import os as _os; pid = str(_os.getpid())
 from datetime import datetime, timezone
 stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
 run_id = f"btc_{stamp}_{pid}"
-supa_url = os.environ.get("SUPABASE_URL","")
-supa_key = os.environ.get("SUPABASE_KEY","") or os.environ.get("SUPABASE_ANON_KEY","")
+supa_url = os.environ.get("SUPABASE_URL","") or os.environ.get("SUPABASE8_API_URL","")
+supa_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY","")
 if not supa_url or not supa_key:
-    print("SUPABASE_URL/KEY manquant — skip"); sys.exit(0)
+    print("SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY manquant — skip"); sys.exit(0)
 headers = {"apikey": supa_key, "Authorization": f"Bearer {supa_key}",
            "Content-Type": "application/json", "Prefer": "return=minimal"}
 payload = {"run_id": run_id, "cycle": cycle, "version": version,

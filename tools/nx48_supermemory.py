@@ -22,6 +22,8 @@ SUPERMEMORY_URL        = "https://api.supermemory.ai/v3/documents"
 SUPERMEMORY_SEARCH_URL = "https://api.supermemory.ai/v3/search"
 SUPERMEMORY_CONTAINER  = "lumvorax_nx48"
 FALLBACK_CACHE         = "/tmp/lumvorax_supermemory_cache.jsonl"
+SUPABASE_RECORDS_TABLE = "btc_records"
+SUPABASE_METRICS_TABLE = "btc_metrics_realtime"
 
 # ── Paramètres NX48 complets (C42) ───────────────────────────────
 NX48_PARAMS_C42 = [
@@ -143,6 +145,83 @@ def _fallback_save(content, metadata):
     print(f"[NX48-MEM] Fallback local: {FALLBACK_CACHE}")
 
 
+def _supabase_auth():
+    url = os.environ.get("SUPABASE_URL", "").strip() or os.environ.get("SUPABASE8_API_URL", "").strip()
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    if not url or not key:
+        return None, None
+    return url.rstrip("/"), key
+
+
+def _supabase_request(method, table, payload=None, query=""):
+    url, key = _supabase_auth()
+    if not url or not key:
+        print("[NX48-MEM] Supabase service_role absent — skip")
+        return False, {"error": "missing_supabase_service_role"}
+    endpoint = f"{url}/rest/v1/{table}{query}"
+    data = json.dumps(payload).encode() if payload is not None else None
+    headers = {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+    req = urllib.request.Request(endpoint, data=data, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            body = r.read().decode()
+            return True, json.loads(body) if body else {"status": r.status}
+    except urllib.error.HTTPError as e:
+        return False, {"error": e.code, "body": e.read().decode()[:500]}
+    except Exception as e:
+        return False, {"error": str(e)}
+
+
+def _supabase_fetch_best():
+    ok, data = _supabase_request(
+        "GET",
+        SUPABASE_RECORDS_TABLE,
+        query="?select=*&order=leading_zeros.desc&limit=1",
+    )
+    if not ok:
+        return {}
+    rows = data if isinstance(data, list) else []
+    return rows[0] if rows else {}
+
+
+def _store_supabase_state(params, cycle, run_id):
+    try:
+        leading = int(float(params.get("best_leading_zeros", 0) or 0))
+    except Exception:
+        leading = 0
+    payload = {
+        "run_id": run_id,
+        "cycle": cycle,
+        "leading_zeros": leading,
+        "nonce": str(params.get("best_nonce", "")),
+        "update_count": int(float(params.get("update_count", 0) or 0)),
+        "loss_curr": float(params.get("loss_curr", 0) or 0),
+        "grad_norm": float(params.get("grad_norm", 0) or 0),
+        "delta_nonce_scale": float(params.get("delta_nonce_scale", 0) or 0),
+        "exploration_bias": float(params.get("exploration_bias", 0) or 0),
+        "weights": {f"w{i}": params.get(f"w{i}") for i in range(8)},
+        "bias": float(params.get("bias", 0) or 0),
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    ok, resp = _supabase_request("POST", SUPABASE_RECORDS_TABLE, payload)
+    if ok:
+        print(f"[NX48-MEM] Supabase btc_records OK — leading={leading}")
+    else:
+        print(f"[NX48-MEM] Supabase btc_records WARN: {resp}")
+    metric_payload = dict(payload)
+    ok2, resp2 = _supabase_request("POST", SUPABASE_METRICS_TABLE, metric_payload)
+    if ok2:
+        print("[NX48-MEM] Supabase btc_metrics_realtime OK")
+    else:
+        print(f"[NX48-MEM] Supabase btc_metrics_realtime WARN: {resp2}")
+    return ok or ok2
+
+
 def read_csv(csv_path):
     """Lit le CSV NX48 et retourne un dict de paramètres."""
     if not csv_path or not os.path.exists(csv_path):
@@ -231,6 +310,24 @@ def init_session(stamp, csv_path=None):
                         pass
 
     print(f"[NX48-MEM] Meilleur état Supermemory: best_leading={sm_best}")
+
+    supa_best_params = _supabase_fetch_best()
+    try:
+        supa_best = int(float(supa_best_params.get("leading_zeros", 0) or supa_best_params.get("best_leading_zeros", 0) or 0))
+    except Exception:
+        supa_best = 0
+    if supa_best > sm_best:
+        sm_best = supa_best
+        mapped = dict(supa_best_params)
+        if "leading_zeros" in mapped:
+            mapped["best_leading_zeros"] = mapped["leading_zeros"]
+        if "nonce" in mapped:
+            mapped["best_nonce"] = mapped["nonce"]
+        weights = mapped.get("weights")
+        if isinstance(weights, dict):
+            mapped.update(weights)
+        sm_best_params = mapped
+        print(f"[NX48-MEM] Supabase > Supermemory: best_leading={sm_best}")
 
     # Mettre à jour le CSV si Supermemory a un meilleur record
     if sm_best > local_best and sm_best_params and csv_path:
@@ -367,6 +464,7 @@ Enregistré: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
     else:
         print(f"[NX48-MEM] ⚠️ Supermemory FAIL: {resp}")
         _fallback_save(content, metadata)
+    _store_supabase_state(params, cycle, run_id)
 
 
 def store_discovery(cycle, run_id, content, extra_meta=None):
