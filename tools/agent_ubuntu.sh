@@ -6,7 +6,7 @@
 # ============================================================
 
 REPLIT_URL="https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev"
-AGENT_TOKEN="3de963ebc09043b3b1b9f22e1e771ecc"
+AGENT_TOKEN="0ce121419a08e95af480ce37dad5c17f"
 POLL_INTERVAL=5
 LOG_FILE="$HOME/lumvorax_agent.log"
 
