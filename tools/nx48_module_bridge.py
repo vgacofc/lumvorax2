@@ -55,10 +55,22 @@ def build_manifest(src_root):
             "sha256": digest(path),
             "bytes": path.stat().st_size,
         })
+    kind_counts = {}
+    total_bytes = 0
+    for module in modules:
+        kind_counts[module["kind"]] = kind_counts.get(module["kind"], 0) + 1
+        total_bytes += module["bytes"]
     return {
         "schema": "lumvorax_btc_module_bridge_v1",
         "source_root": str(src_root),
         "module_count": len(modules),
+        "kind_counts": kind_counts,
+        "total_bytes": total_bytes,
+        "btc_nx48_usage": {
+            "mode": "advisory_manifest_for_forensic_and_parameter_context",
+            "hot_path": False,
+            "reason": "les sources sont cartographiées et hashées; elles ne sont pas toutes exécutées dans la boucle SHA-256 afin de préserver le débit"
+        },
         "modules": modules,
     }
 

@@ -35,9 +35,14 @@
 
 /* ── État persistant NX48_BTC (sauvegardé dans btc_nx48_last.csv) ─ */
 typedef struct {
-    /* Poids du neurone (ISTA gradient) */
+    /* Poids du neurone producteur (ISTA gradient) */
     double weights[NX48_BTC_N_FEATURES];  /* w[0..7] */
     double bias;                           /* biais du neurone */
+
+    /* Neurone applicateur distillé depuis le producteur */
+    double executor_weights[NX48_BTC_N_FEATURES];
+    double executor_bias;
+    double dual_blend;
 
     /* Hyper-paramètres appris */
     double delta_nonce_scale;   /* Rayon voisinage nonce [0.1, 10.0] */

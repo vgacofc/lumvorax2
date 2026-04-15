@@ -1560,6 +1560,17 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 | `LUMVORAX_BTC_MODULE_BRIDGE_COUNT` | variable env | `btc_mining_engine.c` | Nombre de modules `src/` connectés/loggés dans `btc_module_bridge_count` |
 | `btc_module_bridge_count` | métrique forensic | `btc_mining_engine.c` | Compteur de modules du manifeste branché au moteur BTC |
 
+### §M-BTC17-C43 : Module 17 BTC — NX48 dual-neuron + validation POW chaîne
+
+| Nom canonique | Type | Fichier | Rôle |
+|---|---|---|---|
+| `BTC_NX48_PRODUCER_NEURON` | neurone logique | `src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c` | Neurone producteur qui apprend en temps réel par gradient ISTA |
+| `BTC_NX48_EXECUTOR_NEURON` | neurone logique | `src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c` | Neurone applicateur distillé depuis le producteur et utilisé pour la décision runtime |
+| `btc_nx48_neuron_count` | métrique forensic | `FORENSIC_LOG_MODULE_METRIC` | Compteur explicite des 2 neurones logiques NX48 actifs |
+| `btc_pow_candidate_exported` | métrique forensic | `FORENSIC_LOG_MODULE_METRIC` | Indique qu'un candidat POW local a été exporté en JSON |
+| `scripts/validate_pow_candidate.py` | script officiel | `src/advanced_calculations/bitcoin_quantum_mining/scripts/validate_pow_candidate.py` | Valide localement un candidat POW et peut soumettre un bloc complet via `submitblock` si `full_block_hex` existe |
+| `lumvorax_btc_pow_candidate_v1` | schéma JSON | `logs/forensic/pow_candidate_*.json` | Rapport de candidat POW : header, hash, target, nonce, statut soumission |
+
 #### Dépendances externes exactes Module 17 BTC
 
 | Service | URL / Endpoint | Version / mode | Secret requis | Usage |
@@ -1580,4 +1591,4 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 | `btc_records` | Archive records NX48/nonce/leading zeros | `SUPABASE_SERVICE_ROLE_KEY` |
 | `btc_metrics_realtime` | Miroir temps réel des métriques NX48 BTC | `SUPABASE_SERVICE_ROLE_KEY` |
 
-*Mise à jour : Version 4.2-C42PLUS — 2026-04-14 — Module 17 BTC dual-agent, service_role Supabase, pont modules `src/`*
+*Mise à jour : Version 4.3-C43 — 2026-04-15 — Module 17 BTC NX48 dual-neuron, candidat POW exporté, validateur chaîne `submitblock` si bloc complet disponible*

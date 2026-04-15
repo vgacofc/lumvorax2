@@ -63,6 +63,7 @@
 #include <inttypes.h>
 #include <unistd.h>
 #include <signal.h>    /* C42-SIGNAL : sigaction, SIGTERM, SIGINT */
+#include <sys/stat.h>
 
 #ifdef _OPENMP
 #  include <omp.h>
@@ -306,6 +307,83 @@ static uint64_t rng_next(void) {
     tl_rng_state ^= tl_rng_state >> 7;
     tl_rng_state ^= tl_rng_state << 17;
     return tl_rng_state;
+}
+
+static void btc_header_to_hex(const lv_btc_block_header_t* h, char out[161]) {
+    uint8_t raw[80];
+    raw[0] = (uint8_t)h->version;
+    raw[1] = (uint8_t)(h->version >> 8);
+    raw[2] = (uint8_t)(h->version >> 16);
+    raw[3] = (uint8_t)(h->version >> 24);
+    memcpy(raw + 4, h->prev_block_hash, 32);
+    memcpy(raw + 36, h->merkle_root, 32);
+    raw[68] = (uint8_t)h->timestamp;
+    raw[69] = (uint8_t)(h->timestamp >> 8);
+    raw[70] = (uint8_t)(h->timestamp >> 16);
+    raw[71] = (uint8_t)(h->timestamp >> 24);
+    raw[72] = (uint8_t)h->bits;
+    raw[73] = (uint8_t)(h->bits >> 8);
+    raw[74] = (uint8_t)(h->bits >> 16);
+    raw[75] = (uint8_t)(h->bits >> 24);
+    raw[76] = (uint8_t)h->nonce;
+    raw[77] = (uint8_t)(h->nonce >> 8);
+    raw[78] = (uint8_t)(h->nonce >> 16);
+    raw[79] = (uint8_t)(h->nonce >> 24);
+    for (int i = 0; i < 80; i++)
+        snprintf(out + 2 * i, 3, "%02x", raw[i]);
+    out[160] = '\0';
+}
+
+static void btc_bytes_to_hex_local(const uint8_t* bytes, size_t n, char* out) {
+    for (size_t i = 0; i < n; i++)
+        snprintf(out + 2 * i, 3, "%02x", bytes[i]);
+    out[2 * n] = '\0';
+}
+
+static void btc_write_pow_candidate(
+    const btc_engine_t* eng,
+    const lv_sha256_result_t* res,
+    uint32_t nonce)
+{
+    if (!eng || !res) return;
+    mkdir(eng->cfg.log_dir, 0755);
+    char path[512];
+    snprintf(path, sizeof(path), "%s/pow_candidate_%s.json", eng->cfg.log_dir, eng->cfg.run_id);
+    FILE* f = fopen(path, "w");
+    if (!f) return;
+    lv_btc_block_header_t h = eng->cfg.header_template;
+    h.nonce = nonce;
+    char header_hex[161];
+    char hash_hex[65];
+    char target_hex[65];
+    btc_header_to_hex(&h, header_hex);
+    btc_bytes_to_hex_local(res->digest, 32, hash_hex);
+    btc_bytes_to_hex_local(eng->cfg.target, 32, target_hex);
+    fprintf(f,
+        "{\n"
+        "  \"schema\": \"lumvorax_btc_pow_candidate_v1\",\n"
+        "  \"run_id\": \"%s\",\n"
+        "  \"mode\": \"%s\",\n"
+        "  \"nonce\": %u,\n"
+        "  \"leading_zeros\": %d,\n"
+        "  \"below_target\": %s,\n"
+        "  \"header_hex\": \"%s\",\n"
+        "  \"block_hash_hex\": \"%s\",\n"
+        "  \"target_hex\": \"%s\",\n"
+        "  \"network_submission_ready\": false,\n"
+        "  \"submission_reason\": \"header_pow_only_no_full_block_hex_coinbase_merkle_template\"\n"
+        "}\n",
+        eng->cfg.run_id,
+        eng->cfg.run_mode,
+        nonce,
+        res->leading_zeros,
+        res->below_target ? "true" : "false",
+        header_hex,
+        hash_hex,
+        target_hex);
+    fclose(f);
+    printf("[BTC_QM] Candidat POW exporté → %s\n", path);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_pow_candidate_exported", 1.0);
 }
 
 /* ── Initialise le moteur ───────────────────────────────────────── */
@@ -619,8 +697,10 @@ static void* btc_mining_thread(void* arg) {
                 pthread_mutex_lock(&eng->global_mutex);
                 eng->block_found        = 1;
                 eng->best_nonce_global  = nonce;
+                eng->cfg.header_template.nonce = nonce;
                 BTC_FORENSIC_BLOCK_FOUND(nonce, res.leading_zeros, 1);
                 FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_block_valid", 1.0);
+                btc_write_pow_candidate(eng, &res, nonce);
                 pthread_mutex_unlock(&eng->global_mutex);
                 break;
             }
@@ -739,6 +819,11 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
         double count = bridge_count ? atof(bridge_count) : 0.0;
         printf("[BTC_QM] Pont modules LumVorax actif: %.0f modules — %s\n", count, bridge_manifest);
         FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_module_bridge_count", count);
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_module_bridge_advisory_active", 1.0);
+        if (nx48 && count >= 47.0) {
+            nx48->exploration_bias = fmin(1.0, nx48->exploration_bias + 0.01);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_module_bridge_nx48_bias_applied", nx48->exploration_bias);
+        }
     }
 
     /* C42-SIGNAL : Enregistrement handlers SIGTERM/SIGINT pour sauvegarde CSV */

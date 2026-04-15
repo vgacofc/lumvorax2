@@ -31,7 +31,7 @@ BINARY="./btc_mining_runner"
 SCRIPT_POW="scripts/fetch_btc_real_pow.py"
 N_THREADS=6           # C42: réduit 8→6 pour économiser CPU (Replit = 6 CPU)
 CYCLE="C42"
-VERSION="1.0.0-C42"
+VERSION="1.0.0-C43-DUAL-POW"
 NX48_CSV="config/btc_nx48_last.csv"   # C42-CSV-UNIFIED : chemin unique
 
 # ── Système de secrets : Doppler priorité → Replit fallback ──────
@@ -151,7 +151,15 @@ with open(sys.argv[1], "r", encoding="utf-8") as f:
     print(len(json.load(f).get("modules", [])))
 PYEOF
 )"
+        export LUMVORAX_BTC_MODULE_BRIDGE_KIND_COUNTS="$(python3 - "$MODULE_BRIDGE_JSON" <<'PYEOF' 2>/dev/null
+import json, sys
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+    data = json.load(f)
+print(json.dumps(data.get("kind_counts", {}), sort_keys=True))
+PYEOF
+)"
         echo "[BTC_RUN] Pont modules src actif: ${LUMVORAX_BTC_MODULE_BRIDGE_COUNT:-0} modules → $MODULE_BRIDGE_JSON"
+        echo "[BTC_RUN] Familles modules: ${LUMVORAX_BTC_MODULE_BRIDGE_KIND_COUNTS:-{}}"
     fi
 fi
 
@@ -234,7 +242,7 @@ fi
 echo "============================================================"
 echo " LumVorax — Module 17 — Run INFINI vers 256 bits"
 echo " Version : $VERSION | Cycle : $CYCLE | Threads : $N_THREADS"
-echo " C42: Watchdog RAM/CPU | Restart auto | Nice+5 | WIF decode"
+echo " C43: Dual-neuron NX48 | POW candidate export | Watchdog | WIF"
 echo " CSV: $NX48_CSV (weights[8]+bias persistés)"
 echo " Wallet: ${BTC_WALLET_ADDRESS_TESTNET:-mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj}"
 echo "============================================================"
@@ -255,6 +263,7 @@ while true; do
     RESTART_COUNT=$((RESTART_COUNT + 1))
     echo ""
     echo "[BTC_RUN] ═══ START #$RESTART_COUNT — $STAMP ═══"
+    echo "[BTC_RUN] NX48 neurones actifs: 2 (producteur apprend, applicateur décide)"
     echo "[BTC_RUN] RAM dispo: $(awk '/MemAvailable/{printf "%.0fMB", $2/1024}' /proc/meminfo)"
 
     # Lancement du binaire (en arrière-plan pour pouvoir surveiller)

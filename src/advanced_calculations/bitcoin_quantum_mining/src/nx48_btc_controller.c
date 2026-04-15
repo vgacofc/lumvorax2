@@ -132,6 +132,9 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
         /* Initialisation par défaut */
         memcpy(s->weights, NX48_BTC_WEIGHTS_DEFAULT, sizeof(s->weights));
         s->bias               = 0.0;
+        memcpy(s->executor_weights, s->weights, sizeof(s->executor_weights));
+        s->executor_bias      = s->bias;
+        s->dual_blend         = 0.20;
         s->delta_nonce_scale  = 1.0;
         s->n_replicas_scale   = 1.0;
         s->swap_temp_scale    = 1.0;
@@ -158,6 +161,7 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_swap_temp_scale",   s->swap_temp_scale);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_batch_size_scale",  s->batch_size_scale);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_exploration_bias",  s->exploration_bias);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_neuron_count",      2.0);
 
     return s;
 }
@@ -218,15 +222,15 @@ void nx48_btc_compute_features(
  * Ref : analysechatgpt91.38.1.md §C41-SIMD-PREDICT — 2026-04-13 */
 double nx48_btc_predict(nx48_btc_state_t* s, const double features[NX48_BTC_N_FEATURES]) {
     /* Déroulage explicite 8 features (NX48_BTC_N_FEATURES == 8) */
-    double z = s->bias
-             + s->weights[0] * features[0]
-             + s->weights[1] * features[1]
-             + s->weights[2] * features[2]
-             + s->weights[3] * features[3]
-             + s->weights[4] * features[4]
-             + s->weights[5] * features[5]
-             + s->weights[6] * features[6]
-             + s->weights[7] * features[7];
+    double z = s->executor_bias
+             + s->executor_weights[0] * features[0]
+             + s->executor_weights[1] * features[1]
+             + s->executor_weights[2] * features[2]
+             + s->executor_weights[3] * features[3]
+             + s->executor_weights[4] * features[4]
+             + s->executor_weights[5] * features[5]
+             + s->executor_weights[6] * features[6]
+             + s->executor_weights[7] * features[7];
     return sigmoid(z);
 }
 
@@ -298,6 +302,23 @@ void nx48_btc_update(
 
     s->bias -= lr * err;
     s->grad_norm = sqrt(grad_norm_sq);
+
+    {
+        double blend = clamp(s->dual_blend > 0.0 ? s->dual_blend : 0.20, 0.01, 0.50);
+#define _EXECUTOR_DISTILL(I) \
+        s->executor_weights[(I)] = (1.0 - blend) * s->executor_weights[(I)] + blend * s->weights[(I)]
+        _EXECUTOR_DISTILL(0);
+        _EXECUTOR_DISTILL(1);
+        _EXECUTOR_DISTILL(2);
+        _EXECUTOR_DISTILL(3);
+        _EXECUTOR_DISTILL(4);
+        _EXECUTOR_DISTILL(5);
+        _EXECUTOR_DISTILL(6);
+        _EXECUTOR_DISTILL(7);
+#undef _EXECUTOR_DISTILL
+        s->executor_bias = (1.0 - blend) * s->executor_bias + blend * s->bias;
+        s->dual_blend = blend;
+    }
 
     /* Adaptation hyper-paramètres selon gradient */
     double old_delta  = s->delta_nonce_scale;
@@ -404,6 +425,7 @@ void nx48_btc_update(
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_grad_norm",      s->grad_norm);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_update_count",   (double)s->update_count);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_exploration_bias", s->exploration_bias);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_dual_blend", s->dual_blend);
 }
 
 /* ── Clamp des scales dans les bornes physiques ─────────────────── */
@@ -416,6 +438,7 @@ void nx48_btc_clamp_scales(nx48_btc_state_t* s) {
     s->swap_temp_scale    = clamp(s->swap_temp_scale,    0.5,   3.0);
     s->batch_size_scale   = clamp(s->batch_size_scale,   0.5,   4.0);
     s->exploration_bias   = clamp(s->exploration_bias,   0.0,   1.0);
+    s->dual_blend         = clamp(s->dual_blend > 0.0 ? s->dual_blend : 0.20, 0.01, 0.50);
 }
 
 /* ── Sauvegarde CSV (format btc_nx48_last.csv) ──────────────────── */
@@ -433,9 +456,11 @@ int nx48_btc_save_csv(const nx48_btc_state_t* s, const char* csv_path) {
     fprintf(f, "run_id,delta_nonce_scale,n_replicas_scale,swap_temp_scale,"
                "batch_size_scale,exploration_bias,best_leading_zeros,"
                "best_nonce,update_count,loss_curr,grad_norm,"
-               "w0,w1,w2,w3,w4,w5,w6,w7,bias\n");
+               "w0,w1,w2,w3,w4,w5,w6,w7,bias,"
+               "exec_w0,exec_w1,exec_w2,exec_w3,exec_w4,exec_w5,exec_w6,exec_w7,exec_bias,dual_blend\n");
     fprintf(f, "%s,%.6f,%.6f,%.6f,%.6f,%.6f,%d,%u,%d,%.9f,%.9f,"
-               "%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f\n",
+               "%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,"
+               "%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f,%.9f\n",
         s->run_id,
         s->delta_nonce_scale, s->n_replicas_scale,
         s->swap_temp_scale,   s->batch_size_scale,
@@ -444,7 +469,12 @@ int nx48_btc_save_csv(const nx48_btc_state_t* s, const char* csv_path) {
         s->loss_curr,         s->grad_norm,
         s->weights[0], s->weights[1], s->weights[2], s->weights[3],
         s->weights[4], s->weights[5], s->weights[6], s->weights[7],
-        s->bias);
+        s->bias,
+        s->executor_weights[0], s->executor_weights[1],
+        s->executor_weights[2], s->executor_weights[3],
+        s->executor_weights[4], s->executor_weights[5],
+        s->executor_weights[6], s->executor_weights[7],
+        s->executor_bias, s->dual_blend);
     fclose(f);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_saved", 1.0);
     return 1;
@@ -461,10 +491,11 @@ int nx48_btc_load_csv(nx48_btc_state_t* s, const char* csv_path) {
     if (!f) return 0;
     char header[1024]; fgets(header, sizeof(header), f); /* skip header */
 
-    /* Tentative de lecture C42 (21 colonnes avec weights) */
+    /* Tentative de lecture C43+ (31 colonnes avec neurone applicateur) */
     int n = fscanf(f,
         "%63[^,],%lf,%lf,%lf,%lf,%lf,%d,%u,%d,%lf,%lf,"
-        "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
+        "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,"
+        "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
         s->run_id,
         &s->delta_nonce_scale, &s->n_replicas_scale,
         &s->swap_temp_scale,   &s->batch_size_scale,
@@ -473,7 +504,12 @@ int nx48_btc_load_csv(nx48_btc_state_t* s, const char* csv_path) {
         &s->loss_curr,         &s->grad_norm,
         &s->weights[0], &s->weights[1], &s->weights[2], &s->weights[3],
         &s->weights[4], &s->weights[5], &s->weights[6], &s->weights[7],
-        &s->bias);
+        &s->bias,
+        &s->executor_weights[0], &s->executor_weights[1],
+        &s->executor_weights[2], &s->executor_weights[3],
+        &s->executor_weights[4], &s->executor_weights[5],
+        &s->executor_weights[6], &s->executor_weights[7],
+        &s->executor_bias, &s->dual_blend);
     fclose(f);
 
     if (n >= 11) {
@@ -483,10 +519,18 @@ int nx48_btc_load_csv(nx48_btc_state_t* s, const char* csv_path) {
             /* Format C41 — garder les poids par défaut */
             memcpy(s->weights, NX48_BTC_WEIGHTS_DEFAULT, sizeof(s->weights));
             s->bias = 0.0;
+            memcpy(s->executor_weights, s->weights, sizeof(s->executor_weights));
+            s->executor_bias = s->bias;
+            s->dual_blend = 0.20;
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_loaded_c41", 1.0);
+        } else if (n < 30) {
+            memcpy(s->executor_weights, s->weights, sizeof(s->executor_weights));
+            s->executor_bias = s->bias;
+            s->dual_blend = 0.20;
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_loaded_c42", 1.0);
         } else {
             /* Format C42 complet avec weights */
-            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_loaded_c42", 1.0);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_loaded_c43_dual", 1.0);
         }
         FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_csv_loaded", 1.0);
         FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_best_leading_loaded",

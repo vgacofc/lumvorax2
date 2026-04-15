@@ -190,9 +190,9 @@ int main(int argc, char* argv[]) {
     printf("\n");
     printf("╔══════════════════════════════════════════════════════════╗\n");
     printf("║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║\n");
-    printf("║  Version : 1.0.0-C41 | Standard : STANDARD_NAMES v4.2  ║\n");
-    printf("║  C41 : SIMD predict/ISTA, lockfree CAS, timestamp cache  ║\n");
-    printf("║  C41 : cache-line align, batch 512, thermal, async-log   ║\n");
+    printf("║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║\n");
+    printf("║  C43 : NX48 dual-neuron, POW candidate export           ║\n");
+    printf("║  C43 : module bridge advisory + chain validator         ║\n");
     printf("╚══════════════════════════════════════════════════════════╝\n");
     printf("[BTC_QM] run_id    = %s\n", cfg.run_id);
     printf("[BTC_QM] mode      = %s\n", cfg.run_mode);
@@ -248,6 +248,7 @@ int main(int argc, char* argv[]) {
 
     printf("[BTC_QM] NX48_BTC initialisé — update_count=%d best_leading=%d\n",
            nx48->update_count, nx48->best_leading_zeros);
+    printf("[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)\n");
     fflush(stdout);
 
     /* ── Gate : test intégrité SHA-256 ─────────────────────────── */
