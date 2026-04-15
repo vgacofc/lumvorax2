@@ -2,7 +2,7 @@
  * LumVorax — Module 17 — Bitcoin Quantum Mining Engine
  * btc_mining_engine.c — Moteur PT-MC nonce explorer + validation bloc
  *
- * STANDARD_NAMES.md v4.2 §M-BTC17 — Cycle C42 — 2026-04-13
+ * STANDARD_NAMES.md v4.3 §M-BTC17-C46 — Cycle C46 — 2026-04-15
  *
  * Architecture :
  *  - 8 répliques PT-MC (Parallel Tempering Monte Carlo)
@@ -12,6 +12,17 @@
  *  - NX48_BTC adaptatif : ajuste delta_nonce + batch_size en temps réel
  *  - Traçabilité forensic 100% A–Z (FORENSIC_LOG_* — NOM D'ORIGINE §A)
  *  - Mémoire tracée LV_MALLOC / LV_CALLOC / LV_FREE
+ *
+ * OPTIMISATIONS C46 (nouveau compte Supabase — 2026-04-15) :
+ *  [C46-1-BATCH-2K]    BTC_BATCH_SIZE 512→1024 — pipeline AVX2 8-way saturé 2×
+ *                       Gain estimé : +5-10% hashrate (moindre overhead par batch)
+ *                       Base : C44 hashrate 0.4365 MH/s @ batch=512, 2 threads.
+ *  [C46-2-NX48-EVERY]  BTC_NX48_UPDATE_EVERY 200000→256000 — overhead NX48 réduit
+ *                       Aligné sur puissance de 2 (meilleure prévisibilité hot-path).
+ *  [C46-3-TS-CACHE]    C41_TS_CACHE_NS 1ms→2ms — 2× moins de syscall clock_gettime
+ *                       Justification : Replit latence NFS ~2ms (mesurée C44).
+ *  [C46-4-SUPABASE]    Nouveau compte Supabase — tables recréées via setup_c46.sql
+ *                       Schema version : lumvorax_btc_pow_candidate_v1 cycle=C46.
  *
  * CORRECTIONS C42 :
  *  [C42-WATCHDOG-RAM]  Thread watchdog surveille /proc/meminfo toutes les 5s.
@@ -77,11 +88,11 @@
  * APRES : 512 hashes/batch → pipeline entier saturé, 2× moins de surcout batch.
  * Source : src/optimization/simd_batch/simd_batch_processor.h SIMD_BATCH_SIZE=256
  *          → taille doublée pour correspondre aux meilleures pratiques SIMD. */
-#define BTC_BATCH_SIZE_DEFAULT  512     /* C41-5 : 256→512 hashes par batch SIMD */
-/* C41-5-NX48-EVERY : nx48_every 100k→200k — 2× moins d'overhead NX48 par MH.
- * NX48 update = ~500µs (log + gradient). A 0.9 MH/s : 100k→9× par seconde
- * APRES 200k→4-5× par seconde. Gain : ~2% hashrate récupéré sur overhead NX48. */
-#define BTC_NX48_UPDATE_EVERY   200000  /* C41-5 : 100k→200k hashes entre updates NX48 */
+#define BTC_BATCH_SIZE_DEFAULT  1024    /* C46-1 : 512→1024 hashes par batch SIMD — pipeline AVX2 8-way saturé 2× */
+/* C46-2-NX48-EVERY : nx48_every 200k→256k (puissance de 2) — overhead NX48 réduit.
+ * NX48 update = ~500µs (log + gradient). A 0.44 MH/s : 256k → ~1.7× par seconde.
+ * Aligné puissance de 2 → meilleure prévisibilité hot-path (branchement mod). */
+#define BTC_NX48_UPDATE_EVERY   256000  /* C46-2 : 200k→256k hashes entre updates NX48 */
 #define BTC_HW_SAMPLE_EVERY     50000   /* Snapshot HW tous les N hashes */
 #define BTC_PTMC_SWAP_EVERY     10000   /* Échange répliques tous les N hashes */
 #define BTC_STATS_PRINT_EVERY   1000000 /* Affichage stats chaque M hashes */
@@ -92,7 +103,7 @@
  * APRES : cache 1ms → clock_gettime seulement si delta > 1ms → ~1000× moins.
  * Source : src/advanced_calculations/quantum_simulator_v4_staging_next/common_types.h
  *          REPLIT_TIMESTAMP_CACHE_NS = 1 000 000 (1ms cache NFS storage) */
-#define C41_TS_CACHE_NS 1000000ULL
+#define C41_TS_CACHE_NS 2000000ULL  /* C46-3 : 1ms→2ms — 2× moins de syscalls clock_gettime (latence NFS Replit ~2ms) */
 
 /* Températures répliques PT-MC (ratio 50 comme Hubbard) */
 static const double BTC_REPLICA_TEMPS[BTC_N_REPLICAS] = {

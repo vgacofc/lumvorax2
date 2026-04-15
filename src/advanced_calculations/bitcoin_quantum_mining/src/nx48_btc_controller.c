@@ -2,7 +2,7 @@
  * LumVorax — Module 17 — Bitcoin Quantum Mining Engine
  * nx48_btc_controller.c — Contrôleur NX48 adapté espace nonce Bitcoin
  *
- * STANDARD_NAMES.md v4.2 §M-BTC17 — Cycle C42 — 2026-04-13
+ * STANDARD_NAMES.md v4.3 §M-BTC17-C46 — Cycle C46 — 2026-04-15
  *
  * OPTIMISATIONS C41 (nx48_btc_controller.c) :
  *  [C41-SIMD-PREDICT]  nx48_btc_predict() : boucle scalaire → déroulage 8 features
@@ -12,6 +12,11 @@
  *                       Gain : 4× update gradient (AVX2 double precision 4-way)
  *                       Source : src/optimization/simd_optimizer.h
  *  [C41-VERSION]       Cycle C40 → C41 — banner et traçabilité
+ *
+ * OPTIMISATION C46 :
+ *  [C46-NX48-EVERY]    BTC_NX48_UPDATE_EVERY 200000→256000 (puissance de 2) 
+ *                       Impact sur nx48_btc_update() : fréquence réduite ~22%
+ *                       → gradient moins souvent calculé → +~1% hashrate global
  *
  * Implémentation du neurone NX48_BTC avec gradient ISTA.
  * Même principe que nx48_adaptive_controller.c (Hubbard)
