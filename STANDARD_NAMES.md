@@ -695,3 +695,16 @@
 2026-04-15 18:00 - btc_hashrate_mhs_final_c44 + C44 — 0.4365 MH/s (NX48 disabled) / 0.4344 MH/s (NX48 enabled) — run 2026-04-15T17:58Z
 2026-04-15 18:00 - btc_best_leading_zeros_c44 + C44 — 20 bits atteints (cas A et B) — binaire 117K recompilé
 2026-04-15 18:00 - analysechatgpt91.43.md + C44 — Rapport cycle C44 : nouveau Supabase + recompilation + forensic réel
+2026-04-15 18:35 - /agent/status + C45 — Route Flask publique : statut file agent Ubuntu (pas de token requis)
+2026-04-15 18:35 - /agent/job + C45 — Route Flask GET : Ubuntu poll prochain job (X-Agent-Token requis)
+2026-04-15 18:35 - /agent/push + C45 — Route Flask POST : envoyer commande dans file Ubuntu (X-Agent-Token requis)
+2026-04-15 18:35 - /agent/result + C45 — Route Flask POST : Ubuntu renvoie résultat d'exécution
+2026-04-15 18:35 - /agent/results + C45 — Route Flask GET : lister derniers résultats Ubuntu
+2026-04-15 18:35 - AGENT_TOKEN_C45 + C45 — sha256("agent:"+SESSION_SECRET)[:32] = 3de963ebc09043b3b1b9f22e1e771ecc
+2026-04-15 18:35 - tools/agent_ubuntu.sh + C45 — Script bash Ubuntu : poll Replit HTTPS, exécute jobs BTC, renvoie résultats
+2026-04-15 18:35 - tools/datadog_metrics.py + C45 — Intégration Datadog API v2 — métriques forensic BTC/NX48
+2026-04-15 18:35 - tools/btc_ubuntu_rpc_setup.md + C45 — Bitcoin Core RPC setup Ubuntu + pipeline getblocktemplate testnet4
+2026-04-15 18:35 - SSH_PUBKEY_REPLIT_C45 + C45 — ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwDUInCkZnsrPGiXyfA2ZUELRXw0y+j0fNckFTsfA+q
+2026-04-15 18:35 - DATADOG_API_KEY + C45 — Secret requis : API Key 32 hex chars (pas ddapp_) — à créer dans Datadog Dashboard
+2026-04-15 18:35 - REPLIT_PUBLIC_URL_C45 + C45 — https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev
+2026-04-15 18:35 - analysechatgpt91.44.md + C45 — Rapport cycle C45 : agent Ubuntu + Datadog + Supabase sync complet

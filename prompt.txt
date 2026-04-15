@@ -904,3 +904,8 @@ bool secure_function_template(const void* input, size_t input_size, void** outpu
 - **BTC C44 RECOMPILATION** : Toujours `make clean && make all` dans `src/advanced_calculations/bitcoin_quantum_mining/` avant benchmark. Vérifier taille binaire ~117K et SHA-256.
 - **BTC C44 BENCHMARK** : `python scripts/benchmark_nx48_ab.py --binary ./btc_mining_runner --header-hex <HEADER> --duration-s 8 --threads 4`. Header via `python scripts/fetch_btc_real_pow.py`.
 - **FORENSIC PARSE** : Métriques clés à extraire : `btc_hashrate_mhs_final`, `btc_best_leading_zeros`, `btc_best_nonce_final`, `btc_nx48_neuron_count`, `btc_nx48_update_count`, `btc_nx48_stall_count`, `total_metric_events`, `total_anomalies`.
+- **AGENT UBUNTU C45** : Routes `/agent/*` intégrées Flask port 5000. AGENT_TOKEN = sha256("agent:"+SESSION_SECRET)[:32]. Ubuntu poll via `bash ~/agent_ubuntu.sh`. URL publique : `https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev`.
+- **DATADOG C45** : Utiliser `python tools/datadog_metrics.py --c44-forensic`. Clé requise = DATADOG_API_KEY (32 hex, pas ddapp_). DATADOG_API_TOKEN contient une Application Key — incompatible métriques v2.
+- **SUPABASE C45** : Métriques C44 synced HTTP 201. Password SUPABASE_DB_PASSWORD mis à jour. Service role REST fonctionnel.
+- **SSH REPLIT C45** : Clé ED25519 générée `/home/runner/.ssh/id_lumvorax`. Clé publique à ajouter dans `~/.ssh/authorized_keys` Ubuntu. fingerprint SHA256:pdCm55BevQEUS9gSs6HuE2Wfy5iFPTY3zD0M9c4MUFs.
+- **BTC CORE UBUNTU** : Voir `tools/btc_ubuntu_rpc_setup.md`. Bitcoin Core testnet4 recommandé. Job via agent `/agent/push` avec `bitcoin-cli getblocktemplate`.

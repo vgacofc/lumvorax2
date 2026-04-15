@@ -12,7 +12,11 @@ LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin e
 - **NX48 C44** : 2 neurones — 3 updates en 8s — stall_count=2 — loss=0.834 — dual_blend=0.200
 - **Validation POW C44** : `scripts/validate_pow_candidate.py --context config/btc_getblocktemplate_job.json [--submit]`
 - **Supabase** : SERVICE_ROLE 200 OK — Tables absentes (nouveau compte) — SQL setup: `tools/supabase_c44_setup.sql`
-- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.43.md`
+- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.44.md`
+- **Agent Ubuntu C45** : routes `/agent/status /job /push /result /results` Flask port 5000 — AGENT_TOKEN=3de963ebc09043b3b1b9f22e1e771ecc — script: `tools/agent_ubuntu.sh`
+- **Datadog C45** : `tools/datadog_metrics.py` — blocage: DATADOG_API_KEY requise (pas DATADOG_API_TOKEN ddapp_)
+- **SSH Replit** : `/home/runner/.ssh/id_lumvorax` — clé publique à ajouter sur Ubuntu
+- **Supabase C44/C45** : toutes métriques synced HTTP 201 — 11 tables opérationnelles
 
 ## Architecture
 

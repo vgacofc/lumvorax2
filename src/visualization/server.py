@@ -519,6 +519,112 @@ def static_files(filename):
     return send_from_directory("static", filename)
 
 
+# ── AGENT UBUNTU — file d'exécution distante ─────────────────────────────────
+import threading
+import hashlib
+import hmac
+import time
+
+from flask import request, Response
+
+_agent_queue = []
+_agent_results = []
+_agent_lock = threading.Lock()
+
+def _agent_token():
+    secret = os.environ.get("SESSION_SECRET", "lumvorax_agent_default")
+    return hashlib.sha256(f"agent:{secret}".encode()).hexdigest()[:32]
+
+def _check_token():
+    tok = request.headers.get("X-Agent-Token", "") or request.args.get("token", "")
+    return hmac.compare_digest(tok, _agent_token())
+
+
+@app.route("/agent/token", methods=["GET"])
+def agent_token_info():
+    """Retourne le token hashé (côté Replit uniquement — ne pas exposer publiquement)."""
+    import socket
+    host = request.host or ""
+    if "localhost" in host or "127.0.0.1" in host:
+        return jsonify({"token": _agent_token(), "note": "local only"})
+    return jsonify({"error": "token endpoint local only"}), 403
+
+
+@app.route("/agent/job", methods=["GET"])
+def agent_job():
+    """Ubuntu poll : retourne le prochain job à exécuter."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    with _agent_lock:
+        if _agent_queue:
+            job = _agent_queue.pop(0)
+        else:
+            job = None
+    return jsonify({"job": job, "queue_len": len(_agent_queue), "ts": int(time.time())})
+
+
+@app.route("/agent/push", methods=["POST"])
+def agent_push():
+    """Ajoute un job à la file (JSON body : {cmd, label, timeout_s})."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    cmd = data.get("cmd") or request.data.decode().strip()
+    if not cmd:
+        return jsonify({"error": "cmd required"}), 400
+    job = {
+        "id": hashlib.sha256(f"{cmd}{time.time()}".encode()).hexdigest()[:12],
+        "cmd": cmd,
+        "label": data.get("label", ""),
+        "timeout_s": int(data.get("timeout_s", 60)),
+        "created_at": int(time.time()),
+    }
+    with _agent_lock:
+        _agent_queue.append(job)
+    return jsonify({"ok": True, "job_id": job["id"], "queue_len": len(_agent_queue)})
+
+
+@app.route("/agent/result", methods=["POST"])
+def agent_result():
+    """Ubuntu envoie le résultat d'exécution (JSON : {job_id, stdout, returncode, duration_s})."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    data["received_at"] = int(time.time())
+    with _agent_lock:
+        _agent_results.append(data)
+        if len(_agent_results) > 200:
+            _agent_results.pop(0)
+    return jsonify({"ok": True, "results_stored": len(_agent_results)})
+
+
+@app.route("/agent/results", methods=["GET"])
+def agent_results():
+    """Liste les derniers résultats reçus depuis Ubuntu."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    with _agent_lock:
+        results = list(reversed(_agent_results[-50:]))
+    return jsonify({"results": results, "count": len(results)})
+
+
+@app.route("/agent/status", methods=["GET"])
+def agent_status():
+    """Statut de la file d'exécution (public, pas de token requis)."""
+    with _agent_lock:
+        qlen = len(_agent_queue)
+        rlen = len(_agent_results)
+    domain = os.environ.get("REPLIT_DEV_DOMAIN", "localhost:5000")
+    return jsonify({
+        "ok": True,
+        "queue_len": qlen,
+        "results_count": rlen,
+        "public_url": f"https://{domain}",
+        "agent_endpoint": f"https://{domain}/agent/job",
+        "cycle": "C45",
+    })
+
+
 def _register_app_api_aliases():
     for rule in list(app.url_map.iter_rules()):
         if rule.rule.startswith("/api/"):
