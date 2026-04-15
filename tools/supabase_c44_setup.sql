@@ -1,0 +1,193 @@
+-- LumVorax — Setup Supabase C44 — SQL à exécuter dans SQL Editor Supabase
+-- Cycle C44 — 2026-04-15
+-- Noms de colonnes exacts conformes STANDARD_NAMES.md v4.4
+
+-- TABLE 1 : standard_names_registry
+CREATE TABLE IF NOT EXISTS standard_names_registry (
+    id           SERIAL PRIMARY KEY,
+    section      TEXT NOT NULL,
+    key_name     TEXT NOT NULL,
+    value_desc   TEXT,
+    file_origin  TEXT,
+    version      TEXT,
+    cycle        TEXT,
+    is_canonical BOOLEAN DEFAULT FALSE,
+    created_at   TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (section, key_name)
+);
+
+-- TABLE 2 : quantum_benchmarks
+CREATE TABLE IF NOT EXISTS quantum_benchmarks (
+    id               SERIAL PRIMARY KEY,
+    dataset          TEXT,
+    module           TEXT,
+    observable       TEXT,
+    t_k              DOUBLE PRECISION,
+    u_over_t         DOUBLE PRECISION,
+    reference_value  DOUBLE PRECISION,
+    reference_method TEXT,
+    source           TEXT,
+    error_bar        DOUBLE PRECISION,
+    notes            TEXT,
+    created_at       TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 3 : run_scores
+CREATE TABLE IF NOT EXISTS run_scores (
+    id           SERIAL PRIMARY KEY,
+    run_id       TEXT UNIQUE,
+    runner       TEXT,
+    score_iso    INTEGER,
+    score_trace  INTEGER,
+    score_repr   INTEGER,
+    score_robust INTEGER,
+    score_phys   INTEGER,
+    score_expert INTEGER,
+    score_total  INTEGER,
+    notes        TEXT,
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 4 : quantum_run_files
+CREATE TABLE IF NOT EXISTS quantum_run_files (
+    id         SERIAL PRIMARY KEY,
+    run_id     TEXT,
+    path       TEXT,
+    size       BIGINT,
+    checksum   TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 5 : quantum_csv_rows (schéma réel C53 vérifié)
+CREATE TABLE IF NOT EXISTS quantum_csv_rows (
+    id       BIGSERIAL PRIMARY KEY,
+    run_id   TEXT,
+    row_json TEXT NOT NULL
+);
+
+-- TABLE 6 : benchmark_runtime (vérifié Supabase 2026-03-30)
+CREATE TABLE IF NOT EXISTS benchmark_runtime (
+    id                SERIAL PRIMARY KEY,
+    run_id            TEXT,
+    benchmark_type    TEXT,
+    u_ev              DOUBLE PRECISION,
+    module            TEXT,
+    observable        TEXT,
+    t_k               DOUBLE PRECISION,
+    reference_value   DOUBLE PRECISION,
+    error_bar         DOUBLE PRECISION,
+    model_value       DOUBLE PRECISION,
+    abs_error         DOUBLE PRECISION,
+    rel_error         DOUBLE PRECISION,
+    within_error_bar  BOOLEAN,
+    rmse_global       DOUBLE PRECISION,
+    mae_global        DOUBLE PRECISION,
+    pct_within_global DOUBLE PRECISION,
+    created_at        TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 7 : research_modules_config
+CREATE TABLE IF NOT EXISTS research_modules_config (
+    id         SERIAL PRIMARY KEY,
+    module     TEXT UNIQUE,
+    enabled    BOOLEAN DEFAULT TRUE,
+    lx         INTEGER,
+    ly         INTEGER,
+    notes      TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 8 : problems_config (vérifié Supabase 2026-03-30)
+CREATE TABLE IF NOT EXISTS problems_config (
+    id         SERIAL PRIMARY KEY,
+    name       TEXT UNIQUE,
+    lx         INTEGER,
+    ly         INTEGER,
+    t_ev       DOUBLE PRECISION,
+    u_ev       DOUBLE PRECISION,
+    mu_ev      DOUBLE PRECISION,
+    temp_k     DOUBLE PRECISION,
+    dt         DOUBLE PRECISION,
+    steps      INTEGER,
+    cycle      INTEGER,
+    notes      TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 9 : btc_run_metrics (Module 17 BTC C44)
+CREATE TABLE IF NOT EXISTS btc_run_metrics (
+    id                 SERIAL PRIMARY KEY,
+    run_id             TEXT UNIQUE,
+    schema_version     TEXT DEFAULT 'lumvorax_btc_pow_candidate_v1',
+    cycle              TEXT DEFAULT 'C44',
+    best_leading_zeros INTEGER,
+    best_nonce         BIGINT,
+    hashrate_mhs_final DOUBLE PRECISION,
+    nx48_neuron_count  DOUBLE PRECISION,
+    metrics_count      INTEGER,
+    anomalies_count    INTEGER,
+    duration_s         DOUBLE PRECISION,
+    threads            INTEGER,
+    nx48_enabled       BOOLEAN,
+    header_hex         TEXT,
+    notes              TEXT,
+    created_at         TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 10 : btc_nx48_ab_benchmarks (Benchmark A/B NX48 C44)
+CREATE TABLE IF NOT EXISTS btc_nx48_ab_benchmarks (
+    id                    SERIAL PRIMARY KEY,
+    schema_version        TEXT DEFAULT 'lumvorax_btc_nx48_ab_benchmark_v1',
+    cycle                 TEXT DEFAULT 'C44',
+    created_at_run        TEXT,
+    duration_s_per_case   INTEGER,
+    threads               INTEGER,
+    case_a_nx48_enabled   BOOLEAN,
+    case_a_leading_zeros  INTEGER,
+    case_a_hashrate_mhs   DOUBLE PRECISION,
+    case_a_returncode     INTEGER,
+    case_b_nx48_enabled   BOOLEAN,
+    case_b_leading_zeros  INTEGER,
+    case_b_hashrate_mhs   DOUBLE PRECISION,
+    case_b_returncode     INTEGER,
+    notes                 TEXT,
+    created_at            TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- TABLE 11 : artifact_sync_log (Traçabilité sync artefacts)
+CREATE TABLE IF NOT EXISTS artifact_sync_log (
+    id          SERIAL PRIMARY KEY,
+    cycle       TEXT DEFAULT 'C44',
+    artifact    TEXT,
+    sha256      TEXT,
+    destination TEXT,
+    status      TEXT,
+    details     TEXT,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Activation Row Level Security (recommandé)
+ALTER TABLE standard_names_registry ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quantum_benchmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE run_scores ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quantum_run_files ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quantum_csv_rows ENABLE ROW LEVEL SECURITY;
+ALTER TABLE benchmark_runtime ENABLE ROW LEVEL SECURITY;
+ALTER TABLE research_modules_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE problems_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE btc_run_metrics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE btc_nx48_ab_benchmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE artifact_sync_log ENABLE ROW LEVEL SECURITY;
+
+-- Policies (service_role peut tout faire)
+CREATE POLICY "service_role_all" ON standard_names_registry FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON quantum_benchmarks FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON run_scores FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON quantum_run_files FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON quantum_csv_rows FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON benchmark_runtime FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON research_modules_config FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON problems_config FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON btc_run_metrics FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON btc_nx48_ab_benchmarks FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "service_role_all" ON artifact_sync_log FOR ALL TO service_role USING (true) WITH CHECK (true);

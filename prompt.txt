@@ -900,3 +900,7 @@ bool secure_function_template(const void* input, size_t input_size, void** outpu
 - **DOCUMENTATION JOUR** : Mettre à jour standards après découverte anomalie
 - **BTC C43 POW RÉEL** : Pour Module 17, utiliser `scripts/btc_getblocktemplate_job.py` si `BTC_RPC_URL` existe, conserver `config/btc_getblocktemplate_job.json`, puis valider tout candidat via `scripts/validate_pow_candidate.py --context`.
 - **SYNC ARTEFACTS CANONIQUES** : Après modification de `prompt.txt` ou `STANDARD_NAMES.md`, lancer `tools/sync_lumvorax_c43_artifacts.py` et consigner le résultat dans `logs/forensic/lumvorax_c43_artifact_sync_result.json`.
+- **SUPABASE C44 SETUP** : Nouveau compte Supabase → exécuter `tools/supabase_c44_setup.sql` dans SQL Editor Supabase. Noms de colonnes exacts dans STANDARD_NAMES.md. Corriger `SUPABASE_DB_PASSWORD` pour connexion directe psycopg2.
+- **BTC C44 RECOMPILATION** : Toujours `make clean && make all` dans `src/advanced_calculations/bitcoin_quantum_mining/` avant benchmark. Vérifier taille binaire ~117K et SHA-256.
+- **BTC C44 BENCHMARK** : `python scripts/benchmark_nx48_ab.py --binary ./btc_mining_runner --header-hex <HEADER> --duration-s 8 --threads 4`. Header via `python scripts/fetch_btc_real_pow.py`.
+- **FORENSIC PARSE** : Métriques clés à extraire : `btc_hashrate_mhs_final`, `btc_best_leading_zeros`, `btc_best_nonce_final`, `btc_nx48_neuron_count`, `btc_nx48_update_count`, `btc_nx48_stall_count`, `total_metric_events`, `total_anomalies`.

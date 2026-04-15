@@ -687,3 +687,11 @@
 2026-04-15 00:00 - BTC_NX48_DISABLED + C43 — Variable benchmark A/B pour désactiver l'effet NX48
 2026-04-15 00:00 - lumvorax_btc_nx48_ab_benchmark_v1 + C43 — Rapport JSON benchmark avant/après NX48
 2026-04-15 00:00 - tools/sync_lumvorax_c43_artifacts.py + C43 — Synchronisation prompt.txt et STANDARD_NAMES vers Supabase/Vercel/Supermemory/Doppler
+2026-04-15 18:00 - tools/supabase_c44_setup.sql + C44 — DDL 11 tables nouveau compte Supabase (noms colonnes exacts STANDARD_NAMES.md)
+2026-04-15 18:00 - tools/setup_supabase_c44.py + C44 — Script Python setup tables Supabase + registre canonique
+2026-04-15 18:00 - btc_run_metrics + C44 — Table Supabase métriques forensic BTC par run (run_id, leading_zeros, hashrate, nx48_enabled, ...)
+2026-04-15 18:00 - btc_nx48_ab_benchmarks + C44 — Table Supabase benchmark A/B NX48 (case_a_*, case_b_*)
+2026-04-15 18:00 - artifact_sync_log + C44 — Table Supabase traçabilité sync artefacts canoniques
+2026-04-15 18:00 - btc_hashrate_mhs_final_c44 + C44 — 0.4365 MH/s (NX48 disabled) / 0.4344 MH/s (NX48 enabled) — run 2026-04-15T17:58Z
+2026-04-15 18:00 - btc_best_leading_zeros_c44 + C44 — 20 bits atteints (cas A et B) — binaire 117K recompilé
+2026-04-15 18:00 - analysechatgpt91.43.md + C44 — Rapport cycle C44 : nouveau Supabase + recompilation + forensic réel
