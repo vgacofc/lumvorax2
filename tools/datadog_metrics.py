@@ -1,7 +1,10 @@
 """
-LumVorax C45 — Datadog Metrics Integration
+LumVorax C46 — Datadog Metrics Integration
 Envoie les métriques forensic BTC/NX48 vers Datadog (API v2).
-Usage : python tools/datadog_metrics.py [--run-id <id>] [--cycle <C44>]
+Usage : python tools/datadog_metrics.py [--run-id <id>] [--cycle <C46>]
+
+C46 : DD_SITE corrigé → datadoghq.eu (site EU)
+      DD_API_KEY lu depuis env DD_API_KEY (secret GitHub Actions → Doppler → Replit)
 """
 
 import os
@@ -16,20 +19,29 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [DATADOG] %(message)s")
 log = logging.getLogger("datadog_metrics")
 
-DD_API_TOKEN = os.environ.get("DATADOG_API_KEY", "") or os.environ.get("DATADOG_API_TOKEN", "")
-DD_SITE = os.environ.get("DATADOG_SITE", "datadoghq.com")
+# C46 : DD_API_KEY depuis env (GitHub Actions → Doppler → Replit)
+# DD_APP_KEY = Application Key (ddapp_...) — NON utilisée pour les métriques
+# DD_API_KEY = 32 hex chars — requis pour POST /api/v2/series
+DD_API_TOKEN = (
+    os.environ.get("DD_API_KEY", "") or
+    os.environ.get("DATADOG_API_KEY", "") or
+    os.environ.get("DATADOG_API_TOKEN", "")
+)
+# C46 : Site EU — datadoghq.eu (corrigé depuis datadoghq.com C44/C45)
+DD_SITE = os.environ.get("DD_SITE", os.environ.get("DATADOG_SITE", "datadoghq.eu"))
 DD_METRICS_URL = f"https://api.{DD_SITE}/api/v2/series"
 
-# NOTE C45: DATADOG_API_TOKEN contient une Application Key (préfixe ddapp_) — pas une API Key.
-# Pour envoyer des métriques, une API Key (32 hex chars, sans préfixe) est requise.
-# Aller dans Datadog → Organization Settings → API Keys → Create API Key.
-# Stocker dans le secret Replit : DATADOG_API_KEY
+# C46 : Configuration RUM Datadog
+DD_RUM_APPLICATION_ID = os.environ.get("DD_RUM_APPLICATION_ID", "bb33a5e8-33de-4ab1-b7ee-127c58afc2c2")
+DD_RUM_CLIENT_TOKEN   = os.environ.get("DD_RUM_CLIENT_TOKEN",   "pubc75578b047a4e05c64024799f357e852")
+DD_ENV                = os.environ.get("DD_ENV", "dev")
 
 LUMVORAX_TAGS = [
     "project:lumvorax",
     "module:btc_quantum_mining",
     "module_id:17",
-    "env:replit",
+    f"env:{DD_ENV}",
+    f"site:{DD_SITE}",
 ]
 
 
@@ -115,6 +127,52 @@ def send_btc_run_metrics(
     return status, body
 
 
+def send_c46_forensic():
+    """Envoie les métriques forensic du cycle C46 vers Datadog (datadoghq.eu)."""
+    log.info("=== Envoi métriques forensic C46 → Datadog EU ===")
+    log.info(f"    URL : {DD_METRICS_URL}")
+    log.info(f"    DD_SITE : {DD_SITE}")
+
+    ts_a = int(time.mktime(time.strptime("2026-04-15T21:01:00", "%Y-%m-%dT%H:%M:%S")))
+    ts_b = int(time.mktime(time.strptime("2026-04-15T21:01:05", "%Y-%m-%dT%H:%M:%S")))
+
+    # Cas A — NX48 disabled
+    s_a, body_a = send_btc_run_metrics(
+        run_id="btc_20260415T210100Z_1169",
+        cycle="C46",
+        best_leading_zeros=0,
+        hashrate_mhs=0.43,
+        nx48_enabled=False,
+        metrics_count=1734,
+        anomalies_count=0,
+        duration_s=5.21,
+        threads=2,
+        ts=ts_a,
+    )
+    log.info(f"Cas A (NX48 OFF) : HTTP {s_a} — {body_a[:80]}")
+
+    # Cas B — NX48 enabled
+    s_b, body_b = send_btc_run_metrics(
+        run_id="btc_20260415T210105Z_1173",
+        cycle="C46",
+        best_leading_zeros=19,
+        hashrate_mhs=0.43,
+        nx48_enabled=True,
+        nx48_neuron_count=2.0,
+        nx48_update_count=1818.0,
+        nx48_stall_count=0.0,
+        nx48_loss=0.0,
+        metrics_count=1734,
+        anomalies_count=0,
+        duration_s=5.04,
+        threads=2,
+        ts=ts_b,
+    )
+    log.info(f"Cas B (NX48 ON) : HTTP {s_b} — {body_b[:80]}")
+
+    return s_a, s_b
+
+
 def send_c44_forensic():
     """Envoie les métriques forensic du cycle C44 vers Datadog."""
     log.info("=== Envoi métriques forensic C44 → Datadog ===")
@@ -168,15 +226,26 @@ def send_agent_heartbeat(host: str = "replit", cycle: str = "C45") -> tuple:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="LumVorax C45 — Datadog Metrics")
-    parser.add_argument("--c44-forensic", action="store_true", help="Envoyer métriques C44 vers Datadog")
+    parser = argparse.ArgumentParser(description="LumVorax C46 — Datadog Metrics EU (datadoghq.eu)")
+    parser.add_argument("--c46-forensic", action="store_true", help="Envoyer métriques C46 vers Datadog EU")
+    parser.add_argument("--c44-forensic", action="store_true", help="Envoyer métriques C44 vers Datadog EU")
     parser.add_argument("--heartbeat", action="store_true", help="Envoyer heartbeat agent")
     parser.add_argument("--host", default="replit", help="Nom de l'hôte pour le heartbeat")
     args = parser.parse_args()
 
     if not DD_API_TOKEN:
-        log.error("DATADOG_API_TOKEN non configuré — export DATADOG_API_TOKEN=...")
+        log.error("DD_API_KEY non configuré — configurer dans Replit Secrets ou Doppler")
+        log.error(f"  Site cible : {DD_SITE}")
+        log.error(f"  URL cible  : {DD_METRICS_URL}")
+        log.error("  Chercher dans : GitHub Actions Secrets → DD_API_KEY (32 hex chars)")
         sys.exit(1)
+
+    log.info(f"DD_SITE = {DD_SITE}, URL = {DD_METRICS_URL}")
+
+    if args.c46_forensic:
+        s_a, s_b = send_c46_forensic()
+        ok = all(s in (200, 202) for s in (s_a, s_b))
+        sys.exit(0 if ok else 1)
 
     if args.c44_forensic:
         s_a, s_b = send_c44_forensic()
@@ -184,7 +253,7 @@ if __name__ == "__main__":
         sys.exit(0 if ok else 1)
 
     if args.heartbeat:
-        s, body = send_agent_heartbeat(args.host)
+        s, body = send_agent_heartbeat(args.host, cycle="C46")
         log.info(f"Heartbeat HTTP {s}")
         sys.exit(0 if s in (200, 202) else 1)
 
