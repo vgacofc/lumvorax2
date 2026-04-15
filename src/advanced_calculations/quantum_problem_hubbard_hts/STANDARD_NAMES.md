@@ -1570,6 +1570,11 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 | `btc_pow_candidate_exported` | métrique forensic | `FORENSIC_LOG_MODULE_METRIC` | Indique qu'un candidat POW local a été exporté en JSON |
 | `scripts/validate_pow_candidate.py` | script officiel | `src/advanced_calculations/bitcoin_quantum_mining/scripts/validate_pow_candidate.py` | Valide localement un candidat POW et peut soumettre un bloc complet via `submitblock` si `full_block_hex` existe |
 | `lumvorax_btc_pow_candidate_v1` | schéma JSON | `logs/forensic/pow_candidate_*.json` | Rapport de candidat POW : header, hash, target, nonce, statut soumission |
+| `scripts/btc_getblocktemplate_job.py` | script officiel | `src/advanced_calculations/bitcoin_quantum_mining/scripts/btc_getblocktemplate_job.py` | Construit un job minier depuis `getblocktemplate`, coinbase, merkle root, header et tail de bloc complet |
+| `lumvorax_btc_getblocktemplate_job_v1` | schéma JSON | `config/btc_getblocktemplate_job.json` | Contexte de bloc complet permettant de reconstruire `full_block_hex` avec le header nonce gagnant |
+| `BTC_COINBASE_SCRIPT_PUBKEY_HEX` | variable env | `scripts/btc_getblocktemplate_job.py` | ScriptPubKey explicite pour coinbase si l'adresse wallet ne peut pas être dérivée automatiquement |
+| `BTC_NX48_DISABLED` | variable env | `scripts/benchmark_nx48_ab.py` | Désactive l'effet NX48 pour benchmark A/B contrôlé sans supprimer la instrumentation forensic |
+| `lumvorax_btc_nx48_ab_benchmark_v1` | schéma JSON | `logs/forensic/btc_nx48_ab_benchmark.json` | Rapport de comparaison avant/après NX48 sur une fenêtre courte |
 
 #### Dépendances externes exactes Module 17 BTC
 
@@ -1582,6 +1587,7 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 | Blockstream | `https://blockstream.info/api/blocks/tip/hash` et endpoints associés dans `fetch_btc_real_pow.py` | API publique Bitcoin mainnet | aucun | Header Bitcoin réel pour validation POW |
 | Aristocle / Aristotle | `https://aristotle.harmonic.fun/api/v2` | Endpoint à confirmer | `ARISTOCLE_IA_API_KEY` | Certification Lean4, fallback local `logs/aristocle_pending_discoveries.jsonl` |
 | Vercel | API Vercel v13 | REST | `VERCEL_TOKEN` | Publication/streaming externe si activé hors runner BTC |
+| Bitcoin Core RPC | `${BTC_RPC_URL}` JSON-RPC | `getblocktemplate` + `submitblock` | `BTC_RPC_URL`, optionnel `BTC_RPC_USER`/`BTC_RPC_PASSWORD` | Construction d'un bloc complet soumissible et soumission chaîne |
 
 #### Tables Supabase BTC officielles
 
@@ -1591,4 +1597,4 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 | `btc_records` | Archive records NX48/nonce/leading zeros | `SUPABASE_SERVICE_ROLE_KEY` |
 | `btc_metrics_realtime` | Miroir temps réel des métriques NX48 BTC | `SUPABASE_SERVICE_ROLE_KEY` |
 
-*Mise à jour : Version 4.3-C43 — 2026-04-15 — Module 17 BTC NX48 dual-neuron, candidat POW exporté, validateur chaîne `submitblock` si bloc complet disponible*
+*Mise à jour : Version 4.3-C43 — 2026-04-15 — Module 17 BTC NX48 dual-neuron, candidat POW exporté, job `getblocktemplate`, reconstruction `full_block_hex`, validateur chaîne `submitblock` si bloc complet disponible*

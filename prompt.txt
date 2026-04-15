@@ -898,3 +898,5 @@ bool secure_function_template(const void* input, size_t input_size, void** outpu
 - **TESTS SÉCURITÉ** : Path traversal, buffer overflow, injection validation
 - **REVIEW CROISÉ** : Validation par autre développeur code cryptographique/sécurité
 - **DOCUMENTATION JOUR** : Mettre à jour standards après découverte anomalie
+- **BTC C43 POW RÉEL** : Pour Module 17, utiliser `scripts/btc_getblocktemplate_job.py` si `BTC_RPC_URL` existe, conserver `config/btc_getblocktemplate_job.json`, puis valider tout candidat via `scripts/validate_pow_candidate.py --context`.
+- **SYNC ARTEFACTS CANONIQUES** : Après modification de `prompt.txt` ou `STANDARD_NAMES.md`, lancer `tools/sync_lumvorax_c43_artifacts.py` et consigner le résultat dans `logs/forensic/lumvorax_c43_artifact_sync_result.json`.

@@ -10,11 +10,11 @@ LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin e
 - **Secrets** : Doppler (priorité) → Replit (fallback) — projet lumvorax / dev_lumvorax
 - **Mémoire dual-agent NX48** : Agent1 temps réel C (`nx48_btc_controller.c`) + Agent2 long terme (`tools/nx48_supermemory.py`)
 - **NX48 C43** : 2 neurones logiques persistables — producteur apprend par ISTA, applicateur décide par distillation EMA
-- **Validation POW C43** : `scripts/validate_pow_candidate.py` valide localement `logs/forensic/pow_candidate_*.json`; soumission chaîne possible seulement avec `full_block_hex` + `BTC_RPC_URL` via `submitblock`
+- **Validation POW C43** : `scripts/validate_pow_candidate.py` valide localement `logs/forensic/pow_candidate_*.json`; avec `scripts/btc_getblocktemplate_job.py`, un contexte `getblocktemplate` peut reconstruire `full_block_hex` puis soumettre via `submitblock`
 - **Supermemory** : container lumvorax_nx48 — endpoint POST /v3/documents
 - **Supabase** : tables btc_mining_runs, btc_records, btc_metrics_realtime via SUPABASE_SERVICE_ROLE_KEY uniquement
 - **Aristocle** : ARISTOCLE_IA_API_KEY — URL aristotle.harmonic.fun (à confirmer)
-- **Rapport** : src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.39.md
+- **Rapport** : src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.42.md
 
 ## Architecture
 

@@ -2,7 +2,7 @@
 # LumVorax — Module 17 — Bitcoin Quantum Mining Engine
 # scripts/run_btc_infinite.sh — Run INFINI vers 256 bits
 #
-# Version C42 — STANDARD_NAMES.md v4.2 §M-BTC17-C42 — 2026-04-13
+# Version C43 — STANDARD_NAMES.md v4.3 §M-BTC17-C43 — 2026-04-15
 #
 # CORRECTIONS C42 :
 #   [C42-WATCHDOG]     Thread watchdog C (RAM/CPU) intégré dans le binaire
@@ -29,8 +29,9 @@ cd "$(dirname "$0")/.."  # Se positionne dans bitcoin_quantum_mining/
 
 BINARY="./btc_mining_runner"
 SCRIPT_POW="scripts/fetch_btc_real_pow.py"
+SCRIPT_GBT="scripts/btc_getblocktemplate_job.py"
 N_THREADS=6           # C42: réduit 8→6 pour économiser CPU (Replit = 6 CPU)
-CYCLE="C42"
+CYCLE="C43"
 VERSION="1.0.0-C43-DUAL-POW"
 NX48_CSV="config/btc_nx48_last.csv"   # C42-CSV-UNIFIED : chemin unique
 
@@ -227,8 +228,23 @@ except Exception as e:
 PYEOF
 
 # ── Récupération du vrai header Bitcoin ──────────────────────────
-echo "[BTC_RUN] Recuperation header Bitcoin (blockstream.info)..."
-REAL_HEADER=$(python3 "$SCRIPT_POW" 2>/dev/null | grep '^[0-9a-f]' | head -1)
+GBT_JOB_JSON="config/btc_getblocktemplate_job.json"
+USE_GBT_JOB=0
+if [ -n "${BTC_RPC_URL:-}" ] && [ -f "$SCRIPT_GBT" ]; then
+    echo "[BTC_RUN] Construction job getblocktemplate Bitcoin Core..."
+    REAL_HEADER=$(python3 "$SCRIPT_GBT" --output "$GBT_JOB_JSON" --print-header 2>/tmp/lumvorax_gbt.err | grep '^[0-9a-f]' | head -1)
+    if [ -n "$REAL_HEADER" ] && [ ${#REAL_HEADER} -ge 160 ]; then
+        USE_GBT_JOB=1
+        echo "[BTC_RUN] Job getblocktemplate OK: $GBT_JOB_JSON"
+    else
+        echo "[BTC_RUN] WARN: getblocktemplate indisponible — fallback Blockstream"
+        sed 's/^/[BTC_GBT] /' /tmp/lumvorax_gbt.err 2>/dev/null || true
+    fi
+fi
+if [ "$USE_GBT_JOB" -eq 0 ]; then
+    echo "[BTC_RUN] Recuperation header Bitcoin (blockstream.info)..."
+    REAL_HEADER=$(python3 "$SCRIPT_POW" 2>/dev/null | grep '^[0-9a-f]' | head -1)
+fi
 
 if [ -z "$REAL_HEADER" ] || [ ${#REAL_HEADER} -lt 160 ]; then
     echo "[BTC_RUN] WARN: API blockstream inaccessible — header testnet synthetique"
@@ -242,8 +258,8 @@ fi
 echo "============================================================"
 echo " LumVorax — Module 17 — Run INFINI vers 256 bits"
 echo " Version : $VERSION | Cycle : $CYCLE | Threads : $N_THREADS"
-echo " C43: Dual-neuron NX48 | POW candidate export | Watchdog | WIF"
-echo " CSV: $NX48_CSV (weights[8]+bias persistés)"
+echo " C43: Dual-neuron NX48 | POW candidate export | getblocktemplate si RPC | Watchdog | WIF"
+echo " CSV: $NX48_CSV (producer+executor persistés)"
 echo " Wallet: ${BTC_WALLET_ADDRESS_TESTNET:-mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj}"
 echo "============================================================"
 
@@ -310,6 +326,14 @@ while true; do
             sed 's/^/[NX48-MEM] /' || true
     fi
 
+    if [ "$USE_GBT_JOB" -eq 1 ] && [ -f "scripts/validate_pow_candidate.py" ]; then
+        LAST_CANDIDATE=$(ls -t logs/forensic/pow_candidate_*.json 2>/dev/null | head -1)
+        if [ -n "$LAST_CANDIDATE" ]; then
+            python3 scripts/validate_pow_candidate.py "$LAST_CANDIDATE" --context "$GBT_JOB_JSON" --write-enriched 2>&1 | \
+                sed 's/^/[BTC_POW_VALIDATE] /' || true
+        fi
+    fi
+
     # Adapter le délai selon le code de sortie
     if [ "$EXIT_CODE" -eq 42 ]; then
         # Arrêt propre via signal handler → restart rapide
@@ -327,7 +351,18 @@ while true; do
 
     # Récupérer un nouveau header Bitcoin à chaque restart
     echo "[BTC_RUN] Récupération nouveau header Bitcoin..."
-    NEW_HEADER=$(python3 "$SCRIPT_POW" 2>/dev/null | grep '^[0-9a-f]' | head -1)
+    if [ -n "${BTC_RPC_URL:-}" ] && [ -f "$SCRIPT_GBT" ]; then
+        NEW_HEADER=$(python3 "$SCRIPT_GBT" --output "$GBT_JOB_JSON" --print-header 2>/tmp/lumvorax_gbt.err | grep '^[0-9a-f]' | head -1)
+        if [ -n "$NEW_HEADER" ] && [ ${#NEW_HEADER} -ge 160 ]; then
+            USE_GBT_JOB=1
+        fi
+    else
+        NEW_HEADER=""
+    fi
+    if [ -z "$NEW_HEADER" ]; then
+        USE_GBT_JOB=0
+        NEW_HEADER=$(python3 "$SCRIPT_POW" 2>/dev/null | grep '^[0-9a-f]' | head -1)
+    fi
     if [ -n "$NEW_HEADER" ] && [ ${#NEW_HEADER} -ge 160 ]; then
         REAL_HEADER="$NEW_HEADER"
         USE_REAL_HEADER=1

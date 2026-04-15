@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 sync_standard_names.py — Centralisation du STANDARD_NAMES.md sur Supabase et Vercel
-Conforme STANDARD_NAMES.md v3.4 — Cycle C50
+Conforme STANDARD_NAMES.md v4.3 — Cycle C43
 
 Objectif :
   Rendre STANDARD_NAMES.md accessible à TOUS les agents qui touchent au code,
@@ -28,13 +28,14 @@ import re
 import json
 import time
 import logging
+import urllib.request
+import urllib.error
 from pathlib import Path
 
 try:
     import requests
 except ImportError:
-    print("requests non installé. pip install requests")
-    sys.exit(1)
+    requests = None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -51,6 +52,33 @@ SUPABASE_KEY  = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_ANON_
 VERCEL_API_KEY = os.getenv("VERCEL_TOKEN", os.getenv("VERCEL_API_KEY", "")).strip()
 VERCEL_URL_BASE = os.getenv("VERCEL_URL", "").strip()
 TIMEOUT_S = 20
+
+
+class _Response:
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text
+
+    def json(self):
+        return json.loads(self.text) if self.text else {}
+
+
+def http_request(method: str, url: str, headers: dict, payload=None) -> _Response:
+    if requests is not None:
+        if method == "POST":
+            return requests.post(url, headers=headers, json=payload, timeout=TIMEOUT_S)
+        if method == "PUT":
+            data = payload if isinstance(payload, (bytes, bytearray)) else str(payload).encode("utf-8")
+            return requests.put(url, headers=headers, data=data, timeout=TIMEOUT_S)
+    data = None
+    if payload is not None:
+        data = payload if isinstance(payload, (bytes, bytearray)) else json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(url, data=data, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_S) as r:
+            return _Response(r.status, r.read().decode())
+    except urllib.error.HTTPError as e:
+        return _Response(e.code, e.read().decode())
 
 
 def _headers_supabase() -> dict:
@@ -89,8 +117,8 @@ def parse_standard_names(content: str) -> list[dict]:
                     "key_name": key_name[:120],
                     "value_desc": value_desc[:500],
                     "file_origin": "STANDARD_NAMES.md",
-                    "version": "3.4",
-                    "cycle": "C50",
+                    "version": "4.3",
+                    "cycle": "C43",
                     "is_canonical": True,
                 })
     return entries
@@ -111,7 +139,7 @@ def upload_to_supabase(entries: list[dict]) -> bool:
     for i in range(0, len(entries), batch_size):
         batch = entries[i:i + batch_size]
         try:
-            r = requests.post(url, headers=_headers_supabase(), json=batch, timeout=TIMEOUT_S)
+            r = http_request("POST", url, _headers_supabase(), batch)
             if r.status_code in (200, 201, 204):
                 ok += len(batch)
                 log.info(f"Supabase batch {i//batch_size + 1}: {len(batch)} entrées ✅")
@@ -132,11 +160,11 @@ def upload_to_vercel(content: str) -> str | None:
         return None
 
     try:
-        r = requests.put(
+        r = http_request(
+            "PUT",
             "https://api.vercel.com/v2/blob/upload",
-            headers=_headers_vercel(),
-            data=content.encode("utf-8"),
-            timeout=TIMEOUT_S,
+            _headers_vercel(),
+            content.encode("utf-8"),
         )
         if r.status_code in (200, 201):
             result = r.json()
@@ -156,7 +184,7 @@ def save_vercel_url(url: str):
     ref_file = BASE_DIR / "SUPABASE" / "vercel_standard_names_url.txt"
     with open(ref_file, "w") as f:
         f.write(f"STANDARD_NAMES.md Vercel URL:\n{url}\n")
-        f.write(f"Version: 3.4\nCycle: C50\nDate: 2026-04-08\n")
+        f.write(f"Version: 4.3\nCycle: C43\nDate: 2026-04-15\n")
     log.info(f"URL Vercel sauvegardée dans {ref_file}")
 
 

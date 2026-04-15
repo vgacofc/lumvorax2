@@ -533,6 +533,7 @@ static void* btc_mining_thread(void* arg) {
     /* Delta nonce initial depuis NX48 (minimum 1 pour éviter division par zéro) */
     double delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
     if (delta_nonce < 1.0) delta_nonce = 65536.0; /* valeur par défaut sûre */
+    int nx48_disabled = getenv("BTC_NX48_DISABLED") != NULL;
 
     while (!eng->block_found) {
         /* Vérification durée max */
@@ -748,9 +749,9 @@ static void* btc_mining_thread(void* arg) {
                 (double)local_hashes, (double)(BTC_NX48_UPDATE_EVERY),
                 BTC_REPLICA_TEMPS[BTC_N_REPLICAS-1], BTC_REPLICA_TEMPS[0]);
 
-            double prob = nx48_btc_predict(eng->nx48, features);
+            double prob = nx48_disabled ? 0.5 : nx48_btc_predict(eng->nx48, features);
 
-            if (work->thread_id == 0) { /* Un seul thread met à jour NX48 */
+            if (!nx48_disabled && work->thread_id == 0) { /* Un seul thread met à jour NX48 */
                 nx48_btc_update(eng->nx48,
                     &(nx48_btc_config_t){
                         .learning_rate   = 0.01,
@@ -761,6 +762,8 @@ static void* btc_mining_thread(void* arg) {
                     eng->best_leading_global, hashrate_mhs);
                 delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
             }
+            if (nx48_disabled && work->thread_id == 0)
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_disabled", 1.0);
 
             BTC_FORENSIC_HASHRATE(hashrate_mhs, work->thread_id);
         }

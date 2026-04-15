@@ -10,10 +10,10 @@ RÔLE : Supermemory est la MÉMOIRE CENTRALE de NX48.
     paramètres NX48 et records vers Supermemory pour mémoire inter-sessions.
   - Accessible depuis TOUS les comptes qui partagent la même clé API Supermemory.
 
-URL validée C42: POST https://api.supermemory.ai/v3/documents
+URL validée C43: POST https://api.supermemory.ai/v3/documents
 Container: lumvorax_nx48
 
-STANDARD_NAMES.md v4.2 §M-BTC17-C42 — 2026-04-13
+STANDARD_NAMES.md v4.3 §M-BTC17-C43 — 2026-04-15
 """
 
 import os, sys, json, argparse, urllib.request, urllib.error, urllib.parse, time, csv
@@ -25,21 +25,25 @@ FALLBACK_CACHE         = "/tmp/lumvorax_supermemory_cache.jsonl"
 SUPABASE_RECORDS_TABLE = "btc_records"
 SUPABASE_METRICS_TABLE = "btc_metrics_realtime"
 
-# ── Paramètres NX48 complets (C42) ───────────────────────────────
-NX48_PARAMS_C42 = [
-    "delta_nonce_scale",   # Rayon d'exploration [0.1, 50.0]
-    "n_replicas_scale",    # Échelle répliques PT-MC [1.0, 2.0]
-    "swap_temp_scale",     # Température swap [0.5, 3.0]
-    "batch_size_scale",    # Taille lot [0.5, 4.0]
-    "exploration_bias",    # Biais exploration [0.0, 1.0]
-    "best_leading_zeros",  # Record bits leading zeros
-    "best_nonce",          # Nonce champion (ancre scan orbital)
-    "update_count",        # Total updates gradient ISTA
-    "loss_curr",           # Perte BCE courante
-    "grad_norm",           # Norme gradient
-    "w0","w1","w2","w3","w4","w5","w6","w7",  # Poids réseau (C42-WEIGHTS-PERSIST)
-    "bias",                # Biais neurone (C42-WEIGHTS-PERSIST)
+# ── Paramètres NX48 complets (C43) ───────────────────────────────
+NX48_PARAMS_C43 = [
+    "delta_nonce_scale",
+    "n_replicas_scale",
+    "swap_temp_scale",
+    "batch_size_scale",
+    "exploration_bias",
+    "best_leading_zeros",
+    "best_nonce",
+    "update_count",
+    "loss_curr",
+    "grad_norm",
+    "w0","w1","w2","w3","w4","w5","w6","w7",
+    "bias",
+    "exec_w0","exec_w1","exec_w2","exec_w3","exec_w4","exec_w5","exec_w6","exec_w7",
+    "exec_bias",
+    "dual_blend",
 ]
+NX48_PARAMS_C42 = NX48_PARAMS_C43
 
 NX48_FEATURES = [
     ("F0", "btc_best_leading_zeros",  "best_leading_zeros / 256.0"),
@@ -53,10 +57,10 @@ NX48_FEATURES = [
 ]
 
 NX48_FORMULAS = """
-FORMULES NX48_BTC (Cycle C42 — STANDARD_NAMES.md v4.2) :
+FORMULES NX48_BTC (Cycle C43 — STANDARD_NAMES.md v4.3) :
 
-1. PRÉDICTION (sigmoid product):
-   z = bias + sum(weights[i] * features[i] for i in 0..7)
+1. PRÉDICTION APPLICATEUR (sigmoid executor):
+   z = exec_bias + sum(exec_weights[i] * features[i] for i in 0..7)
    prob = sigmoid(z) = 1 / (1 + exp(-z))
 
 2. LABEL (linéaire sur 256 bits — C38-FIX-LABEL-256):
@@ -66,29 +70,34 @@ FORMULES NX48_BTC (Cycle C42 — STANDARD_NAMES.md v4.2) :
 3. BCE LOSS:
    bce = -(label * log(prob) + (1-label) * log(1-prob))
 
-4. GRADIENT ISTA (déroulage 8 features — C41-SIMD-ISTA):
+4. GRADIENT ISTA PRODUCTEUR (déroulage 8 features — C41-SIMD-ISTA):
    err = prob - label
    w[i]_new = soft_threshold(w[i] - lr * err * features[i], lambda_L1)
    bias_new = bias - lr * err
    lr=0.01, lambda_L1=0.001
 
-5. DELTA_NONCE ADAPTATIF (Xoshiro256++ — C65-FIX-ADAPT):
+5. DISTILLATION DUAL-NEURON C43 :
+   exec_w[i] = (1 - dual_blend) * exec_w[i] + dual_blend * w[i]
+   exec_bias = (1 - dual_blend) * exec_bias + dual_blend * bias
+   dual_blend ∈ [0.01, 0.50]
+
+6. DELTA_NONCE ADAPTATIF (Xoshiro256++ — C65-FIX-ADAPT):
    loss_delta = (loss_curr - loss_prev) / loss_prev
    sigma = sigma_base * exp(stagnation * log(sigma_max / sigma_base))
    perturbation = N(0, sigma)  [Xoshiro256++]
    delta_nonce_new = delta_nonce_old * exp(alpha * (-loss_delta) + perturbation)
    alpha=0.8 | sigma_base=0.05 | sigma_max=0.25
 
-6. BATCH SCHEDULING (tanh continu — C65-FIX-BATCH):
+7. BATCH SCHEDULING (tanh continu — C65-FIX-BATCH):
    adapt_rate = 1.0 + 0.10 * tanh(5.0 * grad_norm)
    batch_size_scale_new = batch_size_scale * adapt_rate  [clamp: 0.5, 4.0]
 
-7. SCAN ORBITAL (30% des threads — C39-P3):
+8. SCAN ORBITAL (30% des threads — C39-P3):
    Si best_leading >= 20 et U < 0.30:
      offset = gauss(0, ORBITAL_RADIUS / 0.577)  [ORBITAL_RADIUS = 50000]
      nonce = best_nonce + offset
 
-8. LEBESGUE SCAN (25% des threads — C39-P5):
+9. LEBESGUE SCAN (25% des threads — C39-P5):
    level = randint(0, best_leading)
    weight = (level + 1) / (best_leading + 1)
    leb_radius = ORBITAL_RADIUS * (1 + (1 - weight) * 4)
@@ -245,7 +254,9 @@ def write_csv(csv_path, params):
         fieldnames = ["run_id", "delta_nonce_scale", "n_replicas_scale", "swap_temp_scale",
                       "batch_size_scale", "exploration_bias", "best_leading_zeros",
                       "best_nonce", "update_count", "loss_curr", "grad_norm",
-                      "w0","w1","w2","w3","w4","w5","w6","w7","bias"]
+                      "w0","w1","w2","w3","w4","w5","w6","w7","bias",
+                      "exec_w0","exec_w1","exec_w2","exec_w3","exec_w4","exec_w5","exec_w6","exec_w7",
+                      "exec_bias","dual_blend"]
         with open(csv_path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
             writer.writeheader()
@@ -337,6 +348,10 @@ def init_session(stamp, csv_path=None):
         for k, v in sm_best_params.items():
             if k in NX48_PARAMS_C42 or k == "run_id":
                 merged[k] = v
+        for i in range(8):
+            merged.setdefault(f"exec_w{i}", merged.get(f"w{i}", "0"))
+        merged.setdefault("exec_bias", merged.get("bias", "0"))
+        merged.setdefault("dual_blend", "0.20")
         if "run_id" not in merged:
             merged["run_id"] = f"sm_restored_{stamp}"
         write_csv(csv_path, merged)
@@ -356,18 +371,18 @@ def init_session(stamp, csv_path=None):
         pass
 
     content = (
-        f"LumVorax NX48 Session Init — stamp={stamp} cycle=C42\n"
+        f"LumVorax NX48 Session Init — stamp={stamp} cycle=C43\n"
         f"CSV local: best_leading_zeros={local_best} nonce={local_params.get('best_nonce','?')}\n"
         f"Supermemory best: best_leading_zeros={sm_best}\n"
         f"RAM disponible: {ram_mb}MB\n"
-        f"STANDARD_NAMES.md v4.2 §M-BTC17-C42"
+        f"STANDARD_NAMES.md v4.3 §M-BTC17-C43"
     )
     metadata = {
         "source": "LumVorax", "module": "btc_quantum_mining",
-        "cycle": "C42", "event": "session_start", "stamp": stamp,
+        "cycle": "C43", "event": "session_start", "stamp": stamp,
         "best_leading_zeros_local": local_best,
         "best_leading_zeros_sm": sm_best,
-        "standard": "STANDARD_NAMES_v4.2"
+        "standard": "STANDARD_NAMES_v4.3"
     }
     ok, resp = _post_document(key, content, metadata)
     if ok:
@@ -413,6 +428,11 @@ def store_run(csv_path, cycle, run_id):
         fname = features_names[i] if i < len(features_names) else f"f{i}"
         weights_str += f"  w{i}={w} ({fname})\n"
     bias_val = params.get("bias", "?")
+    executor_str = ""
+    for i in range(8):
+        executor_str += f"  exec_w{i}={params.get(f'exec_w{i}', params.get(f'w{i}', '?'))}\n"
+    exec_bias_val = params.get("exec_bias", bias_val)
+    dual_blend_val = params.get("dual_blend", "0.20")
 
     content = f"""LumVorax NX48 État Complet — Cycle {cycle} — Run {run_id}
 ================================================
@@ -429,9 +449,13 @@ HYPERPARAMÈTRES D'EXPLORATION :
   batch_size_scale   = {params.get('batch_size_scale','?')}
   exploration_bias   = {expl}
 
-NEURONE NX48 (C42-WEIGHTS-PERSIST) :
+NEURONE PRODUCTEUR NX48 (C43-DUAL-PRODUCER) :
   bias = {bias_val}
 {weights_str}
+NEURONE APPLICATEUR NX48 (C43-DUAL-EXECUTOR) :
+  exec_bias = {exec_bias_val}
+  dual_blend = {dual_blend_val}
+{executor_str}
 ÉTAT APPRENTISSAGE :
   loss_curr  = {loss}
   grad_norm  = {params.get('grad_norm','?')}
@@ -441,7 +465,7 @@ NEURONE NX48 (C42-WEIGHTS-PERSIST) :
 FEATURES (8 entrées du neurone) :
 """ + "\n".join(f"  {fid}: {fname} = {formula}" for fid, fname, formula in NX48_FEATURES) + f"""
 
-STANDARD_NAMES.md v4.2 §M-BTC17-C42
+STANDARD_NAMES.md v4.3 §M-BTC17-C43
 Enregistré: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
 """
 
@@ -452,7 +476,7 @@ Enregistré: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
         "best_leading_zeros": int(best_leading) if str(best_leading).isdigit() else 0,
         "best_nonce": str(best_nonce),
         "update_count": str(update_count),
-        "standard": "STANDARD_NAMES_v4.2",
+        "standard": "STANDARD_NAMES_v4.3",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     }
 
@@ -475,7 +499,7 @@ def store_discovery(cycle, run_id, content, extra_meta=None):
         "source": "LumVorax", "module": "btc_quantum_mining",
         "cycle": cycle, "run_id": run_id,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "standard": "STANDARD_NAMES_v4.2",
+        "standard": "STANDARD_NAMES_v4.3",
         **(extra_meta or {})
     }
     print(f"[NX48-MEM] Envoi découverte: cycle={cycle} run={run_id}")
@@ -490,12 +514,12 @@ def store_discovery(cycle, run_id, content, extra_meta=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="LumVorax NX48 Supermemory C42")
+    parser = argparse.ArgumentParser(description="LumVorax NX48 Supermemory C43")
     parser.add_argument("--init",       metavar="STAMP",   help="Init session (récupère état depuis SM)")
     parser.add_argument("--csv",        metavar="CSV_PATH", help="Chemin CSV NX48 (config/btc_nx48_last.csv)")
     parser.add_argument("--store-run",  action="store_true", help="Envoie état NX48 complet à Supermemory")
     parser.add_argument("--store",      metavar="CONTENT",  help="Envoie une découverte")
-    parser.add_argument("--cycle",      default="C42")
+    parser.add_argument("--cycle",      default="C43")
     parser.add_argument("--run-id",     default="unknown")
     parser.add_argument("--recall",     action="store_true")
     parser.add_argument("--query",      default="LumVorax NX48 BTC")

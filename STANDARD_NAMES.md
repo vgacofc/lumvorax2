@@ -674,3 +674,16 @@
 2026-04-11 22:23 - BTC_HASHRATE_GATE_DISABLED + C64 — Seuil hashrate supprimé de btc_mining_engine.c (seuil_gate=NONE)
 2026-04-11 22:23 - btc_hashrate_gate_pass + Métrique toujours loggée à 1.0 — gate désactivé, forensic conservé intégral
 2026-04-11 22:23 - btc_hashrate_mhs_final + Hashrate réel loggé sans seuil — données pour analyse SHA-256 patterns
+
+2026-04-15 00:00 - BTC_NX48_PRODUCER_NEURON + C43 — Neurone producteur NX48 BTC, apprentissage ISTA temps réel
+2026-04-15 00:00 - BTC_NX48_EXECUTOR_NEURON + C43 — Neurone applicateur NX48 BTC, décision runtime distillée EMA
+2026-04-15 00:00 - btc_nx48_neuron_count + C43 — Métrique forensic compteur 2 neurones logiques actifs
+2026-04-15 00:00 - lumvorax_btc_pow_candidate_v1 + C43 — Schéma JSON candidat POW exporté par le moteur
+2026-04-15 00:00 - btc_pow_candidate_exported + C43 — Métrique forensic export candidat POW
+2026-04-15 00:00 - scripts/validate_pow_candidate.py + C43 — Validation locale POW et soumission submitblock si full_block_hex disponible
+2026-04-15 00:00 - scripts/btc_getblocktemplate_job.py + C43 — Construction job getblocktemplate, coinbase, merkle root, header et full_block_tail_hex
+2026-04-15 00:00 - lumvorax_btc_getblocktemplate_job_v1 + C43 — Schéma JSON contexte bloc complet pour reconstruction full_block_hex
+2026-04-15 00:00 - BTC_COINBASE_SCRIPT_PUBKEY_HEX + C43 — ScriptPubKey coinbase explicite pour job getblocktemplate
+2026-04-15 00:00 - BTC_NX48_DISABLED + C43 — Variable benchmark A/B pour désactiver l'effet NX48
+2026-04-15 00:00 - lumvorax_btc_nx48_ab_benchmark_v1 + C43 — Rapport JSON benchmark avant/après NX48
+2026-04-15 00:00 - tools/sync_lumvorax_c43_artifacts.py + C43 — Synchronisation prompt.txt et STANDARD_NAMES vers Supabase/Vercel/Supermemory/Doppler
