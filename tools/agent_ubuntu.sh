@@ -87,24 +87,36 @@ while true; do
         log "${RED}[RÉSULTAT] rc=$RC durée=${DURATION}s${NC}"
     fi
 
-    # Tronquer stdout si trop long
-    STDOUT_TRUNC=$(echo "$STDOUT" | head -c 4096)
+    # Tronquer stdout si trop long — écriture dans fichiers temp pour parsing robuste
+    echo "$STDOUT" | head -c 4096 > /tmp/lv_stdout_c47.txt
+    echo "$CMD"    > /tmp/lv_cmd_c47.txt
+    echo "$LABEL"  > /tmp/lv_label_c47.txt
+    echo "$JOB_ID" > /tmp/lv_jobid_c47.txt
+    echo "$RC"     > /tmp/lv_rc_c47.txt
+    echo "$DURATION" > /tmp/lv_dur_c47.txt
 
-    # Envoyer résultat à Replit
-    RESULT_JSON=$(python3 -c "
-import json, sys
+    # Construire le JSON résultat via heredoc Python (sans interpolation bash fragile)
+    RESULT_JSON=$(python3 - << 'PYEOF'
+import json
+stdout  = open('/tmp/lv_stdout_c47.txt').read()
+cmd     = open('/tmp/lv_cmd_c47.txt').read().strip()
+label   = open('/tmp/lv_label_c47.txt').read().strip()
+job_id  = open('/tmp/lv_jobid_c47.txt').read().strip()
+rc      = int(open('/tmp/lv_rc_c47.txt').read().strip() or '0')
+dur     = int(open('/tmp/lv_dur_c47.txt').read().strip() or '0')
 d = {
-    'job_id': '$JOB_ID',
-    'label': '$LABEL',
-    'cmd': $(echo "$CMD" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip()))"),
-    'stdout': $(echo "$STDOUT_TRUNC" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))"),
-    'returncode': $RC,
-    'duration_s': $DURATION,
-    'host': 'lvx-Vostro-5481',
+    'job_id': job_id,
+    'label':  label,
+    'cmd':    cmd,
+    'stdout': stdout,
+    'returncode': rc,
+    'duration_s': dur,
+    'host':  'lvx-Vostro-5481',
     'cycle': 'C47',
 }
 print(json.dumps(d))
-" 2>/dev/null)
+PYEOF
+)
 
     curl -s --max-time 10 \
         -H "X-Agent-Token: $AGENT_TOKEN" \
