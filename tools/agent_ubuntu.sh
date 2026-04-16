@@ -51,20 +51,34 @@ fi
 log "${GREEN}[AGENT] Boucle poll démarrée — C47 (CTRL+C pour arrêter)${NC}"
 
 while true; do
-    # Poll : récupérer prochain job
-    JOB_RESP=$(curl -s --max-time 10 \
+    # Poll : récupérer prochain job — sauvegarder JOB_RESP brut dans fichier
+    curl -s --max-time 10 \
         -H "X-Agent-Token: $AGENT_TOKEN" \
-        "$REPLIT_URL/agent/job" 2>/dev/null)
+        "$REPLIT_URL/agent/job" > /tmp/lv_job_resp_c47.json 2>/dev/null
 
-    JOB=$(echo "$JOB_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('job') or '')" 2>/dev/null)
+    # Extraire le job en JSON VALIDE via python json.dump (évite le bug print(dict) → repr Python)
+    JOB_PRESENT=$(python3 - << 'PYEOF_POLL'
+import json, sys
+try:
+    d = json.load(open('/tmp/lv_job_resp_c47.json'))
+    job = d.get('job')
+    if job and isinstance(job, dict) and job.get('cmd'):
+        with open('/tmp/lv_job_c47.json', 'w') as f:
+            json.dump(job, f)
+        print('yes')
+    else:
+        print('no')
+except Exception:
+    print('no')
+PYEOF_POLL
+)
 
-    if [ -z "$JOB" ] || [ "$JOB" = "None" ] || [ "$JOB" = "null" ]; then
+    if [ "$JOB_PRESENT" != "yes" ]; then
         sleep $POLL_INTERVAL
         continue
     fi
 
-    # Écrire le job dans un fichier temp pour un parsing robuste (évite les bugs de guillemets)
-    echo "$JOB" > /tmp/lv_job_c47.json
+    # Extraire les champs depuis le JSON valide /tmp/lv_job_c47.json
     JOB_ID=$(python3 -c "import json; d=json.load(open('/tmp/lv_job_c47.json')); print(d.get('id',''))" 2>/dev/null)
     CMD=$(python3 -c "import json; d=json.load(open('/tmp/lv_job_c47.json')); print(d.get('cmd',''))" 2>/dev/null)
     LABEL=$(python3 -c "import json; d=json.load(open('/tmp/lv_job_c47.json')); print(d.get('label',''))" 2>/dev/null)
