@@ -27,7 +27,9 @@ fi
 BTC_DIR="$REPO_ROOT/src/advanced_calculations/bitcoin_quantum_mining"
 SCRIPTS_DIR="$BTC_DIR/scripts"
 LOG_FILE="$HOME/btc_ubuntu.log"
-NPROC=$(nproc)
+NPROC="${BTC_THREADS:-$(nproc)}"
+BTC_DURATION_S="${BTC_DURATION_S:-0}"
+BTC_MODE="${BTC_MODE:-UBUNTU_UNLIMITED}"
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 RUN_ID="btc_${STAMP}_c48_${ENV_NAME}"
 
@@ -36,6 +38,11 @@ echo "[C48] LumVorax BTC Mining Runner"
 echo "[C48] Environnement : $ENV_NAME"
 echo "[C48] REPO_ROOT     : $REPO_ROOT"
 echo "[C48] CPUs dispo    : $NPROC"
+if [ "$BTC_DURATION_S" = "0" ]; then
+    echo "[C48] Durée mining  : illimitée"
+else
+    echo "[C48] Durée mining  : ${BTC_DURATION_S}s"
+fi
 echo "[C48] Run ID        : $RUN_ID"
 echo "[C48] Log           : $LOG_FILE"
 echo "[C48] ============================================"
@@ -95,7 +102,7 @@ echo "[C48] ============================================"
 cd "$BTC_DIR"
 
 # Construire les arguments
-ARGS="--threads $NPROC --run-id $RUN_ID"
+ARGS="--threads $NPROC --duration-s $BTC_DURATION_S --mode $BTC_MODE --run-id $RUN_ID"
 if [ -n "$REAL_HEADER" ]; then
     ARGS="$ARGS --header-hex $REAL_HEADER"
 fi

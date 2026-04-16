@@ -1,64 +1,77 @@
 # LUMVORAX — Module 17 BTC Quantum Mining + Hubbard-HTS
 
 ## Project Overview
-LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin expérimental (NX48), simulation Hubbard-HTS, forensic logging ultra-précis, et intégrations Supabase/Supermemory/Aristocle.
+LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoin expérimental NX48, simulation Hubbard-HTS, forensic logging ultra-précis, tableau de bord Flask/Three.js, pipeline agent Ubuntu↔Replit, et synchronisation Doppler.
 
-### MODULE ACTIF : Bitcoin Quantum Mining (Module 17)
-- **Binaire** : `src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner` — v1.0.0-C44 (117K, 2026-04-15T17:57Z)
+### Module actif : Bitcoin Quantum Mining (Module 17)
+- **Binaire** : `src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner`
 - **Record absolu** : 32 bits leading zeros — nonce 2 044 645 236 — cycle C41/C42 forensic
-- **C44 run 2026-04-15T17:58Z** : 20 bits — 0.4365 MH/s (NX48 off) / 0.4344 MH/s (NX48 on) — +28% vs C43
-- **Nouveau Supabase** : tables à créer via `tools/supabase_c44_setup.sql` dans SQL Editor — corriger SUPABASE_DB_PASSWORD
-- **Mémoire dual-agent NX48** : Agent1 temps réel C (`nx48_btc_controller.c`) + Agent2 long terme (`tools/nx48_supermemory.py`)
-- **NX48 C44** : 2 neurones — 3 updates en 8s — stall_count=2 — loss=0.834 — dual_blend=0.200
-- **Validation POW C44** : `scripts/validate_pow_candidate.py --context config/btc_getblocktemplate_job.json [--submit]`
-- **Supabase** : SERVICE_ROLE 200 OK — Tables absentes (nouveau compte) — SQL setup: `tools/supabase_c44_setup.sql`
-- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.48.md`
-- **Agent Ubuntu C48** : AGENT_TOKEN=3de963ebc09043b3b1b9f22e1e771ecc — lancer Ubuntu sans Doppler : `bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh`
-- **Doppler token** : `dp.st.dev_lumvorax.7BkqkAdUmxTww1estW1ZQfQoXYvm4Wz1fMc1TCuCFO3` INVALIDE — regénérer dashboard.doppler.com
-- **Fish incompatibilité** : Ubuntu fish shell → toujours `bash ~/LVX/lumvorax2/tools/script.sh` (jamais direct)
-- **Chemins Ubuntu** : REPO_ROOT=/home/lvx/LVX/lumvorax2 | LOG=/home/lvx/lumvorax_agent.log
-- **Mining Ubuntu** : `bash ~/LVX/lumvorax2/tools/btc_run_ubuntu.sh` (portable, détecte env auto)
-- **Bitcoin Core** : testnet actif port 18332 — IBD en cours (blocks=0)
-- **Supabase** : 11 tables opérationnelles — métriques C44/C45 synced HTTP 201
+- **Résultats Ubuntu C48** : 8 threads, environ 1.0–1.6 MH/s, meilleur leading zeros observé 28 bits, NX48 update_count environ 1964+
+- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.49.md`
+- **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
+- **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
 ## Architecture
 
-### Backend (C)
-- `src/` — Core C modules: physics, optimization, logging, persistence, parallel processing
-- `Makefile` — Build system supporting debug/release modes with SIMD auto-detection
-- `build.sh` — Build wrapper with CPU capability detection (AVX-512, AVX2, SSE4.2)
-- Compiled binary: `bin/lum_vorax_complete`
+### Backend C
+- `src/` — modules core : physics, optimization, logging, persistence, parallel processing
+- `src/advanced_calculations/bitcoin_quantum_mining/` — moteur BTC expérimental, NX48, scripts POW et forensic logs
+- `Makefile` / `build.sh` — compilation C avec détection CPU
 
-### Web Server (Python/Flask)
-- `main.py` — Entry point, imports Flask app from `src/visualization/server.py`
-- `src/visualization/server.py` — Flask server exposing simulation data via REST API
-- `src/visualization/static/` — Frontend assets (HTML/CSS/JS with Three.js visualization)
+### Web Server Python/Flask
+- `main.py` — point d’entrée gunicorn
+- `src/visualization/server.py` — serveur Flask, API dashboard et routes agent Ubuntu (`/agent/status`, `/agent/job`, `/agent/push`, `/agent/result`, `/agent/results`, `/agent/token` local)
+- `src/visualization/static/` — frontend Three.js
 
-### Key Directories
-- `src/advanced_calculations/quantum_problem_hubbard_hts/` — Quantum simulation module
-- `tools/nx48_supermemory.py` — mémoire longue durée NX48 BTC Supermemory/Supabase
-- `tools/nx48_module_bridge.py` — manifeste de pont modules `src/` vers le moteur BTC, avec `kind_counts` et mode advisory forensic
-- `logs/`, `evidence/` — Simulation output and forensic audit trails
-- `docs/` — Documentation and Doxygen configs
+### Agent Ubuntu / Doppler C49
+- `tools/agent_ubuntu.sh` lit `REPLIT_URL`, `AGENT_TOKEN`, `DEFAULT_JOB_TIMEOUT_S`, `POLL_INTERVAL` depuis l’environnement ou Doppler.
+- `tools/btc_run_ubuntu.sh` lit `BTC_DURATION_S`, `BTC_THREADS`, `BTC_MODE`; `BTC_DURATION_S=0` signifie mining illimité.
+- `tools/update_doppler_agent_env.sh` synchronise depuis Replit vers Doppler : URL Replit actuelle, token agent live, timeout agent, durée BTC.
+- Le token Flask priorise `AGENT_TOKEN`, puis `LUMVORAX_AGENT_TOKEN`, puis dérive depuis `SESSION_SECRET`; sans secret il est temporaire par process.
 
 ## Running the App
 
 ### Development
-The "Start application" workflow runs:
-```
+Le workflow "Start application" lance :
+```bash
 uv run gunicorn --bind 0.0.0.0:5000 --reload main:app
 ```
 
-The browser frontend uses `/app-api/...` as a Replit-compatible alias for the existing Flask `/api/...` routes. Requests are relative so they work through the Replit preview proxy and production domains.
-The Ubuntu agent token now uses `SESSION_SECRET` when present, otherwise a per-process random fallback instead of a static default.
+Le frontend utilise `/app-api/...` comme alias relatif Replit-compatible pour les routes Flask `/api/...`.
 
-### Deployment
-Configured for Autoscale deployment via gunicorn on port 5000.
+### Commandes clés C49
+Depuis le shell Replit, synchroniser Doppler :
+```bash
+bash tools/update_doppler_agent_env.sh
+```
+
+Depuis Ubuntu, agent via Doppler :
+```bash
+cd ~/LVX/lumvorax2
+git pull origin main
+doppler run -- bash tools/agent_ubuntu.sh
+```
+
+Depuis Ubuntu, mining illimité :
+```bash
+cd ~/LVX/lumvorax2
+doppler run -- bash tools/btc_run_ubuntu.sh
+```
+
+Limiter la durée depuis fish :
+```bash
+env BTC_DURATION_S=3600 doppler run -- bash tools/btc_run_ubuntu.sh
+```
+
+Désactiver explicitement le timeout agent :
+```bash
+env DEFAULT_JOB_TIMEOUT_S=0 doppler run -- bash tools/agent_ubuntu.sh
+```
 
 ## Environment
 - Python packages managed via uv/`.pythonlibs`
-- Nix packages: gcc, gnumake, postgresql, opencv, etc.
-- Kaggle credentials: `KAGGLE_USERNAME`, `KAGGLE_CONFIG_DIR`
+- Nix packages include gcc, gnumake, PostgreSQL, OpenCV, and scientific tooling
+- Important env vars: `SESSION_SECRET`, `AGENT_TOKEN`, `LUMVORAX_AGENT_TOKEN`, `REPLIT_URL`, `BTC_DURATION_S`, `BTC_THREADS`, `DEFAULT_JOB_TIMEOUT_S`
 
 ## Dependencies
 - Flask, Flask-SQLAlchemy, gunicorn, psycopg2

@@ -30,12 +30,10 @@ fi
 TOOLS_DIR="$REPO_ROOT/tools"
 BTC_DIR="$REPO_ROOT/src/advanced_calculations/bitcoin_quantum_mining"
 
-# ─── Valeurs par défaut — mises à jour C48 ────────────────
-# Ces valeurs sont utilisées si Doppler n'injecte pas les siennes
-# ou si Doppler est indisponible.
-AGENT_TOKEN="${AGENT_TOKEN:-3de963ebc09043b3b1b9f22e1e771ecc}"
-REPLIT_URL="${REPLIT_URL:-https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev}"
+AGENT_TOKEN="${AGENT_TOKEN:-${LUMVORAX_AGENT_TOKEN:-}}"
+REPLIT_URL="${REPLIT_URL:-${LUMVORAX_REPLIT_URL:-}}"
 POLL_INTERVAL="${POLL_INTERVAL:-5}"
+DEFAULT_JOB_TIMEOUT_S="${DEFAULT_JOB_TIMEOUT_S:-0}"
 LOG_FILE="$HOME/lumvorax_agent.log"
 
 # ─── Couleurs ─────────────────────────────────────────────
@@ -48,7 +46,20 @@ log "${CYAN}  Environnement : $ENV_NAME${NC}"
 log "${CYAN}  REPO_ROOT     : $REPO_ROOT${NC}"
 log "${CYAN}  Replit URL    : $REPLIT_URL${NC}"
 log "${CYAN}  Poll interval : ${POLL_INTERVAL}s${NC}"
+if [ "$DEFAULT_JOB_TIMEOUT_S" = "0" ]; then
+    log "${CYAN}  Job timeout   : désactivé par défaut${NC}"
+else
+    log "${CYAN}  Job timeout   : ${DEFAULT_JOB_TIMEOUT_S}s par défaut${NC}"
+fi
 log "${CYAN}  Log           : $LOG_FILE${NC}"
+if [ -z "$REPLIT_URL" ]; then
+    log "${RED}[ERREUR] REPLIT_URL absent. Synchroniser Doppler depuis Replit ou lancer avec env REPLIT_URL=...${NC}"
+    exit 1
+fi
+if [ -z "$AGENT_TOKEN" ]; then
+    log "${RED}[ERREUR] AGENT_TOKEN absent. Synchroniser Doppler depuis Replit ou lancer avec env AGENT_TOKEN=...${NC}"
+    exit 1
+fi
 log "${CYAN}  Token (8ch)   : ${AGENT_TOKEN:0:8}...${NC}"
 
 # ─── Vérification connectivité ────────────────────────────
@@ -59,7 +70,7 @@ else
     log "${RED}[ERREUR] Impossible de joindre $REPLIT_URL${NC}"
     log "${RED}  Réponse brute : $STATUS_RESP${NC}"
     log "${YELLOW}  Si URL Replit a changé, corriger REPLIT_URL :${NC}"
-    log "${YELLOW}  REPLIT_URL=https://nouvelle-url.replit.dev bash $0${NC}"
+    log "${YELLOW}  env REPLIT_URL=https://nouvelle-url.replit.dev AGENT_TOKEN=token bash $0${NC}"
     exit 1
 fi
 
@@ -98,8 +109,8 @@ PYEOF_POLL
     JOB_ID=$(python3 -c "import json; d=json.load(open('/tmp/lv_job.json')); print(d.get('id',''))")
     CMD=$(python3 -c "import json; d=json.load(open('/tmp/lv_job.json')); print(d.get('cmd',''))")
     LABEL=$(python3 -c "import json; d=json.load(open('/tmp/lv_job.json')); print(d.get('label',''))")
-    TIMEOUT=$(python3 -c "import json; d=json.load(open('/tmp/lv_job.json')); print(d.get('timeout_s',60))")
-    TIMEOUT="${TIMEOUT:-60}"
+    TIMEOUT=$(python3 -c "import json; d=json.load(open('/tmp/lv_job.json')); print(d.get('timeout_s',''))")
+    TIMEOUT="${TIMEOUT:-$DEFAULT_JOB_TIMEOUT_S}"
 
     log "${YELLOW}[JOB] id=$JOB_ID label='$LABEL'${NC}"
     log "${YELLOW}  cmd: ${CMD:0:80}...${NC}"
@@ -112,7 +123,11 @@ PYEOF_POLL
 
     # Exécuter la commande dans bash (pas fish)
     START_TS=$(date +%s)
-    STDOUT=$(timeout "$TIMEOUT" bash -c "$CMD_RESOLVED" 2>&1)
+    if [ "$TIMEOUT" = "0" ] || [ "$TIMEOUT" = "none" ] || [ "$TIMEOUT" = "unlimited" ] || [ "$TIMEOUT" = "inf" ]; then
+        STDOUT=$(bash -c "$CMD_RESOLVED" 2>&1)
+    else
+        STDOUT=$(timeout "$TIMEOUT" bash -c "$CMD_RESOLVED" 2>&1)
+    fi
     RC=$?
     END_TS=$(date +%s)
     DURATION=$((END_TS - START_TS))

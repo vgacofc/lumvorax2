@@ -534,6 +534,9 @@ _agent_lock = threading.Lock()
 _fallback_agent_secret = secrets.token_hex(32)
 
 def _agent_token():
+    configured_token = os.environ.get("AGENT_TOKEN") or os.environ.get("LUMVORAX_AGENT_TOKEN")
+    if configured_token:
+        return configured_token.strip()
     secret = os.environ.get("SESSION_SECRET") or _fallback_agent_secret
     return hashlib.sha256(f"agent:{secret}".encode()).hexdigest()[:32]
 

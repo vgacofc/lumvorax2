@@ -743,3 +743,12 @@
 2026-04-16 - UBUNTU_CPUS_C48 + C48 — 8 CPUs physiques (nproc=8)
 2026-04-16 - LV_STUBS_FIX_C48 + C48 — src/debug/memory_tracker.c : stubs lv_tracked_calloc/malloc/free/lv_init/lv_destroy/lv_module_*/lv_get_timestamp_ns ajoutés (fix erreur linker Ubuntu)
 2026-04-16 - COMPILE_FIX_CAUSE_C48 + C48 — btc_block_validator.c inclut lumvorax_integration.h avec LUMVORAX_ENABLED=1 → macros LV_CALLOC → lv_tracked_calloc → non implémenté dans LUM_SRC (LUM_INTG_SRC absent de la règle Makefile)
+# ─── C49 — 2026-04-16 — URL/session Replit + timeouts Ubuntu ───────────────
+2026-04-16 - REPLIT_URL_C49 + C49 — URL de session courante lue via REPLIT_DEV_DOMAIN et injectable dans Doppler par tools/update_doppler_agent_env.sh
+2026-04-16 - AGENT_TOKEN_C49 + C49 — Token agent récupéré localement via /agent/token puis injecté dans Doppler; plus de token ancien codé en dur requis
+2026-04-16 - DEFAULT_JOB_TIMEOUT_S + C49 — 0 = aucun timeout agent par défaut; valeur >0 = limite des jobs Ubuntu en secondes
+2026-04-16 - BTC_DURATION_S + C49 — 0 = mining BTC illimité; valeur >0 = durée du run btc_mining_runner en secondes
+2026-04-16 - tools/update_doppler_agent_env.sh + C49 — Script Replit pour synchroniser REPLIT_URL, AGENT_TOKEN, DEFAULT_JOB_TIMEOUT_S et BTC_DURATION_S vers Doppler
+2026-04-16 - tools/btc_run_ubuntu.sh + C49 — Passe explicitement --duration-s $BTC_DURATION_S au binaire pour éviter le défaut interne 60s
+2026-04-16 - tools/agent_ubuntu.sh + C49 — Désactive timeout par défaut et accepte timeout_s=0/none/unlimited/inf par job
+2026-04-16 - analysechatgpt91.49.md + C49 — Rapport final correctif C49 : Doppler, URL session, token, durée run Ubuntu
