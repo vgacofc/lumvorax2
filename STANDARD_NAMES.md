@@ -708,3 +708,30 @@
 2026-04-15 18:35 - DATADOG_API_KEY + C45 — Secret requis : API Key 32 hex chars (pas ddapp_) — à créer dans Datadog Dashboard
 2026-04-15 18:35 - REPLIT_PUBLIC_URL_C45 + C45 — https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev
 2026-04-15 18:35 - analysechatgpt91.44.md + C45 — Rapport cycle C45 : agent Ubuntu + Datadog + Supabase sync complet
+
+# ─── C48 — 2026-04-16 — Chemins Ubuntu / Portabilité / Fish fix ───────────────
+# CHEMINS UBUNTU EXACTS (lvx@lvx-Vostro-5481)
+2026-04-16 - UBUNTU_REPO_ROOT + C48 — /home/lvx/LVX/lumvorax2/
+2026-04-16 - UBUNTU_BTC_DIR + C48 — /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/
+2026-04-16 - UBUNTU_TOOLS_DIR + C48 — /home/lvx/LVX/lumvorax2/tools/
+2026-04-16 - UBUNTU_SCRIPTS_DIR + C48 — /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/scripts/
+2026-04-16 - UBUNTU_AGENT_SCRIPT + C48 — /home/lvx/LVX/lumvorax2/tools/agent_ubuntu.sh
+2026-04-16 - UBUNTU_BTC_RUNNER + C48 — /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
+2026-04-16 - UBUNTU_BTC_RUN_SCRIPT + C48 — /home/lvx/LVX/lumvorax2/tools/btc_run_ubuntu.sh
+2026-04-16 - UBUNTU_AGENT_LOG + C48 — /home/lvx/lumvorax_agent.log
+2026-04-16 - UBUNTU_BTC_LOG + C48 — /home/lvx/btc_ubuntu.log
+2026-04-16 - UBUNTU_BITCOIN_CONF + C48 — /home/lvx/.bitcoin/bitcoin.conf  (chain=test, rpcport=18332)
+2026-04-16 - UBUNTU_BITCOIN_CLI + C48 — bitcoin-cli -testnet (port 18332, user=lumvorax)
+# CHEMINS REPLIT EXACTS
+2026-04-16 - REPLIT_REPO_ROOT + C48 — /home/runner/workspace/
+2026-04-16 - REPLIT_BTC_DIR + C48 — /home/runner/workspace/src/advanced_calculations/bitcoin_quantum_mining/
+2026-04-16 - REPLIT_TOOLS_DIR + C48 — /home/runner/workspace/tools/
+# RÈGLES PORTABILITÉ C48
+2026-04-16 - FISH_COMPAT_RULE + C48 — Ubuntu utilise fish shell — toujours lancer les scripts bash avec : bash ~/LVX/lumvorax2/tools/script.sh (jamais directement ni avec source)
+2026-04-16 - AGENT_TOKEN_C48 + C48 — 3de963ebc09043b3b1b9f22e1e771ecc (sha256 Flask actuel)
+2026-04-16 - DOPPLER_TOKEN_STATUS + C48 — dp.st.dev_lumvorax.7BkqkAdUmxTww1estW1ZQfQoXYvm4Wz1fMc1TCuCFO3 INVALIDE — regénérer dans dashboard.doppler.com → Service Tokens
+2026-04-16 - AGENT_SANS_DOPPLER + C48 — Commande officielle (Doppler token invalide) : bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
+2026-04-16 - BTC_RUN_SANS_DOPPLER + C48 — Commande officielle mining : bash ~/LVX/lumvorax2/tools/btc_run_ubuntu.sh
+2026-04-16 - ENV_AUTO_DETECT + C48 — tools/agent_ubuntu.sh et tools/btc_run_ubuntu.sh détectent automatiquement Replit vs Ubuntu via test -d $HOME/LVX/lumvorax2
+2026-04-16 - tools/btc_run_ubuntu.sh + C48 — Nouveau script bash portable : compile + header réel + mining illimité (compatible Replit et Ubuntu)
+2026-04-16 - analysechatgpt91.48.md + C48 — Rapport cycle C48 : Doppler fix + portabilité chemins + fish compat + agent_ubuntu.sh C48
