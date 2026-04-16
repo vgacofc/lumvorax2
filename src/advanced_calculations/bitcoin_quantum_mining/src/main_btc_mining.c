@@ -238,6 +238,7 @@ int main(int argc, char* argv[]) {
     nx48_cfg.T_cold          = 1.0;
     nx48_cfg.T_hot           = 50.0;
     strncpy(nx48_cfg.csv_path, cfg.nx48_csv, sizeof(nx48_cfg.csv_path)-1);
+    nx48_cfg.csv_path[sizeof(nx48_cfg.csv_path)-1] = '\0'; /* C50-FIX-P1 : null-terminator explicite — élimine warning strncpy-truncation */
 
     nx48_btc_state_t* nx48 = nx48_btc_init(&nx48_cfg, cfg.run_id);
     if (!nx48) {
