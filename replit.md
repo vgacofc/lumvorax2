@@ -12,11 +12,14 @@ LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin e
 - **NX48 C44** : 2 neurones — 3 updates en 8s — stall_count=2 — loss=0.834 — dual_blend=0.200
 - **Validation POW C44** : `scripts/validate_pow_candidate.py --context config/btc_getblocktemplate_job.json [--submit]`
 - **Supabase** : SERVICE_ROLE 200 OK — Tables absentes (nouveau compte) — SQL setup: `tools/supabase_c44_setup.sql`
-- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.44.md`
-- **Agent Ubuntu C45** : routes `/agent/status /job /push /result /results` Flask port 5000 — AGENT_TOKEN=3de963ebc09043b3b1b9f22e1e771ecc — script: `tools/agent_ubuntu.sh`
-- **Datadog C45** : `tools/datadog_metrics.py` — blocage: DATADOG_API_KEY requise (pas DATADOG_API_TOKEN ddapp_)
-- **SSH Replit** : `/home/runner/.ssh/id_lumvorax` — clé publique à ajouter sur Ubuntu
-- **Supabase C44/C45** : toutes métriques synced HTTP 201 — 11 tables opérationnelles
+- **Rapport actif** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.48.md`
+- **Agent Ubuntu C48** : AGENT_TOKEN=3de963ebc09043b3b1b9f22e1e771ecc — lancer Ubuntu sans Doppler : `bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh`
+- **Doppler token** : `dp.st.dev_lumvorax.7BkqkAdUmxTww1estW1ZQfQoXYvm4Wz1fMc1TCuCFO3` INVALIDE — regénérer dashboard.doppler.com
+- **Fish incompatibilité** : Ubuntu fish shell → toujours `bash ~/LVX/lumvorax2/tools/script.sh` (jamais direct)
+- **Chemins Ubuntu** : REPO_ROOT=/home/lvx/LVX/lumvorax2 | LOG=/home/lvx/lumvorax_agent.log
+- **Mining Ubuntu** : `bash ~/LVX/lumvorax2/tools/btc_run_ubuntu.sh` (portable, détecte env auto)
+- **Bitcoin Core** : testnet actif port 18332 — IBD en cours (blocks=0)
+- **Supabase** : 11 tables opérationnelles — métriques C44/C45 synced HTTP 201
 
 ## Architecture
 
