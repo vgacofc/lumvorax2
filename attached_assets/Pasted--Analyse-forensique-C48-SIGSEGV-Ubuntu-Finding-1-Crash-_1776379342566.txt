@@ -1,0 +1,84 @@
+## Analyse forensique C48 — SIGSEGV Ubuntu
+
+### 🔑 Finding #1 — Crash déterministe, pas aléatoire
+
+Les deux runs crashent à **exactement la même quantité de hashes** :
+
+| Run | Elapsed | Hashes au crash |
+|-----|---------|----------------|
+| btc_20260416T212934Z | ~800s | **619,552,768** |
+| btc_20260416T214335Z | ~875s | **618,661,888** |
+
+**~618–619M hashes** dans les deux cas. C'est **déterministe**, pas une corruption mémoire aléatoire. Un bug aléatoire (race condition, stack smash classique) ne donne pas deux crashes au même seuil exact.
+
+---
+
+### 🔑 Finding #2 — Le diagnostic AVX/alignement est éliminé
+
+Le `objdump` confirme :
+- Uniquement `ymm` → AVX2 ✅
+- Zéro `zmm` → pas d'AVX-512
+- `ptr mod 32 = 0` → alignement OK
+
+**Le SIGSEGV n'est pas lié au CPU ni à l'alignement.** C'était une fausse piste.
+
+---
+
+### 🎯 Cause réelle probable — Buffer de taille fixe épuisé à ~618M
+
+Un nombre de hashes aussi précis et reproductible pointe vers **un tableau de taille fixe** qui se remplit et déborde. Candidats dans `btc_mining_engine.c` ligne 703 (source des ANOMALY logs) :
+
+**Suspects prioritaires :**
+
+1. **Buffer POW candidates / near-miss** — chaque `btc_near_miss_or_valid` est loggué dans un tableau. Si ce tableau fait par exemple `MAX_CANDIDATES = 20` ou similaire et que le code écrit au-delà → overflow → SIGSEGV
+
+2. **Buffer de log forensique** — le FD_PERSISTANT `btc_qm_engine_forensic_*.log` est potentiellement écrit en mémoire avec un ring buffer de taille fixe avant flush, qui déborde
+
+3. **Counter NX48 `update_count`** — passe de 1818 à 2040 entre les runs → il croît. Si un tableau interne NX48 est dimensionné sur `MAX_UPDATE_COUNT` et que ce compteur l'indexe... overflow à la limite
+
+4. **Compteur de nonces explorés** sur un `uint32_t` — à 618M ça ne wrap pas (2^32 = 4.3G), mais un sous-compteur thread-local en `uint16_t` (max 65535 × N_THREADS×batch_size) peut déborder
+
+---
+
+### 🔬 Vérification immédiate (2 commandes)
+
+**1. Identifier le buffer fautif autour de la ligne 703 :**
+
+```bash
+grep -n "near_miss\|MAX_\|malloc\|candidates\|buf\[" \
+  src/advanced_calculations/bitcoin_quantum_mining/src/btc_mining_engine.c \
+  | head -50
+```
+
+**2. Voir le contexte exact de la ligne 703 :**
+
+```bash
+sed -n '690,720p' \
+  src/advanced_calculations/bitcoin_quantum_mining/src/btc_mining_engine.c
+```
+
+---
+
+### 🔬 Confirmation avec ASAN (build diagnostic)
+
+```bash
+cd src/advanced_calculations/bitcoin_quantum_mining
+make clean
+CFLAGS="-O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer" make
+./btc_mining_runner --threads 1 --duration 300
+```
+
+ASAN va afficher la ligne C exacte du dépassement avant de mourir proprement.
+
+---
+
+### Résumé
+
+| Hypothèse | Statut |
+|-----------|--------|
+| AVX-512 sur CPU non compatible | ❌ éliminé |
+| Mauvais alignement vmovdqa | ❌ éliminé |
+| Bug aléatoire race condition | ❌ peu probable (crash reproductible) |
+| **Buffer fixe épuisé à ~618M hashes** | ✅ **cause très probable** |
+
+Le fix sera probablement un `MAX_XXX` à augmenter ou un buffer à allouer dynamiquement. Envoie le contenu de `sed -n '690,720p' btc_mining_engine.c` pour confirmer.

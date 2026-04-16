@@ -1,0 +1,48 @@
+~/workspace$ ./generate_ssh_key.sh
+~/workspace$ ssh-keygen -t ed25519 -C "vgac4224@outlook.com" -f ~/.ssh/id_ed25519 -N ""
+Generating public/private ed25519 key pair.
+Created directory '/home/runner/.ssh'.
+Your identification has been saved in /home/runner/.ssh/id_ed25519
+Your public key has been saved in /home/runner/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:35N+bc0wkWcNGPGZ6ZOczmRcJI87hMwYl4pa5FZLRmI vgac4224@outlook.com
+The key's randomart image is:
++--[ED25519 256]--+
+|        E.o +=. .|
+|       ...+*oo.O |
+|       o =.o+ Bo+|
+|        = o  =o=+|
+|       +S     %+ |
+|      .  . . *oo |
+|          . + o=.|
+|           . .. =|
+|            .. . |
++----[SHA256]-----+
+~/workspace$ cp ~/.ssh/id_ed25519.pub ./github_ssh_key.txt
+
+echo "SSH key generated."
+echo "Public key saved in: github_ssh_key.txt"
+SSH key generated.
+Public key saved in: github_ssh_key.txt
+~/workspace$ ssh -T git@github.com
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+git fetch origin
+git reset --hard origin/main
+The authenticity of host 'github.com (140.82.116.4)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 2621, done.
+remote: Counting objects: 100% (2620/2620), done.
+remote: Compressing objects: 100% (1028/1028), done.
+remote: Total 2466 (delta 1558), reused 2291 (delta 1413), pack-reused 0 (from 0)
+Receiving objects: 100% (2466/2466), 112.09 MiB | 14.72 MiB/s, done.
+Resolving deltas: 100% (1558/1558), completed with 106 local objects.
+From github.com:vgacofc/lumvorax2
+   22479b2..a03e528  main                                    -> origin/main
+ * [new branch]      audit/rapport-forensique-c55-validation -> origin/audit/rapport-forensique-c55-validation
+HEAD is now at a03e528 chat91.51.2
+Encountered 1 file that should have been a pointer, but wasn't:
+    src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/btc_qm_engine_metrics.log
