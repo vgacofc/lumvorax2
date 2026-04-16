@@ -1629,3 +1629,82 @@ Implémentées dans : `hubbard_hts_research_cycle_advanced_parallel.c`, `nx48_ad
 *Note C46 : hashrate stable confirmé — pas de régression. Optimisations C46 réduisent l'overhead non-SHA (NX48 gradient, timestamp) sans impact mesurable sur pipeline SHA-256 Replit (CPU sans AVX2 natif actif).*
 
 *Mise à jour : Version 4.3-C46 — 2026-04-15 — batch=1024, NX48-EVERY=256k, ts_cache=2ms, nouveau compte Supabase, benchmark bloc 945230*
+
+---
+
+## SECTION N — INFRASTRUCTURE UBUNTU (lvx@lvx-Vostro-5481)
+
+> **Mise à jour C47 — 2026-04-16**
+> Cette section documente les chemins exacts et commandes officielles pour travailler sur la machine Ubuntu locale.
+> **SOURCE UNIQUE AUTORISÉE** : `~/LVX/lumvorax2/` (dépôt git cloné). Tout autre fichier hors du dépôt est considéré obsolète.
+
+### §N-UBUNTU-C47 : Chemins et commandes officiels — Ubuntu lvx-Vostro-5481
+
+#### Dépôt git (source unique)
+
+| Élément | Chemin / Valeur | Notes |
+|---|---|---|
+| Racine dépôt | `~/LVX/lumvorax2/` | Clône complet de `github.com/vgacofc/lumvorax2` |
+| Mise à jour dépôt | `cd ~/LVX/lumvorax2 && git pull origin main` | Toujours faire avant de lancer l'agent |
+| Branche active | `main` | Ne jamais travailler sur d'autres branches localement |
+
+#### Scripts clés sur Ubuntu
+
+| Script | Chemin exact sur Ubuntu | Usage |
+|---|---|---|
+| Agent polling C47 | `~/LVX/lumvorax2/tools/agent_ubuntu.sh` | Script principal — poll Replit et exécute les jobs |
+| Nettoyage Ubuntu | `~/LVX/lumvorax2/tools/ubuntu_cleanup.sh` | Supprime les anciens fichiers temporaires hors dépôt |
+| Métriques Datadog | `~/LVX/lumvorax2/tools/datadog_metrics.py` | Envoi métriques Datadog EU (`datadoghq.eu`) |
+| Setup Supabase C46 | `~/LVX/lumvorax2/tools/supabase_c46_setup.sql` | SQL de création des 16 tables Supabase C46 |
+
+#### Commande de lancement officielle de l'agent (C47)
+
+```bash
+# Étape 1 — Mettre à jour le dépôt
+cd ~/LVX/lumvorax2 && git pull origin main
+
+# Étape 2 — Nettoyer les anciens fichiers hors dépôt
+bash ~/LVX/lumvorax2/tools/ubuntu_cleanup.sh
+
+# Étape 3 — Lancer l'agent (via Doppler — recommandé)
+doppler run -- bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
+
+# OU — Lancement manuel sans Doppler (si besoin)
+AGENT_TOKEN=0ce121419a08e95af480ce37dad5c17f \
+REPLIT_URL=https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev \
+bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
+```
+
+#### Secrets Doppler sur Ubuntu (projet=lumvorax, config=dev_lumvorax)
+
+| Clé Doppler | Valeur (tronquée) | Rôle |
+|---|---|---|
+| `AGENT_TOKEN` | `0ce1...7f` (32 chars) | Token HMAC pour authentification avec le serveur Flask Replit |
+| `REPLIT_URL` | `https://e40e29e0-...picard.replit.dev` | URL du serveur Flask Replit (à mettre à jour si URL change) |
+| `DATABASE_URL` | `postgresql://postgres:...@db.auytumghnaguqscehyas.supabase.co:5432/postgres` | Connexion Supabase directe (psql) |
+| `SUPABASE_URL` | `https://auytumghnaguqscehyas.supabase.co` | API REST Supabase |
+| `DD_API_KEY` | `8ecf35...` (32 chars) | Clé API Datadog EU (`datadoghq.eu`) |
+
+#### Commande de mise à jour si l'URL Replit change
+
+```bash
+# Depuis Ubuntu — mettre à jour REPLIT_URL dans Doppler
+doppler secrets set REPLIT_URL=https://<nouvelle-url>.replit.dev \
+  --project lumvorax --config dev_lumvorax
+```
+
+#### Log de l'agent
+
+| Fichier | Chemin | Notes |
+|---|---|---|
+| Log agent Ubuntu | `~/lumvorax_agent.log` | Toutes les lignes de log de l'agent — `tail -f ~/lumvorax_agent.log` |
+
+#### Règle de nettoyage (fichiers interdits hors dépôt)
+
+Les fichiers suivants sont **INTERDITS** sur Ubuntu (créés par erreur lors de sessions précédentes) :
+- `~/agent_ubuntu.sh` — copie obsolète dans home → utiliser `~/LVX/lumvorax2/tools/agent_ubuntu.sh`
+- `~/lumvorax_patch*.sh` — patches temporaires → intégrer dans le dépôt git
+- `~/lumvorax_*.py`, `~/lumvorax_*.sh` — scripts temporaires → supprimer après usage
+- `/tmp/lumvorax_*` — fichiers /tmp → supprimer avec `ubuntu_cleanup.sh`
+
+*Mise à jour : Version 4.4-C47 — 2026-04-16 — Infrastructure Ubuntu documentée, Doppler natif, source unique ~/LVX/lumvorax2/*

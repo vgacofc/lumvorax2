@@ -625,6 +625,18 @@ def agent_status():
     })
 
 
+@app.route("/agent_ubuntu.sh", methods=["GET"])
+def serve_agent_script():
+    """Sert le script agent_ubuntu.sh pour téléchargement direct depuis Ubuntu."""
+    script_path = os.path.join(os.path.dirname(__file__), "../../tools/agent_ubuntu.sh")
+    script_path = os.path.realpath(script_path)
+    if not os.path.exists(script_path):
+        return "Script non trouvé", 404
+    with open(script_path, "r") as f:
+        content = f.read()
+    return content, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
 def _register_app_api_aliases():
     for rule in list(app.url_map.iter_rules()):
         if rule.rule.startswith("/api/"):
