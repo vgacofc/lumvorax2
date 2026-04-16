@@ -2,6 +2,11 @@
 
 ## Historique des noms normalisés
 
+2026-04-17 00:00 - C52-VERIF-C51 + C52 — Vérification intégrale 5/5 corrections C51 dans code Replit confirmées (mutex, null-terminators, logs horodatés)
+2026-04-17 00:00 - REPLIT_URL_C52 + C52 — https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev (nœud kirk, session 2026-04-17)
+2026-04-17 00:00 - AGENT_TOKEN_C52 + C52 — 0d679c8ce780ecd034da1a183d2125df (sha256 Flask session courante)
+2026-04-17 00:00 - analysechatgpt91.52.md + C52 — Rapport C52 : vérification intégrale C51, session kirk, commandes Doppler exactes, procédure run illimité Ubuntu
+
 2026-04-16 20:00 - C50-FIX-P1-SIGSEGV + Correction data race NX48 : eng->nx48->batch_size_scale et exploration_bias lus sous global_mutex — élimine SIGSEGV reproductible après 700s
 2026-04-16 20:00 - C50-FIX-P1b-strncpy + Null-terminator explicite après strncpy pour csv_path et btc_global_csv — élimine warning -Wstringop-truncation
 2026-04-16 20:00 - C50-FIX-P2-log-horodate + Logs btc_ubuntu horodatés btc_ubuntu_STAMP.log + symlink — conformité prompt.txt §17.1 INTERDICTION écrasement
