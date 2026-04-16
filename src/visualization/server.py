@@ -524,15 +524,17 @@ import threading
 import hashlib
 import hmac
 import time
+import secrets
 
 from flask import request, Response
 
 _agent_queue = []
 _agent_results = []
 _agent_lock = threading.Lock()
+_fallback_agent_secret = secrets.token_hex(32)
 
 def _agent_token():
-    secret = os.environ.get("SESSION_SECRET", "lumvorax_agent_default")
+    secret = os.environ.get("SESSION_SECRET") or _fallback_agent_secret
     return hashlib.sha256(f"agent:{secret}".encode()).hexdigest()[:32]
 
 def _check_token():

@@ -271,7 +271,9 @@ function fmtKV(k,v){
 
 async function fetchData(endpoint){
   if(state.data[endpoint]) return state.data[endpoint];
-  const r = await fetch(API+endpoint);
+  const path = endpoint.replace(/^\/api/, '');
+  const r = await fetch(API+path);
+  if(!r.ok) throw new Error(endpoint+' → '+r.status);
   const d = await r.json();
   state.data[endpoint] = d;
   return d;

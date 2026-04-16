@@ -46,10 +46,11 @@ LUMVORAX — Système de recherche quantique multi-modules avec mining Bitcoin e
 ### Development
 The "Start application" workflow runs:
 ```
-python -m gunicorn --bind 0.0.0.0:5000 main:app
+uv run gunicorn --bind 0.0.0.0:5000 --reload main:app
 ```
 
-The browser frontend uses `/app-api/...` as a Replit-compatible alias for the existing Flask `/api/...` routes.
+The browser frontend uses `/app-api/...` as a Replit-compatible alias for the existing Flask `/api/...` routes. Requests are relative so they work through the Replit preview proxy and production domains.
+The Ubuntu agent token now uses `SESSION_SECRET` when present, otherwise a per-process random fallback instead of a static default.
 
 ### Deployment
 Configured for Autoscale deployment via gunicorn on port 5000.
