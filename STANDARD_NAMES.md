@@ -735,3 +735,11 @@
 2026-04-16 - ENV_AUTO_DETECT + C48 — tools/agent_ubuntu.sh et tools/btc_run_ubuntu.sh détectent automatiquement Replit vs Ubuntu via test -d $HOME/LVX/lumvorax2
 2026-04-16 - tools/btc_run_ubuntu.sh + C48 — Nouveau script bash portable : compile + header réel + mining illimité (compatible Replit et Ubuntu)
 2026-04-16 - analysechatgpt91.48.md + C48 — Rapport cycle C48 : Doppler fix + portabilité chemins + fish compat + agent_ubuntu.sh C48
+# RÉSULTATS UBUNTU C48 — RUN TEST 3s (4 threads AVX2 natif)
+2026-04-16 - UBUNTU_HASHRATE_C48 + C48 — 1.64 MH/s (4 threads, 3s) — 3.8× Replit (0.43 MH/s @ 2 threads)
+2026-04-16 - UBUNTU_BEST_LZ_C48 + C48 — 24 bits leading zeros (vs 20 sur Replit)
+2026-04-16 - UBUNTU_TOTAL_HASHES_C48 + C48 — 4 931 584 hashes en 3.01s
+2026-04-16 - UBUNTU_BINARY_SHA256_C48 + C48 — 4bf73e49bf0187b6... (124K, AVX2 natif Ubuntu)
+2026-04-16 - UBUNTU_CPUS_C48 + C48 — 8 CPUs physiques (nproc=8)
+2026-04-16 - LV_STUBS_FIX_C48 + C48 — src/debug/memory_tracker.c : stubs lv_tracked_calloc/malloc/free/lv_init/lv_destroy/lv_module_*/lv_get_timestamp_ns ajoutés (fix erreur linker Ubuntu)
+2026-04-16 - COMPILE_FIX_CAUSE_C48 + C48 — btc_block_validator.c inclut lumvorax_integration.h avec LUMVORAX_ENABLED=1 → macros LV_CALLOC → lv_tracked_calloc → non implémenté dans LUM_SRC (LUM_INTG_SRC absent de la règle Makefile)

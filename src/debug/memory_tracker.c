@@ -513,3 +513,61 @@ int memory_tracker_reset_freed(void) {
         freed_count, active_count);
     return (int)active_count;
 }
+/* ======================================================
+ * lv_* — Implémentations LumVorax Integration Bridge
+ * Requis par lumvorax_integration.h (flag -DLUMVORAX_ENABLED=1)
+ * Compatibilité Replit + Ubuntu — C48 2026-04-16
+ * ====================================================== */
+#include <time.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+bool lv_init(const char* log_dir) {
+    (void)log_dir;
+    return true;
+}
+
+void lv_destroy(void) {}
+
+void lv_module_start(const char* file, int line, const char* func,
+                     const char* module, const char* label) {
+    (void)file; (void)line; (void)func; (void)module; (void)label;
+}
+
+void lv_module_end(const char* file, int line, const char* func,
+                   const char* module, const char* label, bool success) {
+    (void)file; (void)line; (void)func; (void)module; (void)label; (void)success;
+}
+
+void lv_module_metric(const char* file, int line, const char* func,
+                      const char* module, const char* metric, double value) {
+    (void)file; (void)line; (void)func; (void)module; (void)metric; (void)value;
+}
+
+void lv_module_operation(const char* file, int line, const char* func,
+                         const char* module, const char* op, const char* data) {
+    (void)file; (void)line; (void)func; (void)module; (void)op; (void)data;
+}
+
+void* lv_tracked_calloc(size_t nmemb, size_t size, const char* file, int line, const char* func) {
+    (void)file; (void)line; (void)func;
+    return calloc(nmemb, size);
+}
+
+void* lv_tracked_malloc(size_t size, const char* file, int line, const char* func) {
+    (void)file; (void)line; (void)func;
+    return malloc(size);
+}
+
+void lv_tracked_free(void* ptr, const char* file, int line, const char* func) {
+    (void)file; (void)line; (void)func;
+    free(ptr);
+}
+
+void lv_report_leaks(void) {}
+
+uint64_t lv_get_timestamp_ns(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+}

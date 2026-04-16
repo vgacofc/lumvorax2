@@ -42,6 +42,12 @@ echo "[C48] ============================================"
 
 # ─── Étape 1 : Compilation propre ─────────────────────────
 echo "[C48] Étape 1/3 — Compilation binaire BTC..."
+# Sync depuis GitHub si on est dans un dépôt git
+if [ -d "$REPO_ROOT/.git" ]; then
+    echo "[C48] Sync git (git pull origin main)..."
+    cd "$REPO_ROOT" && git pull origin main --quiet 2>&1 | tail -3 || echo "[WARN] git pull échoué — compilation avec état local"
+fi
+
 cd "$BTC_DIR"
 make clean 2>&1 | tail -3
 make all 2>&1 | tail -5
