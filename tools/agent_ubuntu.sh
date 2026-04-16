@@ -12,7 +12,7 @@
 
 # ─── Valeurs par défaut (remplacées par Doppler ou env) ───
 AGENT_TOKEN="${AGENT_TOKEN:-0ce121419a08e95af480ce37dad5c17f}"
-REPLIT_URL="${REPLIT_URL:-https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev}"
+REPLIT_URL="${REPLIT_URL:-https://de10cf97-9bc3-4cd9-9cb9-e3269b99076a-00-3b0h1avyi2m16.picard.replit.dev}"
 POLL_INTERVAL=5
 LOG_FILE="$HOME/lumvorax_agent.log"
 
