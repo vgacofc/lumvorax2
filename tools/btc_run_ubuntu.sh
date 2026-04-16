@@ -26,12 +26,16 @@ fi
 
 BTC_DIR="$REPO_ROOT/src/advanced_calculations/bitcoin_quantum_mining"
 SCRIPTS_DIR="$BTC_DIR/scripts"
-LOG_FILE="$HOME/btc_ubuntu.log"
 NPROC="${BTC_THREADS:-$(nproc)}"
 BTC_DURATION_S="${BTC_DURATION_S:-0}"
 BTC_MODE="${BTC_MODE:-UBUNTU_UNLIMITED}"
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 RUN_ID="btc_${STAMP}_c48_${ENV_NAME}"
+# C50-FIX-P2 : Log horodaté — prompt.txt §17.1 INTERDICTION écrasement.
+# Chaque run crée son propre fichier btc_ubuntu_STAMP.log.
+# ~/btc_ubuntu.log est un lien symbolique vers le fichier courant (rétrocompatibilité).
+LOG_FILE="$HOME/btc_ubuntu_${STAMP}.log"
+ln -sf "$LOG_FILE" "$HOME/btc_ubuntu.log"
 
 echo "[C48] ============================================"
 echo "[C48] LumVorax BTC Mining Runner"

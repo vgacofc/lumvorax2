@@ -552,8 +552,22 @@ static void* btc_mining_thread(void* arg) {
         if (cfg->duration_ns > 0 && (ts_now - eng->ts_start_ns) >= cfg->duration_ns)
             break;
 
-        /* Batch de hashes */
-        int batch = (int)(cfg->batch_size * eng->nx48->batch_size_scale);
+        /* C50-FIX-P1 : Copie atomique des scalaires NX48 sous global_mutex.
+         * BUG ROOT CAUSE : eng->nx48->batch_size_scale et exploration_bias sont
+         * écrits par thread 0 via nx48_btc_update() (toutes les 2s) sans aucune
+         * synchronisation vers les 7 autres threads mining → data race C11 →
+         * undefined behavior → SIGSEGV reproductible après ~700s (619-626M hashes).
+         * CORRECTION : lecture sous global_mutex une fois par itération while
+         * (coût : ~50ns, négligeable vs ~1100ns par batch de 1024 hashes).
+         * Ref : analysechatgpt91.50.md §5 BUG-P1-SIGSEGV — 2026-04-16 */
+        int    batch;
+        double exploration;
+        {
+            pthread_mutex_lock(&eng->global_mutex);
+            batch       = (int)(cfg->batch_size * eng->nx48->batch_size_scale);
+            exploration = eng->nx48->exploration_bias;
+            pthread_mutex_unlock(&eng->global_mutex);
+        }
         if (batch < 1) batch = 1;
         if (batch > 4096) batch = 4096;
 
@@ -593,7 +607,7 @@ static void* btc_mining_thread(void* arg) {
             #define LEBESGUE_PROB     0.15   /* 15% des calculs en scan Lebesgue */
 
             uint32_t nonce;
-            double exploration = eng->nx48->exploration_bias;
+            /* exploration : variable locale copiée sous mutex en début de batch (C50-FIX-P1) */
             double u = (double)(rng_next() & 0xFFFFFFFFu) / 4294967296.0;
 
             pthread_mutex_lock(&rep->mutex);
@@ -842,8 +856,10 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
 
     /* C42-SIGNAL : Enregistrement handlers SIGTERM/SIGINT pour sauvegarde CSV */
     btc_global_nx48 = nx48;
-    if (cfg->nx48_csv[0])
+    if (cfg->nx48_csv[0]) {
         strncpy(btc_global_csv, cfg->nx48_csv, sizeof(btc_global_csv)-1);
+        btc_global_csv[sizeof(btc_global_csv)-1] = '\0'; /* C50-FIX-P1b : null-terminator */
+    }
     {
         struct sigaction sa;
         memset(&sa, 0, sizeof(sa));

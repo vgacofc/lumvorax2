@@ -2,6 +2,11 @@
 
 ## Historique des noms normalisés
 
+2026-04-16 20:00 - C50-FIX-P1-SIGSEGV + Correction data race NX48 : eng->nx48->batch_size_scale et exploration_bias lus sous global_mutex — élimine SIGSEGV reproductible après 700s
+2026-04-16 20:00 - C50-FIX-P1b-strncpy + Null-terminator explicite après strncpy pour csv_path et btc_global_csv — élimine warning -Wstringop-truncation
+2026-04-16 20:00 - C50-FIX-P2-log-horodate + Logs btc_ubuntu horodatés btc_ubuntu_STAMP.log + symlink — conformité prompt.txt §17.1 INTERDICTION écrasement
+2026-04-16 20:00 - analysechatgpt91.50.md + Rapport forensique C50 : analyse comparative runs BTC, diagnostic SIGSEGV, PT-MC thermalisation, record 33 bits
+
 2026-01-20 18:45 - rsa_quadratic_sieve + Crible quadratique pour accélération du cassage RSA-512
 2026-01-20 18:45 - rsa_nn_pattern_recognition + Reconnaissance de motifs par réseau de neurones pour RSA-1024
 2026-01-20 17:00 - rsa_karatsuba_mult + Multiplication rapide pour cassage de clés cryptographiques
