@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # ============================================================
-# LumVorax C48 — Agent Ubuntu (client pull) — BASH UNIQUEMENT
+# LumVorax C49 — Agent Ubuntu (client pull) — BASH UNIQUEMENT
 #
 # IMPORTANT : Ce script doit être lancé avec bash, PAS fish.
 # Sous fish, toujours écrire :  bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
 #
-# Usage sans Doppler (recommandé si Doppler token invalide) :
+# Usage direct :
 #   bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
 #
-# Usage avec Doppler (si token valide) :
-#   doppler run -- bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
+# Si REPLIT_URL/AGENT_TOKEN sont absents, le script tente automatiquement :
+#   doppler run --config dev_lumvorax -- bash ...
 #
-# Token Doppler invalide → utiliser sans Doppler, le script
-# a les bonnes valeurs par défaut hardcodées.
+# Usage manuel sans Doppler :
+#   env REPLIT_URL=https://... AGENT_TOKEN=... bash ~/LVX/lumvorax2/tools/agent_ubuntu.sh
 # ============================================================
 
 # ─── Détection automatique de l'environnement ─────────────
@@ -34,14 +34,25 @@ AGENT_TOKEN="${AGENT_TOKEN:-${LUMVORAX_AGENT_TOKEN:-}}"
 REPLIT_URL="${REPLIT_URL:-${LUMVORAX_REPLIT_URL:-}}"
 POLL_INTERVAL="${POLL_INTERVAL:-5}"
 DEFAULT_JOB_TIMEOUT_S="${DEFAULT_JOB_TIMEOUT_S:-0}"
+DOPPLER_CONFIG="${DOPPLER_CONFIG:-dev_lumvorax}"
 LOG_FILE="$HOME/lumvorax_agent.log"
+
+if [ -z "$REPLIT_URL" ] || [ -z "$AGENT_TOKEN" ]; then
+    if [ "${LUMVORAX_AGENT_DOPPLER_REEXEC:-0}" != "1" ] && command -v doppler >/dev/null 2>&1; then
+        echo "[INFO] REPLIT_URL/AGENT_TOKEN absents — tentative Doppler config=$DOPPLER_CONFIG"
+        export LUMVORAX_AGENT_DOPPLER_REEXEC=1
+        export DOPPLER_UPDATE_CHECK=false
+        export DOPPLER_NO_UPDATE_NOTIFIER=true
+        exec doppler run --config "$DOPPLER_CONFIG" -- bash "$0"
+    fi
+fi
 
 # ─── Couleurs ─────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
 
 log() { echo -e "$(date -u '+%Y-%m-%dT%H:%M:%SZ') $1" | tee -a "$LOG_FILE"; }
 
-log "${CYAN}[LumVorax Agent C48] Démarrage${NC}"
+log "${CYAN}[LumVorax Agent C49] Démarrage${NC}"
 log "${CYAN}  Environnement : $ENV_NAME${NC}"
 log "${CYAN}  REPO_ROOT     : $REPO_ROOT${NC}"
 log "${CYAN}  Replit URL    : $REPLIT_URL${NC}"
@@ -54,10 +65,14 @@ fi
 log "${CYAN}  Log           : $LOG_FILE${NC}"
 if [ -z "$REPLIT_URL" ]; then
     log "${RED}[ERREUR] REPLIT_URL absent. Synchroniser Doppler depuis Replit ou lancer avec env REPLIT_URL=...${NC}"
+    log "${YELLOW}  Replit : bash tools/update_doppler_agent_env.sh${NC}"
+    log "${YELLOW}  Ubuntu : doppler run --config $DOPPLER_CONFIG -- bash $0${NC}"
     exit 1
 fi
 if [ -z "$AGENT_TOKEN" ]; then
     log "${RED}[ERREUR] AGENT_TOKEN absent. Synchroniser Doppler depuis Replit ou lancer avec env AGENT_TOKEN=...${NC}"
+    log "${YELLOW}  Replit : bash tools/update_doppler_agent_env.sh${NC}"
+    log "${YELLOW}  Ubuntu : doppler run --config $DOPPLER_CONFIG -- bash $0${NC}"
     exit 1
 fi
 log "${CYAN}  Token (8ch)   : ${AGENT_TOKEN:0:8}...${NC}"
@@ -75,7 +90,7 @@ else
 fi
 
 # ─── Boucle agent principale ──────────────────────────────
-log "${GREEN}[AGENT] Boucle poll démarrée — C48 (CTRL+C pour arrêter)${NC}"
+log "${GREEN}[AGENT] Boucle poll démarrée — C49 (CTRL+C pour arrêter)${NC}"
 
 while true; do
     # Poll : écrire réponse brute dans fichier temp
@@ -160,7 +175,7 @@ env     = open('/tmp/lv_env.txt').read().strip()
 print(json.dumps({
     'job_id': job_id, 'label': label, 'cmd': cmd,
     'stdout': stdout, 'returncode': rc, 'duration_s': dur,
-    'host': 'lvx-Vostro-5481', 'env': env, 'cycle': 'C48',
+    'host': 'lvx-Vostro-5481', 'env': env, 'cycle': 'C49',
 }))
 PYEOF_RESULT
 )

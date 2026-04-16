@@ -1,0 +1,412 @@
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> doppler whoami
+Unable to fetch actor
+Doppler Error: Invalid Auth token
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [1]> cd
+lvx@lvx-Vostro-5481 ~> cd
+lvx@lvx-Vostro-5481 ~> doppler whoami
+Unable to fetch actor
+Doppler Error: Invalid Auth token
+lvx@lvx-Vostro-5481 ~ [1]> doppler login
+? Open the authorization page in your browser? Yes
+Complete authorization at https://dashboard.doppler.com/workplace/auth/cli
+Your auth code is:
+spring_utah_goat_jujube_ellipse
+
+Waiting...
+
+Welcome, vgac
+lvx@lvx-Vostro-5481 ~> doppler whoami
+Unable to fetch actor
+Doppler Error: Invalid Auth token
+lvx@lvx-Vostro-5481 ~ [1]> echo $DOPPLER_TOKEN
+
+lvx@lvx-Vostro-5481 ~> ls -la ~/.doppler
+total 16
+drwx------  3 lvx lvx 4096 Apr 16 20:25 ./
+drwxr-x--- 45 lvx lvx 4096 Apr 16 20:19 ../
+-rw-------  1 lvx lvx  340 Apr 16 20:25 .doppler.yaml
+drwx------  2 lvx lvx 4096 Apr 16 17:18 fallback/
+lvx@lvx-Vostro-5481 ~> doppler logout
+? Revoke auth token scoped to /? Yes
+Auth token has been revoked
+lvx@lvx-Vostro-5481 ~> rm -rf ~/.doppler
+lvx@lvx-Vostro-5481 ~> ls -la ~/.doppler
+ls: cannot access '/home/lvx/.doppler': No such file or directory
+lvx@lvx-Vostro-5481 ~ [2]> unset DOPPLER_TOKEN
+                           env | grep DOPPLER
+unset: command not found
+lvx@lvx-Vostro-5481 ~ [0|1]> doppler login
+? Open the authorization page in your browser? Yes
+Complete authorization at https://dashboard.doppler.com/workplace/auth/cli
+Your auth code is:
+deca_arizona_boise_delaware_hymenaios
+
+Waiting...
+
+Welcome, vgac
+lvx@lvx-Vostro-5481 ~> doppler whoami
+┌─────────────────┬──────┬──────────────────────────────────┬───────────────┬──────────────────────────────────────┬──────────────────────────┬──────────────┐
+│ NAME            │ TYPE │ WORKPLACE                        │ TOKEN PREVIEW │ SLUG                                 │ CREATED AT               │ LAST SEEN AT │
+├─────────────────┼──────┼──────────────────────────────────┼───────────────┼──────────────────────────────────────┼──────────────────────────┼──────────────┤
+│ lvx-Vostro-5481 │ cli  │ lvxsecret (b6deb943584e68011892) │ dp.ct…moWkjV  │ 17d10eec-2ec8-4393-a452-f3f571ab7cca │ 2026-04-16T18:28:30.037Z │              │
+└─────────────────┴──────┴──────────────────────────────────┴───────────────┴──────────────────────────────────────┴──────────────────────────┴──────────────┘
+lvx@lvx-Vostro-5481 ~> doppler run -- env | grep REPLIT
+Unable to fetch secrets from the Doppler API
+Doppler Error: You must specify a config
+Reading secrets from fallback file
+Doppler Error: The fallback file does not exist
+lvx@lvx-Vostro-5481 ~ [1|1]> doppler run --config dev -- env | grep REPLIT
+lvx@lvx-Vostro-5481 ~ [0|1]> doppler run --config dev -- bash agent_ubuntu.sh
+2026-04-16T20:31:12Z [LumVorax Agent C47] Démarrage — Ubuntu lvx
+2026-04-16T20:31:12Z   Replit URL : https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev
+2026-04-16T20:31:12Z   Poll interval : 5s
+2026-04-16T20:31:12Z   Log : /home/lvx/lumvorax_agent.log
+2026-04-16T20:31:12Z   Token (4 chars) : 0ce1...
+2026-04-16T20:31:12Z [ERREUR] Impossible de joindre https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev
+2026-04-16T20:31:12Z   Réponse: <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Run this app to see the results here.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #1c2333;
+      font-family: "IBM Plex Sans", "sans";
+      color: #f5f9fc;
+    }
+
+    .title-box {
+      font-size: 12px;
+      inline-size: max-content;
+    }
+
+    .err-box {
+      padding: 1em;
+      max-width: 30em;
+      width: 100vw;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .message {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    .ascii {
+      font-size: 6px;
+      text-align: center;
+      opacity: .8;
+    }
+
+    .console {
+      background-color: #0e1628;
+      color: #fff;
+      font-family: "IBM Plex Sans", "sans";
+      padding: 1em;
+      margin: 1em;
+    }
+
+    .footer {
+      margin: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .link-icon {
+      margin-right: 20px;
+      margin-top: 4px;
+    }
+
+    a {
+      color: #c2c8cc;
+    }
+  </style>
+
+  <script>
+    var reload_timeout = setTimeout(function () {
+      window.location.reload();
+    }, 60000);
+  </script>
+</head>
+
+<body>
+  <div class="err-box">
+    <div class="message">
+      <pre class="ascii">
+
+                                  -%%%%%%%%%%%##**++==---::....                                     
+                                  *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%##*+=--::...              
+                                  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#*######******##*****+           
+                                 .#@%**+++**##%%@@@@@@@@@@@@@@@@@@%#*#*******************:          
+                                 .#@#*+.-*######%%%%#**+++++=+#@@%%#*#####***************+          
+                                 .#@#*=:=***####%%%%%%%%%%%%%#%@@%##*####*****************:         
+                                 .%@#*--+****######%%%%%%%%%%%@@@%##*#####***************+:         
+                                 :%@##-=+****########%%%%%%%%%@@@%##*####****************+.         
+                                 :%@#*-===+++**########%%%%%%@@@@%#**#####**************+*.         
+                                 :@@#*-====++++**###########%%@@@%#*######**************+*          
+                                 -@@#*--====+++++++*****#####%@@@%#*#######*************++          
+                                 -@@#*--======++++++++++*****#@@%%#*#####***************++          
+                                 -@%#*--========+++++++++++++#@@%%#*######**************++          
+                                 =@%#*--=================+===#@@%%#*##*****************++=          
+                                 =@%#*---====================#@@%#**#####*#************++=          
+                                 =@%#*----===================%@@%#*########************++-          
+                                 +@%%@#*+====================@@@%#*######*************+++-          
+                                 +@@@@@@@@@%%*==============-@@@%#*###*#**************+++:          
+                                 +@@@@@@@@@@@@@@@@@@@#+======@@@%#**##****************+++:          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%***#****************++++.          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%********************++++.          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%*******************+++++           
+                                 *@@@@@@@@@@@@@##@@@@@@@@@@@@@@%#******************+++++=           
+                                 #@%%@@@@@@@@@@@@@%#-:=*#%%@@@@%#*****************++++++=           
+                                .#@@@@@@@@@@@@@@@@@@@@@%=::*@@@%#*****************++++++=           
+                                 +##%%@@@@@@@@@@@@@@@@@@@@@@@@@%*****************++++++=-           
+                    .*%#*#%##:     .:+####%%%@@@@@@@@@@@@@@@@@@%*****************+++=+==-           
+                .:*@%##+**++%%#%%*-:.-++===**##%%%@@@@@@@@@@@@@%***************+++=+=+==:           
+              -*%%%##%*#+*****+#**##%%%#*=======++*##%%%%@@@@@%#************++*++++++-.             
+           -%@@#%#**+#+##+**=#*+#*+#+##+#%@@#+=========+####%%##*********+++++++++:.                
+       .=%@@@@##*+*#+##*+#+##***+**+**+#*+#**#%%@#++======-==+*=--=****++*+**+=:                 .:.
+     .*@@@@@@@%*##*###**+#***#+*#**#*+#***#=*+*#**%%%%#*+=====::++*****+***-:                    :. 
+      +%@@@@@@@@@@########**#+#*+**+#*+*#*+#*+##+**+####%@@@#====++*****:                       ::  
+       -*##%@@@@@@@@@%########*+#+*#*+*#+#*****=#*+*#****%@@@@@@#-=+=:                         :-   
+         .:=*#%%@@@@@@@@@@%#########+*+##*+**+###******%@@@@@@%#*:......                      ::    
+              .*##%%@@@@@@@@@@%###*+####+*%%####****#@@@@@@@##**=--=-==++++.               .-=.     
+                 .-+#%%@@@@@@@@@@@%###*+##*=+##***%@@@@@@%#**+-.:..   ..:-==:         .:--:.        
+                     .-*#%%@@@@@@@@@@@%##**%%%%%@@@@@@@%#**+: .:=#**==-+---:.:----::::.             
+                         :+##%%@@@@@@@@@@@@@@@@@@@@@@##**+-. :#@#####***+--=.                       
+                            .-+#%%%@@@@@@@@@@@@@@@%#**+-. .+@@@@@@@@%%%@@@%-                        
+                                .:*##%%@@@@@@@@@%#**+: .=%@@@@@@@@@@@@@@##*=                        
+                                    .-*##%%@@@#**+=. .*@@@@@@@@@@@@@@%#*****.                       
+                                        :=*##**+-.   =@@@@@@@@@@@@@%#****+-.                        
+                                           .::.      +@@@@@@@@@@@#****+-.                           
+                                                      :+#%@@@@@#***+=.                              
+
+        </pre>
+      <div class="title-box">
+        <h1>Run this app to see the results here.</h1>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="link-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M6.66668 8.66666C6.95298 9.04942 7.31825 9.36612 7.73771 9.59529C8.15717 9.82446 8.62102 9.96074 9.09778 9.99489C9.57454 10.029 10.0531 9.96024 10.5009 9.79319C10.9487 9.62613 11.3554 9.36471 11.6933 9.02666L13.6933 7.02666C14.3005 6.39799 14.6365 5.55598 14.6289 4.68199C14.6213 3.808 14.2708 2.97196 13.6527 2.35394C13.0347 1.73591 12.1987 1.38535 11.3247 1.37775C10.4507 1.37016 9.60869 1.70614 8.98001 2.31333L7.83334 3.45333M9.33334 7.33333C9.04704 6.95058 8.68177 6.63388 8.26231 6.4047C7.84285 6.17553 7.37901 6.03925 6.90224 6.00511C6.42548 5.97096 5.94695 6.03975 5.49911 6.20681C5.05128 6.37387 4.6446 6.63528 4.30668 6.97333L2.30668 8.97333C1.69948 9.602 1.3635 10.444 1.3711 11.318C1.37869 12.192 1.72926 13.028 2.34728 13.6461C2.96531 14.2641 3.80135 14.6147 4.67534 14.6222C5.54933 14.6298 6.39134 14.2939 7.02001 13.6867L8.16001 12.5467"
+            stroke="#C2C8CC" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="repl-links">
+        <a href="https://replit.com">Go to Replit</a>
+      </div>
+      <div></div>
+    </div>
+  </div>
+</body>
+
+</html>
+2026-04-16T20:31:12Z   Vérifier que le workflow Replit 'Start application' tourne
+2026-04-16T20:31:12Z   Si l'URL Replit a changé : doppler secrets set REPLIT_URL=<nouvelle_url>
+lvx@lvx-Vostro-5481 ~ [1]> doppler whoami
+┌─────────────────┬──────┬──────────────────────────────────┬───────────────┬──────────────────────────────────────┬──────────────────────────┬──────────────────────────┐
+│ NAME            │ TYPE │ WORKPLACE                        │ TOKEN PREVIEW │ SLUG                                 │ CREATED AT               │ LAST SEEN AT             │
+├─────────────────┼──────┼──────────────────────────────────┼───────────────┼──────────────────────────────────────┼──────────────────────────┼──────────────────────────┤
+│ lvx-Vostro-5481 │ cli  │ lvxsecret (b6deb943584e68011892) │ dp.ct…moWkjV  │ 17d10eec-2ec8-4393-a452-f3f571ab7cca │ 2026-04-16T18:28:30.037Z │ 2026-04-16T18:31:11.322Z │
+└─────────────────┴──────┴──────────────────────────────────┴───────────────┴──────────────────────────────────────┴──────────────────────────┴──────────────────────────┘
+lvx@lvx-Vostro-5481 ~> doppler whoami
+┌─────────────────┬──────┬──────────────────────────────────┬───────────────┬──────────────────────────────────────┬──────────────────────────┬──────────────────────────┐
+│ NAME            │ TYPE │ WORKPLACE                        │ TOKEN PREVIEW │ SLUG                                 │ CREATED AT               │ LAST SEEN AT             │
+├─────────────────┼──────┼──────────────────────────────────┼───────────────┼──────────────────────────────────────┼──────────────────────────┼──────────────────────────┤
+│ lvx-Vostro-5481 │ cli  │ lvxsecret (b6deb943584e68011892) │ dp.ct…moWkjV  │ 17d10eec-2ec8-4393-a452-f3f571ab7cca │ 2026-04-16T18:28:30.037Z │ 2026-04-16T18:33:10.156Z │
+└─────────────────┴──────┴──────────────────────────────────┴───────────────┴──────────────────────────────────────┴──────────────────────────┴──────────────────────────┘
+lvx@lvx-Vostro-5481 ~> doppler run --config dev -- bash agent_ubuntu.sh
+2026-04-16T20:43:23Z [LumVorax Agent C47] Démarrage — Ubuntu lvx
+2026-04-16T20:43:23Z   Replit URL : https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev
+2026-04-16T20:43:23Z   Poll interval : 5s
+2026-04-16T20:43:23Z   Log : /home/lvx/lumvorax_agent.log
+2026-04-16T20:43:23Z   Token (4 chars) : 0ce1...
+2026-04-16T20:43:23Z [ERREUR] Impossible de joindre https://e40e29e0-9d6e-4d1d-83d7-75fba79991fc-00-2xfnracaqcp0l.picard.replit.dev
+2026-04-16T20:43:23Z   Réponse: <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Run this app to see the results here.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #1c2333;
+      font-family: "IBM Plex Sans", "sans";
+      color: #f5f9fc;
+    }
+
+    .title-box {
+      font-size: 12px;
+      inline-size: max-content;
+    }
+
+    .err-box {
+      padding: 1em;
+      max-width: 30em;
+      width: 100vw;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .message {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    .ascii {
+      font-size: 6px;
+      text-align: center;
+      opacity: .8;
+    }
+
+    .console {
+      background-color: #0e1628;
+      color: #fff;
+      font-family: "IBM Plex Sans", "sans";
+      padding: 1em;
+      margin: 1em;
+    }
+
+    .footer {
+      margin: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .link-icon {
+      margin-right: 20px;
+      margin-top: 4px;
+    }
+
+    a {
+      color: #c2c8cc;
+    }
+  </style>
+
+  <script>
+    var reload_timeout = setTimeout(function () {
+      window.location.reload();
+    }, 60000);
+  </script>
+</head>
+
+<body>
+  <div class="err-box">
+    <div class="message">
+      <pre class="ascii">
+
+                                  -%%%%%%%%%%%##**++==---::....                                     
+                                  *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%##*+=--::...              
+                                  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#*######******##*****+           
+                                 .#@%**+++**##%%@@@@@@@@@@@@@@@@@@%#*#*******************:          
+                                 .#@#*+.-*######%%%%#**+++++=+#@@%%#*#####***************+          
+                                 .#@#*=:=***####%%%%%%%%%%%%%#%@@%##*####*****************:         
+                                 .%@#*--+****######%%%%%%%%%%%@@@%##*#####***************+:         
+                                 :%@##-=+****########%%%%%%%%%@@@%##*####****************+.         
+                                 :%@#*-===+++**########%%%%%%@@@@%#**#####**************+*.         
+                                 :@@#*-====++++**###########%%@@@%#*######**************+*          
+                                 -@@#*--====+++++++*****#####%@@@%#*#######*************++          
+                                 -@@#*--======++++++++++*****#@@%%#*#####***************++          
+                                 -@%#*--========+++++++++++++#@@%%#*######**************++          
+                                 =@%#*--=================+===#@@%%#*##*****************++=          
+                                 =@%#*---====================#@@%#**#####*#************++=          
+                                 =@%#*----===================%@@%#*########************++-          
+                                 +@%%@#*+====================@@@%#*######*************+++-          
+                                 +@@@@@@@@@%%*==============-@@@%#*###*#**************+++:          
+                                 +@@@@@@@@@@@@@@@@@@@#+======@@@%#**##****************+++:          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%***#****************++++.          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%********************++++.          
+                                 *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%*******************+++++           
+                                 *@@@@@@@@@@@@@##@@@@@@@@@@@@@@%#******************+++++=           
+                                 #@%%@@@@@@@@@@@@@%#-:=*#%%@@@@%#*****************++++++=           
+                                .#@@@@@@@@@@@@@@@@@@@@@%=::*@@@%#*****************++++++=           
+                                 +##%%@@@@@@@@@@@@@@@@@@@@@@@@@%*****************++++++=-           
+                    .*%#*#%##:     .:+####%%%@@@@@@@@@@@@@@@@@@%*****************+++=+==-           
+                .:*@%##+**++%%#%%*-:.-++===**##%%%@@@@@@@@@@@@@%***************+++=+=+==:           
+              -*%%%##%*#+*****+#**##%%%#*=======++*##%%%%@@@@@%#************++*++++++-.             
+           -%@@#%#**+#+##+**=#*+#*+#+##+#%@@#+=========+####%%##*********+++++++++:.                
+       .=%@@@@##*+*#+##*+#+##***+**+**+#*+#**#%%@#++======-==+*=--=****++*+**+=:                 .:.
+     .*@@@@@@@%*##*###**+#***#+*#**#*+#***#=*+*#**%%%%#*+=====::++*****+***-:                    :. 
+      +%@@@@@@@@@@########**#+#*+**+#*+*#*+#*+##+**+####%@@@#====++*****:                       ::  
+       -*##%@@@@@@@@@%########*+#+*#*+*#+#*****=#*+*#****%@@@@@@#-=+=:                         :-   
+         .:=*#%%@@@@@@@@@@%#########+*+##*+**+###******%@@@@@@%#*:......                      ::    
+              .*##%%@@@@@@@@@@%###*+####+*%%####****#@@@@@@@##**=--=-==++++.               .-=.     
+                 .-+#%%@@@@@@@@@@@%###*+##*=+##***%@@@@@@%#**+-.:..   ..:-==:         .:--:.        
+                     .-*#%%@@@@@@@@@@@%##**%%%%%@@@@@@@%#**+: .:=#**==-+---:.:----::::.             
+                         :+##%%@@@@@@@@@@@@@@@@@@@@@@##**+-. :#@#####***+--=.                       
+                            .-+#%%%@@@@@@@@@@@@@@@%#**+-. .+@@@@@@@@%%%@@@%-                        
+                                .:*##%%@@@@@@@@@%#**+: .=%@@@@@@@@@@@@@@##*=                        
+                                    .-*##%%@@@#**+=. .*@@@@@@@@@@@@@@%#*****.                       
+                                        :=*##**+-.   =@@@@@@@@@@@@@%#****+-.                        
+                                           .::.      +@@@@@@@@@@@#****+-.                           
+                                                      :+#%@@@@@#***+=.                              
+
+        </pre>
+      <div class="title-box">
+        <h1>Run this app to see the results here.</h1>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="link-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M6.66668 8.66666C6.95298 9.04942 7.31825 9.36612 7.73771 9.59529C8.15717 9.82446 8.62102 9.96074 9.09778 9.99489C9.57454 10.029 10.0531 9.96024 10.5009 9.79319C10.9487 9.62613 11.3554 9.36471 11.6933 9.02666L13.6933 7.02666C14.3005 6.39799 14.6365 5.55598 14.6289 4.68199C14.6213 3.808 14.2708 2.97196 13.6527 2.35394C13.0347 1.73591 12.1987 1.38535 11.3247 1.37775C10.4507 1.37016 9.60869 1.70614 8.98001 2.31333L7.83334 3.45333M9.33334 7.33333C9.04704 6.95058 8.68177 6.63388 8.26231 6.4047C7.84285 6.17553 7.37901 6.03925 6.90224 6.00511C6.42548 5.97096 5.94695 6.03975 5.49911 6.20681C5.05128 6.37387 4.6446 6.63528 4.30668 6.97333L2.30668 8.97333C1.69948 9.602 1.3635 10.444 1.3711 11.318C1.37869 12.192 1.72926 13.028 2.34728 13.6461C2.96531 14.2641 3.80135 14.6147 4.67534 14.6222C5.54933 14.6298 6.39134 14.2939 7.02001 13.6867L8.16001 12.5467"
+            stroke="#C2C8CC" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="repl-links">
+        <a href="https://replit.com">Go to Replit</a>
+      </div>
+      <div></div>
+    </div>
+  </div>
+</body>
+
+</html>
+2026-04-16T20:43:23Z   Vérifier que le workflow Replit 'Start application' tourne
+2026-04-16T20:43:23Z   Si l'URL Replit a changé : doppler secrets set REPLIT_URL=<nouvelle_url>
+lvx@lvx-Vostro-5481 ~ [1]> cd ~/LVX/lumvorax2
+                           git pull origin main
+                           doppler run -- bash tools/agent_ubuntu.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+Unable to fetch secrets from the Doppler API
+Doppler Error: You must specify a config
+Reading secrets from fallback file
+2026-04-16T18:43:51Z [LumVorax Agent C48] Démarrage
+2026-04-16T18:43:51Z   Environnement : ubuntu_lvx
+2026-04-16T18:43:51Z   REPO_ROOT     : /home/lvx/LVX/lumvorax2
+2026-04-16T18:43:51Z   Replit URL    : 
+2026-04-16T18:43:51Z   Poll interval : 5s
+2026-04-16T18:43:51Z   Job timeout   : désactivé par défaut
+2026-04-16T18:43:51Z   Log           : /home/lvx/lumvorax_agent.log
+2026-04-16T18:43:51Z [ERREUR] REPLIT_URL absent. Synchroniser Doppler depuis Replit ou lancer avec env REPLIT_URL=...
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [1]> 

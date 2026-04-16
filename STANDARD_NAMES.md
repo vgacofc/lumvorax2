@@ -752,3 +752,5 @@
 2026-04-16 - tools/btc_run_ubuntu.sh + C49 — Passe explicitement --duration-s $BTC_DURATION_S au binaire pour éviter le défaut interne 60s
 2026-04-16 - tools/agent_ubuntu.sh + C49 — Désactive timeout par défaut et accepte timeout_s=0/none/unlimited/inf par job
 2026-04-16 - analysechatgpt91.49.md + C49 — Rapport final correctif C49 : Doppler, URL session, token, durée run Ubuntu
+2026-04-16 - AGENT_DOPPLER_AUTO_REEXEC_C49 + C49 — tools/agent_ubuntu.sh auto-relance via doppler run --config dev_lumvorax si REPLIT_URL/AGENT_TOKEN absents
+2026-04-16 - DOPPLER_SYNC_DEV_CONFIG_C49 + C49 — tools/update_doppler_agent_env.sh écrit les secrets dans la config Doppler par défaut et dans --config dev_lumvorax si disponible

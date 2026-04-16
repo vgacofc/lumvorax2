@@ -1,0 +1,97 @@
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2
+                                          git pull origin main
+                                          doppler run -- bash tools/btc_run_ubuntu.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+Unable to fetch secrets from the Doppler API
+Doppler Error: You must specify a config
+Reading secrets from fallback file
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260416T184440Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:240:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  240 |     strncpy(nx48_cfg.csv_path, cfg.nx48_csv, sizeof(nx48_cfg.csv_path)-1);
+      |     ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 124K Apr 16 20:44 btc_mining_runner
+[C48] Binaire : 124K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00e00320508a7937b440... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260416T184440Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17020684 version=537124864
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260416T184440Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17020684
+[BTC_QM] target    = 0000000000000000000000000000000000000000020684000000000000000000
+[BTC_QM] NX48_BTC initialisé — update_count=1841 best_leading=28
+[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260416T184440Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mp6ivsoAoghcQY8fYfVekmjSxEgQHMUUFK        ║
+║ Adresse Bech32  : tb1qtc3luz8kq4y67r49eew5d6f82c6ygx7h6yfnzq║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 9e237a00...(masquée)                     ║
+║ WIF compressé   : cSt6teSC45rAnoxz4N8VfnKb9ywC4AYYL8svwVxgUZjRvWtgRQKV║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 5e23fe08f60549af0ea5ce5d46e9275634441bd7  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260416T184440Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:689
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1589MB
+[BTC_QM] elapsed=10.0s hashes=10399744 hashrate=1.04MH/s best_leading=20 best_nonce=2376787105 nx48_delta=46.05
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:689
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=28.000000 src=src/btc_mining_engine.c:689
+[BTC_QM] elapsed=20.0s hashes=19417088 hashrate=0.97MH/s best_leading=28 best_nonce=4202309636 nx48_delta=50.00
+[BTC_QM] elapsed=30.0s hashes=28141568 hashrate=0.94MH/s best_leading=28 best_nonce=4202309636 nx48_delta=50.00
+[BTC_QM] elapsed=40.0s hashes=37042176 hashrate=0.93MH/s best_leading=28 best_nonce=4202309636 nx48_delta=49.98
+[BTC_QM] elapsed=50.0s hashes=45830144 hashrate=0.92MH/s best_leading=28 best_nonce=4202309636 nx48_delta=50.00
+[BTC_QM] elapsed=60.1s hashes=54212608 hashrate=0.90MH/s best_leading=28 best_nonce=4202309636 nx48_delta=48.89
+[BTC_QM] elapsed=70.1s hashes=62717952 hashrate=0.90MH/s best_leading=28 best_nonce=4202309636 nx48_delta=50.00
+
+

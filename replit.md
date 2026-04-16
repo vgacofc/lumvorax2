@@ -49,7 +49,12 @@ Depuis Ubuntu, agent via Doppler :
 ```bash
 cd ~/LVX/lumvorax2
 git pull origin main
-doppler run -- bash tools/agent_ubuntu.sh
+bash tools/agent_ubuntu.sh
+```
+
+Si Doppler ne relance pas automatiquement, utiliser explicitement :
+```bash
+doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
 ```
 
 Depuis Ubuntu, mining illimité :
@@ -65,7 +70,7 @@ env BTC_DURATION_S=3600 doppler run -- bash tools/btc_run_ubuntu.sh
 
 Désactiver explicitement le timeout agent :
 ```bash
-env DEFAULT_JOB_TIMEOUT_S=0 doppler run -- bash tools/agent_ubuntu.sh
+env DEFAULT_JOB_TIMEOUT_S=0 doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
 ```
 
 ## Environment

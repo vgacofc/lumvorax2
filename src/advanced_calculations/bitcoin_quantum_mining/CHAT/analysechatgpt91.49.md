@@ -23,6 +23,7 @@ C49 corrige les deux :
   - `_agent_token()` priorise maintenant `AGENT_TOKEN`, puis `LUMVORAX_AGENT_TOKEN`, puis dérivation depuis `SESSION_SECRET`.
 - `tools/agent_ubuntu.sh`
   - Lecture dynamique de `REPLIT_URL`, `AGENT_TOKEN`, `LUMVORAX_REPLIT_URL`, `LUMVORAX_AGENT_TOKEN`.
+  - Si `REPLIT_URL` ou `AGENT_TOKEN` sont absents et que Doppler est disponible, auto-relance via `doppler run --config dev_lumvorax -- bash ...`.
   - Aucun fallback URL/token codé en dur : si ces variables sont absentes, l’agent s’arrête avec une erreur claire.
   - Timeout par défaut désactivé : `DEFAULT_JOB_TIMEOUT_S=0`.
   - Exécution sans `timeout` quand timeout vaut `0`, `none`, `unlimited`, `inf`.
@@ -70,7 +71,13 @@ Depuis Ubuntu :
 ```bash
 cd ~/LVX/lumvorax2
 git pull origin main
-doppler run -- bash tools/agent_ubuntu.sh
+bash tools/agent_ubuntu.sh
+```
+
+Si Doppler ne relance pas automatiquement :
+
+```bash
+doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
 ```
 
 Pour lancer le mining BTC directement en illimité :
@@ -185,3 +192,17 @@ alors Ubuntu n'a pas encore le patch C49 ou le script lancé n'est pas le bon.
 ## Limite importante
 
 Si le token Doppler Ubuntu est expiré ou invalide, il faut d'abord régénérer/configurer le token Doppler sur Ubuntu. Le correctif C49 synchronise les secrets côté projet Doppler, mais ne peut pas réparer un client Ubuntu qui n'est plus authentifié auprès de Doppler.
+
+## Diagnostic 2026-04-16 après retour Ubuntu
+
+Le mining direct est validé côté Ubuntu : le log affiche maintenant `Durée mining : illimitée` puis `[BTC_QM] duration = INFINI`, avec un run observé au-delà de 70 secondes.
+
+Le problème restant venait de l'agent lancé avec `bash tools/agent_ubuntu.sh` sans environnement Doppler chargé : `REPLIT_URL` et `AGENT_TOKEN` étaient vides. Le script a donc été renforcé pour tenter automatiquement Doppler avec `--config dev` avant d'afficher l'erreur finale.
+
+Correction finale : la config Doppler correcte du projet est `dev_lumvorax`, pas `dev`. La synchronisation Replit écrit maintenant dans la config par défaut et dans `dev_lumvorax`. L'agent Ubuntu auto-relance donc avec :
+
+```bash
+doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
+```
+
+Validation Replit : les secrets `REPLIT_URL`, `AGENT_TOKEN`, `DEFAULT_JOB_TIMEOUT_S=0`, `BTC_DURATION_S=0` sont visibles via `doppler run --config dev_lumvorax`.

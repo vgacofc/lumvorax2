@@ -3,6 +3,9 @@ set -euo pipefail
 
 echo "[INFO] Doppler sync start"
 
+export DOPPLER_UPDATE_CHECK=false
+export DOPPLER_NO_UPDATE_NOTIFIER=true
+
 # ------------------------------------------------------------
 # 1. Detect Replit
 # ------------------------------------------------------------
@@ -24,6 +27,7 @@ fi
 
 DOPPLER_BIN=$(command -v doppler)
 echo "[INFO] Using Doppler: $DOPPLER_BIN"
+DOPPLER_CONFIG="${DOPPLER_CONFIG:-dev_lumvorax}"
 
 # ------------------------------------------------------------
 # 3. Get token
@@ -47,7 +51,12 @@ PY
 # ------------------------------------------------------------
 # 4. Env values
 # ------------------------------------------------------------
-URL="https://${REPLIT_DEV_DOMAIN:-localhost}"
+if [ -z "${REPLIT_DEV_DOMAIN:-}" ]; then
+    echo "[ERROR] REPLIT_DEV_DOMAIN absent. Lance ce script depuis le shell Replit pendant que le workflow tourne."
+    exit 1
+fi
+
+URL="https://${REPLIT_DEV_DOMAIN}"
 DEFAULT_JOB_TIMEOUT_S="${DEFAULT_JOB_TIMEOUT_S:-0}"
 BTC_DURATION_S="${BTC_DURATION_S:-0}"
 
@@ -63,12 +72,21 @@ fi
 # ------------------------------------------------------------
 echo "[INFO] Applying Doppler secrets..."
 
-$DOPPLER_BIN secrets set \
-    REPLIT_URL="$URL" \
-    AGENT_TOKEN="$TOKEN" \
-    DEFAULT_JOB_TIMEOUT_S="$DEFAULT_JOB_TIMEOUT_S" \
-    BTC_DURATION_S="$BTC_DURATION_S" \
-    >/dev/null
+SET_ARGS=(
+    REPLIT_URL="$URL"
+    AGENT_TOKEN="$TOKEN"
+    DEFAULT_JOB_TIMEOUT_S="$DEFAULT_JOB_TIMEOUT_S"
+    BTC_DURATION_S="$BTC_DURATION_S"
+)
+
+"$DOPPLER_BIN" secrets set "${SET_ARGS[@]}" >/dev/null
+
+if "$DOPPLER_BIN" configs get "$DOPPLER_CONFIG" >/dev/null 2>&1; then
+    echo "[INFO] Applying same secrets to Doppler config=$DOPPLER_CONFIG"
+    "$DOPPLER_BIN" secrets set --config "$DOPPLER_CONFIG" "${SET_ARGS[@]}" >/dev/null
+else
+    echo "[WARN] Doppler config '$DOPPLER_CONFIG' not found from this environment; default config was updated."
+fi
 
 # ------------------------------------------------------------
 # 7. Output
@@ -80,4 +98,5 @@ echo "AGENT_TOKEN=${TOKEN:0:8}..."
 echo "DEFAULT_JOB_TIMEOUT_S=$DEFAULT_JOB_TIMEOUT_S"
 echo "BTC_DURATION_S=$BTC_DURATION_S"
 echo "DOPPLER_BIN=$DOPPLER_BIN"
+echo "DOPPLER_CONFIG=$DOPPLER_CONFIG"
 echo "----------------------------------------"

@@ -1,0 +1,124 @@
+~/workspace$ bash tools/update_doppler_agent_env.sh
+An update is available.
+CLI v3.75.3
+· * a553ebc9270b28cd0b982f93263d33c34525a509 Update Go version to 1.25
+
+? Install Doppler CLI v3.75.3 Yes
+Updating...
+Error: update failed due to improper permissions
+Please re-run with `sudo` or as an admin
+Doppler Error: exit status 2
+~/workspace$ sudo bash tools/update_doppler_agent_env.sh
+    You don't need sudo in Replit, all files that
+    can be modified already have the correct permissions
+    and you can install new software using Nix.
+
+An update is available.
+CLI v3.75.3
+· * a553ebc9270b28cd0b982f93263d33c34525a509 Update Go version to 1.25
+
+? Install Doppler CLI v3.75.3 Yes
+Updating...
+Error: update failed due to improper permissions
+Please re-run with `sudo` or as an admin
+Doppler Error: exit status 2
+~/workspace$ if grep -qi replit /proc/version 2>/dev/null; then
+  echo "[DOPPLER] Running on Replit → skip update"
+  exit 0
+fi
+~/workspace$ nano tools/update_doppler_agent_env.sh
+~/workspace$ command -v doppler
+/nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+~/workspace$ nano tools/update_doppler_agent_env.sh
+~/workspace$ command -v doppler
+/nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+~/workspace$ sudo bash tools/update_doppler_agent_env.sh
+[INFO] Doppler sync start
+[INFO] Replit environment detected (Nix-managed Doppler)
+[INFO] Using Doppler: /nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+[INFO] Fetching agent token...
+[INFO] Skipping any Doppler update (Nix immutable environment)
+[INFO] Applying Doppler secrets...
+----------------------------------------
+[SUCCESS] Doppler sync completed
+REPLIT_URL=https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni0t.worf.replit.dev
+AGENT_TOKEN=9ee5b5c4...
+DEFAULT_JOB_TIMEOUT_S=0
+BTC_DURATION_S=0
+DOPPLER_BIN=/nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+----------------------------------------
+~/workspace$ doppler secrets get REPLIT_URL
+doppler secrets get AGENT_TOKEN
+An update is available.
+CLI v3.75.3
+· * a553ebc9270b28cd0b982f93263d33c34525a509 Update Go version to 1.25
+
+? Install Doppler CLI v3.75.3 No
+┌────────────┬────────────────────────────────────────────────────────────┬──────┐
+│ NAME       │ VALUE                                                      │ NOTE │
+├────────────┼────────────────────────────────────────────────────────────┼──────┤
+│ REPLIT_URL │ https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni │      │
+│            │ 0t.worf.replit.dev                                         │      │
+└────────────┴────────────────────────────────────────────────────────────┴──────┘
+┌─────────────┬──────────────────────────────────┬──────┐
+│ NAME        │ VALUE                            │ NOTE │
+├─────────────┼──────────────────────────────────┼──────┤
+│ AGENT_TOKEN │ 9ee5b5c49fb5960992c4ae69c1bec608 │      │
+└─────────────┴──────────────────────────────────┴──────┘
+~/workspace$ bash tools/update_doppler_agent_env.sh
+[INFO] Doppler sync start
+[INFO] Replit environment detected (Nix-managed Doppler)
+[INFO] Using Doppler: /nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+[INFO] Fetching agent token...
+[INFO] Skipping any Doppler update (Nix immutable environment)
+[INFO] Applying Doppler secrets...
+----------------------------------------
+[SUCCESS] Doppler sync completed
+REPLIT_URL=https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni0t.worf.replit.dev
+AGENT_TOKEN=9ee5b5c4...
+DEFAULT_JOB_TIMEOUT_S=0
+BTC_DURATION_S=0
+DOPPLER_BIN=/nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+----------------------------------------
+~/workspace$ doppler secrets get AGENT_TOKEN
+┌─────────────┬──────────────────────────────────┬──────┐
+│ NAME        │ VALUE                            │ NOTE │
+├─────────────┼──────────────────────────────────┼──────┤
+│ AGENT_TOKEN │ 9ee5b5c49fb5960992c4ae69c1bec608 │      │
+└─────────────┴──────────────────────────────────┴──────┘
+~/workspace$ doppler secrets get REPLIT_URL
+┌────────────┬────────────────────────────────────────────────────────────┬──────┐
+│ NAME       │ VALUE                                                      │ NOTE │
+├────────────┼────────────────────────────────────────────────────────────┼──────┤
+│ REPLIT_URL │ https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni │      │
+│            │ 0t.worf.replit.dev                                         │      │
+└────────────┴────────────────────────────────────────────────────────────┴──────┘
+~/workspace$ bash tools/update_doppler_agent_env.sh
+[INFO] Doppler sync start
+[INFO] Replit environment detected (Nix-managed Doppler)
+[INFO] Using Doppler: /nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+[INFO] Fetching agent token...
+[INFO] Skipping any Doppler update (Nix immutable environment)
+[INFO] Applying Doppler secrets...
+----------------------------------------
+[SUCCESS] Doppler sync completed
+REPLIT_URL=https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni0t.worf.replit.dev
+AGENT_TOKEN=9ee5b5c4...
+DEFAULT_JOB_TIMEOUT_S=0
+BTC_DURATION_S=0
+DOPPLER_BIN=/nix/store/9qz3y431jxv01y6jkvib1qgbs8b7k45k-doppler-3.74.0/bin/doppler
+----------------------------------------
+~/workspace$ doppler secrets get REPLIT_URL
+┌────────────┬────────────────────────────────────────────────────────────┬──────┐
+│ NAME       │ VALUE                                                      │ NOTE │
+├────────────┼────────────────────────────────────────────────────────────┼──────┤
+│ REPLIT_URL │ https://27a39504-b4c2-4915-a364-dc2602b5b12d-00-b19ese52ni │      │
+│            │ 0t.worf.replit.dev                                         │      │
+└────────────┴────────────────────────────────────────────────────────────┴──────┘
+~/workspace$ doppler secrets get AGENT_TOKEN
+┌─────────────┬──────────────────────────────────┬──────┐
+│ NAME        │ VALUE                            │ NOTE │
+├─────────────┼──────────────────────────────────┼──────┤
+│ AGENT_TOKEN │ 9ee5b5c49fb5960992c4ae69c1bec608 │      │
+└─────────────┴──────────────────────────────────┴──────┘
+~/workspace$ 
