@@ -1,7 +1,7 @@
 # LumVorax — Module 18 — QDAYPRIZE Quantum Attack Simulator
 # Makefile — Compilation du simulateur d'attaque quantique
 #
-# STANDARD_NAMES.md v4.3 §M-QDPR18-C55 — Cycle C55 — 2026-04-17
+# STANDARD_NAMES.md v4.3 §M-QDPR18-C56 — Cycle C56 — 2026-04-17
 #
 # Usage :
 #   make              # Compilation optimisée
@@ -13,15 +13,18 @@ CC      = gcc
 BINARY  = qdayprize_runner
 
 # Flags de compilation — identiques au BTC mining (-march=native safe sur i5-8265U)
+# -fPIE requis pour Ubuntu 16.04+ (PIE activé par défaut par le linker)
 CFLAGS  = -std=c11 -O3 -march=native -ffast-math -funroll-loops \
           -Wall -Wextra -Wno-unused-parameter \
-          -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+          -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L \
+          -fPIE
 
 # Flags debug
 DFLAGS  = -std=c11 -O0 -g3 -fsanitize=address,undefined \
           -Wall -Wextra -D_GNU_SOURCE
 
-LDFLAGS = -lm -lpthread
+# -pie dans LDFLAGS pour créer un exécutable PIE sur Ubuntu
+LDFLAGS = -lm -lpthread -pie
 
 SRCS    = main_qdayprize.c qdayprize_engine.c
 OBJS    = $(SRCS:.c=.o)

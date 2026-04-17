@@ -1,0 +1,572 @@
+Voici un arsenal complet de commandes Fish (Ubuntu/Linux) pour faire une inspection forensique précise des processus, RAM, CPU, threads et anomalies — adapté exactement à ton cas (processus caché qui bouffe ~15 GB RAM + contention CPU).
+
+🔎 1. Vue globale système (RAM / CPU immédiat)
+# RAM + swap (lecture rapide)
+free -h
+
+# Stat mémoire détaillée (kernel)
+cat /proc/meminfo | less
+
+# Charge CPU temps réel
+uptimea
+
+# Top interactif (processus triés CPU)
+top
+
+👉 Variante plus lisible :
+
+htop
+🧠 2. Trouver QUI consomme la RAM (CRITIQUE dans ton cas)
+# Top processus par RAM
+ps aux --sort=-%mem | head -20
+
+👉 Version plus précise avec RSS réel :
+
+ps -eo pid,ppid,cmd,%mem,%cpu,rss --sort=-rss | head -20
+
+👉 Conversion RSS → MB lisible :
+
+ps -eo pid,cmd,rss --sort=-rss | awk '{printf "%-8s %-50s %.2f MB\n", $1, $2, $3/1024}' | head -20
+🧬 3. Analyse profonde d’un processus suspect
+
+Remplace PID :
+
+# Infos complètes
+cat /proc/PID/status
+
+# Mémoire détaillée (maps)
+cat /proc/PID/smaps | less
+
+# Résumé mémoire
+pmap -x PID | tail -n 20
+
+# Threads (important pour ton mining)
+ps -T -p PID
+🧵 4. Voir les threads (détecter contention mutex / scaling foireux)
+# Threads + CPU par thread
+top -H -p PID
+
+👉 ou :
+
+ps -eLf | grep PID
+⚠️ 5. Trouver les processus "fantômes" ou oubliés (run BTC anciens)
+# Tous les process liés à ton projet
+ps aux | grep -i lumvorax
+
+# Ou BTC
+ps aux | grep -i btc
+
+# Ou mining
+ps aux | grep -i mine
+
+👉 nettoyage rapide :
+
+kill -9 PID
+🔍 6. Qui consomme 15GB ? (détection automatique)
+ps -eo pid,cmd,rss --sort=-rss | awk '$3 > 1000000 {print $0}'
+
+👉 (1000000 KB ≈ 1GB)
+
+🧱 7. Mémoire kernel / cache (important pour ton cas RAM 1.5GB)
+# Cache Linux
+cat /proc/meminfo | grep -E "Cached|Buffers"
+
+# Drop cache (⚠️ root)
+sudo sync
+sudo sysctl -w vm.drop_caches=3
+🧭 8. Processus par arbre (qui a lancé quoi)
+pstree -p
+
+👉 super utile pour voir :
+
+anciens runs BTC
+processus enfants oubliés
+watchdogs
+🔥 9. Détection contention CPU / saturation
+# Charge par core
+mpstat -P ALL 1
+
+👉 si pas installé :
+
+sudo apt install sysstat
+🧪 10. Vérifier ton problème EXACT (cas C55)
+🔴 Détecter le process qui bouffe ~15GB :
+ps -eo pid,cmd,rss --sort=-rss | head -10
+🔴 Vérifier ton mining :
+ps aux | grep btc
+🔴 Vérifier threads (contention mutex suspecte) :
+top -H -p (pgrep -f btc)
+🧠 11. RAM utilisée par utilisateur (très utile)
+ps -eo user,rss --sort=-rss | awk '{arr[$1]+=$2} END {for (i in arr) print i, arr[i]/1024 " MB"}'
+🧨 12. Kill propre de tout ton environnement BTC
+pkill -f btc
+pkill -f lumvorax
+🧾 13. Log temps réel (observer fuite mémoire)
+watch -n 1 "ps -eo pid,cmd,%mem,%cpu --sort=-%mem | head -10"
+⚙️ 14. GPU (dans ton cas → Intel UHD 620)
+# activité GPU Intel
+sudo apt install intel-gpu-tools
+
+intel_gpu_top
+📊 15. Résumé ultra rapide (1 commande)
+htop
+
+Puis :
+
+F6 → trier par RAM
+F5 → arbre process
+H → threads
+🧩 Lecture directe de TON problème (C55)
+
+Avec ton rapport, le scénario probable est :
+
+❗ ancien process BTC encore actif
+❗ ou process zombie (child non tué)
+❗ ou autre app (browser / docker / VM)
+
+👉 commande clé :
+
+ps -eo pid,cmd,rss --sort=-rss | head -10
+✔️ Conclusion opérationnelle
+
+Les 3 commandes critiques pour toi :
+
+ps aux --sort=-%mem | head -20
+top -H -p (pgrep -f btc)
+pstree -p
+
+Si tu veux, envoie-moi le résultat de :
+
+ps -eo pid,cmd,rss --sort=-rss | head -10
+
+et je te fais une analyse forensique directe (comme ton rapport C55) du processus fautif.
+
+Zswap:                 0 kB
+Zswapped:              0 kB
+Dirty:              1808 kB
+Writeback:             0 kB
+AnonPages:       2556624 kB
+Mapped:           316184 kB
+Shmem:            562052 kB
+KReclaimable:      85552 kB
+Slab:             326304 kB
+SReclaimable:      85552 kB
+SUnreclaim:       240752 kB
+KernelStack:       19572 kB
+PageTables:        46604 kB
+SecPageTables:      4040 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     7048436 kB
+Committed_AS:   12171528 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      150808 kB
+VmallocChunk:          0 kB
+Percpu:            10432 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:    59392 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+Unaccepted:            0 kB
+Balloon:               0 kB
+HugePages_Total:    1024
+HugePages_Free:     1018
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:         2097152 kB
+DirectMap4k:      395512 kB
+DirectMap2M:     5570560 kB
+DirectMap1G:     2097152 kB
+(END)
+
+Analyse directe de ton /proc/meminfo — sans détour.
+
+🧠 Diagnostic RAM (à partir de tes données)
+🔴 Point critique
+CommitLimit:   7.0 GB
+Committed_AS: 12.1 GB
+
+👉 PROBLÈME MAJEUR :
+
+Le système a engagé 12.1 GB de mémoire virtuelle
+Mais ne peut garantir que 7.0 GB
+
+➡️ Overcommit massif (~+73%)
+
+📊 Répartition mémoire réelle
+Type	Valeur	Interprétation
+AnonPages	2.55 GB	mémoire utilisée par processus (heap, malloc)
+Shmem	562 MB	mémoire partagée (souvent Chrome, IPC, tmpfs)
+Slab	326 MB	mémoire kernel (cache objets)
+PageTables	46 MB	tables mémoire (OK)
+KernelStack	19 MB	normal
+⚠️ Lecture clé
+
+👉 Tu n’as PAS 15GB réellement utilisés en RAM physique.
+
+Mais :
+
+2.5 GB → mémoire réelle process
++ engagement virtuel énorme (12GB)
+
+👉 Donc :
+
+🔥 Un processus a réservé énormément de mémoire sans forcément l’utiliser encore
+
+🎯 Hypothèses précises
+1. 🔴 Processus avec malloc massif (cas très probable)
+mining ?
+simulation QDAYPRIZE ?
+buffers SHA / tables ?
+
+➡️ réserve mémoire → augmente Committed_AS
+
+2. 🟠 Chrome / navigateur (très fréquent)
+utilise Shmem élevé (562MB ici)
+crée beaucoup de segments partagés
+3. 🟡 tmpfs / shared memory
+/dev/shm
+IPC
+mmap
+⚠️ Pourquoi ton système ralentit
+
+Tu avais :
+
+RAM dispo ≈ 1.5 GB
+
+Avec ça :
+
+watchdog déclenché ✔️
+throttling CPU ✔️
+baisse hashrate ✔️
+🔍 Ce qui manque (CRUCIAL)
+
+Ton dump ne montre pas QUI consomme
+
+👉 Il faut corréler avec :
+
+ps -eo pid,cmd,rss,vsz --sort=-vsz | head -15
+🧨 Commandes à lancer maintenant
+1. Trouver le coupable (virtuel vs réel)
+ps -eo pid,cmd,rss,vsz --sort=-vsz | head -10
+
+👉 colonnes :
+
+RSS = RAM réelle
+VSZ = mémoire virtuelle (le problème ici)
+2. Détecter abus mémoire virtuelle
+ps -eo pid,cmd,vsz --sort=-vsz | head -10
+3. Vérifier /dev/shm
+df -h /dev/shm
+4. Voir mémoire réellement libre
+free -h
+🧠 Lecture experte (important)
+Ce que ton système dit réellement :
+✔️ RAM physique utilisée → ~3–4 GB (normal)
+❌ RAM engagée → 12 GB (dangereux)
+⚠️ Linux accepte trop (overcommit)
+⚙️ Vérifier overcommit (très important)
+cat /proc/sys/vm/overcommit_memory
+Valeur	Signification
+0	auto (actuel probable)
+1	permissif (dangereux)
+2	strict
+🧨 Correction recommandée
+sudo sysctl -w vm.overcommit_memory=2
+
+➡️ empêche ce problème à l’avenir
+
+📌 Conclusion nette
+
+👉 Ton problème n’est PAS une fuite RAM classique
+
+C’est :
+
+🔴 un processus qui réserve massivement de la mémoire virtuelle (VSZ)
+
+Conséquences :
+
+RAM dispo chute
+watchdog s’active
+CPU throttlé
+mining pénalisé (-36%)
+✔️ Prochaine étape
+
+Envoie-moi juste :
+
+ps -eo pid,cmd,rss,vsz --sort=-vsz | head -10
+
+Je t’identifie exactement le processus fautif + son comportement mémoire (niveau kernel).
+
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10018
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> ps -eo pid,cmd,rss,vsz --sort=-vsz | head -15
+    PID CMD                           RSS    VSZ
+  12620 /snap/firefox/7766/usr/lib/ 530948 12252488
+  10429 /usr/bin/gnome-shell        313204 4842660
+  13618 /snap/firefox/7766/usr/lib/ 539988 3509612
+  11519 gjs /usr/share/gnome-shell/ 66464 3157588
+  11677 /usr/bin/gjs -m /usr/share/ 27428 2876740
+  10649 /usr/bin/gjs -m /usr/share/ 27528 2680100
+  12983 /snap/firefox/7766/usr/lib/ 131972 2644276
+  13254 /snap/firefox/7766/usr/lib/ 103384 2623932
+  15141 /snap/firefox/7766/usr/lib/ 70332 2579980
+  15208 /snap/firefox/7766/usr/lib/ 70840 2579980
+  15215 /snap/firefox/7766/usr/lib/ 70728 2579980
+   6754 /opt/datadog-agent/bin/agen 146292 2444612
+   6752 /opt/datadog-agent/embedded 168464 2423128
+   3960 /snap/snapd/current/usr/lib 41968 2220320
+lvx@lvx-Vostro-5481 ~> ps -eo pid,cmd,rss,vsz --sort=-vsz | head -10
+    PID CMD                           RSS    VSZ
+  12620 /snap/firefox/7766/usr/lib/ 531316 12125352
+  10429 /usr/bin/gnome-shell        313252 4838812
+  13618 /snap/firefox/7766/usr/lib/ 544948 3514732
+  11519 gjs /usr/share/gnome-shell/ 66452 3157588
+  11677 /usr/bin/gjs -m /usr/share/ 27428 2876740
+  10649 /usr/bin/gjs -m /usr/share/ 27528 2680100
+  12983 /snap/firefox/7766/usr/lib/ 131988 2644292
+  13254 /snap/firefox/7766/usr/lib/ 103384 2623932
+  15141 /snap/firefox/7766/usr/lib/ 70332 2579980
+lvx@lvx-Vostro-5481 ~> ps -eo pid,cmd,rss,vsz --sort=-vsz | head -15
+    PID CMD                           RSS    VSZ
+  16849 /opt/google/chrome/chrome - 466236 1463790400
+  16957 /opt/google/chrome/chrome - 158304 1461746744
+  16838 /opt/google/chrome/chrome - 87444 1461691408
+  17006 /opt/google/chrome/chrome - 145768 1459819912
+  17015 /opt/google/chrome/chrome - 155800 1459802052
+  16951 /opt/google/chrome/chrome - 150324 1459762952
+  17099 /opt/google/chrome/chrome - 75760 1459720504
+  16224 /opt/google/chrome/chrome   370776 51414708
+  16345 /opt/google/chrome/chrome - 159680 51343964
+  17049 /opt/google/chrome/chrome - 88612 50816700
+  16379 /opt/google/chrome/chrome - 56212 50810820
+  16351 /opt/google/chrome/chrome - 132172 50783620
+  16316 /opt/google/chrome/chrome - 17916 50751888
+  16302 /opt/google/chrome/chrome - 61588 50751876
+lvx@lvx-Vostro-5481 ~> ps -eo pid,cmd,rss,vsz --sort=-vsz | head -10
+    PID CMD                           RSS    VSZ
+  16849 /opt/google/chrome/chrome - 466292 1463790400
+  16957 /opt/google/chrome/chrome - 158240 1461746744
+  16838 /opt/google/chrome/chrome - 87444 1461691408
+  17006 /opt/google/chrome/chrome - 145768 1459819912
+  17015 /opt/google/chrome/chrome - 155800 1459802052
+  16951 /opt/google/chrome/chrome - 150324 1459762952
+  17099 /opt/google/chrome/chrome - 75824 1459720504
+  16224 /opt/google/chrome/chrome   370788 51414708
+  16345 /opt/google/chrome/chrome - 159680 51343964
+lvx@lvx-Vostro-5481 ~> 
+🔴 Diagnostic confirmé (niveau kernel / mémoire virtuelle)
+
+Ton dump est très clair. Le coupable n’est pas caché.
+
+🧨 PROBLÈME PRINCIPAL
+
+👉 Les processus :
+
+/opt/google/chrome/chrome
+VSZ ≈ 1 463 790 400 KB  (~1.46 TB)  ❗❗❗
+
+➡️ Chrome réserve ~1.4 TÉRAOCTET de mémoire virtuelle par processus
+
+🧠 Explication technique (importante)
+VSZ ≠ RAM réelle
+Métrique	Signification
+RSS	mémoire réellement utilisée (physique)
+VSZ	espace mémoire réservé (virtuel)
+📊 Dans ton cas
+Chrome :
+RSS ≈ 100–400 MB par process ✔️ normal
+VSZ ≈ 1.4 TB ❌ énorme (mais "virtuel")
+
+👉 Chrome utilise :
+
+mmap() massif
+sandbox
+JIT
+V8 engine
+shared memory
+
+➡️ Il réserve large pour éviter fragmentation / crash
+
+⚠️ MAIS — impact réel sur TON système
+
+Même si VSZ est "virtuel" :
+
+👉 il impacte directement :
+
+Committed_AS = 12 GB  (vu avant)
+
+➡️ Donc :
+
+Linux croit que la RAM est "promise"
+watchdog s’active
+ton mining est throttlé
+🔥 Conclusion nette
+
+❗ Le problème que tu cherchais (les ~15GB “fantômes”) = Chrome
+
+Pas :
+
+❌ ton miner
+❌ fuite C
+❌ kernel bug
+
+👉 ✔️ Chrome + Firefox + GNOME combinés
+
+📊 Répartition réelle chez toi
+Chrome
+~10+ process
+chacun 1.4 TB VSZ
+RSS réel total ≈ 1.5–2 GB
+Firefox
+~500 MB × plusieurs process
+GNOME
+~300 MB
+
+👉 TOTAL ≈ 3–4 GB RAM réelle
+
+🧨 Pourquoi ton mining chute
+
+Chaîne causale exacte :
+
+Chrome → énorme VSZ
+→ Committed_AS explose
+→ kernel pense RAM saturée
+→ watchdog active throttle
+→ CPU limité
+→ hashrate -36%
+⚙️ Solutions immédiates
+🥇 Solution brutale (efficace)
+pkill chrome
+pkill firefox
+🥈 Solution propre
+# fermer Chrome proprement
+killall chrome
+
+# ou
+kill PID
+🥉 Solution optimisation (recommandée)
+1. Lancer Chrome avec limites
+google-chrome --disable-dev-shm-usage --process-per-site
+2. Limiter overcommit (IMPORTANT)
+sudo sysctl -w vm.overcommit_memory=2
+3. Vérifier après nettoyage
+free -h
+
+Tu dois voir :
+
+RAM dispo remonter
+mining redevenir stable
+🧪 Vérification post-fix
+ps -eo pid,cmd,rss,vsz --sort=-rss | head -10
+
+👉 Tu dois voir :
+
+Chrome disparu
+RAM libre ↑
+plus de saturation virtuelle
+🧠 Insight avancé (niveau expert)
+
+👉 Ce que tu as découvert est réel :
+
+Linux ne limite pas bien VSZ
+Chrome abuse du virtual memory mapping
+ton watchdog réagit à une illusion mémoire
+
+➡️ Donc ton système :
+
+🔴 prend une décision réelle (throttle CPU) basée sur une métrique virtuelle
+
+✔️ Conclusion finale
+❌ Pas de fuite mémoire dans ton code
+❌ Pas de bug kernel
+❌ Pas de process caché
+✅ Chrome = cause principale
+✅ surcharge virtuelle → effet réel sur performance
+🎯 Action recommandée
+
+👉 Pour ton setup mining :
+
+NE PAS lancer Chrome en même temps
+ou utiliser :
+VM dédiée
+TTY (sans GUI)
+ou serveur headless
+
+Si tu veux, je peux te donner :
+
+un script Fish qui clean automatiquement tout avant run
+ou 
+un mode “mining safe environment” optimisé Linux
+lvx@lvx-Vostro-5481 ~ [1]> free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       5.3Gi       910Mi       554Mi       2.0Gi       2.2Gi
+Swap:          4.0Gi       464Mi       3.5Gi
+lvx@lvx-Vostro-5481 ~> 
+📊 Lecture directe de ton free -h
+RAM totale     : 7.4 GiB
+RAM utilisée   : 5.3 GiB
+RAM libre      : 910 MiB
+Cache/buffers  : 2.0 GiB
+Disponible     : 2.2 GiB
+Swap utilisé   : 464 MiB
+🧠 Diagnostic réel (pas superficiel)
+🔴 1. Tu es sous pression mémoire, mais pas en crise
+910 MB free → faible
+2.2 GB available → encore exploitable
+Swap utilisé (464 MB) → ⚠️ le système a déjà commencé à décharger
+
+👉 Conclusion :
+
+Le système compense déjà un manque de RAM via le swap.
+
+⚠️ 2. Pourquoi ton mining est impacté
+
+Chaîne réelle :
+
+Chrome + Firefox + GNOME
+→ ~3–4 GB RAM
+→ pression mémoire
+→ swap activé
+→ latence mémoire ↑
+→ CPU stalls
+→ hashrate ↓
+
+👉 Le problème n’est plus VSZ ici, mais :
+
+🔴 pression RAM + swap actif
+
+📉 3. Signal critique
+Swap: 464 MB utilisé
+
+👉 Ça signifie :
+
+certaines pages mémoire sont sur disque
+accès beaucoup plus lent
+impact direct sur ton miner (CPU-bound + mémoire)
+🔬 4. Interprétation fine
+Ce qui est NORMAL
+2.0 GB cache → OK (Linux optimise)
+Ce qui est PROBLÉMATIQUE
+swap > 0
+free < 1GB
+🔥 5. Verdict
+
+❗ Ton système est en mode dégradé léger mais réel
+
+Pas critique, mais suffisant pour :
+
+activer ton watchdog
+réduire performance CPU
+créer jitter dans les threads
