@@ -2,6 +2,11 @@
 
 ## Historique des noms normalisés
 
+2026-04-17 11:20 - C54-AGENT-WEBSOCKET + C54 — Migration agent HTTP polling → WebSocket persistant bidirectionnel (flask-socketio 5.6.1 + simple-websocket) — latence 0ms, reconnexion auto
+2026-04-17 11:20 - C54-AGENT-WS-FILES + C54 — tools/agent_ubuntu_ws.py + tools/agent_ubuntu_ws.sh créés — client python-socketio, namespace /agent, auth token handshake
+2026-04-17 11:20 - C54-BTC-RUN-696S + C54 — Run btc_replit_c52 696.8s ZÉRO SIGSEGV — 626.8M hashes, 0.90 MH/s stable, best_leading=28 bits (record Replit) — arrêt gunicorn restart (pas crash)
+2026-04-17 11:20 - C54-WORKERS-1 + C54 — gunicorn --workers 1 (requis SocketIO threading mode) — Start application RUNNING
+2026-04-17 11:20 - analysechatgpt91.54.md + C54 — Rapport C54 : migration WS, run 696s/626M hashes/28 bits, architecture complète, commandes Ubuntu WS
 2026-04-17 11:05 - C53-VALIDATION-RUN + C53 — Run Replit btc_replit_c52_20260417T105851Z : 350s+ sans crash, 318M hashes, 0.91 MH/s stable, best_leading=26 bits — SIGSEGV ÉLIMINÉ
 2026-04-17 11:05 - C53-AVANT-APRES + C53 — AVANT C51 : SIGSEGV 100% entre 650-750s (4 runs) | APRÈS C51 : 0 crash, moteur stable >350s, hashrate constant 0.90-0.99 MH/s
 2026-04-17 11:05 - C53-FORENSIC-LOG + C53 — btc_qm_engine_forensic_btc_replit_c52_20260417T105851Z.log : 48 146+ lignes, 0 SIGSEGV, 0 FATAL, mutex actif (22 ops), SHA-256 OK

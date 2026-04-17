@@ -2,6 +2,7 @@
 Module de visualisation LumVorax — Hubbard HTS
 Serveur Flask exposant les données réelles de simulation.
 Noms conformes au STANDARD_NAMES.md v3.0 (C68-REALTIME-BENCH).
+C54 : WebSocket bidirectionnel pour agent Ubuntu (Flask-SocketIO).
 """
 
 import os
@@ -11,8 +12,20 @@ import re
 import glob
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory
+from flask_socketio import SocketIO, emit, disconnect
 
 app = Flask(__name__, static_folder="static")
+
+# ── SocketIO — WebSocket bidirectionnel agent Ubuntu (C54) ────────────────────
+# async_mode threading = compatible gunicorn sync workers (pas d'eventlet requis)
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    async_mode="threading",
+    path="/ws/socket.io",
+    logger=False,
+    engineio_logger=False,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent / "advanced_calculations" / "quantum_problem_hubbard_hts"
 RESULTS_DIR   = BASE_DIR / "results"
@@ -519,7 +532,7 @@ def static_files(filename):
     return send_from_directory("static", filename)
 
 
-# ── AGENT UBUNTU — file d'exécution distante ─────────────────────────────────
+# ── AGENT UBUNTU — file d'exécution distante (HTTP + WebSocket C54) ──────────
 import threading
 import hashlib
 import hmac
@@ -533,6 +546,10 @@ _agent_results = []
 _agent_lock = threading.Lock()
 _fallback_agent_secret = secrets.token_hex(32)
 
+# Sid des clients WebSocket agent connectés (namespace /agent)
+_ws_agent_sids = set()
+_ws_agent_sids_lock = threading.Lock()
+
 def _agent_token():
     configured_token = os.environ.get("AGENT_TOKEN") or os.environ.get("LUMVORAX_AGENT_TOKEN")
     if configured_token:
@@ -543,6 +560,77 @@ def _agent_token():
 def _check_token():
     tok = request.headers.get("X-Agent-Token", "") or request.args.get("token", "")
     return hmac.compare_digest(tok, _agent_token())
+
+def _check_ws_token(token):
+    try:
+        return hmac.compare_digest(str(token), _agent_token())
+    except Exception:
+        return False
+
+
+# ── WebSocket handlers — namespace /agent (C54) ───────────────────────────────
+
+@socketio.on("connect", namespace="/agent")
+def ws_agent_connect(auth):
+    """Authentification WebSocket Ubuntu → Replit."""
+    token = (auth or {}).get("token", "")
+    if not _check_ws_token(token):
+        disconnect()
+        return False
+    from flask_socketio import request as ws_req
+    sid = ws_req.sid
+    with _ws_agent_sids_lock:
+        _ws_agent_sids.add(sid)
+    # Envoyer les jobs en attente immédiatement
+    with _agent_lock:
+        pending = list(_agent_queue)
+        _agent_queue.clear()
+    for job in pending:
+        emit("job", job)
+    emit("connected", {
+        "ok": True,
+        "cycle": "C54",
+        "mode": "websocket",
+        "pending_jobs": len(pending),
+        "ts": int(time.time()),
+    })
+
+
+@socketio.on("disconnect", namespace="/agent")
+def ws_agent_disconnect():
+    from flask_socketio import request as ws_req
+    sid = ws_req.sid
+    with _ws_agent_sids_lock:
+        _ws_agent_sids.discard(sid)
+
+
+@socketio.on("result", namespace="/agent")
+def ws_agent_result(data):
+    """Ubuntu envoie un résultat de job via WebSocket."""
+    if not isinstance(data, dict):
+        return
+    data["received_at"] = int(time.time())
+    data["transport"] = "websocket"
+    with _agent_lock:
+        _agent_results.append(data)
+        if len(_agent_results) > 200:
+            _agent_results.pop(0)
+    emit("ack", {"ok": True, "job_id": data.get("job_id", "")})
+
+
+@socketio.on("ping_agent", namespace="/agent")
+def ws_agent_ping(data):
+    emit("pong_agent", {"ts": int(time.time()), "cycle": "C54"})
+
+
+def _push_job_to_ws(job):
+    """Émettre un job vers tous les agents WebSocket connectés (appelé thread-safe)."""
+    with _ws_agent_sids_lock:
+        connected = set(_ws_agent_sids)
+    if connected:
+        socketio.emit("job", job, namespace="/agent")
+        return True
+    return False
 
 
 @app.route("/agent/token", methods=["GET"])
@@ -570,7 +658,7 @@ def agent_job():
 
 @app.route("/agent/push", methods=["POST"])
 def agent_push():
-    """Ajoute un job à la file (JSON body : {cmd, label, timeout_s})."""
+    """Ajoute un job à la file. Si agent WS connecté : push immédiat. Sinon : file HTTP."""
     if not _check_token():
         return jsonify({"error": "unauthorized"}), 401
     data = request.get_json(force=True, silent=True) or {}
@@ -581,12 +669,20 @@ def agent_push():
         "id": hashlib.sha256(f"{cmd}{time.time()}".encode()).hexdigest()[:12],
         "cmd": cmd,
         "label": data.get("label", ""),
-        "timeout_s": int(data.get("timeout_s", 60)),
+        "timeout_s": int(data.get("timeout_s", 0)),
         "created_at": int(time.time()),
     }
-    with _agent_lock:
-        _agent_queue.append(job)
-    return jsonify({"ok": True, "job_id": job["id"], "queue_len": len(_agent_queue)})
+    ws_delivered = _push_job_to_ws(job)
+    if not ws_delivered:
+        with _agent_lock:
+            _agent_queue.append(job)
+    transport = "websocket" if ws_delivered else "http_queue"
+    return jsonify({
+        "ok": True,
+        "job_id": job["id"],
+        "transport": transport,
+        "queue_len": len(_agent_queue),
+    })
 
 
 @app.route("/agent/result", methods=["POST"])
