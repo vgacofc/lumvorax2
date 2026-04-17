@@ -2,6 +2,14 @@
 
 ## Historique des noms normalisés
 
+2026-04-18 00:10 - C57-FIX-SIGSEGV + C57 — btc_mining_engine.c L820 guard NULL eng->nx48 avant delta_nonce_scale — crash impossible t≈850s (fix compile + git pull requis sur Ubuntu)
+2026-04-18 00:10 - C57-RUN1-UBUNTU + C57 — btc_20260417T215519Z_c48 : 622M hashes, 28 bits@t=550s, SIGSEGV@t=847s, hashrate -21.5%, nx48_init=2987
+2026-04-18 00:10 - C57-RUN2-UBUNTU + C57 — btc_20260417T222805Z_c48 : 623M hashes, 28 bits@t=80s RECORD, SIGSEGV@t=921s, hashrate -13.9%, nx48_init=3258
+2026-04-18 00:10 - C57-REPLIT-RUN + C57 — btc_replit_c52_20260417T224555Z : 27 bits@t=280s, stable 0.95 MH/s, 617M hashes à t=650s
+2026-04-18 00:10 - C57-WS-GTHREAD + C57 — gunicorn gthread 4 threads timeout=300 activé — WebSocket concurrent supporté (remplacement sync worker)
+2026-04-18 00:10 - C57-SYSCTL-FIX + C57 — vm.drop_caches valeurs valides 1/2/3 uniquement — commande correcte: sudo sysctl -w vm.drop_caches=3
+2026-04-18 00:10 - C57-NX48-RECORD + C57 — NX48 update_count=3258 → 28 bits à t=80.1s (record vitesse, -85% vs run1 t=550s)
+2026-04-18 00:10 - analysechatgpt91.57.md + C57 — Rapport C57 : fix SIGSEGV, 2 runs Ubuntu forensics, WebSocket gthread, NX48 analyse
 2026-04-17 19:52 - C56-FIX-PIE-QDAYPRIZE + C56 — Makefile src/qdayprize/Makefile corrigé : ajout -fPIE (CFLAGS) + -pie (LDFLAGS) — erreur "relocation R_X86_64_32 can not be used when making a PIE object" résolue sur Ubuntu 16.04+
 2026-04-17 19:52 - C56-DOPPLER-UPDATE + C56 — Doppler dev_lumvorax mis à jour : REPLIT_URL=spock.replit.dev (10005cba...) AGENT_TOKEN=552ced77... — Agent Ubuntu C49 reconnecté confirmé
 2026-04-17 19:52 - C56-GIT-CONFLICT + C56 — Conflit a/aa.txt résolu : commande "git checkout a/aa.txt && git pull origin main" — Makefile PIE récupéré après pull

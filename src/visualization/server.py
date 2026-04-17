@@ -16,8 +16,9 @@ from flask_socketio import SocketIO, emit, disconnect
 
 app = Flask(__name__, static_folder="static")
 
-# ── SocketIO — WebSocket bidirectionnel agent Ubuntu (C54) ────────────────────
-# async_mode threading = compatible gunicorn sync workers (pas d'eventlet requis)
+# ── SocketIO — WebSocket bidirectionnel agent Ubuntu (C57) ────────────────────
+# async_mode threading + simple-websocket = WebSocket réel via gunicorn gthread
+# Compatibilité NixOS sans dépendance eventlet/gevent (libstdc++ issues)
 socketio = SocketIO(
     app,
     cors_allowed_origins="*",
@@ -25,6 +26,8 @@ socketio = SocketIO(
     path="/ws/socket.io",
     logger=False,
     engineio_logger=False,
+    ping_timeout=60,
+    ping_interval=25,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent / "advanced_calculations" / "quantum_problem_hubbard_hts"

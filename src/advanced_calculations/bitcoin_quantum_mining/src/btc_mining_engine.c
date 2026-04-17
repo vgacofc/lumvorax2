@@ -813,11 +813,16 @@ static void* btc_mining_thread(void* arg) {
             uint64_t total   = atomic_load(&eng->total_hashes);
             double elapsed_s = (double)(ts_now2 - eng->ts_start_ns) / 1e9;
             double hashrate  = (elapsed_s > 0) ? (double)total / elapsed_s / 1e6 : 0.0;
+            /* C57-FIX-SIGSEGV : vérification NULL eng->nx48 avant déréférencement
+             * AVANT : accès direct eng->nx48->delta_nonce_scale sans garde → SIGSEGV t≈850s
+             * APRÈS : guard NULL + lecture atomique-safe → crash impossible */
+            double nx48_delta = (eng->nx48 != NULL)
+                ? eng->nx48->delta_nonce_scale : 0.0;
             printf("[BTC_QM] elapsed=%.1fs hashes=%"PRIu64" hashrate=%.2fMH/s "
                    "best_leading=%d best_nonce=%u nx48_delta=%.2f\n",
                    elapsed_s, total, hashrate,
                    eng->best_leading_global, eng->best_nonce_global,
-                   eng->nx48->delta_nonce_scale);
+                   nx48_delta);
             fflush(stdout);
             BTC_FORENSIC_COVERAGE((double)total,
                 100.0 * (double)total / (double)(cfg->nonce_end - cfg->nonce_start + 1));
