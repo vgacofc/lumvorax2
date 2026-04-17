@@ -2,6 +2,16 @@
 
 ## Historique des noms normalisés
 
+2026-04-17 16:05 - C55-BUG-DEAD-NEURON + C55 — NX48 dead neuron : tous w[0..7]=0 après L1 over-régularisation — prob=sigmoid(-1.663)=constante — grad_norm<1e-6 — neurone inactif
+2026-04-17 16:05 - C55-BUG-WATCHDOG + C55 — Throttle watchdog CPU (-36% hashrate) : RAM 1584MB → niveau1 actif → usleep(1ms) entre batchs workers → contention inutile
+2026-04-17 16:05 - C55-BUG-MUTEX + C55 — Scaling mutex : 8 threads = 1.04× hashrate (vs ×4 théorique) — ptmc_swap_mutex goulot → formule empirique hashrate(n)=base×log(n+1)/log2
+2026-04-17 16:05 - C55-BUG-GPU + C55 — GPU Intel UHD 620 Ubuntu : 0% utilisation — potentiel OpenCL SHA-256 : ~500 MH/s théorique (×531 CPU)
+2026-04-17 16:05 - C55-DISCOVERY-32BITS + C55 — Record 32 bits trouvé dans anomalies.log : btc_nx48_new_record_leading_zeros=32 (run historique)
+2026-04-17 16:05 - C55-DISCOVERY-NX48-CONV + C55 — Loi convergence NX48 empirique : t_conv ≈ t_0 / log(1+update_count/700) — 28 bits en 40s Ubuntu vs 456s Replit = ×11.4 accélération
+2026-04-17 16:05 - C55-QDAYPRIZE-MODULE + C55 — Module 18 QDAYPRIZE créé : src/qdayprize/ — QFT simulée, BSGS oracle, Shor ECDLP — 30KB binaire compilé Replit
+2026-04-17 16:05 - C55-QDAYPRIZE-RESULTS + C55 — Test Replit : 5000 clés testées, 70.5% récupérées (24 bits), 3s — extrapolation : 2330 qubits L, 4.48M qubits P, gate_depth 7.5e9
+2026-04-17 16:05 - C55-QDAYPRIZE-SCORE + C55 — Score QDAYPRIZE estimé : 16/20 (Good) — Clarity 4/4, Resources 4/4, Impact 3/4, Technical 3/4, HW Dep 2/4
+2026-04-17 16:05 - analysechatgpt91.55.md + C55 — Rapport C55 : analyse profonde bugs cachés NX48, hardware, QDAYPRIZE complet, corrections C56 recommandées
 2026-04-17 11:20 - C54-AGENT-WEBSOCKET + C54 — Migration agent HTTP polling → WebSocket persistant bidirectionnel (flask-socketio 5.6.1 + simple-websocket) — latence 0ms, reconnexion auto
 2026-04-17 11:20 - C54-AGENT-WS-FILES + C54 — tools/agent_ubuntu_ws.py + tools/agent_ubuntu_ws.sh créés — client python-socketio, namespace /agent, auth token handshake
 2026-04-17 11:20 - C54-BTC-RUN-696S + C54 — Run btc_replit_c52 696.8s ZÉRO SIGSEGV — 626.8M hashes, 0.90 MH/s stable, best_leading=28 bits (record Replit) — arrêt gunicorn restart (pas crash)
