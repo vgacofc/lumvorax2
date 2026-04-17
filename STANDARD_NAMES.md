@@ -2,6 +2,11 @@
 
 ## Historique des noms normalisés
 
+2026-04-17 11:05 - C53-VALIDATION-RUN + C53 — Run Replit btc_replit_c52_20260417T105851Z : 350s+ sans crash, 318M hashes, 0.91 MH/s stable, best_leading=26 bits — SIGSEGV ÉLIMINÉ
+2026-04-17 11:05 - C53-AVANT-APRES + C53 — AVANT C51 : SIGSEGV 100% entre 650-750s (4 runs) | APRÈS C51 : 0 crash, moteur stable >350s, hashrate constant 0.90-0.99 MH/s
+2026-04-17 11:05 - C53-FORENSIC-LOG + C53 — btc_qm_engine_forensic_btc_replit_c52_20260417T105851Z.log : 48 146+ lignes, 0 SIGSEGV, 0 FATAL, mutex actif (22 ops), SHA-256 OK
+2026-04-17 11:05 - C53-MAKEFILE-VERIFY + C53 — Makefile BTC vérifié : -march=native correct sur Ubuntu i5-8265U (AVX2 only), détection auto AVX2, pas d'AVX-512 — aucune correction nécessaire
+2026-04-17 11:05 - analysechatgpt91.53.md + C53 — Rapport forensique C53 : run validation Replit, tableau AVANT/APRÈS C51, 270s+ sans crash, confirmé safe pour Ubuntu
 2026-04-17 00:00 - C52-VERIF-C51 + C52 — Vérification intégrale 5/5 corrections C51 dans code Replit confirmées (mutex, null-terminators, logs horodatés)
 2026-04-17 00:00 - REPLIT_URL_C52 + C52 — https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev (nœud kirk, session 2026-04-17)
 2026-04-17 00:00 - AGENT_TOKEN_C52 + C52 — 0d679c8ce780ecd034da1a183d2125df (sha256 Flask session courante)
