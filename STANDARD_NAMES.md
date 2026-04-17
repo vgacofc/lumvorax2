@@ -2,6 +2,14 @@
 
 ## Historique des noms normalisés
 
+2026-04-17 19:52 - C56-FIX-PIE-QDAYPRIZE + C56 — Makefile src/qdayprize/Makefile corrigé : ajout -fPIE (CFLAGS) + -pie (LDFLAGS) — erreur "relocation R_X86_64_32 can not be used when making a PIE object" résolue sur Ubuntu 16.04+
+2026-04-17 19:52 - C56-DOPPLER-UPDATE + C56 — Doppler dev_lumvorax mis à jour : REPLIT_URL=spock.replit.dev (10005cba...) AGENT_TOKEN=552ced77... — Agent Ubuntu C49 reconnecté confirmé
+2026-04-17 19:52 - C56-GIT-CONFLICT + C56 — Conflit a/aa.txt résolu : commande "git checkout a/aa.txt && git pull origin main" — Makefile PIE récupéré après pull
+2026-04-17 19:52 - C56-QDAYPRIZE-VALID + C56 — Validation QDAYPRIZE Replit C56 : 5000 clés, 3556 récupérées, 71.12% succès, 24 bits, runtime 3s — avec -fPIE binary 30KB
+2026-04-17 19:52 - C56-QDAYPRIZE-COMPETITION + C56 — Dossier compétition QDAYPRIZE complet : circuit 2330 qubits L / 4.48M physiques, gate_depth 834977, T-gates 2504931, fidélité 99-99.9% OK avec SC d=31
+2026-04-17 19:52 - C56-CHROME-RAM + C56 — Diagnostic RAM Ubuntu : Chrome VSZ=1.4TB (mmap JIT) → Committed_AS=12GB → watchdog déclenché → pkill chrome libère throttle → +36% hashrate potentiel
+2026-04-17 19:52 - C56-DOPPLER-CMD-MANUAL + C56 — Commande manuelle universelle Doppler : "echo n | doppler secrets set REPLIT_URL=$REPLIT_DEV_DOMAIN AGENT_TOKEN=... --config dev_lumvorax" (applicable tout compte/session)
+2026-04-17 19:52 - analysechatgpt91.56.md + C56 — Rapport C56 : fix PIE QDAYPRIZE, Doppler spock, dossier compétition QDAYPRIZE complet (rubric+circuit+extrapolation), diagnostic Chrome RAM
 2026-04-17 16:05 - C55-BUG-DEAD-NEURON + C55 — NX48 dead neuron : tous w[0..7]=0 après L1 over-régularisation — prob=sigmoid(-1.663)=constante — grad_norm<1e-6 — neurone inactif
 2026-04-17 16:05 - C55-BUG-WATCHDOG + C55 — Throttle watchdog CPU (-36% hashrate) : RAM 1584MB → niveau1 actif → usleep(1ms) entre batchs workers → contention inutile
 2026-04-17 16:05 - C55-BUG-MUTEX + C55 — Scaling mutex : 8 threads = 1.04× hashrate (vs ×4 théorique) — ptmc_swap_mutex goulot → formule empirique hashrate(n)=base×log(n+1)/log2
