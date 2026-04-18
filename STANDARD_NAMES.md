@@ -821,3 +821,15 @@
 2026-04-18 17:15 - C60-GITIGNORE + C60 — .gitignore étendu : *.o + binaires compilés — plus jamais de SIGILL par .o Replit (EPYC AVX-512) sur Ubuntu (AVX2 only)
 2026-04-18 17:15 - C60-WS-LIVE + C60 — WebSocket temps réel confirmé : transport=websocket (non http_queue) — jobs exécutés <1s après envoi — agent Ubuntu connecté spock
 2026-04-18 17:15 - analysechatgpt91.60.md + C60 — Rapport C60 : Doppler bash auto, GPU AMD EPYC, Ubuntu tests rc=0, NX48 72%, format LUM, questions expertes C61
+
+2026-04-18 18:15 - C61-NX48-AUTONOMOUS + C61 — NX48 100% autonome : 16 sous-neurones dynamiques, exploration_bias débloqué 0.922, delta max 500, contrôle total threads/GPU/T_hot/T_cold/batch/AVX/QDAYPRIZE
+2026-04-18 18:15 - C61-SUBNEURONS + C61 — 8 sous-neurones × 2 neurones (16 total) : Adam optimizer par SN, spécialités exploration/threads/gpu/T_hot/T_cold/batch/avx/qdayprize
+2026-04-18 18:15 - C61-EXPLOR-VEL + C61 — exploration_bias débloqué : vélocité momentum 0.9, déblocage plateau forcé si >20 updates en [0.45,0.55] — mesuré 0.922 vs ancien 0.48-0.50
+2026-04-18 18:15 - C61-DELTA-500 + C61 — delta_nonce_scale max 50→500 : exploration tout l'espace nonce 2^32 désormais possible
+2026-04-18 18:15 - C61-LUM-NATIVE + C61 — Format LUM binaire natif 64 bytes CRC32 implémenté dans NX48 — src/file_formats existait mais NON connecté avant C61
+2026-04-18 18:15 - C61-HW-DETECT + C61 — Détection HW autonome NX48 : /proc/cpuinfo+clinfo+/dev/dri toutes les 30s — AVX2/AVX512/SHA-NI/GPU/RAM
+2026-04-18 18:15 - C61-CTRL-ATOMIC + C61 — 6 atomiques moteur↔NX48 : nx48_ctrl_n_threads/T_hot_idx/T_cold_idx/gpu_active/avx_level/batch_size
+2026-04-18 18:15 - C61-ADAM + C61 — Adam optimizer β1=0.9 β2=0.999 sur poids principaux — ISTA gardé pour sous-neurones (Adam pour SN aussi)
+2026-04-18 18:15 - C61-UBUNTU-2MHS + C61 — Ubuntu BTC C61 : 2.00 MH/s (×2 vs 1.0 MH/s C60!) — SN5-batch auto-sélectionne batch=2048
+2026-04-18 18:15 - FILE-FORMATS-VERITE + C61 — VÉRITÉ : src/file_formats/ N'ÉTAIT PAS utilisé par NX48/BTC — seulement backups. C61 connecte LUM natif.
+2026-04-18 18:15 - analysechatgpt91.61.md + C61 — Rapport C61 : NX48 100% autonome, 16 SN, LUM natif connecté, GPU Ubuntu actif, exploration débloquée
