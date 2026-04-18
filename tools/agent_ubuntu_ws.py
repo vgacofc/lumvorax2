@@ -180,6 +180,13 @@ def disconnect():
 def on_connected(data):
     pending = data.get("pending_jobs", 0) if isinstance(data, dict) else 0
     log.info(f"[C57-WS] 🟢 Agent authentifié — jobs en attente : {pending}")
+    # C63 : envoi des 200 dernières lignes forensic au moment de la connexion
+    files = _find_latest_forensic_logs(1)
+    for fpath in files:
+        lines = _tail_forensic_file(fpath, 200)
+        if lines:
+            source = f"ubuntu_init_{os.path.basename(fpath)[:25]}"
+            _push_forensic_batch(sio, lines, source)
 
 @sio.on("job", namespace="/agent")
 def on_job(data):
@@ -191,9 +198,88 @@ def on_job(data):
 def on_pong(data):
     log.debug(f"[C57-WS] pong : {data}")
 
+# ─── Forensic log push (C63) ───────────────────────────────────────────────
+
+# Dictionnaire {filepath: last_position_bytes} pour tail -f de chaque log
+_forensic_file_positions: dict = {}
+_forensic_push_lock = threading.Lock()
+
+
+def _find_latest_forensic_logs(n: int = 3) -> list:
+    """Retourne les N fichiers forensic les plus récents."""
+    if not os.path.isdir(FORENSIC_DIR):
+        return []
+    pattern = os.path.join(FORENSIC_DIR, "*.log")
+    files = sorted(glob.glob(pattern), key=os.path.getmtime, reverse=True)
+    return files[:n]
+
+
+def _push_forensic_batch(sio_client: socketio.Client, lines: list, source: str):
+    """Envoie un batch de lignes forensic vers Replit."""
+    if not lines:
+        return
+    try:
+        sio_client.emit("forensic_batch", {
+            "lines": lines,
+            "source": source,
+            "count": len(lines),
+        }, namespace="/agent")
+        log.info(f"[C63-FOR] ✅ {len(lines)} lignes forensic envoyées ({source})")
+    except Exception as exc:
+        log.warning(f"[C63-FOR] Erreur envoi forensic : {exc}")
+
+
+def _tail_forensic_file(filepath: str, max_lines: int = 500) -> list:
+    """Lit les nouvelles lignes d'un fichier forensic depuis la dernière position."""
+    with _forensic_push_lock:
+        last_pos = _forensic_file_positions.get(filepath, 0)
+    try:
+        fsize = os.path.getsize(filepath)
+    except OSError:
+        return []
+    if fsize <= last_pos:
+        return []
+    try:
+        with open(filepath, "r", errors="replace") as f:
+            f.seek(last_pos)
+            lines = []
+            for line in f:
+                line = line.rstrip("\n")
+                if line:
+                    lines.append(line)
+                if len(lines) >= max_lines:
+                    break
+            new_pos = f.tell()
+        with _forensic_push_lock:
+            _forensic_file_positions[filepath] = new_pos
+        return lines
+    except Exception as exc:
+        log.warning(f"[C63-FOR] Lecture log FAIL {filepath}: {exc}")
+        return []
+
+
+def _forensic_push_thread(sio_client: socketio.Client):
+    """Thread daemon : push des nouveaux logs forensic toutes les N secondes (C63)."""
+    log.info(f"[C63-FOR] Thread forensic démarré — intervalle={FORENSIC_PUSH_INTERVAL}s dir={FORENSIC_DIR}")
+    while True:
+        time.sleep(FORENSIC_PUSH_INTERVAL)
+        if not sio_client.connected:
+            continue
+        files = _find_latest_forensic_logs(3)
+        for fpath in files:
+            source = f"ubuntu_{os.path.basename(fpath)[:30]}"
+            lines = _tail_forensic_file(fpath, FORENSIC_BATCH_SIZE)
+            if lines:
+                _push_forensic_batch(sio_client, lines, source)
+
+
 # ─── Boucle principale ─────────────────────────────────────────────────────
 
 def main():
+    # C63 : démarrage du thread forensic push en arrière-plan
+    ft = threading.Thread(target=_forensic_push_thread, args=(sio,), daemon=True)
+    ft.start()
+    log.info(f"[C63-FOR] Thread forensic démarré (intervalle={FORENSIC_PUSH_INTERVAL}s)")
     log.info(f"[C57-WS] Connexion WebSocket → {REPLIT_URL}/ws/socket.io ...")
     while True:
         try:
