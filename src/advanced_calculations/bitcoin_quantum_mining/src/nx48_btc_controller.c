@@ -447,26 +447,32 @@ void nx48_btc_control_all(nx48_btc_state_t* s) {
     }
 
     /* ── SN3 : T_hot température chaude ── */
+    /* Ne pas modifier si sous-neurone pas encore entraîné (<10 updates) */
     {
-        double sn_out = s->subneurons_exec[NX48_SN_TEMP_HOT].output;
-        int idx = (int)(sn_out * 7.0 + 0.5);
-        idx = (idx < 0) ? 0 : (idx > 7) ? 7 : idx;
-        /* T_hot doit rester > T_cold */
-        if (idx <= s->T_cold_idx) idx = s->T_cold_idx + 1;
-        if (idx > 7) idx = 7;
-        s->T_hot_idx    = idx;
-        s->T_hot_actual = NX48_REPLICA_TEMPS[idx];
-        atomic_store_explicit(&nx48_ctrl_T_hot_idx, idx, memory_order_relaxed);
+        if (s->subneurons_exec[NX48_SN_TEMP_HOT].update_count >= 10) {
+            double sn_out = s->subneurons_exec[NX48_SN_TEMP_HOT].output;
+            int idx = (int)(sn_out * 7.0 + 0.5);
+            idx = (idx < 0) ? 0 : (idx > 7) ? 7 : idx;
+            /* T_hot doit rester > T_cold ET ≥ index 4 (T≥12) pour exploration réelle */
+            if (idx < 4) idx = 4;
+            if (idx <= s->T_cold_idx) idx = s->T_cold_idx + 1;
+            if (idx > 7) idx = 7;
+            s->T_hot_idx    = idx;
+            s->T_hot_actual = NX48_REPLICA_TEMPS[idx];
+        }
+        atomic_store_explicit(&nx48_ctrl_T_hot_idx, s->T_hot_idx, memory_order_relaxed);
     }
 
     /* ── SN4 : T_cold température froide ── */
     {
-        double sn_out = s->subneurons_exec[NX48_SN_TEMP_COLD].output;
-        int idx = (int)(sn_out * 3.0 + 0.5); /* T_cold reste basse [0..3] */
-        idx = (idx < 0) ? 0 : (idx > 3) ? 3 : idx;
-        s->T_cold_idx    = idx;
-        s->T_cold_actual = NX48_REPLICA_TEMPS[idx];
-        atomic_store_explicit(&nx48_ctrl_T_cold_idx, idx, memory_order_relaxed);
+        if (s->subneurons_exec[NX48_SN_TEMP_COLD].update_count >= 10) {
+            double sn_out = s->subneurons_exec[NX48_SN_TEMP_COLD].output;
+            int idx = (int)(sn_out * 3.0 + 0.5); /* T_cold reste basse [0..3] */
+            idx = (idx < 0) ? 0 : (idx > 3) ? 3 : idx;
+            s->T_cold_idx    = idx;
+            s->T_cold_actual = NX48_REPLICA_TEMPS[idx];
+        }
+        atomic_store_explicit(&nx48_ctrl_T_cold_idx, s->T_cold_idx, memory_order_relaxed);
     }
 
     /* ── SN5 : batch size ── */
