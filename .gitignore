@@ -79,3 +79,14 @@ src/advanced_calculations/quantum_problem_hubbard_hts/backups/
 src/advanced_calculations/quantum_problem_hubbard_hts/.run_current_phase
 src/advanced_calculations/quantum_problem_hubbard_hts/.run_checkpoint
 src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/reports/secret.md
+
+# =========================
+# BINAIRES COMPILÉS (NE PAS COMMITER — dépendants du CPU local)
+# *.o compilés Replit (AMD EPYC AVX-512) causeraient SIGILL sur Ubuntu i5-8265U
+# =========================
+*.o
+src/qdayprize/qdayprize_runner
+src/qdayprize/qdayprize_runner_debug
+src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
+btc_mining_runner
+qdayprize_runner

@@ -1,0 +1,297 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10329
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> QDPR_SIM_BITS=4 QDPR_DURATION_S=30 bash tools/qdayprize_run.sh
+bash: tools/qdayprize_run.sh: No such file or directory
+lvx@lvx-Vostro-5481 ~ [127]> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> QDPR_SIM_BITS=4 QDPR_DURATION_S=30 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133600Z
+[QDPR] SIM_BITS  : 4 bits
+[QDPR] DURATION  : 30s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 78946 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     78947 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=256 QDPR_DURATION_S=6000 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133623Z
+[QDPR] SIM_BITS  : 256 bits
+[QDPR] DURATION  : 6000s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 79193 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     79194 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=25 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133642Z
+[QDPR] SIM_BITS  : 25 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 79437 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     79438 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=25 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T144934Z
+[QDPR] SIM_BITS  : 25 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+Makefile:41: *** missing separator (did you mean TAB instead of 8 spaces?).  Stop.
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [2]> QDPR_SIM_BITS=25 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T145758Z
+[QDPR] SIM_BITS  : 25 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+[QDPR] Nettoyage OK
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+gcc -std=c11 -O3 -march=native -mno-avx512f -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512cd -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 35K Apr 18 14:57 qdayprize_runner
+[QDPR] Binaire : 36K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+║  Simulation classique d'attaque quantique ECDLP         ║
+║  Cible : secp256k1 (Bitcoin) — 6 924 807 BTC à risque  ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id    = qdpr_c55_20260418T145758Z
+[QDPR] sim_bits  = 24 bits
+[QDPR] duration  = limitée
+[QDPR] threads   = 1
+[QDPR] log_dir   = /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic
+[QDPR] THÉORIE : secp256k1 nécessite 2330 qubits logiques [Roetteler 2017]
+[QDPR] THÉORIE : Surface Code d=31 → 4480590 qubits physiques
+[QDPR] SIMULATION : 24 bits → validation oracle BSGS + QFT classique
+[QDPR] ============================================
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE — Cycle C55 — démarrage
+[QDPR] sim_bits = 24 | run_id = qdpr_c55_20260418T145758Z
+[QDPR] Simulation parallèle BTC mining = OUI
+[QDPR] ============================================
+[QDPR] elapsed=0s sim_bits=24 keys_tested=1000 recovered=1000 success=100.0% n_qubits_L=2330 gate_depth=144
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id        = qdpr_c55_20260418T145758Z
+[QDPR] sim_bits      = 24 bits (clés simulées)
+[QDPR] qubits_sim    = 52 qubits (2×24+ancilla)
+[QDPR] ─── EXTRAPOLATION secp256k1 (256 bits) ───
+[QDPR] n_qubits_L    = 2330 qubits logiques [Roetteler 2017]
+[QDPR] n_qubits_P    = 4480590 qubits physiques [Surface Code d=31]
+[QDPR] QEC overhead  = 1923× (physique/logique)
+[QDPR] gate_depth    = 174762 ops [O(n³), n=256]
+[QDPR] T-gates       = 524288 [×QEC=10 correction]
+[QDPR] speedup       = 2^128 vs BSGS classique
+[QDPR] ─── RÉSULTATS SIMULATION ───
+[QDPR] keys_tested   = 1000
+[QDPR] keys_recovered= 1000
+[QDPR] success_rate  = 100.00%
+[QDPR] near_miss_bits= 24 bits
+[QDPR] bits_security = 232.0 bits (résiduel)
+[QDPR] runtime       = 0.0 s
+[QDPR] target_wallet = mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj
+[QDPR] ─── IMPACT Q-DAY ───
+[QDPR] BTC vulnérables : 6 924 807 BTC (~490B USD)
+[QDPR] Adresses à risque: 13 978 108 (P2PKH/P2WPKH/P2SH/P2TR reuse)
+[QDPR] Temps attaque réelle (hardware quantique 2330 qubits L) : ~1h
+[QDPR] Temps attaque simulée (classique, 24 bits) : 0.0 s
+
+[QDPR] Rapport sauvegardé → /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/qdayprize_qdpr_c55_20260418T145758Z.json
+[QDPR] QDAYPRIZE terminé.
+[QDPR] Run terminé. Log : /tmp/qdayprize_qdpr_c55_20260418T145758Z.log
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> QDPR_SIM_BITS=256 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T145822Z
+[QDPR] SIM_BITS  : 256 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+[QDPR] Nettoyage OK
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+gcc -std=c11 -O3 -march=native -mno-avx512f -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512cd -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 35K Apr 18 14:58 qdayprize_runner
+[QDPR] Binaire : 36K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+║  Simulation classique d'attaque quantique ECDLP         ║
+║  Cible : secp256k1 (Bitcoin) — 6 924 807 BTC à risque  ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id    = qdpr_c55_20260418T145822Z
+[QDPR] sim_bits  = 24 bits
+[QDPR] duration  = limitée
+[QDPR] threads   = 1
+[QDPR] log_dir   = /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic
+[QDPR] THÉORIE : secp256k1 nécessite 2330 qubits logiques [Roetteler 2017]
+[QDPR] THÉORIE : Surface Code d=31 → 4480590 qubits physiques
+[QDPR] SIMULATION : 24 bits → validation oracle BSGS + QFT classique
+[QDPR] ============================================
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE — Cycle C55 — démarrage
+[QDPR] sim_bits = 24 | run_id = qdpr_c55_20260418T145822Z
+[QDPR] Simulation parallèle BTC mining = OUI
+[QDPR] ============================================
+[QDPR] elapsed=0s sim_bits=24 keys_tested=1000 recovered=1000 success=100.0% n_qubits_L=2330 gate_depth=144
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id        = qdpr_c55_20260418T145822Z
+[QDPR] sim_bits      = 24 bits (clés simulées)
+[QDPR] qubits_sim    = 52 qubits (2×24+ancilla)
+[QDPR] ─── EXTRAPOLATION secp256k1 (256 bits) ───
+[QDPR] n_qubits_L    = 2330 qubits logiques [Roetteler 2017]
+[QDPR] n_qubits_P    = 4480590 qubits physiques [Surface Code d=31]
+[QDPR] QEC overhead  = 1923× (physique/logique)
+[QDPR] gate_depth    = 174762 ops [O(n³), n=256]
+[QDPR] T-gates       = 524288 [×QEC=10 correction]
+[QDPR] speedup       = 2^128 vs BSGS classique
+[QDPR] ─── RÉSULTATS SIMULATION ───
+[QDPR] keys_tested   = 1000
+[QDPR] keys_recovered= 1000
+[QDPR] success_rate  = 100.00%
+[QDPR] near_miss_bits= 24 bits
+[QDPR] bits_security = 232.0 bits (résiduel)
+[QDPR] runtime       = 0.0 s
+[QDPR] target_wallet = mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj
+[QDPR] ─── IMPACT Q-DAY ───
+[QDPR] BTC vulnérables : 6 924 807 BTC (~490B USD)
+[QDPR] Adresses à risque: 13 978 108 (P2PKH/P2WPKH/P2SH/P2TR reuse)
+[QDPR] Temps attaque réelle (hardware quantique 2330 qubits L) : ~1h
+[QDPR] Temps attaque simulée (classique, 24 bits) : 0.0 s
+
+[QDPR] Rapport sauvegardé → /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/qdayprize_qdpr_c55_20260418T145822Z.json
+[QDPR] QDAYPRIZE terminé.
+[QDPR] Run terminé. Log : /tmp/qdayprize_qdpr_c55_20260418T145822Z.log
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> QDPR_SIM_BITS=4 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T145846Z
+[QDPR] SIM_BITS  : 4 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+[QDPR] Nettoyage OK
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+gcc -std=c11 -O3 -march=native -mno-avx512f -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512cd -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 35K Apr 18 14:58 qdayprize_runner
+[QDPR] Binaire : 36K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+║  Simulation classique d'attaque quantique ECDLP         ║
+║  Cible : secp256k1 (Bitcoin) — 6 924 807 BTC à risque  ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id    = qdpr_c55_20260418T145846Z
+[QDPR] sim_bits  = 8 bits
+[QDPR] duration  = limitée
+[QDPR] threads   = 1
+[QDPR] log_dir   = /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic
+[QDPR] THÉORIE : secp256k1 nécessite 2330 qubits logiques [Roetteler 2017]
+[QDPR] THÉORIE : Surface Code d=31 → 4480590 qubits physiques
+[QDPR] SIMULATION : 8 bits → validation oracle BSGS + QFT classique
+[QDPR] ============================================
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE — Cycle C55 — démarrage
+[QDPR] sim_bits = 8 | run_id = qdpr_c55_20260418T145846Z
+[QDPR] Simulation parallèle BTC mining = OUI
+[QDPR] ============================================
+[QDPR] elapsed=0s sim_bits=8 keys_tested=1000 recovered=193 success=19.3% n_qubits_L=2330 gate_depth=256
+[QDPR] elapsed=0s sim_bits=12 keys_tested=2000 recovered=1193 success=59.7% n_qubits_L=2330 gate_depth=256
+[QDPR] elapsed=1s sim_bits=16 keys_tested=3000 recovered=2193 success=73.1% n_qubits_L=2330 gate_depth=400
+[QDPR] elapsed=8s sim_bits=20 keys_tested=4000 recovered=2537 success=63.4% n_qubits_L=2330 gate_depth=544
+[QDPR] elapsed=8s sim_bits=24 keys_tested=5000 recovered=3537 success=70.7% n_qubits_L=2330 gate_depth=688
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id        = qdpr_c55_20260418T145846Z
+[QDPR] sim_bits      = 24 bits (clés simulées)
+[QDPR] qubits_sim    = 52 qubits (2×24+ancilla)
+[QDPR] ─── EXTRAPOLATION secp256k1 (256 bits) ───
+[QDPR] n_qubits_L    = 2330 qubits logiques [Roetteler 2017]
+[QDPR] n_qubits_P    = 4480590 qubits physiques [Surface Code d=31]
+[QDPR] QEC overhead  = 1923× (physique/logique)
+[QDPR] gate_depth    = 834977 ops [O(n³), n=256]
+[QDPR] T-gates       = 2504931 [×QEC=10 correction]
+[QDPR] speedup       = 2^128 vs BSGS classique
+[QDPR] ─── RÉSULTATS SIMULATION ───
+[QDPR] keys_tested   = 5000
+[QDPR] keys_recovered= 3537
+[QDPR] success_rate  = 70.74%
+[QDPR] near_miss_bits= 24 bits
+[QDPR] bits_security = 239.0 bits (résiduel)
+[QDPR] runtime       = 8.0 s
+[QDPR] target_wallet = mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj
+[QDPR] ─── IMPACT Q-DAY ───
+[QDPR] BTC vulnérables : 6 924 807 BTC (~490B USD)
+[QDPR] Adresses à risque: 13 978 108 (P2PKH/P2WPKH/P2SH/P2TR reuse)
+[QDPR] Temps attaque réelle (hardware quantique 2330 qubits L) : ~1h
+[QDPR] Temps attaque simulée (classique, 24 bits) : 8.0 s
+
+[QDPR] Rapport sauvegardé → /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/qdayprize_qdpr_c55_20260418T145846Z.json
+[QDPR] QDAYPRIZE terminé.
+[QDPR] Run terminé. Log : /tmp/qdayprize_qdpr_c55_20260418T145846Z.log
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 

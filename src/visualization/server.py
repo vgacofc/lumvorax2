@@ -638,12 +638,39 @@ def _push_job_to_ws(job):
 
 @app.route("/agent/token", methods=["GET"])
 def agent_token_info():
-    """Retourne le token hashé (côté Replit uniquement — ne pas exposer publiquement)."""
-    import socket
+    """Retourne le token (localhost uniquement OU setup_key valide — C60)."""
     host = request.host or ""
+    # Mode local (Replit shell) — accès direct
     if "localhost" in host or "127.0.0.1" in host:
-        return jsonify({"token": _agent_token(), "note": "local only"})
-    return jsonify({"error": "token endpoint local only"}), 403
+        return jsonify({"token": _agent_token(), "note": "local", "cycle": "C60"})
+    # Mode externe (Ubuntu) — nécessite setup_key = sha256(REPLIT_DEV_DOMAIN+token)[:16]
+    setup_key = request.args.get("setup_key", "")
+    if setup_key:
+        domain = os.environ.get("REPLIT_DEV_DOMAIN", "")
+        expected = hashlib.sha256(f"{domain}:{_agent_token()}".encode()).hexdigest()[:16]
+        try:
+            if hmac.compare_digest(setup_key, expected):
+                return jsonify({"token": _agent_token(), "note": "external_auth", "cycle": "C60"})
+        except Exception:
+            pass
+    return jsonify({"error": "token endpoint: use localhost or valid setup_key"}), 403
+
+
+@app.route("/agent/token/setup-key", methods=["GET"])
+def agent_token_setup_key():
+    """Retourne le setup_key pour accès externe au token (localhost uniquement — C60)."""
+    host = request.host or ""
+    if "localhost" not in host and "127.0.0.1" not in host:
+        return jsonify({"error": "local only"}), 403
+    domain = os.environ.get("REPLIT_DEV_DOMAIN", "")
+    tok = _agent_token()
+    setup_key = hashlib.sha256(f"{domain}:{tok}".encode()).hexdigest()[:16]
+    return jsonify({
+        "setup_key": setup_key,
+        "replit_url": f"https://{domain}" if domain else "",
+        "usage": f"curl 'https://{domain}/agent/token?setup_key={setup_key}'",
+        "cycle": "C60"
+    })
 
 
 @app.route("/agent/job", methods=["GET"])
@@ -727,6 +754,75 @@ def agent_status():
         "agent_endpoint": f"https://{domain}/agent/job",
         "cycle": "C45",
     })
+
+
+@app.route("/gpu/status", methods=["GET"])
+def gpu_status():
+    """Détection GPU/CPU capabilities — C60 (Replit NixOS + Ubuntu)."""
+    import subprocess, platform, struct
+    info = {
+        "cycle": "C60",
+        "platform": platform.system(),
+        "cpu_model": "",
+        "cpu_cores": 0,
+        "cpu_flags": [],
+        "gpu_cuda": False,
+        "gpu_opencl": False,
+        "gpu_dri": False,
+        "gpu_nvidia": False,
+        "avx512": False,
+        "avx2": False,
+        "sha_ni": False,
+        "recommendation": "",
+    }
+    try:
+        with open("/proc/cpuinfo") as f:
+            cpuinfo = f.read()
+        lines = cpuinfo.split("\n")
+        for l in lines:
+            if "model name" in l and not info["cpu_model"]:
+                info["cpu_model"] = l.split(":", 1)[1].strip()
+            if "flags" in l and not info["cpu_flags"]:
+                flags = l.split(":", 1)[1].strip().split()
+                info["cpu_flags"] = [f for f in flags if any(k in f for k in ["avx","sse","sha","aes","vaes"])]
+                info["avx512"] = any("avx512" in f for f in flags)
+                info["avx2"] = "avx2" in flags
+                info["sha_ni"] = "sha_ni" in flags
+        import os
+        info["cpu_cores"] = os.cpu_count() or 0
+    except Exception as e:
+        info["cpu_error"] = str(e)
+    try:
+        import os
+        info["gpu_dri"] = os.path.exists("/dev/dri")
+        info["gpu_nvidia"] = any(os.path.exists(f"/dev/nvidia{i}") for i in range(4))
+        info["gpu_kfd"] = os.path.exists("/dev/kfd")
+    except Exception:
+        pass
+    try:
+        r = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"],
+                          capture_output=True, text=True, timeout=3)
+        if r.returncode == 0:
+            info["gpu_cuda"] = True
+            info["gpu_cuda_devices"] = r.stdout.strip().split("\n")
+    except Exception:
+        pass
+    try:
+        r = subprocess.run(["clinfo", "--list"], capture_output=True, text=True, timeout=3)
+        if r.returncode == 0 and r.stdout.strip():
+            info["gpu_opencl"] = True
+            info["gpu_opencl_platforms"] = r.stdout.strip().split("\n")[:5]
+    except Exception:
+        pass
+    if info["avx512"]:
+        info["recommendation"] = "AVX-512 dispo — utiliser -march=native, -mavx512f pour SHA-256 vectorisé (~8x vs scalaire)"
+    elif info["avx2"]:
+        info["recommendation"] = "AVX2 dispo — utiliser -mavx2 pour SHA-256 vectorisé (~4x vs scalaire)"
+    elif info["gpu_cuda"]:
+        info["recommendation"] = "GPU CUDA — utiliser OpenCL/CUDA SHA-256 pour >500MH/s"
+    else:
+        info["recommendation"] = "CPU seulement — optimiser avec SIMD disponible"
+    return jsonify(info)
 
 
 @app.route("/agent_ubuntu.sh", methods=["GET"])

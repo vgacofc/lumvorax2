@@ -1,0 +1,81 @@
+~/workspace$ ssh -T git@github.com
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+git add .
+git commit -m "chat91.59.1"
+git push -f origin main
+The authenticity of host 'github.com (140.82.116.4)' can't be established.
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+git@github.com: Permission denied (publickey).
+[main 20cc4eb] chat91.59.1
+ 7 files changed, 2025 insertions(+), 4 deletions(-)
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.59.1.md
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/wallet_btc_replit_c52_20260418T134144Z.json
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+~/workspace$ # génération de la clé
+ssh-keygen -t ed25519 -C "vgac4224@outlook.com" -f ~/.ssh/id_ed25519 -N ""
+
+# copie de la clé publique dans un fichier du projet
+cp ~/.ssh/id_ed25519.pub ./github_ssh_key.txt
+
+echo "SSH key generated."
+echo "Public key saved in: github_ssh_key.txt"
+Generating public/private ed25519 key pair.
+Your identification has been saved in /home/runner/.ssh/id_ed25519
+Your public key has been saved in /home/runner/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:s/lddib8LQW+hpSzE+jA0hggMZOfZoBz5i296LTntG0 vgac4224@outlook.com
+The key's randomart image is:
++--[ED25519 256]--+
+| .+o             |
+|o *o.            |
+| = * o           |
+|  o B .       .  |
+|   = . =S  . o . |
+|  o . o ++. =.. .|
+| o ..  .oo . ==oo|
+|  o..oE  ...+o+=.|
+|   oo..   . .o .o|
++----[SHA256]-----+
+SSH key generated.
+Public key saved in: github_ssh_key.txt
+~/workspace$ ssh -T git@github.com
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+git add .
+git commit -m "chat91.59"
+git push -f origin main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+[main a32eca3] chat91.59
+ 2 files changed, 46 insertions(+), 2 deletions(-)
+Uploading LFS objects: 100% (2/2), 135 MB | 5.5 MB/s, done.                                                                  
+Enumerating objects: 51, done.
+Counting objects: 100% (51/51), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (27/27), done.
+Writing objects: 100% (31/31), 37.45 KiB | 1.44 MiB/s, done.
+Total 31 (delta 17), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (17/17), completed with 11 local objects.
+To github.com:vgacofc/lumvorax2.git
+   22d14ac..a32eca3  main -> main
+~/workspace$ # Remplace l'URL par celle visible dans l'onglet Preview de Replit
+fish ~/LVX/lumvorax2/tools/doppler_update.fish https://NOUVELLE-URL.replit.dev
+fish: command not installed. Multiple versions of this command were found in Nix.
+Select one to run (or press Ctrl-C to cancel):
+fish         4.0.2  Smart and user-friendly command line shell
+Adding fish to .replit
+error: Error reading script file '/home/runner/LVX/lumvorax2/tools/doppler_update.fish':
+No such file or directory (os error 2)
+~/workspace$ fish ~/LVX/lumvorax2/tools/doppler_update.fish https://NOUVELLE-URL.replit.dev
+error: Error reading script file '/home/runner/LVX/lumvorax2/tools/doppler_update.fish':
+No such file or directory (os error 2)
+~/workspace$ # Remplace l'URL par celle visible dans l'onglet Preview de Replit
+fish ~/LVX/lumvorax2/tools/doppler_update.fish https://NOUVELLE-URL.replit.dev
+error: Error reading script file '/home/runner/LVX/lumvorax2/tools/doppler_update.fish':
+No such file or directory (os error 2)
+~/workspace$ 
