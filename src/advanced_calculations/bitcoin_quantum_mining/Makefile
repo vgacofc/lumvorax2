@@ -23,6 +23,12 @@ HAVE_AVX2 := $(shell echo | gcc -mavx2 -dM -E - 2>/dev/null | grep -c '__AVX2__'
 ifeq ($(HAVE_AVX2),1)
 CFLAGS += -mavx2 -DBTC_HAVE_AVX2=1
 endif
+
+# SHA-NI hardware (AMD EPYC 9B14 Replit + Intel Kaby Lake Ubuntu)
+HAVE_SHA_NI := $(shell grep -m1 sha_ni /proc/cpuinfo 2>/dev/null | wc -l)
+ifeq ($(HAVE_SHA_NI),1)
+CFLAGS += -msha -DBTC_HAVE_SHA_NI=1
+endif
 # Supprimer les warnings OpenSSL 3.x API dépréciée (EC_KEY → EVP migration)
 CFLAGS += -Wno-deprecated-declarations
 

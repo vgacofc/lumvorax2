@@ -238,6 +238,45 @@ void nx48_btc_hw_detect(nx48_btc_state_t* s) {
         hw->ram_available_mb = avail_kb / 1024L;
     }
 
+    /* ── C62 : QDAYPRIZE feedback — lecture JSON le plus recent ──── */
+    {
+        FILE* qd = popen("ls -t logs/forensic/qdayprize_*.json 2>/dev/null | head -1", "r");
+        if (qd) {
+            char qpath[512] = {0};
+            if (fgets(qpath, sizeof(qpath)-1, qd)) {
+                char* nl = strchr(qpath, '\n');
+                if (nl) *nl = '\0';
+                pclose(qd);
+                qd = NULL;
+                if (qpath[0] != '\0') {
+                    FILE* jf = fopen(qpath, "r");
+                    if (jf) {
+                        char jbuf[4096] = {0};
+                        size_t nr = fread(jbuf, 1, sizeof(jbuf)-1, jf);
+                        fclose(jf);
+                        if (nr > 0) {
+                            char* sr = strstr(jbuf, "\"success_rate\"");
+                            if (sr) { char* c = strchr(sr, ':'); if (c) hw->qdayprize_success_rate = atof(c+1); }
+                            char* nb = strstr(jbuf, "\"near_miss_bits\"");
+                            if (nb) { char* c = strchr(nb, ':'); if (c) hw->qdayprize_bits = atoi(c+1); }
+                            char* rt = strstr(jbuf, "\"runtime_s\"");
+                            if (rt) { char* c = strchr(rt, ':'); if (c) hw->qdayprize_runtime_s = atof(c+1); }
+                            printf("[NX48-QDPR] Feedback C62 : success=%.1f%% bits=%d rt=%.1fs\n",
+                                hw->qdayprize_success_rate * 100.0,
+                                hw->qdayprize_bits, hw->qdayprize_runtime_s);
+                            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                "btc_nx48_qdayprize_success_rate", hw->qdayprize_success_rate);
+                            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                "btc_nx48_qdayprize_bits", (double)hw->qdayprize_bits);
+                        }
+                    }
+                }
+            } else {
+                pclose(qd);
+            }
+        }
+    }
+
     /* ── Mise à jour atomique AVX level ── */
     atomic_store_explicit(&nx48_ctrl_avx_level, hw->avx_level, memory_order_relaxed);
 
@@ -794,6 +833,16 @@ void nx48_btc_update(
         if (s->stall_count >= 2) {
             s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 500.0);
             s->stall_count = 0;
+        }
+        /* C62 : Reset delta_nonce si bloqué au cap 500 trop longtemps (plateau absolu) */
+        if (s->stall_long_count > 0 && (s->stall_long_count % 50) == 0
+            && s->delta_nonce_scale >= 490.0) {
+            double old_delta = s->delta_nonce_scale;
+            s->delta_nonce_scale = 1.0 + xosh_uniform() * 15.0; /* Reset aleatoire [1, 16] */
+            printf("[NX48-C62] Reset delta_nonce %.1f->%.3f (stall_long=%d cap500_plateau)\n",
+                old_delta, s->delta_nonce_scale, s->stall_long_count);
+            FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
+                "btc_nx48_delta_reset_stall_c62", s->delta_nonce_scale);
         }
     }
 
