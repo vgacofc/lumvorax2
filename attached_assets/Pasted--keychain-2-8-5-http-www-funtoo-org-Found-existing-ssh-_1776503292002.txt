@@ -1,0 +1,74 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10329
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> ssh -T git@github.com
+                                          git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                          git fetch origin
+                                          git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 75, done.
+remote: Counting objects: 100% (75/75), done.
+remote: Compressing objects: 100% (15/15), done.
+remote: Total 50 (delta 31), reused 50 (delta 31), pack-reused 0 (from 0)
+Unpacking objects: 100% (50/50), 6.80 MiB | 78.00 KiB/s, done.
+From github.com:vgacofc/lumvorax2
+   867a373..2e8e31f  main       -> origin/main
+HEAD is now at 2e8e31f chat91.57.1
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2 && git pull origin main
+                       doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] Création du venv Python : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Installation python-socketio[client] dans le venv...
+[C57-WS] Installation OK
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T11:06:08Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T11:06:08Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T11:06:08Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T11:06:08Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T11:06:08Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T11:06:08Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T11:06:08Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T11:06:08Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T11:06:31Z WARNING [C57-WS] Connexion refusée : One or more namespaces failed to connect:  — retry 5s
+2026-04-18T11:06:58Z WARNING [C57-WS] Connexion refusée : One or more namespaces failed to connect:  — retry 5s
+^C2026-04-18T11:07:06Z INFO [C57-WS] Arrêt (CTRL+C)
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main
+                                          doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T11:07:13Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T11:07:13Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T11:07:13Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T11:07:13Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T11:07:13Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T11:07:13Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T11:07:13Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T11:07:13Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T11:07:34Z WARNING [C57-WS] Connexion refusée : One or more namespaces failed to connect:  — retry 5s
+2026-04-18T11:08:00Z WARNING [C57-WS] Connexion refusée : One or more namespaces failed to connect:  — retry 5s
+

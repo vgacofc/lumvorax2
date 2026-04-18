@@ -580,7 +580,7 @@ def ws_agent_connect(auth):
     if not _check_ws_token(token):
         disconnect()
         return False
-    from flask_socketio import request as ws_req
+    from flask import request as ws_req
     sid = ws_req.sid
     with _ws_agent_sids_lock:
         _ws_agent_sids.add(sid)
@@ -601,7 +601,7 @@ def ws_agent_connect(auth):
 
 @socketio.on("disconnect", namespace="/agent")
 def ws_agent_disconnect():
-    from flask_socketio import request as ws_req
+    from flask import request as ws_req
     sid = ws_req.sid
     with _ws_agent_sids_lock:
         _ws_agent_sids.discard(sid)
