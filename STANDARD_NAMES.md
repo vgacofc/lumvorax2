@@ -811,3 +811,13 @@
 2026-04-16 - analysechatgpt91.49.md + C49 — Rapport final correctif C49 : Doppler, URL session, token, durée run Ubuntu
 2026-04-16 - AGENT_DOPPLER_AUTO_REEXEC_C49 + C49 — tools/agent_ubuntu.sh auto-relance via doppler run --config dev_lumvorax si REPLIT_URL/AGENT_TOKEN absents
 2026-04-16 - DOPPLER_SYNC_DEV_CONFIG_C49 + C49 — tools/update_doppler_agent_env.sh écrit les secrets dans la config Doppler par défaut et dans --config dev_lumvorax si disponible
+
+2026-04-18 17:15 - C60-DOPPLER-BASH + C60 — doppler_update.sh bash Ubuntu/Replit créé : remplace doppler_update.fish — auto-détecte REPLIT_DEV_DOMAIN, récupère token localhost, setup_key HMAC externe
+2026-04-18 17:15 - C60-ENDPOINT-TOKEN + C60 — /agent/token étendu : setup_key HMAC(domain:token)[:16] → accès Ubuntu externe sécurisé | /agent/token/setup-key → génère setup_key (localhost uniquement)
+2026-04-18 17:15 - C60-GPU-ENDPOINT + C60 — /gpu/status ajouté : détection AVX-512, SHA-NI, CUDA, OpenCL, DRI — Replit=AMD EPYC 9B14 AVX-512+SHA-NI | Ubuntu=i5-8265U AVX2+/dev/dri Intel UHD 620
+2026-04-18 17:15 - C60-CPU-REPLIT + C60 — CPU Replit = AMD EPYC 9B14 + AVX-512 COMPLET (avx512f,dq,bw,vl,sha_ni,vaes,bf16,vbmi2) — NE PAS commiter .o compilés Replit sur Ubuntu!
+2026-04-18 17:15 - C60-UBUNTU-COMPILE-OK + C60 — QDAYPRIZE Ubuntu rc=0 ✅ : 35K, 83.40% succès 12 bits, 4.0s — job WebSocket automatique validé
+2026-04-18 17:15 - C60-GIT-SYNC + C60 — tools/git_sync.sh créé : stash auto + pull + make clean (supprime .o cross-CPU) + recompile locale — résout SIGILL définitivement
+2026-04-18 17:15 - C60-GITIGNORE + C60 — .gitignore étendu : *.o + binaires compilés — plus jamais de SIGILL par .o Replit (EPYC AVX-512) sur Ubuntu (AVX2 only)
+2026-04-18 17:15 - C60-WS-LIVE + C60 — WebSocket temps réel confirmé : transport=websocket (non http_queue) — jobs exécutés <1s après envoi — agent Ubuntu connecté spock
+2026-04-18 17:15 - analysechatgpt91.60.md + C60 — Rapport C60 : Doppler bash auto, GPU AMD EPYC, Ubuntu tests rc=0, NX48 72%, format LUM, questions expertes C61
