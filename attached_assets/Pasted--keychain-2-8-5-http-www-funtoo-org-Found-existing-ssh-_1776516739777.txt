@@ -1,0 +1,78 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10329
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> QDPR_SIM_BITS=4 QDPR_DURATION_S=30 bash tools/qdayprize_run.sh
+bash: tools/qdayprize_run.sh: No such file or directory
+lvx@lvx-Vostro-5481 ~ [127]> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> QDPR_SIM_BITS=4 QDPR_DURATION_S=30 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133600Z
+[QDPR] SIM_BITS  : 4 bits
+[QDPR] DURATION  : 30s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 78946 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     78947 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=256 QDPR_DURATION_S=6000 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133623Z
+[QDPR] SIM_BITS  : 256 bits
+[QDPR] DURATION  : 6000s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 79193 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     79194 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=25 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T133642Z
+[QDPR] SIM_BITS  : 25 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+gcc -std=c11 -O3 -march=native -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 31K Apr 18 13:36 qdayprize_runner
+[QDPR] Binaire : 32K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+tools/qdayprize_run.sh: line 82: 79437 Illegal instruction     (core dumped) ./qdayprize_runner --sim-bits "$SIM_BITS" --duration "$DURATION" --threads "$THREADS" --run-id "$RUN_ID" --log-dir "$LOG_DIR" $PARALLEL_FLAG $EXTRA_ARGS 2>&1
+     79438 Done                    | tee "/tmp/qdayprize_${RUN_ID}.log"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGILL]> QDPR_SIM_BITS=25 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T144934Z
+[QDPR] SIM_BITS  : 25 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+Makefile:41: *** missing separator (did you mean TAB instead of 8 spaces?).  Stop.
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [2]> 
+

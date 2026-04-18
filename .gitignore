@@ -47,6 +47,27 @@ experiments/
 !src/
 !src/**
 
+# =========================
+# BINAIRES COMPILÉS (JAMAIS COMMITER — cause SIGILL cross-platform)
+# =========================
+*.o
+*.a
+*.so
+src/qdayprize/qdayprize_runner
+src/qdayprize/qdayprize_runner_debug
+src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
+
+# =========================
+# FICHIERS RUNTIME UBUNTU (évitent conflits git pull)
+# Après !src/** : ré-exclure ces chemins spécifiques
+# =========================
+src/advanced_calculations/bitcoin_quantum_mining/config/btc_nx48_last.csv
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/anomalies/
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/hw_samples/
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/
+src/qdayprize/logs/
+
 # NE PAS ignorer les archives workspace si utilisées comme source
 # (sinon cassera ton pipeline)
 !*.zipsrc/advanced_calculations/quantum_problem_hubbard_hts/logs/
