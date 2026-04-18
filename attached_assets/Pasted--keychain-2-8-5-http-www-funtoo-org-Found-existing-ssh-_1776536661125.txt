@@ -1,0 +1,1776 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10329
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> clinfo --list
+Platform #0: Intel(R) OpenCL Graphics
+ `-- Device #0: Intel(R) UHD Graphics 620
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd 
+lvx@lvx-Vostro-5481 ~> clinfo --list
+Platform #0: Intel(R) OpenCL Graphics
+ `-- Device #0: Intel(R) UHD Graphics 620
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> # 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                          pkill chrome
+                                          pkill firefox
+
+                                          # 2. Libérer le cache kernel (optionnel, root requis)
+                                          sudo sync && sudo sysctl -w vm.drop_caches=5
+
+                                          # 3. Vérifier la RAM disponible
+                                          free -h  # doit afficher >5 GB libres
+
+                                          QDPR_SIM_BITS=20 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+
+                                          doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[sudo] password for lvx: 
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       3.9Gi       2.1Gi       294Mi       2.0Gi       3.5Gi
+Swap:          4.0Gi       656Mi       3.4Gi
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T182004Z
+[QDPR] SIM_BITS  : 20 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+[QDPR] Nettoyage OK
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+gcc -std=c11 -O3 -march=native -mno-avx512f -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512cd -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 35K Apr 18 18:20 qdayprize_runner
+[QDPR] Binaire : 36K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+║  Simulation classique d'attaque quantique ECDLP         ║
+║  Cible : secp256k1 (Bitcoin) — 6 924 807 BTC à risque  ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id    = qdpr_c55_20260418T182004Z
+[QDPR] sim_bits  = 20 bits
+[QDPR] duration  = limitée
+[QDPR] threads   = 1
+[QDPR] log_dir   = /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic
+[QDPR] THÉORIE : secp256k1 nécessite 2330 qubits logiques [Roetteler 2017]
+[QDPR] THÉORIE : Surface Code d=31 → 4480590 qubits physiques
+[QDPR] SIMULATION : 20 bits → validation oracle BSGS + QFT classique
+[QDPR] ============================================
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE — Cycle C55 — démarrage
+[QDPR] sim_bits = 20 | run_id = qdpr_c55_20260418T182004Z
+[QDPR] Simulation parallèle BTC mining = OUI
+[QDPR] ============================================
+[QDPR] elapsed=3s sim_bits=20 keys_tested=1000 recovered=337 success=33.7% n_qubits_L=2330 gate_depth=144
+[QDPR] elapsed=3s sim_bits=24 keys_tested=2000 recovered=1337 success=66.8% n_qubits_L=2330 gate_depth=288
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id        = qdpr_c55_20260418T182004Z
+[QDPR] sim_bits      = 24 bits (clés simulées)
+[QDPR] qubits_sim    = 52 qubits (2×24+ancilla)
+[QDPR] ─── EXTRAPOLATION secp256k1 (256 bits) ───
+[QDPR] n_qubits_L    = 2330 qubits logiques [Roetteler 2017]
+[QDPR] n_qubits_P    = 4480590 qubits physiques [Surface Code d=31]
+[QDPR] QEC overhead  = 1923× (physique/logique)
+[QDPR] gate_depth    = 349525 ops [O(n³), n=256]
+[QDPR] T-gates       = 1048576 [×QEC=10 correction]
+[QDPR] speedup       = 2^128 vs BSGS classique
+[QDPR] ─── RÉSULTATS SIMULATION ───
+[QDPR] keys_tested   = 2000
+[QDPR] keys_recovered= 1337
+[QDPR] success_rate  = 66.85%
+[QDPR] near_miss_bits= 24 bits
+[QDPR] bits_security = 240.0 bits (résiduel)
+[QDPR] runtime       = 3.0 s
+[QDPR] target_wallet = mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj
+[QDPR] ─── IMPACT Q-DAY ───
+[QDPR] BTC vulnérables : 6 924 807 BTC (~490B USD)
+[QDPR] Adresses à risque: 13 978 108 (P2PKH/P2WPKH/P2SH/P2TR reuse)
+[QDPR] Temps attaque réelle (hardware quantique 2330 qubits L) : ~1h
+[QDPR] Temps attaque simulée (classique, 24 bits) : 3.0 s
+
+[QDPR] Rapport sauvegardé → /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/qdayprize_qdpr_c55_20260418T182004Z.json
+[QDPR] QDAYPRIZE terminé.
+[QDPR] Run terminé. Log : /tmp/qdayprize_qdpr_c55_20260418T182004Z.log
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGINT]> # 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                                   pkill chrome
+                                                   pkill firefox
+
+                                                   # 2. Libérer le cache kernel (optionnel, root requis)
+                                                   sudo sync && sudo sysctl -w vm.drop_caches=5
+
+                                                   # 3. Vérifier la RAM disponible
+                                                   free -h  # doit afficher >5 GB libres
+
+                                                   # 4. Lancer le mining
+                                                   doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       3.9Gi       2.0Gi       293Mi       2.1Gi       3.5Gi
+Swap:          4.0Gi       655Mi       3.4Gi
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGINT]> # 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                                   pkill chrome
+                                                   pkill firefox
+
+                                                   # 2. Libérer le cache kernel (optionnel, root requis)
+                                                   sudo sync && sudo sysctl -w vm.drop_caches=4
+
+                                                   # 3. Vérifier la RAM disponible
+                                                   free -h  # doit afficher >4 GB libres
+
+                                                   # 4. Lancer le mining
+                                                   doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+vm.drop_caches = 4
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       3.9Gi       2.1Gi       287Mi       2.1Gi       3.5Gi
+Swap:          4.0Gi       655Mi       3.4Gi
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGINT]> cd
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T163317Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T163317Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 18:33 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00a0773c69b8683a7a6f... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T163317Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T163317Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=1014472704
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T163317Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4389 best=28 bits exploration=0.909 delta=29.10
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:1778MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.91 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4389 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.909 | delta_nonce=29.10 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T163317Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T163317Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:703
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1778MB
+[BTC_QM] elapsed=10.0s hashes=16015360 hashrate=1.60MH/s best_leading=26 best_nonce=1521843784 nx48_delta=30.02
+[BTC_QM] elapsed=20.0s hashes=29033472 hashrate=1.45MH/s best_leading=26 best_nonce=1521843784 nx48_delta=35.21
+[BTC_QM] elapsed=30.0s hashes=40051712 hashrate=1.33MH/s best_leading=26 best_nonce=1521843784 nx48_delta=39.94
+[BTC_QM] elapsed=40.0s hashes=50877440 hashrate=1.27MH/s best_leading=26 best_nonce=1521843784 nx48_delta=58.67
+[BTC_QM] elapsed=50.0s hashes=61708288 hashrate=1.23MH/s best_leading=26 best_nonce=1521843784 nx48_delta=80.90
+[BTC_QM] elapsed=60.0s hashes=72782336 hashrate=1.21MH/s best_leading=26 best_nonce=1521843784 nx48_delta=91.01
+[BTC_QM] elapsed=70.0s hashes=83884544 hashrate=1.20MH/s best_leading=26 best_nonce=1521843784 nx48_delta=116.91
+[BTC_QM] elapsed=80.0s hashes=94934016 hashrate=1.19MH/s best_leading=26 best_nonce=1521843784 nx48_delta=110.38
+[BTC_QM] elapsed=90.0s hashes=105667584 hashrate=1.17MH/s best_leading=26 best_nonce=1521843784 nx48_delta=117.08
+[BTC_QM] elapsed=100.0s hashes=115747840 hashrate=1.16MH/s best_leading=26 best_nonce=1521843784 nx48_delta=117.44
+[BTC_QM] elapsed=110.0s hashes=126202368 hashrate=1.15MH/s best_leading=26 best_nonce=1521843784 nx48_delta=133.34
+[BTC_QM] elapsed=120.0s hashes=136496640 hashrate=1.14MH/s best_leading=26 best_nonce=1521843784 nx48_delta=134.89
+[BTC_QM] elapsed=130.0s hashes=146840064 hashrate=1.13MH/s best_leading=26 best_nonce=1521843784 nx48_delta=131.93
+[BTC_QM] elapsed=140.0s hashes=156967936 hashrate=1.12MH/s best_leading=26 best_nonce=1521843784 nx48_delta=144.70
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=74 sn=0.601)
+[BTC_QM] elapsed=150.0s hashes=167365120 hashrate=1.12MH/s best_leading=26 best_nonce=1521843784 nx48_delta=146.35
+[BTC_QM] elapsed=160.0s hashes=177800704 hashrate=1.11MH/s best_leading=26 best_nonce=1521843784 nx48_delta=160.28
+[BTC_QM] elapsed=170.0s hashes=188270592 hashrate=1.11MH/s best_leading=26 best_nonce=1521843784 nx48_delta=186.97
+[BTC_QM] elapsed=180.0s hashes=198714368 hashrate=1.10MH/s best_leading=26 best_nonce=1521843784 nx48_delta=208.08
+[BTC_QM] elapsed=190.0s hashes=209186816 hashrate=1.10MH/s best_leading=26 best_nonce=1521843784 nx48_delta=252.73
+[BTC_QM] elapsed=200.0s hashes=219658752 hashrate=1.10MH/s best_leading=26 best_nonce=1521843784 nx48_delta=225.52
+[BTC_QM] elapsed=210.0s hashes=230135808 hashrate=1.10MH/s best_leading=26 best_nonce=1521843784 nx48_delta=296.87
+[BTC_QM] elapsed=220.0s hashes=240595456 hashrate=1.09MH/s best_leading=26 best_nonce=1521843784 nx48_delta=421.97
+[BTC_QM] elapsed=230.0s hashes=251076608 hashrate=1.09MH/s best_leading=26 best_nonce=1521843784 nx48_delta=403.23
+[BTC_QM] elapsed=240.1s hashes=261202944 hashrate=1.09MH/s best_leading=26 best_nonce=1521843784 nx48_delta=492.34
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=250.1s hashes=271282176 hashrate=1.08MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=260.1s hashes=281302016 hashrate=1.08MH/s best_leading=26 best_nonce=1521843784 nx48_delta=494.93
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=270.1s hashes=291080192 hashrate=1.08MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=280.1s hashes=300829696 hashrate=1.07MH/s best_leading=26 best_nonce=1521843784 nx48_delta=463.29
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=290.1s hashes=310579200 hashrate=1.07MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=300.1s hashes=320318464 hashrate=1.07MH/s best_leading=26 best_nonce=1521843784 nx48_delta=473.88
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=330058752 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=320.1s hashes=339806208 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=478.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=330.1s hashes=349967872 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=360008704 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=350.1s hashes=370428416 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=380788736 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=486.95
+[BTC_QM] elapsed=370.1s hashes=390693376 hashrate=1.06MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=380.1s hashes=400907776 hashrate=1.05MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=411301376 hashrate=1.05MH/s best_leading=26 best_nonce=1521843784 nx48_delta=499.78
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=421707776 hashrate=1.05MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=432143360 hashrate=1.05MH/s best_leading=26 best_nonce=1521843784 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=28.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=420.1s hashes=442189824 hashrate=1.05MH/s best_leading=28 best_nonce=2236486240 nx48_delta=375.17
+[BTC_QM] elapsed=430.1s hashes=451768320 hashrate=1.05MH/s best_leading=28 best_nonce=2236486240 nx48_delta=424.05
+[BTC_QM] elapsed=440.1s hashes=461480960 hashrate=1.05MH/s best_leading=28 best_nonce=2236486240 nx48_delta=476.54
+[BTC_QM] elapsed=450.1s hashes=471288832 hashrate=1.05MH/s best_leading=28 best_nonce=2236486240 nx48_delta=494.27
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=460.1s hashes=480841216 hashrate=1.05MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=470.1s hashes=490303488 hashrate=1.04MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=480.1s hashes=499694080 hashrate=1.04MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=490.1s hashes=508995072 hashrate=1.04MH/s best_leading=28 best_nonce=2236486240 nx48_delta=440.14
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.215446 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=500.1s hashes=518479872 hashrate=1.04MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=510.1s hashes=527974912 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=520.1s hashes=537872384 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=469.15
+[BTC_QM] elapsed=530.1s hashes=547979264 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=458.46
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=540.1s hashes=557963776 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=550.1s hashes=568032256 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=480.40
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=560.1s hashes=577962496 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=482.09
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=570.1s hashes=587654656 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=580.2s hashes=597488128 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=470.68
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.966299 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=590.2s hashes=607675904 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=443.82
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=600.2s hashes=617640960 hashrate=1.03MH/s best_leading=28 best_nonce=2236486240 nx48_delta=486.29
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+tools/btc_run_ubuntu.sh: line 115: 141206 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     141207 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> QDPR_SIM_BITS=20 QDPR_DURATION_S=600 bash tools/qdayprize_run.sh
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE Runner — Cycle C55
+[QDPR] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[QDPR] RUN_ID    : qdpr_c55_20260418T184421Z
+[QDPR] SIM_BITS  : 20 bits
+[QDPR] DURATION  : 600s (0=illimité)
+[QDPR] THREADS   : 1
+[QDPR] THEORY    : secp256k1 → 2330 qubits logiques, ~4.47M physiques
+[QDPR] ============================================
+[QDPR] Étape 1/2 — Compilation QDAYPRIZE...
+[QDPR] Nettoyage OK
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+gcc -std=c11 -O3 -march=native -mno-avx512f -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512cd -ffast-math -funroll-loops -Wall -Wextra -Wno-unused-parameter -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -fPIE -o qdayprize_runner main_qdayprize.o qdayprize_engine.o -lm -lpthread -pie
+[QDPR] Compilation OK → qdayprize_runner
+-rwxrwxr-x 1 lvx lvx 35K Apr 18 18:44 qdayprize_runner
+[QDPR] Binaire : 36K qdayprize_runner
+[QDPR] Étape 2/2 — Simulation QDAYPRIZE...
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+║  Simulation classique d'attaque quantique ECDLP         ║
+║  Cible : secp256k1 (Bitcoin) — 6 924 807 BTC à risque  ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id    = qdpr_c55_20260418T184421Z
+[QDPR] sim_bits  = 20 bits
+[QDPR] duration  = limitée
+[QDPR] threads   = 1
+[QDPR] log_dir   = /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic
+[QDPR] THÉORIE : secp256k1 nécessite 2330 qubits logiques [Roetteler 2017]
+[QDPR] THÉORIE : Surface Code d=31 → 4480590 qubits physiques
+[QDPR] SIMULATION : 20 bits → validation oracle BSGS + QFT classique
+[QDPR] ============================================
+[QDPR] ============================================
+[QDPR] LumVorax QDAYPRIZE — Cycle C55 — démarrage
+[QDPR] sim_bits = 20 | run_id = qdpr_c55_20260418T184421Z
+[QDPR] Simulation parallèle BTC mining = OUI
+[QDPR] ============================================
+[QDPR] elapsed=3s sim_bits=20 keys_tested=1000 recovered=322 success=32.2% n_qubits_L=2330 gate_depth=144
+[QDPR] elapsed=3s sim_bits=24 keys_tested=2000 recovered=1322 success=66.1% n_qubits_L=2330 gate_depth=288
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 18 — QDAYPRIZE Quantum Attack        ║
+║  Version : 1.0.0-C55 | Cycle : C55              ║
+╚══════════════════════════════════════════════════════════╝
+[QDPR] run_id        = qdpr_c55_20260418T184421Z
+[QDPR] sim_bits      = 24 bits (clés simulées)
+[QDPR] qubits_sim    = 52 qubits (2×24+ancilla)
+[QDPR] ─── EXTRAPOLATION secp256k1 (256 bits) ───
+[QDPR] n_qubits_L    = 2330 qubits logiques [Roetteler 2017]
+[QDPR] n_qubits_P    = 4480590 qubits physiques [Surface Code d=31]
+[QDPR] QEC overhead  = 1923× (physique/logique)
+[QDPR] gate_depth    = 349525 ops [O(n³), n=256]
+[QDPR] T-gates       = 1048576 [×QEC=10 correction]
+[QDPR] speedup       = 2^128 vs BSGS classique
+[QDPR] ─── RÉSULTATS SIMULATION ───
+[QDPR] keys_tested   = 2000
+[QDPR] keys_recovered= 1322
+[QDPR] success_rate  = 66.10%
+[QDPR] near_miss_bits= 24 bits
+[QDPR] bits_security = 240.1 bits (résiduel)
+[QDPR] runtime       = 3.0 s
+[QDPR] target_wallet = mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj
+[QDPR] ─── IMPACT Q-DAY ───
+[QDPR] BTC vulnérables : 6 924 807 BTC (~490B USD)
+[QDPR] Adresses à risque: 13 978 108 (P2PKH/P2WPKH/P2SH/P2TR reuse)
+[QDPR] Temps attaque réelle (hardware quantique 2330 qubits L) : ~1h
+[QDPR] Temps attaque simulée (classique, 24 bits) : 3.0 s
+
+[QDPR] Rapport sauvegardé → /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/qdayprize_qdpr_c55_20260418T184421Z.json
+[QDPR] QDAYPRIZE terminé.
+[QDPR] Run terminé. Log : /tmp/qdayprize_qdpr_c55_20260418T184421Z.log
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T164453Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T164453Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 18:44 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00206723083b65f2746b... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T164453Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T164453Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=593960960
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T164453Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4597 best=28 bits exploration=0.707 delta=498.31
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:1720MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.71 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4597 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.707 | delta_nonce=498.31 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T164453Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T164453Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=24.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1720MB
+[BTC_QM] elapsed=10.0s hashes=13946880 hashrate=1.39MH/s best_leading=24 best_nonce=1459813474 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=20.0s hashes=26701824 hashrate=1.33MH/s best_leading=24 best_nonce=1459813474 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.667307 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=30.0s hashes=36874240 hashrate=1.23MH/s best_leading=24 best_nonce=1459813474 nx48_delta=500.00
+[BTC_QM] elapsed=40.0s hashes=47249920 hashrate=1.18MH/s best_leading=24 best_nonce=1459813474 nx48_delta=468.12
+[BTC_QM] elapsed=50.0s hashes=57745920 hashrate=1.15MH/s best_leading=24 best_nonce=1459813474 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=60.0s hashes=67661824 hashrate=1.13MH/s best_leading=25 best_nonce=32142862 nx48_delta=444.16
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=70.0s hashes=77455360 hashrate=1.11MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[BTC_QM] elapsed=80.0s hashes=87373824 hashrate=1.09MH/s best_leading=25 best_nonce=32142862 nx48_delta=446.02
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=90.0s hashes=97836032 hashrate=1.09MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=100.0s hashes=108326912 hashrate=1.08MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=110.0s hashes=118453248 hashrate=1.08MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=120.0s hashes=128022016 hashrate=1.07MH/s best_leading=25 best_nonce=32142862 nx48_delta=471.23
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=130.1s hashes=137768448 hashrate=1.06MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=68 sn=0.600)
+[BTC_QM] elapsed=140.1s hashes=147500544 hashrate=1.05MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[BTC_QM] elapsed=150.1s hashes=157257216 hashrate=1.05MH/s best_leading=25 best_nonce=32142862 nx48_delta=467.28
+[BTC_QM] elapsed=160.1s hashes=167505408 hashrate=1.05MH/s best_leading=25 best_nonce=32142862 nx48_delta=438.58
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=170.1s hashes=177721348 hashrate=1.05MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.546816 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=180.1s hashes=188161540 hashrate=1.04MH/s best_leading=25 best_nonce=32142862 nx48_delta=499.55
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.323667 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=190.1s hashes=198512132 hashrate=1.04MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=200.1s hashes=208494596 hashrate=1.04MH/s best_leading=25 best_nonce=32142862 nx48_delta=476.94
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=210.1s hashes=218173444 hashrate=1.04MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=220.1s hashes=227817476 hashrate=1.04MH/s best_leading=25 best_nonce=32142862 nx48_delta=490.91
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=230.1s hashes=237794308 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=240.1s hashes=248113668 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=458.99
+[BTC_QM] elapsed=250.1s hashes=258595332 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=494.15
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.550911 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=260.1s hashes=269048836 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=270.1s hashes=279527428 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[BTC_QM] elapsed=280.1s hashes=289628676 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=427.20
+[BTC_QM] elapsed=290.1s hashes=299575812 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=493.03
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=300.1s hashes=309277188 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=479.09
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=319272964 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=320.1s hashes=329357828 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=490.02
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=330.1s hashes=339509764 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=349576196 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=461.71
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=350.1s hashes=359708164 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=369754116 hashrate=1.03MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=370.1s hashes=379039748 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=380.1s hashes=388653060 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=487.35
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=398672900 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=408785412 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=483.50
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=418930692 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=420.1s hashes=429316100 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=430.1s hashes=439466500 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=440.1s hashes=449547780 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=450.2s hashes=459698692 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=480.74
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=460.2s hashes=469220868 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=470.2s hashes=478370308 hashrate=1.02MH/s best_leading=25 best_nonce=32142862 nx48_delta=479.79
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=480.2s hashes=487320068 hashrate=1.01MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=490.2s hashes=497001988 hashrate=1.01MH/s best_leading=25 best_nonce=32142862 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGINT]> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T165322Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T165322Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 18:53 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00206723083b65f2746b... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T165322Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T165322Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=593960960
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T165322Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4846 best=28 bits exploration=0.950 delta=442.31
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2692MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.95 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4846 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.950 | delta_nonce=442.31 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T165322Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T165322Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 2692MB
+[BTC_QM] elapsed=10.0s hashes=12667904 hashrate=1.27MH/s best_leading=20 best_nonce=252698176 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=20.0s hashes=22436864 hashrate=1.12MH/s best_leading=25 best_nonce=1878833215 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=30.0s hashes=31985664 hashrate=1.07MH/s best_leading=25 best_nonce=1878833215 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.494423 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=40.0s hashes=41435136 hashrate=1.04MH/s best_leading=25 best_nonce=1878833215 nx48_delta=469.42
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=50.0s hashes=50637824 hashrate=1.01MH/s best_leading=25 best_nonce=1878833215 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=60.0s hashes=60115456 hashrate=1.00MH/s best_leading=25 best_nonce=1878833215 nx48_delta=477.35
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=70.0s hashes=69512192 hashrate=0.99MH/s best_leading=25 best_nonce=1878833215 nx48_delta=500.00
+[BTC_QM] elapsed=80.0s hashes=78895616 hashrate=0.99MH/s best_leading=25 best_nonce=1878833215 nx48_delta=465.58
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=90.0s hashes=88297472 hashrate=0.98MH/s best_leading=25 best_nonce=1878833215 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=27.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=100.0s hashes=97688576 hashrate=0.98MH/s best_leading=27 best_nonce=3389001029 nx48_delta=469.98
+[BTC_QM] elapsed=110.0s hashes=107100672 hashrate=0.97MH/s best_leading=27 best_nonce=3389001029 nx48_delta=411.77
+[BTC_QM] elapsed=120.0s hashes=116252160 hashrate=0.97MH/s best_leading=27 best_nonce=3389001029 nx48_delta=488.83
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=130.0s hashes=125629952 hashrate=0.97MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=68 sn=0.601)
+[BTC_QM] elapsed=140.0s hashes=135025152 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=150.0s hashes=144494080 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=160.0s hashes=153975808 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=481.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=170.0s hashes=163272192 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=180.0s hashes=172673024 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=190.1s hashes=182076416 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=200.1s hashes=191376896 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[BTC_QM] elapsed=210.1s hashes=200854016 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=416.01
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=220.1s hashes=210271744 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=487.11
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=230.1s hashes=219759104 hashrate=0.96MH/s best_leading=27 best_nonce=3389001029 nx48_delta=496.08
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=240.1s hashes=228880386 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=250.1s hashes=238363650 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=260.1s hashes=247919106 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=270.1s hashes=257158146 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=280.1s hashes=266608130 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=476.64
+[BTC_QM] elapsed=290.1s hashes=275919362 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=441.32
+[BTC_QM] elapsed=300.1s hashes=285227010 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=474.06
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=294369282 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2758MB
+[BTC_QM] elapsed=320.1s hashes=303915522 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=428.54
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=330.1s hashes=313385986 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=322863106 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=461.27
+[BTC_QM] elapsed=350.1s hashes=331917314 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=473.48
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=341315074 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=492.03
+[BTC_QM] elapsed=370.1s hashes=350731266 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=460.14
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=380.1s hashes=360210946 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=369432066 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=378887682 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=388267522 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=420.1s hashes=397660162 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=451.49
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=430.1s hashes=407063042 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=440.1s hashes=416511490 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=492.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=450.1s hashes=425762818 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=460.1s hashes=435071490 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=488.87
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=470.1s hashes=444282370 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=493.49
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=480.2s hashes=453820930 hashrate=0.95MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[BTC_QM] elapsed=490.2s hashes=463081986 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=490.50
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=500.2s hashes=472468482 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=486.89
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=510.2s hashes=481763842 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=520.2s hashes=491008002 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=490.72
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=530.2s hashes=500395010 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=540.2s hashes=509779970 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=477.94
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=550.2s hashes=519027202 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=560.2s hashes=528223234 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=570.2s hashes=537733634 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=580.2s hashes=546823682 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=590.2s hashes=556270594 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=600.2s hashes=565601282 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=610.2s hashes=574897154 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=470.06
+[BTC_QM] elapsed=620.2s hashes=584052226 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=459.18
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=630.2s hashes=593616386 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=640.2s hashes=602904066 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=650.2s hashes=612304898 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=660.2s hashes=621605378 hashrate=0.94MH/s best_leading=27 best_nonce=3389001029 nx48_delta=494.11
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+tools/btc_run_ubuntu.sh: line 115: 144894 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     144895 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T173538Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T173538Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 19:35 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00e0042058d5014e6480... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T173538Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T173538Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=537190400
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T173538Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4892 best=28 bits exploration=0.873 delta=500.00
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2654MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.87 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4892 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.873 | delta_nonce=500.00 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T173538Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T173538Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:703
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 2654MB
+[BTC_QM] elapsed=10.0s hashes=13745664 hashrate=1.37MH/s best_leading=26 best_nonce=4196016681 nx48_delta=376.74
+[BTC_QM] elapsed=20.0s hashes=25274880 hashrate=1.26MH/s best_leading=26 best_nonce=4196016681 nx48_delta=408.72
+[BTC_QM] elapsed=30.0s hashes=35094528 hashrate=1.17MH/s best_leading=26 best_nonce=4196016681 nx48_delta=452.71
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=40.0s hashes=44724224 hashrate=1.12MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=50.0s hashes=54312960 hashrate=1.09MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=60.0s hashes=63926272 hashrate=1.07MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.128571 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=70.0s hashes=73534976 hashrate=1.05MH/s best_leading=26 best_nonce=4196016681 nx48_delta=474.15
+[BTC_QM] elapsed=80.0s hashes=83094016 hashrate=1.04MH/s best_leading=26 best_nonce=4196016681 nx48_delta=472.20
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=90.0s hashes=92497920 hashrate=1.03MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.079619 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=100.0s hashes=101915648 hashrate=1.02MH/s best_leading=26 best_nonce=4196016681 nx48_delta=488.75
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=110.0s hashes=111350784 hashrate=1.01MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=120.0s hashes=120751104 hashrate=1.01MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=130.0s hashes=130061824 hashrate=1.00MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=68 sn=0.600)
+[BTC_QM] elapsed=140.0s hashes=139116032 hashrate=0.99MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=150.1s hashes=148155392 hashrate=0.99MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[BTC_QM] elapsed=160.1s hashes=157082624 hashrate=0.98MH/s best_leading=26 best_nonce=4196016681 nx48_delta=483.61
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=170.1s hashes=166064128 hashrate=0.98MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=180.1s hashes=175041536 hashrate=0.97MH/s best_leading=26 best_nonce=4196016681 nx48_delta=497.05
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=190.1s hashes=184129536 hashrate=0.97MH/s best_leading=26 best_nonce=4196016681 nx48_delta=480.00
+[BTC_QM] elapsed=200.1s hashes=193232896 hashrate=0.97MH/s best_leading=26 best_nonce=4196016681 nx48_delta=483.52
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=210.1s hashes=202283520 hashrate=0.96MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2600MB
+[BTC_QM] elapsed=220.1s hashes=211345408 hashrate=0.96MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=230.1s hashes=220504576 hashrate=0.96MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=240.1s hashes=229448704 hashrate=0.96MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=250.1s hashes=238449152 hashrate=0.95MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=260.1s hashes=247499264 hashrate=0.95MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=270.1s hashes=256485376 hashrate=0.95MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=280.1s hashes=265374208 hashrate=0.95MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.853598 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=290.1s hashes=274404352 hashrate=0.95MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=300.1s hashes=283473920 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.499913 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=292694016 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=493.13
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=320.1s hashes=301705216 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=482.28
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=330.1s hashes=310681600 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=319674368 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=496.08
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.149393 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=350.1s hashes=328673280 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=337838080 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=485.83
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=370.1s hashes=346942464 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=483.43
+[BTC_QM] elapsed=380.1s hashes=356200448 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=485.37
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=365297664 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=480.86
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=374480384 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=383619584 hashrate=0.94MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=420.1s hashes=392381952 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=430.1s hashes=401377797 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=476.07
+[BTC_QM] elapsed=440.2s hashes=410793989 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=496.14
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=450.2s hashes=419405317 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[BTC_QM] elapsed=460.2s hashes=427795461 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=475.38
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=470.2s hashes=436583941 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=480.2s hashes=445534213 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=490.2s hashes=454700037 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=500.2s hashes=463912965 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=510.2s hashes=473077765 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=520.2s hashes=482228741 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=451.59
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=530.2s hashes=491377669 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=540.2s hashes=500325895 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=464.59
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.301779 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=550.2s hashes=509204999 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=560.2s hashes=518340615 hashrate=0.93MH/s best_leading=26 best_nonce=4196016681 nx48_delta=449.60
+[BTC_QM] elapsed=570.2s hashes=527406087 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=499.44
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=580.2s hashes=535926792 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=445.88
+[BTC_QM] elapsed=590.2s hashes=544664584 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=474.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=600.2s hashes=553639944 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[BTC_QM] elapsed=610.2s hashes=562680328 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=475.28
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=620.2s hashes=571529224 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=495.02
+[BTC_QM] elapsed=630.2s hashes=580914696 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=490.16
+[BTC_QM] elapsed=640.2s hashes=590039048 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=462.98
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=650.2s hashes=599138824 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=469.34
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=660.2s hashes=608239112 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=670.2s hashes=617363464 hashrate=0.92MH/s best_leading=26 best_nonce=4196016681 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+tools/btc_run_ubuntu.sh: line 115: 148559 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     148560 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> pkill chrome
+                                                    pkill firefox
+
+                                                    # 2. Libérer le cache kernel (optionnel, root requis)
+                                                    sudo sync && sudo sysctl -w vm.drop_caches=6
+
+                                                    # 3. Vérifier la RAM disponible
+                                                    free -h  # doit afficher >6 GB libres
+
+                                                    # 4. Lancer le mining
+                                                    doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[sudo] password for lvx: 
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       3.5Gi       3.3Gi       136Mi       1.1Gi       3.9Gi
+Swap:          4.0Gi       992Mi       3.0Gi
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T175320Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T175320Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 19:53 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00000038f49b958b2401... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T175320Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T175320Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=939524096
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T175320Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4893 best=28 bits exploration=0.862 delta=500.00
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:3995MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.86 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4893 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.862 | delta_nonce=500.00 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T175320Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T175320Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=24.000000 src=src/btc_mining_engine.c:703
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 3994MB
+[BTC_QM] elapsed=10.0s hashes=14312448 hashrate=1.43MH/s best_leading=24 best_nonce=1853283097 nx48_delta=422.58
+[BTC_QM] elapsed=20.0s hashes=25605120 hashrate=1.28MH/s best_leading=24 best_nonce=1853283097 nx48_delta=466.37
+[BTC_QM] elapsed=30.0s hashes=35089408 hashrate=1.17MH/s best_leading=24 best_nonce=1853283097 nx48_delta=464.40
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=40.0s hashes=44265472 hashrate=1.11MH/s best_leading=25 best_nonce=3653355185 nx48_delta=470.58
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.838573 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=50.0s hashes=53217792 hashrate=1.06MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=60.0s hashes=62492160 hashrate=1.04MH/s best_leading=26 best_nonce=4057188376 nx48_delta=494.08
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=70.0s hashes=71870976 hashrate=1.03MH/s best_leading=26 best_nonce=4057188376 nx48_delta=475.91
+[BTC_QM] elapsed=80.0s hashes=81175552 hashrate=1.01MH/s best_leading=26 best_nonce=4057188376 nx48_delta=471.88
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=90.0s hashes=90138112 hashrate=1.00MH/s best_leading=26 best_nonce=4057188376 nx48_delta=489.78
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=100.0s hashes=99370498 hashrate=0.99MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=110.0s hashes=108704770 hashrate=0.99MH/s best_leading=26 best_nonce=4057188376 nx48_delta=470.41
+[BTC_QM] elapsed=120.0s hashes=117745666 hashrate=0.98MH/s best_leading=26 best_nonce=4057188376 nx48_delta=477.57
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=130.0s hashes=126441474 hashrate=0.97MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=68 sn=0.600)
+[BTC_QM] elapsed=140.0s hashes=135291394 hashrate=0.97MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=150.1s hashes=144097794 hashrate=0.96MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=160.1s hashes=153061378 hashrate=0.96MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=170.1s hashes=162326530 hashrate=0.95MH/s best_leading=26 best_nonce=4057188376 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=180.1s hashes=171635714 hashrate=0.95MH/s best_leading=26 best_nonce=4057188376 nx48_delta=482.99
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=27.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=190.1s hashes=180952066 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=200.1s hashes=190213122 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=496.83
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=210.1s hashes=199463943 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2007MB
+[BTC_QM] elapsed=220.1s hashes=208138573 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=495.53
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=230.1s hashes=217574733 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=497.72
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=240.1s hashes=226504013 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=494.83
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=250.1s hashes=235592013 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=260.1s hashes=244878669 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=470.27
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=270.1s hashes=254378317 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=467.68
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=280.1s hashes=264078157 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[BTC_QM] elapsed=290.1s hashes=273368397 hashrate=0.94MH/s best_leading=27 best_nonce=308000712 nx48_delta=442.68
+[BTC_QM] elapsed=300.1s hashes=283608909 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=462.89
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.275854 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=293327181 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[BTC_QM] elapsed=320.1s hashes=303018317 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=461.79
+[BTC_QM] elapsed=330.1s hashes=312394061 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=486.62
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=321913165 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=350.1s hashes=332122957 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=342122317 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=370.1s hashes=352634701 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=440.97
+[BTC_QM] elapsed=380.1s hashes=362597197 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=435.76
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=372472653 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=382016333 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=480.32
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=391582541 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=479.02
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=420.1s hashes=401123149 hashrate=0.95MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=430.1s hashes=411321165 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=440.1s hashes=421552461 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=450.1s hashes=431688525 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=460.1s hashes=441603917 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=441.22
+[BTC_QM] elapsed=470.1s hashes=451130701 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=452.98
+[BTC_QM] elapsed=480.1s hashes=460619085 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=419.80
+[BTC_QM] elapsed=490.1s hashes=469911373 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=446.39
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=500.2s hashes=479586637 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=510.2s hashes=489639757 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=520.2s hashes=499782477 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.965312 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=530.2s hashes=509672269 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=496.82
+[BTC_QM] elapsed=540.2s hashes=519365453 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=497.63
+[BTC_QM] elapsed=550.2s hashes=528992077 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[BTC_QM] elapsed=560.2s hashes=538879821 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=496.33
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=570.2s hashes=549217101 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[BTC_QM] elapsed=580.2s hashes=559610705 hashrate=0.96MH/s best_leading=27 best_nonce=308000712 nx48_delta=476.62
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=590.2s hashes=569721681 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=600.2s hashes=579865937 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=487.56
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=610.2s hashes=589732689 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=620.2s hashes=599245649 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=500.00
+[BTC_QM] elapsed=630.2s hashes=608832849 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=486.45
+[BTC_QM] elapsed=640.2s hashes=618433361 hashrate=0.97MH/s best_leading=27 best_nonce=308000712 nx48_delta=497.52
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+tools/btc_run_ubuntu.sh: line 115: 155888 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     155889 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> pkill chrome
+                                                    pkill firefox 
+                                                    # 2. Libérer le cache kernel (optionnel, root requis)
+                                                    sudo sync && sudo sysctl -w vm.drop_caches=6
+
+                                                    # 3. Vérifier la RAM disponible
+                                                    free -h  # doit afficher >6 GB libres
+
+                                                    # 4. Lancer le mining
+                                                    doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       3.8Gi       2.4Gi       169Mi       1.9Gi       3.7Gi
+Swap:          4.0Gi       903Mi       3.1Gi
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260418T180519Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260418T180519Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/main_btc_mining.c:253:9: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  253 |         strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+      |         ^
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 145K Apr 18 20:05 btc_mining_runner
+[C48] Binaire : 145K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 0060022065da0a7a867d... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260418T180519Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260418T180519Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=537026560
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260418T180519Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=4984 best=28 bits exploration=0.950 delta=486.27
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:3808MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.95 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=4984 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.950 | delta_nonce=486.27 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260418T180519Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260418T180519Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.780628 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 3808MB
+[BTC_QM] elapsed=10.0s hashes=15614976 hashrate=1.56MH/s best_leading=20 best_nonce=1217757304 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=20.0s hashes=27816960 hashrate=1.39MH/s best_leading=25 best_nonce=2358599043 nx48_delta=326.19
+[BTC_QM] elapsed=30.0s hashes=36997632 hashrate=1.23MH/s best_leading=25 best_nonce=2358599043 nx48_delta=400.90
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:3886MB
+[BTC_QM] elapsed=40.0s hashes=46267202 hashrate=1.16MH/s best_leading=25 best_nonce=2358599043 nx48_delta=445.36
+[BTC_QM] elapsed=50.0s hashes=55432002 hashrate=1.11MH/s best_leading=25 best_nonce=2358599043 nx48_delta=492.19
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=60.0s hashes=64883010 hashrate=1.08MH/s best_leading=25 best_nonce=2358599043 nx48_delta=486.29
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=70.0s hashes=74352962 hashrate=1.06MH/s best_leading=26 best_nonce=246076920 nx48_delta=398.76
+[BTC_QM] elapsed=80.0s hashes=83749186 hashrate=1.05MH/s best_leading=26 best_nonce=246076920 nx48_delta=401.01
+[BTC_QM] elapsed=90.0s hashes=93082946 hashrate=1.03MH/s best_leading=26 best_nonce=246076920 nx48_delta=463.80
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=100.0s hashes=102397250 hashrate=1.02MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[BTC_QM] elapsed=110.0s hashes=111465282 hashrate=1.01MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=120.0s hashes=120714562 hashrate=1.01MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.167756 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=130.0s hashes=129402178 hashrate=1.00MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[NX48-GPU] ✅ Activation GPU OpenCL : Intel(R) UHD Graphics 620 (stall_long=69 sn=0.602)
+[BTC_QM] elapsed=140.1s hashes=138422082 hashrate=0.99MH/s best_leading=26 best_nonce=246076920 nx48_delta=483.13
+[BTC_QM] elapsed=150.1s hashes=147696450 hashrate=0.98MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=160.1s hashes=156377922 hashrate=0.98MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=170.1s hashes=165554498 hashrate=0.97MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=180.1s hashes=174745922 hashrate=0.97MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=190.1s hashes=183883074 hashrate=0.97MH/s best_leading=26 best_nonce=246076920 nx48_delta=485.63
+[BTC_QM] elapsed=200.1s hashes=192732482 hashrate=0.96MH/s best_leading=26 best_nonce=246076920 nx48_delta=468.32
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=210.1s hashes=201533250 hashrate=0.96MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=220.1s hashes=210458946 hashrate=0.96MH/s best_leading=26 best_nonce=246076920 nx48_delta=487.16
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=230.1s hashes=219552578 hashrate=0.95MH/s best_leading=26 best_nonce=246076920 nx48_delta=500.00
+[BTC_QM] elapsed=240.1s hashes=228708674 hashrate=0.95MH/s best_leading=26 best_nonce=246076920 nx48_delta=412.95
+[BTC_QM] elapsed=250.1s hashes=237947202 hashrate=0.95MH/s best_leading=26 best_nonce=246076920 nx48_delta=479.09
+[BTC_QM] elapsed=260.1s hashes=247089986 hashrate=0.95MH/s best_leading=26 best_nonce=246076920 nx48_delta=473.21
+[BTC_QM] elapsed=270.1s hashes=256166210 hashrate=0.95MH/s best_leading=26 best_nonce=246076920 nx48_delta=484.54
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=27.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=280.1s hashes=265115970 hashrate=0.95MH/s best_leading=27 best_nonce=553343965 nx48_delta=497.29
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=290.1s hashes=274327874 hashrate=0.95MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=300.1s hashes=283418434 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=475.10
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=310.1s hashes=292715330 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=484.85
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=320.1s hashes=302098242 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=488.84
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=330.1s hashes=311517506 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=460.63
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=340.1s hashes=320800578 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=350.1s hashes=329982274 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=475.54
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.438639 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=360.1s hashes=339365698 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=495.48
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=370.1s hashes=348640066 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=380.1s hashes=357542722 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=390.1s hashes=366596930 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=495.61
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=400.1s hashes=375560002 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=486.62
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=410.1s hashes=384792898 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=450.91
+[BTC_QM] elapsed=420.1s hashes=393610050 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=492.47
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=430.1s hashes=402326850 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=440.1s hashes=411739458 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=450.1s hashes=421496131 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=495.15
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=460.2s hashes=431320899 hashrate=0.94MH/s best_leading=27 best_nonce=553343965 nx48_delta=492.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=28.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=470.2s hashes=441397571 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=480.2s hashes=451804483 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=452.09
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=490.2s hashes=461777219 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=500.2s hashes=471778115 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=510.2s hashes=481359171 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.876645 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=520.2s hashes=491053379 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=530.2s hashes=500375363 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=540.2s hashes=510420291 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.854038 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=550.2s hashes=520301379 hashrate=0.95MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=560.2s hashes=529286467 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=570.2s hashes=538448707 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=498.88
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=580.2s hashes=547672899 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=590.2s hashes=557001539 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=600.2s hashes=566055747 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=610.2s hashes=575079235 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[BTC_QM] elapsed=620.2s hashes=584837443 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=454.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=630.2s hashes=594558275 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=640.2s hashes=604640579 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=469.17
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.312985 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=650.2s hashes=613427011 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+[BTC_QM] elapsed=660.2s hashes=622509891 hashrate=0.94MH/s best_leading=28 best_nonce=2626542707 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:774
+tools/btc_run_ubuntu.sh: line 115: 160217 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     160218 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> 
+
