@@ -228,17 +228,30 @@ int main(int argc, char* argv[]) {
     }
 
     /* ── Initialisation NX48 BTC ────────────────────────────────── */
+    /* ── C61 : Configuration NX48 BTC — Autonomie 100% ─────────── */
     nx48_btc_config_t nx48_cfg;
     memset(&nx48_cfg, 0, sizeof(nx48_cfg));
-    nx48_cfg.learning_rate   = 0.01;
-    nx48_cfg.lambda_l1       = 0.001;
-    nx48_cfg.label_target    = 1.0;
-    nx48_cfg.update_interval = 100000;
-    nx48_cfg.n_replicas_base = 8;
-    nx48_cfg.T_cold          = 1.0;
-    nx48_cfg.T_hot           = 50.0;
+    nx48_cfg.learning_rate        = 0.01;
+    nx48_cfg.lambda_l1            = 0.001;
+    nx48_cfg.label_target         = 1.0;
+    nx48_cfg.update_interval      = 100000;
+    nx48_cfg.n_replicas_base      = 8;
+    nx48_cfg.T_cold               = 1.0;
+    nx48_cfg.T_hot                = 50.0;
+    nx48_cfg.n_threads_initial    = cfg.n_threads;
+    nx48_cfg.hw_detect_interval_s = 30;
     strncpy(nx48_cfg.csv_path, cfg.nx48_csv, sizeof(nx48_cfg.csv_path)-1);
-    nx48_cfg.csv_path[sizeof(nx48_cfg.csv_path)-1] = '\0'; /* C50-FIX-P1 : null-terminator explicite — élimine warning strncpy-truncation */
+    nx48_cfg.csv_path[sizeof(nx48_cfg.csv_path)-1] = '\0';
+    /* C61 : chemin LUM natif (même répertoire que CSV, extension .lum) */
+    {
+        char lum_path[256];
+        strncpy(lum_path, cfg.nx48_csv, sizeof(lum_path)-1);
+        lum_path[sizeof(lum_path)-1] = '\0';
+        char* dot = strrchr(lum_path, '.');
+        if (dot) strncpy(dot, ".lum", 5);
+        else strncat(lum_path, ".lum", sizeof(lum_path)-strlen(lum_path)-1);
+        strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+    }
 
     nx48_btc_state_t* nx48 = nx48_btc_init(&nx48_cfg, cfg.run_id);
     if (!nx48) {
@@ -247,9 +260,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    printf("[BTC_QM] NX48_BTC initialisé — update_count=%d best_leading=%d\n",
+    printf("[BTC_QM] NX48_BTC C61 initialisé — update_count=%d best_leading=%d\n",
            nx48->update_count, nx48->best_leading_zeros);
-    printf("[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)\n");
+    printf("[BTC_QM] NX48 architecture C61 : 2 neurones × %d sous-neurones = %d total\n",
+           NX48_N_SUBNEURONS, NX48_N_SUBNEURONS * 2);
+    printf("[BTC_QM] NX48 contrôle : threads=%d | T_hot=%.1f | T_cold=%.1f | GPU=%s\n",
+           nx48->n_threads_target, nx48->T_hot_actual, nx48->T_cold_actual,
+           nx48->hw.gpu_opencl_present ? nx48->hw.gpu_name : "absent");
+    printf("[BTC_QM] NX48 exploration_bias=%.3f | delta_nonce=%.2f | AVX=%d\n",
+           nx48->exploration_bias, nx48->delta_nonce_scale, nx48->hw.avx_level);
     fflush(stdout);
 
     /* ── Gate : test intégrité SHA-256 ─────────────────────────── */

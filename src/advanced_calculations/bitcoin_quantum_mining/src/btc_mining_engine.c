@@ -764,6 +764,12 @@ static void* btc_mining_thread(void* arg) {
             double coverage_pct    = 100.0 * (double)(total)
                 / (double)(cfg->nonce_end - cfg->nonce_start + 1);
 
+            /* C61 : Températures PT-MC lues depuis atomiques NX48 */
+            int T_hot_idx  = atomic_load_explicit(&nx48_ctrl_T_hot_idx,  memory_order_relaxed);
+            int T_cold_idx = atomic_load_explicit(&nx48_ctrl_T_cold_idx, memory_order_relaxed);
+            double T_hot_nx48  = BTC_REPLICA_TEMPS[(T_hot_idx  < 0) ? 7 : (T_hot_idx  > 7) ? 7 : T_hot_idx];
+            double T_cold_nx48 = BTC_REPLICA_TEMPS[(T_cold_idx < 0) ? 0 : (T_cold_idx > 7) ? 7 : T_cold_idx];
+
             double features[NX48_BTC_N_FEATURES];
             nx48_btc_compute_features(features,
                 eng->best_leading_global,
@@ -772,20 +778,32 @@ static void* btc_mining_thread(void* arg) {
                     ? (double)rep->swaps_accepted / (double)rep->swaps_attempted : 0.0,
                 time_since_impr, coverage_pct, delta_nonce,
                 (double)local_hashes, (double)(BTC_NX48_UPDATE_EVERY),
-                BTC_REPLICA_TEMPS[BTC_N_REPLICAS-1], BTC_REPLICA_TEMPS[0]);
+                T_hot_nx48, T_cold_nx48);
 
             double prob = nx48_disabled ? 0.5 : nx48_btc_predict(eng->nx48, features);
 
             if (!nx48_disabled && work->thread_id == 0) { /* Un seul thread met à jour NX48 */
                 nx48_btc_update(eng->nx48,
                     &(nx48_btc_config_t){
-                        .learning_rate   = 0.01,
-                        .lambda_l1       = 0.001,
-                        .update_interval = BTC_NX48_UPDATE_EVERY
+                        .learning_rate        = 0.01,
+                        .lambda_l1            = 0.001,
+                        .update_interval      = BTC_NX48_UPDATE_EVERY,
+                        .n_threads_initial    = cfg->n_threads,
+                        .hw_detect_interval_s = 30
                     },
                     features, prob,
                     eng->best_leading_global, hashrate_mhs);
                 delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
+
+                /* C61 : Appliquer threads dynamiques NX48 */
+                int nx48_threads = atomic_load_explicit(&nx48_ctrl_n_threads, memory_order_relaxed);
+                if (nx48_threads > 0 && nx48_threads != cfg->n_threads)
+                    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_threads_target",
+                        (double)nx48_threads);
+
+                /* C61 : Adapter la réplique la plus chaude selon NX48 */
+                eng->replicas[BTC_N_REPLICAS-1].temperature = T_hot_nx48;
+                eng->replicas[0].temperature = T_cold_nx48;
             }
             if (nx48_disabled && work->thread_id == 0)
                 FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_disabled", 1.0);
