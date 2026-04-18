@@ -90,3 +90,22 @@ src/qdayprize/qdayprize_runner_debug
 src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
 btc_mining_runner
 qdayprize_runner
+
+# =========================
+# C63 : FICHIERS VOLUMINEUX — ROTATION 50 MB (PAS DE LFS)
+# =========================
+# Fragments worm (>20 MB) — non utiles au repo
+worm_part_*
+*_part_a*
+
+# Bench brut volumineux
+logs/bench_raw.txt
+
+# Logs forensic modules — déjà en rotation automatique
+# (patterns de sécurité supplémentaires)
+*.log_part_*
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/*.log
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/*.log
+
+# Cache Python volumineux (torch, cv2, scipy — bibliothèques système)
+.cache/uv/

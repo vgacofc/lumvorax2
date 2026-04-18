@@ -534,14 +534,35 @@ void nx48_btc_control_all(nx48_btc_state_t* s) {
         atomic_store_explicit(&nx48_ctrl_avx_level, hw_max, memory_order_relaxed);
     }
 
-    /* ── SN7 : QDAYPRIZE feedback → exploration_bias ── */
+    /* ── SN7 : QDAYPRIZE feedback → exploration_bias ── C63-FIX ──
+     * PROBLÈME C62 : signal trop fort → exploration_bias descend jusqu'au floor 0.05.
+     * ANALYSE C63 : avec qsr=0.833, signal = 0.0183 par update.
+     *   Si SN7 appelé chaque update (1000x/s) → floor atteint en ~50s.
+     * CORRECTION C63 :
+     *   1. Signal divisé par 10 (0.10 → 0.01) — influence douce
+     *   2. Appliquer seulement tous les 100 updates (throttle)
+     *   3. Zone neutre élargie : [0.60, 0.70] → pas de signal
+     *   4. Plancher relevé à 0.30 (exploration minimale garantie)
+     *   5. Log forensic du signal pour suivi
+     */
     {
         double qsr = hw->qdayprize_success_rate;
-        if (qsr > 0.0) {
-            /* Si QDAYPRIZE > 80% → augmenter exploitation (moins d'exploration aléatoire)
-             * Si QDAYPRIZE < 50% → augmenter exploration */
-            double qdayprize_signal = (qsr - 0.65) * 0.10;
-            s->exploration_bias = clamp(s->exploration_bias - qdayprize_signal, 0.05, 0.95);
+        if (qsr > 0.0 && (s->update_count % 100) == 0) {
+            double qdayprize_signal = 0.0;
+            if (qsr > 0.70) {
+                /* QDAYPRIZE > 70% → légère exploitation supplémentaire */
+                qdayprize_signal = (qsr - 0.70) * 0.010;  /* max ~0.003/update */
+            } else if (qsr < 0.60) {
+                /* QDAYPRIZE < 60% → encourager exploration */
+                qdayprize_signal = (qsr - 0.60) * 0.010;  /* négatif → monte bias */
+            }
+            /* Plancher 0.30 : au moins 30% d'exploration toujours actif */
+            double new_bias = clamp(s->exploration_bias - qdayprize_signal, 0.30, 0.95);
+            if (new_bias != s->exploration_bias) {
+                s->exploration_bias = new_bias;
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_sn7_qdpr_signal", qdayprize_signal);
+            }
         }
     }
 
@@ -834,8 +855,10 @@ void nx48_btc_update(
             s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 500.0);
             s->stall_count = 0;
         }
-        /* C62 : Reset delta_nonce si bloqué au cap 500 trop longtemps (plateau absolu) */
-        if (s->stall_long_count > 0 && (s->stall_long_count % 50) == 0
+        /* C63 : Reset delta_nonce si bloqué au cap 500 trop longtemps (plateau absolu)
+         * C62 : %50 → trop rare (1 reset sur 139K lines / 7.5min = 1 reset)
+         * C63 FIX : %10 → reset 5× plus fréquent → moins de stalls prolongés */
+        if (s->stall_long_count > 0 && (s->stall_long_count % 10) == 0
             && s->delta_nonce_scale >= 490.0) {
             double old_delta = s->delta_nonce_scale;
             s->delta_nonce_scale = 1.0 + xosh_uniform() * 15.0; /* Reset aleatoire [1, 16] */
