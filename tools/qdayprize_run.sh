@@ -57,7 +57,10 @@ echo "[QDPR] ============================================"
 # ─── Compilation ────────────────────────────────────────────
 echo "[QDPR] Étape 1/2 — Compilation QDAYPRIZE..."
 cd "$QDPR_DIR"
-rm -f qdayprize_runner
+# C59-FIX-SIGILL : make clean OBLIGATOIRE pour supprimer les .o Replit (AVX-512)
+# compilés avec -march=native sur CPU Replit et committés dans git.
+# Sans make clean, le binaire hérite des .o AVX-512 → SIGILL sur i5-8265U.
+make clean 2>&1 | tail -1
 make 2>&1 | tail -5
 if [ ! -f qdayprize_runner ]; then
     echo "[QDPR] ERREUR : Compilation échouée"

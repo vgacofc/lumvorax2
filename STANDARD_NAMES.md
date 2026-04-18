@@ -2,6 +2,10 @@
 
 ## Historique des noms normalisés
 
+2026-04-18 14:30 - C59-FIX-SIGILL-QDAYPRIZE + C59 — Cause : .o Replit AVX-512 (vmovupd %zmm2) sur i5-8265U sans AVX-512 — Fix : Makefile -mno-avx512f + make clean forcé dans script
+2026-04-18 14:30 - C59-CPU-CORRECTION + C59 — CPU réel = i5-8265U @1.6-3.9GHz 6MB L3 (rapports C57/C58 indiquaient i7-8565U @1.8-4.6GHz 8MB — FAUX)
+2026-04-18 14:30 - C59-FORENSIC-PTMC + C59 — Log forensique btc_20260418T102900Z : 28500 swaps/s PT-MC, fenêtre=7 iter=35µs, accept=100% (exploration zone 29bits)
+2026-04-18 14:30 - analysechatgpt91.59.md + C59 — Rapport C59 : SIGILL QDAYPRIZE fix, CPU correction i5-8265U, forensic PT-MC brut analysé
 2026-04-18 12:48 - C58-WS-LIVE + C58 — WebSocket Ubuntu↔Replit 100% fonctionnel — latence <50ms, namespace /agent connecté, token 552ced77 auth OK
 2026-04-18 12:48 - C58-FIX-IMPORT + C58 — server.py L583+L604 : from flask import request (pas flask_socketio) → ImportError corrigé → namespace /agent accessible
 2026-04-18 12:48 - C58-FIX-SOCKETIO + C58 — main.py socketio.run() remplace app.run() + workflow python main.py remplace gunicorn gthread → WebSocket natif
