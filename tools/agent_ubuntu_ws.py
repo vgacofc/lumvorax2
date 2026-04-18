@@ -26,6 +26,7 @@ import time
 import socket
 import threading
 import logging
+import glob
 
 try:
     import socketio
@@ -52,8 +53,14 @@ else:
     REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ENV_NAME  = "unknown"
 
-BTC_DIR   = os.path.join(REPO_ROOT, "src/advanced_calculations/bitcoin_quantum_mining")
-TOOLS_DIR = os.path.join(REPO_ROOT, "tools")
+BTC_DIR      = os.path.join(REPO_ROOT, "src/advanced_calculations/bitcoin_quantum_mining")
+TOOLS_DIR    = os.path.join(REPO_ROOT, "tools")
+FORENSIC_DIR = os.path.join(BTC_DIR, "logs/forensic/modules")
+
+# Cycle de push forensic : toutes les N secondes
+FORENSIC_PUSH_INTERVAL = int(os.environ.get("FORENSIC_PUSH_INTERVAL_S", "30"))
+# Nombre max de lignes par batch WebSocket
+FORENSIC_BATCH_SIZE    = int(os.environ.get("FORENSIC_BATCH_SIZE", "200"))
 
 # ─── Logging ───────────────────────────────────────────────────────────────
 

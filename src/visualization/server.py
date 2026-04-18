@@ -553,6 +553,19 @@ _fallback_agent_secret = secrets.token_hex(32)
 _ws_agent_sids = set()
 _ws_agent_sids_lock = threading.Lock()
 
+# ── Forensic logs reçus depuis Ubuntu (C63) ────────────────────────────────
+from collections import deque
+_forensic_logs = deque(maxlen=10000)
+_forensic_lock = threading.Lock()
+_forensic_stats = {
+    "total_received": 0,
+    "anomalies": 0,
+    "hw_samples": 0,
+    "metrics": 0,
+    "last_received_at": 0,
+    "sources": {},
+}
+
 def _agent_token():
     configured_token = os.environ.get("AGENT_TOKEN") or os.environ.get("LUMVORAX_AGENT_TOKEN")
     if configured_token:
@@ -623,7 +636,65 @@ def ws_agent_result(data):
 
 @socketio.on("ping_agent", namespace="/agent")
 def ws_agent_ping(data):
-    emit("pong_agent", {"ts": int(time.time()), "cycle": "C54"})
+    emit("pong_agent", {"ts": int(time.time()), "cycle": "C63"})
+
+
+def _ingest_forensic_line(line: str, source: str = "ubuntu"):
+    """Parse et stocke une ligne de log forensic."""
+    line = line.strip()
+    if not line:
+        return
+    entry = {
+        "raw": line,
+        "source": source,
+        "received_at": int(time.time()),
+    }
+    parts = line.split(",", 5)
+    if len(parts) >= 2:
+        entry["type"] = parts[0]
+        entry["ts_iso"] = parts[1] if len(parts) > 1 else ""
+        entry["nano_ts"] = parts[2] if len(parts) > 2 else ""
+        entry["field"] = parts[4] if len(parts) > 4 else ""
+        entry["value"] = parts[5] if len(parts) > 5 else ""
+    with _forensic_lock:
+        _forensic_logs.append(entry)
+        _forensic_stats["total_received"] += 1
+        _forensic_stats["last_received_at"] = entry["received_at"]
+        etype = entry.get("type", "")
+        if etype == "ANOMALY":
+            _forensic_stats["anomalies"] += 1
+        elif etype == "HW_SAMPLE":
+            _forensic_stats["hw_samples"] += 1
+        elif etype == "METRIC":
+            _forensic_stats["metrics"] += 1
+        src = _forensic_stats["sources"]
+        src[source] = src.get(source, 0) + 1
+
+
+@socketio.on("forensic_log", namespace="/agent")
+def ws_forensic_log(data):
+    """Ubuntu envoie une ligne de log forensic unique."""
+    if not isinstance(data, dict):
+        return
+    line = data.get("line", "")
+    source = data.get("source", "ubuntu")
+    _ingest_forensic_line(line, source)
+    emit("forensic_ack", {"ok": True})
+
+
+@socketio.on("forensic_batch", namespace="/agent")
+def ws_forensic_batch(data):
+    """Ubuntu envoie un batch de lignes de log forensic (liste)."""
+    if not isinstance(data, dict):
+        return
+    lines = data.get("lines", [])
+    source = data.get("source", "ubuntu")
+    count = 0
+    for line in lines:
+        if isinstance(line, str):
+            _ingest_forensic_line(line, source)
+            count += 1
+    emit("forensic_batch_ack", {"ok": True, "ingested": count})
 
 
 def _push_job_to_ws(job):
@@ -737,6 +808,60 @@ def agent_results():
     with _agent_lock:
         results = list(reversed(_agent_results[-50:]))
     return jsonify({"results": results, "count": len(results)})
+
+
+@app.route("/agent/forensic/logs", methods=["GET"])
+def agent_forensic_logs():
+    """Retourne les derniers logs forensic reçus depuis Ubuntu (C63)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    limit = min(int(request.args.get("limit", 500)), 5000)
+    etype = request.args.get("type", "")
+    with _forensic_lock:
+        logs = list(_forensic_logs)
+    if etype:
+        logs = [e for e in logs if e.get("type", "") == etype.upper()]
+    logs = logs[-limit:]
+    with _forensic_lock:
+        stats = dict(_forensic_stats)
+    return jsonify({
+        "logs": logs,
+        "count": len(logs),
+        "stats": stats,
+        "cycle": "C63",
+    })
+
+
+@app.route("/agent/forensic/stats", methods=["GET"])
+def agent_forensic_stats():
+    """Statistiques forensic en temps réel (C63)."""
+    with _forensic_lock:
+        stats = dict(_forensic_stats)
+        recent = list(_forensic_logs)[-20:]
+    anomalies = [e for e in recent if e.get("type") == "ANOMALY"]
+    return jsonify({
+        "stats": stats,
+        "recent_anomalies": anomalies,
+        "buffer_size": len(_forensic_logs),
+        "buffer_max": _forensic_logs.maxlen,
+        "cycle": "C63",
+    })
+
+
+@app.route("/agent/forensic/push", methods=["POST"])
+def agent_forensic_push():
+    """Ubuntu envoie des lignes forensic via HTTP (fallback WebSocket — C63)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    lines = data.get("lines", [])
+    source = data.get("source", "ubuntu_http")
+    count = 0
+    for line in lines:
+        if isinstance(line, str):
+            _ingest_forensic_line(line, source)
+            count += 1
+    return jsonify({"ok": True, "ingested": count})
 
 
 @app.route("/agent/status", methods=["GET"])
