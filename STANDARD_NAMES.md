@@ -2,6 +2,13 @@
 
 ## Historique des noms normalisés
 
+2026-04-18 12:48 - C58-WS-LIVE + C58 — WebSocket Ubuntu↔Replit 100% fonctionnel — latence <50ms, namespace /agent connecté, token 552ced77 auth OK
+2026-04-18 12:48 - C58-FIX-IMPORT + C58 — server.py L583+L604 : from flask import request (pas flask_socketio) → ImportError corrigé → namespace /agent accessible
+2026-04-18 12:48 - C58-FIX-SOCKETIO + C58 — main.py socketio.run() remplace app.run() + workflow python main.py remplace gunicorn gthread → WebSocket natif
+2026-04-18 12:48 - C58-RECORD-28BITS + C58 — btc_20260418T102900Z : 28 bits @ t=40.1s RECORD ABSOLU (-50% vs 80.1s run2 C57, -93% vs 550s run1) NX48 update_count=3637
+2026-04-18 12:48 - C58-HASHRATE-CROISSANT + C58 — btc_20260418T102900Z : hashrate croissant 0.71→0.94 MH/s (+32.4%) — inversion du phénomène dégradation (swap 27Mi=propre)
+2026-04-18 12:48 - C58-NX48-3637 + C58 — NX48 update_count=3637 (+379 vs run2 C57), courbe accélération continue — hypothèse 29 bits accessible dans 200-400s
+2026-04-18 12:48 - analysechatgpt91.58.md + C58 — Rapport C58 : WebSocket 100%, record 28bits@40s, hashrate croissant, NX48=3637
 2026-04-18 00:10 - C57-FIX-SIGSEGV + C57 — btc_mining_engine.c L820 guard NULL eng->nx48 avant delta_nonce_scale — crash impossible t≈850s (fix compile + git pull requis sur Ubuntu)
 2026-04-18 00:10 - C57-RUN1-UBUNTU + C57 — btc_20260417T215519Z_c48 : 622M hashes, 28 bits@t=550s, SIGSEGV@t=847s, hashrate -21.5%, nx48_init=2987
 2026-04-18 00:10 - C57-RUN2-UBUNTU + C57 — btc_20260417T222805Z_c48 : 623M hashes, 28 bits@t=80s RECORD, SIGSEGV@t=921s, hashrate -13.9%, nx48_init=3258
