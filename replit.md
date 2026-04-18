@@ -11,6 +11,36 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
+## IBM Quantum Integration (C63)
+
+### Connexion et résultats
+- **Compte** : vgactec | ID : `1ac3cc9b11dd4aa6ac6c53f2d5e2dde7`
+- **Canal** : `ibm_quantum_platform` (nouveau nom 2024+)
+- **Backends disponibles** : `ibm_fez`, `ibm_kingston`, `ibm_marrakesh` (156 qubits Heron)
+- **Dépendances** : `qiskit>=2.0.0`, `qiskit-ibm-runtime>=0.30.0` (dans pyproject.toml)
+
+### Script principal
+- `tools/ibm_quantum_runner.py` — Runner IBM Quantum (QDAYPRIZE ECDLP + HTS VQE)
+- `tools/run_ibm_quantum.sh` — Wrapper Doppler/uv
+
+### Résultats C63 (2026-04-18)
+- **QDAYPRIZE** sur `ibm_fez` : success_rate=90.8%, near_miss=6 bits, runtime=8.62s
+  - JSON : `logs/forensic/qdayprize_qdpr_ibm_c63_20260418T221530Z.json`
+- **HTS VQE Hubbard** sur `ibm_fez` : energy=-1.0t, entropy=3.088 bits, runtime=20.3s
+  - JSON : `logs/hts_vqe_hts_vqe_ibm_c63_20260418T221559Z.json`
+
+### Usage
+```bash
+# Test connexion
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner.py --test
+# Via Doppler (Ubuntu/Replit)
+doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --qdayprize
+doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --hubbard
+doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --pipeline
+# Hardware réel (queue IBM)
+doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --qdayprize --hardware
+```
+
 ## Architecture
 
 ### Backend C
