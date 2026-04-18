@@ -37,7 +37,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "uv run gunicorn --worker-class gthread --threads 4 --workers 1 --bind 0.0.0.0:5000 --timeout 300 main:app"
+args = "uv run python main.py"
 waitForPort = 5000
 
 [[workflows.workflow]]

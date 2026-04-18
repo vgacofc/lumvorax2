@@ -1,26 +1,21 @@
 #!/usr/bin/env python3
 """
-LumVorax C54 — Agent Ubuntu WebSocket (remplacement du polling HTTP)
-=====================================================================
+LumVorax C57 — Agent Ubuntu WebSocket
+======================================
 Connexion WebSocket persistante bidirectionnelle vers Replit.
-- Replit PUSH les jobs → Ubuntu exécute immédiatement (latence ~0ms)
-- Ubuntu PUSH les résultats → Replit stocke
-- Reconnexion automatique si réseau coupé ou nœud Replit redémarré
-- Authentification par token dans le handshake
+- Replit PUSH les jobs → Ubuntu exécute immédiatement (<1s latence)
+- Ubuntu PUSH les résultats → Replit stocke et retourne via /agent/results
+- Reconnexion automatique si réseau coupé
+- Authentification par token dans le handshake SocketIO
+- Fallback polling si upgrade WS refusé (gunicorn gthread compatible)
 
 Usage :
-  python3 tools/agent_ubuntu_ws.py
-  # ou via Doppler :
-  doppler run --config dev_lumvorax -- python3 tools/agent_ubuntu_ws.py
+  doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
 
-Variables d'environnement :
-  REPLIT_URL     = https://xxx.replit.dev  (sans /ws/)
-  AGENT_TOKEN    = token (identique à l'agent HTTP)
-  POLL_INTERVAL  = délai entre reconnexions (défaut 5s)
+Variables :
+  REPLIT_URL          = https://xxx.replit.dev
+  AGENT_TOKEN         = token 552ced77...
   DEFAULT_JOB_TIMEOUT_S = 0 (illimité)
-
-Compatibilité :
-  pip install "python-socketio[client]>=5.11"
 """
 
 import os
@@ -28,7 +23,6 @@ import sys
 import json
 import subprocess
 import time
-import hashlib
 import socket
 import threading
 import logging
@@ -36,19 +30,18 @@ import logging
 try:
     import socketio
 except ImportError:
-    print("[C54-WS] ERREUR : python-socketio non installé.")
-    print("  Installer : pip install 'python-socketio[client]>=5.11'")
+    print("[C57-WS] ERREUR : python-socketio non disponible dans le venv.")
+    print("  Lance via : bash tools/agent_ubuntu_ws.sh")
     sys.exit(1)
 
-# ─── Configuration ────────────────────────────────────────────────────────────
+# ─── Configuration ─────────────────────────────────────────────────────────
 
-REPLIT_URL           = os.environ.get("REPLIT_URL", "").rstrip("/")
-AGENT_TOKEN          = os.environ.get("AGENT_TOKEN", "") or os.environ.get("LUMVORAX_AGENT_TOKEN", "")
-DEFAULT_JOB_TIMEOUT  = int(os.environ.get("DEFAULT_JOB_TIMEOUT_S", "0"))
-RECONNECT_DELAY      = int(os.environ.get("POLL_INTERVAL", "5"))
-LOG_FILE             = os.path.expanduser("~/lumvorax_agent_ws.log")
+REPLIT_URL          = os.environ.get("REPLIT_URL", "").rstrip("/")
+AGENT_TOKEN         = os.environ.get("AGENT_TOKEN", "") or os.environ.get("LUMVORAX_AGENT_TOKEN", "")
+DEFAULT_JOB_TIMEOUT = int(os.environ.get("DEFAULT_JOB_TIMEOUT_S", "0"))
+RECONNECT_DELAY     = int(os.environ.get("POLL_INTERVAL", "5"))
+LOG_FILE            = os.path.expanduser("~/lumvorax_agent_ws.log")
 
-# Détection REPO_ROOT
 if os.path.isdir(os.path.expanduser("~/LVX/lumvorax2")):
     REPO_ROOT = os.path.expanduser("~/LVX/lumvorax2")
     ENV_NAME  = "ubuntu_lvx"
@@ -62,7 +55,7 @@ else:
 BTC_DIR   = os.path.join(REPO_ROOT, "src/advanced_calculations/bitcoin_quantum_mining")
 TOOLS_DIR = os.path.join(REPO_ROOT, "tools")
 
-# ─── Logging ─────────────────────────────────────────────────────────────────
+# ─── Logging ───────────────────────────────────────────────────────────────
 
 logging.basicConfig(
     level=logging.INFO,
@@ -73,96 +66,91 @@ logging.basicConfig(
         logging.FileHandler(LOG_FILE, encoding="utf-8"),
     ]
 )
-log = logging.getLogger("lv-agent-ws")
+log = logging.getLogger("lv-ws")
 
-# ─── Validation ───────────────────────────────────────────────────────────────
+# ─── Validation ────────────────────────────────────────────────────────────
 
 if not REPLIT_URL:
-    log.error("[C54-WS] REPLIT_URL absent. Utiliser Doppler ou env REPLIT_URL=...")
+    log.error("[C57-WS] REPLIT_URL absent. Lancer via Doppler ou env REPLIT_URL=...")
     sys.exit(1)
 if not AGENT_TOKEN:
-    log.error("[C54-WS] AGENT_TOKEN absent. Utiliser Doppler ou env AGENT_TOKEN=...")
+    log.error("[C57-WS] AGENT_TOKEN absent. Lancer via Doppler ou env AGENT_TOKEN=...")
     sys.exit(1)
 
-# Construire l'URL WebSocket
-WS_URL = REPLIT_URL
-log.info(f"[C54-WS] LumVorax Agent WebSocket — Cycle C54")
-log.info(f"[C54-WS] Environnement : {ENV_NAME}")
-log.info(f"[C54-WS] REPO_ROOT     : {REPO_ROOT}")
-log.info(f"[C54-WS] Replit URL    : {REPLIT_URL}")
-log.info(f"[C54-WS] Token (8ch)   : {AGENT_TOKEN[:8]}...")
-log.info(f"[C54-WS] Log           : {LOG_FILE}")
-log.info(f"[C54-WS] Job timeout   : {'illimité' if DEFAULT_JOB_TIMEOUT == 0 else str(DEFAULT_JOB_TIMEOUT) + 's'}")
+log.info("[C57-WS] LumVorax Agent WebSocket — Cycle C57")
+log.info(f"[C57-WS] Env          : {ENV_NAME}")
+log.info(f"[C57-WS] REPO_ROOT    : {REPO_ROOT}")
+log.info(f"[C57-WS] Replit URL   : {REPLIT_URL}")
+log.info(f"[C57-WS] Token (8ch)  : {AGENT_TOKEN[:8]}...")
+log.info(f"[C57-WS] Log          : {LOG_FILE}")
+log.info(f"[C57-WS] Job timeout  : {'illimité' if DEFAULT_JOB_TIMEOUT == 0 else str(DEFAULT_JOB_TIMEOUT) + 's'}")
 
-# ─── Exécution de commande ────────────────────────────────────────────────────
+# ─── Résolution des variables de chemin ────────────────────────────────────
 
-def _resolve_cmd(cmd):
-    """Remplace les variables de chemin dans la commande."""
+def _resolve_cmd(cmd: str) -> str:
     cmd = cmd.replace("$REPO_ROOT", REPO_ROOT)
     cmd = cmd.replace("$BTC_DIR", BTC_DIR)
     cmd = cmd.replace("$TOOLS_DIR", TOOLS_DIR)
     cmd = cmd.replace("~/LVX/lumvorax2", REPO_ROOT)
     return cmd
 
-def _run_job(job, sio):
-    """Exécute un job et envoie le résultat via WebSocket."""
+# ─── Exécution de commande ─────────────────────────────────────────────────
+
+def _run_job(job: dict, sio_client: socketio.Client) -> None:
+    """Exécute un job reçu via WebSocket et envoie le résultat."""
     job_id  = job.get("id", "?")
     cmd     = job.get("cmd", "")
     label   = job.get("label", "")
-    timeout = int(job.get("timeout_s", DEFAULT_JOB_TIMEOUT))
+    timeout = int(job.get("timeout_s", DEFAULT_JOB_TIMEOUT)) or None
 
-    log.info(f"[C54-WS] JOB id={job_id} label='{label}'")
-    log.info(f"[C54-WS]   cmd: {cmd[:80]}...")
+    log.info(f"[C57-WS] JOB id={job_id} label='{label}'")
+    log.info(f"[C57-WS]   cmd: {cmd[:100]}")
 
     cmd_resolved = _resolve_cmd(cmd)
     start = time.time()
     try:
-        if timeout == 0:
-            result = subprocess.run(
-                ["bash", "-c", cmd_resolved],
-                capture_output=True, text=True
-            )
-        else:
-            result = subprocess.run(
-                ["bash", "-c", cmd_resolved],
-                capture_output=True, text=True,
-                timeout=timeout
-            )
-        stdout = (result.stdout + result.stderr)[:8192]
+        result = subprocess.run(
+            ["bash", "-c", cmd_resolved],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        stdout = (result.stdout + result.stderr)[:16384]
         rc = result.returncode
     except subprocess.TimeoutExpired:
         stdout = f"[TIMEOUT] Commande interrompue après {timeout}s"
         rc = 124
-    except Exception as e:
-        stdout = f"[ERREUR] {e}"
+    except Exception as exc:
+        stdout = f"[ERREUR] {exc}"
         rc = 1
 
-    duration = int(time.time() - start)
-    log.info(f"[C54-WS]   rc={rc} durée={duration}s")
+    duration = round(time.time() - start, 2)
+    log.info(f"[C57-WS]   rc={rc} durée={duration}s output={len(stdout)}c")
 
     payload = {
-        "job_id":      job_id,
-        "label":       label,
-        "cmd":         cmd_resolved,
-        "stdout":      stdout,
-        "returncode":  rc,
-        "duration_s":  duration,
-        "host":        socket.gethostname(),
-        "env":         ENV_NAME,
-        "cycle":       "C54",
-        "transport":   "websocket",
+        "job_id":     job_id,
+        "label":      label,
+        "cmd":        cmd_resolved,
+        "output":     stdout,
+        "stdout":     stdout,
+        "returncode": rc,
+        "duration_s": duration,
+        "host":       socket.gethostname(),
+        "env":        ENV_NAME,
+        "cycle":      "C57",
+        "transport":  "websocket",
     }
     try:
-        sio.emit("result", payload, namespace="/agent")
-        log.info(f"[C54-WS]   Résultat envoyé via WebSocket")
-    except Exception as e:
-        log.error(f"[C54-WS]   Erreur envoi résultat WS : {e}")
+        sio_client.emit("result", payload, namespace="/agent")
+        log.info(f"[C57-WS]   ✅ Résultat envoyé via WebSocket")
+    except Exception as exc:
+        log.error(f"[C57-WS]   ❌ Erreur envoi WS : {exc}")
 
-# ─── Client SocketIO ──────────────────────────────────────────────────────────
+# ─── Client SocketIO ───────────────────────────────────────────────────────
 
 sio = socketio.Client(
     reconnection=True,
-    reconnection_attempts=0,  # 0 = infini
+    reconnection_attempts=0,       # 0 = infini
     reconnection_delay=RECONNECT_DELAY,
     reconnection_delay_max=30,
     logger=False,
@@ -171,56 +159,64 @@ sio = socketio.Client(
 
 @sio.event(namespace="/agent")
 def connect():
-    log.info("[C54-WS] ✅ Connecté au serveur Replit WebSocket (/agent)")
+    log.info("[C57-WS] ✅ Connecté au serveur Replit (/agent namespace)")
 
 @sio.event(namespace="/agent")
 def connect_error(data):
-    log.warning(f"[C54-WS] ❌ Erreur de connexion : {data}")
+    log.warning(f"[C57-WS] ❌ Erreur de connexion : {data}")
 
 @sio.event(namespace="/agent")
 def disconnect():
-    log.warning("[C54-WS] ⚠️  Déconnecté — reconnexion automatique en cours...")
+    log.warning("[C57-WS] ⚠️  Déconnecté — reconnexion automatique...")
 
 @sio.on("connected", namespace="/agent")
 def on_connected(data):
-    pending = data.get("pending_jobs", 0)
-    log.info(f"[C54-WS] 🟢 Agent authentifié — jobs en attente : {pending}")
+    pending = data.get("pending_jobs", 0) if isinstance(data, dict) else 0
+    log.info(f"[C57-WS] 🟢 Agent authentifié — jobs en attente : {pending}")
 
 @sio.on("job", namespace="/agent")
 def on_job(data):
-    """Réception d'un job depuis Replit — exécution dans un thread séparé."""
+    """Réception d'un job → exécution dans thread daemon."""
     t = threading.Thread(target=_run_job, args=(data, sio), daemon=True)
     t.start()
 
 @sio.on("pong_agent", namespace="/agent")
 def on_pong(data):
-    log.debug(f"[C54-WS] pong reçu : {data}")
+    log.debug(f"[C57-WS] pong : {data}")
 
-# ─── Connexion principale ────────────────────────────────────────────────────
+# ─── Boucle principale ─────────────────────────────────────────────────────
 
 def main():
-    log.info("[C54-WS] Connexion au serveur WebSocket Replit...")
+    log.info(f"[C57-WS] Connexion WebSocket → {REPLIT_URL}/ws/socket.io ...")
     while True:
         try:
+            # C57 : transports=["websocket","polling"] permet le handshake
+            # polling initial puis upgrade WebSocket automatique.
+            # AVANT C57 : transports=["websocket"] seul → connexion refusée
+            # (Socket.IO nécessite un handshake HTTP polling d'abord)
             sio.connect(
-                WS_URL,
+                REPLIT_URL,
                 socketio_path="/ws/socket.io",
                 auth={"token": AGENT_TOKEN},
                 namespaces=["/agent"],
-                transports=["websocket"],
-                wait_timeout=15,
+                transports=["websocket", "polling"],
+                wait_timeout=20,
             )
+            log.info("[C57-WS] Connexion établie — boucle d'attente active")
             sio.wait()
-        except socketio.exceptions.ConnectionError as e:
-            log.warning(f"[C54-WS] Connexion refusée : {e} — retry dans {RECONNECT_DELAY}s")
+        except socketio.exceptions.ConnectionError as exc:
+            log.warning(f"[C57-WS] Connexion refusée : {exc} — retry {RECONNECT_DELAY}s")
             time.sleep(RECONNECT_DELAY)
         except KeyboardInterrupt:
-            log.info("[C54-WS] Arrêt demandé (CTRL+C)")
+            log.info("[C57-WS] Arrêt (CTRL+C)")
             break
-        except Exception as e:
-            log.error(f"[C54-WS] Erreur inattendue : {e} — retry dans {RECONNECT_DELAY}s")
+        except Exception as exc:
+            log.error(f"[C57-WS] Erreur : {exc} — retry {RECONNECT_DELAY}s")
             time.sleep(RECONNECT_DELAY)
-    sio.disconnect()
+    try:
+        sio.disconnect()
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     main()

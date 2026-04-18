@@ -19,8 +19,17 @@ _viz_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src", "visu
 if _viz_dir not in sys.path:
     sys.path.insert(0, _viz_dir)
 
-from server import app
+from server import app, socketio
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    # C57-WS : socketio.run() active les vrais WebSockets (async_mode=threading)
+    # Remplace gunicorn qui ne supporte pas les upgrades WebSocket nativement.
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        allow_unsafe_werkzeug=True,
+        use_reloader=False,
+        log_output=False,
+    )
