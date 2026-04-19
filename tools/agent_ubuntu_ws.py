@@ -230,7 +230,12 @@ def _push_forensic_batch(sio_client: socketio.Client, lines: list, source: str):
 
 
 def _tail_forensic_file(filepath: str, max_lines: int = 500) -> list:
-    """Lit les nouvelles lignes d'un fichier forensic depuis la dernière position."""
+    """Lit les nouvelles lignes d'un fichier forensic depuis la dernière position.
+    C64-FIX : utilise readline() au lieu de l'itérateur for-in qui désactive tell().
+    Cause : for line in f appelle __next__() qui active le buffer interne Python
+    et rend f.tell() invalide → 'telling position disabled by next() call'.
+    Solution : readline() est compatible avec seek()/tell() sur fichiers texte.
+    """
     with _forensic_push_lock:
         last_pos = _forensic_file_positions.get(filepath, 0)
     try:
@@ -239,20 +244,22 @@ def _tail_forensic_file(filepath: str, max_lines: int = 500) -> list:
         return []
     if fsize <= last_pos:
         return []
+    lines_out = []
+    new_pos = last_pos
     try:
         with open(filepath, "r", errors="replace") as f:
             f.seek(last_pos)
-            lines = []
-            for line in f:
+            while len(lines_out) < max_lines:
+                line = f.readline()
+                if not line:
+                    break
                 line = line.rstrip("\n")
                 if line:
-                    lines.append(line)
-                if len(lines) >= max_lines:
-                    break
+                    lines_out.append(line)
             new_pos = f.tell()
         with _forensic_push_lock:
             _forensic_file_positions[filepath] = new_pos
-        return lines
+        return lines_out
     except Exception as exc:
         log.warning(f"[C63-FOR] Lecture log FAIL {filepath}: {exc}")
         return []

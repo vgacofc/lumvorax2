@@ -11,34 +11,44 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
-## IBM Quantum Integration (C63)
+## IBM Quantum Integration (C64 — MAXIMUM)
 
 ### Connexion et résultats
 - **Compte** : vgactec | ID : `1ac3cc9b11dd4aa6ac6c53f2d5e2dde7`
-- **Canal** : `ibm_quantum_platform` (nouveau nom 2024+)
-- **Backends disponibles** : `ibm_fez`, `ibm_kingston`, `ibm_marrakesh` (156 qubits Heron)
-- **Dépendances** : `qiskit>=2.0.0`, `qiskit-ibm-runtime>=0.30.0` (dans pyproject.toml)
+- **Canal** : `ibm_quantum_platform`
+- **Backends disponibles** : `ibm_fez`, `ibm_kingston`, `ibm_marrakesh` (156 qubits Heron R2)
+- **Dépendances** : `qiskit>=2.0.0`, `qiskit-ibm-runtime>=0.30.0` (pyproject.toml)
 
-### Script principal
-- `tools/ibm_quantum_runner.py` — Runner IBM Quantum (QDAYPRIZE ECDLP + HTS VQE)
+### Scripts principaux
+- `tools/ibm_quantum_runner_c64.py` — **Runner C64 MAX** : QDAYPRIZE+ZNE, 16 HTS, RCS XEB
+- `tools/ibm_quantum_runner.py` — Runner C63 (legacy)
 - `tools/run_ibm_quantum.sh` — Wrapper Doppler/uv
+- `tools/agent_ubuntu_ws.py` — Agent WebSocket Ubuntu↔Replit (bug `tell()` corrigé C64)
 
-### Résultats C63 (2026-04-18)
-- **QDAYPRIZE** sur `ibm_fez` : success_rate=90.8%, near_miss=6 bits, runtime=8.62s
-  - JSON : `logs/forensic/qdayprize_qdpr_ibm_c63_20260418T221530Z.json`
-- **HTS VQE Hubbard** sur `ibm_fez` : energy=-1.0t, entropy=3.088 bits, runtime=20.3s
-  - JSON : `logs/hts_vqe_hts_vqe_ibm_c63_20260418T221559Z.json`
+### Résultats C64 (2026-04-19) — PIPELINE COMPLET 19 JOBS
+- **Backend** : ibm_fez (156Q Heron R2), readout_err=3.06%, 120.3s total
+- **QDAYPRIZE MAX** : 10Q, sim_bits=8, shots=4096, ZNE 3 niveaux
+  - SNR=83.45, success_rate=83.59%, near_miss=8 bits, fidelity=30.47%
+  - JSON : `logs/forensic/qdayprize_qdpr_max_c64_20260419T204217Z.json`
+- **16 HTS Hubbard** : 6-8 qubits, paramètres réels (U/t=4.06→14), 15/16 complétés
+  - ED 2×2 : E_IBM=−1.68t vs exact=−4.83t (65% erreur VQE non-convergé)
+  - Entropie moyenne : 3.898 bits
+- **RCS XEB** : 20 qubits, profondeur=17, bug DataBin 'c0' → sim fallback
+- **Forensic** : 116 entrées ns, fichiers JSON+CSV
+- **Rapport** : `CHAT/RAPPORT_IBM_QUANTUM_C64_MAX_COMPLET.md`
 
-### Usage
+### Bug C64-FIX — agent_ubuntu_ws.py
+- **Bug corrigé** : `telling position disabled by next() call`
+- **Cause** : `for line in f:` désactive `f.tell()` en mode texte Python
+- **Fix** : remplacé par `while True: line = f.readline()`
+
+### Usage C64
 ```bash
-# Test connexion
-IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner.py --test
-# Via Doppler (Ubuntu/Replit)
-doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --qdayprize
-doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --hubbard
-doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --pipeline
-# Hardware réel (queue IBM)
-doppler run --config dev_lumvorax -- uv run python3 tools/ibm_quantum_runner.py --qdayprize --hardware
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --status
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --all
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --qdayprize --sim-bits 8
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --hts16
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --rcs
 ```
 
 ## Architecture

@@ -1,0 +1,117 @@
+ts_ns,ts_iso,module,level,msg,val,src,line
+1776631337895596302,2026-04-19T20:42:17.895598+00:00,ibm_connect,INFO,Connexion IBM Quantum Platform canal=ibm_quantum_platform,,,
+1776631343639509700,2026-04-19T20:42:23.639513+00:00,ibm_connect,INFO,Connecté — 3 backends — latence=5743.9ms,5743.901708,ibm_quantum_runner_c64.py,101
+1776631343639547620,2026-04-19T20:42:23.639548+00:00,pipeline,INFO,════════════════════════════════════════════════,,,
+1776631343639555680,2026-04-19T20:42:23.639556+00:00,pipeline,INFO,IBM QUANTUM MAXIMUM C64 — PIPELINE COMPLET,,,
+1776631343639562870,2026-04-19T20:42:23.639563+00:00,pipeline,INFO,QDAYPRIZE sim_bits=8 shots=4096,,,
+1776631343639569000,2026-04-19T20:42:23.639569+00:00,pipeline,INFO,HTS 16 problèmes shots=2048,,,
+1776631343639574780,2026-04-19T20:42:23.639575+00:00,pipeline,INFO,RCS XEB shots=1024,,,
+1776631343639579210,2026-04-19T20:42:23.639579+00:00,pipeline,INFO,════════════════════════════════════════════════,,,
+1776631343639585510,2026-04-19T20:42:23.639585+00:00,ibm_connect,INFO,Connexion IBM Quantum Platform canal=ibm_quantum_platform,,,
+1776631348559878379,2026-04-19T20:42:28.559881+00:00,ibm_connect,INFO,Connecté — 3 backends — latence=4920.3ms,4920.279009,ibm_quantum_runner_c64.py,101
+1776631348559914759,2026-04-19T20:42:28.559915+00:00,pipeline,INFO,PHASE 1/3 : QDAYPRIZE MAX,,,
+1776631348559928159,2026-04-19T20:42:28.559928+00:00,qdayprize_max,INFO,═══ QDAYPRIZE MAX C64 ═══ sim_bits=8 shots=4096 ZNE=True,,,
+1776631348559940559,2026-04-19T20:42:28.559940+00:00,qdayprize_max,INFO,"Circuit QDAYPRIZE MAX : sim_bits=8, total=10Q, espace=2^8=256",10.0,ibm_quantum_runner_c64.py,215
+1776631348562879019,2026-04-19T20:42:28.562880+00:00,qdayprize_max,INFO,Circuit QDAYPRIZE MAX construit : 10Q profondeur=12,12.0,ibm_quantum_runner_c64.py,252
+1776631349907736090,2026-04-19T20:42:29.907739+00:00,ibm_backend,INFO,Backend sélectionné : ibm_fez (156Q) latence_sélection=1051.0ms,156.0,ibm_quantum_runner_c64.py,167
+1776631349908217610,2026-04-19T20:42:29.908218+00:00,ibm_calib,INFO,Calibration ibm_fez : T1=?µs T2=?µs gate2Q_err=? fid241=?,0,ibm_quantum_runner_c64.py,155
+1776631350272515953,2026-04-19T20:42:30.272521+00:00,qdayprize_max,METRIC,Transpilation : 12→337 portes (×28.1) en 352ms,337.0,ibm_quantum_runner_c64.py,
+1776631350273046163,2026-04-19T20:42:30.273048+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^175 × (1-0.0306)^10 = 0.3047,0.3047123659768047,ibm_quantum_runner_c64.py,185
+1776631350273230573,2026-04-19T20:42:30.273231+00:00,qdayprize_zne,INFO,ZNE : lancement 3 niveaux de bruit,,,
+1776631350273246163,2026-04-19T20:42:30.273246+00:00,qdayprize_zne,INFO,ZNE 1x : soumission 4096 shots,1.0,,
+1776631356482612987,2026-04-19T20:42:36.482614+00:00,qdayprize_zne,METRIC,"ZNE 1x terminé : 246 états, 6209ms",6209.355564,ibm_quantum_runner_c64.py,
+1776631356482641777,2026-04-19T20:42:36.482642+00:00,qdayprize_zne,INFO,ZNE 2x : soumission 4096 shots,2.0,,
+1776631362545075912,2026-04-19T20:42:42.545077+00:00,qdayprize_zne,METRIC,"ZNE 2x terminé : 254 états, 6062ms",6062.394255,ibm_quantum_runner_c64.py,
+1776631362545106152,2026-04-19T20:42:42.545106+00:00,qdayprize_zne,INFO,ZNE 3x : soumission 4096 shots,3.0,,
+1776631368835960320,2026-04-19T20:42:48.835976+00:00,qdayprize_zne,METRIC,"ZNE 3x terminé : 255 états, 6291ms",6290.840988,ibm_quantum_runner_c64.py,
+1776631368836193070,2026-04-19T20:42:48.836193+00:00,qdayprize_zne,INFO,ZNE extrapolation : 246 états → bruit corrigé,,,
+1776631368836328800,2026-04-19T20:42:48.836329+00:00,qdayprize_analyse,METRIC,QDAYPRIZE : SNR=83.45 success=83.6% near_miss=8b r_est=1,0.835930735930736,ibm_quantum_runner_c64.py,
+1776631368841746930,2026-04-19T20:42:48.841748+00:00,qdayprize_max,INFO,QDAYPRIZE MAX terminé → qdayprize_qdpr_max_c64_20260419T204217Z.json,0.83593,ibm_quantum_runner_c64.py,
+1776631368841772040,2026-04-19T20:42:48.841772+00:00,pipeline,INFO,PHASE 2/3 : HTS 16 PROBLÈMES HUBBARD,,,
+1776631368841780850,2026-04-19T20:42:48.841781+00:00,hts_batch,INFO,═══ HTS 16 PROBLÈMES IBM MAX C64 ═══ shots=2048,,,
+1776631370072278160,2026-04-19T20:42:50.072281+00:00,ibm_backend,INFO,Backend sélectionné : ibm_fez (156Q) latence_sélection=914.7ms,156.0,ibm_quantum_runner_c64.py,167
+1776631370072620020,2026-04-19T20:42:50.072621+00:00,ibm_calib,INFO,Calibration ibm_fez : T1=?µs T2=?µs gate2Q_err=? fid241=?,0,ibm_quantum_runner_c64.py,155
+1776631370072645360,2026-04-19T20:42:50.072645+00:00,hts_batch,INFO,[01/16] hubbard_hts_core : n_sites=3 U=8.0 t=1.0 T=95.0K,,,
+1776631370072664230,2026-04-19T20:42:50.072664+00:00,hts_vqe_build,INFO,hubbard_hts_core : 3 sites → 6Q U/t=8.00 T=95.0K mu=0.2,6.0,ibm_quantum_runner_c64.py,
+1776631370114397057,2026-04-19T20:42:50.114401+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^53 × (1-0.0306)^6 = 0.6361,0.6361123813593808,ibm_quantum_runner_c64.py,185
+1776631370621560079,2026-04-19T20:42:50.621563+00:00,hts_batch,INFO,  [01] Job soumis : d7ijsinb91ec73avu7pg,,,
+1776631375376284721,2026-04-19T20:42:55.376287+00:00,hts_batch,METRIC,  [01] DONE : E=0.1641t S=2.952b dom=100101(39.6%) t=5.3s,0.3955078125,ibm_quantum_runner_c64.py,
+1776631375376324011,2026-04-19T20:42:55.376324+00:00,hts_batch,INFO,[02/16] qcd_lattice_fullscale : n_sites=3 U=9.0 t=0.7 T=140.0K,,,
+1776631375376337301,2026-04-19T20:42:55.376337+00:00,hts_vqe_build,INFO,qcd_lattice_fullscale : 3 sites → 6Q U/t=12.86 T=140.0K mu=0.1,6.0,ibm_quantum_runner_c64.py,
+1776631375412706268,2026-04-19T20:42:55.412709+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^49 × (1-0.0306)^6 = 0.6490,0.6489952613899805,ibm_quantum_runner_c64.py,185
+1776631376013691814,2026-04-19T20:42:56.013693+00:00,hts_batch,INFO,  [02] Job soumis : d7ijsjq2khts739quorg,,,
+1776631381001341908,2026-04-19T20:43:01.001343+00:00,hts_batch,METRIC,  [02] DONE : E=4.3455t S=2.932b dom=111100(39.7%) t=5.6s,0.39697265625,ibm_quantum_runner_c64.py,
+1776631381001371348,2026-04-19T20:43:01.001371+00:00,hts_batch,INFO,[03/16] quantum_field_noneq : n_sites=3 U=7.0 t=1.3 T=180.0K,,,
+1776631381001383908,2026-04-19T20:43:01.001384+00:00,hts_vqe_build,INFO,quantum_field_noneq : 3 sites → 6Q U/t=5.38 T=180.0K mu=0.05,6.0,ibm_quantum_runner_c64.py,
+1776631381031804186,2026-04-19T20:43:01.031808+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^50 × (1-0.0306)^6 = 0.6458,0.6457502850830306,ibm_quantum_runner_c64.py,185
+1776631381597774184,2026-04-19T20:43:01.597776+00:00,hts_batch,INFO,  [03] Job soumis : d7ijslc93s0c738u2q30,,,
+1776631387535892879,2026-04-19T20:43:07.535895+00:00,hts_batch,METRIC,  [03] DONE : E=-0.1141t S=3.090b dom=111100(36.3%) t=6.5s,0.36328125,ibm_quantum_runner_c64.py,
+1776631387535927729,2026-04-19T20:43:07.535928+00:00,hts_batch,INFO,[04/16] dense_nuclear_fullscale : n_sites=4 U=11.0 t=0.8 T=80.0K,,,
+1776631387535943629,2026-04-19T20:43:07.535944+00:00,hts_vqe_build,INFO,dense_nuclear_fullscale : 4 sites → 8Q U/t=13.75 T=80.0K mu=0.3,8.0,ibm_quantum_runner_c64.py,
+1776631387601755254,2026-04-19T20:43:07.601759+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^73 × (1-0.0306)^8 = 0.5407,0.5407115586698698,ibm_quantum_runner_c64.py,185
+1776631388171044703,2026-04-19T20:43:08.171047+00:00,hts_batch,INFO,  [04] Job soumis : d7ijsn22khts739quovg,,,
+1776631394161209633,2026-04-19T20:43:14.161212+00:00,hts_batch,METRIC,  [04] DONE : E=3.8146t S=4.124b dom=00001111(31.9%) t=6.6s,0.31884765625,ibm_quantum_runner_c64.py,
+1776631394161247373,2026-04-19T20:43:14.161247+00:00,hts_batch,INFO,[05/16] quantum_chemistry_fullscale : n_sites=4 U=6.5 t=1.6 T=60.0K,,,
+1776631394161264613,2026-04-19T20:43:14.161265+00:00,hts_vqe_build,INFO,quantum_chemistry_fullscale : 4 sites → 8Q U/t=4.06 T=60.0K mu=0.4,8.0,ibm_quantum_runner_c64.py,
+1776631394216318329,2026-04-19T20:43:14.216323+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^60 × (1-0.0306)^8 = 0.5771,0.577119307423688,ibm_quantum_runner_c64.py,185
+1776631394756305180,2026-04-19T20:43:14.756308+00:00,hts_batch,INFO,  [05] Job soumis : d7ijsojjne2c7395bdug,,,
+1776631400303785523,2026-04-19T20:43:20.303787+00:00,hts_batch,METRIC,  [05] DONE : E=-4.1085t S=5.085b dom=00001111(17.6%) t=6.1s,0.17626953125,ibm_quantum_runner_c64.py,
+1776631400303816543,2026-04-19T20:43:20.303817+00:00,hts_batch,INFO,[06/16] spin_liquid_exotic : n_sites=4 U=10.5 t=0.9 T=55.0K,,,
+1776631400303833303,2026-04-19T20:43:20.303833+00:00,hts_vqe_build,INFO,spin_liquid_exotic : 4 sites → 8Q U/t=11.67 T=55.0K mu=0.12,8.0,ibm_quantum_runner_c64.py,
+1776631400363099339,2026-04-19T20:43:20.363104+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^63 × (1-0.0306)^8 = 0.5685,0.568505729620476,ibm_quantum_runner_c64.py,185
+1776631400915442039,2026-04-19T20:43:20.915445+00:00,hts_batch,INFO,  [06] Job soumis : d7ijsq22khts739qup30,,,
+1776631406416498606,2026-04-19T20:43:26.416501+00:00,hts_batch,METRIC,  [06] DONE : E=3.0650t S=4.096b dom=00001111(31.7%) t=6.1s,0.3173828125,ibm_quantum_runner_c64.py,
+1776631406416535506,2026-04-19T20:43:26.416536+00:00,hts_batch,INFO,[07/16] topological_correlated_materials : n_sites=4 U=7.8 t=1.1 T=70.0K,,,
+1776631406416551986,2026-04-19T20:43:26.416552+00:00,hts_vqe_build,INFO,topological_correlated_materials : 4 sites → 8Q U/t=7.09 T=70.0K mu=0.15,8.0,ibm_quantum_runner_c64.py,
+1776631406474358021,2026-04-19T20:43:26.474361+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^60 × (1-0.0306)^8 = 0.5771,0.577119307423688,ibm_quantum_runner_c64.py,185
+1776631406983943394,2026-04-19T20:43:26.983946+00:00,hts_batch,INFO,  [07] Job soumis : d7ijsri2khts739qup60,,,
+1776631413289644802,2026-04-19T20:43:33.289647+00:00,hts_batch,METRIC,  [07] DONE : E=-0.1572t S=4.562b dom=00001111(27.2%) t=6.9s,0.27197265625,ibm_quantum_runner_c64.py,
+1776631413289679412,2026-04-19T20:43:33.289680+00:00,hts_batch,INFO,[08/16] correlated_fermions_non_hubbard : n_sites=4 U=8.6 t=1.2 T=85.0K,,,
+1776631413289695242,2026-04-19T20:43:33.289695+00:00,hts_vqe_build,INFO,correlated_fermions_non_hubbard : 4 sites → 8Q U/t=7.17 T=85.0K mu=0.18,8.0,ibm_quantum_runner_c64.py,
+1776631413340485279,2026-04-19T20:43:33.340490+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^72 × (1-0.0306)^8 = 0.5434,0.5434287021807735,ibm_quantum_runner_c64.py,185
+1776631413914556787,2026-04-19T20:43:33.914559+00:00,hts_batch,INFO,  [08] Job soumis : d7ijstfb91ec73avu85g,,,
+1776631418743296003,2026-04-19T20:43:38.743297+00:00,hts_batch,METRIC,  [08] DONE : E=-0.0213t S=4.685b dom=00001111(27.8%) t=5.5s,0.27783203125,ibm_quantum_runner_c64.py,
+1776631418743338653,2026-04-19T20:43:38.743339+00:00,hts_batch,INFO,[09/16] multi_state_excited_chemistry : n_sites=4 U=6.8 t=1.5 T=48.0K,,,
+1776631418743354543,2026-04-19T20:43:38.743354+00:00,hts_vqe_build,INFO,multi_state_excited_chemistry : 4 sites → 8Q U/t=4.53 T=48.0K mu=0.22,8.0,ibm_quantum_runner_c64.py,
+1776631418816648308,2026-04-19T20:43:38.816653+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^63 × (1-0.0306)^8 = 0.5685,0.568505729620476,ibm_quantum_runner_c64.py,185
+1776631419309570042,2026-04-19T20:43:39.309572+00:00,hts_batch,INFO,  [09] Job soumis : d7ijsus93s0c738u2qh0,,,
+1776631424444410546,2026-04-19T20:43:44.444412+00:00,hts_batch,METRIC,  [09] DONE : E=-2.7328t S=4.834b dom=00001111(24.0%) t=5.7s,0.240234375,ibm_quantum_runner_c64.py,
+1776631424444450046,2026-04-19T20:43:44.444450+00:00,hts_batch,INFO,[10/16] bosonic_multimode_systems : n_sites=3 U=5.2 t=0.6 T=110.0K,,,
+1776631424444466486,2026-04-19T20:43:44.444466+00:00,hts_vqe_build,INFO,bosonic_multimode_systems : 3 sites → 6Q U/t=8.67 T=110.0K mu=0.06,6.0,ibm_quantum_runner_c64.py,
+1776631424489758343,2026-04-19T20:43:44.489763+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^53 × (1-0.0306)^6 = 0.6361,0.6361123813593808,ibm_quantum_runner_c64.py,185
+1776631424976343317,2026-04-19T20:43:44.976346+00:00,hts_batch,INFO,  [10] Job soumis : d7ijt03jne2c7395be7g,,,
+1776631430226101653,2026-04-19T20:43:50.226104+00:00,hts_batch,METRIC,  [10] DONE : E=0.2516t S=2.950b dom=100101(39.5%) t=5.8s,0.39453125,ibm_quantum_runner_c64.py,
+1776631430226147143,2026-04-19T20:43:50.226147+00:00,hts_batch,INFO,[11/16] multiscale_nonlinear_field_models : n_sites=3 U=9.2 t=1.4 T=125.0K,,,
+1776631430226163173,2026-04-19T20:43:50.226163+00:00,hts_vqe_build,INFO,multiscale_nonlinear_field_models : 3 sites → 6Q U/t=6.57 T=125.0K mu=0.1,6.0,ibm_quantum_runner_c64.py,
+1776631430272134180,2026-04-19T20:43:50.272139+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^52 × (1-0.0306)^6 = 0.6393,0.6393089259893273,ibm_quantum_runner_c64.py,185
+1776631430764012894,2026-04-19T20:43:50.764015+00:00,hts_batch,INFO,  [11] Job soumis : d7ijt1i2khts739qupc0,,,
+1776631435619860748,2026-04-19T20:43:55.619862+00:00,hts_batch,METRIC,  [11] DONE : E=1.1922t S=3.066b dom=111100(36.9%) t=5.4s,0.369140625,ibm_quantum_runner_c64.py,
+1776631435619890118,2026-04-19T20:43:55.619890+00:00,hts_batch,INFO,[12/16] far_from_equilibrium_kinetic_lattices : n_sites=3 U=8.0 t=1.0 T=150.0K,,,
+1776631435619901918,2026-04-19T20:43:55.619902+00:00,hts_vqe_build,INFO,far_from_equilibrium_kinetic_lattices : 3 sites → 6Q U/t=8.00 T=150.0K mu=0.09,6.0,ibm_quantum_runner_c64.py,
+1776631435671929195,2026-04-19T20:43:55.671933+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^55 × (1-0.0306)^6 = 0.6298,0.6297671603553209,ibm_quantum_runner_c64.py,185
+1776631436257820372,2026-04-19T20:43:56.257822+00:00,hts_batch,INFO,  [12] Job soumis : d7ijt33jne2c7395bec0,,,
+1776631441619273080,2026-04-19T20:44:01.619275+00:00,hts_batch,METRIC,  [12] DONE : E=2.3281t S=2.974b dom=111100(39.6%) t=6.0s,0.3955078125,ibm_quantum_runner_c64.py,
+1776631441619312240,2026-04-19T20:44:01.619312+00:00,hts_batch,INFO,[13/16] multi_correlated_fermion_boson_networks : n_sites=4 U=7.4 t=1.05 T=100.0K,,,
+1776631441619328870,2026-04-19T20:44:01.619329+00:00,hts_vqe_build,INFO,multi_correlated_fermion_boson_networks : 4 sites → 8Q U/t=7.05 T=100.0K mu=0.14,8.0,ibm_quantum_runner_c64.py,
+1776631441681487575,2026-04-19T20:44:01.681490+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^63 × (1-0.0306)^8 = 0.5685,0.568505729620476,ibm_quantum_runner_c64.py,185
+1776631442238481044,2026-04-19T20:44:02.238484+00:00,hts_batch,INFO,  [13] Job soumis : d7ijt4i2khts739qupg0,,,
+1776631447350527171,2026-04-19T20:44:07.350529+00:00,hts_batch,METRIC,  [13] DONE : E=0.6635t S=4.111b dom=00001111(32.9%) t=5.7s,0.32861328125,ibm_quantum_runner_c64.py,
+1776631447350554801,2026-04-19T20:44:07.350555+00:00,hts_batch,INFO,[14/16] ed_validation_2x2 : n_sites=4 U=4.0 t=1.0 T=10.0K,,,
+1776631447350566791,2026-04-19T20:44:07.350567+00:00,hts_vqe_build,INFO,ed_validation_2x2 : 4 sites → 8Q U/t=4.00 T=10.0K mu=0.0,8.0,ibm_quantum_runner_c64.py,
+1776631447405696327,2026-04-19T20:44:07.405700+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^63 × (1-0.0306)^8 = 0.5685,0.568505729620476,ibm_quantum_runner_c64.py,185
+1776631447905215080,2026-04-19T20:44:07.905217+00:00,hts_batch,INFO,  [14] Job soumis : d7ijt5rjne2c7395beg0,,,
+1776631453254175159,2026-04-19T20:44:13.254177+00:00,hts_batch,METRIC,  ED 2×2 exact E=-4.8284t vs IBM E=-1.6797t écart=3.1487t,3.14873962474619,,
+1776631453255538059,2026-04-19T20:44:13.255540+00:00,hts_batch,METRIC,  [14] DONE : E=-1.6797t S=4.323b dom=00001111(29.0%) t=5.9s,0.2900390625,ibm_quantum_runner_c64.py,
+1776631453255567849,2026-04-19T20:44:13.255568+00:00,hts_batch,INFO,[15/16] fermionic_sign_problem : n_sites=4 U=14.0 t=1.0 T=20.0K,,,
+1776631453255583439,2026-04-19T20:44:13.255583+00:00,hts_vqe_build,INFO,fermionic_sign_problem : 4 sites → 8Q U/t=14.00 T=20.0K mu=0.0,8.0,ibm_quantum_runner_c64.py,
+1776631453317508245,2026-04-19T20:44:13.317512+00:00,ibm_fidelity,METRIC,Fidélité estimée : (1-0.0050)^69 × (1-0.0306)^8 = 0.5517,0.5516623314352359,ibm_quantum_runner_c64.py,185
+1776631453815982058,2026-04-19T20:44:13.815984+00:00,hts_batch,INFO,  [15] Job soumis : d7ijt7a2khts739qupl0,,,
+1776631458823851872,2026-04-19T20:44:18.823854+00:00,hts_batch,METRIC,  [15] DONE : E=3.6973t S=4.682b dom=00001111(27.5%) t=5.6s,0.27490234375,ibm_quantum_runner_c64.py,
+1776631458823886342,2026-04-19T20:44:18.823886+00:00,hts_batch,INFO,[16/16] random_circuit_sampling : n_sites=5 U=2.0 t=1.0 T=1.0K,,,
+1776631458823899412,2026-04-19T20:44:18.823899+00:00,rcs_xeb,INFO,"RCS XEB : 20 qubits, profondeur=12, shots=2048",,,
+1776631458851641030,2026-04-19T20:44:18.851644+00:00,rcs_xeb,INFO,RCS transpilé : 156Q profondeur=17,,,
+1776631459332021375,2026-04-19T20:44:19.332023+00:00,rcs_xeb,INFO,RCS Job : d7ijt8q2khts739qupn0,,,
+1776631463968757746,2026-04-19T20:44:23.968759+00:00,rcs_xeb,WARN,RCS erreur : 'DataBin' object has no attribute 'c0' → simulation,,,
+1776631463969012806,2026-04-19T20:44:23.969013+00:00,rcs_xeb,METRIC,RCS XEB terminé : score=1.0000 entropy=6.644b états=100/1048576 t=5.1s,1.0,ibm_quantum_runner_c64.py,
+1776631463969079986,2026-04-19T20:44:23.969080+00:00,hts_batch,INFO,16 problèmes terminés en 95.1s total,95.127297146,,
+1776631463969089436,2026-04-19T20:44:23.969089+00:00,pipeline,INFO,PHASE 3/3 : FORENSIC + RAPPORT,,,
