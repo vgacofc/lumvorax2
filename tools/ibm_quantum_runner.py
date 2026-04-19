@@ -520,7 +520,7 @@ def run_hubbard_ibm(service, n_sites: int = 2, shots: int = 2048,
     }
 
     HTS_LOG_DIR.mkdir(parents=True, exist_ok=True)
-    json_path = HTS_LOG_DIR / f"hts_vqe_{run_id}.json"
+    json_path = HTS_LOG_DIR / f"{run_id}.json"
     with open(json_path, "w") as f:
         json.dump(result_dict, f, indent=2)
 
