@@ -11,14 +11,27 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
-## IBM Quantum Integration (C66 — corrections 156Q exploitables)
+## IBM Quantum Integration (C66 — corrections 156Q exploitables + résultats IBM réels)
 
 ### État C66 (2026-04-20)
 - **Runner ajouté** : `tools/ibm_quantum_runner_c66.py`
-- **Rapport généré** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_IBM_QUANTUM_C66_20260420T195435Z.md`
-- **JSON résultat** : `src/advanced_calculations/bitcoin_quantum_mining/results/ibm_c66_pipeline_20260420T195435Z.json`
-- **Mode validé localement** : `--all --fake --shots-q 4 --shots-h 4 --shots-b 4 --vqe-iters 1 --retrieve-jobs --src-manifest`
+- **Rapport final C66** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_IBM_QUANTUM_C66_20260420T200525Z.md`
+- **JSON résultat** : `src/advanced_calculations/bitcoin_quantum_mining/results/ibm_c66_pipeline_20260420T200525Z.json`
+- **9 jobs IBM C65 récupérés avec vrais counts** — IBM_API_KEY opérationnel dans Replit Secrets
 - **Important** : le simulateur local disponible expose 127 qubits, donc C66 conserve les circuits 156Q et bypass uniquement la contrainte du fake backend. Le chemin IBM réel reste destiné à `ibm_fez` 156Q avec transpilation SABRE.
+
+### Résultats IBM C65 récupérés (vrais counts extraits C66)
+| Job | Module | Shots | États | Dominant | Entropie H |
+|-----|--------|-------|-------|----------|------------|
+| d7j4otn16ugs73eud8qg | QDAYPRIZE_156Q | 2282 | 2282 (max) | 0.044% | 11.16b |
+| d7j4pff16ugs73eud9c0 | ED_2×2_VALID | 2048 | 16 | 35.9% (`1011`) | 2.72b |
+| d7j4poq3fd4c73ddk1sg | BTC_GROVER_156Q | 1024 | 1024 (max) | 0.098% | 10.0b |
+| d7j4q1hs7cos73ejf760 | RCS_XEB_156Q | 512 | 512 (max) | 0.20% | 9.0b |
+| d7j4qiv16ugs73eudae0 | HTS_hubbard_core | 1024 | 109 | 23.5% (`10111011`) | 4.51b |
+| d7j4ql716ugs73eudah0 | HTS_spin_liquid | 1024 | 125 | 24.1% (`10111011`) | 4.87b |
+| d7j4qmv16ugs73eudaj0 | HTS_fermionic | 1024 | 59 | 33.0% (`000100`) | 3.78b |
+| d7j4qon16ugs73eudal0 | HTS_qchem | 1024 | 98 | 25.6% (`10111011`) | 4.32b |
+| d7j4r8q3fd4c73ddk3cg | QDAYPRIZE_8Q (était RUNNING) | 4096 | 243 | 21.2% (`00000000`) | 5.71b |
 
 ### Corrections C66 principales
 - QDAYPRIZE : ancillas limitées à 32, padding 156Q, multi-échelle `[1, 3, 5]`, mesures locales de blocs de 4.

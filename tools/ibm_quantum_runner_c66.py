@@ -96,6 +96,17 @@ C65_JOB_IDS = [
     "d7j4q1hs7cos73ejf760", "d7j4qiv16ugs73eudae0", "d7j4ql716ugs73eudah0",
     "d7j4qmv16ugs73eudaj0", "d7j4qon16ugs73eudal0", "d7j4r8q3fd4c73ddk3cg",
 ]
+C65_JOB_META = {
+    "d7j4otn16ugs73eud8qg": {"module": "QDAYPRIZE_156Q",  "c65_note": "SNR=1.00, 154 ancillas, 14007 portes 2Q, depth≈6446, 15.5s"},
+    "d7j4pff16ugs73eud9c0": {"module": "ED_2x2_VALID",    "c65_note": "E_IBM=-1.563t, E_exact=-4.828t, err=67.64%"},
+    "d7j4poq3fd4c73ddk1sg": {"module": "BTC_GROVER_156Q", "c65_note": "prob=0.00098, speedup=2^39≈5.5×10^11, 11.9s"},
+    "d7j4q1hs7cos73ejf760": {"module": "RCS_XEB_156Q",    "c65_note": "XEB borné 1.0, 512 états distincts, 12.0s"},
+    "d7j4qiv16ugs73eudae0": {"module": "HTS_hubbard_core","c65_note": "E=-0.352t, S=4.512b, U/t=8.0, 9.7s"},
+    "d7j4ql716ugs73eudah0": {"module": "HTS_spin_liquid",  "c65_note": "E=+2.198t, signe_pb=True, S=4.871b, 6.8s"},
+    "d7j4qmv16ugs73eudaj0": {"module": "HTS_fermionic",   "c65_note": "E=-1.000t, Mott, S=3.782b, 7.0s"},
+    "d7j4qon16ugs73eudal0": {"module": "HTS_qchem",       "c65_note": "E=-4.611t (meilleure), S=4.322b, 6.0s"},
+    "d7j4r8q3fd4c73ddk3cg": {"module": "QDAYPRIZE_8Q",    "c65_note": "Était RUNNING lors du rapport C65, résultat inconnu"},
+}
 
 
 def ns() -> int:
@@ -497,26 +508,75 @@ def run_rcs_c66(service: Optional[Any], shots: int, fake: bool) -> Dict[str, Any
     return run_rcs_c66_with_backend(backend, calib, shots, None)
 
 
+def extract_counts_from_result(result: Any) -> Dict[str, Any]:
+    info: Dict[str, Any] = {"pubs": [], "n_pubs": 0, "top_states": {}, "n_shots_total": 0, "n_distinct_states": 0}
+    try:
+        n_pubs = len(result)
+        info["n_pubs"] = n_pubs
+        all_counts: Dict[str, int] = {}
+        for pub_idx in range(n_pubs):
+            try:
+                pub = result[pub_idx]
+                counts = get_counts_safe(pub)
+                n_shots = sum(counts.values())
+                n_distinct = len(counts)
+                info["pubs"].append({"pub_idx": pub_idx, "n_shots": n_shots, "n_distinct_states": n_distinct})
+                info["n_shots_total"] += n_shots
+                for k, v in counts.items():
+                    all_counts[k] = all_counts.get(k, 0) + v
+            except Exception as exc:
+                info["pubs"].append({"pub_idx": pub_idx, "error": str(exc)})
+        info["n_distinct_states"] = len(all_counts)
+        top = sorted(all_counts.items(), key=lambda kv: kv[1], reverse=True)[:10]
+        info["top_states"] = {k: v for k, v in top}
+        if info["n_shots_total"] > 0 and top:
+            info["dominant_prob"] = round(top[0][1] / info["n_shots_total"], 6)
+            info["dominant_state"] = top[0][0]
+            info["entropy_bits"] = round(-sum((c / info["n_shots_total"]) * math.log2(c / info["n_shots_total"]) for _, c in all_counts.items() if c > 0), 4)
+    except Exception as exc:
+        info["extract_error"] = str(exc)
+    return info
+
+
 def retrieve_jobs(service: Optional[Any], job_ids: List[str]) -> List[Dict[str, Any]]:
     out = []
     if service is None:
-        return [{"job_id": jid, "status": "not_retrieved", "reason": "IBM_API_KEY absent"} for jid in job_ids]
+        for jid in job_ids:
+            meta = C65_JOB_META.get(jid, {})
+            out.append({"job_id": jid, "status": "not_retrieved", "reason": "IBM_API_KEY absent", "module": meta.get("module", "?"), "c65_note": meta.get("c65_note", "")})
+        return out
     for jid in job_ids:
+        meta = C65_JOB_META.get(jid, {})
         try:
             job = service.job(jid)
             status = str(job.status())
-            row = {"job_id": jid, "status": status, "backend": str(getattr(job, "backend", lambda: "?")())}
+            try:
+                backend_name = str(job.backend())
+            except Exception:
+                backend_name = "unknown"
+            row: Dict[str, Any] = {
+                "job_id": jid,
+                "status": status,
+                "backend": backend_name,
+                "module": meta.get("module", "?"),
+                "c65_note": meta.get("c65_note", ""),
+            }
             if "DONE" in status.upper():
                 try:
                     result = job.result()
                     row["result_type"] = type(result).__name__
                     row["retrieved"] = True
+                    counts_info = extract_counts_from_result(result)
+                    row.update(counts_info)
+                    flog("retrieve", "INFO", f"{jid} ({meta.get('module','?')}): DONE — {counts_info.get('n_shots_total')} shots, {counts_info.get('n_distinct_states')} états, dominant_prob={counts_info.get('dominant_prob')}")
                 except Exception as exc:
                     row["result_error"] = str(exc)
+                    flog("retrieve", "WARN", f"{jid}: résultat échoué: {exc}")
+            else:
+                flog("retrieve", "INFO", f"{jid}: {status}")
             out.append(row)
-            flog("retrieve", "INFO", f"{jid}: {status}")
         except Exception as exc:
-            out.append({"job_id": jid, "status": "error", "error": str(exc)})
+            out.append({"job_id": jid, "status": "error", "error": str(exc), "module": meta.get("module", "?")})
             flog("retrieve", "WARN", f"{jid}: {exc}")
     return out
 
@@ -613,10 +673,51 @@ def generate_report(summary: Dict[str, Any]) -> Path:
     lines.append(f"- Préfixe marqué: {b.get('marked_prefix_bits')}")
     lines.append(f"- Depth: {b.get('depth')} / OK≤500={b.get('depth_ok')}")
     lines.append("")
-    lines.append("## Récupération des jobs manquants")
-    for job in summary.get("retrieved_jobs", []):
-        lines.append(f"- `{job.get('job_id')}`: {job.get('status')} {job.get('reason', job.get('error', ''))}")
+    lines.append("## Récupération des jobs IBM C65 — RÉSULTATS RÉELS")
     lines.append("")
+    lines.append("### Tableau AVANT / APRÈS")
+    lines.append("| Job ID | Module | Statut | AVANT (C65 rapport) | APRÈS (C66 récupéré) |")
+    lines.append("|--------|--------|--------|---------------------|----------------------|")
+    for job in summary.get("retrieved_jobs", []):
+        jid = job.get("job_id", "?")
+        module = job.get("module", "?")
+        status = job.get("status", "?")
+        avant = job.get("c65_note", "—")
+        if job.get("retrieved"):
+            shots = job.get("n_shots_total", 0)
+            distinct = job.get("n_distinct_states", 0)
+            dom_prob = job.get("dominant_prob", "?")
+            dom_state = job.get("dominant_state", "?")
+            entropy = job.get("entropy_bits", "?")
+            apres = f"shots={shots}, états={distinct}, dominant_prob={dom_prob}, H={entropy}b"
+        elif job.get("reason"):
+            apres = f"Non récupéré: {job.get('reason')}"
+        elif job.get("error"):
+            apres = f"Erreur: {job.get('error')}"
+        elif job.get("result_error"):
+            apres = f"Erreur résultat: {job.get('result_error')}"
+        else:
+            apres = status
+        lines.append(f"| `{jid}` | {module} | {status} | {avant} | {apres} |")
+    lines.append("")
+    lines.append("### Détail des tops états par job")
+    for job in summary.get("retrieved_jobs", []):
+        if not job.get("retrieved"):
+            continue
+        jid = job.get("job_id", "?")
+        module = job.get("module", "?")
+        lines.append(f"#### {module} — `{jid}`")
+        top = job.get("top_states", {})
+        n_total = max(1, job.get("n_shots_total", 1))
+        if top:
+            for state, cnt in list(top.items())[:5]:
+                prob = round(cnt / n_total, 5)
+                lines.append(f"  - `{state}`: {cnt} ({prob*100:.2f}%)")
+        else:
+            lines.append("  - Aucun count extrait")
+        lines.append(f"  - Entropie Shannon: {job.get('entropy_bits', '?')} bits")
+        lines.append(f"  - État dominant: `{job.get('dominant_state', '?')}` (prob={job.get('dominant_prob', '?')})")
+        lines.append("")
     lines.append("## Hypothèse LUM Qubits")
     lines.append("L’analyse C66 valide l’hypothèse de travail: LUM Qubits doit rester une couche de traçabilité/présence au-dessus des qubits IBM, comme LUM/VORAX le fait au-dessus des bits classiques. Le `.lum` natif transporte les snapshots de calibration, blocs de mesure, transpilation, feedback NX ATOM et checksum sans convertir d’abord en CSV/JSON.")
     lines.append("")
@@ -642,12 +743,13 @@ def generate_report(summary: Dict[str, Any]) -> Path:
 
 def run_all(args: argparse.Namespace) -> Dict[str, Any]:
     run_id = f"ibm_c66_all_{STAMP}"
-    service = None if args.fake else connect_ibm()
-    retrieved = retrieve_jobs(service, C65_JOB_IDS) if args.retrieve_jobs else []
-    qday = run_qdayprize_c66(service, args.shots_q, args.fake)
-    hts = run_hts_c66(service, args.shots_h, args.fake, args.vqe_iters)
-    btc = run_btc_grover_c66(service, args.shots_b, args.fake)
-    rcs = run_rcs_c66(service, min(args.shots_h, 512), args.fake)
+    circuit_service = None if args.fake else connect_ibm()
+    retrieve_service = connect_ibm() if IBM_API_KEY and args.retrieve_jobs else circuit_service
+    retrieved = retrieve_jobs(retrieve_service, C65_JOB_IDS) if args.retrieve_jobs else []
+    qday = run_qdayprize_c66(circuit_service, args.shots_q, args.fake)
+    hts = run_hts_c66(circuit_service, args.shots_h, args.fake, args.vqe_iters)
+    btc = run_btc_grover_c66(circuit_service, args.shots_b, args.fake)
+    rcs = run_rcs_c66(circuit_service, min(args.shots_h, 512), args.fake)
     manifest = src_line_manifest() if args.src_manifest else {"files_read": 0, "total_lines_read": 0, "entries": []}
     forensic_path = save_forensic(run_id)
     summary = {"cycle": CYCLE, "run_id": run_id, "timestamp": STAMP, "fake_mode": args.fake, "backend_target": IBM_FEZ_TARGET, "n_qubits": IBM_FEZ_QUBITS, "retrieved_jobs": retrieved, "qdayprize": qday, "hts": hts, "btc_grover": btc, "rcs": rcs, "src_manifest": manifest, "forensic_path": str(forensic_path)}
