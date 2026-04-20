@@ -157,7 +157,7 @@ bash tools/rotate_logs_50mb.sh  # Rotation manuelle
 ### Development
 Le workflow "Start application" lance :
 ```bash
-uv run gunicorn --bind 0.0.0.0:5000 --reload main:app
+uv run python main.py
 ```
 
 Le frontend utilise `/app-api/...` comme alias relatif Replit-compatible pour les routes Flask `/api/...`.
@@ -197,7 +197,7 @@ env DEFAULT_JOB_TIMEOUT_S=0 doppler run --config dev_lumvorax -- bash tools/agen
 ```
 
 ## Environment
-- Python packages managed via uv/`.pythonlibs`
+- Python packages managed via uv/`.pythonlibs`; the Replit workflow uses uv's managed Python runtime so pyproject dependencies resolve consistently
 - Nix packages include gcc, gnumake, PostgreSQL, OpenCV, and scientific tooling
 - Important env vars: `SESSION_SECRET`, `AGENT_TOKEN`, `LUMVORAX_AGENT_TOKEN`, `REPLIT_URL`, `BTC_DURATION_S`, `BTC_THREADS`, `DEFAULT_JOB_TIMEOUT_S`
 
