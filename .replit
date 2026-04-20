@@ -14,10 +14,6 @@ author = "agent"
 task = "workflow.run"
 args = "Start application"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "BTC Mining — Run Replit"
-
 [[workflows.workflow]]
 name = "git fetch "
 mode = "sequential"
@@ -39,17 +35,6 @@ outputType = "webview"
 task = "shell.exec"
 args = "uv run python main.py"
 waitForPort = 5000
-
-[[workflows.workflow]]
-name = "BTC Mining — Run Replit"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd src/advanced_calculations/bitcoin_quantum_mining && STAMP=$(date +%Y%m%dT%H%M%SZ) && ./btc_mining_runner --threads 2 --duration-s 0 --mode UBUNTU_UNLIMITED --run-id btc_replit_c52_${STAMP} 2>&1 | tee /tmp/btc_replit_run.log"
-
-[workflows.workflow.metadata]
-outputType = "console"
 
 [nix]
 packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "iana-etc", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
