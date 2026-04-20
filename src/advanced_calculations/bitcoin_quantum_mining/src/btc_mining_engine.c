@@ -916,6 +916,21 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     }
     eng->nx48 = nx48;
 
+    /* C65-GPU-EARLY : Activation GPU AVANT lancement moteur PT-MC
+     * Correction bug C64 : GPU s'activait seulement après stagnation longue (elapsed>130s)
+     * Désormais : si hw.gpu_opencl_present=1 au moment de l'init, on active immédiatement.
+     * Cela garantit que OpenCL est chaud avant le 1er cycle PT-MC.
+     */
+    if (nx48 && nx48->hw.gpu_opencl_present) {
+        atomic_store_explicit(&nx48_ctrl_gpu_active, 1, memory_order_relaxed);
+        nx48->hw.gpu_opencl_active = 1;
+        printf("[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : %s\n",
+               nx48->hw.gpu_name[0] ? nx48->hw.gpu_name : "GPU-Détecté");
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_early_activation_c65", 1.0);
+    } else {
+        printf("[C65-GPU-EARLY] ⚠ GPU OpenCL absent ou non détecté — mode CPU pur\n");
+    }
+
     /* Pré-calcul midstate (optimisation classique) */
     uint32_t midstate[LV_SHA256_MIDSTATE_WORDS];
     lv_sha256_compute_midstate(&cfg->header_template, midstate);

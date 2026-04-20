@@ -32,7 +32,7 @@ experiments/
 **/results/*.csv
 **/outputs/*.csv
 
-# Ignorer logs runtime uniquement
+# Ignorer logs runtime
 *.log
 
 # =========================
@@ -48,7 +48,7 @@ experiments/
 !src/**
 
 # =========================
-# BINAIRES COMPILÉS (JAMAIS COMMITER — cause SIGILL cross-platform)
+# BINAIRES COMPILES (JAMAIS COMMITER — cause SIGILL cross-platform)
 # =========================
 *.o
 *.a
@@ -56,10 +56,11 @@ experiments/
 src/qdayprize/qdayprize_runner
 src/qdayprize/qdayprize_runner_debug
 src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
+btc_mining_runner
+qdayprize_runner
 
 # =========================
-# FICHIERS RUNTIME UBUNTU (évitent conflits git pull)
-# Après !src/** : ré-exclure ces chemins spécifiques
+# FICHIERS RUNTIME UBUNTU
 # =========================
 src/advanced_calculations/bitcoin_quantum_mining/config/btc_nx48_last.csv
 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/anomalies/
@@ -67,45 +68,34 @@ src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/hw_samples/
 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/
 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/
 src/qdayprize/logs/
-
-# NE PAS ignorer les archives workspace si utilisées comme source
-# (sinon cassera ton pipeline)
-!*.zipsrc/advanced_calculations/quantum_problem_hubbard_hts/logs/
 src/advanced_calculations/quantum_problem_hubbard_hts/logs/
-
-# Hubbard HTS — après !src/** : ré-exclure runs lourds & secrets de prod local
 src/advanced_calculations/quantum_problem_hubbard_hts/results/
 src/advanced_calculations/quantum_problem_hubbard_hts/backups/
 src/advanced_calculations/quantum_problem_hubbard_hts/.run_current_phase
 src/advanced_calculations/quantum_problem_hubbard_hts/.run_checkpoint
-src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/reports/secret.md
 
 # =========================
-# BINAIRES COMPILÉS (NE PAS COMMITER — dépendants du CPU local)
-# *.o compilés Replit (AMD EPYC AVX-512) causeraient SIGILL sur Ubuntu i5-8265U
+# ROTATION 50MB — AUCUN FICHIER > 50MB AUTORISE (C65)
+# LFS DESACTIVE — Rotation locale appliquee
 # =========================
-*.o
-src/qdayprize/qdayprize_runner
-src/qdayprize/qdayprize_runner_debug
-src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
-btc_mining_runner
-qdayprize_runner
-
-# =========================
-# C63 : FICHIERS VOLUMINEUX — ROTATION 50 MB (PAS DE LFS)
-# =========================
-# Fragments worm (>20 MB) — non utiles au repo
+# Fragments worm (>20 MB)
 worm_part_*
 *_part_a*
 
 # Bench brut volumineux
 logs/bench_raw.txt
 
-# Logs forensic modules — déjà en rotation automatique
-# (patterns de sécurité supplémentaires)
+# Logs forensic modules — rotation automatique 50MB
 *.log_part_*
 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/*.log
 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/*.log
+src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/btc_qm_engine_metrics.log
 
-# Cache Python volumineux (torch, cv2, scipy — bibliothèques système)
+# Archives vesuvius/rapports volumineux
+*.tif
+*.tiff
+*.zip
+
+# Cache Python volumineux
 .cache/uv/
+.pythonlibs/

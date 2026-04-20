@@ -51,6 +51,49 @@ IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --hts16
 IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c64.py --rcs
 ```
 
+## IBM Quantum C65 — 156Q MAXIMUM (2026-04-20)
+
+### Nouveautés C65
+- **156 Qubits physiques** pour TOUS les problèmes (QDAYPRIZE, HTS, BTC, RCS)
+- **LUM Qubits** : couche forensique ns par qubit (`tools/lum_qubits.py`)
+- **NX ATOM** + bruit quantique réel IBM T1/T2 → stabilisation décohérence
+- **Fix DataBin 'c0'** : `_get_counts_safe()` — plus de crash AttributeError
+- **Fix VQE optimizer** : paramètres initiaux β physiques (Boltzmann)
+- **GPU Early Activation** : `[C65-GPU-EARLY]` avant PT-MC dans `btc_mining_engine.c`
+- **Rotation 50MB** : `tools/rotate_logs_50mb.sh` + `lum_qubits.py`
+- **LFS supprimé** : `.gitattributes` nettoyé, `btc_qm_engine_metrics.log` ignoré
+
+### Runner C65
+- `tools/ibm_quantum_runner_c65.py` — Runner 156Q NOUVEAU
+- `tools/lum_qubits.py` — LUM Qubits 156Q tracker NOUVEAU
+- `tools/rotate_logs_50mb.sh` — Script rotation logs NOUVEAU
+
+### QDAYPRIZE 156Q
+- 154 ancilla QPE + 2 cibles ECC = 156Q total (vs 10Q en C64)
+- Résolution 2^154 (vs 2^8 en C64) — facteur 10^43 supérieur
+
+### HTS 16 Problèmes 156Q
+- 78 sites × 2 spins = 156Q (Jordan-Wigner complet)
+- ED 2×2 validation exacte : E_exact = -4.828t
+
+### BTC Grover 156Q
+- 78Q registre + 78Q oracle = 156Q total
+- Speedup Grover : √(2^78) = 2^39 ≈ 5.5 × 10^11
+
+### Usage C65
+```bash
+uv run python3 tools/ibm_quantum_runner_c65.py --status
+uv run python3 tools/ibm_quantum_runner_c65.py --all --fake   # Simulateur
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c65.py --all
+IBM_API_KEY=... uv run python3 tools/ibm_quantum_runner_c65.py --qdayprize156
+bash tools/rotate_logs_50mb.sh  # Rotation manuelle
+```
+
+### Rapport C65
+- `RAPPORT_IBM_QUANTUM_C65_COMPLET.md` — Rapport A-Z complet
+
+---
+
 ## Architecture
 
 ### Backend C
