@@ -11,6 +11,33 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
+## IBM Quantum Integration (C66 — corrections 156Q exploitables)
+
+### État C66 (2026-04-20)
+- **Runner ajouté** : `tools/ibm_quantum_runner_c66.py`
+- **Rapport généré** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_IBM_QUANTUM_C66_20260420T195435Z.md`
+- **JSON résultat** : `src/advanced_calculations/bitcoin_quantum_mining/results/ibm_c66_pipeline_20260420T195435Z.json`
+- **Mode validé localement** : `--all --fake --shots-q 4 --shots-h 4 --shots-b 4 --vqe-iters 1 --retrieve-jobs --src-manifest`
+- **Important** : le simulateur local disponible expose 127 qubits, donc C66 conserve les circuits 156Q et bypass uniquement la contrainte du fake backend. Le chemin IBM réel reste destiné à `ibm_fez` 156Q avec transpilation SABRE.
+
+### Corrections C66 principales
+- QDAYPRIZE : ancillas limitées à 32, padding 156Q, multi-échelle `[1, 3, 5]`, mesures locales de blocs de 4.
+- HTS/Hubbard : les 16 problèmes construisent des circuits 156Q; `ed_validation_2x2` reste un modèle actif 2 sites mais padded à 156Q.
+- VQE : boucle COBYLA ajoutée avec historique d'énergie, EstimatorV2 si disponible, surrogate contrôlé en fake/offline.
+- BTC Grover : oracle symbolique remplacé par marquage MCX d'un préfixe public pré-fetché dérivé de l'adresse BTC cible publique.
+- RCS : profondeur logique réduite à 5, mesures locales, budget profondeur physique ≤500.
+- NX ATOM : feedback basé sur transpilation `optimization_level=3`, `layout_method="sabre"`, `routing_method="sabre"`; second learner NX ATOM ajouté.
+- LUM Qubits : `tools/lum_qubits.py` écrit/lit un format natif `.lum` gzip+checksum; JSON/CSV restent des exports d'analyse.
+- Lecture `src/` : le manifeste C66 a parcouru 2823 fichiers et 1 032 876 lignes; le détail complet est dans le JSON résultat.
+
+### Usage C66
+```bash
+uv run python tools/ibm_quantum_runner_c66.py --selftest
+uv run python tools/ibm_quantum_runner_c66.py --all --fake --shots-q 4 --shots-h 4 --shots-b 4 --vqe-iters 1 --retrieve-jobs --src-manifest
+IBM_API_KEY=... uv run python tools/ibm_quantum_runner_c66.py --all --shots-q 256 --shots-h 128 --shots-b 256 --vqe-iters 1 --retrieve-jobs --src-manifest
+IBM_API_KEY=... uv run python tools/ibm_quantum_runner_c66.py --retrieve-jobs
+```
+
 ## IBM Quantum Integration (C65 — 156Q COMPLET)
 
 ### Résultats C65 (2026-04-20) — 8 JOBS DONE + 1 RUNNING

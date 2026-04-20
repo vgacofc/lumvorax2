@@ -20,6 +20,8 @@ import time
 import json
 import gzip
 import os
+import struct
+import hashlib
 from dataclasses import dataclass, field, asdict
 from typing import Optional, List, Dict, Any
 from pathlib import Path
@@ -31,8 +33,10 @@ import threading
 
 IBM_FEZ_QUBITS      = 156          # ibm_fez Heron R2 — 156 qubits physiques
 IBM_FEZ_BACKEND     = "ibm_fez"
-LUM_QUBITS_VERSION  = "C65"
+LUM_QUBITS_VERSION  = os.environ.get("LUM_QUBITS_VERSION", "C66")
 LOG_MAX_BYTES       = 50 * 1024 * 1024   # Rotation 50MB
+LUM_NATIVE_MAGIC    = b"LUMQ"
+LUM_NATIVE_VERSION  = 2
 
 # ════════════════════════════════════════════════════════════════
 # STRUCTURES DE DONNEES
@@ -75,6 +79,18 @@ class LumQubitsLayer:
     lum_warnings:       int   = 0      # Nombre de warnings
     fidelity_mean:      float = 0.0    # Fidélité moyenne sur 156 qubits
     fidelity_min:       float = 1.0    # Fidélité minimale (qubit le plus bruité)
+
+
+@dataclass
+class NxAtomLearnerState:
+    cycle:              str = LUM_QUBITS_VERSION
+    learner_id:         str = "nx_atom_learner_2"
+    source_coherence:   float = 0.0
+    learned_bias:       float = 0.0
+    convergence_score:  float = 0.0
+    recommended_shots:  int = 0
+    recommended_depth:  int = 1
+    evidence_hash:      str = ""
 
 
 # ════════════════════════════════════════════════════════════════
@@ -132,9 +148,11 @@ class LumQubitsTracker:
         self.job_id       = job_id
         self._lock        = threading.Lock()
         self._layers: List[LumQubitsLayer] = []
+        self._learner_history: List[NxAtomLearnerState] = []
         self._total_traces = 0
         self.LOG_DIR.mkdir(parents=True, exist_ok=True)
         self._log_path = self.LOG_DIR / f"lum_qubits_{problem_name}_{int(time.time())}.jsonl"
+        self._lum_path = self.LOG_DIR / f"lum_qubits_{problem_name}_{int(time.time())}.lum"
         print(f"[LUM-QUBITS] Initialisation : {n_qubits}Q {backend_name} — Problème: {problem_name}")
 
     def _ns(self) -> int:
@@ -291,6 +309,90 @@ class LumQubitsTracker:
         except Exception as e:
             print(f"[LUM-QUBITS] WARN log forensic échoué : {e}")
 
+    def apply_nx_atom_feedback(self, transpile_metrics: Dict[str, Any],
+                               measurement_blocks: Optional[List[Dict[str, Any]]] = None) -> NxAtomLearnerState:
+        with self._lock:
+            last = self._layers[-1] if self._layers else None
+        source_coherence = float(last.nx_atom_coherence if last else 0.0)
+        depth = int(transpile_metrics.get("depth", 0) or 0)
+        twoq = int(transpile_metrics.get("n_2q_gates", 0) or 0)
+        block_count = len(measurement_blocks or [])
+        depth_penalty = min(1.0, depth / 500.0)
+        twoq_penalty = min(1.0, twoq / 2500.0)
+        learned_bias = max(0.0, min(0.25, (1.0 - source_coherence) * 0.12 + depth_penalty * 0.08 + twoq_penalty * 0.05))
+        convergence_score = max(0.0, min(1.0, source_coherence * (1.0 - learned_bias) + block_count * 0.005))
+        evidence = json.dumps({
+            "backend": self.backend_name,
+            "job_id": self.job_id,
+            "problem": self.problem_name,
+            "transpile": transpile_metrics,
+            "blocks": measurement_blocks or [],
+            "coherence": source_coherence,
+        }, sort_keys=True).encode("utf-8")
+        state = NxAtomLearnerState(
+            source_coherence=round(source_coherence, 6),
+            learned_bias=round(learned_bias, 6),
+            convergence_score=round(convergence_score, 6),
+            recommended_shots=int(128 + 2048 * learned_bias),
+            recommended_depth=max(1, min(5, 5 - int(depth_penalty * 4))),
+            evidence_hash=hashlib.sha256(evidence).hexdigest(),
+        )
+        with self._lock:
+            self._learner_history.append(state)
+        return state
+
+    def save_native_lum(self, extra: Optional[Dict[str, Any]] = None,
+                        path: Optional[Path] = None) -> Path:
+        with self._lock:
+            payload = {
+                "format": "LUM_QUBITS_NATIVE",
+                "version": LUM_NATIVE_VERSION,
+                "backend": self.backend_name,
+                "n_qubits": self.n_qubits,
+                "problem": self.problem_name,
+                "job_id": self.job_id,
+                "cycle": LUM_QUBITS_VERSION,
+                "layers": [asdict(layer) for layer in self._layers],
+                "nx_atom_learner": [asdict(s) for s in self._learner_history],
+                "extra": extra or {},
+            }
+        raw = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        compressed = gzip.compress(raw, compresslevel=9)
+        digest = hashlib.sha256(compressed).digest()
+        target = path or self._lum_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        rotate_log_if_needed(target)
+        header = struct.pack(
+            ">4sHHQQ32s",
+            LUM_NATIVE_MAGIC,
+            LUM_NATIVE_VERSION,
+            0,
+            len(raw),
+            len(compressed),
+            digest,
+        )
+        with open(target, "wb") as f:
+            f.write(header)
+            f.write(compressed)
+        return target
+
+    @staticmethod
+    def load_native_lum(path: Path) -> Dict[str, Any]:
+        with open(path, "rb") as f:
+            header = f.read(struct.calcsize(">4sHHQQ32s"))
+            magic, version, _flags, raw_size, compressed_size, digest = struct.unpack(">4sHHQQ32s", header)
+            if magic != LUM_NATIVE_MAGIC:
+                raise ValueError("format .lum invalide")
+            compressed = f.read(compressed_size)
+        if hashlib.sha256(compressed).digest() != digest:
+            raise ValueError("checksum .lum invalide")
+        raw = gzip.decompress(compressed)
+        if len(raw) != raw_size:
+            raise ValueError("taille .lum invalide")
+        payload = json.loads(raw.decode("utf-8"))
+        payload["_native_header"] = {"version": version, "raw_size": raw_size, "compressed_size": compressed_size}
+        return payload
+
     def report(self) -> Dict[str, Any]:
         """Rapport complet LUM Qubits — compatible LumVorax forensic."""
         with self._lock:
@@ -316,6 +418,8 @@ class LumQubitsTracker:
                 "total_warnings":        sum(l.lum_warnings for l in self._layers),
                 "last_snapshot_ts_iso":  last.ts_layer_iso,
                 "log_path":              str(self._log_path),
+                "lum_path":              str(self._lum_path),
+                "nx_atom_learner_last":  asdict(self._learner_history[-1]) if self._learner_history else None,
             }
 
     def print_summary(self) -> None:
@@ -332,6 +436,7 @@ class LumQubitsTracker:
         print(f"  Anomalies LUM : {r.get('total_anomalies',0)}")
         print(f"  Warnings LUM  : {r.get('total_warnings',0)}")
         print(f"  Log forensic  : {r.get('log_path','?')}")
+        print(f"  Fichier .lum  : {r.get('lum_path','?')}")
         print("=" * 70)
 
 
