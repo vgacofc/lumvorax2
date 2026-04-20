@@ -11,6 +11,46 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
+## IBM Quantum Integration (C65 — 156Q COMPLET)
+
+### Résultats C65 (2026-04-20) — 8 JOBS DONE + 1 RUNNING
+
+**Backend** : ibm_fez (156Q Heron R2) — **TOUS les 156 qubits physiques utilisés**
+
+| Module | Job IBM | Résultat clé | Exec |
+|--------|---------|-------------|------|
+| QDAYPRIZE 156Q | d7j4otn16ugs73eud8qg | SNR=1.00, 154 bits réduits, 14007 portes 2Q | 15.5s |
+| ED 2×2 Validation | d7j4pff16ugs73eud9c0 | E_IBM=-1.563t, E_exact=-4.828t, erreur=67.64% | 7.4s |
+| BTC Grover 156Q | d7j4poq3fd4c73ddk1sg | prob=0.00098, speedup=2^39≈5.5×10^11 | 11.9s |
+| RCS XEB 156Q | d7j4q1hs7cos73ejf760 | XEB>>2000 borné 1.0, 512 états distincts | 12.0s |
+| HTS hubbard_hts_core | d7j4qiv16ugs73eudae0 | E=-0.352t, S=4.512b, U/t=8.0 | 9.7s |
+| HTS spin_liquid_exotic | d7j4ql716ugs73eudah0 | E=+2.198t, signe_pb=True, S=4.871b | 6.8s |
+| HTS fermionic_sign_problem | d7j4qmv16ugs73eudaj0 | E=-1.000t, Mott, S=3.782b | 7.0s |
+| HTS quantum_chemistry | d7j4qon16ugs73eudal0 | E=-4.611t (meilleure), S=4.322b | 6.0s |
+| QDAYPRIZE 8Q comparatif | d7j4r8q3fd4c73ddk3cg | RUNNING (>7min, file IBM) | — |
+
+**Shots totaux** : ~76 000 | **Rapport** : `RAPPORT_IBM_QUANTUM_C65_RESULTATS_REELS.md`
+
+### Corrections C64→C65
+- `DataBin 'c0'` : `_get_counts_safe()` avec 3 fallbacks → RCS 156Q = succès
+- VQE params non-physiques : `θ_k = π/(2(1+k·0.01·β·t))` — fix β-physique
+- GPU tardif : `C65-GPU-EARLY` avant PT-MC dans `btc_mining_engine.c`
+- LFS 71MB : `.gitattributes` nettoyé, rotation 50MB active (`tools/rotate_logs_50mb.sh`)
+- Qubits 10→156 : tous les modules utilisent les 156Q d'ibm_fez complet
+
+### LUM Qubits C65
+- `tools/lum_qubits.py` : tracker 156Q par qubit (fidélité, NX ATOM, timestamps ns)
+- Log forensic : `tools/logs/lum_qubits/lum_qubits_qdayprize_156q_*.jsonl`
+- NX ATOM 156Q : coherence=0.087, correction=+234 shots, correction_bias=0.15
+
+### Usage C65
+```bash
+uv run python3 tools/ibm_quantum_runner_c65.py --qdayprize156 --shots-q 2048
+uv run python3 tools/ibm_quantum_runner_c65.py --btc156 --shots-b 1024
+uv run python3 tools/ibm_quantum_runner_c65.py --rcs156
+uv run python3 tools/ibm_quantum_runner_c65.py --hts-batch
+```
+
 ## IBM Quantum Integration (C64 — MAXIMUM)
 
 ### Connexion et résultats
