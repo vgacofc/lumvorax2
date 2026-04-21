@@ -33,11 +33,11 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "uv run python main.py"
+args = "python main.py"
 waitForPort = 5000
 
 [nix]
-packages = ["arrow-cpp", "cairo", "clang", "doppler", "ffmpeg-full", "file", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "iana-etc", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "nano", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
+packages = ["arrow-cpp", "cairo", "catch2", "clang", "doppler", "ffmpeg-full", "file", "fmt", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "iana-etc", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "muparserx", "nano", "nlohmann_json", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "spdlog", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
 channel = "stable-25_05"
 
 [deployment]
