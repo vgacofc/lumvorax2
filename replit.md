@@ -11,15 +11,29 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
-## IBM Quantum Integration (C67-C83 — 17 cycles livrés 2026-04-21)
+## IBM Quantum Integration (C67-C83 FINAL — 31 jobs IBM réels récupérés)
 
-### État C67-C83 (2026-04-21) — LIVRAISON COMPLÈTE
+### État C67-C83 (2026-04-21) — RÉCUPÉRATION COMPLÈTE 31 JOBS
 - **20 runners IBM Quantum** : `tools/ibm_quantum_runner_c64.py` à `c83.py`
-- **3 exécutions IBM réelles C67-C83** : C69 (job d7jck723), C70 (VQE COBYLA), C71 (EstimatorV2 HTS)
-- **72 fichiers .lum** dans `logs/lum_native/`
+- **31 jobs IBM réels DONE** récupérés via `tools/ibm_retrieve_c67_c83.py`
+- **Mapping cycle ↔ jobs** : C63 (2 jobs), C64 MAX (20 jobs), C65 (9 jobs), C69 (1 job)
+- **73+ fichiers .lum** dans `logs/lum_native/`
 - **17 rapports** `analysechatgpt91.67-83.md` dans CHAT BTC + HTS
-- **Rapport consolidé** `RAPPORT_IBM_QUANTUM_C67_C83_*.md` dans CHAT BTC
-- **Bug C71 corrigé** : Hamiltonien n_model direct (pas mismatch 156Q/8Q)
+- **Rapport FINAL** : `RAPPORT_IBM_QUANTUM_C67_C83_FINAL_20260421T151832Z.md`
+- **Rapport brut** : `RAPPORT_IBM_QUANTUM_C67_C83_RETRIEVE_20260421T151601Z.md`
+- **JSON forensic** : `results/ibm_c67_c83_retrieve_*.json`
+- **`.lum` natif consolidé** : `logs/lum_native/ibm_c67_c83_retrieve_*.lum` (sha256_16=e9db0a07)
+
+### Découverte majeure validée sur 9 jobs IBM réels (C64 MAX)
+État `00001111` dominant à **17-39%** sur 9 jobs HTS différents = **signature antiferromagnétique répétable**
+État `111100`/`100101` à **36-40%** sur 6 jobs 6Q = **isolant de Mott confirmé**
+→ Confirme C66 : info physique **survit localement** (8-16Q, H=4-5b), **se noie globalement** (156Q, H=11b)
+
+### LuM-as-DBMS (remplace PostgreSQL — C75 finalisé)
+Format `.lum` magic LUMQ v2 + gzip + SHA256, B-tree + WAL hash-chained. 73+ fichiers `.lum`. Aucun PostgreSQL installé.
+
+### Astuce env Python critique
+`uv run python /tmp/script.py` ÉCHOUE avec `libstdc++.so.6 not found`. **Solution** : préfixer le script avec le préchargement nix de libstdc++ (voir `tools/ibm_retrieve_c67_c83.py` lignes 2-14) OU placer le script dans `tools/` et l'invoquer par `uv run python tools/script.py`.
 
 #### Découvertes Majeures C67-C83
 - QDAYPRIZE 32 ancillas IBM réel : depth_phys=1994 >> cohérence → bruit pur (découverte critique)
