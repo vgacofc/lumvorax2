@@ -970,11 +970,59 @@ void nx48_btc_update(
  * C61 : CLAMP DES SCALES — bornes élargies
  * ════════════════════════════════════════════════════════════════════ */
 void nx48_btc_clamp_scales(nx48_btc_state_t* s) {
-    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  500.0); /* C61: 50→500 */
+    /* C68-NAN-GUARD : Reset des scalaires NaN/Inf AVANT clamp
+     * Cause du SIGSEGV à ~870s : après 400+ stall_long, les poids Adam divergent
+     * (Inf/NaN via multiplication de flottants extrêmes), ce qui corrompt
+     * delta_nonce_scale → undefined behavior lors du cast (int64_t)NaN en btc_mining_engine.c
+     * CORRECTION : isnan/isinf check sur tous les scalaires → reset aux valeurs sûres */
+#define NX48_SAFE_RESET_SCALAR(v, dflt) \
+    do { if (!__builtin_isfinite(v)) { (v) = (dflt); } } while(0)
+
+    NX48_SAFE_RESET_SCALAR(s->delta_nonce_scale,  1.0);
+    NX48_SAFE_RESET_SCALAR(s->n_replicas_scale,   1.0);
+    NX48_SAFE_RESET_SCALAR(s->swap_temp_scale,    1.0);
+    NX48_SAFE_RESET_SCALAR(s->batch_size_scale,   1.0);
+    NX48_SAFE_RESET_SCALAR(s->exploration_bias,   0.5);
+    NX48_SAFE_RESET_SCALAR(s->exploration_vel,    0.0);
+    NX48_SAFE_RESET_SCALAR(s->dual_blend,         0.2);
+    NX48_SAFE_RESET_SCALAR(s->loss_curr,          1.0);
+    NX48_SAFE_RESET_SCALAR(s->loss_prev,          1.0);
+    NX48_SAFE_RESET_SCALAR(s->grad_norm,          0.0);
+
+    /* C68 : Reset NaN/Inf dans les poids Adam des sous-neurones */
+    for (int i = 0; i < NX48_N_SUBNEURONS; i++) {
+        for (int j = 0; j < NX48_SN_FEATURES; j++) {
+            NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].weights[j],  0.0);
+            NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].momentum[j], 0.0);
+            NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].velocity[j], 0.0);
+            NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].weights[j],  0.0);
+            NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].momentum[j], 0.0);
+            NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].velocity[j], 0.0);
+        }
+        NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].bias,         0.0);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].bias,         0.0);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].output,       0.5);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].output,       0.5);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].loss,         0.0);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].loss,         0.0);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_prod[i].grad_norm,    0.0);
+        NX48_SAFE_RESET_SCALAR(s->subneurons_exec[i].grad_norm,    0.0);
+    }
+
+    /* C68 : Reset NaN/Inf dans les poids principaux Adam */
+    for (int i = 0; i < NX48_BTC_N_FEATURES; i++) {
+        NX48_SAFE_RESET_SCALAR(s->weights[i],          0.0);
+        NX48_SAFE_RESET_SCALAR(s->executor_weights[i], 0.0);
+        NX48_SAFE_RESET_SCALAR(s->adam_m1[i],          0.0);
+        NX48_SAFE_RESET_SCALAR(s->adam_m2[i],          0.0);
+    }
+#undef NX48_SAFE_RESET_SCALAR
+
+    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  500.0);
     s->n_replicas_scale   = clamp(s->n_replicas_scale,   1.0,    2.0);
     s->swap_temp_scale    = clamp(s->swap_temp_scale,    0.5,    3.0);
-    s->batch_size_scale   = clamp(s->batch_size_scale,   0.5,    8.0); /* C61: 4→8 */
-    s->exploration_bias   = clamp(s->exploration_bias,   0.05,   0.95); /* C61: 0-1→0.05-0.95 */
+    s->batch_size_scale   = clamp(s->batch_size_scale,   0.5,    8.0);
+    s->exploration_bias   = clamp(s->exploration_bias,   0.05,   0.95);
     s->exploration_vel    = clamp(s->exploration_vel,   -0.5,    0.5);
     s->dual_blend         = clamp(s->dual_blend > 0.0 ? s->dual_blend : 0.20, 0.01, 0.50);
     /* Température indices */
