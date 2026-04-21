@@ -535,11 +535,13 @@ static void* btc_mining_thread(void* arg) {
     /* Initialise RNG thread-local */
     tl_rng_state = rng_init_seed(work->thread_id);
 
-    uint64_t local_hashes   = 0;
-    uint64_t ts_last_hw     = eng_ts_ns();
-    uint64_t ts_last_nx48   = eng_ts_ns();
-    uint64_t ts_last_swap   = eng_ts_ns();
-    uint64_t ts_last_stats  = eng_ts_ns();
+    uint64_t local_hashes      = 0;
+    uint64_t ts_last_hw        = eng_ts_ns();
+    uint64_t ts_last_nx48      = eng_ts_ns();
+    uint64_t ts_last_swap      = eng_ts_ns();
+    uint64_t ts_last_stats     = eng_ts_ns();
+    /* C66-PERIODIC-SAVE : sauvegarde CSV toutes les 60s — protège contre SIGSEGV/OOM */
+    uint64_t ts_last_save_csv  = eng_ts_ns();
 
     /* Delta nonce initial depuis NX48 (minimum 1 pour éviter division par zéro) */
     double delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
@@ -703,8 +705,17 @@ static void* btc_mining_thread(void* arg) {
                     BTC_FORENSIC_BLOCK_FOUND(nonce, res.leading_zeros, 0);
                     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                         "btc_best_leading_zeros", (double)res.leading_zeros);
-                    if (eng->nx48)
+                    if (eng->nx48) {
                         eng->nx48->best_nonce = nonce;
+                        /* C66-FIX-PERSIST : Synchroniser best_leading_zeros dans l'état NX48
+                         * AVANT C66 : seul best_nonce était mis à jour ici → best_leading_zeros
+                         *             restait à l'ancienne valeur (ex: 28) jusqu'au prochain
+                         *             nx48_btc_update() appelé 2s plus tard.
+                         * Résultat : CSV sauvegardé avec best_nonce=record mais best_leading=28.
+                         * APRÈS C66 : best_leading_zeros synchronisé AVANT la sauvegarde CSV.
+                         * Ref : bug forensique C66 §BUG-PERSIST — btc_nx48_last.csv best=28/34 */
+                        eng->nx48->best_leading_zeros = res.leading_zeros;
+                    }
                     /* C40-CSV-RECORD : Sauvegarde immédiate du CSV NX48 à chaque
                      * nouveau record de leading zeros — évite la perte de record
                      * si le run est interrompu avant la fin.
@@ -844,6 +855,23 @@ static void* btc_mining_thread(void* arg) {
             fflush(stdout);
             BTC_FORENSIC_COVERAGE((double)total,
                 100.0 * (double)total / (double)(cfg->nonce_end - cfg->nonce_start + 1));
+        }
+
+        /* C66-PERIODIC-SAVE : sauvegarde CSV périodique toutes les 60s (thread 0)
+         * Protège contre SIGSEGV/OOM : si le run crashe brutalement, le dernier
+         * état NX48 est perdu seulement si le crash survient dans les 60 dernières
+         * secondes. Complémentaire au C40-CSV-RECORD (sauvegarde à chaque record).
+         * AVANT C66 : sauvegarde uniquement à la fin propre ou sur nouveau record.
+         * APRÈS C66 : sauvegarde minimum toutes les 60s → perte max 60s de training. */
+        if (work->thread_id == 0 && ts_now2 - ts_last_save_csv > 60000000000ULL) {
+            ts_last_save_csv = ts_now2;
+            if (eng->nx48 && cfg->nx48_csv[0]) {
+                pthread_mutex_lock(&eng->global_mutex);
+                nx48_btc_save_csv(eng->nx48, cfg->nx48_csv);
+                pthread_mutex_unlock(&eng->global_mutex);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_periodic_save_c66", 1.0);
+            }
         }
     }
 
