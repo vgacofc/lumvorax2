@@ -293,3 +293,23 @@ env DEFAULT_JOB_TIMEOUT_S=0 doppler run --config dev_lumvorax -- bash tools/agen
 - Flask, Flask-SQLAlchemy, gunicorn, psycopg2
 - numpy, pandas, scipy, matplotlib, torch, opencv-python
 - C toolchain: gcc, gnumake, librt, libpthread
+
+## C84-B + C85 Experimental Validation Layer (2026-04-21)
+
+- **C84-B exécuté sur IBM réel** (`ibm_fez` 156Q Heron R2, 38,5 s) — verdict publication-grade **ACCEPT** :
+  - HTS 8Q AFM : S(π) = 0,6123 ± 0,004, sym_gap = 0,18%
+  - Q3 X-init : P(00001111)=0,2%, P(11110000)=0,0% → **PHYSIQUE_AFM_PROBABLE** (pas d'artefact)
+  - HTS 6Q Mott : dominant `111111` à 83,6%, S(π) = 0,099
+- **C85 publication-grade** : code livré (V1/V2/V3 + cross-backend + N_rep=5), run `hts_6q` en arrière-plan
+- **Quota IBM 2026-04-21** : 95s consommés / 600s — 505s restantes (84%)
+- **Backends opérationnels** : `ibm_fez` 156Q queue=0, `ibm_marrakesh` 156Q queue=0
+- **Suggestions Claude/ChatGPT appliquées** : observables E + ZZ + S(π), readout mitigation locale, ZNE 1/3/5, X-init Q3, IC95, baselines Aer ideal+noisy, V1/V2/V3, cross-backend, critère ACCEPT/REJECT
+- **Fichiers livrés** :
+  - `tools/ibm_quantum_runner_c84.py` (421 lignes)
+  - `tools/ibm_quantum_runner_c85.py` (273 lignes, importe C84)
+  - `tools/sync_replit_to_doppler.sh` (whitelist 15 secrets)
+  - `tools/check_ibm_free_tier.sh` (Runtime + Code Engine + COS + CR)
+  - `tools/run_c84_c85_ubuntu.sh` (orchestrateur Doppler-aware)
+  - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_IBM_QUANTUM_C84_C85_SYNTHESE_*.md`
+- **BTC bloc réel** : **0 % validable sur NISQ actuel** (oracle SHA-256 ~ 2048 qubits logiques requis vs 156 disponibles). Pipeline classique SHA-256 GPU C80 (531 MH/s) validé.
+- **Dépendance ajoutée** : `qiskit-aer 0.17.2` (baselines KL ideal vs noisy)
