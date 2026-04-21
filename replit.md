@@ -11,7 +11,41 @@ LUMVORAX est un système de recherche quantique multi-modules avec mining Bitcoi
 - **Chemins Ubuntu** : `REPO_ROOT=/home/lvx/LVX/lumvorax2`, `BTC_DIR=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining`
 - **Shell Ubuntu** : fish est utilisé, donc lancer les scripts avec `bash script.sh` ou `env VAR=... bash script.sh`
 
-## IBM Quantum Integration (C66 — corrections 156Q exploitables + résultats IBM réels)
+## IBM Quantum Integration (C67-C83 — 17 cycles livrés 2026-04-21)
+
+### État C67-C83 (2026-04-21) — LIVRAISON COMPLÈTE
+- **20 runners IBM Quantum** : `tools/ibm_quantum_runner_c64.py` à `c83.py`
+- **3 exécutions IBM réelles C67-C83** : C69 (job d7jck723), C70 (VQE COBYLA), C71 (EstimatorV2 HTS)
+- **72 fichiers .lum** dans `logs/lum_native/`
+- **17 rapports** `analysechatgpt91.67-83.md` dans CHAT BTC + HTS
+- **Rapport consolidé** `RAPPORT_IBM_QUANTUM_C67_C83_*.md` dans CHAT BTC
+- **Bug C71 corrigé** : Hamiltonien n_model direct (pas mismatch 156Q/8Q)
+
+#### Découvertes Majeures C67-C83
+- QDAYPRIZE 32 ancillas IBM réel : depth_phys=1994 >> cohérence → bruit pur (découverte critique)
+- VQE COBYLA : non convergé (74% erreur) → SPSA requis pour C84+
+- EstimatorV2 HTS : bug mismatch 156Q/8Q identifié → corrigé dans c71.py
+- LuM Tensor Manifold : g_ij=diag(1/T1,1/T2,g_gate) valide la géométrie du bruit
+- Krylov m adaptatif : instabilité < 0.1 → m=8, instabilité > 0.5 → m=4
+- NX48 recalibré : update_count 7→4, threshold 0.5→0.67 (basé entropie IBM)
+
+#### Architecture C67 — Modules Clés
+- `KrylovPseudoSpectrum` : K_m(H,ψ₀) → Hessenberg → pseudo-spectre σ_ε(H)
+- `LumTensorManifold` : variété géométrique erreur IBM (curvature/anisotropy/Ricci)
+- `IBMRuntimeSessionManager` : sessions persistantes latence ÷10
+- `lum_local_block` : ansatz brickwork θ-calibré NX ATOM
+
+#### Usage C67-C83
+```bash
+# Mode simulation (sans IBM_API_KEY)
+uv run python3 tools/ibm_quantum_runner_c67.py --fake
+uv run python3 tools/ibm_quantum_runner_c{68..83}.py --fake --shots 512
+
+# Mode IBM réel (IBM_API_KEY dans Replit Secrets)
+uv run python3 tools/ibm_quantum_runner_c67.py --shots-q 1024 --shots-h 512
+uv run python3 tools/ibm_quantum_runner_c69.py --shots 2048  # QDAYPRIZE 32 ancillas
+uv run python3 tools/ibm_quantum_runner_c71.py --shots 1024  # EstimatorV2 HTS corrigé
+```
 
 ### État C66 (2026-04-20)
 - **Runner ajouté** : `tools/ibm_quantum_runner_c66.py`

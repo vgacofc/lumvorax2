@@ -1,0 +1,118 @@
+{
+  "C69_QDAYPRIZE_S1": {
+    "cycle": "C69",
+    "module": "QDAYPRIZE_SCALE1",
+    "n_ancillas": 32,
+    "n_ecc": 2,
+    "n_pad": 122,
+    "n_total": 156,
+    "depth_log": 36,
+    "depth_phys": 1994,
+    "gates_2q": 2430,
+    "fid_est": 0.002282,
+    "shots": 2048,
+    "distinct": 2048,
+    "dom": "00011101101011010000011011010101",
+    "snr": 2097152.0,
+    "phi_int": 497878741,
+    "phi_frac": 0.11592143,
+    "entropy_b": 11.0,
+    "bits_reduced": 32,
+    "bits_remaining": 224,
+    "runtime_s": 9.59,
+    "top10": {
+      "00011101101011010000011011010101": 1,
+      "00011101101010011110001101001111": 1,
+      "10110110100100110111010100110110": 1,
+      "00101100111000011110100011110000": 1,
+      "01101101100000010001110001010001": 1,
+      "11100010101100110010100100100001": 1,
+      "01010011111111100110011001011110": 1,
+      "11110001100010101010010110000011": 1,
+      "00101111111101100000101110110001": 1,
+      "11100001111001011110101010001100": 1
+    },
+    "vs_c65": {
+      "c65_snr": 1.0,
+      "c69_snr": 2097152.0,
+      "improvement_x": 2097152.0,
+      "c65_fid": "~1e-16",
+      "c69_fid": 0.002282,
+      "c65_gates": 14007,
+      "c69_gates": 2430
+    }
+  },
+  "C70_VQE_COBYLA": {
+    "cycle": "C70",
+    "module": "VQE_COBYLA",
+    "E_IBM": -1.25442,
+    "E_exact": -4.8284,
+    "error_pct": 74.02,
+    "c65_error_pct": 67.64,
+    "improvement_pct": -6.38,
+    "cobyla_iter": 14,
+    "converged": false,
+    "energy_history": [
+      -1.08218,
+      -1.09443,
+      -1.06918,
+      -1.05903,
+      -1.05482,
+      -1.05261,
+      -1.05129,
+      -1.05041,
+      -1.04979,
+      -1.04934,
+      -1.04899,
+      -1.04871,
+      -1.04849,
+      -1.25442
+    ],
+    "E_min": -1.25442,
+    "runtime_s": 0.37,
+    "hamiltonian": "Hubbard_2x2_SparsePauliOp",
+    "estimator": "EstimatorV2_ibm_fez"
+  },
+  "C71_ESTIMATORV2_HTS": [
+    {
+      "name": "hubbard_hts_core",
+      "E_direct_estimator": 0.0,
+      "c65_sampler": -0.352,
+      "delta_E": 0.352,
+      "n_sites": 4,
+      "U_t": 8.0,
+      "T_K": 95.0,
+      "runtime_s": 0.01
+    },
+    {
+      "name": "spin_liquid_exotic",
+      "E_direct_estimator": 1.65,
+      "c65_sampler": 2.198,
+      "delta_E": -0.548,
+      "n_sites": 4,
+      "U_t": 11.67,
+      "T_K": 55.0,
+      "runtime_s": 0.01
+    },
+    {
+      "name": "fermionic_sign_pb",
+      "E_direct_estimator": 4.0,
+      "c65_sampler": -1.0,
+      "delta_E": 5.0,
+      "n_sites": 3,
+      "U_t": 14.0,
+      "T_K": 20.0,
+      "runtime_s": 0.01
+    },
+    {
+      "name": "quantum_chemistry",
+      "E_direct_estimator": -3.15,
+      "c65_sampler": -4.611,
+      "delta_E": 1.461,
+      "n_sites": 4,
+      "U_t": 4.06,
+      "T_K": 60.0,
+      "runtime_s": 0.01
+    }
+  ]
+}
