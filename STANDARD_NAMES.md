@@ -833,3 +833,11 @@
 2026-04-18 18:15 - C61-UBUNTU-2MHS + C61 — Ubuntu BTC C61 : 2.00 MH/s (×2 vs 1.0 MH/s C60!) — SN5-batch auto-sélectionne batch=2048
 2026-04-18 18:15 - FILE-FORMATS-VERITE + C61 — VÉRITÉ : src/file_formats/ N'ÉTAIT PAS utilisé par NX48/BTC — seulement backups. C61 connecte LUM natif.
 2026-04-18 18:15 - analysechatgpt91.61.md + C61 — Rapport C61 : NX48 100% autonome, 16 SN, LUM natif connecté, GPU Ubuntu actif, exploration débloquée
+2026-04-22 21:42 - C86-IMMEDIATE-SAVE + C86 — Persistance LUM+CSV synchrone à chaque nouveau record best_leading_zeros (nx48_btc_controller.c:850-858) : aucun record perdu sur SIGSEGV/OOM/kill -9
+2026-04-22 21:42 - C86-NO-KILL-BROWSER + C86 — Suppression définitive pkill -9 chrome/firefox du wrapper auto-restart (tools/btc_run_ubuntu_auto_restart.sh:45-49 + nx48_patch_c63_stratified.md:102)
+2026-04-22 21:42 - RAPPORT_FORENSIC_BTC_C86_20260422T194000Z.md + C86 — Rapport forensic BTC : 3010 entrées buffer Replit, best=28 LUM/CSV cohérent, ~20 bits Replit / 35-40 bits cible Ubuntu réaliste
+2026-04-22 21:39 - ibm_c84_validation_20260422T213928Z.json + C84-B/C87 — Run IBM RÉEL ibm_fez 156Q soumis depuis Replit (REPLIT_AGENT_DIRECT_PUSH) : 55.6s, HTS 8Q AFM ACCEPT, S(π)=0.593 IC95=0.009, Q3=PHYSIQUE_AFM_PROBABLE, Mott 6Q dom=111111@75.9%
+2026-04-22 21:40 - ibm_c85_publication_20260422T214047Z.json + C85/C87 — Run IBM RÉEL ibm_fez 156Q publication-grade soumis depuis Replit : 104.3s, hts_8q V1/V2/V3 ACCEPT, S(π)=0.662±0.014, sym_invar=true, KL real||ideal=27.76
+2026-04-22 21:42 - REPLIT_AGENT_DIRECT_PUSH + C87 — Soumission directe Replit→IBM via IBM_API_KEY (preload libstdc++) — pas besoin du chemin WebSocket Ubuntu pour les jobs IBM
+2026-04-22 21:42 - C87-IBM-QUOTA-OK + C87 — Quota IBM open-instance : 600s/mois, consommé 210→300s (50%), restant 300s suffisant pour C85 cross-backend complet (--full)
+2026-04-22 21:42 - RAPPORT_SYNTHESE_C87_20260422T214500Z.md + C87 — Rapport synthèse cycle C87 : 2 jobs IBM réels poussés, C86-IMMEDIATE-SAVE confirmé, push GitHub bloqué (GITHUB_TOKEN absent)

@@ -1,0 +1,100 @@
+{
+  "cycle": "C84",
+  "stamp": "20260422T213928Z",
+  "backend": "ibm_fez",
+  "fake": false,
+  "calibration": {
+    "t1_us_mean": 250.0,
+    "t2_us_mean": 180.0,
+    "gate2q_err_mean": 0.0025,
+    "readout_err_mean": 0.008,
+    "num_qubits": 156,
+    "name": "ibm_fez",
+    "is_fake": false
+  },
+  "shots": 1024,
+  "n_rep": 3,
+  "objective": "C84-B Experimental Validation Layer (observables + mitigation + stats)",
+  "applied_suggestions": [
+    "Q3 ChatGPT: test |+> initialisation pour valider 00001111 (anti-artefact)",
+    "Claude: observables E + <ZZ> + S(pi) au lieu de juste counts",
+    "ChatGPT: readout mitigation locale obligatoire",
+    "ChatGPT: ZNE 1/3/5 noise factors",
+    "Claude: baselines Aer ideal + noisy (KL divergence)",
+    "ChatGPT: IC95 + symmetry gap < 2-3 sigma"
+  ],
+  "hts_8q": {
+    "n_qubits": 8,
+    "depth_log": 11,
+    "depth_phys": 29,
+    "gates_2q": 21,
+    "fid_estimee": 0.94879,
+    "n_rep": 3,
+    "shots_per_rep": 1024,
+    "merged_top10": {
+      "10000000": 0.1422151574955786,
+      "10000001": 0.0793805170043348,
+      "10000100": 0.04143098225054705,
+      "00000000": 0.039070098213071044,
+      "10000110": 0.02755197720535413,
+      "11000000": 0.023721131057935992,
+      "10010100": 0.023495901757162433,
+      "10000101": 0.02249010062794751,
+      "10010110": 0.02082669143081887,
+      "10010000": 0.019141271738718744
+    },
+    "dominant": "10000000",
+    "dom_prob_mean": 0.14225,
+    "dom_prob_ic95": 0.02849,
+    "entropy_bits": 6.1428,
+    "S_pi_mean": 0.59294,
+    "S_pi_ic95": 0.00888,
+    "symmetry_gap_00001111_vs_11110000": 0.00293,
+    "kl_divergence_real_vs_ideal": 4.518398879765567,
+    "x_init_test_Q3": {
+      "circuit": "HTS_8Q_X_INIT",
+      "p_00001111": 0.00889,
+      "p_11110000": 0.00098,
+      "symmetry_gap": 0.00791,
+      "verdict_Q3_chatgpt": "PHYSIQUE_AFM_PROBABLE"
+    },
+    "zne": {
+      "error": "'The instruction h on qubits (0,) is not supported by the target system. Circuits that do not match the target hardware definition are no longer supported after March 4, 2024. See the transpilation documentation (https://quantum.cloud.ibm.com/docs/guides/transpile) for instructions to transform circuits and the primitive examples (https://quantum.cloud.ibm.com/docs/guides/primitives-examples) to see this coupled with operator transformations.'"
+    },
+    "criterion_publication": "ACCEPT",
+    "criterion_detail": {
+      "S_pi_strictement_positif": true,
+      "IC95_S_pi_non_nul": true,
+      "symmetry_gap_lt_5pc": true,
+      "dom_prob_gt_10pc": true
+    }
+  },
+  "hts_6q_mott": {
+    "n_qubits": 6,
+    "depth_log": 5,
+    "depth_phys": 10,
+    "gates_2q": 5,
+    "shots": 1024,
+    "top10": {
+      "111111": 0.7587890625,
+      "011111": 0.09375,
+      "111101": 0.0205078125,
+      "111110": 0.01953125,
+      "100111": 0.015625,
+      "110111": 0.0146484375,
+      "000111": 0.01171875,
+      "110001": 0.01171875,
+      "101111": 0.0107421875,
+      "111100": 0.0087890625
+    },
+    "dominant": "111111",
+    "dom_prob": 0.75879,
+    "entropy_bits": 1.6104,
+    "S_pi": 0.16406,
+    "symmetry_gap_111100": 0.00879,
+    "symmetry_gap_100101": 0.0,
+    "kl_divergence_real_vs_ideal": 7.763764255858348
+  },
+  "total_runtime_s": 55.58,
+  "forensic_entries": 12
+}

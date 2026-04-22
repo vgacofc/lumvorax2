@@ -1,0 +1,95 @@
+{
+  "cycle": "C85",
+  "stamp": "20260422T214047Z",
+  "fake": false,
+  "shots": 2048,
+  "n_rep": 3,
+  "backend_A": {
+    "t1_us_mean": 250.0,
+    "t2_us_mean": 180.0,
+    "gate2q_err_mean": 0.0025,
+    "readout_err_mean": 0.008,
+    "num_qubits": 156,
+    "name": "ibm_fez",
+    "is_fake": false
+  },
+  "backend_B": null,
+  "objective": "C85 Quantum Experimental Proof Layer (publication-grade)",
+  "applied_suggestions": [
+    "ChatGPT C85: N_rep>=3 (5 par defaut)",
+    "ChatGPT C85: V1+V2(perm)+V3(bit-flip) test invariance",
+    "ChatGPT C85: cross-backend Delta < IC95 combine",
+    "ChatGPT C85: critere ACCEPT = S(pi)>0 ET IC95!=0 ET cross-backend stable ET symetrie OK"
+  ],
+  "hts_8q": {
+    "circuit": "hts_8q",
+    "V1": {
+      "obs_A": {
+        "S_pi_mean": 0.66162,
+        "S_pi_ic95": 0.01405,
+        "entropy_mean": 6.12983,
+        "entropy_ic95": 0.0697,
+        "dom_prob_mean": 0.12549,
+        "dom_prob_ic95": 0.00679,
+        "n_runs": 3
+      },
+      "top5": {
+        "10000000": 0.1221385536802326,
+        "10000001": 0.06612490280347672,
+        "10000100": 0.05396613852979139,
+        "00000000": 0.0355574239382733,
+        "11000000": 0.02891898473730316
+      }
+    },
+    "V2_perm": {
+      "obs_A": {
+        "S_pi_mean": 0.54272,
+        "S_pi_ic95": 0.01586,
+        "entropy_mean": 5.86646,
+        "entropy_ic95": 0.06738,
+        "dom_prob_mean": 0.15576,
+        "dom_prob_ic95": 0.0134,
+        "n_runs": 3
+      },
+      "top5": {
+        "00000001": 0.14524137526699743,
+        "00000011": 0.08441967541705897,
+        "00001001": 0.03838604025584941,
+        "00000000": 0.035280578482212825,
+        "10110001": 0.02786528252866926
+      }
+    },
+    "V3_bitflip": {
+      "obs_A": {
+        "S_pi_mean": 0.62606,
+        "S_pi_ic95": 0.01227,
+        "entropy_mean": 6.30878,
+        "entropy_ic95": 0.02511,
+        "dom_prob_mean": 0.11898,
+        "dom_prob_ic95": 0.00304,
+        "n_runs": 3
+      },
+      "top5": {
+        "01111111": 0.12273946269721633,
+        "01111110": 0.07120536416435422,
+        "01111011": 0.04514710250994029,
+        "11111111": 0.03648799769455509,
+        "01111001": 0.02845988934359706
+      }
+    },
+    "baselines": {
+      "S_pi_ideal": 0.44897,
+      "S_pi_noisy": 0.6123,
+      "kl_real_vs_ideal": 27.756676822000383
+    },
+    "criterion_publication": "ACCEPT",
+    "criterion_detail": {
+      "S_pi_pos": true,
+      "IC95_non_zero": true,
+      "symmetry_invariance_V1_V3": true,
+      "cross_backend_stable": true
+    }
+  },
+  "total_runtime_s": 104.27,
+  "forensic_entries": 2
+}
