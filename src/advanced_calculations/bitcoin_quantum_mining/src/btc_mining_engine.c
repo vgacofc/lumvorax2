@@ -1031,20 +1031,39 @@ static void* btc_gpu_thread(void* arg) {
             pthread_mutex_unlock(&eng->global_mutex);
         }
 
-        /* 6. Bloc valide trouvé par le GPU */
+        /* 6. C88-GPU-FIX : Near-miss GPU n'EST PAS un bloc valide.
+         * BUG ANTERIEUR (C69-C87) : le kernel OpenCL ecrit out_nonce des qu'un
+         * near-miss >= target_bits (20 par defaut) est trouve. Le moteur
+         * interpretait ca comme "BLOC VALIDE" et faisait block_found=1, ce qui
+         * arretait tous les threads CPU via while(!eng->block_found) (ligne 556).
+         * D'ou les arrets a ~0.15s avec "Bloc valide: OUI" sur seulement 20 bits.
+         *
+         * CORRECTION C88 : un VRAI bloc Bitcoin valide doit satisfaire la
+         * difficulte complete (target sur 256 bits = ~75 bits leading zeros mainnet).
+         * Le GPU avec target_bits=20 ne fait que tracker les near-miss pour
+         * accelerer la recherche statistique. On NE marque JAMAIS block_found
+         * depuis le GPU sans verification complete contre cfg.target[32 bytes].
+         *
+         * Le near-miss est deja enregistre comme record au point #5.
+         * On continue donc le minage sans interruption.
+         * Ref : STANDARD_NAMES.md v4.7 §M-BTC17-C88-GPU-FIX */
         if (out_nonce != 0xFFFFFFFFu) {
+            /* Mise a jour optionnelle du best_nonce pour traceability */
             pthread_mutex_lock(&eng->global_mutex);
-            eng->block_found       = 1;
-            eng->best_nonce_global = out_nonce;
-            if (eng->nx48) {
-                eng->nx48->best_nonce         = out_nonce;
-                eng->nx48->best_leading_zeros = (int)out_best;
+            if ((int)out_best > eng->best_leading_global - 1) {
+                eng->best_nonce_global = out_nonce;
+                if (eng->nx48) eng->nx48->best_nonce = out_nonce;
             }
             pthread_mutex_unlock(&eng->global_mutex);
-            printf("[C69-GPU] *** BLOC VALIDE TROUVE PAR GPU nonce=%u best=%u bits ***\n",
-                   out_nonce, out_best);
-            fflush(stdout);
-            break;
+            if (batch_count % 50 == 0) {
+                printf("[C88-GPU-FIX] Near-miss GPU nonce=%u best=%u bits "
+                       "(target_bits=%u) — minage continue (PAS un bloc valide)\n",
+                       out_nonce, out_best, gw->target_bits);
+                fflush(stdout);
+            }
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_gpu_c88_near_miss_continue", (double)out_best);
+            /* PAS de break — le minage continue */
         }
 
         /* 7. Log périodique toutes les 100 batches (~26M nonces GPU) */
