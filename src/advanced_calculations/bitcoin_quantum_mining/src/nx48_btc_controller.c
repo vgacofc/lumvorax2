@@ -848,6 +848,17 @@ void nx48_btc_update(
         s->stall_long_count   = 0;
         FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
             "btc_nx48_new_record_leading_zeros", (double)best_leading_zeros);
+        /* C86-IMMEDIATE-SAVE : flush LUM + CSV IMMEDIATEMENT a chaque nouveau record.
+         * Avant : sauvegarde periodique (60s) -> en cas de SIGSEGV, perte du record.
+         * Apres : double persistance instantanee -> meme un crash apres conserve le record. */
+        if (s->lum_path[0] != '\0') {
+            nx48_btc_save_lum(s, s->lum_path);
+        }
+        if (s->csv_path[0] != '\0') {
+            nx48_btc_save_csv(s, s->csv_path);
+        }
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+            "btc_nx48_immediate_save_on_record", (double)best_leading_zeros);
     } else {
         s->stall_count++;
         s->stall_long_count++;
