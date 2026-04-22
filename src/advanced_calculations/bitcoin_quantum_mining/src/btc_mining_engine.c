@@ -76,6 +76,11 @@
 #include <signal.h>    /* C42-SIGNAL : sigaction, SIGTERM, SIGINT */
 #include <sys/stat.h>
 
+/* C69-GPU-INTEGRATE : inclusion runner OpenCL — nécessaire pour btc_opencl_mine_batch()
+ * AVANT C69 : ce header n'était pas inclus → appel impossible depuis ce fichier.
+ * APRES C69 : btc_opencl_mine_batch() appelée dans btc_gpu_thread() ci-dessous. */
+#include "btc_opencl_runner.h"
+
 #ifdef _OPENMP
 #  include <omp.h>
 #endif
@@ -882,6 +887,197 @@ static void* btc_mining_thread(void* arg) {
     return NULL;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+ * C69-GPU-INTEGRATE : Thread GPU OpenCL — appel REEL de btc_opencl_mine_batch
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * HISTORIQUE DU BUG (avant C69) :
+ *   btc_opencl_runner.c compilé et linké depuis C63.
+ *   nx48->hw.gpu_opencl_active = 1 depuis C65-GPU-EARLY.
+ *   MAIS : btc_opencl_mine_batch() n'était JAMAIS APPELEE dans ce fichier.
+ *   Résultat observé dans les runs Ubuntu :
+ *     [OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs    ← log OK
+ *     [C65-GPU-EARLY] GPU OpenCL active : Intel UHD Graphics 620       ← flag OK
+ *     [BTC_QM] hashrate=0.88MH/s                                       ← CPU pur !
+ *   Le GPU était détecté et "activé" (flag=1) mais ne calculait AUCUN hash.
+ *
+ * CORRECTION C69 :
+ *   Un thread GPU dédié (btc_gpu_thread) tourne en parallèle des N threads CPU.
+ *   Il appelle btc_opencl_mine_batch() en boucle continue.
+ *   Chaque batch = BTC_OCL_BATCH_DEFAULT = 262144 nonces calculés sur GPU.
+ *   Les hashes GPU sont comptés dans eng->total_hashes (hashrate global réel).
+ *   Les near-miss GPU mettent à jour eng->best_leading_global.
+ *
+ * PREUVE QUE LE GPU EST REELLEMENT UTILISE (pas juste un flag) :
+ *   Log [C69-GPU] btc_opencl_init OK → benchmark MH/s mesuré et affiché
+ *   Log [C69-GPU] batch #N → nonces GPU comptés dans atomic total_hashes
+ *   Log [C69-GPU] ECHEC btc_opencl_init → si OpenCL absent, dit-le explicitement
+ *   Si GPU absent → thread non lancé, log clair, CPU pur continue normalement.
+ *
+ * Ref : analysechatgpt92.01.md §5 — 2026-04-22
+ */
+
+/* Structure de travail pour le thread GPU */
+typedef struct {
+    btc_engine_t* eng;
+    uint32_t      midstate[LV_SHA256_MIDSTATE_WORDS];
+    /* tail[0] = merkle_root[28..31] (bytes 64-67 du header 80 bytes)
+     * tail[1] = timestamp           (bytes 68-71)
+     * tail[2] = bits                (bytes 72-75)
+     * tail[3] = 0 (nonce overridé par chaque work-item GPU)
+     * Conforme au kernel btc_sha256.cl : msg1[0..2]=tail[0..2], msg1[3]=nonce */
+    uint32_t      tail[4];
+    uint32_t      target_bits; /* bits zéro requis — 20 pour near-miss, 64+ pour mainnet */
+    uint64_t      duration_ns; /* durée max en ns (0 = illimité) */
+    uint64_t      ts_start_ns; /* timestamp démarrage moteur */
+} btc_gpu_work_t;
+
+/* Thread GPU : tourne en parallèle des threads CPU */
+static void* btc_gpu_thread(void* arg) {
+    btc_gpu_work_t* gw  = (btc_gpu_work_t*)arg;
+    btc_engine_t*   eng = gw->eng;
+
+    /* 1. Initialisation OpenCL réelle — si échoue, GPU pas utilisé */
+    int init_r = btc_opencl_init(BTC_OCL_BATCH_DEFAULT);
+    if (init_r != BTC_OCL_OK) {
+        fprintf(stderr,
+            "[C69-GPU] *** ECHEC btc_opencl_init (r=%d) — GPU NON UTILISE ***\n"
+            "[C69-GPU] Verifier : driver Intel OpenCL installe ?\n"
+            "[C69-GPU]   Ubuntu : sudo apt install intel-opencl-icd ocl-icd-libopencl1\n"
+            "[C69-GPU]   Test   : clinfo | grep Device\n",
+            init_r);
+        return NULL;
+    }
+
+    /* 2. Benchmark rapide — preuve du hashrate GPU reel avant mining */
+    double bench_mhs = btc_opencl_benchmark_mhs(BTC_OCL_BATCH_DEFAULT);
+    printf("[C69-GPU] ===== THREAD GPU ACTIF — btc_opencl_mine_batch() APPELEE =====\n");
+    printf("[C69-GPU] Hashrate GPU mesure (benchmark) : %.2f MH/s\n", bench_mhs);
+    printf("[C69-GPU] Target near-miss : %u bits | Batch : %u nonces/dispatch\n",
+           gw->target_bits, BTC_OCL_BATCH_DEFAULT);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_bench_mhs",    bench_mhs);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_target_bits",  (double)gw->target_bits);
+    fflush(stdout);
+
+    uint32_t nonce_start     = 0;
+    uint64_t gpu_total_hashes = 0;
+    uint32_t gpu_best_bits    = 0;
+    uint64_t batch_count      = 0;
+
+    for (;;) {
+        /* Arrêt si bloc trouvé par un thread CPU ou GPU */
+        if (eng->block_found) break;
+
+        /* Arrêt si durée max atteinte */
+        if (gw->duration_ns > 0) {
+            struct timespec ts_now;
+            clock_gettime(CLOCK_MONOTONIC, &ts_now);
+            uint64_t now_ns = (uint64_t)ts_now.tv_sec * 1000000000ULL
+                            + (uint64_t)ts_now.tv_nsec;
+            if (now_ns - gw->ts_start_ns >= gw->duration_ns) break;
+        }
+
+        uint32_t out_nonce   = 0xFFFFFFFFu;
+        uint32_t out_hash[8] = {0};
+        uint32_t out_best    = 0;
+
+        /* 3. APPEL REEL AU GPU — 262144 nonces en parallèle sur UHD 620 */
+        int r = btc_opencl_mine_batch(
+            gw->midstate,
+            gw->tail,
+            nonce_start,
+            BTC_OCL_BATCH_DEFAULT,
+            gw->target_bits,
+            &out_nonce,
+            out_hash,
+            &out_best
+        );
+
+        if (r != BTC_OCL_OK) {
+            fprintf(stderr,
+                "[C69-GPU] ERREUR btc_opencl_mine_batch r=%d — thread GPU arrete\n", r);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_error", (double)r);
+            break;
+        }
+
+        /* 4. Comptabiliser les nonces GPU dans le total global (hashrate affiché) */
+        atomic_fetch_add_explicit(&eng->total_hashes, BTC_OCL_BATCH_DEFAULT,
+                                  memory_order_relaxed);
+        gpu_total_hashes += BTC_OCL_BATCH_DEFAULT;
+        batch_count++;
+
+        /* 5. Mise à jour near-miss si GPU trouve mieux */
+        if (out_best > gpu_best_bits) gpu_best_bits = out_best;
+        if ((int)out_best > atomic_load_explicit(&eng->best_leading_global,
+                                                 memory_order_relaxed)) {
+            pthread_mutex_lock(&eng->global_mutex);
+            if ((int)out_best > eng->best_leading_global) {
+                eng->best_leading_global = (int)out_best;
+                /* timestamp de la dernière amélioration GPU */
+                {
+                    struct timespec _ts_gpu;
+                    clock_gettime(CLOCK_MONOTONIC, &_ts_gpu);
+                    eng->ts_last_improvement_ns = (uint64_t)_ts_gpu.tv_sec * 1000000000ULL
+                                                + (uint64_t)_ts_gpu.tv_nsec;
+                }
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_gpu_c69_best_bits", (double)out_best);
+                if (eng->nx48)
+                    eng->nx48->best_leading_zeros = (int)out_best;
+                printf("[C69-GPU] Nouveau record GPU : %u bits (nonce_start=%u)\n",
+                       out_best, nonce_start);
+                fflush(stdout);
+            }
+            pthread_mutex_unlock(&eng->global_mutex);
+        }
+
+        /* 6. Bloc valide trouvé par le GPU */
+        if (out_nonce != 0xFFFFFFFFu) {
+            pthread_mutex_lock(&eng->global_mutex);
+            eng->block_found       = 1;
+            eng->best_nonce_global = out_nonce;
+            if (eng->nx48) {
+                eng->nx48->best_nonce         = out_nonce;
+                eng->nx48->best_leading_zeros = (int)out_best;
+            }
+            pthread_mutex_unlock(&eng->global_mutex);
+            printf("[C69-GPU] *** BLOC VALIDE TROUVE PAR GPU nonce=%u best=%u bits ***\n",
+                   out_nonce, out_best);
+            fflush(stdout);
+            break;
+        }
+
+        /* 7. Log périodique toutes les 100 batches (~26M nonces GPU) */
+        if (batch_count % 100 == 0) {
+            double gpu_mhs = (bench_mhs > 0) ? bench_mhs : 0.0;
+            printf("[C69-GPU] batch #%"PRIu64
+                   " | GPU hashes: %"PRIu64
+                   " | near-miss GPU best: %u bits"
+                   " | ~%.1f MH/s\n",
+                   batch_count, gpu_total_hashes, gpu_best_bits, gpu_mhs);
+            fflush(stdout);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_gpu_c69_batches", (double)batch_count);
+        }
+
+        /* 8. Avancer nonce (wrap-around si proche limite 32 bits) */
+        if (nonce_start >= (0xFFFFFFFFu - (uint32_t)BTC_OCL_BATCH_DEFAULT * 2u))
+            nonce_start = (uint32_t)((batch_count * 131071u) & 0xFFFFFFFFu);
+        else
+            nonce_start += (uint32_t)BTC_OCL_BATCH_DEFAULT;
+    }
+
+    printf("[C69-GPU] Thread GPU termine | Total GPU hashes: %"PRIu64
+           " | Best GPU near-miss: %u bits\n",
+           gpu_total_hashes, gpu_best_bits);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_total_hashes", (double)gpu_total_hashes);
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_best_bits_final", (double)gpu_best_bits);
+    fflush(stdout);
+
+    btc_opencl_cleanup();
+    return NULL;
+}
+
 /* ── Lancement du moteur complet ────────────────────────────────── */
 int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     /* Gate : test intégrité SHA-256 */
@@ -983,9 +1179,69 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
     }
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_threads_launched", (double)n_threads);
 
-    /* Attente fin */
+    /* C69-GPU-INTEGRATE : Lancer le thread GPU parallèle aux threads CPU.
+     * AVANT C69 : gpu_opencl_active=1 mais btc_opencl_mine_batch() jamais appelée.
+     * APRES C69 : btc_gpu_thread() tourne en parallèle — appelle réellement le GPU.
+     *
+     * Construction de la tail (bytes 64-75 du header BTC packed 80 bytes) :
+     *   lv_btc_block_header_t layout (packed) :
+     *     [0..3]   version                (4 bytes)
+     *     [4..35]  prev_block_hash        (32 bytes)
+     *     [36..67] merkle_root            (32 bytes)
+     *     [68..71] timestamp              (4 bytes)
+     *     [72..75] bits                   (4 bytes)
+     *     [76..79] nonce                  (4 bytes — variável)
+     *   Midstate couvre bytes [0..63].
+     *   tail[0] = bytes [64..67] = merkle_root[28..31]
+     *   tail[1] = bytes [68..71] = timestamp
+     *   tail[2] = bytes [72..75] = bits
+     *   tail[3] = 0 (nonce sera overridé par GPU)
+     * Le kernel btc_sha256.cl confirme : msg1[0..2]=tail[0..2], msg1[3]=nonce_gpu
+     */
+    pthread_t      gpu_tid            = 0;
+    btc_gpu_work_t gpu_work;
+    int            gpu_thread_launched = 0;
+
+    if (nx48 && nx48->hw.gpu_opencl_active) {
+        const uint8_t* hdr = (const uint8_t*)&cfg->header_template;
+        memcpy(gpu_work.midstate, midstate, sizeof(midstate));
+        memcpy(&gpu_work.tail[0], hdr + 64, 4);  /* merkle_root[28..31] */
+        memcpy(&gpu_work.tail[1], hdr + 68, 4);  /* timestamp */
+        memcpy(&gpu_work.tail[2], hdr + 72, 4);  /* bits */
+        gpu_work.tail[3]    = 0u;                 /* nonce = 0 → override GPU */
+        gpu_work.eng         = eng;
+        gpu_work.duration_ns = cfg->duration_ns;
+        gpu_work.ts_start_ns = eng->ts_start_ns;
+        /* Target bits : 20 par défaut (near-miss detection) — configurable via env */
+        const char* env_tb   = getenv("BTC_GPU_TARGET_BITS");
+        gpu_work.target_bits = env_tb ? (uint32_t)atoi(env_tb) : 20u;
+
+        if (pthread_create(&gpu_tid, NULL, btc_gpu_thread, &gpu_work) == 0) {
+            gpu_thread_launched = 1;
+            printf("[C69-GPU] Thread GPU lance en parallele de %d threads CPU\n"
+                   "[C69-GPU] Pour valider GPU reel : chercher log"
+                   " '[C69-GPU] ===== THREAD GPU ACTIF'\n",
+                   n_threads);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_gpu_c69_thread_launched", 1.0);
+        } else {
+            fprintf(stderr, "[C69-GPU] ECHEC pthread_create — GPU non lance\n");
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_gpu_c69_thread_launched", 0.0);
+        }
+    } else {
+        printf("[C69-GPU] GPU non actif (gpu_opencl_active=0) — mode CPU pur\n");
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+            "btc_gpu_c69_thread_launched", 0.0);
+    }
+
+    /* Attente fin threads CPU */
     for (int t = 0; t < n_threads; t++)
         pthread_join(threads[t], NULL);
+
+    /* C69-GPU : rejoindre le thread GPU après les threads CPU */
+    if (gpu_thread_launched)
+        pthread_join(gpu_tid, NULL);
 
     /* Résultats finaux */
     uint64_t total_hashes = atomic_load(&eng->total_hashes);
