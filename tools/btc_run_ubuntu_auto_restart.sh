@@ -42,10 +42,9 @@ while [ $ITER -lt $MAX_ITER ]; do
     echo "[AUTO-RESTART] ─── Itération #$ITER — best_leading actuel: $CURRENT_BEST ───" | tee -a "$GLOBAL_LOG"
     echo "[AUTO-RESTART] $(date -u +%Y-%m-%dT%H:%M:%SZ)"                    | tee -a "$GLOBAL_LOG"
 
-    # Hygiène RAM : tuer Chrome/Firefox si présents (évite throttle watchdog)
-    KILLED=$(pkill -9 -c chrome 2>/dev/null || echo 0)
-    KILLED2=$(pkill -9 -c firefox 2>/dev/null || echo 0)
-    [ "$KILLED" != "0" ] || [ "$KILLED2" != "0" ] && echo "[AUTO-RESTART] Tué Chrome=$KILLED Firefox=$KILLED2 (hygiène RAM)" | tee -a "$GLOBAL_LOG"
+    # NOTE : Le kill automatique des navigateurs (Chrome/Firefox) a été DÉFINITIVEMENT
+    # supprimé à la demande de l'utilisateur. La gestion RAM des navigateurs est manuelle
+    # et reste sous le contrôle exclusif de l'utilisateur.
     sync
 
     FREE_MB=$(awk '/MemAvailable/ {printf "%d", $2/1024}' /proc/meminfo)

@@ -98,8 +98,7 @@ cd ~/LVX/lumvorax2
 cp src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c{,.bak_c61}
 cp src/btc_mining_engine.c{,.bak_c61}
 
-# 2. Fermer Chrome+Firefox AVANT (libère 4-5 GB de RAM)
-pkill -9 chrome firefox 2>/dev/null
+# 2. Vérifier la RAM disponible (la fermeture des navigateurs reste manuelle, jamais automatique)
 free -h  # vérifier qu'on a ≥ 4 GB libres
 
 # 3. Appliquer les 3 patches manuellement (voir code ci-dessus)
