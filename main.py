@@ -20,6 +20,10 @@ if _viz_dir not in sys.path:
     sys.path.insert(0, _viz_dir)
 
 from server import app, socketio
+from console_banner import print_banner, print_info
+
+print_banner()
+print_info("Starting LUM/VORAX visualization server on port 5000")
 
 def _auto_update_doppler():
     """C63 : Met à jour Doppler avec l'URL et le token de cette session au démarrage.
