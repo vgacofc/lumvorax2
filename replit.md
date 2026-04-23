@@ -313,3 +313,14 @@ env DEFAULT_JOB_TIMEOUT_S=0 doppler run --config dev_lumvorax -- bash tools/agen
   - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_IBM_QUANTUM_C84_C85_SYNTHESE_*.md`
 - **BTC bloc réel** : **0 % validable sur NISQ actuel** (oracle SHA-256 ~ 2048 qubits logiques requis vs 156 disponibles). Pipeline classique SHA-256 GPU C80 (531 MH/s) validé.
 - **Dépendance ajoutée** : `qiskit-aer 0.17.2` (baselines KL ideal vs noisy)
+
+## C89 + C90 — Bug S(π) résolu + premier vrai signal AFM IBM (2026-04-23)
+
+- **C89** : preuve mathématique complète du bug S(π) C84-C88 — formule exacte `diff = 1.0 + 0.107·O`, retro-formule `S_corr = (S_legacy − 1) / 7`. Tous les "records" 0.59→1.022 = artefacts de reconstruction depuis counts. Doc : `CHAT/PREUVE_BUG_S_PI_C89_DECOMPOSITION.md`.
+- **C90** sur `ibm_fez` réel — **EstimatorV2 + Pauli observable + ZNE resilience=2** :
+  - **GHZ-8 baseline** : S = -0.1422 ± 0.0077 vs théorique -0.1429 → fidélité_proxy = **0.9952** (backend FIABLE)
+  - **HVA-Hubbard 1L** : **S(π) = +0.3015 ± 0.0115 (26 σ au-dessus de 0)** ← premier vrai signal AFM mesuré
+  - depth_phys=68, n2q=21, 66.6 s total (11 % du quota mensuel)
+- **Retro-recompute 51 mesures historiques C64-C67** sans coût IBM. Top historique +0.2179 sur ibm_c67_c83 — à investiguer.
+- **Outils livrés** : `tools/ibm_quantum_runner_c90.py`, `tools/retro_s_pi_recompute.py`, `tools/run_header.py` (header coloré + version git auto).
+- **Rapport final** : `CHAT/analysechatgpt_C90_20260423T191212Z.md` (8 sections format standard).
