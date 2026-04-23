@@ -20,10 +20,15 @@ if _viz_dir not in sys.path:
     sys.path.insert(0, _viz_dir)
 
 from server import app, socketio
-from console_banner import print_banner, print_info
 
-print_banner()
-print_info("Starting LUM/VORAX visualization server on port 5000")
+# Banner unifie via tools/run_header.py (deja utilise par tous les runners IBM C64..C90)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+try:
+    from run_header import print_header, info as _hdr_info
+    print_header(cycle="VIZ", backend="flask:5000")
+    _hdr_info("server", "Starting LUM/VORAX visualization server on port 5000")
+except Exception as _e:
+    print(f"[banner-skip] {_e}", flush=True)
 
 def _auto_update_doppler():
     """C63 : Met à jour Doppler avec l'URL et le token de cette session au démarrage.
