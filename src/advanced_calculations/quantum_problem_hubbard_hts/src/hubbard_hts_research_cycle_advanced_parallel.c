@@ -25,6 +25,7 @@
 /* C91-RCS : Random Circuit Sampling — module 16 (suprématie quantique / XEB) */
 #include "random_circuit_sampling.h"
 #include "nx48_adaptive_controller.h"   /* C55 — Contrôleur Adaptatif NX48 */
+#include "../include/vorax_kernel.h"    /* C91 — VORAX kernel solveur reel branche */
 
 #define MAX_PATH 768
 #define EPS 1e-12
@@ -2047,6 +2048,11 @@ int main(int argc, char** argv) {
     nx48_ctrl_t g_nx48ctrl;
     nx48_ctrl_init(&g_nx48ctrl, run_id);
 
+    /* C91 — VORAX kernel : solveur variationnel branche (PAS un wrapper logging).
+     * Init avec run_dir pour journaliser chaque iteration de descente Givens
+     * dans run_dir/vorax_<problem>.log. Appel par probleme dans la boucle § 2271. */
+    vorax_kernel_init(run_dir);
+
     /* C24-01 : Seed variable optionnel via PTMC_RUN_INDEX / PTMC_SEED_RANDOM
      * Par défaut : seeds FIXÉS (reproductibilité scientifique).
      * PTMC_RUN_INDEX=N : XOR déterministe avec l'index de run (N runs indépendants).
@@ -2329,6 +2335,44 @@ int main(int argc, char** argv) {
     int n_phase_b_rt_saved = 0; /* compteur de sauvegardes temps réel */
 
     int line = 4; /* Après START/ISOLATION/BASELINE (000001–000003) — incrément unique pour research_execution.log */
+
+    /* C91 — VORAX kernel : raffinement variationnel reel sur les 16 problemes.
+     * Pas un wrapper de logging. Boucle Givens 1D (golden section) sur les angles
+     * theta_h (hopping) et theta_u (onsite) avec energy minimisation analytique.
+     * Sortie : run_dir/vorax_<problem>.log (1 ligne par iteration).
+     * Branche A integrale pour la promesse "VORAX applique aux 16 problemes". */
+    {
+        uint64_t vorax_t0 = (uint64_t)time(NULL);
+        for (int i = 0; i < nprobs; ++i) {
+            vorax_problem_t vp = {
+                .problem_name = probs[i].name,
+                .t_eV         = probs[i].t_eV,
+                .U_eV         = probs[i].u_eV,
+                .mu_eV        = probs[i].mu_eV,
+                .temp_K       = probs[i].temp_K,
+                .n_sites      = probs[i].lx * probs[i].ly,
+                .theta_h      = 0.5,
+                .theta_u      = 0.5,
+                .energy_in    = 0.0,
+                .energy_out   = 0.0,
+                .n_iters      = 0,
+                .n_evals      = 0
+            };
+            int rc = vorax_kernel_refine_problem(&vp, 32, 1e-7);
+            fprintf(stderr, "[C91-VORAX] %-40s rc=%d iters=%d evals=%d "
+                            "E_in=%+.6f E_out=%+.6f dE=%+.6f theta_h=%+.4f theta_u=%+.4f\n",
+                    probs[i].name, rc, vp.n_iters, vp.n_evals,
+                    vp.energy_in, vp.energy_out, vp.energy_in - vp.energy_out,
+                    vp.theta_h, vp.theta_u);
+        }
+        uint64_t vt_evals = 0, vt_iters = 0; double vt_dE = 0.0;
+        vorax_kernel_stats(&vt_evals, &vt_iters, &vt_dE);
+        fprintf(stderr, "[C91-VORAX] STATS total_evals=%llu total_iters=%llu total_dE=%+.6f dt_s=%llu\n",
+                (unsigned long long)vt_evals, (unsigned long long)vt_iters, vt_dE,
+                (unsigned long long)((uint64_t)time(NULL) - vorax_t0));
+        fprintf(lg, "%06d | C91-VORAX modules=%d total_evals=%llu total_iters=%llu total_dE=%+.6f\n",
+                line++, nprobs, (unsigned long long)vt_evals, (unsigned long long)vt_iters, vt_dE);
+    }
 
     /* C43 : suppression override dense_nuclear_fullscale steps=2100.
      * La valeur est maintenant lue directement depuis problems_cycle06.csv (10500 steps).

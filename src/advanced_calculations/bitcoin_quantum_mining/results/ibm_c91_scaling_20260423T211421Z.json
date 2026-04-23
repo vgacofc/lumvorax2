@@ -1,0 +1,207 @@
+{
+  "cycle": "C91",
+  "stamp": "20260423T211421Z",
+  "backend": "ibm_kingston",
+  "Ns": [
+    8,
+    12,
+    16
+  ],
+  "shots": 2048,
+  "resilience": 2,
+  "version": {
+    "commit": "d0f19a5",
+    "branch": "main",
+    "date": "2026-04-23 20:53:53 +0000",
+    "subject": "Update server banner and save quantum computing results",
+    "remote": "https://github.com/vgacofc/lumvorax2",
+    "host": "6cbe9dd5045c",
+    "user": "runner",
+    "pwd": "/home/runner/workspace",
+    "now_utc": "2026-04-23 21:14:21Z"
+  },
+  "results": [
+    {
+      "kind": "ghz",
+      "N": 8,
+      "depth_phys": 24,
+      "n2q_phys": 7,
+      "S_pi": -0.14732858348164884,
+      "S_pi_std": 0.0043521831954915595,
+      "S_pi_theorie_ideal": -0.14285714285714285,
+      "fidelity_proxy": 1.031300084371542
+    },
+    {
+      "kind": "hva",
+      "N": 8,
+      "depth_phys": 73,
+      "n2q_phys": 21,
+      "S_pi": 0.2999493736286775,
+      "S_pi_std": 0.011659344683919718
+    },
+    {
+      "kind": "ghz",
+      "N": 12,
+      "depth_phys": 36,
+      "n2q_phys": 11,
+      "S_pi": -0.08965573734814186,
+      "S_pi_std": 0.0028278615072974216,
+      "S_pi_theorie_ideal": -0.09090909090909091,
+      "fidelity_proxy": 0.9862131108295604
+    },
+    {
+      "kind": "hva",
+      "N": 12,
+      "depth_phys": 110,
+      "n2q_phys": 33,
+      "S_pi": 0.31411241660494693,
+      "S_pi_std": 0.008510322509789253
+    },
+    {
+      "kind": "ghz",
+      "N": 16,
+      "depth_phys": 48,
+      "n2q_phys": 15,
+      "S_pi": -0.06671703000277913,
+      "S_pi_std": 0.008974756878698364,
+      "S_pi_theorie_ideal": -0.06666666666666667,
+      "fidelity_proxy": 1.000755450041687
+    },
+    {
+      "kind": "hva",
+      "N": 16,
+      "depth_phys": 149,
+      "n2q_phys": 45,
+      "S_pi": 0.3557760319999274,
+      "S_pi_std": 0.004862484440517814
+    }
+  ],
+  "scaling": {
+    "afm_by_N": {
+      "8": 0.2999493736286775,
+      "12": 0.31411241660494693,
+      "16": 0.3557760319999274
+    },
+    "fid_by_N": {
+      "8": 1.031300084371542,
+      "12": 0.9862131108295604,
+      "16": 1.000755450041687
+    }
+  },
+  "elapsed_total_s": 374.39,
+  "elapsed_quantum_s": 368.85,
+  "forensic": [
+    {
+      "ts": 0.1384,
+      "tag": "start",
+      "msg": "backend=ibm_kingston Ns=[8, 12, 16]",
+      "val": 0.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.2819,
+      "tag": "backend",
+      "msg": "ibm_kingston",
+      "val": 156.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.4227,
+      "tag": "transpile_ghz",
+      "msg": "N=8 depth=24 2Q=7",
+      "val": 24.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.4417,
+      "tag": "transpile_hva",
+      "msg": "N=8 depth=73 2Q=21",
+      "val": 73.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.4594,
+      "tag": "transpile_ghz",
+      "msg": "N=12 depth=36 2Q=11",
+      "val": 36.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.4837,
+      "tag": "transpile_hva",
+      "msg": "N=12 depth=110 2Q=33",
+      "val": 110.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.5108,
+      "tag": "transpile_ghz",
+      "msg": "N=16 depth=48 2Q=15",
+      "val": 48.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.5403,
+      "tag": "transpile_hva",
+      "msg": "N=16 depth=149 2Q=45",
+      "val": 149.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 5.542,
+      "tag": "batch_ready",
+      "msg": "6 pubs",
+      "val": 6.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 6.2386,
+      "tag": "job_id",
+      "msg": "d7l8ncq4lglc7380aoj0",
+      "val": 0.0,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.3929,
+      "tag": "ghz_result_N8",
+      "msg": "S=-0.1473+-0.0044",
+      "val": -0.14732858348164884,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.393,
+      "tag": "hva_result_N8",
+      "msg": "S=+0.2999+-0.0117",
+      "val": 0.2999493736286775,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.3931,
+      "tag": "ghz_result_N12",
+      "msg": "S=-0.0897+-0.0028",
+      "val": -0.08965573734814186,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.3933,
+      "tag": "hva_result_N12",
+      "msg": "S=+0.3141+-0.0085",
+      "val": 0.31411241660494693,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.3933,
+      "tag": "ghz_result_N16",
+      "msg": "S=-0.0667+-0.0090",
+      "val": -0.06671703000277913,
+      "cycle": "C91"
+    },
+    {
+      "ts": 374.3934,
+      "tag": "hva_result_N16",
+      "msg": "S=+0.3558+-0.0049",
+      "val": 0.3557760319999274,
+      "cycle": "C91"
+    }
+  ]
+}
