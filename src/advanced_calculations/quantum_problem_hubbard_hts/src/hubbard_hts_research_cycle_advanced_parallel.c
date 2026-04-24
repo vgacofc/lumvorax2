@@ -2048,10 +2048,9 @@ int main(int argc, char** argv) {
     nx48_ctrl_t g_nx48ctrl;
     nx48_ctrl_init(&g_nx48ctrl, run_id);
 
-    /* C91 — VORAX kernel : solveur variationnel branche (PAS un wrapper logging).
-     * Init avec run_dir pour journaliser chaque iteration de descente Givens
-     * dans run_dir/vorax_<problem>.log. Appel par probleme dans la boucle § 2271. */
-    vorax_kernel_init(run_dir);
+    /* C91 — VORAX kernel : init differe APRES creation effective de run_dir
+     * (cf. ligne ~2084). FIX C92-PLUS du bug d'init order qui faisait que
+     * vorax_correlation.jsonl etait ecrit dans cwd au lieu de run_dir/. */
 
     /* C24-01 : Seed variable optionnel via PTMC_RUN_INDEX / PTMC_SEED_RANDOM
      * Par défaut : seeds FIXÉS (reproductibilité scientifique).
@@ -2085,6 +2084,11 @@ int main(int argc, char** argv) {
     mkdir_if_missing(logs);
     mkdir_if_missing(reports);
     mkdir_if_missing(tests);
+
+    /* C92-PLUS : VORAX kernel init APRES mkdir run_dir (fix bug d'init order).
+     * Maintenant g_run_dir contient le bon chemin -> vorax_correlation.jsonl
+     * et vorax_<problem>.log/.jsonl iront dans run_dir/. */
+    vorax_kernel_init(run_dir);
 
     /* BC-LV02/LV03 : Activation LumVorax 100% INCONDITIONNELLE — premier à s'activer */
     {

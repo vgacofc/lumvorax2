@@ -66,6 +66,13 @@ typedef struct {
     /* Trace d'optimisation */
     int         iter;              /* derniere iteration */
     int         n_evals;
+    /* C92-FINAL : courbure 5-points (plus precise que 3-points) */
+    double      curv_h_5pt;        /* d²E/dth² 5-point central */
+    double      curv_u_5pt;        /* d²E/dtu² 5-point central */
+    /* C92-FINAL : flag de classification physique */
+    int         is_unstable;       /* 1 si stab < 0.30 (cible ZNE level 3) */
+    int         is_pure_physics;   /* 1 si stab > 0.90 (reference propre) */
+    int         feedback_rounds;   /* nb de rounds boucle fermee NX48-VORAX */
     /* Forensique */
     uint64_t    timestamp_ns;
     uint64_t    checksum_state;    /* FNV1a sur tous les champs precedents */
@@ -90,6 +97,18 @@ int vorax_kernel_refine_problem(vorax_problem_t *p,
  * Loggue 1 ligne JSON dans run_dir/vorax_correlation.jsonl. */
 int vorax_kernel_extract_correlation(const vorax_problem_t *p,
                                       correlation_vector_t *out);
+
+/* C92-FINAL [A1] : Boucle fermee NX48 <-> VORAX.
+ * Effectue jusqu'a max_rounds cycles de refine + extract + re-randomisation
+ * theta si stability < target_stability. Retourne nb de rounds executes.
+ * La meilleure correlation vector (max stability) est ecrite dans best_cv.
+ * Loggue chaque round dans run_dir/vorax_feedback_<problem>.jsonl. */
+int vorax_kernel_refine_with_feedback(vorax_problem_t *p,
+                                       int max_rounds,
+                                       double target_stability,
+                                       int max_iters_per_round,
+                                       double tol_energy,
+                                       correlation_vector_t *best_cv);
 
 /* Liberation traceurs. */
 void vorax_kernel_destroy(void);

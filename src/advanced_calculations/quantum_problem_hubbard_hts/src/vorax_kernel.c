@@ -189,7 +189,7 @@ int vorax_kernel_extract_correlation(const vorax_problem_t *p,
     out->iter    = p->n_iters;
     out->n_evals = p->n_evals;
 
-    /* Gradient numerique central (eps=1e-6) */
+    /* Gradient numerique central (eps=1e-6) + courbure 3-points */
     const double eps = 1e-6;
     double E_h_p = vorax_energy(p->theta_h + eps, p->theta_u, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
     double E_h_m = vorax_energy(p->theta_h - eps, p->theta_u, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
@@ -200,9 +200,19 @@ int vorax_kernel_extract_correlation(const vorax_problem_t *p,
     out->grad_theta_u = (E_u_p - E_u_m) / (2.0 * eps);
     out->grad_norm    = sqrt(out->grad_theta_h * out->grad_theta_h
                             + out->grad_theta_u * out->grad_theta_u);
-    /* Courbure (Hessien diagonal) */
+    /* Courbure (Hessien diagonal) — 3 points */
     out->curv_theta_h = (E_h_p - 2.0 * E0 + E_h_m) / (eps * eps);
     out->curv_theta_u = (E_u_p - 2.0 * E0 + E_u_m) / (eps * eps);
+    /* C92-FINAL : Courbure 5-points central (precision O(eps^4) au lieu de O(eps^2)) */
+    {
+        double E_h_p2 = vorax_energy(p->theta_h + 2*eps, p->theta_u, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
+        double E_h_m2 = vorax_energy(p->theta_h - 2*eps, p->theta_u, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
+        double E_u_p2 = vorax_energy(p->theta_h, p->theta_u + 2*eps, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
+        double E_u_m2 = vorax_energy(p->theta_h, p->theta_u - 2*eps, p->t_eV, p->U_eV, p->mu_eV, p->temp_K, p->n_sites);
+        /* Coeffs 5-pt : (-1, 16, -30, 16, -1) / 12 */
+        out->curv_h_5pt = (-E_h_p2 + 16*E_h_p - 30*E0 + 16*E_h_m - E_h_m2) / (12.0 * eps * eps);
+        out->curv_u_5pt = (-E_u_p2 + 16*E_u_p - 30*E0 + 16*E_u_m - E_u_m2) / (12.0 * eps * eps);
+    }
     /* Signature multi-echelle */
     out->chi_local = fabs(out->delta_energy_norm) / (1.0 + out->grad_norm);
     /* Metriques d'extraction */
@@ -211,6 +221,10 @@ int vorax_kernel_extract_correlation(const vorax_problem_t *p,
     out->signal_strength = (out->grad_norm > 1e-12)
                           ? out->delta_energy_norm / out->grad_norm
                           : out->delta_energy_norm * 1e12;
+    /* C92-FINAL : flags de classification physique (cf. brief "classifieur universel") */
+    out->is_unstable     = (out->stability < 0.30) ? 1 : 0;
+    out->is_pure_physics = (out->stability > 0.90) ? 1 : 0;
+    /* feedback_rounds reste a 0 ici, sera surcharge par refine_with_feedback */
     /* Forensique */
     out->timestamp_ns   = (uint64_t)now_ns();
     /* Checksum FNV1a sur tout sauf le checksum lui-meme */
@@ -239,6 +253,74 @@ int vorax_kernel_extract_correlation(const vorax_problem_t *p,
         fclose(jf);
     }
     return 0;
+}
+
+/* C92-FINAL [A1] : Boucle fermee NX48 <-> VORAX.
+ * Strategie : refine -> extract -> si stab < target alors re-randomise theta
+ * (perturbation gaussienne sigma=0.1 rad) et recommence. Garde le meilleur CV.
+ * Loggue chaque round dans run_dir/vorax_feedback_<problem>.jsonl. */
+int vorax_kernel_refine_with_feedback(vorax_problem_t *p,
+                                       int max_rounds,
+                                       double target_stability,
+                                       int max_iters_per_round,
+                                       double tol_energy,
+                                       correlation_vector_t *best_cv) {
+    if (!p || !best_cv) return -1;
+    if (max_rounds <= 0) max_rounds = 5;
+    if (target_stability <= 0) target_stability = 0.90;
+    if (max_iters_per_round <= 0) max_iters_per_round = 24;
+
+    correlation_vector_t cv_round;
+    double best_stab = -1.0;
+    double th0 = p->theta_h, tu0 = p->theta_u;
+    int round;
+    char fbpath[1024];
+    const char *pname = p->problem_name ? p->problem_name : "unknown";
+    snprintf(fbpath, sizeof(fbpath), "%s/vorax_feedback_%s.jsonl",
+             g_run_dir[0] ? g_run_dir : ".", pname);
+    FILE *fb = fopen(fbpath, "a");
+
+    /* Generateur deterministe simple (xorshift64) seede par problem_name */
+    uint64_t rng = fnv1a_64(pname, strlen(pname)) ^ 0xDEADBEEFCAFEBABEULL;
+
+    for (round = 0; round < max_rounds; ++round) {
+        vorax_kernel_refine_problem(p, max_iters_per_round, tol_energy);
+        vorax_kernel_extract_correlation(p, &cv_round);
+        cv_round.feedback_rounds = round + 1;
+
+        if (fb) fprintf(fb,
+            "{\"ts_ns\":%lu,\"mod\":\"%s\",\"round\":%d,\"th\":%.8f,\"tu\":%.8f,"
+            "\"E\":%.8f,\"dE\":%.8f,\"stab\":%.8f,\"sig\":%.8e,\"score\":%.8e,"
+            "\"chi\":%.8e,\"target_stab\":%.4f,\"checksum\":\"0x%016lx\"}\n",
+            (unsigned long)cv_round.timestamp_ns, pname, round,
+            cv_round.theta_h, cv_round.theta_u, cv_round.energy, cv_round.delta_energy,
+            cv_round.stability, cv_round.signal_strength, cv_round.score,
+            cv_round.chi_local, target_stability,
+            (unsigned long)cv_round.checksum_state);
+
+        if (cv_round.stability > best_stab) {
+            best_stab = cv_round.stability;
+            memcpy(best_cv, &cv_round, sizeof(*best_cv));
+        }
+
+        if (cv_round.stability >= target_stability) { ++round; break; }
+
+        /* Perturbation gaussienne (Box-Muller) sigma = 0.1 rad */
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17;
+        double u1 = (double)(rng & 0xFFFFFFFFULL) / 4294967295.0;
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17;
+        double u2 = (double)(rng & 0xFFFFFFFFULL) / 4294967295.0;
+        if (u1 < 1e-12) u1 = 1e-12;
+        double r  = sqrt(-2.0 * log(u1));
+        double z1 = r * cos(2.0 * 3.14159265358979 * u2);
+        double z2 = r * sin(2.0 * 3.14159265358979 * u2);
+        p->theta_h = th0 + 0.1 * z1;
+        p->theta_u = tu0 + 0.1 * z2;
+    }
+
+    if (fb) fclose(fb);
+    best_cv->feedback_rounds = round;
+    return round;
 }
 
 void vorax_kernel_destroy(void) {

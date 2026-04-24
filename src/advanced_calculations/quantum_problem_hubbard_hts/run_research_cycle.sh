@@ -385,7 +385,7 @@ done
 print_progress "fullscale simulation"
 checkpoint_save 3
 
-LATEST_FULLSCALE_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
+LATEST_FULLSCALE_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | grep '^research_' | head -n 1 || true)"
 FULLSCALE_RUN_DIR="$ROOT_DIR/results/$LATEST_FULLSCALE_RUN"
 
 # ── C37-SPLITLOG : séparation lumvorax par module (runner fullscale) ──────────
@@ -540,7 +540,7 @@ echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Streamer Vercel arrêté"
 print_progress "advanced parallel simulation"
 checkpoint_save 10
 
-LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | rg '^research_' | head -n 1 || true)"
+LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | grep '^research_' | head -n 1 || true)"
 ADV_RUN_DIR="$ROOT_DIR/results/$LATEST_ADV_RUN"
 
 # ── C61-P1 : Archivage anomalies D² par run_id ──────────────────────────────
