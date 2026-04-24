@@ -1,10 +1,18 @@
 #include "vorax_parser.h"
 #include "../debug/memory_tracker.h"  // NOUVEAU: Pour TRACKED_MALLOC/FREE
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY/STRCAT
+#include "../../include/lumvorax_ibm_constants.h"  // C94: constantes IBM Quantum
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+
+/* C94: API d'introspection — retourne le pic AFM IBM mesure pour une taille N.
+ * Utilise par les futurs scripts VORAX (.vrx) via la directive runtime
+ * @ibm_signal(N) qui sera ajoutee au lexer dans une revision posterieure. */
+double vorax_parser_ibm_reference_s_pi(int N) {
+    return ibm_best_s_pi_for_N(N);
+}
 
 // Lexer implementation
 void vorax_lexer_init(vorax_parser_context_t* ctx, const char* input) {

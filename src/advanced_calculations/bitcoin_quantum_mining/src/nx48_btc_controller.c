@@ -61,6 +61,7 @@
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
 #include "debug/memory_tracker.h"
+#include "../../../../include/lumvorax_ibm_constants.h"  /* C94 : ponts IBM Quantum (S_pi reel) */
 
 #include <math.h>
 #include <string.h>

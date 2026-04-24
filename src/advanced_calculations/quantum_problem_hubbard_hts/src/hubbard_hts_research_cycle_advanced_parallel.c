@@ -26,6 +26,7 @@
 #include "random_circuit_sampling.h"
 #include "nx48_adaptive_controller.h"   /* C55 — Contrôleur Adaptatif NX48 */
 #include "../include/vorax_kernel.h"    /* C91 — VORAX kernel solveur reel branche */
+#include "../include/ibm_quantum_constants.h" /* C94 — constantes IBM Quantum reelles (S_pi C91/C93/C94) */
 
 #define MAX_PATH 768
 #define EPS 1e-12

@@ -16,6 +16,7 @@
  */
 #define _POSIX_C_SOURCE 200809L
 #include "../include/vorax_kernel.h"
+#include "../include/ibm_quantum_constants.h"  /* C94 : valeurs reelles IBM (ibm_best_s_pi_for_N) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

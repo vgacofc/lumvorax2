@@ -160,11 +160,51 @@ static inline double ibm_c91_ghz_fidelity_for_N(int N) {
 #define IBM_C93_SPSA_STAB_AER    ( 0.904)
 #define IBM_C93_SV_S_PI_AER_N8   ( 0.9998)   /* statevector pur, sans bruit */
 
+/* ============================================================================
+ * C94 — VORAX-piloted ADAPT-VQE scaling N=12 / N=16
+ * Source : ibm_c94_RETRIEVE_<job_id>.json (mis a jour apres chaque run reel)
+ * Pipeline : ADAPT-VQE pilote VORAX (score = w_grad*|g| + w_stab*1/(1+curv)
+ *            - w_depth*max(0,depth-14)) + Neel init + RXX/RYY/RZZ pool +
+ *            SPSA bi-phasique + PEC twirl + ZNE expo + 1 batch IBM.
+ *
+ * Les valeurs N12_PLACEHOLDER / N16_PLACEHOLDER sont remplacees par les
+ * vraies mesures IBM Kingston apres le retrieve. Tant que le run reel n'a
+ * pas eu lieu, ces constantes restent indicatives et marquees PENDING.
+ * ============================================================================ */
+/* PENDING : sera ecrase apres ibm_c94_retrieve.py
+ * Initialement on copie C93 (N=8) comme borne basse de reference. */
+#ifndef IBM_C94_S_PI_N12
+#define IBM_C94_S_PI_N12          (IBM_C93_S_PI)        /* placeholder */
+#define IBM_C94_S_PI_N12_STD      (IBM_C93_S_PI_STD)
+#define IBM_C94_S_PI_N12_PENDING  1
+#endif
+#ifndef IBM_C94_S_PI_N16
+#define IBM_C94_S_PI_N16          (IBM_C91_HVA16_S_PI)  /* placeholder */
+#define IBM_C94_S_PI_N16_STD      (IBM_C91_HVA16_S_PI_STD)
+#define IBM_C94_S_PI_N16_PENDING  1
+#endif
+
 /* Helper : selection automatique S(pi) reel selon N et cycle */
 static inline double ibm_best_s_pi_for_N(int N) {
     if (N <= 8)  return IBM_C93_S_PI;        /* C93 ADAPT-VQE bat C91 HVA8 */
-    if (N <= 12) return IBM_C91_HVA12_S_PI;  /* C91 reste reference N=12 */
-    return IBM_C91_HVA16_S_PI;                /* C91 reste reference N=16 */
+    if (N <= 12) return IBM_C94_S_PI_N12;    /* C94 si dispo, sinon copie C93 */
+    return IBM_C94_S_PI_N16;                  /* C94 N=16 si dispo, sinon C91 */
+}
+
+/* Helper : VORAX score d'extraction utilise par les modules C
+ * (vorax_kernel, advanced_parallel) pour normaliser le signal_strength
+ * d'un probleme par rapport au pic AFM IBM mesure pour la meme taille. */
+static inline double ibm_normalize_signal_strength(double s_pi_local, int N) {
+    double ref = ibm_best_s_pi_for_N(N);
+    if (ref <= 1e-9) return 0.0;
+    return s_pi_local / ref;  /* ratio : 1.0 = on egale IBM, >1 = on bat IBM */
+}
+
+/* Helper : recommandation depth_phys cible selon N (issu C93/C94) */
+static inline int ibm_recommended_max_depth(int N) {
+    if (N <= 8)  return 14;   /* C93 reel */
+    if (N <= 12) return 22;   /* C94 cible */
+    return 30;                /* C94 N=16 */
 }
 
 #ifdef __cplusplus

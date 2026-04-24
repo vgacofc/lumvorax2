@@ -2,6 +2,7 @@
 #include "../logger/lum_logger.h"
 #include "../debug/memory_tracker.h"  // CORRECTION: Include pour TRACKED_MALLOC/FREE
 #include "../common/magic_numbers.h"  // CORRECTION RAPPORT 129 ANOMALIE #001
+#include "../../include/lumvorax_ibm_constants.h"  // C94: ponts physique IBM (S_pi reel)
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

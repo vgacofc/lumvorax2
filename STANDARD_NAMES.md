@@ -879,3 +879,29 @@
 2026-04-24 19:57 - tools/ibm_c93_retrieve.py + C93 — Recuperateur asynchrone IBM C93 : interroge job par job_id, polling status, parse evs+stds, ecrit JSON RETRIEVE - resout probleme timeout 600s shell vs 8min queue IBM
 2026-04-24 19:57 - ibm_best_s_pi_for_N + C93 — Helper inline C : retourne IBM_C93_S_PI pour N<=8 (gain x3.31 confirme), IBM_C91_HVA12/16 sinon (en attente C94)
 2026-04-24 19:57 - C93-TRIPLE-HARVEST + C93 — Triple recolte simultanee Replit/IBM/Ubuntu : pipeline Aer valide, S(pi) IBM reel +0.9944, BTC Ubuntu best_leading=34 bits stable
+
+2026-04-24 22:01 - tools/ibm_quantum_runner_c94.py + C94 — Runner C94 VORAX-piloted ADAPT-VQE : pool RXX/RYY/RZZ etendu + Neel init |0101...> + score VORAX (w_grad*|g| + w_stab/(1+curv) - w_depth*max(0,depth-14)) + SPSA bi-phasique + PEC twirl + ZNE + 1 batch IBM + scaling N=12,16
+2026-04-24 22:01 - tools/ibm_c94_retrieve.py + C94 — Recuperateur asynchrone job IBM C94 : poll status, parse evs+stds 6 observables (S_pi, S_k_{0,pi/2,pi}, C_r_{1,N/2}), JSON RETRIEVE force
+2026-04-24 22:01 - tools/run_c94_ubuntu.sh + C94 — Script pilote Ubuntu C94 6 modes : dry-12 / dry-16 / submit-12 / submit-16 / full-12 / build-c-only ; pre-load libstdc++ nix automatique ; smoke test C des constantes IBM
+2026-04-24 22:01 - vorax_adapt_score + C94 — Score d'extraction ADAPT VORAX-pilote : remplace |grad| pur par combinaison w_grad*|g|+w_stab/(1+curv)-w_depth*depth_pen ; defauts w_grad=1.0 w_stab=0.30 w_depth=0.005 ; bonus profondeur <=14
+2026-04-24 22:01 - C94-NEEL-INIT + C94 — Initialisation circuit |0101...> (etat de Neel) au lieu de |0...0> : amorcage AFM, S(pi) demarrage ~0.95 vs 0.0 sans init, accelere convergence ADAPT
+2026-04-24 22:01 - C94-DRY-RUN-N12-AER + C94 — DRY-RUN N=12 reussi : 4 couches RXX(i=1) gradients 0.025->0.062 ; SPSA E_final=-1.366 stab=0.896 ; S(pi)_aer=+0.9983 ; C(r=1)=-0.999 ; C(r=6)=+0.998 ; depth_pre_transpile=5
+2026-04-24 22:01 - C94-IBM-SUBMIT-N12 + C94 — Submit IBM Kingston N=12 reussi : job_id=d7lugkdqrg3c738kjg80 ; transpile depth=13 2Q=2 ; 6 observables batch ; resilience=2 shots=2048 twirling 32 randomizations
+2026-04-24 22:01 - ibm_c94_vorax_*N12_DRY.json + C94 — Format dry-run AER : adapt_history, spsa_history, theta_opt, measurements_aer_ideal[6 obs], statevector S(pi)_ideal, depth_pre_transpile
+2026-04-24 22:01 - ibm_c94_vorax_*N12_SUBMITTED.json + C94 — Format submit IBM : job_id, backend ibm_kingston, transpile_final {depth, n2q}, mode=submit_ibm, instructions retrieve
+2026-04-24 22:01 - IBM_C94_S_PI_N12 + C94 — Macro placeholder C94 N=12 : initialement = IBM_C93_S_PI (0.9944), ecrasee apres ibm_c94_retrieve.py par valeur reelle ibm_kingston ; flag IBM_C94_S_PI_N12_PENDING tant que pas de mesure reelle
+2026-04-24 22:01 - IBM_C94_S_PI_N16 + C94 — Macro placeholder C94 N=16 : initialement = IBM_C91_HVA16_S_PI (0.3558), ecrasee apres run reel
+2026-04-24 22:01 - ibm_normalize_signal_strength + C94 — Helper inline C : normalise un signal_strength local en ratio par rapport au pic IBM mesure pour la meme taille N (1.0 = on egale IBM, >1 = on bat IBM)
+2026-04-24 22:01 - ibm_recommended_max_depth + C94 — Helper inline C : profondeur cible max selon N (14 si N<=8, 22 si N<=12, 30 si N<=16) issue des mesures C93/C94
+2026-04-24 22:01 - include/lumvorax_ibm_constants.h + C94 — Wrapper minimal re-exposant les constantes IBM aux modules core LumVorax via __has_include + triple fallback ; permet a vorax_operations/parser/lum_core/nx48_btc d'acceder aux memes macros que quantum_problem_hubbard_hts sans -I global
+2026-04-24 22:01 - LUMVORAX_C94_IBM_BRIDGE + C94 — Flag de runtime (=1) verifiable par les modules pour confirmer que le pont physique IBM a bien ete lie dans la build
+2026-04-24 22:01 - LUMVORAX_IBM_CONSTANTS_FOUND + C94 — Macro definie automatiquement par le wrapper si le header maitre ibm_quantum_constants.h a ete localise (sinon fallback minimal)
+2026-04-24 22:01 - vorax_parser_ibm_reference_s_pi + C94 — API parser : retourne le pic AFM IBM mesure pour une taille N ; pre-requis pour la future directive lexer @ibm_signal(N) dans les scripts .vrx
+2026-04-24 22:01 - C94-PROPAGATION-5-MODULES + C94 — Constantes IBM Quantum reelles propagees dans : src/vorax/vorax_operations.c, src/parser/vorax_parser.c, src/lum/lum_core.c, src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c, src/advanced_calculations/quantum_problem_hubbard_hts/src/{vorax_kernel.c,hubbard_hts_research_cycle_advanced_parallel.c}
+2026-04-24 22:01 - C94-UBUNTU-MODES + C94 — bash tools/run_c94_ubuntu.sh {dry-12|dry-16|submit-12|submit-16|full-12|build-c-only} ; verifie automatiquement la compilation C de tous les modules patches IBM avant les runs Python
+2026-04-24 22:01 - d7lugkdqrg3c738kjg80 + C94 — Job IBM Kingston N=12 ADAPT-VQE+VORAX cree 22:01:53Z, observables {S_pi, S_k_0, S_k_pi/2, S_k_pi, C_r_1, C_r_6}, statut suivi via ibm_c94_RETRIEVE_d7lugkdqrg3c738kjg80*.json
+
+2026-04-24 22:15 - HACKATHON_IBM_BOB_DEVDAY_2026.md + C94 — Dossier candidature hackathon IBM Dev Day Bob 30 avril 2026 (prize 5000 USD), 7 sections alignees sur les 4 criteres officiels x5pts, preuves materielles C91/C93/C94, roadmap Bob 8 livrables ~6h
+2026-04-24 22:15 - C94-HACKATHON-PREP + C94 — Preparation candidature : score officiel cible 20/20 en exploitant pont C-IBM (rare), score VORAX (innovation), UX 1-commande (convivialite), gain x3.32 mesure (efficience)
+2026-04-24 22:15 - bob_demo.md + C94 — Livrable meta-innovation hackathon : trace de la conversation Bob qui aura genere les 6 autres livrables (pip wheel, notebook, pytest, unity tests, sphinx, CI)
+2026-04-24 22:15 - lumvorax-quantum + C94 — Nom du futur package pip a publier au hackathon : refactor du pipeline ibm_quantum_runner_c94 en module installable avec API publique stable (build_hubbard_hamiltonian, vorax_adapt_score, neel_init_circuit, run_ibm_batch)

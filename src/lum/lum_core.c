@@ -8,6 +8,7 @@
 #include "lum_core.h"
 #include "../common/common_types.h"
 #include "../common/debug_macros.h"
+#include "../../include/lumvorax_ibm_constants.h"  // C94: ponts physique IBM
 #include "../debug/memory_tracker.h"
 #include "../debug/forensic_logger.h"
 #include <stdio.h>
