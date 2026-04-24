@@ -2364,6 +2364,16 @@ int main(int argc, char** argv) {
                     probs[i].name, rc, vp.n_iters, vp.n_evals,
                     vp.energy_in, vp.energy_out, vp.energy_in - vp.energy_out,
                     vp.theta_h, vp.theta_u);
+            /* C92-PLUS : extraction du vecteur de correlation complet
+             * (gradient/courbure/chi/score/stability/signal_strength + JSONL forensique) */
+            correlation_vector_t cv;
+            if (vorax_kernel_extract_correlation(&vp, &cv) == 0) {
+                fprintf(stderr, "[C91-VORAX-CV] %-40s dE/N=%+.4e grad=%.3e chi=%.3e "
+                                "score=%.3e stab=%.4f sig=%.3e cs=0x%016lx\n",
+                        probs[i].name, cv.delta_energy_norm, cv.grad_norm, cv.chi_local,
+                        cv.score, cv.stability, cv.signal_strength,
+                        (unsigned long)cv.checksum_state);
+            }
         }
         uint64_t vt_evals = 0, vt_iters = 0; double vt_dE = 0.0;
         vorax_kernel_stats(&vt_evals, &vt_iters, &vt_dE);
