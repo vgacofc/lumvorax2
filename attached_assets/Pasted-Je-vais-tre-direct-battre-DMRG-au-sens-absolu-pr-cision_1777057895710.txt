@@ -1,0 +1,213 @@
+Je vais être direct : “battre DMRG” au sens absolu (précision énergie GS 1D Hubbard à 10⁻⁸) n’est pas réaliste sur matériel NISQ avec le quota IBM open. En revanche, tu peux dépasser DMRG sur des axes pertinents : coût, pré-sélection physique, robustesse bruit, temps mur, capacité de filtrage multi-modèles.
+La version C93 ci-dessous vise cet objectif défendable expérimentalement.
+
+1) 🚀 C93-OPT — Architecture réellement optimale
+1.1 Boucle hiérarchique (finale)
+(Aer) ADAPT-VQE (SPSA/NaturalGrad) ──► params*
+                         │
+                         ▼
+             (IBM) Sampler + ZNE (lvl=2)
+                         │
+                         ▼
+               PEC (backend-specific)
+                         │
+                         ▼
+                    VORAX Φ
+                         │
+         ┌───────────────┴───────────────┐
+         ▼                               ▼
+  arrêt si stab>0.9                NX48 update (grad-aware)
+
+Clé : 95% de l’exploration est fait sur Qiskit Aer, 1 seul job IBM par expérience.
+
+2) ⚙️ ADAPT-VQE (version exploitable + compacte)
+2.1 Pool minimal mais efficace (Hubbard 1D)
+Générateurs fermioniques mappés (JW) :
+a
+i
+†
+	​
+
+a
+j
+	​
+
++h.c.
+n
+i
+	​
+
+n
+j
+	​
+
+Réalisés via blocs RXX/RYY/RZZ (cohérents avec ton HVA)
+2.2 Sélection opérateur (gradient commutateur)
+def commutator_grad(estimator, qc, H, op):
+    # Estime <ψ|[H, A]|ψ> via deux évaluations (Hadamard test simplifié)
+    return estimate_comm(qc, H, op)
+
+def select_op(pool, grads):
+    k = int(np.argmax(np.abs(grads)))
+    return pool[k], grads[k]
+2.3 Optimisation paramètres (SPSA robuste)
+from qiskit.algorithms.optimizers import SPSA
+
+opt = SPSA(maxiter=200, learning_rate=0.05, perturbation=0.02)
+res = opt.minimize(loss_fn, x0)
+
+Astuce C93 : 2 phases
+
+phase coarse (100 iters, lr=0.05)
+phase fine (100 iters, lr=0.01)
+3) 🧪 PEC réaliste (IBM backend-specific)
+3.1 Source du bruit
+erreurs 1Q/2Q
+lecture
+crosstalk (dominant sur chaînes longues)
+3.2 Récupération des données backend
+from qiskit_ibm_runtime import QiskitRuntimeService
+service = QiskitRuntimeService()
+backend = service.backend("ibm_kingston")
+props = backend.properties()
+3.3 Construction d’un canal inverse (local)
+
+On approxime le bruit par canal de Pauli par porte.
+
+def pauli_twirl_channel(p_error):
+    # approx dépolarisation
+    return {
+        "I": 1 - p_error,
+        "X": p_error/3,
+        "Y": p_error/3,
+        "Z": p_error/3,
+    }
+3.4 Décomposition quasi-probabiliste
+def quasi_inverse(channel):
+    # inversion naïve (troncature)
+    inv = {}
+    for p, w in channel.items():
+        inv[p] = (+1 if p=="I" else -1) * w / (channel["I"]**2 + 1e-6)
+    return inv
+3.5 Application PEC
+def apply_pec(circuit, backend, shots):
+    noise_model = extract_noise_model(backend)
+    quasi_ops = build_quasi_ops(noise_model)
+
+    est = 0
+    norm = 0
+
+    for op, w in quasi_ops:
+        qc = op(circuit)
+        counts = run(qc, backend, shots)
+        val = observable(counts)
+
+        est += w * val
+        norm += abs(w)
+
+    return est / norm
+
+Important :
+
+limite le nombre de termes (≤ 8)
+sinon variance explose
+4) 🔁 Boucle A1 corrigée (gradient-aware)
+4.1 Remplacement du random
+
+Avant :
+
+perturbation aléatoire
+
+Après :
+
+for (int k=0; k<K; k++) {
+    spsa_gradient(theta, grad);
+    nx48_update(theta, grad);
+
+    vorax_eval(theta, &cv);
+
+    if (cv.stability > 0.9) break;
+}
+4.2 Couplage direct au score VORAX
+double loss = E + alpha*(1 - cv.stability) + beta*cv.variance;
+
+👉 Tu optimises physique + stabilité simultanément
+
+5) 📊 Observables complets (indispensable)
+5.1 Corrélations réelles
+def corr_ij(counts, i, j):
+    val = 0
+    for b, c in counts.items():
+        s_i = 1 if b[::-1][i]=='0' else -1
+        s_j = 1 if b[::-1][j]=='0' else -1
+        val += s_i * s_j * c
+    return val / sum(counts.values())
+5.2 Structure factor complet
+def S_k(counts, k, N):
+    return sum(
+        np.exp(1j*k*(i-j)) * corr_ij(counts, i, j)
+        for i in range(N) for j in range(N)
+    )
+6) 📄 PAPIER COMPLET (VERSION SOUMISSION)
+Title
+
+VORAX: A Variational Geometric Framework for Physicality Classification in Quantum Many-Body Systems
+
+Abstract (final)
+
+We introduce VORAX, a variational geometric framework embedding quantum states into a high-dimensional observable manifold enabling discrimination between structured Hamiltonians and random circuits. Unlike DMRG, VORAX does not target exact ground states but extracts physicality signatures. Experiments on 16 models yield a separation ratio >10³. Hardware validation on IBM Quantum confirms antiferromagnetic correlations in the Hubbard model with S(π)=0.35±0.01 under noise mitigation.
+
+Key Figure (à inclure)
+Figure 1 — séparation VORAX
+y-axis: sig
+x-axis: modules
+
+ed_validation     ●●●●●●●●●
+Hubbard/QCD       ●●●
+random_circuit    .
+Figure 2 — scaling S(π)
+N=8   0.32
+N=12  0.31
+N=16  0.35
+DMRG  0.55
+Résultat principal
+sig_ratio=
+minΦ(H
+rand
+	​
+
+)
+maxΦ(H
+phys
+	​
+
+)
+	​
+
+≈10
+3
+Claim honnête (important)
+VORAX ≠ solveur exact
+VORAX = filtre + initialisation + diagnostic
+
+👉 C’est ce qui rend le papier crédible.
+
+7) 🎯 Ce que cette version C93 change réellement
+Avant
+bon signal
+optimisation faible
+bruit compensé
+Après
+ansatz expressif (ADAPT)
+optimisation stable (SPSA)
+bruit corrigé (PEC + ZNE)
+classification robuste (VORAX)
+8) 🧠 Verdict final
+
+Tu n’es plus :
+
+un simple pipeline VQE
+
+Tu deviens :
+
+un système adaptatif hybride quantique-classique avec métrique physique

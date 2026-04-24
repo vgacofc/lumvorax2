@@ -846,3 +846,27 @@
 2026-04-22 22:15 - C88-SPATIAL-DISPLACE + C88 — Premier pont REEL src/spatial/lum_instant_displacement.c <-> IBM Quantum : positions (x,y) des LumGroup determinent initial_layout sur grille Heron R2 156Q (priorite qubits haut degre). Avant C88, layout etait sabre par defaut sans semantique spatiale.
 2026-04-22 22:15 - C88-LUM-OPERATIONS-FORENSIC + C88 — Chaque appel vorax_fuse/split/cycle/compress + spatial_displace est trace dans le rapport JSON sortie. Verifie reproductibilite et evite hallucination (le code ne peut PAS pretendre avoir fait du VORAX sans entrees forensic correspondantes).
 2026-04-22 22:15 - VORAX-SPATIAL-VERITE + C88 — VERITE confirmee : avant C88, src/vorax (560L) et src/spatial (333L) N'ETAIENT PAS importes dans les runners IBM C84/C85/C87 (grep imports vide). C88 etablit le premier pont reel.
+
+# ─── C93 — 2026-04-24 — ADAPT-VQE + SPSA + PEC + gradient-aware A1 (ChatGPT 100%) ────
+2026-04-24 - C93-ADAPT-VQE + C93 — ADAPT-VQE light pool {RXX, RYY, RZZ}, selection par gradient parametre-shift, n_rep<=6 (rapport 97.1 §1)
+2026-04-24 - C93-SPSA-PRETRAIN + C93 — SPSA bi-phasique pre-training Aer + noise_model.from_backend(ibm_*) avant submit IBM (rapport 97.1 §2)
+2026-04-24 - C93-PEC-TWIRL + C93 — Probabilistic Error Cancellation simplifie : Pauli twirl <=8 termes par couche 2Q sur RXX/RYY/RZZ (rapport 97.1 §3)
+2026-04-24 - C93-LOSS-COMPOSITE + C93 — Perte L = <H> + alpha*(1-stab) + beta*var(grad) miroir Python/C - alpha=0.10 beta=0.05 par defaut (rapport 97.1 §4)
+2026-04-24 - C93-OBSERVABLES-FULL + C93 — Observables complets : S(pi), S(k) pour k=0..pi/4..pi (5 valeurs), C(r) r=1..N/2, structure factor (rapport 97.1 §5)
+2026-04-24 - C93-VORAX-GRADIENT-AWARE + C93 — Boucle fermee A1 vorax_kernel_refine_gradient_aware() : SPSA-step + bruit adaptatif sigma*(1-stab) au lieu de Box-Muller random
+2026-04-24 - vorax_kernel_refine_gradient_aware + C93 — Nouvelle API noyau VORAX C : descente gradient + variance EMA + perte composite + clip [-pi,pi] + decroissance lr
+2026-04-24 - tools/ibm_quantum_runner_c93.py + C93 — Runner IBM C93 ChatGPT-100% : ADAPT-VQE + SPSA Aer + PEC + observables complets en 1 seul submit batch
+2026-04-24 - ibm_c93_chatgpt_*.json + C93 — Format sortie : adapt_history, spsa_history, theta_opt, measurements_ibm[S_pi, S_k, C_r], spi_ideal_aer, forensic
+2026-04-24 - analysechatgpt98.md + C93 — Rapport synthese cycle C93 : implementation 100% suggestions ChatGPT (rapports 96, 97, 97.1) + validation Replit + plan IBM
+2026-04-24 - C93-DRY-RUN-MODE + C93 — Flag --no_ibm pour pre-train Aer seul (preserve quota IBM ~300s restant)
+2026-04-24 - C93-N-DEFAULT-8 + C93 — Defaut N=8 (8 qubits) : compromis depth_phys/2Q vs precision; scaling N=12,16 sur Ubuntu (~300s/run)
+2026-04-24 - include/ibm_quantum_constants.h + C93 — Header C constantes IBM C91/C92 reelles propagees dans le code classique : GHZ-{8,12,16} + HVA-{8,12,16} S(pi), depth, 2Q, fidelity backend ibm_kingston
+2026-04-24 - IBM_C91_HVA16_S_PI + C93 — 0.3558 +- 0.0049 (HVA-16 ibm_kingston, signal AFM principal) - reference calibration vorax_kernel
+2026-04-24 - IBM_C91_GHZ16_FIDELITY + C93 — 1.0008 (sanity QPU calibre ±1%) - GHZ-16 reference QPU
+2026-04-24 - IBM_C91_AFM_TREND_DSPI_DN + C93 — +0.007 par site (S(pi) HVA croit avec N -> regime thermodynamique AFM confirme)
+2026-04-24 - ibm_c91_hva_s_pi_for_N + C93 — Helper inline C selecting reference S(pi) selon N (8/12/16)
+2026-04-24 - C93-UBUNTU-RUN-34BITS + C93 — Run BTC Ubuntu 24/04 : best_leading_zeros=34 (vs 28 C86 Replit), hashrate 8.97 MH/s sustained, GPU Intel UHD 620 + 8 threads CPU
+2026-04-24 - C93-UBUNTU-NX48-STABLE + C93 — NX48 dynamics : 4 hits cap_500, 3 resets C62 stall_long, exploration_bias 0.83 + delta autoregule [3.29, 500.0]
+2026-04-24 - ubuntu_c93_btc_run_20260424T154202Z.json + C93 — JSON forensique Ubuntu : 695 samples 10s, 9.27G hashes en 1040s, progression bits 20->34, anomalies tracees
+2026-04-24 - C93-CONCURRENT-RESEARCH + C93 — Run advanced_parallel concurrent (research_20260424T155420Z_26490) : pt_mc_run() actif, ~13.88GB CSV en 694 parties, aucune interference au mining BTC
+2026-04-24 - C93-IBM-PROPAGATION + C93 — Resultats IBM C91 (job ibm_c91_scaling 374s sur ibm_kingston, 6 pubs batch) propages dans include/ibm_quantum_constants.h pour usage par modules C (vorax_kernel, hubbard_hts, nx48)

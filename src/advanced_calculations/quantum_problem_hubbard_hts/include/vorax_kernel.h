@@ -110,6 +110,27 @@ int vorax_kernel_refine_with_feedback(vorax_problem_t *p,
                                        double tol_energy,
                                        correlation_vector_t *best_cv);
 
+/* C93 [A1+] : Boucle fermee gradient-aware (remplace Box-Muller random).
+ * Utilise une etape SPSA-like : delta_theta = -lr * grad / (1 + |grad|)
+ * + perturbation gaussienne sigma adaptative scale ~ (1 - stability).
+ * Plus de re-randomisation aveugle : convergence guidee par la geometrie
+ * locale du paysage d'energie.
+ *   - lr  : taux d'apprentissage initial (0.05 par defaut)
+ *   - sigma_explore : amplitude bruit exploratoire (0.05 par defaut)
+ *   - alpha_stab : penalisation (1-stab) dans la perte (0.10 par defaut)
+ *   - beta_var   : penalisation variance gradient (0.05 par defaut)
+ * Loggue chaque round dans run_dir/vorax_feedback_c93_<problem>.jsonl. */
+int vorax_kernel_refine_gradient_aware(vorax_problem_t *p,
+                                        int max_rounds,
+                                        double target_stability,
+                                        int max_iters_per_round,
+                                        double tol_energy,
+                                        double lr,
+                                        double sigma_explore,
+                                        double alpha_stab,
+                                        double beta_var,
+                                        correlation_vector_t *best_cv);
+
 /* Liberation traceurs. */
 void vorax_kernel_destroy(void);
 

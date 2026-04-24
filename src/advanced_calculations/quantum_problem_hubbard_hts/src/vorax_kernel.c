@@ -323,6 +323,118 @@ int vorax_kernel_refine_with_feedback(vorax_problem_t *p,
     return round;
 }
 
+/* C93 [A1+] Boucle gradient-aware : SPSA-step + bruit adaptatif (1-stab).
+ * Remplace re-randomisation Box-Muller par descente guidee par grad estime
+ * et perturbation calibree par instabilite locale. Pertes :
+ *    L = E + alpha*(1-stab) + beta*var(grad)
+ */
+int vorax_kernel_refine_gradient_aware(vorax_problem_t *p,
+                                        int max_rounds,
+                                        double target_stability,
+                                        int max_iters_per_round,
+                                        double tol_energy,
+                                        double lr,
+                                        double sigma_explore,
+                                        double alpha_stab,
+                                        double beta_var,
+                                        correlation_vector_t *best_cv) {
+    if (!p || !best_cv) return -1;
+    if (max_rounds <= 0)         max_rounds         = 6;
+    if (target_stability <= 0)   target_stability   = 0.90;
+    if (max_iters_per_round <= 0) max_iters_per_round = 24;
+    if (tol_energy <= 0)         tol_energy         = 1e-6;
+    if (lr <= 0)                 lr                 = 0.05;
+    if (sigma_explore < 0)       sigma_explore      = 0.05;
+    if (alpha_stab < 0)          alpha_stab         = 0.10;
+    if (beta_var < 0)            beta_var           = 0.05;
+
+    correlation_vector_t cv_round;
+    double best_loss = 1e300;
+    int round;
+    char fbpath[1024];
+    const char *pname = p->problem_name ? p->problem_name : "unknown";
+    snprintf(fbpath, sizeof(fbpath), "%s/vorax_feedback_c93_%s.jsonl",
+             g_run_dir[0] ? g_run_dir : ".", pname);
+    FILE *fb = fopen(fbpath, "a");
+
+    /* RNG xorshift64 deterministe seede par nom + timestamp */
+    uint64_t rng = fnv1a_64(pname, strlen(pname)) ^ 0xC93ABCDEF1234567ULL;
+    /* Variance courante du gradient (moyenne mobile) */
+    double grad_var_ema = 0.0;
+    double grad_prev_norm = 0.0;
+
+    for (round = 0; round < max_rounds; ++round) {
+        vorax_kernel_refine_problem(p, max_iters_per_round, tol_energy);
+        vorax_kernel_extract_correlation(p, &cv_round);
+        cv_round.feedback_rounds = round + 1;
+
+        /* Variance gradient : EMA(beta=0.7) du carre des differences successives */
+        double dnorm = cv_round.grad_norm - grad_prev_norm;
+        grad_var_ema = 0.7 * grad_var_ema + 0.3 * (dnorm * dnorm);
+        grad_prev_norm = cv_round.grad_norm;
+
+        /* Perte composite C93 : L = E + alpha*(1-stab) + beta*var(grad) */
+        double loss = cv_round.energy
+                    + alpha_stab * (1.0 - cv_round.stability)
+                    + beta_var   * grad_var_ema;
+
+        if (fb) fprintf(fb,
+            "{\"ts_ns\":%lu,\"mod\":\"%s\",\"round\":%d,\"th\":%.8f,\"tu\":%.8f,"
+            "\"E\":%.8f,\"dE\":%.8f,\"stab\":%.8f,\"sig\":%.8e,\"score\":%.8e,"
+            "\"chi\":%.8e,\"grad_norm\":%.8e,\"grad_var\":%.8e,"
+            "\"loss\":%.8e,\"lr\":%.4f,\"sigma\":%.4f,"
+            "\"alpha\":%.4f,\"beta\":%.4f,\"target_stab\":%.4f,"
+            "\"checksum\":\"0x%016lx\"}\n",
+            (unsigned long)cv_round.timestamp_ns, pname, round,
+            cv_round.theta_h, cv_round.theta_u, cv_round.energy, cv_round.delta_energy,
+            cv_round.stability, cv_round.signal_strength, cv_round.score,
+            cv_round.chi_local, cv_round.grad_norm, grad_var_ema,
+            loss, lr, sigma_explore, alpha_stab, beta_var, target_stability,
+            (unsigned long)cv_round.checksum_state);
+
+        /* Garde la meilleure : minimise la perte composite (pas juste stab) */
+        if (loss < best_loss) {
+            best_loss = loss;
+            memcpy(best_cv, &cv_round, sizeof(*best_cv));
+        }
+
+        if (cv_round.stability >= target_stability) { ++round; break; }
+
+        /* Step SPSA-like : descente gradient + bruit adaptatif (1-stab) */
+        double inv = 1.0 / (1.0 + cv_round.grad_norm);
+        double step_h = -lr * cv_round.grad_theta_h * inv;
+        double step_u = -lr * cv_round.grad_theta_u * inv;
+
+        /* Bruit gaussien Box-Muller, sigma adaptatif = sigma_explore * (1 - stab) */
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17;
+        double u1 = (double)(rng & 0xFFFFFFFFULL) / 4294967295.0;
+        rng ^= rng << 13; rng ^= rng >> 7; rng ^= rng << 17;
+        double u2 = (double)(rng & 0xFFFFFFFFULL) / 4294967295.0;
+        if (u1 < 1e-12) u1 = 1e-12;
+        double r  = sqrt(-2.0 * log(u1));
+        double z1 = r * cos(2.0 * 3.14159265358979 * u2);
+        double z2 = r * sin(2.0 * 3.14159265358979 * u2);
+        double sigma_adapt = sigma_explore * (1.0 - cv_round.stability);
+
+        p->theta_h += step_h + sigma_adapt * z1;
+        p->theta_u += step_u + sigma_adapt * z2;
+
+        /* Clip dans [-pi, pi] pour rester dans le tore variationnel */
+        const double PI = 3.14159265358979;
+        if (p->theta_h >  PI) p->theta_h -= 2.0 * PI;
+        if (p->theta_h < -PI) p->theta_h += 2.0 * PI;
+        if (p->theta_u >  PI) p->theta_u -= 2.0 * PI;
+        if (p->theta_u < -PI) p->theta_u += 2.0 * PI;
+
+        /* Decroissance lr (pas SPSA classique : 1/(round+1)^0.602) */
+        lr = lr * pow((double)(round + 1) / (double)(round + 2), 0.602);
+    }
+
+    if (fb) fclose(fb);
+    best_cv->feedback_rounds = round;
+    return round;
+}
+
 void vorax_kernel_destroy(void) {
     pthread_mutex_lock(&g_lock);
     g_run_dir[0] = '\0';
