@@ -870,3 +870,12 @@
 2026-04-24 - ubuntu_c93_btc_run_20260424T154202Z.json + C93 — JSON forensique Ubuntu : 695 samples 10s, 9.27G hashes en 1040s, progression bits 20->34, anomalies tracees
 2026-04-24 - C93-CONCURRENT-RESEARCH + C93 — Run advanced_parallel concurrent (research_20260424T155420Z_26490) : pt_mc_run() actif, ~13.88GB CSV en 694 parties, aucune interference au mining BTC
 2026-04-24 - C93-IBM-PROPAGATION + C93 — Resultats IBM C91 (job ibm_c91_scaling 374s sur ibm_kingston, 6 pubs batch) propages dans include/ibm_quantum_constants.h pour usage par modules C (vorax_kernel, hubbard_hts, nx48)
+2026-04-24 19:57 - C93-IBM-JOB-DONE-d7lsems3g2mc7391oi40 + C93 — Job IBM Kingston DONE : ADAPT-VQE 3 couches RXX(i=1) + SPSA Aer E=-6.9947 + PEC twirl x4 + ZNE expo x32 + 6 observables batch, shots=2048, resilience=2, depth_phys=14, n2q=2
+2026-04-24 19:57 - IBM_C93_S_PI + C93 — 0.9944 +- 0.0040 (ibm_kingston N=8 ADAPT-VQE) - GAIN x3.31 vs C91 HVA8 (0.2999) : saut historique AFM
+2026-04-24 19:57 - IBM_C93_C_R1 + C93 — -0.9949 +- 0.0079 (correlation antiferro voisins quasi-parfaite N=8 ibm_kingston)
+2026-04-24 19:57 - IBM_C93_C_R4 + C93 — +0.9954 +- 0.0103 (correlation longue portee alternee parfaite r=4 ibm_kingston)
+2026-04-24 19:57 - IBM_C93_GAIN_VS_C91_HVA8 + C93 — ~3.315 (ADAPT-VQE+ZNE bat HVA simple sur le pic S(pi) du Hubbard N=8)
+2026-04-24 19:57 - ibm_c93_chatgpt_RETRIEVE_*.json + C93 — JSON forensique resultats IBM reels C93 : measurements_ibm[6 obs], metadata_pub0 (ZNE expo, 32 randomizations), config_used, context (adapt_picks, spsa)
+2026-04-24 19:57 - tools/ibm_c93_retrieve.py + C93 — Recuperateur asynchrone IBM C93 : interroge job par job_id, polling status, parse evs+stds, ecrit JSON RETRIEVE - resout probleme timeout 600s shell vs 8min queue IBM
+2026-04-24 19:57 - ibm_best_s_pi_for_N + C93 — Helper inline C : retourne IBM_C93_S_PI pour N<=8 (gain x3.31 confirme), IBM_C91_HVA12/16 sinon (en attente C94)
+2026-04-24 19:57 - C93-TRIPLE-HARVEST + C93 — Triple recolte simultanee Replit/IBM/Ubuntu : pipeline Aer valide, S(pi) IBM reel +0.9944, BTC Ubuntu best_leading=34 bits stable

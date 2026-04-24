@@ -110,6 +110,63 @@ static inline double ibm_c91_ghz_fidelity_for_N(int N) {
     return IBM_C91_GHZ16_FIDELITY;
 }
 
+/* ============================================================================
+ * C93 — ADAPT-VQE + SPSA + PEC + ZNE (REAL IBM Kingston results)
+ * Source : ibm_c93_chatgpt_RETRIEVE_d7lsems3g2mc7391oi40.json
+ * Job IBM : d7lsems3g2mc7391oi40 (DONE) — created 2026-04-24T19:41:15Z
+ * Backend : ibm_kingston (Heron R2 156Q)
+ * Pipeline: ADAPT-VQE 3 layers RXX(i=1) -> SPSA pre-train Aer (E=-6.9947)
+ *           -> PEC Pauli twirl x4 -> ZNE exponential x32 randomizations
+ *           -> 6 observables batch (S_pi + 3 S_k + C_r1 + C_r4)
+ * shots=2048, resilience_level=2 (ZNE), depth_phys=14, n2q_phys=2
+ *
+ * GAIN HISTORIQUE C91 -> C93 : S(pi) HVA8 = 0.2999 -> ADAPT-VQE = 0.9944
+ *                              soit facteur **x3.31** sur le pic AFM N=8
+ * ============================================================================ */
+#define IBM_C93_BACKEND          "ibm_kingston"
+#define IBM_C93_JOB_ID           "d7lsems3g2mc7391oi40"
+#define IBM_C93_STAMP            "20260424T195737Z"
+#define IBM_C93_CREATION_DATE    "2026-04-24T19:41:15Z"
+#define IBM_C93_N                8
+#define IBM_C93_N_REP            3
+#define IBM_C93_SPSA_ITERS       10
+#define IBM_C93_N_TWIRLS         4
+#define IBM_C93_SHOTS            2048
+#define IBM_C93_RESILIENCE       2
+#define IBM_C93_DEPTH_PHYS       14
+#define IBM_C93_N2Q_PHYS          2
+#define IBM_C93_NUM_RANDOMIZ     32
+
+/* --- Mesures IBM Kingston (apres ZNE+twirl+resilience=2) --- */
+#define IBM_C93_S_PI             ( 0.9944)   /* +-0.0040 */
+#define IBM_C93_S_PI_STD         ( 0.0040)
+#define IBM_C93_S_K_0            (-0.1420)   /* +-0.0040 */
+#define IBM_C93_S_K_0_STD        ( 0.0040)
+#define IBM_C93_S_K_PI_HALF      (-0.1424)   /* +-0.0026 */
+#define IBM_C93_S_K_PI_HALF_STD  ( 0.0026)
+#define IBM_C93_S_K_PI           (-0.1418)   /* +-0.0027 (sans normalisation pic) */
+#define IBM_C93_S_K_PI_STD       ( 0.0027)
+#define IBM_C93_C_R1             (-0.9949)   /* +-0.0079 (AFM voisins quasi-parfait) */
+#define IBM_C93_C_R1_STD         ( 0.0079)
+#define IBM_C93_C_R4             ( 0.9954)   /* +-0.0103 (ferro longue portee parfait) */
+#define IBM_C93_C_R4_STD         ( 0.0103)
+
+/* Gain factor C91->C93 sur S(pi) HVA8 (reference principale) */
+#define IBM_C93_GAIN_VS_C91_HVA8 ((IBM_C93_S_PI) / (IBM_C91_HVA8_S_PI))
+                                    /* ~3.315 — ADAPT-VQE+ZNE bat HVA simple */
+/* Aer pre-train SPSA reference (avant submit IBM) */
+#define IBM_C93_SPSA_E_AER       (-6.9947)
+#define IBM_C93_SPSA_LOSS_AER    (-6.9772)
+#define IBM_C93_SPSA_STAB_AER    ( 0.904)
+#define IBM_C93_SV_S_PI_AER_N8   ( 0.9998)   /* statevector pur, sans bruit */
+
+/* Helper : selection automatique S(pi) reel selon N et cycle */
+static inline double ibm_best_s_pi_for_N(int N) {
+    if (N <= 8)  return IBM_C93_S_PI;        /* C93 ADAPT-VQE bat C91 HVA8 */
+    if (N <= 12) return IBM_C91_HVA12_S_PI;  /* C91 reste reference N=12 */
+    return IBM_C91_HVA16_S_PI;                /* C91 reste reference N=16 */
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -141,18 +141,22 @@ def add_pool_op(qc, op, i, theta):
     elif op == "rzz": qc.rzz(theta, i, i+1)
     else: raise ValueError(op)
 
-def parameter_shift_grad_aer(qc_template, params, theta_vals, hamiltonian, aer, shots=1024):
-    """Calcul gradient parametre-shift sur Aer (rapide). Retourne np.array."""
-    grads = np.zeros(len(theta_vals), dtype=float)
+def parameter_shift_grad_aer(qc_template, params, theta_vals, hamiltonian, aer,
+                              shots=1024, only_last=False):
+    """Calcul gradient parametre-shift sur Aer (rapide). Retourne np.array.
+    Si only_last=True, calcule uniquement le gradient du dernier parametre
+    (acceleration ADAPT-VQE selection)."""
+    n = len(theta_vals)
+    grads = np.zeros(n, dtype=float)
     s = math.pi / 2.0
-    for k in range(len(theta_vals)):
+    from qiskit_aer.primitives import EstimatorV2 as AerEstimator
+    est = AerEstimator()
+    indices = [n - 1] if only_last else range(n)
+    for k in indices:
         plus  = list(theta_vals); plus[k]  += s
         minus = list(theta_vals); minus[k] -= s
         qc_p = qc_template.assign_parameters({params[k_]: v for k_, v in enumerate(plus)})
         qc_m = qc_template.assign_parameters({params[k_]: v for k_, v in enumerate(minus)})
-        # Aer Estimator (rapide local)
-        from qiskit_aer.primitives import EstimatorV2 as AerEstimator
-        est = AerEstimator()
         job = est.run([(qc_p, hamiltonian), (qc_m, hamiltonian)])
         res = job.result()
         ep = float(res[0].data.evs); em = float(res[1].data.evs)
@@ -181,20 +185,25 @@ def adapt_vqe_build(N, hamiltonian, n_rep_max=6, grad_tol=1e-2):
         return qc, params, theta_init, history
 
     aer = AerSimulator()
+    # Probe-theta non nul pour eviter gradient nul a l'etat Neel pur
+    # (les operateurs RXX/RYY commutent trivialement avec |Neel> a theta=0)
+    PROBE_THETA = 0.10
     for layer in range(n_rep_max):
-        # Evalue gradient |dE/dtheta| = 0 pour chaque (op, i) candidat
+        # Evalue gradient |dE/dtheta_test| pour chaque (op, i) candidat
         best = None  # (abs_grad, op, i)
         for i in range(N - 1):
             for op in ADAPT_POOL:
-                # Estimation rapide du gradient via parameter-shift sur theta=0
+                # Estimation rapide du gradient via parameter-shift, theta_test=PROBE
                 qc_test = qc.copy()
                 p_test = ParameterVector(f"probe_{layer}_{i}_{op}", 1)[0]
                 add_pool_op(qc_test, op, i, p_test)
                 try:
-                    g = parameter_shift_grad_aer(qc_test,
-                                                  list(params) + [p_test],
-                                                  list(theta_init) + [0.0],
-                                                  hamiltonian, aer, shots=512)
+                    # only_last=True : 2 evals au lieu de 2*(n+1) -> ADAPT enorme acceleration
+                    g = parameter_shift_grad_aer(
+                        qc_test,
+                        list(params) + [p_test],
+                        list(theta_init) + [PROBE_THETA],
+                        hamiltonian, aer, shots=512, only_last=True)
                     g_new = float(abs(g[-1]))
                 except Exception as e:
                     warn("adapt_grad", f"layer={layer} i={i} op={op} err={e}")
@@ -203,6 +212,17 @@ def adapt_vqe_build(N, hamiltonian, n_rep_max=6, grad_tol=1e-2):
                     best = (g_new, op, i)
         if best is None or best[0] < grad_tol:
             info("adapt_stop", f"layer={layer} grad_max={best[0]:.4e} < tol={grad_tol}")
+            # Fallback : si layer 0 et tout grad nul (etat Neel + tol elevee),
+            # injecte au moins une couche HVA initiale RXX+RYY pour amorcer
+            if layer == 0 and len(params) == 0:
+                info("adapt_seed", "injection couche HVA initiale (RXX+RYY)")
+                for i in range(N - 1):
+                    p1 = ParameterVector(f"seed_xx_{i}", 1)[0]
+                    qc.rxx(p1, i, i+1); params.append(p1); theta_init.append(0.10)
+                    p2 = ParameterVector(f"seed_yy_{i}", 1)[0]
+                    qc.ryy(p2, i, i+1); params.append(p2); theta_init.append(0.10)
+                history.append({"layer": -1, "op": "seed_HVA", "i": -1,
+                                "abs_grad": 0.0, "n_params_added": 2*(N-1)})
             break
         # Ajoute l'operateur gagnant
         new_p = ParameterVector(f"th_{layer}_{best[2]}_{best[1]}", 1)[0]

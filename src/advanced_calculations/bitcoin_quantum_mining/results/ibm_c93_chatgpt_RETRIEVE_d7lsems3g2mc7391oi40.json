@@ -1,0 +1,89 @@
+{
+  "cycle": "C93",
+  "subcycle": "retrieve_chatgpt100",
+  "job_id": "d7lsems3g2mc7391oi40",
+  "backend": "ibm_kingston",
+  "final_status": "DONE",
+  "stamp": "20260424T195737Z",
+  "creation_date": "2026-04-24 19:41:15.324198+00:00",
+  "measurements_ibm": [
+    {
+      "name": "S_pi",
+      "value": 0.9944210861262344,
+      "std": 0.0040111601564956955
+    },
+    {
+      "name": "S_k_0.00",
+      "value": -0.14197826993100696,
+      "std": 0.0040111601564956955
+    },
+    {
+      "name": "S_k_1.57",
+      "value": -0.14238567479056996,
+      "std": 0.0025720246659751223
+    },
+    {
+      "name": "S_k_3.14",
+      "value": -0.1418189310712248,
+      "std": 0.0026736620537643084
+    },
+    {
+      "name": "C_r_1",
+      "value": -0.9949332254984651,
+      "std": 0.007939961372012173
+    },
+    {
+      "name": "C_r_4",
+      "value": 0.9954086695923611,
+      "std": 0.01025169625796202
+    }
+  ],
+  "metadata_pub0": {
+    "shots": "2048",
+    "target_precision": "0.022097086912079608",
+    "circuit_metadata": "{}",
+    "resilience": "{'zne': {'extrapolator': array(['exponential', 'exponential', 'exponential', 'exponential',\n       'exponential', 'exponential'], dtype='<U11')}}",
+    "num_randomizations": "32"
+  },
+  "config_used": {
+    "N": 8,
+    "n_rep": 3,
+    "spsa_iters": 10,
+    "n_twirls": 4,
+    "shots": 2048,
+    "resilience_level": 2,
+    "alpha_stab": 0.1,
+    "beta_var": 0.05
+  },
+  "context": {
+    "adapt_layers_built": 3,
+    "adapt_picks": [
+      {
+        "layer": 0,
+        "op": "rxx",
+        "i": 1,
+        "abs_grad": 0.19967
+      },
+      {
+        "layer": 1,
+        "op": "rxx",
+        "i": 1,
+        "abs_grad": 0.29888
+      },
+      {
+        "layer": 2,
+        "op": "rxx",
+        "i": 1,
+        "abs_grad": 0.39734
+      }
+    ],
+    "spsa_E_final_aer": -6.9947,
+    "spsa_loss_final": -6.9772,
+    "spsa_stab_final": 0.904,
+    "statevector_S_pi_ideal_N8": 0.9998,
+    "transpile_final": {
+      "depth": 14,
+      "n2q": 2
+    }
+  }
+}
