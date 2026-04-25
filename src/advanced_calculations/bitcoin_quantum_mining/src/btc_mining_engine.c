@@ -912,6 +912,12 @@ static void* btc_mining_thread(void* arg) {
     /* Contribution finale au compteur global */
     atomic_fetch_add(&eng->total_hashes, (uint64_t)0); /* flush */
 
+    /* C99 — Cleanup pont neuro (uniquement thread 0 qui l'avait alloué) */
+    if (coupler_bridge && work->thread_id == 0) {
+        nx48_bridge_destroy(coupler_bridge);
+        coupler_bridge = NULL;
+    }
+
     BTC_THREAD_END("btc_mining_worker");
     return NULL;
 }
