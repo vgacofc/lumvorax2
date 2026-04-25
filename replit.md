@@ -1,11 +1,15 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C98** (couplage NX48↔Izhikevich+STDP + hook ASIC↔VORAX, 2026‑04‑25T19:30Z)
-- Précédents : C97 (batch IBM multi-N Trotter-1) — voir `analysechatgpt99.md`
-- C98 livrables : voir `src/.../bitcoin_quantum_mining/CHAT/analysechatgpt100.md` (rapport) + `analysechatgpt101.md` (cahier C99)
-- Modules C98 nouveaux : `src/neural_network/nx48_neuro_coupler.{h,c}` + tests (7/7 OK), patch `src/asic_simulation/asic_quantum_array.c` (+hook VORAX)
-- 🏆 Record NX48 mesuré C98 : **32 bits LZ** (run 190540Z_c48_ubuntu_lvx, loss=0.3768, grad=1.58e-3) — dépasse cible QDayPrize 24 de +33 %
-- ⚠ Contrainte explicite utilisateur : **NX48 doit être COUPLÉ à Izhikevich+STDP, pas substitué** — respecté en C98 via module séparé `nx48_neuro_coupler`
+**Cycle courant : C99** (calibration neuro + ASIC contrôleur + testnet3 RÉEL + DMRG vs IBM, 2026‑04‑25T22:00Z)
+- Précédents : C97/C98 — voir `analysechatgpt99.md`, `100.md` (rapport C98), `101.md` (cahier C99), `102.md` (rapport C99)
+- C99 NOUVEAUX modules : `src/.../bitcoin_quantum_mining/src/nx48_coupler_bridge.{h,c}` (pont non-intrusif) + `tools/btc_testnet3_fetch.py` + `tools/dmrg_trotter1_compare.py`
+- C99 PATCHES critiques : `nx48_neuro_coupler.{h,c}` calibré (gain 30→15 pA, neutre 30 Hz, p90 dynamique, décorrélation 8x8, log JSONL) + `asic_simulation.h`/`asic_quantum_array.c` (+ASIC contrôleur recommend_depth/ansatz/resilience)
+- 🏆 Record NX48 conservé : 32 bits LZ (run 190540Z, loss=0.3768)
+- 🌐 Testnet3 RÉEL branché : tip height=4 945 523, double-SHA256 vérifié ✅ (results/testnet3_tip_C99.json)
+- 📊 DMRG vs IBM C97 : N=8 → S(π)/N=0.7343, N=12 → 0.7247 < IBM C97 0.77-0.81 → **suspicion biais ZNE** (à confirmer N=16/24/32)
+- ✅ Smoke C99 (200 steps) : rate 25-38 Hz (régime RS sain), mod ±0.27, STDP w_spread 0.009→0.026, 39/39 near-miss détectés
+- ✅ ASIC 3 régimes : HW std → depth=12/rxx_brick/resil=1, HW bruyant → depth=1/shallow_he/resil=3, HW idéal → depth=102/resil=0
+- ⚠ Contrainte explicite utilisateur : **NX48 COUPLÉ à Izhikevich+STDP, pas substitué** — respecté C98+C99
 
 ## Stack
 - Backend : Flask + Flask‑SocketIO sur port 5000 (workflow `Start application` = `python main.py`)
