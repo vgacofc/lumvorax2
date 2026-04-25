@@ -1,6 +1,6 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant** : C95 (réalisation bout‑en‑bout, 2026‑04‑25)
+**Cycle courant** : **C96** (corrections P0 Claude/ChatGPT + runner batch IBM multi-N, 2026‑04‑25)
 
 ## Stack
 - Backend : Flask + Flask‑SocketIO sur port 5000 (workflow `Start application` = `python main.py`)

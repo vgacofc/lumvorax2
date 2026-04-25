@@ -221,8 +221,28 @@ static inline double ibm_c91_ghz_fidelity_for_N(int N) {
 #define IBM_C94_E_AER_N16             (-1.8677)
 #define IBM_C94_STAB_AER_N16          (0.918)
 
+/* C96 — Job C94 N=16 RÉCUPÉRÉ via Ubuntu (2026-04-25T18:14Z) :
+ * job_id = d7mbre5qrg3c738l2lt0, backend = ibm_kingston
+ * 6 PUBs mesurés en batch :
+ *   PUB0 (S(π)_ZNE)   = +0.99655 ± 0.00101  ← N=16 record AFM scaling
+ *   PUB1 (S(k=0))     = +0.00322 ± 0.02046
+ *   PUB2 (S(k=π/2))   = +0.00560 ± 0.01558
+ *   PUB3 (E_total)    = +15.9041 ± 0.01483  (proche valeur idéale 16)
+ *   PUB4 (C(r=1))     = -0.99829 ± 0.00271  ← AFM voisins quasi-parfait
+ *   PUB5 (C(r=4))     = +0.99292 ± 0.00498  ← longue portée AFM
+ */
+#define IBM_C94_S_PI_N16              (0.99655)   /* mesure ZNE batch C96 */
+#define IBM_C94_S_PI_N16_STD          (0.00101)
+#define IBM_C94_C_R1_N16              (-0.99829)
+#define IBM_C94_C_R1_N16_STD          (0.00271)
+#define IBM_C94_C_R4_N16              (0.99292)
+#define IBM_C94_C_R4_N16_STD          (0.00498)
+#define IBM_C94_E_TOTAL_N16           (15.9041)
+#define IBM_C94_E_TOTAL_N16_STD       (0.01483)
+#define IBM_C94_RETRIEVE_DATE_N16     "2026-04-25T18:14:18Z"
+/* IBM_C94_S_PI_N16_PENDING n'est PLUS défini -> code peut tester son absence */
 #ifndef IBM_C94_S_PI_N16
-#define IBM_C94_S_PI_N16          (IBM_C91_HVA16_S_PI)  /* placeholder C91 tant que job N=16 != DONE */
+#define IBM_C94_S_PI_N16          (IBM_C91_HVA16_S_PI)  /* fallback si reset */
 #define IBM_C94_S_PI_N16_STD      (IBM_C91_HVA16_S_PI_STD)
 #define IBM_C94_S_PI_N16_PENDING  1
 #endif

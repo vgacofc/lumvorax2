@@ -777,8 +777,15 @@ static void* btc_mining_thread(void* arg) {
             double hashrate_mhs = (elapsed_s > 0)
                 ? (double)total / elapsed_s / 1e6 : 0.0;
             double time_since_impr = (double)(ts_now2 - eng->ts_last_improvement_ns) / 1e9;
-            double coverage_pct    = 100.0 * (double)(total)
-                / (double)(cfg->nonce_end - cfg->nonce_start + 1);
+            /* C96 P0 fix : éviter div/0 et inf si nonce_space déborde uint32_t */
+            uint64_t nonce_space = (cfg->nonce_end >= cfg->nonce_start)
+                ? ((uint64_t)cfg->nonce_end - (uint64_t)cfg->nonce_start + 1ULL)
+                : 0ULL;
+            double coverage_pct = (nonce_space > 0)
+                ? (100.0 * (double)total / (double)nonce_space)
+                : 0.0;
+            if (coverage_pct > 100.0) coverage_pct = 100.0;
+            if (!isfinite(coverage_pct)) coverage_pct = 0.0;
 
             /* C61 : Températures PT-MC lues depuis atomiques NX48 */
             int T_hot_idx  = atomic_load_explicit(&nx48_ctrl_T_hot_idx,  memory_order_relaxed);
