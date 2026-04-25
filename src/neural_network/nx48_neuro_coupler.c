@@ -4,6 +4,7 @@
  * Conformité STANDARD_NAMES.md §M-BTC18-C98 + prompt.txt v2.1.
  */
 #include "nx48_neuro_coupler.h"
+#include "../common/lvx_log_rotate.h"  /* C99 P2 : rotation log 50 Mo auto */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -194,9 +195,9 @@ double nx48_coupler_step_auto(nx48_coupler_t *c,
 int nx48_coupler_log_step_jsonl(const nx48_coupler_t *c, const char *log_path,
                                 int near_miss_event, int leading_zeros) {
     if (!c || !log_path) return -1;
-    FILE *fp = fopen(log_path, "a");
-    if (!fp) return -2;
-    fprintf(fp,
+    /* C99 P2 : écriture via lvx_log_append_jsonl → rotation 50 Mo auto. */
+    char line[512];
+    int n = snprintf(line, sizeof(line),
         "{\"step\":%llu,\"rate_hz\":%.4f,\"mod\":%.4f,\"w_spread\":%.6f,"
         "\"w_mean\":%.6f,\"near_miss\":%d,\"lz\":%d,\"thr\":%d,\"nm_total\":%llu}\n",
         (unsigned long long)c->step_count,
@@ -204,14 +205,12 @@ int nx48_coupler_log_step_jsonl(const nx48_coupler_t *c, const char *log_path,
         c->w_spread_ema, c->w_mean_ema,
         near_miss_event, leading_zeros, c->near_miss_threshold,
         (unsigned long long)c->near_miss_total);
-    fclose(fp);
-    return 0;
+    if (n < 0 || (size_t)n >= sizeof(line)) return -3;
+    return (lvx_log_append_jsonl(log_path, line) == 0) ? 0 : -2;
 }
 
 int nx48_coupler_serialize_jsonl(const nx48_coupler_t *c, const char *path) {
     if (!c || !path) return -1;
-    FILE *fp = fopen(path, "a");
-    if (!fp) return -2;
 
     /* Calcul checksum FNV1a-64 sur les poids */
     uint64_t hash = 0xcbf29ce484222325ULL;
@@ -233,7 +232,9 @@ int nx48_coupler_serialize_jsonl(const nx48_coupler_t *c, const char *path) {
     }
     if (c->net->n_synapses > 0) w_mean /= (double)c->net->n_synapses;
 
-    fprintf(fp,
+    /* C99 P2 : écriture via lvx_log_append_jsonl → rotation 50 Mo auto. */
+    char line[1024];
+    int n = snprintf(line, sizeof(line),
         "{\"run_id\":\"%s\",\"step\":%llu,\"spikes_total\":%llu,"
         "\"mean_rate_hz\":%.6f,\"last_modulation\":%.6f,"
         "\"coupler_active\":%d,\"n_synapses\":%d,"
@@ -246,6 +247,6 @@ int nx48_coupler_serialize_jsonl(const nx48_coupler_t *c, const char *path) {
         c->coupler_active, c->net->n_synapses,
         w_min, w_max, w_mean,
         (unsigned long long)hash);
-    fclose(fp);
-    return 0;
+    if (n < 0 || (size_t)n >= sizeof(line)) return -3;
+    return (lvx_log_append_jsonl(path, line) == 0) ? 0 : -2;
 }

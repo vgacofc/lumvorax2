@@ -1,6 +1,9 @@
-/* nx48_coupler_bridge.c — Implémentation pont NX48↔coupleur (C99). */
+/* nx48_coupler_bridge.c — Implémentation pont NX48↔coupleur (C99).
+ * C99 P2 : tous les écrits log passent par lvx_log_append_jsonl
+ *          (rotation automatique à 50 Mo + purge LRU keep_n=5). */
 #include "nx48_coupler_bridge.h"
 #include "../../../neural_network/nx48_neuro_coupler.h"
+#include "../../../common/lvx_log_rotate.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -27,15 +30,15 @@ nx48_bridge_t *nx48_bridge_create(const char *run_id,
         b->coupler = nx48_coupler_create(run_id, 0.1);
         if (!b->coupler) { free(b); return NULL; }
     }
-    /* Header JSONL (1ère ligne marqueur) si log demandé */
+    /* Header JSONL (1ère ligne marqueur) si log demandé.
+     * C99 P2 : écriture via lvx_log_append_jsonl → rotation 50 Mo auto. */
     if (b->log_path[0]) {
-        FILE *fp = fopen(b->log_path, "a");
-        if (fp) {
-            fprintf(fp, "{\"_marker\":\"nx48_bridge_init\","
-                        "\"run_id\":\"%s\",\"enabled\":%d}\n",
-                    run_id ? run_id : "default", b->enabled);
-            fclose(fp);
-        }
+        char header[512];
+        snprintf(header, sizeof(header),
+                 "{\"_marker\":\"nx48_bridge_init\","
+                 "\"run_id\":\"%s\",\"enabled\":%d}\n",
+                 run_id ? run_id : "default", b->enabled);
+        lvx_log_append_jsonl(b->log_path, header);
     }
     return b;
 }

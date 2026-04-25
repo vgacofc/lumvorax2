@@ -1,7 +1,15 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C99** (calibration neuro + ASIC contrôleur + testnet3 RÉEL + DMRG vs IBM, 2026‑04‑25T22:00Z)
-- Précédents : C97/C98 — voir `analysechatgpt99.md`, `100.md` (rapport C98), `101.md` (cahier C99), `102.md` (rapport C99)
+**Cycle courant : C99 partie 2** (IBM RÉEL exécuté + bridge en prod + rotation log 50 MB, 2026‑04‑25T23:15Z)
+- 🎯 **IBM Heron R2 ibm_fez resilience_lvl=1** : N=8 S(π)/N=**0.6935** (job d7miop43g2mc7392hl10), N=12 S(π)/N=**0.6810** (job d7miq0s3g2mc7392hm90)
+- 🏆 **IBM Heron R2 ibm_fez resilience_lvl=2 (RÉVÉLATION C99 P2)** : N=16 S(π)/N=**0.7155** (job d7mitfit99kc73d2j3ng) ≈ DMRG noiseless 0.7199 (écart <1%)
+- 🚨 **C97 ZNE+twirl 0.77-0.81 = BIAIS POSITIF +0.06 SYSTÉMATIQUE** prouvé : le "plateau AFM" C97 N=16-96 n'existe PAS physiquement, artefact ZNE pairwise sur-correctif
+- 🔬 **État de l'art VRAI Trotter-1 N=16 Heron R2 = 0.72 ± 0.005** (pas 0.79 comme C97 le prétendait)
+- 💰 Quota IBM consommé C99 P2 ≈ 350 s (4 jobs traçables sur portail IBM Quantum)
+- ✅ Patch prod `btc_mining_engine.c` (4 hunks, 24 L) : include bridge + init + modulation ±30% + cleanup, garde `BTC_NX48_COUPLER=1`
+- ✅ Module `src/common/lvx_log_rotate.{h,c}` : rotation 50 MB testée empiriquement (60 MB → archive auto YYYYMMDDTHHMMSSZ + purge LRU keep_n=5)
+- 📚 Rapport partie 2 : `src/.../bitcoin_quantum_mining/CHAT/analysechatgpt103.md` (commandes exactes Replit/Ubuntu fish/IBM/modules anciens)
+- Précédents : C97/C98/C99-P1 — voir `analysechatgpt99.md` à `103.md`
 - C99 NOUVEAUX modules : `src/.../bitcoin_quantum_mining/src/nx48_coupler_bridge.{h,c}` (pont non-intrusif) + `tools/btc_testnet3_fetch.py` + `tools/dmrg_trotter1_compare.py`
 - C99 PATCHES critiques : `nx48_neuro_coupler.{h,c}` calibré (gain 30→15 pA, neutre 30 Hz, p90 dynamique, décorrélation 8x8, log JSONL) + `asic_simulation.h`/`asic_quantum_array.c` (+ASIC contrôleur recommend_depth/ansatz/resilience)
 - 🏆 Record NX48 conservé : 32 bits LZ (run 190540Z, loss=0.3768)
