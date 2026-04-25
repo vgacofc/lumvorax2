@@ -33,8 +33,15 @@ extern "C" {
 #define NX48_COUPLER_N_SYNAPSES   56    /* full-mesh sans self-loop = 8*7 */
 #define NX48_COUPLER_DT_MS        0.5   /* pas Euler stable Izhikevich */
 #define NX48_COUPLER_WINDOW_MS    50.0  /* fenêtre intégration spikes pour rate */
-#define NX48_COUPLER_I_GAIN_PA    30.0  /* 0..1 feature → 0..30 pA stimulant */
-#define NX48_COUPLER_REWARD_PA    50.0  /* injection sur near-miss BTC */
+
+/* ── C99 calibration (correction critique C98) ──────────────────────────────
+ * C98 : gain=30 pA → ~63 Hz observé → SUR-STIMULATION (cible RS = 20-40 Hz).
+ * C99 : gain=15 pA → ~30 Hz attendu = milieu du régime RS optimal Izhikevich. */
+#define NX48_COUPLER_I_GAIN_PA    15.0  /* 0..1 feature → 0..15 pA (C99 calibré) */
+#define NX48_COUPLER_REWARD_PA    25.0  /* récompense réduite proportionnellement */
+
+/* C99 : historique pour seuil near-miss DYNAMIQUE (percentile_90 glissant) */
+#define NX48_COUPLER_LZ_HIST_SIZE 100   /* 100 derniers leading_zeros observés */
 
 typedef struct {
     neural_network_t *net;          /* Réseau Izhikevich + STDP (alloué) */
@@ -44,6 +51,20 @@ typedef struct {
     double            last_modulation; /* Dernier signal renvoyé ∈ [-1,+1] */
     int               coupler_active;  /* 1 = ON, 0 = OFF (A/B testing) */
     char              run_id[64];      /* identifiant run pour logs */
+
+    /* ── C99 : seuil near-miss dynamique (percentile_90 glissant) ─────── */
+    int               lz_history[NX48_COUPLER_LZ_HIST_SIZE];
+    int               lz_history_count;       /* combien remplis */
+    int               lz_history_idx;         /* position circulaire */
+    int               near_miss_threshold;    /* p90 calculé à chaque update */
+    uint64_t          near_miss_total;        /* compteur événements récompense */
+
+    /* ── C99 : matrice 8x8 de décorrélation features (Q1 critique) ─── */
+    double            decorr_W[NX48_COUPLER_N_NEURONS][NX48_COUPLER_N_NEURONS];
+
+    /* ── C99 : poids EWMA pour stats poids synaptiques ──────────────── */
+    double            w_spread_ema;   /* w_max - w_min EWMA */
+    double            w_mean_ema;     /* moyenne EWMA */
 } nx48_coupler_t;
 
 /* ─── API publique ────────────────────────────────────────────────── */
