@@ -83,19 +83,33 @@ void nx48_coupler_set_active(nx48_coupler_t *c, int active);
 /* Pas de simulation : prend les 8 features NX48 (∈[0,1]) + un drapeau
  * near_miss_event (1 si un near-miss BTC vient d'arriver, sinon 0).
  * Retourne le signal de modulation scalaire ∈ [-1, +1] :
- *   = (mean_rate_hz - 20.0) / 20.0   borné dans [-1,+1]
+ *   = (mean_rate_hz - 30.0) / 30.0   borné dans [-1,+1]   (C99 : 30 Hz = neutre)
  *
- * Convention : 20 Hz = neutre (régime regular spiking sain).
- * < 20 Hz → exploration insuffisante (injecter exploration_bias↑)
- * > 20 Hz → suractivation (calmer, exploitation↑)
+ * Convention C99 : 30 Hz = neutre (milieu régime RS sain 20-40 Hz).
+ * < 30 Hz → exploration insuffisante (mod < 0 → exploration↑)
+ * > 30 Hz → suractivation (mod > 0 → exploitation↑)
  *
  * NX48 reste libre d'utiliser ou ignorer ce signal. */
 double nx48_coupler_step(nx48_coupler_t *c,
                          const double features[NX48_COUPLER_N_NEURONS],
                          int near_miss_event);
 
+/* C99 : version automatique qui calcule near_miss à partir du percentile_90
+ * dynamique de l'historique LZ. À utiliser plutôt que nx48_coupler_step()
+ * pour bénéficier du seuil adaptatif (recommandation expert). */
+double nx48_coupler_step_auto(nx48_coupler_t *c,
+                              const double features[NX48_COUPLER_N_NEURONS],
+                              int current_leading_zeros);
+
 /* Sérialise l'état (poids STDP, traces, compteurs) pour audit forensique. */
 int nx48_coupler_serialize_jsonl(const nx48_coupler_t *c, const char *path);
+
+/* C99 : log step JSONL ultra-léger (1 ligne par appel, pour analyse temps réel).
+ * Format :
+ *   {"step":N,"rate_hz":...,"mod":...,"w_spread":...,"near_miss":0|1,"lz":N}
+ * À appeler à chaque pas si log_path != NULL. */
+int nx48_coupler_log_step_jsonl(const nx48_coupler_t *c, const char *log_path,
+                                int near_miss_event, int leading_zeros);
 
 #ifdef __cplusplus
 }

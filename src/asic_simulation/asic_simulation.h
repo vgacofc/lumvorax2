@@ -72,6 +72,36 @@ double asic_quantum_estimated_2q_fidelity(const asic_quantum_array_t *q);
 int asic_quantum_extract_vorax_signal(const asic_quantum_array_t *q,
                                       double signal[ASIC_VORAX_SIGNAL_DIM]);
 
+/* ── C99 — ASIC CONTRÔLEUR (et non plus seulement capteur) ────────────────
+ * Critique experte C98 : « Tu n'utilises pas encore ce signal pour modifier
+ * l'ansatz, adapter depth, choisir topology. → c'est un capteur, pas un
+ * contrôleur. » C99 corrige : ces fonctions FOURNISSENT des recommandations
+ * basées sur l'état hardware. */
+
+/* Recommande la profondeur de circuit max pour atteindre une fidélité totale
+ * cible target_total (ex 0.95). Renvoie depth_max ≥ 0 (entier).
+ *   target_total = F_2q^depth → depth_max = floor(log(target) / log(F_2q))
+ */
+int asic_quantum_recommend_depth(const asic_quantum_array_t *q,
+                                 double target_total_fidelity);
+
+/* Recommande l'ansatz approprié selon les caractéristiques hardware :
+ *   "trotter1"     si depth_useful >= 4 et crosstalk faible (<30 kHz)
+ *   "rxx_brick"    si depth_useful 2-3 et crosstalk modéré
+ *   "single_layer" si depth_useful < 2 (trop bruité pour multi-couches)
+ *   "shallow_he"   si T2 << T1 (déphasage dominant) — Hardware Efficient peu profond
+ * Le buffer de sortie doit faire au moins 32 octets. */
+int asic_quantum_recommend_ansatz(const asic_quantum_array_t *q,
+                                  char ansatz_name[32]);
+
+/* Recommande resilience_level IBM (0-3) :
+ *   0 si F_2q > 0.998         (hardware très propre, bypass mitigation)
+ *   1 si F_2q in [0.99, 0.998] (TREX1 + ZNE)
+ *   2 si F_2q in [0.97, 0.99]  (PEC partial)
+ *   3 si F_2q < 0.97           (PEC full + DD XY4)
+ */
+int asic_quantum_recommend_resilience(const asic_quantum_array_t *q);
+
 /* ============================================================================
  * 3. ASIC IBM Heron R2 (calibré sur ibm_kingston via IBM_C93_*)
  * ============================================================================ */
