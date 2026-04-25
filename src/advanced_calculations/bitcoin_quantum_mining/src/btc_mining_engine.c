@@ -59,6 +59,7 @@
 
 #include "sha256_lumvorax.h"
 #include "nx48_btc_controller.h"
+#include "nx48_coupler_bridge.h"  /* C99 — pont neuro Izhikevich+STDP */
 #include "../include/btc_mining_forensic.h"
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
@@ -552,6 +553,14 @@ static void* btc_mining_thread(void* arg) {
     double delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
     if (delta_nonce < 1.0) delta_nonce = 65536.0; /* valeur par défaut sûre */
     int nx48_disabled = getenv("BTC_NX48_DISABLED") != NULL;
+    /* C99 — Pont neuro Izhikevich+STDP (couplé, pas substitut). Activé si
+     * BTC_NX48_COUPLER=1. Allocation par-thread (1er init thread 0). */
+    nx48_bridge_t* coupler_bridge = NULL;
+    int coupler_active = (!nx48_disabled) && (getenv("BTC_NX48_COUPLER") != NULL);
+    if (coupler_active && work->thread_id == 0) {
+        coupler_bridge = nx48_bridge_create(/*log_path=*/"logs/nx48_bridge_C99.jsonl",
+                                            /*log_every=*/50);
+    }
 
     while (!eng->block_found) {
         /* Vérification durée max */
@@ -804,6 +813,19 @@ static void* btc_mining_thread(void* arg) {
                 T_hot_nx48, T_cold_nx48);
 
             double prob = nx48_disabled ? 0.5 : nx48_btc_predict(eng->nx48, features);
+
+            /* C99 — Modulation neuro ±30% sur exploration_bias (couplée à NX48,
+             * pas substitut). N'agit que si BTC_NX48_COUPLER=1 ET thread 0. */
+            if (coupler_bridge && work->thread_id == 0) {
+                double mod = nx48_bridge_modulate(coupler_bridge, features,
+                                                  eng->best_leading_global);
+                double new_bias = eng->nx48->exploration_bias * (1.0 + 0.30 * mod);
+                if (new_bias < 0.05) new_bias = 0.05;
+                if (new_bias > 0.95) new_bias = 0.95;
+                eng->nx48->exploration_bias = new_bias;
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_mod", mod);
+            }
 
             if (!nx48_disabled && work->thread_id == 0) { /* Un seul thread met à jour NX48 */
                 nx48_btc_update(eng->nx48,
