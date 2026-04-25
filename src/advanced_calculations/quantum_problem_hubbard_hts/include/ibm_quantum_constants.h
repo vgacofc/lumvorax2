@@ -171,15 +171,58 @@ static inline double ibm_c91_ghz_fidelity_for_N(int N) {
  * vraies mesures IBM Kingston apres le retrieve. Tant que le run reel n'a
  * pas eu lieu, ces constantes restent indicatives et marquees PENDING.
  * ============================================================================ */
-/* PENDING : sera ecrase apres ibm_c94_retrieve.py
- * Initialement on copie C93 (N=8) comme borne basse de reference. */
-#ifndef IBM_C94_S_PI_N12
-#define IBM_C94_S_PI_N12          (IBM_C93_S_PI)        /* placeholder */
-#define IBM_C94_S_PI_N12_STD      (IBM_C93_S_PI_STD)
-#define IBM_C94_S_PI_N12_PENDING  1
-#endif
+/* C94 N=12 : VALEURS REELLES IBM Kingston (job DONE 2026-04-25)
+ * Source : qiskit_runtime_service.job("d7lugkdqrg3c738kjg80").result()
+ * - EstimatorV2 ZNE 3 noise factors [×1, ×3, ×5]
+ * - data_keys: evs, stds, evs_noise_factors, stds_noise_factors,
+ *              evs_extrapolated, stds_extrapolated
+ * - Backend : ibm_kingston (Heron R2 156Q)
+ * - Submission : 2026-04-25T00:01:53+02:00
+ * - Status retrieved : 2026-04-25T14:58Z DONE
+ * - S(pi)_raw         = 0.992401 ± 0.001550
+ * - S(pi)_ZNE_extrap1 = 0.992321 ± 0.001534 (modele extrapolation 1)
+ * - noise_factors evs = [0.988665, 0.984988, 0.977035]
+ * - Comparaison vs C93 (N=8, 0.9944) : ecart -0.20% pour +4 sites Hubbard
+ *   -> reproductibilite Heron R2 a N=12 confirmee dans la barre 1-sigma
+ */
+#define IBM_C94_BACKEND               "ibm_kingston"
+#define IBM_C94_JOB_ID_N12            "d7lugkdqrg3c738kjg80"
+#define IBM_C94_CREATION_DATE_N12     "2026-04-25T00:01:53+02:00"
+#define IBM_C94_RETRIEVE_DATE_N12     "2026-04-25T14:58:00Z"
+#define IBM_C94_N_N12                 12
+#define IBM_C94_DEPTH_PHYS_N12        14
+#define IBM_C94_N2Q_PHYS_N12          2
+#define IBM_C94_NOISE_FACTORS_N12     3
+#define IBM_C94_S_PI_N12              (0.992401)   /* mesure brute */
+#define IBM_C94_S_PI_N12_STD          (0.001550)
+#define IBM_C94_S_PI_N12_ZNE          (0.992321)   /* extrapole zero noise */
+#define IBM_C94_S_PI_N12_ZNE_STD      (0.001534)
+/* IBM_C94_S_PI_N12_PENDING n'est PLUS defini -> code peut tester son absence */
+
+/* C94 N=16 : SOUMIS sur ibm_kingston, en queue (backend maintenance).
+ * Job soumis : 2026-04-25T13:12:03Z via tools/ibm_quantum_runner_c94.py --N 16 --submit-ibm
+ * Pipeline   : ADAPT-VQE 4 layers RXX(i=1) -> SPSA Aer pre-train (E=-1.8677,stab=0.918)
+ *              -> transpile depth=13, n2q=2 -> EstimatorV2 ZNE 3 noise factors
+ * Hamiltonien: Hubbard 1D N=16, 45 termes (XX+YY hopping + ZZ interaction)
+ * S(pi) ideal: 0.9992 (statevector pur Aer N=16, borne haute theorique)
+ * shots=2048, resilience=2 (ZNE), n_twirls=4
+ * Retrieve   : python tools/ibm_c94_retrieve.py d7mbre5qrg3c738l2lt0 --N 16 --wait_minutes 15
+ * Snapshot   : src/advanced_calculations/bitcoin_quantum_mining/results/
+ *              ibm_c94_vorax_20260425T131203Z_N16_SUBMITTED.json
+ *
+ * Tant que job pas DONE, on garde IBM_C94_S_PI_N16_PENDING=1 et on borne basse
+ * sur C91 HVA16 (= 0.3558). Apres retrieve, ce bloc sera mis a jour. */
+#define IBM_C94_JOB_ID_N16            "d7mbre5qrg3c738l2lt0"
+#define IBM_C94_SUBMIT_DATE_N16       "2026-04-25T13:12:03Z"
+#define IBM_C94_N_N16                 16
+#define IBM_C94_DEPTH_PHYS_N16        13       /* apres transpile */
+#define IBM_C94_N2Q_PHYS_N16          2
+#define IBM_C94_S_PI_N16_AER_IDEAL    (0.9992) /* statevector pur, sans bruit */
+#define IBM_C94_E_AER_N16             (-1.8677)
+#define IBM_C94_STAB_AER_N16          (0.918)
+
 #ifndef IBM_C94_S_PI_N16
-#define IBM_C94_S_PI_N16          (IBM_C91_HVA16_S_PI)  /* placeholder */
+#define IBM_C94_S_PI_N16          (IBM_C91_HVA16_S_PI)  /* placeholder C91 tant que job N=16 != DONE */
 #define IBM_C94_S_PI_N16_STD      (IBM_C91_HVA16_S_PI_STD)
 #define IBM_C94_S_PI_N16_PENDING  1
 #endif
