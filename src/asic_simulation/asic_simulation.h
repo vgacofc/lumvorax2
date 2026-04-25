@@ -55,6 +55,23 @@ void asic_quantum_set_uniform_params(asic_quantum_array_t *q,
                                      double g1, double g2);
 double asic_quantum_estimated_2q_fidelity(const asic_quantum_array_t *q);
 
+/* ── C98 — Hook VORAX (homogénéisation pipeline ASIC ↔ VORAX, audit C97.7) ──
+ * Extrait un vecteur signal compact à partir de l'état ASIC quantique :
+ *   signal[0] = F_2q estimé
+ *   signal[1] = T1_us / T2_us (ratio cohérence)
+ *   signal[2] = gate_2q_us / gate_1q_us (ratio temporel)
+ *   signal[3] = crosstalk_zz_kHz normalisé (/100)
+ *   signal[4] = readout_fidelity
+ *   signal[5] = depth max sans dépasser F_2q^depth = 0.99 (profondeur utile)
+ *   signal[6] = checksum FNV1a-64 normalisé (/2^64) pour audit forensique
+ *   signal[7] = n_qubits / 256 (taille système normalisée)
+ *
+ * Cette fonction permet à VORAX (vorax_kernel) de consommer l'état ASIC
+ * via correlation_vector_t sans dépendre du module quantum_problem_hubbard_hts. */
+#define ASIC_VORAX_SIGNAL_DIM 8
+int asic_quantum_extract_vorax_signal(const asic_quantum_array_t *q,
+                                      double signal[ASIC_VORAX_SIGNAL_DIM]);
+
 /* ============================================================================
  * 3. ASIC IBM Heron R2 (calibré sur ibm_kingston via IBM_C93_*)
  * ============================================================================ */

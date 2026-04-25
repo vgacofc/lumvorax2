@@ -51,3 +51,39 @@ double asic_quantum_estimated_2q_fidelity(const asic_quantum_array_t *q) {
     if (T_eff <= 0.0) return 0.0;
     return exp(-q->gate_2q_us / T_eff);
 }
+
+/* ── C98 — Hook VORAX (audit C97.7 résolu) ───────────────────────────────── */
+#include <stdint.h>
+
+int asic_quantum_extract_vorax_signal(const asic_quantum_array_t *q,
+                                      double signal[ASIC_VORAX_SIGNAL_DIM]) {
+    if (!q || !signal) return -1;
+
+    const double F2q = asic_quantum_estimated_2q_fidelity(q);
+    signal[0] = F2q;
+    signal[1] = (q->T2_us > 0.0) ? q->T1_us / q->T2_us : 0.0;
+    signal[2] = (q->gate_1q_us > 0.0) ? q->gate_2q_us / q->gate_1q_us : 0.0;
+    signal[3] = q->crosstalk_zz_kHz / 100.0;
+    signal[4] = q->readout_fidelity;
+
+    /* Profondeur utile : depth_max tel que F_2q^depth ≥ 0.99 */
+    if (F2q >= 1.0 || F2q <= 0.0) {
+        signal[5] = 0.0;
+    } else {
+        signal[5] = log(0.99) / log(F2q);
+    }
+
+    /* Checksum FNV1a-64 sur la grille de fréquences pour audit forensique */
+    const int n = q->n_rows * q->n_cols;
+    uint64_t hash = 0xcbf29ce484222325ULL;
+    for (int i = 0; i < n; ++i) {
+        const unsigned char *p = (const unsigned char *)&q->qubit_freq_GHz[i];
+        for (size_t k = 0; k < sizeof(double); ++k) {
+            hash ^= p[k];
+            hash *= 0x100000001b3ULL;
+        }
+    }
+    signal[6] = (double)hash / 1.8446744073709552e19;  /* normalisé 2^64 */
+    signal[7] = (double)n / 256.0;
+    return 0;
+}

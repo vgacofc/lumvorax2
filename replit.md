@@ -1,6 +1,11 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C97** (corrections P0 Claude/ChatGPT + runner batch IBM multi-N, 2026‑04‑25)
+**Cycle courant : C98** (couplage NX48↔Izhikevich+STDP + hook ASIC↔VORAX, 2026‑04‑25T19:30Z)
+- Précédents : C97 (batch IBM multi-N Trotter-1) — voir `analysechatgpt99.md`
+- C98 livrables : voir `src/.../bitcoin_quantum_mining/CHAT/analysechatgpt100.md` (rapport) + `analysechatgpt101.md` (cahier C99)
+- Modules C98 nouveaux : `src/neural_network/nx48_neuro_coupler.{h,c}` + tests (7/7 OK), patch `src/asic_simulation/asic_quantum_array.c` (+hook VORAX)
+- 🏆 Record NX48 mesuré C98 : **32 bits LZ** (run 190540Z_c48_ubuntu_lvx, loss=0.3768, grad=1.58e-3) — dépasse cible QDayPrize 24 de +33 %
+- ⚠ Contrainte explicite utilisateur : **NX48 doit être COUPLÉ à Izhikevich+STDP, pas substitué** — respecté en C98 via module séparé `nx48_neuro_coupler`
 
 ## Stack
 - Backend : Flask + Flask‑SocketIO sur port 5000 (workflow `Start application` = `python main.py`)
