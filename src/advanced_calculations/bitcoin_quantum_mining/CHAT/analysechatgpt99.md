@@ -321,3 +321,105 @@ ajout des macros (lignes 227-251) :
 → 2 chemins pour C97.1 (submit batch [16,24,32,48,64,96,128,156]) :
 - (A) ancienne clé : 80-100 s estimés, marge 46-66 s. Risqué mais faisable.
 - (B) nouvelle clé `vgaccodex01` : 600 s frais, marge confortable.
+
+---
+
+# CYCLE C97 — BATCH IBM MULTI-N COMPLET (2026-04-25T17:00Z)
+
+## C97.1 ✅ Submit batch IBM multi-N [16, 24, 32, 48, 64, 96, 128, 156]
+
+**Job IBM** : `d7mf66tqrg3c738l6gq0`
+**Backend** : `ibm_kingston` (156 qubits Heron R2, 0 queue à submit)
+**Ansatz** : Néel + 1 Trotter step (RXX(0.30) + RZZ(0.30), brickwork pair/impair)
+**Shots** : 4096 / PUB | **Resilience** : 1 (ZNE+TREX1) | **Dyn. decoupling** : XY4
+**Total** : 8 PUBs × 6 observables = 48 valeurs réelles en UN SEUL submit (objectif user)
+**Quota consommé** : ~430 s (transpilation incluse) + ~30 s exécution réelle hardware
+
+## C97.2 ✅ Extraction observables — RÉSULTATS BRUTS RÉELS
+
+| N | S(π) brut | S(π)/N | C(r=1) | C(r=4) | E_total | std S(π) |
+|---:|---:|---:|---:|---:|---:|---:|
+| 16  | 12.374 | **0.7734** | -0.9001 | +0.8241 | 13.501 | 0.022 |
+| 24  | 18.889 | **0.7870** | -0.8976 | +0.8023 | 20.646 | 0.016 |
+| 32  | 25.789 | **0.8059** | -0.9058 | +0.8099 | 28.080 | 0.017 |
+| 48  | 38.881 | **0.8100** | -0.9145 | +0.8305 | 42.980 | 0.019 |
+| 64  | 50.948 | **0.7961** | -0.8872 | +0.8049 | 55.891 | 0.017 |
+| 96  | 77.576 | **0.8081** | -0.8875 | +0.7969 | 84.317 | 0.021 |
+| 128 | 81.278 | **0.6350** | -0.7425 | +0.6332 | 94.298 | 0.061 |
+| 156 | 85.152 | **0.5458** | -0.6420 | +0.5470 | 99.516 | 0.101 |
+
+### Lecture honnête
+
+1. **Plateau N=16-96** : S(π)/N stable autour 0.78-0.81 → l'AFM Trotter-1 est
+   préservé sans perte mesurable. C(r=1) reste autour -0.89, C(r=4) autour +0.80.
+2. **Décrochage brutal à N=128** : S(π)/N tombe à 0.635 (-22 %), C(r=1) à -0.74.
+   Le bruit hardware (depth=45, ops_2q=281) commence à dominer.
+3. **Limite physique IBM 156Q** : N=156 atteint mais S(π)/N=0.546, C(r=1)=-0.64,
+   STD multipliée par 5. C'est la limite **dure** de l'Open Plan sans error
+   correction sur Heron R2. Pour N > 156 il faut Flamingo (2027+) ou Quantinuum
+   (1024Q en 2030).
+4. **Important — comparabilité avec C94** : Le C94 N=16 (S(π)=0.997 ZNE) utilisait
+   un ansatz ADAPT-VQE optimisé, alors que C97.1 utilise un Trotter-1 fixe pour
+   pouvoir scanner 8 tailles en 1 submit. La baisse de S(π)/N à 0.77 vs 0.997
+   reflète **l'absence d'optimisation variationnelle**, pas une dégradation hardware.
+
+## C97.3 ✅ Comparaison classique DMRG/ED Heisenberg ground state
+
+ED exacte sur N=6,8,10,12,14 (lourd : 2^14 = 16K dim) :
+
+| N | E_ground | S(π) brut | S(π)/N | C(r=1) | dt (s) |
+|---:|---:|---:|---:|---:|---:|
+| 6  | -9.974  | 1.660 | 0.277 | -0.665 | 0.26 |
+| 8  | -13.500 | 2.077 | 0.260 | -0.643 | 0.77 |
+| 10 | -17.032 | 2.286 | 0.229 | -0.631 | 1.62 |
+| 12 | -20.568 | 2.464 | 0.205 | -0.623 | 2.26 |
+| 14 | -24.107 | 2.619 | 0.187 | -0.618 | 4.89 |
+
+**Lecture** : Le **ground state Heisenberg AFM 1D** N'A PAS d'ordre Néel
+à long-range (Mermin-Wagner) → S(π)/N décroît en 1/log(N), C(r=1) tend vers
+-0.620 (limite Bethe-Bonner-Fisher). Cohérent avec littérature.
+
+**Conclusion comparaison** : IBM C97.1 mesure un *état Néel forcé sous Trotter-1*
+(préserve l'ordre extensive S(π)~N), alors que DMRG mesure le *vrai ground state*
+(S(π) sub-extensive). Les deux résultats sont **valides et complémentaires** —
+mais on NE PEUT PAS dire « S(π)_IBM > S(π)_classique signifie qu'IBM bat le classique ».
+Pour comparer rigoureusement il faut soit (a) Aer/Statevector du même circuit IBM,
+soit (b) DMRG du même Hamiltonien évolué. À faire en C98.
+
+## C97.4 ⚠ A/B NX48 on/off — pas de runs récents disponibles
+
+`logs/ubuntu/` est VIDE sur Ubuntu (les runs cités dans scratchpad C96 ne sont
+pas dans ce répertoire, ils ont peut-être été purgés ou stockés ailleurs).
+
+**Action C98** : lancer un nouveau run NX48 contrôlé (50 epochs avec NX48 actif,
+50 epochs sans), comparer loss et throughput. Estimation 10 min Ubuntu.
+
+## C97.5 ⏸ Bloc atomique pore Na_v 1.5 — REPORTÉ C98 (P2)
+
+Modèle MD ~9000 atomes via OpenMM sur Ubuntu non lancé. Demande installation
+OpenMM + force field (Amber14 + ions calibrated) + équilibration NPT 1 ns
+(~30 min GPU). Reporté C98 pour rester dans scope C97.
+
+## C97.6 ⏸ Substitution NX48 → Izhikevich+STDP — REPORTÉ C98 (P2)
+
+Proof of concept demande ~300 lignes C nouvelles (modèle Izhikevich avec a,b,c,d
+params + STDP window + intégration au pipeline mining_engine). Reporté C98.
+
+## C97.7 ✅ Audit LUM DBMS / VORAX intégration
+
+| Module | .c | .h | Lignes | Liens VORAX |
+|---|---:|---:|---:|---|
+| `src/vorax/` | 2 | 2 | 695 | (kernel central) |
+| `src/blockchain_lumvorax/` | 4 | 1 | 414 | `#include "vorax_kernel.h"` |
+| `src/advanced_calculations/quantum_problem_hubbard_hts/lumvorax/` | 18 | 23 | 9846 | gros sous-module |
+| `src/advanced_calculations/bitcoin_quantum_mining/src/` | 5 | — | — | btc_block_validator, btc_mining_engine, btc_wallet, main_btc_mining, nx48_btc_controller (5/5 fichiers utilisent vorax) |
+| `src/asic_simulation/` | — | — | — | **0 lien VORAX (à corriger)** |
+
+**Action recommandée C98** : ajouter `vorax_kernel_extract_signal()` dans
+`asic_quantum_array.c` pour homogénéiser le pipeline ASIC ↔ VORAX.
+
+## C97.8 ⏸ Auto-push GitHub via clé SSH — DÉLÉGUÉ project task
+
+Script `generate_ssh_key.sh` activé en C96 (113 L). Clé `~/.ssh/id_ed25519`
+existe sur Ubuntu (mode 0600). Reste à committer + pusher (4 fichiers modifiés).
+Délégué au workflow user (filtre Replit interdit `git push` au main agent).

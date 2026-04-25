@@ -1,0 +1,51 @@
+import numpy as np
+import scipy.sparse as sp
+import scipy.sparse.linalg as spla
+import json, time
+from datetime import datetime, timezone
+def heisenberg_afm_1d(N, J=1.0, h_stagg=0.0):
+    sx = sp.csr_matrix([[0,1],[1,0]],dtype=np.float64)
+    sy = sp.csr_matrix([[0,-1j],[1j,0]],dtype=np.complex128)
+    sz = sp.csr_matrix([[1,0],[0,-1]],dtype=np.float64)
+    I  = sp.eye(2,format='csr')
+    def opi(op,i):
+        out=sp.eye(1,format='csr',dtype=op.dtype)
+        for k in range(N):
+            out=sp.kron(out,op if k==i else I,format='csr')
+        return out
+    H=sp.csr_matrix((2**N,2**N),dtype=np.complex128)
+    for i in range(N-1):
+        H = H + (opi(sx,i)@opi(sx,i+1) + opi(sy,i)@opi(sy,i+1) + opi(sz,i)@opi(sz,i+1))*J
+    if h_stagg!=0:
+        for i in range(N):
+            H = H + h_stagg*((-1)**i)*opi(sz,i)
+    return H, [opi(sz,i) for i in range(N)]
+def measure(psi, sz_ops, N):
+    psi = psi.flatten()
+    zexp = np.array([float(np.real(psi.conj()@(op@psi))) for op in sz_ops])
+    zzexp = np.zeros((N,N))
+    for i in range(N):
+        for j in range(N):
+            if i==j: zzexp[i,j]=1.0
+            else: zzexp[i,j] = float(np.real(psi.conj()@(sz_ops[i]@(sz_ops[j]@psi))))
+    S_pi = sum(((-1)**(i-j))*zzexp[i,j] for i in range(N) for j in range(N) if i!=j)/N
+    S_0  = sum(zzexp[i,j] for i in range(N) for j in range(N) if i!=j)/N
+    S_pi2= sum(np.cos(np.pi/2*(i-j))*zzexp[i,j] for i in range(N) for j in range(N) if i!=j)/N
+    Cr1  = sum(zzexp[i,i+1] for i in range(N-1))/(N-1)
+    Cr4  = sum(zzexp[i,i+4] for i in range(N-4))/(N-4) if N>4 else 0.0
+    Etot = sum(zzexp[i,i+1] for i in range(N-1))*(-1.0)
+    return dict(S_pi=S_pi, S_0=S_0, S_pi2=S_pi2, C_r1=Cr1, C_r4=Cr4, E_total=Etot, mag=float(np.mean(zexp)))
+results = {"cycle":"C97.3","started":datetime.now(timezone.utc).isoformat(),"runs":[]}
+for N in [6,8,10,12,14]:
+    t0=time.time()
+    print(f"[C97.3] N={N} ED ...", flush=True)
+    H, sz_ops = heisenberg_afm_1d(N)
+    e0,v0 = spla.eigsh(H, k=1, which='SA')
+    psi = v0[:,0]
+    m = measure(psi, sz_ops, N)
+    m["N"]=N; m["E_ground"]=float(np.real(e0[0])); m["dt_s"]=round(time.time()-t0,2)
+    print(f"[C97.3]   N={N}: E0={m['E_ground']:.4f}  S(pi)={m['S_pi']:.4f}  C(r=1)={m['C_r1']:.4f}  dt={m['dt_s']}s", flush=True)
+    results["runs"].append(m)
+results["finished"]=datetime.now(timezone.utc).isoformat()
+with open("/tmp/c97_3_dmrg_results.json","w") as f: json.dump(results,f,indent=2,default=float)
+print(json.dumps(results,indent=2,default=float))

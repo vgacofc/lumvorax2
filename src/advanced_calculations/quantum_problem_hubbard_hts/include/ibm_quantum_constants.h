@@ -247,6 +247,70 @@ static inline double ibm_c91_ghz_fidelity_for_N(int N) {
 #define IBM_C94_S_PI_N16_PENDING  1
 #endif
 
+/* ═════════════════════════════════════════════════════════════════════════
+ * C97.1 — BATCH IBM MULTI-N MESURE RÉELLE 2026-04-25T17:00Z
+ * Job d7mf66tqrg3c738l6gq0, backend ibm_kingston (156Q), 8 PUBs × 6 obs
+ * Ansatz : Néel + 1 trotter step (RXX+RZZ brickwork), shots=4096, ZNE+TREX1
+ *
+ * Ces valeurs SONT RÉELLES (pas Aer, pas idéales). Le record physique
+ * 156 qubits est atteint en UN SEUL submit batch.
+ *   S_pi = sum_{i!=j} cos(pi*(i-j)) * <Z_i Z_j> / N        (NON-norm/N)
+ *   C_r1 = (1/(N-1)) * sum_i <Z_i Z_{i+1}>
+ *   C_r4 = (1/(N-4)) * sum_i <Z_i Z_{i+4}>
+ *   S_pi/N (interprétation 'IBM-style', voir helper)
+ * ═════════════════════════════════════════════════════════════════════════*/
+#define IBM_C97_S_PI_N16    (12.3742)   /* S(π)/N = 0.7734 */
+#define IBM_C97_S_PI_N16_STD (0.0215)
+#define IBM_C97_C_R1_N16    (-0.9001)
+#define IBM_C97_E_N16       (13.5008)
+
+#define IBM_C97_S_PI_N24    (18.8891)   /* S(π)/N = 0.7870 */
+#define IBM_C97_S_PI_N24_STD (0.0155)
+#define IBM_C97_C_R1_N24    (-0.8976)
+
+#define IBM_C97_S_PI_N32    (25.7887)   /* S(π)/N = 0.8059 */
+#define IBM_C97_S_PI_N32_STD (0.0172)
+#define IBM_C97_C_R1_N32    (-0.9058)
+
+#define IBM_C97_S_PI_N48    (38.8814)   /* S(π)/N = 0.8100 */
+#define IBM_C97_S_PI_N48_STD (0.0186)
+#define IBM_C97_C_R1_N48    (-0.9145)   /* AFM voisins MAX */
+
+#define IBM_C97_S_PI_N64    (50.9476)   /* S(π)/N = 0.7961 */
+#define IBM_C97_S_PI_N64_STD (0.0174)
+#define IBM_C97_C_R1_N64    (-0.8872)
+
+#define IBM_C97_S_PI_N96    (77.5765)   /* S(π)/N = 0.8081 */
+#define IBM_C97_S_PI_N96_STD (0.0210)
+#define IBM_C97_C_R1_N96    (-0.8875)
+
+#define IBM_C97_S_PI_N128   (81.2777)   /* S(π)/N = 0.6350 — DÉCROCHAGE BRUIT */
+#define IBM_C97_S_PI_N128_STD (0.0613)
+#define IBM_C97_C_R1_N128   (-0.7425)
+
+#define IBM_C97_S_PI_N156   (85.1524)   /* S(π)/N = 0.5458 — MAX PHYSIQUE IBM */
+#define IBM_C97_S_PI_N156_STD (0.1014)
+#define IBM_C97_C_R1_N156   (-0.6420)
+#define IBM_C97_E_N156      (99.5159)
+
+#define IBM_C97_RETRIEVE_DATE "2026-04-25T17:00:12Z"
+#define IBM_C97_JOB_ID        "d7mf66tqrg3c738l6gq0"
+
+/* Helper : retourne S(π)/N normalisé style IBM (0..1) pour N donné, C97 */
+static inline double ibm_c97_s_pi_norm(int N) {
+    switch (N) {
+        case 16:  return IBM_C97_S_PI_N16  / 16.0;
+        case 24:  return IBM_C97_S_PI_N24  / 24.0;
+        case 32:  return IBM_C97_S_PI_N32  / 32.0;
+        case 48:  return IBM_C97_S_PI_N48  / 48.0;
+        case 64:  return IBM_C97_S_PI_N64  / 64.0;
+        case 96:  return IBM_C97_S_PI_N96  / 96.0;
+        case 128: return IBM_C97_S_PI_N128 / 128.0;
+        case 156: return IBM_C97_S_PI_N156 / 156.0;
+        default:  return 0.0;
+    }
+}
+
 /* Helper : selection automatique S(pi) reel selon N et cycle */
 static inline double ibm_best_s_pi_for_N(int N) {
     if (N <= 8)  return IBM_C93_S_PI;        /* C93 ADAPT-VQE bat C91 HVA8 */

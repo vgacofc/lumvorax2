@@ -1,6 +1,6 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant** : **C96** (corrections P0 Claude/ChatGPT + runner batch IBM multi-N, 2026‑04‑25)
+**Cycle courant : C97** (corrections P0 Claude/ChatGPT + runner batch IBM multi-N, 2026‑04‑25)
 
 ## Stack
 - Backend : Flask + Flask‑SocketIO sur port 5000 (workflow `Start application` = `python main.py`)
@@ -54,7 +54,7 @@
 - Sandbox seccomp tue les binaires C lourds après ~60 s → tests longs sur Ubuntu obligatoires
 - Workflow `Start application` doit être `python main.py` (PAS gunicorn)
 
-## Prochaines étapes (C96)
+## Prochaines étapes (C98)
 1. Patch `btc_nonce_coverage_pct = inf` dans `btc_qm_engine.c`
 2. Recalibrer `ibm_heron_r2_model.c` avec F_2q = 0.999 (au lieu de 0.996)
 3. Soumettre IBM N=14 ou N=16 (consommer le budget restant ~146 s)
