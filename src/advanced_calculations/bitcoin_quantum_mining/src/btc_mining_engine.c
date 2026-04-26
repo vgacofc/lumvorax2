@@ -60,6 +60,7 @@
 #include "sha256_lumvorax.h"
 #include "nx48_btc_controller.h"
 #include "nx48_coupler_bridge.h"  /* C99 — pont neuro Izhikevich+STDP */
+#include "nx48_alltime_record.h"  /* C100 — persistance MONOTONE record absolu */
 #include "../include/btc_mining_forensic.h"
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
@@ -410,8 +411,34 @@ static btc_engine_t* engine_create(const btc_engine_config_t* cfg) {
 
     memcpy(&eng->cfg, cfg, sizeof(btc_engine_config_t));
     atomic_store(&eng->total_hashes, 0);
-    eng->best_leading_global      = 0;
-    eng->best_nonce_global        = 0;
+
+    /* C100-FIX-PERSIST-MONO : recharge le record absolu monotone du run précédent
+     * pour ne JAMAIS redescendre en dessous (bug C99 : best=37 perdu, redémarre à 32).
+     * Source : config/btc_nx48_alltime.csv (CSV monotone strictement croissant).
+     * Le best_leading_global est seedé à la valeur historique pour que les
+     * comparaisons "if (lz > best_leading_global)" ne valident QUE de vrais records. */
+    {
+        nx48_alltime_record_t alltime;
+        const char *altpath = NX48_ALLTIME_DEFAULT_PATH;
+        if (nx48_alltime_load(altpath, &alltime) == 0
+            && alltime.best_lz_alltime > 0) {
+            eng->best_leading_global = alltime.best_lz_alltime;
+            eng->best_nonce_global   = alltime.best_nonce_alltime;
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_alltime_seed_lz", (double)alltime.best_lz_alltime);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_alltime_seed_upd_count", (double)alltime.update_count);
+            printf("[C100-ALLTIME] seed best_lz_alltime=%d nonce=%u upd_count=%llu "
+                   "(historique préservé)\n",
+                   alltime.best_lz_alltime,
+                   (unsigned)alltime.best_nonce_alltime,
+                   (unsigned long long)alltime.update_count);
+        } else {
+            eng->best_leading_global = 0;
+            eng->best_nonce_global   = 0;
+            printf("[C100-ALLTIME] aucun record absolu antérieur — seed à 0\n");
+        }
+    }
     eng->block_found              = 0;
     eng->ts_start_ns              = eng_ts_ns();
     eng->ts_last_improvement_ns   = eng->ts_start_ns;
@@ -558,8 +585,13 @@ static void* btc_mining_thread(void* arg) {
     nx48_bridge_t* coupler_bridge = NULL;
     int coupler_active = (!nx48_disabled) && (getenv("BTC_NX48_COUPLER") != NULL);
     if (coupler_active && work->thread_id == 0) {
-        coupler_bridge = nx48_bridge_create(/*log_path=*/"logs/nx48_bridge_C99.jsonl",
-                                            /*log_every=*/50);
+        /* C100-FIX : signature corrigée nx48_bridge_create(run_id, use_neural, log_path).
+         * AVANT : appel à 2 args (log_path, log_every) → too few arguments → build break.
+         * APRES : 3 args conformes au header nx48_coupler_bridge.h L30. */
+        coupler_bridge = nx48_bridge_create(
+            cfg->run_id[0] ? cfg->run_id : "btc_anon",
+            /*use_neural=*/1,
+            /*log_path=*/"logs/nx48_bridge_C99.jsonl");
     }
 
     while (!eng->block_found) {
@@ -739,6 +771,50 @@ static void* btc_mining_thread(void* arg) {
                      * Ref : rapport forensique C40 §BUG-P0-CSV — 2026-04-13 */
                     if (eng->nx48 && cfg->nx48_csv[0])
                         nx48_btc_save_csv(eng->nx48, cfg->nx48_csv);
+
+                    /* C100-FIX-PERSIST-MONO : maj record absolu monotone GLOBAL
+                     * (jamais décroissant inter-run, atomique, verrou fcntl).
+                     * Le btc_nx48_last.csv est volatil par run — on a besoin
+                     * d'un compteur monotone strictement croissant pour
+                     * (a) ne PAS redémarrer à 32 quand on a déjà atteint 37,
+                     * (b) pousser le record en temps réel via WebSocket. */
+                    {
+                        char hdr_hex[NX48_ALLTIME_HEADER_HEX_LEN] = {0};
+                        const uint8_t *hp = (const uint8_t*)&cfg->header_template;
+                        for (int hi = 0; hi < 80; hi++) {
+                            snprintf(hdr_hex + hi*2, 3, "%02x", hp[hi]);
+                        }
+                        const char *wallet_env = getenv("BTC_WALLET_ADDRESS");
+                        int upd_rc = nx48_alltime_try_update(
+                            NX48_ALLTIME_DEFAULT_PATH,
+                            res.leading_zeros,
+                            nonce,
+                            hdr_hex,
+                            (wallet_env && wallet_env[0]) ? wallet_env : "-",
+                            cfg->run_id);
+                        if (upd_rc == 1) {
+                            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                "btc_alltime_record_updated",
+                                (double)res.leading_zeros);
+                            printf("[C100-ALLTIME] NOUVEAU RECORD ABSOLU lz=%d "
+                                   "nonce=%u → btc_nx48_alltime.csv\n",
+                                   res.leading_zeros, nonce);
+                            /* Hook fichier sentinelle pour push WebSocket
+                             * (l'agent Ubuntu surveille ce JSONL et pousse). */
+                            FILE *jl = fopen(
+                                "logs/forensic/nano/nx48_records_push.jsonl", "a");
+                            if (jl) {
+                                fprintf(jl,
+                                    "{\"event\":\"new_record\",\"lz\":%d,"
+                                    "\"nonce\":%u,\"run_id\":\"%s\","
+                                    "\"ts\":%lld}\n",
+                                    res.leading_zeros, nonce,
+                                    cfg->run_id ? cfg->run_id : "anon",
+                                    (long long)time(NULL));
+                                fclose(jl);
+                            }
+                        }
+                    }
                 }
                 pthread_mutex_unlock(&eng->global_mutex);
             }

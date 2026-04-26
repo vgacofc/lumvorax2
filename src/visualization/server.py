@@ -697,6 +697,133 @@ def ws_forensic_batch(data):
     emit("forensic_batch_ack", {"ok": True, "ingested": count})
 
 
+# ── NX48 alltime record — push WebSocket Ubuntu↔Replit (C100) ───────────────
+# Persistance JSONL côté serveur du record absolu monotone strictement croissant.
+# Source : config/btc_nx48_alltime.csv (côté Ubuntu) → push à chaque CAS atomic
+# qui valide un NOUVEAU record (lz_new > best_lz_alltime).
+# Stockage Replit : config/nx48_alltime_records.jsonl (append-only, audit complet).
+
+import threading as _threading
+_nx48_alltime_lock = _threading.Lock()
+_nx48_alltime_path = os.path.join(
+    os.path.dirname(__file__), "..", "..",
+    "src", "advanced_calculations", "bitcoin_quantum_mining",
+    "config", "nx48_alltime_records.jsonl",
+)
+_nx48_alltime_path = os.path.realpath(_nx48_alltime_path)
+_nx48_alltime_best = {"best_lz_alltime": 0, "count": 0, "last_record": None}
+
+
+def _nx48_alltime_append(record: dict) -> bool:
+    """Append monotone — n'écrit que si lz_new > best courant. Retour True si écrit."""
+    global _nx48_alltime_best
+    try:
+        lz_new = int(record.get("best_lz_alltime", 0))
+    except Exception:
+        return False
+    with _nx48_alltime_lock:
+        if lz_new <= _nx48_alltime_best["best_lz_alltime"]:
+            return False
+        record["received_at"] = int(time.time())
+        record["server_cycle"] = "C100"
+        os.makedirs(os.path.dirname(_nx48_alltime_path), exist_ok=True)
+        with open(_nx48_alltime_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        _nx48_alltime_best = {
+            "best_lz_alltime": lz_new,
+            "count": _nx48_alltime_best["count"] + 1,
+            "last_record": record,
+        }
+        return True
+
+
+@socketio.on("nx48_record_push", namespace="/agent")
+def ws_nx48_record_push(data):
+    """Ubuntu push un NOUVEAU record absolu nx48 (lz strictement croissant)."""
+    if not isinstance(data, dict):
+        emit("nx48_record_ack", {"ok": False, "error": "payload not dict"})
+        return
+    written = _nx48_alltime_append(data)
+    with _nx48_alltime_lock:
+        snapshot = dict(_nx48_alltime_best)
+    emit("nx48_record_ack", {
+        "ok": True,
+        "persisted": written,
+        "current_best": snapshot["best_lz_alltime"],
+        "total_records": snapshot["count"],
+        "cycle": "C100",
+    })
+
+
+@app.route("/agent/nx48_alltime", methods=["GET", "POST"])
+def agent_nx48_alltime():
+    """REST endpoint NX48 alltime record (fallback HTTP du WS — C100).
+       GET  : lit l'état courant (best_lz_alltime, count, last_record).
+       POST : payload JSON {best_lz_alltime, best_nonce_alltime, header_hex,
+              wallet_address, run_id, ts_unix} → persiste si monotone."""
+    if request.method == "GET":
+        with _nx48_alltime_lock:
+            snapshot = dict(_nx48_alltime_best)
+        return jsonify({
+            "ok": True,
+            "best_lz_alltime": snapshot["best_lz_alltime"],
+            "total_records": snapshot["count"],
+            "last_record": snapshot["last_record"],
+            "cycle": "C100",
+        })
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    written = _nx48_alltime_append(data)
+    with _nx48_alltime_lock:
+        snapshot = dict(_nx48_alltime_best)
+    return jsonify({
+        "ok": True,
+        "persisted": written,
+        "current_best": snapshot["best_lz_alltime"],
+        "total_records": snapshot["count"],
+        "cycle": "C100",
+    })
+
+
+def _nx48_alltime_bootstrap():
+    """Au démarrage, scanne le JSONL existant pour reconstituer le best courant."""
+    global _nx48_alltime_best
+    if not os.path.exists(_nx48_alltime_path):
+        return
+    best_lz = 0
+    count = 0
+    last = None
+    try:
+        with open(_nx48_alltime_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except Exception:
+                    continue
+                count += 1
+                lz = int(rec.get("best_lz_alltime", 0))
+                if lz > best_lz:
+                    best_lz = lz
+                    last = rec
+    except Exception:
+        return
+    with _nx48_alltime_lock:
+        _nx48_alltime_best = {
+            "best_lz_alltime": best_lz,
+            "count": count,
+            "last_record": last,
+        }
+
+
+_nx48_alltime_bootstrap()
+
+
 def _push_job_to_ws(job):
     """Émettre un job vers tous les agents WebSocket connectés (appelé thread-safe)."""
     with _ws_agent_sids_lock:

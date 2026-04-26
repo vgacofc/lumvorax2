@@ -47,7 +47,11 @@ HTS_ROOT := $(LUM_ROOT)advanced_calculations/quantum_problem_hubbard_hts/
 
 # Sources forensic LumVorax partagees (ultra_forensic_logger + memory_tracker)
 LUM_SRC  := $(LUM_ROOT)debug/ultra_forensic_logger.c \
-	$(LUM_ROOT)debug/memory_tracker.c
+	$(LUM_ROOT)debug/memory_tracker.c \
+	$(LUM_ROOT)common/lvx_log_rotate.c \
+	$(LUM_ROOT)neural_network/nx48_neuro_coupler.c \
+	$(LUM_ROOT)neural_network/izhikevich_spiking.c \
+	$(LUM_ROOT)neural_network/stdp_plasticity.c
 
 # Chemin include lumvorax_integration.c si necessaire
 LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
@@ -56,7 +60,7 @@ LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
 # ── OpenCL detection automatique (Intel UHD 620 Ubuntu) ─────────────
 # C63 : btc_opencl_runner.c active si libOpenCL disponible
 HAVE_OPENCL := $(shell pkg-config --exists OpenCL 2>/dev/null && echo 1 || \
-               ls /usr/lib/x86_64-linux-gnu/libOpenCL.so* 2>/dev/null | head -1 | wc -l | tr -d ' ')
+	       ls /usr/lib/x86_64-linux-gnu/libOpenCL.so* 2>/dev/null | head -1 | wc -l | tr -d ' ')
 ifeq ($(HAVE_OPENCL),1)
 CFLAGS   += -DBTC_OPENCL_ENABLED=1
 OCL_LIBS  := $(shell pkg-config --libs OpenCL 2>/dev/null || echo "-lOpenCL")
@@ -80,6 +84,8 @@ BTC_SRC  := src/sha256_lumvorax.c \
 	src/btc_wallet.c \
 	src/btc_block_validator.c \
 	src/main_btc_mining.c \
+	src/nx48_alltime_record.c \
+	src/nx48_coupler_bridge.c \
 	$(OCL_SRC)
 
 # Binaire principal

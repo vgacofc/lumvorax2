@@ -905,3 +905,14 @@
 2026-04-24 22:15 - C94-HACKATHON-PREP + C94 — Preparation candidature : score officiel cible 20/20 en exploitant pont C-IBM (rare), score VORAX (innovation), UX 1-commande (convivialite), gain x3.32 mesure (efficience)
 2026-04-24 22:15 - bob_demo.md + C94 — Livrable meta-innovation hackathon : trace de la conversation Bob qui aura genere les 6 autres livrables (pip wheel, notebook, pytest, unity tests, sphinx, CI)
 2026-04-24 22:15 - lumvorax-quantum + C94 — Nom du futur package pip a publier au hackathon : refactor du pipeline ibm_quantum_runner_c94 en module installable avec API publique stable (build_hubbard_hamiltonian, vorax_adapt_score, neel_init_circuit, run_ibm_batch)
+
+2026-04-26 21:15 - nx48_alltime_record_t + C100 — Struct C persistance MONOTONE record absolu NX48 BTC : best_lz_alltime jamais decroissant, header 80B, wallet, run_id_first/last, ts_unix, update_count
+2026-04-26 21:15 - nx48_alltime_try_update + C100 — API monotone : si lz_new > best alors maj atomique (tmp+rename+fsync) + verrou fcntl ; retourne 1 si maj, 0 si refus, -1 erreur I/O
+2026-04-26 21:15 - NX48_ALLTIME_DEFAULT_PATH + C100 — Chemin canonique config/btc_nx48_alltime.csv pour record absolu monotone (1 seul enregistrement, schema_version=1)
+2026-04-26 21:15 - C100-FIX-PERSIST-MONO + C100 — Patch btc_mining_engine.c L420-441 : seed best_leading_global depuis alltime CSV au demarrage (resout bug C99 : best=37 perdu, redemarre a 32)
+2026-04-26 21:15 - C100-ALLTIME + C100 — Prefixe log forensic des operations alltime monotone (seed, accept, refus regression)
+2026-04-26 21:15 - nx48_record_push + C100 — Evenement SocketIO namespace /agent : Ubuntu push un nouveau record absolu vers Replit a chaque CAS atomic ; ack contient {persisted, current_best, total_records}
+2026-04-26 21:15 - /agent/nx48_alltime + C100 — Endpoint REST GET/POST fallback HTTP du WS nx48_record_push : GET public (lecture etat), POST token-protege (push monotone)
+2026-04-26 21:15 - nx48_alltime_records.jsonl + C100 — Fichier audit append-only serveur Replit : 1 ligne JSON par record persiste, bootstrap au demarrage scan le fichier pour reconstituer le best courant
+2026-04-26 21:15 - btc_nx48_alltime.csv + C100 — Fichier CSV cote Ubuntu : schema_version,best_lz_alltime,best_nonce_alltime,header_hex_80B,wallet_address,run_id_first,run_id_last_update,ts_unix_first,ts_unix_last_update,update_count
+2026-04-26 21:15 - C100-SMOKE-PASS + C100 — Validation smoke test 3s : seed best_lz=37 confirme depuis CSV, NX48 init avec best_leading=37 (vs 29 vanilla), CSV non-modifie post-run (pas de regression)
