@@ -58,6 +58,7 @@
 
 #include "nx48_btc_controller.h"
 #include "../include/btc_mining_forensic.h"
+#include "../include/nx48_neuro_coupler.h"  /* C99 P0.1 — couplage neural Izhikevich+STDP */
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
 #include "debug/memory_tracker.h"
@@ -563,6 +564,48 @@ void nx48_btc_control_all(nx48_btc_state_t* s) {
                 s->exploration_bias = new_bias;
                 FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                     "btc_nx48_sn7_qdpr_signal", qdayprize_signal);
+            }
+        }
+    }
+
+    /* ════════════════════════════════════════════════════════════════════
+     * C99 P0.1 — Couplage neural Izhikevich+STDP (modulation ±15% bias)
+     * Le coupleur reçoit 8 features NX48 → produit signal mod ∈ [-1, +1].
+     * NX48 garde 100% de ses décisions ; bias modifié de ±influence × mod.
+     * ════════════════════════════════════════════════════════════════════ */
+    static nx48_coupler_t* g_coupler = NULL;
+    static int g_coupler_init_attempted = 0;
+    if (cfg && cfg->use_neural_coupler) {
+        if (!g_coupler && !g_coupler_init_attempted) {
+            g_coupler_init_attempted = 1;
+            g_coupler = nx48_coupler_create("btc_run", 0.1);
+            if (g_coupler) {
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_init", 1.0);
+            }
+        }
+        if (g_coupler) {
+            int near_miss = nx48_coupler_check_near_miss(g_coupler, hw->best_leading_zeros);
+            double mod = nx48_coupler_step(g_coupler, features, near_miss);
+            double inf = (cfg->coupler_influence > 0.0 && cfg->coupler_influence <= 1.0)
+                         ? cfg->coupler_influence : 0.15;
+            double new_bias = clamp(s->exploration_bias * (1.0 + inf * mod), 0.05, 0.95);
+            if (new_bias != s->exploration_bias) {
+                s->exploration_bias = new_bias;
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_signal", mod);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_bias_new", new_bias);
+            }
+            /* Log JSONL toutes les 1000 updates */
+            if ((s->update_count % 1000) == 0) {
+                nx48_coupler_log_jsonl(g_coupler);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_rate_hz",
+                    nx48_coupler_mean_rate_hz(g_coupler));
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_nx48_coupler_w_spread",
+                    nx48_coupler_weight_spread(g_coupler));
             }
         }
     }

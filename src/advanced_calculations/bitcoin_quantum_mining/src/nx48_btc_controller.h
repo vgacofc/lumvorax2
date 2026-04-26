@@ -224,6 +224,9 @@ typedef struct {
     char   csv_path[256];       /* Chemin CSV (compatibilité C42) */
     char   lum_path[256];       /* Chemin LUM binaire natif (C61) */
     int    hw_detect_interval_s; /* Secondes entre détections HW (défaut: 30) */
+    /* C99 P0.1 — Couplage neural Izhikevich+STDP (off par défaut) */
+    int    use_neural_coupler;   /* 1 = active le coupleur, 0 = NX48 seul */
+    double coupler_influence;    /* Facteur ±[0..1] (défaut 0.15 = ±15%) */
 } nx48_btc_config_t;
 
 /* ════════════════════════════════════════════════════════════════════
