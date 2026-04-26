@@ -12,11 +12,11 @@
 
 CC      ?= gcc
 CFLAGS  ?= -O3 -std=c11 -Wall -Wextra \
-	-D_POSIX_C_SOURCE=200809L \
-	-DLUMVORAX_ENABLED=1 \
-	-march=native \
-	-ftree-vectorize \
-	-fopenmp
+        -D_POSIX_C_SOURCE=200809L \
+        -DLUMVORAX_ENABLED=1 \
+        -march=native \
+        -ftree-vectorize \
+        -fopenmp
 
 # AVX2 pour SHA-256 8-way (si CPU le supporte - detection auto make)
 HAVE_AVX2 := $(shell echo | gcc -mavx2 -dM -E - 2>/dev/null | grep -c '__AVX2__')
@@ -86,6 +86,7 @@ BTC_SRC  := src/sha256_lumvorax.c \
 	src/main_btc_mining.c \
 	src/nx48_alltime_record.c \
 	src/nx48_coupler_bridge.c \
+	src/btc_testnet3_runtime.c \
 	$(OCL_SRC)
 
 # Binaire principal

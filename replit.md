@@ -1,6 +1,15 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C99 partie 2** (IBM RÉEL exécuté + bridge en prod + rotation log 50 MB, 2026‑04‑25T23:15Z)
+**Cycle courant : C99 partie 5 / C99-105** (P0.1 hook + Q4 + Q6 + Goals partiels, 2026‑04‑26T22:10Z)
+- ✅ **P0.1 coupler hook intégré** dans `nx48_btc_controller.c` L574-614 (modulation ±15% borne [0.05, 0.95])
+- ✅ **Q4 ASIC↔VORAX bridge** : `src/advanced_calculations/asic_lumvorax_bridge.c` (loss multi-terme α·||features||² + β·energy + γ·||ψ||₂²) — test 4/4 OK
+- ✅ **Q6 Blockchain LUMVORAX** : `genesis.c` + `chain.c` + `consensus_pow_lum.c` compilent ; bloc 0 reproductible Replit↔Ubuntu (LZ=16, nonce=12140, hash=`00009ed5...1470af30`)
+- ✅ **Goal #16 partiel** : `tools/qdayprize_escalation.py` + binaire C natif Ubuntu — 24+28 bits trouvés, 32-40 timeout (rate 0.30 MH/s OpenSSL → besoin sha256_lumvorax 8.95 MH/s pour 32+)
+- ✅ **Goal #17 partiel** : `hubbard_16_problems_runner.c` 4/16 problèmes (P01-P04 ED+DMRG OK), 12 restants
+- ⏳ **P0.2 IBM ADAPT-VQE** + **P0.3 testnet3 runtime** + **Goal #18 GPU** : à finaliser C99-106
+- 📚 NOUVEAU rapport : `CHAT/analysechatgpt99_105.md` (220 L, structure complète C99 état)
+
+**Cycle précédent : C99 partie 2** (IBM RÉEL exécuté + bridge en prod + rotation log 50 MB, 2026‑04‑25T23:15Z)
 - 🎯 **IBM Heron R2 ibm_fez resilience_lvl=1** : N=8 S(π)/N=**0.6935** (job d7miop43g2mc7392hl10), N=12 S(π)/N=**0.6810** (job d7miq0s3g2mc7392hm90)
 - 🏆 **IBM Heron R2 ibm_fez resilience_lvl=2 (RÉVÉLATION C99 P2)** : N=16 S(π)/N=**0.7155** (job d7mitfit99kc73d2j3ng) ≈ DMRG noiseless 0.7199 (écart <1%)
 - 🚨 **C97 ZNE+twirl 0.77-0.81 = BIAIS POSITIF +0.06 SYSTÉMATIQUE** prouvé : le "plateau AFM" C97 N=16-96 n'existe PAS physiquement, artefact ZNE pairwise sur-correctif

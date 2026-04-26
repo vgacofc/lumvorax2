@@ -66,7 +66,7 @@ static char* _load_kernel_source(const char* path, size_t* len_out) {
     rewind(f);
     char* src = (char*)malloc(sz + 1);
     if (!src) { fclose(f); return NULL; }
-    fread(src, 1, sz, f);
+    if (fread(src, 1, sz, f) != sz) { free(src); fclose(f); return NULL; }
     src[sz] = '\0';
     fclose(f);
     if (len_out) *len_out = sz;
