@@ -13,39 +13,42 @@
 #include <stdint.h>
 #include <time.h>
 
-extern void sha256_mini(const uint8_t* data, size_t len, uint8_t out[32]);
+extern void sha256_lumvorax(const uint8_t* data, size_t len, uint8_t out[32]);
 
 static const char GENESIS_MAGIC[] = "LUMVORAX-GENESIS-2026-CYCLE-C99";
 static const uint32_t GENESIS_VERSION   = 1;
 static const uint32_t GENESIS_TIMESTAMP = 1714000000U;  /* 2024-04-24 17:46:40 UTC */
 static const uint32_t GENESIS_BITS      = 0x1d00ffffU;  /* difficulté minimale */
 
-int lumvorax_genesis_create(lumvorax_block_header_t* hdr) {
+int lumvorax_genesis_create(block_header_t* hdr) {
     if (!hdr) return -1;
     memset(hdr, 0, sizeof(*hdr));
     hdr->version = GENESIS_VERSION;
     /* prev_hash = tout zéro (déjà fait par memset) */
-    sha256_mini((const uint8_t*)GENESIS_MAGIC, sizeof(GENESIS_MAGIC) - 1, hdr->merkle_root);
+    sha256_lumvorax((const uint8_t*)GENESIS_MAGIC, sizeof(GENESIS_MAGIC) - 1, hdr->merkle_root);
     hdr->timestamp = GENESIS_TIMESTAMP;
     hdr->bits      = GENESIS_BITS;
     hdr->nonce     = 0;  /* sera mis à jour par mining initial */
+    hdr->height    = 0;
     return 0;
 }
 
-int lumvorax_genesis_compute_hash(const lumvorax_block_header_t* hdr, uint8_t out[32]) {
+int lumvorax_genesis_compute_hash(const block_header_t* hdr, uint8_t out[32]) {
     if (!hdr || !out) return -1;
-    /* Sérialise header en 80 octets compatibles Bitcoin */
+    /* Sérialise header en 80 octets compatibles Bitcoin (low 32 bits ts/nonce) */
     uint8_t buf[80];
+    uint32_t ts32    = (uint32_t)(hdr->timestamp & 0xFFFFFFFFU);
+    uint32_t nonce32 = (uint32_t)(hdr->nonce     & 0xFFFFFFFFU);
     memcpy(buf + 0,  &hdr->version, 4);
     memcpy(buf + 4,  hdr->prev_hash, 32);
     memcpy(buf + 36, hdr->merkle_root, 32);
-    memcpy(buf + 68, &hdr->timestamp, 4);
+    memcpy(buf + 68, &ts32, 4);
     memcpy(buf + 72, &hdr->bits, 4);
-    memcpy(buf + 76, &hdr->nonce, 4);
+    memcpy(buf + 76, &nonce32, 4);
     /* Double SHA-256 (Bitcoin standard) */
     uint8_t mid[32];
-    sha256_mini(buf, 80, mid);
-    sha256_mini(mid, 32, out);
+    sha256_lumvorax(buf, 80, mid);
+    sha256_lumvorax(mid, 32, out);
     return 0;
 }
 
@@ -66,7 +69,7 @@ int lumvorax_genesis_count_lz(const uint8_t hash[32]) {
 
 #ifdef GENESIS_STANDALONE
 int main(void) {
-    lumvorax_block_header_t hdr;
+    block_header_t hdr;
     if (lumvorax_genesis_create(&hdr) != 0) {
         fprintf(stderr, "ERR: genesis create\n");
         return 1;

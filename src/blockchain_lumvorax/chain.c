@@ -19,9 +19,9 @@
 #include <errno.h>
 #include <sys/stat.h>
 
-extern void sha256_mini(const uint8_t* data, size_t len, uint8_t out[32]);
-extern int  lumvorax_genesis_create(lumvorax_block_header_t* hdr);
-extern int  lumvorax_genesis_compute_hash(const lumvorax_block_header_t* hdr, uint8_t out[32]);
+extern void sha256_lumvorax(const uint8_t* data, size_t len, uint8_t out[32]);
+extern int  lumvorax_genesis_create(block_header_t* hdr);
+extern int  lumvorax_genesis_compute_hash(const block_header_t* hdr, uint8_t out[32]);
 extern int  lumvorax_genesis_count_lz(const uint8_t hash[32]);
 
 static char    g_chain_path[512] = {0};
@@ -31,7 +31,7 @@ static uint8_t  g_chain_tip[32] = {0};
 
 #define BLOCK_RECORD_BYTES 112  /* 80 header + 32 hash */
 
-static int chain_serialize_header(const lumvorax_block_header_t* hdr, uint8_t buf[80]) {
+static int chain_serialize_header(const block_header_t* hdr, uint8_t buf[80]) {
     if (!hdr) return -1;
     memcpy(buf + 0,  &hdr->version, 4);
     memcpy(buf + 4,  hdr->prev_hash, 32);
@@ -42,7 +42,7 @@ static int chain_serialize_header(const lumvorax_block_header_t* hdr, uint8_t bu
     return 0;
 }
 
-static int chain_deserialize_header(const uint8_t buf[80], lumvorax_block_header_t* hdr) {
+static int chain_deserialize_header(const uint8_t buf[80], block_header_t* hdr) {
     if (!hdr) return -1;
     memcpy(&hdr->version, buf + 0, 4);
     memcpy(hdr->prev_hash, buf + 4, 32);
@@ -61,7 +61,7 @@ int lumvorax_chain_open(const char* path) {
     int exists = (stat(path, &st) == 0 && st.st_size > 0);
     if (!exists) {
         /* Init avec genesis */
-        lumvorax_block_header_t gen;
+        block_header_t gen;
         if (lumvorax_genesis_create(&gen) != 0) return -2;
         /* Mine genesis (rapide) */
         for (uint32_t n = 0; n < 1000000U; n++) {
@@ -104,7 +104,7 @@ int lumvorax_chain_open(const char* path) {
     return g_chain_file ? 0 : -7;
 }
 
-int lumvorax_chain_append(const lumvorax_block_header_t* hdr) {
+int lumvorax_chain_append(const block_header_t* hdr) {
     if (!hdr || !g_chain_file) return -1;
     /* Vérifie chaînage prev_hash == tip */
     if (g_chain_height > 0 && memcmp(hdr->prev_hash, g_chain_tip, 32) != 0) {
@@ -141,7 +141,7 @@ int lumvorax_chain_verify_all(void) {
         uint8_t buf80[80], hash32[32];
         if (fread(buf80, 1, 80, f) != 80) break;
         if (fread(hash32, 1, 32, f) != 32) { fclose(f); return -3; }
-        lumvorax_block_header_t hdr;
+        block_header_t hdr;
         chain_deserialize_header(buf80, &hdr);
         if (verified > 0 && memcmp(hdr.prev_hash, prev_hash, 32) != 0) {
             fclose(f);

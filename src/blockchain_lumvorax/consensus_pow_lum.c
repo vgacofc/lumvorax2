@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <time.h>
 
-extern int lumvorax_genesis_compute_hash(const lumvorax_block_header_t* hdr, uint8_t out[32]);
+extern int lumvorax_genesis_compute_hash(const block_header_t* hdr, uint8_t out[32]);
 extern int lumvorax_genesis_count_lz(const uint8_t hash[32]);
 
 #define POW_DIFFICULTY_MIN     8
@@ -43,7 +43,7 @@ void lumvorax_pow_reset(int initial_lz) {
 }
 
 /* Vérifie qu'un header satisfait la difficulté courante */
-int lumvorax_pow_validate(const lumvorax_block_header_t* hdr) {
+int lumvorax_pow_validate(const block_header_t* hdr) {
     if (!hdr) return 0;
     uint8_t hash[32];
     if (lumvorax_genesis_compute_hash(hdr, hash) != 0) return 0;
@@ -76,7 +76,7 @@ int lumvorax_pow_record_block(uint32_t timestamp) {
 /* Mine un bloc : cherche un nonce qui satisfait difficulty.
  * Retourne 1 si trouvé (hdr->nonce mis à jour), 0 si épuisement ou max_iter atteint.
  */
-int lumvorax_pow_mine(lumvorax_block_header_t* hdr, uint64_t max_iter) {
+int lumvorax_pow_mine(block_header_t* hdr, uint64_t max_iter) {
     if (!hdr) return 0;
     int target = g_current_difficulty_lz;
     uint64_t iter = 0;
