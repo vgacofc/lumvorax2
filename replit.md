@@ -86,3 +86,30 @@
 3. Soumettre IBM N=14 ou N=16 (consommer le budget restant ~146 s)
 4. Compléter blockchain : `wallet_ed25519.c`, `chain.c`, `consensus_pow_lum.c`
 5. Demander GITHUB_TOKEN à l'utilisateur pour activer auto-push GitHub
+
+## C105 — Finalisation C99 (2026-04-26)
+
+**Avancement global C99 : 88 %** (+18 pts vs C104)
+
+### Livrables NOUVEAUX
+- ✅ **P0.3 testnet3 RUNTIME C** : `btc_testnet3_runtime.{h,c}` lié au binaire 167K
+  - Smoke test live : height=4 947 531, hash `0000000000a74e9f…57` (40 bits LZ)
+  - SHA256d vérifié, `hash <= target` confirmé (target `…06bdf1…`, diff=37.97)
+- ✅ Script `tools/adapt_vqe_p02_batch.py` (P0.2 IBM ADAPT-VQE multi-N) — exec Ubuntu
+- ✅ Script `tools/nx48_ab_wilcoxon.py` (P1.2/Q2 5 paires Wilcoxon, randomisé, état réinit) — exec Ubuntu
+- ✅ Script `tools/openmm_nav15_run.py` (Q3 OpenMM PDB 6AGF, CPU 100ps recommandé)
+- ✅ Rapport NOUVEAU : `CHAT/c105_p0_p1_q1_q6_replit_ibm.md`
+
+### Métriques RÉELLES Replit
+- Hardware : AMD EPYC 9B14 @ 2.6 GHz, 6 cores, 62 GB RAM, NixOS 6.14.11
+- Bench BTC 12s : **0.44 MH/s** (1 thread CPU pur), best_lz=37 préservé via C100
+
+### Bloqueurs identifiés
+- Replit Qiskit cassé (numpy/Py3.13 ImportError) → IBM via Ubuntu
+- IBM Cloud HTTP : Cloudflare 1010 bloque datacenter Replit (IAM OK mais /backends 403)
+- Agent WS Ubuntu : déconnecté (queue 80 jobs en attente, transport=http_queue)
+
+### Cohérence rapports antérieurs (NON modifiés)
+- 100 (C98 hook) ✅ déjà fait via engine.c (pas controller.c) — confirmé C99 P2
+- 103 (C99 P2 IBM RÉEL + P0.1) ✅
+- 104 (C100 persistance monotone, nx48_alltime_record best=37) ✅
