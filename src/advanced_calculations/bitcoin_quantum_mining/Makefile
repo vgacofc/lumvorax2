@@ -53,6 +53,15 @@ LUM_SRC  := $(LUM_ROOT)debug/ultra_forensic_logger.c \
 	$(LUM_ROOT)neural_network/izhikevich_spiking.c \
 	$(LUM_ROOT)neural_network/stdp_plasticity.c
 
+# C110 - Modules optimisation src/optimization actives (audit C109 §10):
+#   reasoning_path_tracker : trace decisions NX48 (formal_kernel_v40)
+#   thermal_regulator      : protection throttle CPU > 90% load
+#   async_logger           : journalisation off-hot-path (pthread)
+LUM_SRC  += $(LUM_ROOT)optimization/reasoning_path_tracker.c \
+	$(LUM_ROOT)optimization/formal_kernel_v40.c \
+	$(LUM_ROOT)optimization/thermal_regulator.c \
+	$(LUM_ROOT)optimization/async_logging/async_logger.c
+
 # Chemin include lumvorax_integration.c si necessaire
 LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
 
@@ -97,6 +106,7 @@ BIN := btc_mining_runner
 #   -I$(HTS_ROOT)include             -> workspace/src/advanced_calculations/quantum_problem_hubbard_hts/include/
 #                                       -> trouve lumvorax_integration.h
 INCLUDES := -I$(LUM_ROOT) \
+	-I$(LUM_ROOT)optimization \
 	-I$(HTS_ROOT)include \
 	-Iinclude \
 	-Isrc

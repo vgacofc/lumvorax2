@@ -33,6 +33,11 @@
 #include "lumvorax_integration.h"
 #include "debug/memory_tracker.h"
 
+/* C110 — Modules d'optimisation src/optimization activés (audit C109 §10) */
+#include "optimization/reasoning_path_tracker.h"
+#include "optimization/async_logging/async_logger.h"
+#include "optimization/thermal_regulator.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -184,6 +189,29 @@ int main(int argc, char* argv[]) {
             "%s/modules/btc_qm_engine_forensic_%s.log",
             cfg.log_dir, cfg.run_id);
         ultra_forensic_logger_init_lum(log_path);
+    }
+
+    /* C110 — Init des modules d'optimisation src/optimization
+     *   - reasoning_trace : enregistre les décisions NX48 pour analyse granulaire
+     *   - async_logger    : journalisation off-hot-path (ne bloque pas le mining)
+     * Activation : variables d'environnement BTC_REASONING_TRACE=1 / BTC_ASYNC_LOG=1 */
+    reasoning_trace_t* reasoning_trace = NULL;
+    async_logger_t*    async_log       = NULL;
+    if (getenv("BTC_REASONING_TRACE")) {
+        reasoning_trace = reasoning_trace_start(cfg.run_id);
+        if (reasoning_trace)
+            printf("[C110-OPT] reasoning_path_tracker actif → trace par décision NX48 ✓\n");
+    }
+    if (getenv("BTC_ASYNC_LOG")) {
+        char alog_path[512];
+        snprintf(alog_path, sizeof(alog_path),
+            "%s/modules/btc_async_log_%s.log", cfg.log_dir, cfg.run_id);
+        async_log = async_logger_create(alog_path, ASYNC_LOG_BUFFER_SIZE);
+        if (async_log) {
+            ASYNC_INFO(async_log, "[C110] async_logger actif run_id=%s mode=%s",
+                       cfg.run_id, cfg.run_mode);
+            printf("[C110-OPT] async_logger actif → %s ✓\n", alog_path);
+        }
     }
 
     /* ── Banner ─────────────────────────────────────────────────── */
@@ -394,6 +422,26 @@ int main(int argc, char* argv[]) {
     /* ── Gate mémoire ───────────────────────────────────────────── */
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_memory_gate_pass", 1.0);
     FORENSIC_LOG_MODULE_END(BTC_MODULE_NAME, "main_btc_mining", result >= 0);
+
+    /* C110 — Sauvegarde + libération des modules d'optimisation */
+    if (reasoning_trace) {
+        char trace_path[512];
+        snprintf(trace_path, sizeof(trace_path),
+            "%s/modules/btc_reasoning_trace_%s.json", cfg.log_dir, cfg.run_id);
+        reasoning_trace_save(reasoning_trace, trace_path);
+        printf("[C110-OPT] reasoning_trace sauvegardée → %s (%zu noeuds)\n",
+               trace_path, reasoning_trace->node_count);
+        reasoning_trace_destroy(reasoning_trace);
+    }
+    if (async_log) {
+        ASYNC_INFO(async_log, "[C110] async_logger arrêt run_id=%s result=%d",
+                   cfg.run_id, result);
+        async_logger_flush(async_log);
+        printf("[C110-OPT] async_logger : %" PRIu64 " entries totales, %" PRIu64 " dropped\n",
+               async_logger_get_total(async_log),
+               async_logger_get_dropped(async_log));
+        async_logger_destroy(async_log);
+    }
 
     /* ── Libération ─────────────────────────────────────────────── */
     if (wallet) btc_wallet_destroy(wallet);
