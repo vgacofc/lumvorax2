@@ -1055,6 +1055,49 @@ void nx48_btc_clamp_scales(nx48_btc_state_t* s) {
  * C61 : PERSISTANCE LUM BINAIRE NATIF (64 bytes par entrée)
  * Magic : 0x4E583438 = "NX48" | CRC32 intégrité
  * ════════════════════════════════════════════════════════════════════ */
+/* C107 — Sidecar header binding : écrit le header_hex à côté du .lum
+ * pour permettre la validation du best_leading_zeros au prochain load.
+ * Format : <lum_path>.header (160 chars hex + \n) */
+static void nx48_lum_save_header_sidecar(const char* lum_path) {
+    if (!lum_path || !lum_path[0]) return;
+    const char* hh = getenv("BTC_HEADER_HEX_CURRENT");
+    if (!hh || strlen(hh) < 160) return;  /* Pas de header courant connu */
+    char sidecar[1024];
+    snprintf(sidecar, sizeof(sidecar), "%s.header", lum_path);
+    FILE* sf = fopen(sidecar, "w");
+    if (!sf) return;
+    fwrite(hh, 1, 160, sf);
+    fputc('\n', sf);
+    fclose(sf);
+}
+
+/* C107 — Lit le sidecar et compare au header courant.
+ * Retourne 1 si match (best_lz du .lum est valide), 0 si mismatch (DOIT reset). */
+static int nx48_lum_check_header_sidecar(const char* lum_path) {
+    if (!lum_path || !lum_path[0]) return 1;  /* Pas de path → on garde (legacy) */
+    const char* hh_current = getenv("BTC_HEADER_HEX_CURRENT");
+    if (!hh_current || strlen(hh_current) < 160) return 1;  /* Pas de check possible → on garde */
+    char sidecar[1024];
+    snprintf(sidecar, sizeof(sidecar), "%s.header", lum_path);
+    FILE* sf = fopen(sidecar, "r");
+    if (!sf) {
+        /* Sidecar absent → .lum vient d'avant le patch C107 → header inconnu → RESET */
+        fprintf(stderr, "[NX48-LUM-C107] ⚠️  Sidecar header absent (%s) — best_lz potentiellement obsolète, RESET\n", sidecar);
+        return 0;
+    }
+    char hh_stored[200] = {0};
+    size_t n = fread(hh_stored, 1, 160, sf);
+    fclose(sf);
+    if (n < 160) return 0;
+    int match = (strncmp(hh_stored, hh_current, 160) == 0);
+    if (!match) {
+        fprintf(stderr, "[NX48-LUM-C107] ⚠️  Header MISMATCH — best_lz du .lum invalide pour ce header, RESET\n");
+        fprintf(stderr, "[NX48-LUM-C107]    stored : %.40s...\n", hh_stored);
+        fprintf(stderr, "[NX48-LUM-C107]    current: %.40s...\n", hh_current);
+    }
+    return match;
+}
+
 int nx48_btc_save_lum(const nx48_btc_state_t* s, const char* lum_path) {
     if (!lum_path || lum_path[0] == '\0') return 0;
     FILE* f = fopen(lum_path, "wb");
@@ -1083,6 +1126,8 @@ int nx48_btc_save_lum(const nx48_btc_state_t* s, const char* lum_path) {
 
     fwrite(&e, sizeof(e), 1, f);
     fclose(f);
+    /* C107 — écrit le sidecar header pour validation au prochain load */
+    nx48_lum_save_header_sidecar(lum_path);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_lum_saved", 1.0);
     return 1;
 }
@@ -1106,8 +1151,23 @@ int nx48_btc_load_lum(nx48_btc_state_t* s, const char* lum_path) {
     }
 
     s->update_count       = (int)e.update_count;
-    s->best_leading_zeros = (int)e.best_leading_zeros;
-    s->best_nonce         = (uint32_t)e.best_nonce;
+
+    /* C107 — VALIDATION HEADER BINDING : best_leading_zeros / best_nonce ne sont
+     * valides QUE pour le header_hex stocké dans le sidecar .header. Si mismatch
+     * (ou sidecar absent), on RESET ces deux champs pour empêcher la persistance
+     * d'un best « fantôme » non bound à un header réel.
+     * Les autres params (poids RL, exploration_bias, etc.) restent persistants
+     * car ils décrivent la politique d'apprentissage, pas un résultat de mining. */
+    int header_ok = nx48_lum_check_header_sidecar(lum_path);
+    if (header_ok) {
+        s->best_leading_zeros = (int)e.best_leading_zeros;
+        s->best_nonce         = (uint32_t)e.best_nonce;
+    } else {
+        s->best_leading_zeros = 0;
+        s->best_nonce         = 0;
+        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_best_reset_header_mismatch", 1.0);
+    }
+
     for (int i = 0; i < 8; i++) {
         s->weights[i]          = (double)e.weights[i];
         s->executor_weights[i] = (double)e.executor_weights[i];
@@ -1124,8 +1184,9 @@ int nx48_btc_load_lum(nx48_btc_state_t* s, const char* lum_path) {
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_lum_loaded", 1.0);
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_nx48_best_leading_loaded",
         (double)s->best_leading_zeros);
-    printf("[NX48-LUM] Chargé : update=%d best=%d bits exploration=%.3f delta=%.2f\n",
-        s->update_count, s->best_leading_zeros, s->exploration_bias, s->delta_nonce_scale);
+    printf("[NX48-LUM] Chargé : update=%d best=%d bits exploration=%.3f delta=%.2f%s\n",
+        s->update_count, s->best_leading_zeros, s->exploration_bias, s->delta_nonce_scale,
+        header_ok ? " [header-bound]" : " [best RESET — header mismatch C107]");
     return 1;
 }
 
