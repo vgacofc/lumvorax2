@@ -1,6 +1,18 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C106-PART2** (corrections + WS Ubuntu + tokens + procédure réseau, 2026‑04‑27T13:48Z)
+**Cycle courant : C107 PATCH 2** (best DYNAMIQUE auto-MAJ + nx48_alltime intégré, 2026‑04‑27T14:08Z)
+- ✅ **C107 P1** : Sidecar `.lum.header` (header binding) + reset auto si mismatch (nx48_btc_controller.c L1061-1102)
+- ✅ **C107 P2** : Bug HISTORIQUE C92.2 corrigé → signature `nx48_btc_update` étend `uint32_t best_nonce` (controller.h L269 + .c L734 + engine.c L920)
+- ✅ **try_update intégré** : à chaque NEW RECORD, appel `nx48_alltime_try_update()` avec header env + wallet env (controller.c L880-903)
+- ✅ **Validation live mainnet 946883 (10s)** : 10 NEW RECORDS monotones consécutifs LZ=4→8→9→10→11→12→16→19→20→**24**, CSV alltime écrit avec wallet réel `1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C` + update_count=10
+- ✅ **Best EST DYNAMIQUE** (exigence utilisateur) — fini le 37 figé du 2026-04-26, le best monte progressivement et auto-MAJ via header binding
+- ✅ **Anciens rapports MD5 INTACTS** : 106 (41bfb438) + 106_PART2 (36cdb09e) + VALIDATION_C106 (4310690e) — jamais touchés
+- 📋 **Rapport** : `CHAT/analysechatgpt107.md` (419 lignes, NEUF, NE JAMAIS modifier)
+- 📡 **Job WS Ubuntu** `0ef2f5eed462` (env INLINE corrigé) — git pull → rebuild C107 → run 30s mainnet → CSV final
+
+---
+
+**Cycle précédent : C106-PART2** (corrections + WS Ubuntu + tokens + procédure réseau, 2026‑04‑27T13:48Z)
 - ✅ **3 rapports nouveaux** (anciens jamais modifiés) :
   - `CHAT/analysechatgpt106.md` (PART1 — cycle principal, NON modifié)
   - `CHAT/RAPPORT_LUM_VORAX_VALIDATION_C106.md` (sections 1–8 prompt validation, NON modifié)
