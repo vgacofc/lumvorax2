@@ -276,9 +276,24 @@ lv_btc_validated_block_t* btc_block_validate_from_hash(
 
     b->reward_satoshi = BTC_BLOCK_SUBSIDY_2024; /* 3.125 BTC (halving 2024) */
 
+    /* C106-P2 — BIP34 fix : lire la hauteur réelle depuis l'env
+     * Priorité : BTC_COINBASE_HEIGHT (explicite) > BTC_TIP_HEIGHT+1 (calculé)
+     * Fallback : 0 (mode bench/test) — Bitcoin Core rejettera au submitblock
+     * mais permet la validation locale. */
+    uint32_t coinbase_height = 0;
+    const char* env_h = getenv("BTC_COINBASE_HEIGHT");
+    if (env_h && *env_h) {
+        coinbase_height = (uint32_t)strtoul(env_h, NULL, 10);
+    } else {
+        const char* env_tip = getenv("BTC_TIP_HEIGHT");
+        if (env_tip && *env_tip) coinbase_height = (uint32_t)strtoul(env_tip, NULL, 10) + 1;
+    }
+    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_coinbase_height_bip34",
+        (double)coinbase_height);
+
     /* Construire la coinbase tx */
     b->coinbase_tx_len = (size_t)btc_build_coinbase_tx(
-        0, /* height — à calculer depuis le réseau en production */
+        coinbase_height, /* C106-P2 : BIP34 height réel depuis env */
         b->coinbase_addr,
         b->reward_satoshi,
         0xC63A0017u, /* extra_nonce LumVorax Module 17 */

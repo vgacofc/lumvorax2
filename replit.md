@@ -1,6 +1,20 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C99 partie 5 / C99-105** (P0.1 hook + Q4 + Q6 + Goals partiels, 2026‑04‑26T22:10Z)
+**Cycle courant : C106** (BTC mainnet test réel + IBM proof + LUM bit-level Test A PASS, 2026‑04‑27T13:34Z)
+- ✅ **2 rapports nouveaux** (anciens jamais modifiés) :
+  - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt106.md` (cycle principal + réponses Q wallet/mainnet)
+  - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_LUM_VORAX_VALIDATION_C106.md` (sections 1–8 prompt validation)
+- ✅ **BTC MAINNET réel exécuté** (refus du verdict "impossible" sans test) : tip live blockstream height=946 882, hash `000000000000000000014f5fd70581fa…`, LZ_required=79, difficulty=135.6 T. Run 60 s : 74 PT-MC accept, 75 rep_hot, best_loaded=37, alltime CSV inchangé (logique stat : T̄ ≈ 7 Gyr sur Replit 8-thread)
+- ✅ **LUM bit-level Test A PASS** : `logs/c106/lum_trace.jsonl` (66 lignes JSONL FNV1a) → reconstruction sha256 `650b5c8f50…1713ae4f2b29` IDENTIQUE à dump original. **Test A VERDICT=PASS**
+- ✅ **Overhead LUM mesuré** (Test B) : 332 ns/mutation OFF vs 4 530 ns/mutation ON (+4.2 µs surcoût trace JSONL = 13.6×)
+- 🔴 **IBM Quantum compte GELÉ** (preuve JWT brute `logs/c106/ibm_jwt_decoded.json` `account.frozen=true`, email vgaccodex01@gmail.com, bss=1ac3cc9b…). IAM HTTP 200 mais backends API HTTP 401 (trace 476ce38a-…). **Action user : dégeler compte sur https://cloud.ibm.com → Account status**
+- 🔴 **Anomalie C106-A1** : wallet coinbase **éphémère** (`1MbWfvAW…`) ≠ wallet Doppler `BTC_WALLET_ADDRESS`. Patch C107 nécessaire dans `btc_block_validator.c:wallet_generate_real()`
+- 🔴 **Anomalie C106-A2** : aucun `submitblock` RPC nulle part dans le code (jamais soumis au réseau). Patch C108
+- 🔴 **Anomalie C106-A3** : `coinbase_height=0` hardcodé (BIP34 violation). Patch C107
+- 📐 **Verdict LUM+VORAX** : (A) trace bit-level classique CONFIRMÉ, (B) trace état quantique pré-mesure INVALIDÉ (no-cloning), (D) overhead CONFIRMÉ. **Validation PARTIELLE — claims classiques OK, claims quantiques retirés**
+- 📋 Commandes Ubuntu fish + IBM dans `analysechatgpt106.md` §8
+
+**Cycle précédent : C99 partie 5 / C99-105** (P0.1 hook + Q4 + Q6 + Goals partiels, 2026‑04‑26T22:10Z)
 - ✅ **P0.1 coupler hook intégré** dans `nx48_btc_controller.c` L574-614 (modulation ±15% borne [0.05, 0.95])
 - ✅ **Q4 ASIC↔VORAX bridge** : `src/advanced_calculations/asic_lumvorax_bridge.c` (loss multi-terme α·||features||² + β·energy + γ·||ψ||₂²) — test 4/4 OK
 - ✅ **Q6 Blockchain LUMVORAX** : `genesis.c` + `chain.c` + `consensus_pow_lum.c` compilent ; bloc 0 reproductible Replit↔Ubuntu (LZ=16, nonce=12140, hash=`00009ed5...1470af30`)
