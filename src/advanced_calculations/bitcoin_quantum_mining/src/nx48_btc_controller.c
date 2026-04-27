@@ -59,6 +59,11 @@
 #include "nx48_btc_controller.h"
 #include "nx48_alltime_record.h"  /* C107 : persistance MONOTONE par header */
 #include "../include/btc_mining_forensic.h"
+#include "optimization/reasoning_path_tracker.h"  /* C110 : trace décisions NX48 */
+
+/* C110 — pointer global vers reasoning_trace (init dans main_btc_mining.c).
+ * NULL si BTC_REASONING_TRACE absent → appel ignoré (no-op). */
+extern reasoning_trace_t* g_btc_reasoning_trace;
 /* NOTE C99-P5 : Le hook coupler officiel est dans btc_mining_engine.c
  * (nx48_bridge_*) — voir rapport 103 (C99 P2). Pas de hook duplicata ici. */
 #include "debug/ultra_forensic_logger.h"
@@ -906,6 +911,18 @@ void nx48_btc_update(
         s->stall_long_count   = 0;
         FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
             "btc_nx48_new_record_leading_zeros", (double)best_leading_zeros);
+
+        /* C110 — trace granulaire : nouveau record NX48 = décision-clé.
+         * confidence = best_lz / 256 ; lyapunov = exploration_bias (proxy stabilité). */
+        if (g_btc_reasoning_trace) {
+            char label[128];
+            snprintf(label, sizeof(label),
+                "NX48-NEW-RECORD lz=%d nonce=%u hashrate=%.2fMHs",
+                best_leading_zeros, best_nonce, hashrate_mhs);
+            reasoning_trace_add_node(g_btc_reasoning_trace, label,
+                (float)best_leading_zeros / 256.0f,
+                (float)s->exploration_bias);
+        }
         /* C86-IMMEDIATE-SAVE : flush LUM + CSV IMMEDIATEMENT a chaque nouveau record.
          * Avant : sauvegarde periodique (60s) -> en cas de SIGSEGV, perte du record.
          * Apres : double persistance instantanee -> meme un crash apres conserve le record. */

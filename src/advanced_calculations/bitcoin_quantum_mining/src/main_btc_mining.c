@@ -38,6 +38,9 @@
 #include "optimization/async_logging/async_logger.h"
 #include "optimization/thermal_regulator.h"
 
+/* C110 — pointer global exposé pour nx48_btc_controller.c (point décision NX48) */
+reasoning_trace_t* g_btc_reasoning_trace = NULL;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -199,8 +202,10 @@ int main(int argc, char* argv[]) {
     async_logger_t*    async_log       = NULL;
     if (getenv("BTC_REASONING_TRACE")) {
         reasoning_trace = reasoning_trace_start(cfg.run_id);
-        if (reasoning_trace)
+        if (reasoning_trace) {
+            g_btc_reasoning_trace = reasoning_trace;  /* expose au contrôleur NX48 */
             printf("[C110-OPT] reasoning_path_tracker actif → trace par décision NX48 ✓\n");
+        }
     }
     if (getenv("BTC_ASYNC_LOG")) {
         char alog_path[512];
