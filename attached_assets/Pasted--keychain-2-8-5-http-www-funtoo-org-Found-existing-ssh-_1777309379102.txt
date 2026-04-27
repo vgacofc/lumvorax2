@@ -1,0 +1,60 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10240
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> # Wallet mainnet :
+                                          curl -s https://blockstream.info/api/address/1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C
+                                          # → Renvoie chain_stats { tx_count, funded_txo_sum, spent_txo_sum, … }
+
+                                          # Vérifié 2026-04-27 14:38 UTC :
+                                          #   tx_count = 0
+                                          #   funded_txo_sum = 0 satoshi
+                                          #   mempool_stats.tx_count = 0
+                                          # ⇒ Aucun bloc minté reçu, aucune transaction en cours
+{"address":"1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C","chain_stats":{"funded_txo_count":0,"funded_txo_sum":0,"spent_txo_count":0,"spent_txo_sum":0,"tx_count":0},"mempool_stats":{"funded_txo_count":0,"funded_txo_sum":0,"spent_txo_count":0,"spent_txo_sum":0,"tx_count":0}}⏎                                                                                                      lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> # scripts/validate_pow_candidate.py L120 — DÉJÀ implémenté
+                                          result, error = rpc_call("submitblock", [full_block_hex])
+submitblock,: command not found
+in command substitution
+fish: Unknown command
+result, error = rpc_call("submitblock", [full_block_hex])
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [127]> # Récupérer le bloc à hauteur H (où H = bloc qu'on a miné)
+                                                curl -s "https://blockstream.info/api/block-height/$H"
+                                                # → renvoie le hash du bloc à cette hauteur
+
+                                                # Récupérer la première transaction (coinbase) :
+                                                curl -s "https://blockstream.info/api/block/$BLOCK_HASH/txid/0"
+                                                # → coinbase txid
+
+                                                # Vérifier que vout[0].scriptpubkey contient notre HASH160 :
+                                                curl -s "https://blockstream.info/api/tx/$COINBASE_TXID" | jq '.vout[0]'
+                                                # → scriptpubkey_address doit être 1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C
+Invalid numberendpoint does not exist "/block/txid/0"jq: parse error: Invalid numeric literal at line 1, column 8
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [0|5]> # Si rpc_call renvoie None (succès) :
+                                                BLOCK_HASH=<hash retourné>
+                                                curl -s https://blockstream.info/api/block/$BLOCK_HASH
+                                                # → status 200 + JSON {height, version, timestamp, …} = bloc accepté par les nœuds publics
+fish: Unsupported use of '='. In fish, please use 'set BLOCK_HASH '.
+BLOCK_HASH=<hash retourné>
+^~~~~~~~~~^
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [0|5]> # Si rpc_call renvoie None (succès) :
+                                                BLOCK_HASH=<hash retourné>
+                                                curl -s https://blockstream.info/api/block/$BLOCK_HASH
+                                                # → status 200 + JSON {height, version, timestamp, …} = bloc accepté par les nœuds publics
+fish: Unsupported use of '='. In fish, please use 'set BLOCK_HASH '.
+BLOCK_HASH=<hash retourné>
+^~~~~~~~~~^
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [0|5]> # Si rpc_call renvoie None (succès) :
+                                                BLOCK_HASH=<hash retourné>
+                                                curl -s https://blockstream.info/api/block/$BLOCK_HASH
+                                                # → status 200 + JSON {height, version, timestamp, …} = bloc accepté par les nœuds publics
+fish: Unsupported use of '='. In fish, please use 'set BLOCK_HASH '.
+BLOCK_HASH=<hash retourné>
+^~~~~~~~~~^
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [0|5]> # Si rpc_call renvoie None (succès) :
+                                                BLOCK_HASH=<hash retourné>
+                                                curl -s https://blockstream.info/api/block/$BLOCK_HASH
+                                                # → status 200 + JSON {height, version, timestamp, …} = bloc accepté par les nœuds publics

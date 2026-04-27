@@ -1,6 +1,24 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C107 PATCH 2** (best DYNAMIQUE auto-MAJ + nx48_alltime intégré, 2026‑04‑27T14:08Z)
+**Cycle courant : C108** (validation forensique live + audit anomalies, 2026‑04‑27T17:00Z)
+- ✅ **Lecture intégrale** : prompt.txt + STANDARD_NAMES.md + analysechatgpt105/106/106_PART2/107/107.1 + AUDIT_LUM_VORAX_VALIDATION_C108 + c105_p0_p1_q1_q6_replit_ibm + analysechatgpt21 (format ref)
+- ✅ **Patches C107 vérifiés en source** : signature `best_nonce` (controller.c L731), `nx48_alltime_try_update` (L881), header binding sidecar (L1189-1202), passage du global engine (L917). Aucune régression.
+- ✅ **Mainnet live confirmé** : tip 946902 (blockstream + mempool), wallet `1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C` tx_count=0 (vierge, attendu)
+- ✅ **CSV alltime canonique** : best_lz=24, nonce=3563405791, update_count=10, wallet mainnet OK
+- ✅ **Overhead LUM ON/OFF mesuré** : 14.8 ns/op OFF vs 15.1 ns/op ON = +2 % (n=200 000, micro-bench isolé tracker pur)
+- ✅ **Submitblock RPC** : implémenté ligne 121 `validate_pow_candidate.py` — bloqué par `BTC_RPC_URL` absent (= bitcoind absent Ubuntu)
+- ✅ **OpenCL Makefile** : auto-détecté (`pkg-config --exists OpenCL` L62) — actif sur Ubuntu UHD 620 (9.83 MH/s prouvé), inactif Replit
+- 🔴 **A4 confirmée live** : Doppler `ADDRESS_P2PKH = tb1qlm4tvk…` (= bech32 testnet, pas P2PKH mainnet) — anomalie nommage
+- 🔴 **A5 nouvelle** : `nx48_alltime_records.jsonl` contient 2 records test orphelins (`tb1qtest`, `deadbeef`) — endpoint `/agent/nx48_alltime` non protégé par header binding
+- 🔴 **A6 actuelle** : agent WS Ubuntu déconnecté (`queue_len=0, results_count=0`) — utilisateur doit relancer `bash ~/agent_ubuntu_ws.sh`
+- ⏸ **IBM** : compte gelé inchangé (`account.frozen=true` JWT) — TOUS jobs IBM laissés pending, conformément consigne user
+- ✅ **Anciens rapports MD5 INTACTS** (vérifié 17:00Z) : 105 + 106 + 106_P2 + 107 + 107.1 + AUDIT_C108 + RAPPORT_VALIDATION_C106 + c105_p0_p1
+- 📋 **Nouveau rapport** : `CHAT/analysechatgpt108.md` (384 L, MD5 `b8ff8f7b0bca3a562574417370e5e14d`, NEUF, NE JAMAIS modifier)
+- 📐 **Commandes Replit + Ubuntu fish** : §7 du rapport C108 (agent WS, bitcoind testnet4, OpenCL UHD 620, submitblock, push job)
+
+---
+
+**Cycle précédent : C107 PATCH 2** (best DYNAMIQUE auto-MAJ + nx48_alltime intégré, 2026‑04‑27T14:08Z)
 - ✅ **C107 P1** : Sidecar `.lum.header` (header binding) + reset auto si mismatch (nx48_btc_controller.c L1061-1102)
 - ✅ **C107 P2** : Bug HISTORIQUE C92.2 corrigé → signature `nx48_btc_update` étend `uint32_t best_nonce` (controller.h L269 + .c L734 + engine.c L920)
 - ✅ **try_update intégré** : à chaque NEW RECORD, appel `nx48_alltime_try_update()` avec header env + wallet env (controller.c L880-903)
