@@ -916,3 +916,12 @@
 2026-04-26 21:15 - nx48_alltime_records.jsonl + C100 — Fichier audit append-only serveur Replit : 1 ligne JSON par record persiste, bootstrap au demarrage scan le fichier pour reconstituer le best courant
 2026-04-26 21:15 - btc_nx48_alltime.csv + C100 — Fichier CSV cote Ubuntu : schema_version,best_lz_alltime,best_nonce_alltime,header_hex_80B,wallet_address,run_id_first,run_id_last_update,ts_unix_first,ts_unix_last_update,update_count
 2026-04-26 21:15 - C100-SMOKE-PASS + C100 — Validation smoke test 3s : seed best_lz=37 confirme depuis CSV, NX48 init avec best_leading=37 (vs 29 vanilla), CSV non-modifie post-run (pas de regression)
+
+
+2026-04-27 21:30 - C110-OPT-INTEGRATION + C110 — Intégration de 4 modules src/optimization/ au binaire BTC : reasoning_path_tracker, formal_kernel_v40, thermal_regulator, async_logger ; passage de 16 à 20 .c liés au binaire
+2026-04-27 21:30 - g_btc_reasoning_trace + C110 — Pointer global reasoning_trace_t* exposé par main_btc_mining.c pour nx48_btc_controller.c ; trace les décisions NEW-RECORD avec confidence=lz/256, lyapunov_proxy=exploration_bias
+2026-04-27 21:30 - BTC_REASONING_TRACE + C110 — Variable d'environnement (1=actif) qui active reasoning_path_tracker dans le binaire BTC ; trace JSON sauvegardée à logs/forensic/modules/btc_reasoning_trace_<run_id>.json
+2026-04-27 21:30 - BTC_ASYNC_LOG + C110 — Variable d'environnement (1=actif) qui active async_logger off-hot-path ; journalisation pthread non-bloquante à logs/forensic/modules/btc_async_log_<run_id>.log
+2026-04-27 21:30 - C110-AVX-FIX-FALLBACK + C110 — Fix nx48_btc_controller.c L200-210 : fallback __builtin_cpu_supports("avx2"|"avx512f") si /proc/cpuinfo ne propage pas le flag (résout AVX:0 sur Ubuntu i5-8265U Kaby Lake)
+2026-04-27 21:30 - C110-WALLET-MAINNET-WARN + C110 — Avertissement explicite (encadré ASCII) dans main_btc_mining.c quand MAINNET sans BTC_WALLET_PRIV_HEX : prévient la perte de BTC en cas de bloc miné avec wallet éphémère
+2026-04-27 21:30 - thermal_regulator.h + C110 — Header créé (manquant en C109) pour exposer thermal_throttle_check(int load) ; module désormais linkable
