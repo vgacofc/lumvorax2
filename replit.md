@@ -1,18 +1,21 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C106** (BTC mainnet test réel + IBM proof + LUM bit-level Test A PASS, 2026‑04‑27T13:34Z)
-- ✅ **2 rapports nouveaux** (anciens jamais modifiés) :
-  - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt106.md` (cycle principal + réponses Q wallet/mainnet)
-  - `src/advanced_calculations/bitcoin_quantum_mining/CHAT/RAPPORT_LUM_VORAX_VALIDATION_C106.md` (sections 1–8 prompt validation)
-- ✅ **BTC MAINNET réel exécuté** (refus du verdict "impossible" sans test) : tip live blockstream height=946 882, hash `000000000000000000014f5fd70581fa…`, LZ_required=79, difficulty=135.6 T. Run 60 s : 74 PT-MC accept, 75 rep_hot, best_loaded=37, alltime CSV inchangé (logique stat : T̄ ≈ 7 Gyr sur Replit 8-thread)
-- ✅ **LUM bit-level Test A PASS** : `logs/c106/lum_trace.jsonl` (66 lignes JSONL FNV1a) → reconstruction sha256 `650b5c8f50…1713ae4f2b29` IDENTIQUE à dump original. **Test A VERDICT=PASS**
-- ✅ **Overhead LUM mesuré** (Test B) : 332 ns/mutation OFF vs 4 530 ns/mutation ON (+4.2 µs surcoût trace JSONL = 13.6×)
-- 🔴 **IBM Quantum compte GELÉ** (preuve JWT brute `logs/c106/ibm_jwt_decoded.json` `account.frozen=true`, email vgaccodex01@gmail.com, bss=1ac3cc9b…). IAM HTTP 200 mais backends API HTTP 401 (trace 476ce38a-…). **Action user : dégeler compte sur https://cloud.ibm.com → Account status**
-- 🔴 **Anomalie C106-A1** : wallet coinbase **éphémère** (`1MbWfvAW…`) ≠ wallet Doppler `BTC_WALLET_ADDRESS`. Patch C107 nécessaire dans `btc_block_validator.c:wallet_generate_real()`
-- 🔴 **Anomalie C106-A2** : aucun `submitblock` RPC nulle part dans le code (jamais soumis au réseau). Patch C108
-- 🔴 **Anomalie C106-A3** : `coinbase_height=0` hardcodé (BIP34 violation). Patch C107
-- 📐 **Verdict LUM+VORAX** : (A) trace bit-level classique CONFIRMÉ, (B) trace état quantique pré-mesure INVALIDÉ (no-cloning), (D) overhead CONFIRMÉ. **Validation PARTIELLE — claims classiques OK, claims quantiques retirés**
-- 📋 Commandes Ubuntu fish + IBM dans `analysechatgpt106.md` §8
+**Cycle courant : C106-PART2** (corrections + WS Ubuntu + tokens + procédure réseau, 2026‑04‑27T13:48Z)
+- ✅ **3 rapports nouveaux** (anciens jamais modifiés) :
+  - `CHAT/analysechatgpt106.md` (PART1 — cycle principal, NON modifié)
+  - `CHAT/RAPPORT_LUM_VORAX_VALIDATION_C106.md` (sections 1–8 prompt validation, NON modifié)
+  - `CHAT/analysechatgpt106_PART2.md` (NEUF — corrections + tokens + WS Ubuntu + procédure mainnet)
+- ✅ **A1 RÉSOLUE** par config : `doppler run -- ./btc_mining_runner` charge `BTC_WALLET_PRIV_HEX` Doppler ⇒ wallet **FIXE `1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C`** confirmé live (run `btc_C106P2_BIP34`)
+- ✅ **A2 CORRIGÉE** (mauvais diagnostic PART1) : `submitblock` EXISTE déjà dans `scripts/validate_pow_candidate.py:120` (Python via RPC). Pipeline complet `run_btc_infinite.sh` + doc `tools/btc_ubuntu_rpc_setup.md`
+- ✅ **A3 PATCHÉE** : `btc_block_validator.c:281` lit env `BTC_TIP_HEIGHT`/`BTC_COINBASE_HEIGHT` au lieu de hardcode 0. Recompile OK 170 256 bytes
+- ✅ **Agent WS Ubuntu Vostro 5481 prouvé** : 2 jobs returncode=0 (whoami + recon Doppler), kernel 6.17.0-22, repo `f58e826`, **PAS de GPU NVIDIA**, doppler `/usr/bin/doppler`, `BTC_WALLET_ADDRESS` Doppler partagé OK
+- 🔴 **A4 NOUVELLE** : `ADDRESS_P2PKH` Doppler = `tb1qlm4tvk…` (bech32 testnet, pas P2PKH) — nommage trompeur, à renommer
+- 📊 **Tokens mainnet identifiés** : trio Doppler `BTC_WALLET_ADDRESS` + `BTC_WALLET_PRIV_HEX` + `BTC_WALLET_WIF`. Verif live blockstream : tx_count=0, sats=0 (wallet vierge, jamais minté = attendu)
+- 📊 **58 secrets Doppler** listés exhaustivement dans PART2 §2
+- 📊 **Tip mainnet** PART1=946882 → PART2=946883 (+1 bloc miné par d'autres, 90 min écoulées)
+- 🔴 **IBM Quantum compte GELÉ** (inchangé — `account.frozen=true` JWT). **Action user : dégeler sur cloud.ibm.com**
+- 📐 **Verdict LUM+VORAX** (PART1) : (A) PASS, (B) INVALIDÉ no-cloning, (D) overhead CONFIRMÉ
+- 📋 **Procédure réseau** complète dans PART2 §3 + §7 (3 niveaux blockstream + Bitcoin Core RPC local)
 
 **Cycle précédent : C99 partie 5 / C99-105** (P0.1 hook + Q4 + Q6 + Goals partiels, 2026‑04‑26T22:10Z)
 - ✅ **P0.1 coupler hook intégré** dans `nx48_btc_controller.c` L574-614 (modulation ±15% borne [0.05, 0.95])
