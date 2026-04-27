@@ -13,6 +13,7 @@
 CC      ?= gcc
 CFLAGS  ?= -O3 -std=c11 -Wall -Wextra \
         -D_POSIX_C_SOURCE=200809L \
+        -D_DEFAULT_SOURCE \
         -DLUMVORAX_ENABLED=1 \
         -march=native \
         -ftree-vectorize \
@@ -47,20 +48,24 @@ HTS_ROOT := $(LUM_ROOT)advanced_calculations/quantum_problem_hubbard_hts/
 
 # Sources forensic LumVorax partagees (ultra_forensic_logger + memory_tracker)
 LUM_SRC  := $(LUM_ROOT)debug/ultra_forensic_logger.c \
-	$(LUM_ROOT)debug/memory_tracker.c \
-	$(LUM_ROOT)common/lvx_log_rotate.c \
-	$(LUM_ROOT)neural_network/nx48_neuro_coupler.c \
-	$(LUM_ROOT)neural_network/izhikevich_spiking.c \
-	$(LUM_ROOT)neural_network/stdp_plasticity.c
+        $(LUM_ROOT)debug/memory_tracker.c \
+        $(LUM_ROOT)common/lvx_log_rotate.c \
+        $(LUM_ROOT)neural_network/nx48_neuro_coupler.c \
+        $(LUM_ROOT)neural_network/izhikevich_spiking.c \
+        $(LUM_ROOT)neural_network/stdp_plasticity.c
 
 # C110 - Modules optimisation src/optimization actives (audit C109 §10):
 #   reasoning_path_tracker : trace decisions NX48 (formal_kernel_v40)
 #   thermal_regulator      : protection throttle CPU > 90% load
 #   async_logger           : journalisation off-hot-path (pthread)
 LUM_SRC  += $(LUM_ROOT)optimization/reasoning_path_tracker.c \
-	$(LUM_ROOT)optimization/formal_kernel_v40.c \
-	$(LUM_ROOT)optimization/thermal_regulator.c \
-	$(LUM_ROOT)optimization/async_logging/async_logger.c
+        $(LUM_ROOT)optimization/formal_kernel_v40.c \
+        $(LUM_ROOT)optimization/thermal_regulator.c \
+        $(LUM_ROOT)optimization/async_logging/async_logger.c
+
+# C111 - Modules LUM 100% : tracage memoire process + encodeur log natif
+LUM_SRC  += $(LUM_ROOT)lum/lum_memory_tracer.c \
+        $(LUM_ROOT)lum/lum_log_encoder.c
 
 # Chemin include lumvorax_integration.c si necessaire
 LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
@@ -69,7 +74,7 @@ LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
 # ── OpenCL detection automatique (Intel UHD 620 Ubuntu) ─────────────
 # C63 : btc_opencl_runner.c active si libOpenCL disponible
 HAVE_OPENCL := $(shell pkg-config --exists OpenCL 2>/dev/null && echo 1 || \
-	       ls /usr/lib/x86_64-linux-gnu/libOpenCL.so* 2>/dev/null | head -1 | wc -l | tr -d ' ')
+               ls /usr/lib/x86_64-linux-gnu/libOpenCL.so* 2>/dev/null | head -1 | wc -l | tr -d ' ')
 ifeq ($(HAVE_OPENCL),1)
 CFLAGS   += -DBTC_OPENCL_ENABLED=1
 OCL_LIBS  := $(shell pkg-config --libs OpenCL 2>/dev/null || echo "-lOpenCL")
@@ -88,15 +93,15 @@ OCL_SRC   := src/btc_opencl_runner.c
 
 # Sources Module 17
 BTC_SRC  := src/sha256_lumvorax.c \
-	src/nx48_btc_controller.c \
-	src/btc_mining_engine.c \
-	src/btc_wallet.c \
-	src/btc_block_validator.c \
-	src/main_btc_mining.c \
-	src/nx48_alltime_record.c \
-	src/nx48_coupler_bridge.c \
-	src/btc_testnet3_runtime.c \
-	$(OCL_SRC)
+        src/nx48_btc_controller.c \
+        src/btc_mining_engine.c \
+        src/btc_wallet.c \
+        src/btc_block_validator.c \
+        src/main_btc_mining.c \
+        src/nx48_alltime_record.c \
+        src/nx48_coupler_bridge.c \
+        src/btc_testnet3_runtime.c \
+        $(OCL_SRC)
 
 # Binaire principal
 BIN := btc_mining_runner
@@ -106,32 +111,33 @@ BIN := btc_mining_runner
 #   -I$(HTS_ROOT)include             -> workspace/src/advanced_calculations/quantum_problem_hubbard_hts/include/
 #                                       -> trouve lumvorax_integration.h
 INCLUDES := -I$(LUM_ROOT) \
-	-I$(LUM_ROOT)optimization \
-	-I$(HTS_ROOT)include \
-	-Iinclude \
-	-Isrc
+        -I$(LUM_ROOT)lum \
+        -I$(LUM_ROOT)optimization \
+        -I$(HTS_ROOT)include \
+        -Iinclude \
+        -Isrc
 
 all: $(BIN)
 
 $(BIN): $(BTC_SRC) $(LUM_SRC)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) \
-	-o $@ $(BTC_SRC) $(LUM_SRC) $(LDLIBS)
-	@echo "[MODULE 17] Compilation OK -> $(BIN)"
-	@ls -lh $(BIN)
+        $(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) \
+        -o $@ $(BTC_SRC) $(LUM_SRC) $(LDLIBS)
+        @echo "[MODULE 17] Compilation OK -> $(BIN)"
+        @ls -lh $(BIN)
 
 # Gate : test integrite SHA-256 (vecteur NIST)
 test: $(BIN)
-	@echo "[BTC_GATE] BTC_SHA256_INTEGRITY_GATE..."
-	./$(BIN) --mode BENCHMARK --duration-s 1 --threads 1
-	@echo "[BTC_GATE] Test termine"
+        @echo "[BTC_GATE] BTC_SHA256_INTEGRITY_GATE..."
+        ./$(BIN) --mode BENCHMARK --duration-s 1 --threads 1
+        @echo "[BTC_GATE] Test termine"
 
 # Benchmark 60 secondes
 benchmark: $(BIN)
-	@echo "[BTC_QM] Benchmark 60s - 16 threads"
-	./$(BIN) --mode BENCHMARK --duration-s 60 --threads 16
+        @echo "[BTC_QM] Benchmark 60s - 16 threads"
+        ./$(BIN) --mode BENCHMARK --duration-s 60 --threads 16
 
 clean:
-	rm -f $(BIN)
-	@echo "[MODULE 17] Nettoyage OK"
+        rm -f $(BIN)
+        @echo "[MODULE 17] Nettoyage OK"
 
 .PHONY: all clean test benchmark

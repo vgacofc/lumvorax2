@@ -1,6 +1,39 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C109** (audit src/optimization complet + 3 bugs corrigés temps réel + run mainnet validé, 2026-04-27T19:06Z)
+**Cycle courant : C111** (modules LUM 100% : tracage memoire process + encodeur log natif + fix 3 bugs C110 path GPU, 2026-04-27T22:15Z)
+
+## C111 (en cours) — Modules LUM 100% + Fix bugs C110
+**Faisabilite tracage** : process bit-par-bit OUI (faisable, /proc/self/{maps,pagemap,mem}) ; OS/kernel via /proc/kcore PARTIEL (root requis) ; machine/hyperviseur NON ; quantique avant mesure NON (no-cloning theorem)
+**4 nouveaux fichiers** : `src/lum/lum_memory_tracer.{h,c}` (snapshot+reconstruction format .lum binaire 3 granularites PAGE/BYTE/BIT) + `src/lum/lum_log_encoder.{h,c}` (writer thread-safe append-only)
+**3 bugs C110 corriges** :
+  - BUG-A : `btc_mining_engine.c` L1147 — path GPU declenche desormais `nx48_alltime_try_update` (avant : seul path CPU le faisait, donc records GPU=34bits jamais persistes en C110)
+  - BUG-B : `btc_mining_engine.c` L1174 — path GPU declenche desormais `reasoning_trace_add_node` (label "GPU_NEW_RECORD lz=X")
+  - BUG-C : `Makefile` L18 — ajout `-D_DEFAULT_SOURCE` (supprime warning glibc moderne usleep deprecated par _POSIX_C_SOURCE>=200112L)
+**Doublons evites** : `LUM_LOG_INFO/WARN/ERROR/...` renommes en `LUM_LOG_KIND_*` (collision semantique avec `kaggle_*/lum_logger.h` historique non-link au binaire BTC mais source de confusion)
+**STANDARD_NAMES.md** : +23 entrees C111 (lum_memory_tracer, lum_log_encoder, granularites, magic numbers, hooks GPU)
+**Compilation Replit** : OK sans warning (`[MODULE 17] Compilation OK -> btc_mining_runner` apres `-D_DEFAULT_SOURCE`)
+**MD5 anciens rapports CHAT (105-109.1)** : verifies intacts sur Replit, propagation Ubuntu via job WS in-flight
+**Run Ubuntu MAINNET 10min C111** : in-flight (job_id 3f620f5dac33, http_queue car payload base64 50KB > WS limit)
+
+## C110 (TERMINE) — Integration src/optimization/ + run mainnet Ubuntu
+- ✅ **Lecture intégrale** : prompt.txt + STANDARD_NAMES.md + analysechatgpt108/109/109.1 + 2 prompts joints (validation LUM bit-par-bit + analyse runs réels mainnet)
+- ✅ **MD5 anciens rapports CHAT** TOUS intacts (vérifiés Replit + Ubuntu) : 105 → 109.1 inchangés
+- ✅ **Audit src/ A→Z** : 300 .c repo, **20 linkés au binaire BTC C110** (vs 16 en C109, +4 modules optimization). Catalogue dans rapport §2
+- ✅ **Patches C110 appliqués** : (a) `__builtin_cpu_supports` fallback AVX nx48_btc_controller.c L200-210, (b) warning ASCII MAINNET sans wallet privé main_btc_mining.c L331-380, (c) Makefile `LUM_SRC += reasoning_path_tracker.c + formal_kernel_v40.c + thermal_regulator.c + async_logging/async_logger.c`, (d) globals + init/cleanup `g_btc_reasoning_trace` + async_logger dans main, (e) hook `reasoning_trace_add_node` dans nx48_btc_controller.c L909-928, (f) header `src/optimization/thermal_regulator.h` créé
+- ✅ **Run mainnet 10 min Ubuntu C110** (premier run > 60s jamais réalisé) : RUN_ID `c110_ub_1777326003`, durée 600.02s, hashrate **8.63 MH/s** stabilisé (5.18 G hashes), best_leading **34 bits** (vs 29 C109), NX48 update_count **314** (vs 17 C109, +18×), NX48 delta 14.5 → 51.7 (exploration boost actif), CPU 39%, RAM 3114 MB, pas de thermal throttle
+- ✅ **Doppler `dev_lumvorax`** + wallet fallback `1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C` chargé (warning C110 affiché car BTC_WALLET_PRIV_HEX absent)
+- ✅ **Agent WS Ubuntu** : token `92a3caf6...` (dérivé `sha256(agent:SESSION_SECRET)[:32]`), transport WebSocket actif, 3 jobs poussés (audit + build+run + forensic-collect)
+- ✅ **STANDARD_NAMES.md** : 7 nouvelles entrées C110 (C110-OPT-INTEGRATION, g_btc_reasoning_trace, BTC_REASONING_TRACE, BTC_ASYNC_LOG, C110-AVX-FIX-FALLBACK, C110-WALLET-MAINNET-WARN, thermal_regulator.h)
+- ⚠️ **BUG-C110-A** : `nx48_alltime` reste à 24 alors que best in-mem = 34 → cause : path GPU C69 ne déclenche pas `nx48_alltime_try_update` (uniquement appelé depuis path NX48 controller CPU). Fix C111
+- ⚠️ **BUG-C110-B** : `reasoning_trace` 0 noeuds malgré best=34 → même cause : hook dans path CPU, records viennent du path GPU. Fix C111 = dupliquer hook dans `btc_opencl_runner.c`
+- ⚠️ **BUG-C110-C** : warning compilation `usleep` implicit decl dans `thermal_regulator.c` → `#include <unistd.h>` à ajouter (cosmétique, pas d'impact runtime)
+- ⏸ **IBM** : gelé en C110 conformément directive (aucun call IBM)
+- 📋 **Nouveau rapport** : `CHAT/analysechatgpt110.md` (484 L, NEUF, NE JAMAIS modifier)
+- 📐 **Couverture src/** : 6.7 % (20/300) — modules dormants candidats C111 : `blockchain_lumvorax/`, `asic_simulation/`, `crypto/shf/`, `parallel/`
+
+---
+
+**Cycle précédent : C109** (audit src/optimization complet + 3 bugs corrigés temps réel + run mainnet validé, 2026-04-27T19:06Z)
 - ✅ **Audit ligne par ligne 15 modules `src/optimization/`** : 4 451 LOC inertes (0/14 liés au binaire BTC). Catalogue API + plan intégration C110/C111/C112 dans rapport §4
 - ✅ **BUG-C109-A corrigé temps réel** : binaire ELF NixOS (`interpreter /nix/store/...`) non-portable Ubuntu → `make -B` rebuild Ubuntu → 190K avec `/lib64/ld-linux-x86-64.so.2` + `libOpenCL.so.1` automatiquement LINKÉ
 - ✅ **BUG-C109-B corrigé** : `doppler --config dev` (root locked) → `dev_lumvorax` (la bonne) → wallet FIXE Doppler `1YkQrH...` chargé `[BTC_QM] Wallet FIXE chargé depuis secrets ✓`

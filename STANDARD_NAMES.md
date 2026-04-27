@@ -925,3 +925,28 @@
 2026-04-27 21:30 - C110-AVX-FIX-FALLBACK + C110 — Fix nx48_btc_controller.c L200-210 : fallback __builtin_cpu_supports("avx2"|"avx512f") si /proc/cpuinfo ne propage pas le flag (résout AVX:0 sur Ubuntu i5-8265U Kaby Lake)
 2026-04-27 21:30 - C110-WALLET-MAINNET-WARN + C110 — Avertissement explicite (encadré ASCII) dans main_btc_mining.c quand MAINNET sans BTC_WALLET_PRIV_HEX : prévient la perte de BTC en cas de bloc miné avec wallet éphémère
 2026-04-27 21:30 - thermal_regulator.h + C110 — Header créé (manquant en C109) pour exposer thermal_throttle_check(int load) ; module désormais linkable
+
+
+2026-04-27 22:15 - lum_memory_tracer.h + C111 — Header module tracage memoire process Linux (snapshot + reconstruction format LUM 100%)
+2026-04-27 22:15 - lum_memory_tracer.c + C111 — Implementation tracage memoire process via /proc/self/{maps,pagemap,mem} ; 3 granularites supportees (page, byte, bit)
+2026-04-27 22:15 - lum_trace_granularity_t + C111 — Enum granularite : LUM_TRACE_GRANULARITY_PAGE (1 LUM/4KiB), _BYTE (1 LUM/octet), _BIT (1 LUM/bit) ; choix du compromis taille/precision
+2026-04-27 22:15 - lum_trace_stats_t + C111 — Struct stats snapshot : total_lums_emitted, total_pages_scanned, total_pages_resident, total_bytes_dumped, snapshot_ns, magic
+2026-04-27 22:15 - lum_memory_snapshot_self + C111 — API dump memoire process self vers fichier .lum binaire (header 32o + N x lum_t alignes 64o + contenu si granularite PAGE)
+2026-04-27 22:15 - lum_memory_reconstruct + C111 — API reconstruction buffer cible depuis fichier .lum ; preserve adresses virtuelles d'origine dans lum_t.memory_address
+2026-04-27 22:15 - lum_memory_validate_diff_zero + C111 — API validation reconstruction strictement byte-a-byte (diff_count=0 garanti si process gele entre snapshot et reconstruction)
+2026-04-27 22:15 - LUM_TRACER_MAGIC + C111 — Magic number 0x4C554D54 ('LUMT') marqueur fichier .lum tracer memoire (header + chaque lum_t)
+2026-04-27 22:15 - lum_log_encoder.h + C111 — Header module encodeur log natif format LUM 100% (toute log devient sequence de lum_t alignes 64o append-only)
+2026-04-27 22:15 - lum_log_encoder.c + C111 — Implementation writer thread-safe (pthread_mutex) avec continuation marker pour payloads > 20o
+2026-04-27 22:15 - lum_log_kind_t + C111 — Enum types evenements : LUM_LOG_KIND_INFO/WARN/ERROR/METRIC/RECORD/DECISION/QUANTUM_OBS (prefixe _KIND_ pour eviter collision avec lum_logger.h historique)
+2026-04-27 22:15 - lum_log_writer_t + C111 — Struct opaque writer (FILE* + pthread_mutex + next_id + events_written) ; signature opaque pour ABI stable
+2026-04-27 22:15 - lum_log_writer_open + C111 — Constructeur writer mode append-only ; retourne NULL si erreur
+2026-04-27 22:15 - lum_log_writer_write_text + C111 — Ecriture texte (kind, message <= 40o effectifs ; au-dela continuation_lum)
+2026-04-27 22:15 - lum_log_writer_write_metric + C111 — Ecriture mesure scalaire double (encodee "name=val" via snprintf %.17g preservation precision)
+2026-04-27 22:15 - lum_log_writer_write_record + C111 — Ecriture record uint64 (encodee "name=val")
+2026-04-27 22:15 - lum_log_writer_close + C111 — Destructeur writer (flush+fsync+free, thread-safe)
+2026-04-27 22:15 - LUM_LOG_MAGIC + C111 — Magic number 0x4C554D4C ('LUML') marqueur fichier .lum log encoder
+2026-04-27 22:15 - C111-FIX-BUG-C110-A + C111 — Patch btc_mining_engine.c L1147 : path GPU declenche desormais nx48_alltime_try_update + push WS sentinelle (avant C111, seul path CPU le faisait)
+2026-04-27 22:15 - C111-FIX-BUG-C110-B + C111 — Patch btc_mining_engine.c L1174 : path GPU declenche desormais reasoning_trace_add_node (label "GPU_NEW_RECORD lz=X nonce=Y")
+2026-04-27 22:15 - C111-FIX-USLEEP + C111 — Ajout -D_DEFAULT_SOURCE au CFLAGS Makefile BTC : supprime warning glibc moderne sur usleep deprecated par _POSIX_C_SOURCE>=200112L
+2026-04-27 22:15 - C111-ALLTIME-GPU + C111 — Prefixe log forensic "[C111-ALLTIME-GPU] RECORD ABSOLU GPU lz=X nonce=Y" pour tracer les records persistes par le path GPU
+2026-04-27 22:15 - btc_gpu_work_t.cfg + C111 — Champ ajoute a struct btc_gpu_work_t : reference const btc_engine_config_t* pour expose header_template + run_id au thread GPU (necessaire pour hooks alltime/reasoning)

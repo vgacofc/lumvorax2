@@ -61,6 +61,8 @@
 #include "nx48_btc_controller.h"
 #include "nx48_coupler_bridge.h"  /* C99 — pont neuro Izhikevich+STDP */
 #include "nx48_alltime_record.h"  /* C100 — persistance MONOTONE record absolu */
+#include "reasoning_path_tracker.h"  /* C111 — hook reasoning trace path GPU */
+extern reasoning_trace_t* g_btc_reasoning_trace;  /* C111 — exposé par main_btc_mining.c */
 #include "../include/btc_mining_forensic.h"
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
@@ -1043,6 +1045,7 @@ typedef struct {
     uint32_t      target_bits; /* bits zéro requis — 20 pour near-miss, 64+ pour mainnet */
     uint64_t      duration_ns; /* durée max en ns (0 = illimité) */
     uint64_t      ts_start_ns; /* timestamp démarrage moteur */
+    const btc_engine_config_t* cfg; /* C111 : référence cfg (header_template, run_id) pour hooks alltime/reasoning GPU */
 } btc_gpu_work_t;
 
 /* Thread GPU : tourne en parallèle des threads CPU */
@@ -1140,6 +1143,47 @@ static void* btc_gpu_thread(void* arg) {
                 printf("[C69-GPU] Nouveau record GPU : %u bits (nonce_start=%u)\n",
                        out_best, nonce_start);
                 fflush(stdout);
+
+                /* C111-FIX-BUG-C110-A : path GPU déclenche aussi nx48_alltime_try_update
+                 * (avant C111, seul path CPU le faisait → records GPU jamais persistés) */
+                if (gw->cfg) {
+                    char hdr_hex[NX48_ALLTIME_HEADER_HEX_LEN] = {0};
+                    const uint8_t *hp = (const uint8_t*)&gw->cfg->header_template;
+                    for (int hi = 0; hi < 80; hi++) {
+                        snprintf(hdr_hex + hi*2, 3, "%02x", hp[hi]);
+                    }
+                    const char *wallet_env = getenv("BTC_WALLET_ADDRESS");
+                    int upd_rc = nx48_alltime_try_update(
+                        NX48_ALLTIME_DEFAULT_PATH,
+                        (int)out_best,
+                        nonce_start,
+                        hdr_hex,
+                        (wallet_env && wallet_env[0]) ? wallet_env : "-",
+                        gw->cfg->run_id);
+                    if (upd_rc == 1) {
+                        FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                            "btc_alltime_record_updated_gpu",
+                            (double)out_best);
+                        printf("[C111-ALLTIME-GPU] RECORD ABSOLU GPU lz=%u "
+                               "nonce=%u → btc_nx48_alltime.csv\n",
+                               out_best, nonce_start);
+                        fflush(stdout);
+                    }
+                }
+
+                /* C111-FIX-BUG-C110-B : path GPU déclenche aussi reasoning_trace_add_node
+                 * (g_btc_reasoning_trace est exposé par main_btc_mining.c).
+                 * Signature : (trace, decision_label, confidence, lyapunov_stability) */
+                if (g_btc_reasoning_trace) {
+                    char lbl[64];
+                    snprintf(lbl, sizeof(lbl),
+                             "GPU_NEW_RECORD lz=%u nonce=%u", out_best, nonce_start);
+                    reasoning_trace_add_node(
+                        (reasoning_trace_t*)g_btc_reasoning_trace,
+                        lbl,
+                        (float)out_best / 256.0f,
+                        eng->nx48 ? (float)eng->nx48->exploration_bias : 0.0f);
+                }
             }
             pthread_mutex_unlock(&eng->global_mutex);
         }
@@ -1344,6 +1388,7 @@ int btc_engine_run(const btc_engine_config_t* cfg, nx48_btc_state_t* nx48) {
         gpu_work.eng         = eng;
         gpu_work.duration_ns = cfg->duration_ns;
         gpu_work.ts_start_ns = eng->ts_start_ns;
+        gpu_work.cfg         = cfg; /* C111 : exposer cfg au thread GPU pour hooks alltime/reasoning */
         /* Target bits : 20 par défaut (near-miss detection) — configurable via env */
         const char* env_tb   = getenv("BTC_GPU_TARGET_BITS");
         gpu_work.target_bits = env_tb ? (uint32_t)atoi(env_tb) : 20u;
