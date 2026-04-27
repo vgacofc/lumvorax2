@@ -57,6 +57,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "nx48_btc_controller.h"
+#include "nx48_alltime_record.h"  /* C107 : persistance MONOTONE par header */
 #include "../include/btc_mining_forensic.h"
 /* NOTE C99-P5 : Le hook coupler officiel est dans btc_mining_engine.c
  * (nx48_bridge_*) — voir rapport 103 (C99 P2). Pas de hook duplicata ici. */
@@ -727,6 +728,7 @@ void nx48_btc_update(
     const double             features[NX48_BTC_N_FEATURES],
     double                   prob,
     int                      best_leading_zeros,
+    uint32_t                 best_nonce,  /* C107 : nonce qui a produit le record */
     double                   hashrate_mhs)
 {
     /* Label linéaire [0, 256] — C38-FIX-LABEL-256 maintenu */
@@ -852,6 +854,7 @@ void nx48_btc_update(
     /* ── Stagnation record ──────────────────────────────────────── */
     if (best_leading_zeros > s->best_leading_zeros) {
         s->best_leading_zeros = best_leading_zeros;
+        s->best_nonce         = best_nonce;  /* C107 : nonce du record courant pour persistance par header */
         s->stall_count        = 0;
         s->stall_long_count   = 0;
         FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
@@ -864,6 +867,37 @@ void nx48_btc_update(
         }
         if (s->csv_path[0] != '\0') {
             nx48_btc_save_csv(s, s->csv_path);
+        }
+        /* ════════════════════════════════════════════════════════════
+         * C107 — PERSISTANCE MONOTONE PAR HEADER (alltime CSV)
+         * Mise à jour automatique du best ABSOLU bound au header courant.
+         * Si le best monte (LZ=20→25→37), il est persisté avec le header
+         * exact où il a été trouvé. Si le header change, le best alltime
+         * reste mais avec son header d'origine traçable.
+         * ════════════════════════════════════════════════════════════ */
+        const char *hh_env     = getenv("BTC_HEADER_HEX_CURRENT");
+        const char *wallet_env = getenv("BTC_WALLET_ADDRESS");
+        if (hh_env && strlen(hh_env) >= 160 && wallet_env) {
+            int upd = nx48_alltime_try_update(NX48_ALLTIME_DEFAULT_PATH,
+                                              best_leading_zeros,
+                                              best_nonce,
+                                              hh_env,
+                                              wallet_env,
+                                              s->run_id[0] ? s->run_id : "unknown");
+            if (upd > 0) {
+                FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
+                    "btc_nx48_alltime_record_updated_header_bound",
+                    (double)best_leading_zeros);
+                printf("[NX48-ALLTIME-C107] 🏆 NEW ALLTIME : LZ=%d nonce=%u header=%.16s... wallet=%.20s...\n",
+                    best_leading_zeros, best_nonce, hh_env, wallet_env);
+            }
+        } else {
+            /* Pas d'env header/wallet → log warning, on continue (mode local) */
+            static int warned = 0;
+            if (!warned) {
+                fprintf(stderr, "[NX48-ALLTIME-C107] ⚠️  BTC_HEADER_HEX_CURRENT ou BTC_WALLET_ADDRESS absent — alltime CSV non MAJ\n");
+                warned = 1;
+            }
         }
         FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
             "btc_nx48_immediate_save_on_record", (double)best_leading_zeros);

@@ -255,13 +255,15 @@ void nx48_btc_compute_features(
 /* Prédiction NX48_BTC : prob ∈ [0,1] */
 double nx48_btc_predict(nx48_btc_state_t* s, const double features[NX48_BTC_N_FEATURES]);
 
-/* Mise à jour gradient ISTA + sous-neurones + contrôle hardware */
+/* Mise à jour gradient ISTA + sous-neurones + contrôle hardware
+ * C107 : ajout best_nonce pour persistance bound au nonce qui a produit le record */
 void nx48_btc_update(
     nx48_btc_state_t*        s,
     const nx48_btc_config_t* cfg,
     const double             features[NX48_BTC_N_FEATURES],
     double                   prob,
     int                      best_leading_zeros,
+    uint32_t                 best_nonce,
     double                   hashrate_mhs
 );
 

@@ -913,7 +913,9 @@ static void* btc_mining_thread(void* arg) {
                         .hw_detect_interval_s = 30
                     },
                     features, prob,
-                    eng->best_leading_global, hashrate_mhs);
+                    eng->best_leading_global,
+                    (uint32_t)eng->best_nonce_global,  /* C107 : nonce du record courant */
+                    hashrate_mhs);
                 delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
 
                 /* C61 : Appliquer threads dynamiques NX48 */
