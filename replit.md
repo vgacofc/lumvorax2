@@ -1,6 +1,24 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C108** (validation forensique live + audit anomalies, 2026‑04‑27T17:00Z)
+**Cycle courant : C109** (audit src/optimization complet + 3 bugs corrigés temps réel + run mainnet validé, 2026-04-27T19:06Z)
+- ✅ **Audit ligne par ligne 15 modules `src/optimization/`** : 4 451 LOC inertes (0/14 liés au binaire BTC). Catalogue API + plan intégration C110/C111/C112 dans rapport §4
+- ✅ **BUG-C109-A corrigé temps réel** : binaire ELF NixOS (`interpreter /nix/store/...`) non-portable Ubuntu → `make -B` rebuild Ubuntu → 190K avec `/lib64/ld-linux-x86-64.so.2` + `libOpenCL.so.1` automatiquement LINKÉ
+- ✅ **BUG-C109-B corrigé** : `doppler --config dev` (root locked) → `dev_lumvorax` (la bonne) → wallet FIXE Doppler `1YkQrH...` chargé `[BTC_QM] Wallet FIXE chargé depuis secrets ✓`
+- ✅ **BUG-C109-C corrigé** : doppler ne suit pas `cd` shell → chemin absolu binaire obligatoire
+- ✅ **Run mainnet 60s validé** : hashrate 10.41 MH/s (vs 8.97 C106 = +16%), best=29 bits, 552M hashes, GPU UHD 620 actif (`[C69-GPU] Nouveau record GPU : 29 bits @ nonce 94896128`)
+- ✅ **CSV alltime PROGRESSE** : best_lz 24 → **28** (+4 bits), nonce 894390175, header `9db3ef69`, update_count 10 → 11, run_id `btc_20260427T190605Z_195572`, ts_first INVARIANT (MONOTONE C100 OK)
+- ✅ **Tip mainnet** : 946 902 (C108) → 946 912 (C109) = +10 blocs, hash `0000...ece60f4a...cde84c8`
+- ✅ **OpenCL Ubuntu CONFIRMÉ live** : Intel UHD 620 DRI:1, libOpenCL.so.1, clinfo OK, OPENCL_PKG_OK
+- ⚠️ **BUG mineur C110** : `[NX48-HW] AVX:0` alors que i5-8265U a AVX2 → détection à fixer (`__builtin_cpu_supports("avx2")`)
+- ⚠️ **5 wallets éphémères** historiques sur Ubuntu (runs avec `--config dev`) — à nettoyer C110
+- ⏸ **IBM** : gelé/pending respecté (aucun call IBM cette session, conformément directive)
+- ✅ **Anciens rapports MD5 INTACTS** (vérifié post-écriture C109) : 100/101/102/103/104/105/106/107/108
+- 📋 **Nouveau rapport** : `CHAT/analysechatgpt109.md` (543 L, MD5 `8ac05d06bb5da08a0eef372bb464d9f5`, NEUF, NE JAMAIS modifier)
+- 📐 **Procédure compilation Ubuntu obligatoire** : ne plus pousser binaire Replit (NixOS) sur Ubuntu — toujours `make -B` côté lvx
+
+---
+
+**Cycle précédent : C108** (validation forensique live + audit anomalies, 2026‑04‑27T17:00Z)
 - ✅ **Lecture intégrale** : prompt.txt + STANDARD_NAMES.md + analysechatgpt105/106/106_PART2/107/107.1 + AUDIT_LUM_VORAX_VALIDATION_C108 + c105_p0_p1_q1_q6_replit_ibm + analysechatgpt21 (format ref)
 - ✅ **Patches C107 vérifiés en source** : signature `best_nonce` (controller.c L731), `nx48_alltime_try_update` (L881), header binding sidecar (L1189-1202), passage du global engine (L917). Aucune régression.
 - ✅ **Mainnet live confirmé** : tip 946902 (blockstream + mempool), wallet `1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C` tx_count=0 (vierge, attendu)

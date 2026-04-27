@@ -323,6 +323,26 @@ int main(int argc, char* argv[]) {
     }
 
     if (!wallet) {
+        /* C110 BUG-C109-B : avertissement explicite si MAINNET sans wallet fixe */
+        if (btc_net == BTC_NETWORK_MAINNET) {
+            fprintf(stderr,
+                "\n"
+                "╔══════════════════════════════════════════════════════════════════╗\n"
+                "║  ⚠️  AVERTISSEMENT MAINNET — WALLET ÉPHÉMÈRE                     ║\n"
+                "║                                                                  ║\n"
+                "║  BTC_WALLET_PRIV_HEX absent ou invalide.                         ║\n"
+                "║  Un wallet aléatoire va être généré : SI un bloc est miné,       ║\n"
+                "║  les BTC iront à une adresse JAMAIS récupérable                  ║\n"
+                "║  (clé privée perdue à la fin du process).                        ║\n"
+                "║                                                                  ║\n"
+                "║  CORRECTION :                                                    ║\n"
+                "║    doppler run --config dev_lumvorax -- ./btc_mining_runner ... ║\n"
+                "║                                                                  ║\n"
+                "║  ce qui charge BTC_WALLET_PRIV_HEX → adresse FIXE Doppler.       ║\n"
+                "╚══════════════════════════════════════════════════════════════════╝\n"
+                "\n");
+            fflush(stderr);
+        }
         printf("[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…\n");
         wallet = btc_wallet_create(btc_net, cfg.run_id);
     }
