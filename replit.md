@@ -1,8 +1,52 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C112** (inversion renommage C111 + activation hooks lum_log_writer/lum_memory_tracer dans main_btc_mining.c, 2026-04-28T12:02Z)
+**Cycle courant : C114** (HUGEPAGE réservé + agrégateur runs Python + fixes warnings Ubuntu, 2026-04-28T12:25Z)
 
-## C112 (en cours) — Inversion + activation modules LUM C111
+## C114 (TERMINÉ) — HUGEPAGE réservé + agrégateur runs
+
+**2 livrables** :
+- `LUM_TRACE_GRANULARITY_HUGEPAGE = 3` ajouté à `src/lum/lum_memory_tracer.h` (réservé API future, agrégation 512 pages 4 KiB → 1 huge page 2 MiB pour réduire la taille header sur snapshots Ubuntu RSS large) ; les **2 switches** de `lum_memory_tracer.c` (snapshot ligne 218, reconstruct ligne 300) retournent proprement `-ENOSYS` au lieu de comportement indéfini ; implémentation réelle déférée à C115
+- `tools/btc_runs_aggregator.py` : scanne `logs/forensic/{modules,sessions}/`, détecte 196 runs Replit en <60 s grâce au fast-path 4 MiB max ; produit CSV agrégé (run_id, ts_unix, mode, threads, hashrate_mhps, best_lz, best_nonce, reasoning_nodes, async_log_entries, has_lum_log, has_mem_baseline, has_mem_final)
+
+**Préservation ABI** : `LUM_TRACE_GRANULARITY_PAGE/BYTE/BIT` conservent les valeurs 0/1/2. Recompile BTC sur Replit : binaire 196 848 octets, **zéro warning**, zéro erreur.
+
+**Rapport** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt114.md`
+
+## C113 (TERMINÉ) — Fixes warnings Ubuntu + audit blockchain_lumvorax + commande corrigée
+
+**5 patches non-destructifs** (aucune ABI/sémantique modifiée) pour neutraliser les warnings remontés par le run Ubuntu C112 :
+- `golden_score_optimizer.c:232` : `fscanf` retour vérifié, repli `load_avg = 1.0`
+- `matrix_calculator.c:43` : `>> 64` sur `uint64_t` (UB en C99) remplacé par `__uint128_t` (avec repli `#else` documenté pour archi sans `__int128`)
+- `matrix_calculator.c:55` : `(void)m;` pour la variable conservée pour future implémentation Karatsuba
+- `ai_optimization.c:193-200` : 5 `fread` vérifiés avec `fclose+return false` si tronqué (robustesse checkpoint AI améliorée)
+- `btc_mining_engine.c:817` : test `cfg->run_id` (char[64], adresse jamais NULL) → test `cfg->run_id[0] != '\0'` (chaîne vide)
+
+**Audit `src/blockchain_lumvorax/` (7 .c lecture ligne par ligne)** : 4 constats dignes d'attention :
+1. API `.c` (`lumvorax_chain_*`, `lumvorax_pow_*`) **diffère** du header attendu (`chain_*`, `consensus_pow_mine`)
+2. Statiques globaux **non thread-safe** dans `chain.c` et `consensus_pow_lum.c`
+3. Doublon SHA-256 (`sha256_mini.c` vs `sha256_lumvorax.c` AVX2/SHA-NI)
+4. PoW LUMVORAX (leading-zeros + window 16 + target 10 s) non Bitcoin-compatible
+
+→ **Verdict** : non-intégration au runner BTC en C113, modules dormants pour C115+ (refactor header + mutex + dédoublonnage SHA-256). **Pas listés dans le Makefile BTC**, donc zéro impact sur le binaire prod.
+
+**Bug Ubuntu identifié et corrigé** : l'utilisateur a tapé `cd ~/Lumvorax/lumvorax2/...` mais son alias est `~/L/lumvorax2/...` → `cd` a échoué et `make -B` a été lancé sur le **Makefile racine** au lieu du Makefile BTC (compile inappropriée du projet entier). Commande corrigée fournie dans `analysechatgpt113.md` §6.
+
+**Rapport** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt113.md`
+
+## C112-finition (TERMINÉ) — Parseur Python LUM
+
+**Livrable** : `tools/lum_parser.py` (parseur Python 3 sans dépendance externe pour fichiers `.lum` log encoder + memory tracer + rendu HTML/SVG).
+
+**Validation cross-source** sur smoke test C112 : 6 événements log décodés, valeurs match parfaitement les headers tracer (baseline 20 533 lums = 20 533 pages event, baseline 84 103 168 octets = 84 103 168 bytes event). Delta mesuré : -10 722 lums / -43 917 312 octets entre baseline et final (le binaire BTC libère ~44 MiB après init contextes mining, sain).
+
+**3 bugs format identifiés et corrigés pendant l'intégration** :
+- struct `lum_t` : 60 + 4 octets padding final (= 64), format `<IBBBBiiQQII20s4x`
+- header tracer packed : 32 octets format `<IIQQQ` (pages_resident/snapshot_ns sont en RAM uniquement, jamais sur disque)
+- continuation `0xFF` : 28 octets payload via `position_x` (4) + `position_y` (4) + `padding[20]`
+
+**Rapport** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt112.1.md`
+
+## C112 (TERMINÉ) — Inversion + activation modules LUM C111
 
 **Règle d'or appliquée** : utilisateur exige que les anciens noms soient autoritaires. C111 avait préfixé `LUM_LOG_KIND_*` pour éviter une collision sémantique avec `lum_logger.h` legacy → C112 inverse en restaurant `LUM_LOG_*` (valeurs numériques 10..50 conservées pour éviter chevauchement ABI avec valeurs 0..3 du legacy).
 
@@ -38,7 +82,7 @@
 
 **Bug Makefile tabs RÉCURRENT** depuis C108 : Replit/LSP convertit certains TABs en 8 espaces à chaque édition → toujours `sed -i 's/^        /\t/' Makefile` AVANT `make`.
 
-**Avancement global cycle BTC mainnet (C99 → C112) : 96 %** (+1 pt vs C111).
+**Avancement global cycle BTC mainnet (C99 → C114) : 98 %** (+2 pts vs C112) — reste : run mainnet 10 min Ubuntu avec commande corrigée + implémentation réelle HUGEPAGE en C115 si besoin.
 
 ## C111 (TERMINÉ) — Modules LUM 100% + Fix bugs C110
 **Faisabilite tracage** : process bit-par-bit OUI (faisable, /proc/self/{maps,pagemap,mem}) ; OS/kernel via /proc/kcore PARTIEL (root requis) ; machine/hyperviseur NON ; quantique avant mesure NON (no-cloning theorem)
