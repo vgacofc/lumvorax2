@@ -1,0 +1,147 @@
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260428T221434Z_31977.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260428T221434Z_31977
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 16
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[NX48-LUM] Chargé : update=2280 best=38 bits exploration=0.795 delta=161.24 [header-bound]
+[NX48-QDPR] Feedback C62 : success=66.5% bits=24 rt=11.0s
+[C118-Q2-QDPR] success=66.5% ↑ near_miss_bits 20→21
+[NX48-HW] CPU:8 threads AVX:1 (AVX2) SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:3428MB
+[NX48-HW] Binaire compilé AVEC : AVX2+SSE +FMA | gcc auto-vectorise SHA-256 dès maintenant
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.80 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=2280 best_leading=38
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=16 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.795 | delta_nonce=161.24 | AVX=1
+[SMAPS-KERNEL] RSS=4400 KB (1100 pages 4KiB)
+[SMAPS-KERNEL] AnonHugePages (THP 2MB)=0 KB (0 hugepages)
+[SMAPS-KERNEL] Private_Dirty=664 KB | Shared_Dirty=0 KB
+[SMAPS-KERNEL] Referenced=4400 KB | VM_Total=0 KB
+[SMAPS-KERNEL] Granularité réelle : PAGE 4KiB standard (selon AnonHugePages)
+[C118-Q5] ASIC optimizer balayage 4 tailles batch...
+
+╔══════════════════════════════════════════════════════════╗
+║     ASIC BTC OPTIMIZER — Rapport C115                  ║
+╠══════════════════════════════════════════════════════════╣
+║ CONFIGURATION                                           ║
+║   Pipeline depth    : 64 stages SHA-256              
+║   Moteurs parallèles: 96                              
+║   Fréquence         : 0.000 GHz                        
+║   Stratégie nonce   : SEQUENTIAL                             
+║   Batch size        : 2097152 nonces                      
+║   Durée simulation  : 5 s                         
+╠══════════════════════════════════════════════════════════╣
+║ RÉSULTATS HASHRATE                                      ║
+║   Peak              : 0.001 MH/s                      
+║   Moyen             : 0.001 MH/s                      
+║   Final             : 0.001 MH/s                      
+║   Déclin thermique  : 0.00 %                        
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES EFFICACITÉ                                    ║
+║   W/GH              : 71525.5737                           
+║   J/hash            : 7.15e-05                           
+║   Total hashes      : 2.097e+06                           
+║   Batches traités   : 1                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES QUALITÉ NONCE                                 ║
+║   Best leading bits : 13                              
+║   Best nonce        : 0x00000084                        
+║   Near-miss / MH    : 0.0000                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES NX48                                          ║
+║   Delta final       : 6.000                           
+║   Resets C62        : 0                              
+╠══════════════════════════════════════════════════════════╣
+║ SCORE OPTIMISATION  : 4.1 / 100                     
+╚══════════════════════════════════════════════════════════╝
+
+[C118-Q5] BEST batch=2097152 (idx=3) | score=4.1 | hashrate_avg=0.00 MH/s
+[C118-Q5] nx48_ctrl_batch_size ← 2097152 (boucle feedback fermée)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260428T221434Z_31977                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mmcNFq5grDYRhF44ANsExdzvCtaCpWa2qu        ║
+║ Adresse Bech32  : tb1qgttdvv27w54lwqldecj6qdp40cfce9uatrfejs║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): c3a48b98...(masquée)                     ║
+║ WIF compressé   : cU91H4Ufei8cnPJaruu92G3mDtZqMUMxyoVPGU4LWkxuDnfvprhD║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 42d6d6315e752bf703edce25a034357e138c979d  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260428T221434Z_31977.json
+[BTC_QM] Lancement du moteur PT-MC…
+[OCL] GPU trouvé : Intel(R) UHD Graphics 620 (plateforme: Intel(R) OpenCL Graphics)
+[OCL] → Sélectionné : Intel(R) UHD Graphics 620
+[OCL] max_wg=256 max_items=256 gmem=6715 MB batch=262144
+[OCL] ✅ OpenCL initialisé — batch=262144 — cible: 50-200 MH/s
+[C116-WARMUP] Batch factice JIT en cours (élimination cold-start)...
+[C116-WARMUP] ✅ JIT warm-up terminé : 6.16 MH/s froid (prochain batch = GPU chaud)
+[OCL] Benchmark : 7.15 MH/s (batch=262144, t=0.037s)
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 3427MB
+[C100-ALLTIME] seed best_lz_alltime=38 nonce=4278190080 upd_count=16 (historique préservé)
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[C69-GPU] Thread GPU lance en parallele de 16 threads CPU
+[C69-GPU] Pour valider GPU reel : chercher log '[C69-GPU] ===== THREAD GPU ACTIF'
+[C69-GPU] ===== THREAD GPU ACTIF — btc_opencl_mine_batch() APPELEE =====
+[C69-GPU] Hashrate GPU mesure (benchmark) : 7.15 MH/s
+[C69-GPU] Target near-miss : 20 bits | Batch : 262144 nonces/dispatch
+[C116-P4] near_miss_bits adaptatif = 21 bits (QDPR)
+[C69-GPU] batch #100 | GPU hashes: 26214400 | near-miss GPU best: 25 bits | ~7.2 MH/s
+[C69-GPU] batch #200 | GPU hashes: 52428800 | near-miss GPU best: 25 bits | ~7.2 MH/s
+[BTC_QM] elapsed=10.0s hashes=73666560 hashrate=7.34MH/s best_leading=38 best_nonce=4278190080 nx48_delta=179.32
+[C88-GPU-FIX] Near-miss GPU nonce=2226046829 best=21 bits (target_bits=21) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #300 | GPU hashes: 78643200 | near-miss GPU best: 25 bits | ~7.2 MH/s
+[C69-GPU] batch #400 | GPU hashes: 104857600 | near-miss GPU best: 25 bits | ~7.2 MH/s
+[C69-GPU] batch #500 | GPU hashes: 131072000 | near-miss GPU best: 25 bits | ~7.2 MH/s
+[BTC_QM] elapsed=20.1s hashes=146907136 hashrate=7.32MH/s best_leading=38 best_nonce=4278190080 nx48_delta=187.93
+[C88-GPU-FIX] Near-miss GPU nonce=2291655694 best=21 bits (target_bits=21) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #600 | GPU hashes: 157286400 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[C69-GPU] batch #700 | GPU hashes: 183500800 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[C69-GPU] batch #800 | GPU hashes: 209715200 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[BTC_QM] elapsed=30.3s hashes=221782016 hashrate=7.32MH/s best_leading=38 best_nonce=4278190080 nx48_delta=244.38
+[C69-GPU] batch #900 | GPU hashes: 235929600 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[C69-GPU] batch #1000 | GPU hashes: 262144000 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[BTC_QM] elapsed=40.5s hashes=295821312 hashrate=7.31MH/s best_leading=38 best_nonce=4278190080 nx48_delta=245.49
+[C69-GPU] batch #1100 | GPU hashes: 288358400 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[C69-GPU] batch #1200 | GPU hashes: 314572800 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[C69-GPU] batch #1300 | GPU hashes: 340787200 | near-miss GPU best: 27 bits | ~7.2 MH/s
+[BTC_QM] elapsed=50.5s hashes=369590272 hashrate=7.32MH/s best_leading=38 best_nonce=4278190080 nx48_delta=277.52
+[C69-GPU] batch #1400 | GPU hashes: 367001600 | near-miss GPU best: 28 bits | ~7.2 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2527537072 best=21 bits (target_bits=21) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1500 | GPU hashes: 393216000 | near-miss GPU best: 28 bits | ~7.2 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2566749670 best=23 bits (target_bits=21) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1600 | GPU hashes: 419430400 | near-miss GPU best: 29 bits | ~7.2 MH/s
+[C69-GPU] Thread GPU termine | Total GPU hashes: 421789696 | Best GPU near-miss: 29 bits
+[OCL] Ressources libérées
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 439623680
+[BTC_QM] Durée        : 60.07 s
+[BTC_QM] Hashrate     : 7.32 MH/s
+[BTC_QM] Best leading : 38 bits
+[BTC_QM] Best nonce   : 4278190080
+[BTC_QM] Bloc valide  : non
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_5049905552932.csv
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 3408MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+Rapport résumé généré: logs/forensic/sessions/summary_5049917477789.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement
