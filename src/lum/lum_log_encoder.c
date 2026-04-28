@@ -79,9 +79,25 @@ lum_log_writer_t* lum_log_writer_open(const char* lum_path) {
     return w;
 }
 
+/* C118-Q6 — Court-circuit global LUM_LOGGING env var.
+ * Si LUM_LOGGING=0 (lu une seule fois au premier appel), toutes les écritures
+ * lum_log_writer_write_* deviennent des no-op. Permet de mesurer proprement
+ * l'overhead réel du sous-système LUM (test A/B preconisé rapport C117 §9 / Q6).
+ * Référence : RAPPORT_C117_ANALYSE §9 — overhead 4.5% jamais mesuré proprement. */
+static int lum_logging_check_env(void) {
+    static int cached = -1;
+    if (cached == -1) {
+        const char* env = getenv("LUM_LOGGING");
+        cached = (env && env[0] == '0' && env[1] == '\0') ? 0 : 1;
+    }
+    return cached;
+}
+
 static int write_lum(lum_log_writer_t* w, lum_log_kind_t kind,
                      const void* payload, size_t payload_len) {
     if (!w) return -EINVAL;
+    /* C118-Q6 : court-circuit si LUM_LOGGING=0 (mesure overhead A/B) */
+    if (!lum_logging_check_env()) return 0;
     pthread_mutex_lock(&w->mu);
 
     lum_t lum;

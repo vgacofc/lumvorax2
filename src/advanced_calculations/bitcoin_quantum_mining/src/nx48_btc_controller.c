@@ -295,18 +295,40 @@ void nx48_btc_hw_detect(nx48_btc_state_t* s) {
                                 "btc_nx48_qdayprize_success_rate", hw->qdayprize_success_rate);
                             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                                 "btc_nx48_qdayprize_bits", (double)hw->qdayprize_bits);
-                            /* C116-P4 : QDPR adaptatif — si success > 60%, monter le seuil
-                             * near-miss de 1 bit (max 38, cap au record observé run 3). */
-                            if (hw->qdayprize_success_rate > 0.60) {
-                                int cur = atomic_load_explicit(&nx48_ctrl_near_miss_bits,
-                                                               memory_order_relaxed);
-                                int next = (cur < 38) ? cur + 1 : 38;
-                                atomic_store_explicit(&nx48_ctrl_near_miss_bits, next,
-                                                      memory_order_relaxed);
-                                printf("[C116-P4-QDPR] success=%.1f%%>60%% → near_miss_bits %d→%d\n",
-                                    hw->qdayprize_success_rate * 100.0, cur, next);
-                                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
-                                    "btc_nx48_c116p4_near_miss_bits", (double)next);
+                            /* C118-Q2 : QDPR adaptatif bidirectionnel avec hysteresis.
+                             * - C116-P4 : si success > 60% → monter near_miss_bits (max 38)
+                             * - C118-Q2 : si success < 30% → descendre near_miss_bits (min 20)
+                             * - Zone morte 0.30 ≤ rate ≤ 0.60 : pas de changement (anti-oscillation).
+                             *
+                             * Justification (rapport C117 §6) : sans descente, un run qui démarre
+                             * mal (success=0%) reste bloqué à near_miss_bits=20, le GPU loupe les
+                             * near-miss de 25 LZ et NX48 ne peut pas apprendre des near-miss bas.
+                             * L'hysteresis ±0.30/±0.60 évite l'oscillation du seuil. */
+                            {
+                                double sr  = hw->qdayprize_success_rate;
+                                int    cur = atomic_load_explicit(&nx48_ctrl_near_miss_bits,
+                                                                  memory_order_relaxed);
+                                int    next = cur;
+                                const char* direction = NULL;
+                                if (sr > 0.60 && cur < 38) {
+                                    next = cur + 1;
+                                    direction = "↑";
+                                } else if (sr < 0.30 && cur > 20) {
+                                    next = cur - 1;
+                                    direction = "↓";
+                                }
+                                if (next != cur) {
+                                    atomic_store_explicit(&nx48_ctrl_near_miss_bits, next,
+                                                          memory_order_relaxed);
+                                    printf("[C118-Q2-QDPR] success=%.1f%% %s near_miss_bits %d→%d\n",
+                                        sr * 100.0, direction, cur, next);
+                                    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                        "btc_nx48_c118q2_near_miss_bits", (double)next);
+                                } else {
+                                    /* Zone morte ou aux bornes : log sans changement */
+                                    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                        "btc_nx48_c118q2_near_miss_bits", (double)cur);
+                                }
                             }
                         }
                     }

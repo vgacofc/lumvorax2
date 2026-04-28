@@ -11,6 +11,13 @@
 #include <stddef.h>
 
 #ifdef BTC_OPENCL_ENABLED
+/* C119-P2.3 — Cibler OpenCL 2.0 explicitement.
+ * Sans CL_TARGET_OPENCL_VERSION, le header CL/cl.h émet un warning et
+ * tombe par défaut sur 1.2, ce qui désactive certaines features (atomic
+ * fetch_add 64 bits, SVM). 200 = 2.0, supporté par Intel UHD 620 driver. */
+#  ifndef CL_TARGET_OPENCL_VERSION
+#    define CL_TARGET_OPENCL_VERSION 200
+#  endif
 #  ifdef __APPLE__
 #    include <OpenCL/opencl.h>
 #  else

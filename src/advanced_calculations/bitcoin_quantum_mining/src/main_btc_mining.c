@@ -383,23 +383,60 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /* ── C116-P5 : ASIC BTC Optimizer — benchmark 5s avant démarrage ── */
+    /* ── C116-P5 + C118-Q5 : ASIC BTC Optimizer — boucle feedback fermée ──
+     * AVANT C118 : optimizer lancé mais résultat IGNORÉ (pure mesure).
+     * APRÈS C118-Q5 : utilise asic_btc_optimizer_tune_batch() pour balayer
+     * 4 tailles de batch [256K, 512K, 1M, 2M], sélectionne celle qui maximise
+     * le score composite, puis injecte ce batch_size dans l'atomique partagée
+     * nx48_ctrl_batch_size (lue par le moteur BTC dans la boucle de mining).
+     *
+     * Référence : RAPPORT_C117_ANALYSE §7 (Q5 — Boucle optimizer→engine fermée)
+     */
     {
         asic_btc_optimizer_cfg_t opt_cfg;
-        asic_btc_result_t        opt_res;
+        asic_btc_result_t        opt_best;
         asic_btc_optimizer_default_cfg(&opt_cfg);
-        opt_cfg.run_duration_s = 5.0;    /* rapide : 5 secondes */
-        opt_cfg.batch_size     = (uint32_t)cfg.batch_size;
+        opt_cfg.run_duration_s = 5.0;    /* rapide : 5 secondes par taille */
+        opt_cfg.batch_size     = (uint32_t)cfg.batch_size;  /* baseline */
         opt_cfg.target_bits    = bits ? (uint32_t)(32 - __builtin_clz(bits & 0x1FFFFF)) : 20;
-        printf("[C116-P5] ASIC optimizer benchmark 5s (default profile)...\n");
+
+        const uint32_t batch_candidates[] = { 262144u, 524288u, 1048576u, 2097152u };
+        const int      n_candidates       = (int)(sizeof(batch_candidates) / sizeof(batch_candidates[0]));
+
+        printf("[C118-Q5] ASIC optimizer balayage %d tailles batch...\n", n_candidates);
         fflush(stdout);
-        if (asic_btc_optimizer_run(&opt_cfg, &opt_res) == 0) {
-            asic_btc_optimizer_print_report(&opt_cfg, &opt_res);
-            printf("[C116-P5] score=%.1f | best=%u bits | near_miss_rate=%.4f/MH\n",
-                   opt_res.optimization_score,
-                   opt_res.best_leading_bits,
-                   opt_res.near_miss_rate_per_Mh);
+        int best_idx = asic_btc_optimizer_tune_batch(&opt_cfg, batch_candidates,
+                                                     n_candidates, &opt_best);
+        if (best_idx >= 0 && best_idx < n_candidates) {
+            uint32_t best_batch = batch_candidates[best_idx];
+            asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
+            printf("[C118-Q5] BEST batch=%u (idx=%d) | score=%.1f | hashrate_avg=%.2f MH/s\n",
+                   best_batch, best_idx,
+                   opt_best.optimization_score,
+                   opt_best.hashrate_avg_MH_s);
+            /* Boucle fermée : injecter le batch_size optimal dans l'atomique */
+            atomic_store_explicit(&nx48_ctrl_batch_size, (int)best_batch,
+                                  memory_order_relaxed);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c118q5_best_batch_size", (double)best_batch);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c118q5_best_score", opt_best.optimization_score);
+            cfg.batch_size = (int)best_batch;  /* propager dans la cfg locale */
+            printf("[C118-Q5] nx48_ctrl_batch_size ← %u (boucle feedback fermée)\n",
+                   best_batch);
             fflush(stdout);
+        } else {
+            /* Fallback : ancien comportement C116-P5 (single run) */
+            printf("[C118-Q5] tune_batch a échoué — fallback single-run C116-P5\n");
+            fflush(stdout);
+            if (asic_btc_optimizer_run(&opt_cfg, &opt_best) == 0) {
+                asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
+                printf("[C116-P5-fb] score=%.1f | best=%u bits | near_miss_rate=%.4f/MH\n",
+                       opt_best.optimization_score,
+                       opt_best.best_leading_bits,
+                       opt_best.near_miss_rate_per_Mh);
+                fflush(stdout);
+            }
         }
     }
 
