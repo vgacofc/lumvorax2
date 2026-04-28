@@ -141,12 +141,14 @@ typedef struct __attribute__((packed)) {
  * ATOMIQUES PARTAGÉES MOTEUR ↔ NX48 (contrôle total)
  * Déclarées extern ici, définies dans btc_mining_engine.c
  * ════════════════════════════════════════════════════════════════════ */
-extern _Atomic int    nx48_ctrl_n_threads;      /* NX48→moteur: threads actifs */
-extern _Atomic int    nx48_ctrl_T_hot_idx;      /* NX48→moteur: index T_hot [0..7] */
-extern _Atomic int    nx48_ctrl_T_cold_idx;     /* NX48→moteur: index T_cold [0..7] */
-extern _Atomic int    nx48_ctrl_gpu_active;     /* NX48→moteur: GPU OpenCL actif */
-extern _Atomic int    nx48_ctrl_avx_level;      /* NX48→moteur: niveau AVX */
-extern _Atomic int    nx48_ctrl_batch_size;     /* NX48→moteur: batch override */
+extern _Atomic int    nx48_ctrl_n_threads;       /* NX48→moteur: threads actifs */
+extern _Atomic int    nx48_ctrl_T_hot_idx;       /* NX48→moteur: index T_hot [0..7] */
+extern _Atomic int    nx48_ctrl_T_cold_idx;      /* NX48→moteur: index T_cold [0..7] */
+extern _Atomic int    nx48_ctrl_gpu_active;      /* NX48→moteur: GPU OpenCL actif */
+extern _Atomic int    nx48_ctrl_avx_level;       /* NX48→moteur: niveau AVX */
+extern _Atomic int    nx48_ctrl_batch_size;      /* NX48→moteur: batch override */
+/* C116-P4 : QDPR adaptatif — NX48 ajuste dynamiquement le seuil near-miss GPU */
+extern _Atomic int    nx48_ctrl_near_miss_bits;  /* NX48→GPU: seuil near-miss [20..38] */
 
 /* ════════════════════════════════════════════════════════════════════
  * ÉTAT COMPLET NX48_BTC — C61

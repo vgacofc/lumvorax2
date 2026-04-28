@@ -67,6 +67,9 @@ LUM_SRC  += $(LUM_ROOT)optimization/reasoning_path_tracker.c \
 LUM_SRC  += $(LUM_ROOT)lum/lum_memory_tracer.c \
 	$(LUM_ROOT)lum/lum_log_encoder.c
 
+# C116-P5 : ASIC BTC Optimizer — benchmark & comparaison stratégies nonce
+LUM_SRC  += $(LUM_ROOT)asic_simulation/asic_btc_optimizer.c
+
 # Chemin include lumvorax_integration.c si necessaire
 LUM_INTG_SRC := $(HTS_ROOT)lumvorax/lumvorax_integration.c
 

@@ -57,6 +57,10 @@ lum_log_writer_t* g_btc_lum_log = NULL;
 #include <unistd.h>
 #include <inttypes.h>
 #include <sys/stat.h>
+/* C116-P5 : ASIC optimizer — benchmark rapide avant lancement moteur */
+#include "../../../asic_simulation/asic_btc_optimizer.h"
+/* C116-KERNEL : smaps_rollup — traçage mémoire kernel /proc/self/smaps_rollup */
+#include "../../../lum/lum_memory_tracer.h"
 
 /* ── Déclaration externe (btc_mining_engine.c) ──────────────────── */
 typedef struct {
@@ -331,17 +335,15 @@ int main(int argc, char* argv[]) {
     nx48_cfg.T_hot                = 50.0;
     nx48_cfg.n_threads_initial    = cfg.n_threads;
     nx48_cfg.hw_detect_interval_s = 30;
-    strncpy(nx48_cfg.csv_path, cfg.nx48_csv, sizeof(nx48_cfg.csv_path)-1);
-    nx48_cfg.csv_path[sizeof(nx48_cfg.csv_path)-1] = '\0';
+    snprintf(nx48_cfg.csv_path, sizeof(nx48_cfg.csv_path), "%s", cfg.nx48_csv);
     /* C61 : chemin LUM natif (même répertoire que CSV, extension .lum) */
     {
         char lum_path[256];
-        strncpy(lum_path, cfg.nx48_csv, sizeof(lum_path)-1);
-        lum_path[sizeof(lum_path)-1] = '\0';
+        snprintf(lum_path, sizeof(lum_path), "%s", cfg.nx48_csv);
         char* dot = strrchr(lum_path, '.');
-        if (dot) strncpy(dot, ".lum", 5);
+        if (dot) { snprintf(dot, 6, "%s", ".lum"); }
         else strncat(lum_path, ".lum", sizeof(lum_path)-strlen(lum_path)-1);
-        strncpy(nx48_cfg.lum_path, lum_path, sizeof(nx48_cfg.lum_path)-1);
+        snprintf(nx48_cfg.lum_path, sizeof(nx48_cfg.lum_path), "%s", lum_path);
     }
 
     nx48_btc_state_t* nx48 = nx48_btc_init(&nx48_cfg, cfg.run_id);
@@ -361,6 +363,45 @@ int main(int argc, char* argv[]) {
     printf("[BTC_QM] NX48 exploration_bias=%.3f | delta_nonce=%.2f | AVX=%d\n",
            nx48->exploration_bias, nx48->delta_nonce_scale, nx48->hw.avx_level);
     fflush(stdout);
+
+    /* ── C116-KERNEL : Traçage mémoire kernel /proc/self/smaps_rollup ── */
+    {
+        lum_smaps_rollup_t smaps;
+        if (lum_memory_smaps_rollup(&smaps) == 0) {
+            lum_memory_smaps_print(&smaps);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_smaps_rss_kb",         (double)smaps.rss_kb);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_smaps_anon_huge_kb",   (double)smaps.anon_huge_kb);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_smaps_private_dirty",  (double)smaps.private_dirty_kb);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_smaps_page_count",     (double)smaps.page_count);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_smaps_hugepage_count", (double)smaps.huge_pages_count);
+            fflush(stdout);
+        }
+    }
+
+    /* ── C116-P5 : ASIC BTC Optimizer — benchmark 5s avant démarrage ── */
+    {
+        asic_btc_optimizer_cfg_t opt_cfg;
+        asic_btc_result_t        opt_res;
+        asic_btc_optimizer_default_cfg(&opt_cfg);
+        opt_cfg.run_duration_s = 5.0;    /* rapide : 5 secondes */
+        opt_cfg.batch_size     = (uint32_t)cfg.batch_size;
+        opt_cfg.target_bits    = bits ? (uint32_t)(32 - __builtin_clz(bits & 0x1FFFFF)) : 20;
+        printf("[C116-P5] ASIC optimizer benchmark 5s (default profile)...\n");
+        fflush(stdout);
+        if (asic_btc_optimizer_run(&opt_cfg, &opt_res) == 0) {
+            asic_btc_optimizer_print_report(&opt_cfg, &opt_res);
+            printf("[C116-P5] score=%.1f | best=%u bits | near_miss_rate=%.4f/MH\n",
+                   opt_res.optimization_score,
+                   opt_res.best_leading_bits,
+                   opt_res.near_miss_rate_per_Mh);
+            fflush(stdout);
+        }
+    }
 
     /* ── Gate : test intégrité SHA-256 ─────────────────────────── */
     printf("[BTC_QM] Test intégrité SHA-256 (NIST)… ");

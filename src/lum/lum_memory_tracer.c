@@ -389,6 +389,92 @@ done:
     return 0;
 }
 
+/* ============================================================================
+ * C116-KERNEL : lum_memory_smaps_rollup
+ * Lit /proc/self/smaps_rollup pour accéder aux statistiques mémoire kernel
+ * incluant AnonHugePages (THP 2MB), RSS, Private_Dirty, Shared_Clean.
+ *
+ * Accès kernel : OUI — /proc/self/smaps est une interface kernel (VFS /proc)
+ * qui expose les VMAs (Virtual Memory Areas) avec granularité page (4KiB).
+ * smaps_rollup agrège toutes les VMAs pour éviter O(N) parsing.
+ *
+ * Champs extraits :
+ *   - Rss          : pages résidentes (RAM physique occupée)
+ *   - AnonHugePages: pages THP 2MB allouées (HugePage traçage)
+ *   - Private_Dirty: pages modifiées non-partagées (état mémoire unique process)
+ *   - Shared_Dirty : pages modifiées partagées
+ *   - Referenced    : pages accédées depuis dernier reset softclear
+ * ============================================================================ */
+/* lum_smaps_rollup_t défini dans lum_memory_tracer.h */
+
+/* Lit /proc/self/smaps_rollup et remplit smaps.
+ * Retourne 0 succès, -1 si fichier inaccessible (kernel < 4.14). */
+int lum_memory_smaps_rollup(lum_smaps_rollup_t *smaps) {
+    if (!smaps) return -1;
+    memset(smaps, 0, sizeof(*smaps));
+
+    /* Tenter smaps_rollup (kernel >= 4.14, Linux Ubuntu 18.04+) */
+    FILE *f = fopen("/proc/self/smaps_rollup", "r");
+    if (!f) {
+        /* Fallback : /proc/self/status pour VmRSS */
+        f = fopen("/proc/self/status", "r");
+        if (!f) return -1;
+        char line[256];
+        while (fgets(line, sizeof(line), f)) {
+            uint64_t val;
+            if (sscanf(line, "VmRSS: %llu kB", (unsigned long long*)&val) == 1)
+                smaps->rss_kb = val;
+            else if (sscanf(line, "VmSize: %llu kB", (unsigned long long*)&val) == 1)
+                smaps->vm_size_kb = val;
+        }
+        fclose(f);
+        smaps->page_count = smaps->rss_kb / 4;
+        return 0;
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), f)) {
+        uint64_t val;
+        if (sscanf(line, "Rss: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->rss_kb = val;
+        else if (sscanf(line, "AnonHugePages: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->anon_huge_kb = val;
+        else if (sscanf(line, "Private_Dirty: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->private_dirty_kb = val;
+        else if (sscanf(line, "Shared_Dirty: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->shared_dirty_kb = val;
+        else if (sscanf(line, "Referenced: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->referenced_kb = val;
+        else if (sscanf(line, "Size: %llu kB", (unsigned long long*)&val) == 1)
+            smaps->vm_size_kb += val;
+    }
+    fclose(f);
+
+    smaps->page_count      = smaps->rss_kb / 4;  /* 4KB par page */
+    smaps->huge_pages_count = smaps->anon_huge_kb / 2048; /* 2MB par hugepage */
+
+    return 0;
+}
+
+/* Affiche un résumé smaps sur stdout (pour les logs LUM).
+ * Indique si les HugePages THP sont actives (AnonHugePages > 0). */
+void lum_memory_smaps_print(const lum_smaps_rollup_t *smaps) {
+    printf("[SMAPS-KERNEL] RSS=%llu KB (%llu pages 4KiB)\n",
+           (unsigned long long)smaps->rss_kb,
+           (unsigned long long)smaps->page_count);
+    printf("[SMAPS-KERNEL] AnonHugePages (THP 2MB)=%llu KB (%llu hugepages)\n",
+           (unsigned long long)smaps->anon_huge_kb,
+           (unsigned long long)smaps->huge_pages_count);
+    printf("[SMAPS-KERNEL] Private_Dirty=%llu KB | Shared_Dirty=%llu KB\n",
+           (unsigned long long)smaps->private_dirty_kb,
+           (unsigned long long)smaps->shared_dirty_kb);
+    printf("[SMAPS-KERNEL] Referenced=%llu KB | VM_Total=%llu KB\n",
+           (unsigned long long)smaps->referenced_kb,
+           (unsigned long long)smaps->vm_size_kb);
+    printf("[SMAPS-KERNEL] Granularité réelle : %s (selon AnonHugePages)\n",
+           smaps->anon_huge_kb > 0 ? "HUGEPAGE 2MB actif" : "PAGE 4KiB standard");
+}
+
 /* ----------------------------------------------------------------------------
  * Validation diff=0
  * ---------------------------------------------------------------------------- */

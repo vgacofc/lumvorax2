@@ -196,6 +196,29 @@ int btc_opencl_init(size_t batch_size) {
     g_initialized = 1;
     fprintf(stderr, "[OCL] ✅ OpenCL initialisé — batch=%zu — cible: 50-200 MH/s\n",
             g_batch_size);
+
+    /* ── C116-P1 : GPU JIT warm-up — 1 batch factice pour forcer la compilation JIT ──
+     * Pattern P1 identifié logs Ubuntu C112 : hashrate froid 3.66 MH/s → chaud 9.80 MH/s
+     * (facteur 2.68×). Le warm-up garantit que le batch RÉEL de benchmark n'est
+     * pas perturbé par la latence de compilation JIT du driver Intel NEO. */
+    {
+        fprintf(stderr, "[C116-WARMUP] Batch factice JIT en cours (élimination cold-start)...\n");
+        uint32_t wm[8] = {
+            0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+            0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+        };
+        uint32_t wt[4] = { 0x00000000, 0x3b9ac9ff, 0x17a950d2, 0x00000000 };
+        uint32_t wn = 0xFFFFFFFFu, wh[8] = {0}, wb = 0;
+        struct timespec tw0, tw1;
+        clock_gettime(CLOCK_MONOTONIC, &tw0);
+        btc_opencl_mine_batch(wm, wt, 0, g_batch_size, 32, &wn, wh, &wb);
+        clock_gettime(CLOCK_MONOTONIC, &tw1);
+        double tw = (tw1.tv_sec - tw0.tv_sec) + (tw1.tv_nsec - tw0.tv_nsec) * 1e-9;
+        double mhs_cold = (tw > 0) ? ((double)g_batch_size / tw / 1e6) : 0.0;
+        fprintf(stderr, "[C116-WARMUP] ✅ JIT warm-up terminé : %.2f MH/s froid "
+                "(prochain batch = GPU chaud)\n", mhs_cold);
+    }
+
     return BTC_OCL_OK;
 }
 

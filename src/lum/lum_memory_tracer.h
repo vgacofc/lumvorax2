@@ -101,6 +101,21 @@ int lum_memory_validate_diff_zero(const char* original_path,
                                    size_t reconstructed_size,
                                    uint64_t* diff_count);
 
+/* ── C116-KERNEL : smaps_rollup — accès kernel /proc/self/smaps_rollup ───── */
+typedef struct {
+    uint64_t rss_kb;
+    uint64_t anon_huge_kb;
+    uint64_t private_dirty_kb;
+    uint64_t shared_dirty_kb;
+    uint64_t referenced_kb;
+    uint64_t vm_size_kb;
+    uint64_t huge_pages_count;
+    uint64_t page_count;
+} lum_smaps_rollup_t;
+
+int  lum_memory_smaps_rollup(lum_smaps_rollup_t *smaps);
+void lum_memory_smaps_print(const lum_smaps_rollup_t *smaps);
+
 #ifdef __cplusplus
 }
 #endif

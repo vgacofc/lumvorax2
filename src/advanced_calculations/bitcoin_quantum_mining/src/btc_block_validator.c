@@ -104,7 +104,7 @@ bool btc_hash_below_target(const uint8_t hash[32], const uint8_t target[32]) {
 }
 
 /* ── Écriture var_int (format Bitcoin) ──────────────────────────────────── */
-static int write_varint(uint8_t* buf, uint64_t v) {
+static int __attribute__((unused)) write_varint(uint8_t* buf, uint64_t v) {
     if (v < 0xFD) { buf[0] = (uint8_t)v; return 1; }
     if (v <= 0xFFFF) {
         buf[0] = 0xFD; buf[1] = (uint8_t)v; buf[2] = (uint8_t)(v>>8); return 3;
@@ -267,11 +267,11 @@ lv_btc_validated_block_t* btc_block_validate_from_hash(
 
     /* Coinbase transaction */
     if (wallet && wallet->magic == BTC_WALLET_MAGIC) {
-        strncpy(b->coinbase_addr, wallet->address_p2pkh,
-                sizeof(b->coinbase_addr) - 1);
+        snprintf(b->coinbase_addr, sizeof(b->coinbase_addr),
+                 "%s", wallet->address_p2pkh);
     } else {
-        strncpy(b->coinbase_addr, "LumVorax-Module17-Reward",
-                sizeof(b->coinbase_addr) - 1);
+        snprintf(b->coinbase_addr, sizeof(b->coinbase_addr),
+                 "%s", "LumVorax-Module17-Reward");
     }
 
     b->reward_satoshi = BTC_BLOCK_SUBSIDY_2024; /* 3.125 BTC (halving 2024) */

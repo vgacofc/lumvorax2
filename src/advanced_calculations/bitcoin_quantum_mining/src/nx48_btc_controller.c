@@ -83,12 +83,15 @@ extern reasoning_trace_t* g_btc_reasoning_trace;
 /* ════════════════════════════════════════════════════════════════════
  * ATOMIQUES PARTAGÉES MOTEUR ↔ NX48 — définition ici, extern dans .h
  * ════════════════════════════════════════════════════════════════════ */
-_Atomic int nx48_ctrl_n_threads  = 2;    /* Défaut : 2 threads */
-_Atomic int nx48_ctrl_T_hot_idx  = 7;    /* Défaut : T_hot = 50.0 (index 7) */
-_Atomic int nx48_ctrl_T_cold_idx = 0;    /* Défaut : T_cold = 1.0 (index 0) */
-_Atomic int nx48_ctrl_gpu_active = 0;    /* Défaut : GPU inactif */
-_Atomic int nx48_ctrl_avx_level  = 0;    /* Détecté à l'init */
-_Atomic int nx48_ctrl_batch_size = 1024; /* Défaut C46 */
+_Atomic int nx48_ctrl_n_threads      = 2;    /* Défaut : 2 threads */
+_Atomic int nx48_ctrl_T_hot_idx      = 7;    /* Défaut : T_hot = 50.0 (index 7) */
+_Atomic int nx48_ctrl_T_cold_idx     = 0;    /* Défaut : T_cold = 1.0 (index 0) */
+_Atomic int nx48_ctrl_gpu_active     = 0;    /* Défaut : GPU inactif */
+_Atomic int nx48_ctrl_avx_level      = 0;    /* Détecté à l'init */
+_Atomic int nx48_ctrl_batch_size     = 1024; /* Défaut C46 */
+/* C116-P4 : seuil near-miss adaptatif (QDPR). NX48 l'augmente si success>60%.
+ * Valeur initiale 20 (baseline C112). Max observé : 38 bits (run 3, t=460s). */
+_Atomic int nx48_ctrl_near_miss_bits = 20;   /* Défaut : 20 bits (C116-P4) */
 
 /* Températures répliques disponibles (identiques btc_mining_engine.c) */
 static const double NX48_REPLICA_TEMPS[8] = {
@@ -292,6 +295,19 @@ void nx48_btc_hw_detect(nx48_btc_state_t* s) {
                                 "btc_nx48_qdayprize_success_rate", hw->qdayprize_success_rate);
                             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                                 "btc_nx48_qdayprize_bits", (double)hw->qdayprize_bits);
+                            /* C116-P4 : QDPR adaptatif — si success > 60%, monter le seuil
+                             * near-miss de 1 bit (max 38, cap au record observé run 3). */
+                            if (hw->qdayprize_success_rate > 0.60) {
+                                int cur = atomic_load_explicit(&nx48_ctrl_near_miss_bits,
+                                                               memory_order_relaxed);
+                                int next = (cur < 38) ? cur + 1 : 38;
+                                atomic_store_explicit(&nx48_ctrl_near_miss_bits, next,
+                                                      memory_order_relaxed);
+                                printf("[C116-P4-QDPR] success=%.1f%%>60%% → near_miss_bits %d→%d\n",
+                                    hw->qdayprize_success_rate * 100.0, cur, next);
+                                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                                    "btc_nx48_c116p4_near_miss_bits", (double)next);
+                            }
                         }
                     }
                 }
@@ -695,8 +711,8 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
     if (s->T_cold_actual <= 0.0) { s->T_cold_idx = 0; s->T_cold_actual = 1.0; }
 
     /* Chemins fichiers */
-    strncpy(s->csv_path, cfg->csv_path[0] ? cfg->csv_path : "", sizeof(s->csv_path)-1);
-    strncpy(s->lum_path, cfg->lum_path[0] ? cfg->lum_path : "", sizeof(s->lum_path)-1);
+    snprintf(s->csv_path, sizeof(s->csv_path), "%s", cfg->csv_path[0] ? cfg->csv_path : "");
+    snprintf(s->lum_path, sizeof(s->lum_path), "%s", cfg->lum_path[0] ? cfg->lum_path : "");
     strncpy(s->run_id, run_id ? run_id : "unknown", sizeof(s->run_id)-1);
 
     xosh_seed();

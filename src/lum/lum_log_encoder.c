@@ -67,18 +67,25 @@ static int write_lum(lum_log_writer_t* w, lum_log_kind_t kind,
     lum.position_x = (int32_t)(w->events_written & 0xFFFFFFFFu);
     lum.position_y = (int32_t)(w->events_written >> 32);
     lum.timestamp = now_ns();
-    lum.memory_address = NULL;
+    /* C116-P3 : payload_total_len stocké dans memory_address (uint64 via cast).
+     * Simplifie le parseur de continuations : le parseur n'a plus besoin de
+     * compter les lum_t suivants pour connaître la taille totale. */
+    lum.memory_address = (void*)(uintptr_t)payload_len;
     lum.checksum = fast_checksum(payload, payload_len);
     lum.magic_number = LUM_LOG_MAGIC;
 
-    /* Stocker payload jusqu'à 20 octets dans padding (lum_t = 64 octets total) */
+    /* Stocker payload jusqu'à sizeof(lum.padding) octets inline */
     size_t inline_len = (payload_len > sizeof(lum.padding)) ? sizeof(lum.padding)
                                                             : payload_len;
     memcpy(lum.padding, payload, inline_len);
 
     fwrite(&lum, sizeof(lum_t), 1, w->fp);
+    /* C116-P3 FIX BUG : flush immédiat pour éviter perte de données si SIGTERM.
+     * Sans ce flush, le buffer stdio peut rester non vidé → fichier .lum = 0 octets
+     * (reproduit sur Ubuntu run C115 : btc_lum_log_*.lum = 0B). */
+    fflush(w->fp);
 
-    /* Si payload > 20 octets, écrire le surplus en lum_t supplémentaires */
+    /* Si payload > inline, écrire le surplus en lum_t de continuation */
     if (payload_len > inline_len) {
         const uint8_t* p = (const uint8_t*)payload + inline_len;
         size_t remaining = payload_len - inline_len;
@@ -90,13 +97,15 @@ static int write_lum(lum_log_writer_t* w, lum_log_kind_t kind,
             cont.structure_type = 0xFF; /* CONTINUATION marker */
             cont.timestamp = lum.timestamp;
             cont.magic_number = LUM_LOG_MAGIC;
+            /* C116-P3 : stocker l'offset dans memory_address pour reconstruire l'ordre */
+            cont.memory_address = (void*)(uintptr_t)(payload_len - remaining);
             size_t chunk = (remaining > sizeof(cont.padding) + 12)
                            ? sizeof(cont.padding) + 12
                            : remaining;
-            /* Utilise position_x/y + padding pour stocker payload (20+8=28 octets) */
             memcpy(&cont.position_x, p, chunk > 8 ? 8 : chunk);
             if (chunk > 8) memcpy(cont.padding, p + 8, chunk - 8);
             fwrite(&cont, sizeof(lum_t), 1, w->fp);
+            fflush(w->fp);
             p += chunk;
             remaining -= chunk;
         }

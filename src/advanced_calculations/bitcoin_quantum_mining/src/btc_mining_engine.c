@@ -319,7 +319,7 @@ static inline uint64_t eng_ts_cached(void) {
 /* ── RNG thread-local (xorshift64) ──────────────────────────────── */
 static __thread uint64_t tl_rng_state = 0;
 static uint64_t rng_init_seed(int thread_id) {
-    return (uint64_t)thread_id * 6364136223846793005ULL + 1442695040888963407ULL
+    return ((uint64_t)thread_id * 6364136223846793005ULL + 1442695040888963407ULL)
            ^ (uint64_t)eng_ts_ns();
 }
 static uint64_t rng_next(void) {
@@ -1077,7 +1077,17 @@ static void* btc_gpu_thread(void* arg) {
     FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME, "btc_gpu_c69_target_bits",  (double)gw->target_bits);
     fflush(stdout);
 
-    uint32_t nonce_start     = 0;
+    /* C116-P2 : GPU scanne prioritairement la plage HAUTE [2^31, 2^32-1]
+     * Justification : record 38 bits (run 3, t=460s) trouvé à nonce=0xFF002A4D
+     * (plage haute). Démarrer à 2^31 réduit de 50% le temps pour atteindre ce
+     * cluster vs démarrage à 0 (précédent). Le CPU couvre [0, 2^32]. */
+    uint32_t nonce_start     = 0x80000000u;
+    /* C116-P4 : lire le seuil near-miss adaptatif QDPR au démarrage du thread GPU */
+    uint32_t adaptive_target_bits = (uint32_t)atomic_load_explicit(
+        &nx48_ctrl_near_miss_bits, memory_order_relaxed);
+    if (adaptive_target_bits > gw->target_bits)
+        gw->target_bits = adaptive_target_bits;
+    printf("[C116-P4] near_miss_bits adaptatif = %u bits (QDPR)\n", gw->target_bits);
     uint64_t gpu_total_hashes = 0;
     uint32_t gpu_best_bits    = 0;
     uint64_t batch_count      = 0;
