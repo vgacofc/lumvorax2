@@ -1,7 +1,9 @@
 /* ============================================================================
- * LUM Memory Tracer — Cycle C111
+ * LUM Memory Tracer — Cycle C111 / C115
  * Implémentation : snapshot/reconstruction process self au format .lum (binaire)
+ * C115 : Implémentation réelle LUM_TRACE_GRANULARITY_HUGEPAGE (2 MiB)
  * ============================================================================ */
+#define _POSIX_C_SOURCE 200809L  /* pread, clock_gettime, ssize_t */
 #include "lum_memory_tracer.h"
 
 #include <errno.h>
@@ -16,6 +18,8 @@
 
 #define LUM_TRACER_MAGIC 0x4C554D54u  /* 'LUMT' */
 #define PAGE_SIZE 4096u
+#define HUGEPAGE_SIZE   (2UL * 1024UL * 1024UL)   /* 2 MiB */
+#define PAGES_PER_HUGEPAGE (HUGEPAGE_SIZE / PAGE_SIZE) /* 512 pages */
 
 /* Format .lum produit :
  *   header (32 octets) :
@@ -104,6 +108,29 @@ static void encode_bit_to_lum(uint64_t bit_addr, uint8_t bit_val, lum_t* out) {
     memset(out->padding, 0, sizeof(out->padding));
 }
 
+/* Encode 1 huge page (2 MiB max) en 1 lum_t (granularité HUGEPAGE) — C115
+ * hp_vaddr : adresse virtuelle de début de la tranche
+ * hp_len   : taille réelle lue (multiple de PAGE_SIZE, ≤ HUGEPAGE_SIZE)
+ */
+static void encode_hugepage_to_lum(uint64_t hp_vaddr, const uint8_t* hp_data,
+                                    size_t hp_len, lum_t* out) {
+    static uint32_t next_id = 1;
+    out->id = next_id++;
+    out->presence = 1;
+    out->structure_type = 3; /* HUGEPAGE */
+    out->is_destroyed = 0;
+    /* Stocker log2(hp_len >> 12) dans reserved_flags pour reconstruction */
+    out->reserved_flags = (uint8_t)(hp_len / PAGE_SIZE); /* nb pages dans la tranche */
+    out->position_x = (int32_t)(hp_vaddr & 0xFFFFFFFFu);
+    out->position_y = (int32_t)(hp_vaddr >> 32);
+    out->timestamp = now_ns();
+    out->memory_address = (void*)(uintptr_t)hp_vaddr;
+    /* Checksum Adler-32 sur la première page uniquement (rapide pour 2 MiB) */
+    out->checksum = lum_checksum(hp_data, PAGE_SIZE < hp_len ? PAGE_SIZE : hp_len);
+    out->magic_number = LUM_TRACER_MAGIC;
+    memset(out->padding, 0, sizeof(out->padding));
+}
+
 /* ----------------------------------------------------------------------------
  * Snapshot process self
  * ---------------------------------------------------------------------------- */
@@ -148,6 +175,18 @@ int lum_memory_snapshot_self(const char* out_path,
     uint64_t pages_scanned = 0;
     uint64_t pages_resident = 0;
 
+    /* Buffer heap pour HUGEPAGE (2 MiB) — alloué une seule fois */
+    uint8_t *hp_buf = NULL;
+    if (granularity == LUM_TRACE_GRANULARITY_HUGEPAGE) {
+        hp_buf = (uint8_t *)malloc(HUGEPAGE_SIZE);
+        if (!hp_buf) {
+            fclose(out);
+            close(mem_fd);
+            fclose(maps);
+            return -ENOMEM;
+        }
+    }
+
     char line[1024];
     while (fgets(line, sizeof(line), maps)) {
         uint64_t start = 0, end = 0;
@@ -165,6 +204,39 @@ int lum_memory_snapshot_self(const char* out_path,
         /* Skip [vvar], [vsyscall], [vdso] qui peuvent bloquer la lecture */
         if (strstr(path, "[vvar]") || strstr(path, "[vsyscall]")) continue;
 
+        /* C115 — Chemin HUGEPAGE : tranches de 2 MiB (512 pages agrégées) */
+        if (granularity == LUM_TRACE_GRANULARITY_HUGEPAGE) {
+            for (uint64_t hp_addr = start; hp_addr < end; hp_addr += HUGEPAGE_SIZE) {
+                uint64_t hp_end = hp_addr + HUGEPAGE_SIZE;
+                if (hp_end > end) hp_end = end;
+                size_t bytes_collected = 0;
+
+                for (uint64_t pg = hp_addr; pg < hp_end; pg += PAGE_SIZE) {
+                    pages_scanned++;
+                    ssize_t r = pread(mem_fd, hp_buf + bytes_collected,
+                                      PAGE_SIZE, (off_t)pg);
+                    if (r == (ssize_t)PAGE_SIZE) {
+                        pages_resident++;
+                    } else {
+                        /* Page non résidente ou partielle : zéro-fill */
+                        memset(hp_buf + bytes_collected, 0, PAGE_SIZE);
+                    }
+                    bytes_collected += PAGE_SIZE;
+                }
+                if (bytes_collected == 0) continue;
+
+                lum_t lum;
+                memset(&lum, 0, sizeof(lum));
+                encode_hugepage_to_lum(hp_addr, hp_buf, bytes_collected, &lum);
+                fwrite(&lum, sizeof(lum_t), 1, out);
+                fwrite(hp_buf, bytes_collected, 1, out);
+                total_lums++;
+                total_bytes += bytes_collected;
+            }
+            continue; /* Passer à la prochaine VMA */
+        }
+
+        /* Granularités PAGE / BYTE / BIT : loop page-par-page original */
         for (uint64_t addr = start; addr < end; addr += PAGE_SIZE) {
             pages_scanned++;
             uint8_t buf[PAGE_SIZE];
@@ -212,16 +284,13 @@ int lum_memory_snapshot_self(const char* out_path,
                     total_bytes += PAGE_SIZE;
                     break;
                 }
-                case LUM_TRACE_GRANULARITY_HUGEPAGE: {
-                    /* C114 — granularité réservée pour API future (huge page 2 MiB).
-                     * Implémentation déférée à C115 ; pour l'instant on retourne
-                     * proprement une erreur sans corrompre le flux de sortie. */
-                    fclose(out);
-                    return -ENOSYS;
-                }
+                case LUM_TRACE_GRANULARITY_HUGEPAGE:
+                    /* Ne devrait jamais arriver ici (géré avant le loop) */
+                    break;
             }
         }
     }
+    free(hp_buf); /* NULL-safe */
 
     /* Réécrire le header avec les compteurs finaux */
     hdr.total_lums = total_lums;
@@ -295,10 +364,18 @@ int lum_memory_reconstruct(const char* in_path,
                 break;
             }
             case LUM_TRACE_GRANULARITY_HUGEPAGE: {
-                /* C114 — granularité réservée API future ; reconstruction
-                 * non supportée tant que snapshot ne l'écrit pas. */
-                fclose(in);
-                return -ENOSYS;
+                /* C115 — reconstruction HUGEPAGE :
+                 * Le lum_t.reserved_flags contient le nombre de pages dans la tranche.
+                 * On lit bytes_in_tranche = reserved_flags * PAGE_SIZE octets bruts. */
+                size_t n_pages = lum.reserved_flags;
+                if (n_pages == 0) n_pages = PAGES_PER_HUGEPAGE; /* fallback 512 */
+                size_t hp_size = n_pages * PAGE_SIZE;
+                if (hp_size > HUGEPAGE_SIZE) hp_size = HUGEPAGE_SIZE;
+                if (written + hp_size > target_size) hp_size = target_size - written;
+                if (hp_size == 0) goto done;
+                if (fread(dst + written, hp_size, 1, in) != 1) goto done;
+                written += hp_size;
+                break;
             }
         }
     }
