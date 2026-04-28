@@ -212,6 +212,13 @@ int lum_memory_snapshot_self(const char* out_path,
                     total_bytes += PAGE_SIZE;
                     break;
                 }
+                case LUM_TRACE_GRANULARITY_HUGEPAGE: {
+                    /* C114 — granularité réservée pour API future (huge page 2 MiB).
+                     * Implémentation déférée à C115 ; pour l'instant on retourne
+                     * proprement une erreur sans corrompre le flux de sortie. */
+                    fclose(out);
+                    return -ENOSYS;
+                }
             }
         }
     }

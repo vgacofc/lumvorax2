@@ -811,7 +811,9 @@ static void* btc_mining_thread(void* arg) {
                                     "\"nonce\":%u,\"run_id\":\"%s\","
                                     "\"ts\":%lld}\n",
                                     res.leading_zeros, nonce,
-                                    cfg->run_id ? cfg->run_id : "anon",
+                                    /* C113-FIX-WARN-COSMETIC : cfg->run_id est char[64], adresse jamais NULL ;
+                                     * on teste le contenu (caractère 0 d'une chaîne vide) au lieu du pointeur. */
+                                    (cfg->run_id[0] != '\0') ? cfg->run_id : "anon",
                                     (long long)time(NULL));
                                 fclose(jl);
                             }

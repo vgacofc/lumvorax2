@@ -229,7 +229,9 @@ static void collect_system_metrics(golden_metrics_t* metrics) {
     FILE* loadavg_file = fopen("/proc/loadavg", "r");
     double load_avg = 1.0;
     if (loadavg_file) {
-        fscanf(loadavg_file, "%lf", &load_avg);
+        if (fscanf(loadavg_file, "%lf", &load_avg) != 1) {
+            load_avg = 1.0; /* C113-FIX-WARN-UBUNTU : valeur de repli */
+        }
         fclose(loadavg_file);
     }
     

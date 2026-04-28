@@ -33,9 +33,10 @@ extern "C" {
 #endif
 
 typedef enum {
-    LUM_TRACE_GRANULARITY_PAGE = 0,  /* 1 LUM = 1 page de 4096 octets */
-    LUM_TRACE_GRANULARITY_BYTE = 1,  /* 1 LUM = 1 octet                */
-    LUM_TRACE_GRANULARITY_BIT  = 2   /* 1 LUM = 1 bit (présence bit)   */
+    LUM_TRACE_GRANULARITY_PAGE     = 0,  /* 1 LUM = 1 page de 4096 octets */
+    LUM_TRACE_GRANULARITY_BYTE     = 1,  /* 1 LUM = 1 octet                */
+    LUM_TRACE_GRANULARITY_BIT      = 2,  /* 1 LUM = 1 bit (présence bit)   */
+    LUM_TRACE_GRANULARITY_HUGEPAGE = 3   /* 1 LUM = 1 huge page de 2 MiB (C114) */
 } lum_trace_granularity_t;
 
 typedef struct {

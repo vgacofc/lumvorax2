@@ -189,15 +189,20 @@ bool ai_agent_load_reasoning_state(ai_agent_t* agent, const char* filename) {
     FILE* file = fopen(filename, "rb");
     if (!file) return false;
     
-    // Chargement métadonnées
-    fread(&agent->learning_rate, sizeof(double), 1, file);
-    fread(&agent->success_rate, sizeof(double), 1, file);
-    fread(&agent->decisions_made, sizeof(uint64_t), 1, file);
-    fread(&agent->experience_count, sizeof(uint64_t), 1, file);
-    
+    // C113-FIX-WARN-UBUNTU : vérification stricte des fread (warn_unused_result)
+    size_t got = 0;
+    got += fread(&agent->learning_rate,    sizeof(double),   1, file);
+    got += fread(&agent->success_rate,     sizeof(double),   1, file);
+    got += fread(&agent->decisions_made,   sizeof(uint64_t), 1, file);
+    got += fread(&agent->experience_count, sizeof(uint64_t), 1, file);
+    if (got != 4) { fclose(file); return false; }
+
     // Chargement base de connaissances
     uint64_t kb_count;
-    fread(&kb_count, sizeof(uint64_t), 1, file);
+    if (fread(&kb_count, sizeof(uint64_t), 1, file) != 1) {
+        fclose(file);
+        return false;
+    }
     
     if (kb_count > 0) {
         if (!agent->knowledge_base) {
