@@ -98,6 +98,39 @@ _Atomic int nx48_ctrl_near_miss_bits = 20;   /* Défaut : 20 bits (C116-P4) */
  * asic_btc_optimizer_tune_full(). Valeur 0 = aucune injection.
  * ════════════════════════════════════════════════════════════════════ */
 _Atomic int nx48_ctrl_delta_nx48_initial_milli = 0;  /* 0 = pas d'override (garder compile-time) */
+
+/* C127-FIX-OVERRIDE : applique les 4 atomics nx48_ctrl_* sur l'état NX48.
+ * Idempotent : peut être appelée plusieurs fois (après init, après tune_full, etc.).
+ * Si atomic == 0 → garde la valeur courante (pas d'override). */
+void nx48_btc_apply_runtime_overrides(nx48_btc_state_t* s) {
+    if (!s) return;
+    int delta_milli = atomic_load_explicit(&nx48_ctrl_delta_nx48_initial_milli,
+                                           memory_order_relaxed);
+    int thermal_s   = atomic_load_explicit(&nx48_ctrl_thermal_throttle_s,
+                                           memory_order_relaxed);
+    int strat       = atomic_load_explicit(&nx48_ctrl_nonce_strategy,
+                                           memory_order_relaxed);
+    int batch       = atomic_load_explicit(&nx48_ctrl_batch_size,
+                                           memory_order_relaxed);
+    if (delta_milli > 0) {
+        s->delta_nonce_scale = (double)delta_milli / 1000.0;
+        printf("[C127-NX48-OVERRIDE] delta_nonce_scale <- %.3f (atomic tune_full)\n",
+               s->delta_nonce_scale);
+    }
+    if (thermal_s > 0) {
+        printf("[C127-NX48-OVERRIDE] thermal_throttle_s observe = %d s (asic_btc_optimizer)\n",
+               thermal_s);
+    }
+    if (strat > 0) {
+        printf("[C127-NX48-OVERRIDE] nonce_strategy observe = %d (asic_btc_optimizer)\n", strat);
+    }
+    if (batch >= 65536) {
+        s->batch_size_scale = (double)batch / 1024.0;
+        printf("[C127-NX48-OVERRIDE] batch_size_scale <- %.1f (depuis nx48_ctrl_batch_size=%d)\n",
+               s->batch_size_scale, batch);
+    }
+}
+
 _Atomic int nx48_ctrl_thermal_throttle_s       = 0;  /* 0 = pas d'override */
 _Atomic int nx48_ctrl_nonce_strategy           = 0;  /* 0 = SEQUENTIAL par défaut */
 /* C125-MEM-BIT — granularité traçage mémoire (0=PAGE 1=BYTE 2=BIT 3=HUGEPAGE) */
@@ -763,26 +796,10 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
         atomic_store_explicit(&nx48_ctrl_batch_size, 1024, memory_order_relaxed);
     }
 
-    /* C125-OPTIMIZE-RUNTIME : si tune_full a injecté un profil dans les atomics,
-     * appliquer override sur l'état NX48 (delta_nonce_scale, etc.). */
-    int delta_milli = atomic_load_explicit(&nx48_ctrl_delta_nx48_initial_milli,
-                                           memory_order_relaxed);
-    int thermal_s   = atomic_load_explicit(&nx48_ctrl_thermal_throttle_s,
-                                           memory_order_relaxed);
-    int strat       = atomic_load_explicit(&nx48_ctrl_nonce_strategy,
-                                           memory_order_relaxed);
-    if (delta_milli > 0) {
-        s->delta_nonce_scale = (double)delta_milli / 1000.0;
-        printf("[C125-NX48-OVERRIDE] delta_nonce_scale ← %.3f (depuis atomic, was tune_full)\n",
-               s->delta_nonce_scale);
-    }
-    if (thermal_s > 0) {
-        printf("[C125-NX48-OVERRIDE] thermal_throttle_s observé = %d (asic_btc_optimizer)\n",
-               thermal_s);
-    }
-    if (strat > 0) {
-        printf("[C125-NX48-OVERRIDE] nonce_strategy observé = %d (asic_btc_optimizer)\n", strat);
-    }
+    /* C125-OPTIMIZE-RUNTIME (C127-FIX) : appliquer overrides via fonction réutilisable
+     * pour pouvoir être ré-appelée APRÈS tune_full (qui injecte les atomics
+     * APRÈS l'init). Cf. nx48_btc_apply_runtime_overrides() ci-dessous. */
+    nx48_btc_apply_runtime_overrides(s);
 
     printf("[NX48-INIT] C61 — %d sous-neurones × 2 | exploration_bias=%.2f | LUM=%s\n",
         NX48_N_SUBNEURONS, s->exploration_bias,

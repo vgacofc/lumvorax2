@@ -495,6 +495,10 @@ int main(int argc, char* argv[]) {
                                       memory_order_relaxed);
                 cfg.batch_size = (int)tune_full_res.best_batch_size;
 
+                /* C127-FIX-OVERRIDE : nx48 a deja ete init() avec les anciennes
+                 * valeurs. Re-appliquer les atomics fraichement injectes. */
+                nx48_btc_apply_runtime_overrides(nx48);
+
                 printf("[C125-TUNE-FULL] PROFIL INJECTÉ → atomics nx48_ctrl_* :\n");
                 printf("[C125-TUNE-FULL]   batch_size=%u strategy=%d delta_init=%.3f thermal=%.0f s\n",
                        tune_full_res.best_batch_size,
@@ -717,28 +721,50 @@ int main(int argc, char* argv[]) {
         async_logger_destroy(async_log);
     }
 
-    /* C112 — snapshot mémoire final (delta vs baseline) + fermeture lum_log_writer */
+    /* C112 + C127-FIX — snapshot mémoire final : utilise la MEME granularite
+     * que le baseline (lue depuis nx48_ctrl_mem_trace_granularity).
+     * Sinon le snapshot final restait codé en dur sur PAGE -> incoherence. */
     if (getenv("BTC_MEM_TRACE")) {
+        int gran_int = atomic_load_explicit(&nx48_ctrl_mem_trace_granularity,
+                                            memory_order_relaxed);
+        lum_trace_granularity_t gran_final = (lum_trace_granularity_t)gran_int;
+        const char *gran_label_final = "PAGE-4KiB";
+        switch (gran_final) {
+            case LUM_TRACE_GRANULARITY_BYTE:     gran_label_final = "BYTE-1o";       break;
+            case LUM_TRACE_GRANULARITY_BIT:      gran_label_final = "BIT-1b";        break;
+            case LUM_TRACE_GRANULARITY_HUGEPAGE: gran_label_final = "HUGEPAGE-2MiB"; break;
+            default:                             gran_label_final = "PAGE-4KiB";     break;
+        }
         char mt_final[512];
         snprintf(mt_final, sizeof(mt_final),
-            "%s/modules/btc_mem_final_%s.lum", cfg.log_dir, cfg.run_id);
+            "%s/modules/btc_mem_final_%s_%s.lum",
+            cfg.log_dir, cfg.run_id, gran_label_final);
+        printf("[C127-FIX-MEM-FINAL] snapshot final granularite=%s -> %s\n",
+               gran_label_final, mt_final);
+        fflush(stdout);
         lum_trace_stats_t mtsf;
         memset(&mtsf, 0, sizeof(mtsf));
         if (lum_memory_snapshot_self(mt_final,
-                                     LUM_TRACE_GRANULARITY_PAGE,
+                                     gran_final,
                                      true, false, &mtsf) == 0) {
             printf("[C112-LUM] mem snapshot final → %s "
-                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets)\n",
+                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets, gran=%s)\n",
                    mt_final,
                    (uint64_t)mtsf.total_lums_emitted,
                    (uint64_t)mtsf.total_pages_resident,
-                   (uint64_t)mtsf.total_bytes_dumped);
+                   (uint64_t)mtsf.total_bytes_dumped,
+                   gran_label_final);
             if (g_btc_lum_log) {
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_final_bytes", (uint64_t)mtsf.total_bytes_dumped);
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_final_pages", (uint64_t)mtsf.total_pages_resident);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_final_lums",  (uint64_t)mtsf.total_lums_emitted);
             }
+        } else {
+            fprintf(stderr, "[C127-FIX-MEM-FINAL] echec snapshot final (gran=%s)\n",
+                    gran_label_final);
         }
     }
     if (g_btc_lum_log) {

@@ -159,6 +159,8 @@ extern _Atomic int    nx48_ctrl_nonce_strategy;            /* asic_nonce_strateg
 /* C125-MEM-BIT : granularité du traçage mémoire BTC. 0=PAGE, 1=BYTE, 2=BIT, 3=HUGEPAGE. */
 extern _Atomic int    nx48_ctrl_mem_trace_granularity;     /* lecture par snapshot thread périodique */
 
+/* C127-FIX-OVERRIDE : declaration apres definition de nx48_btc_state_t (cf. plus bas) */
+
 /* ════════════════════════════════════════════════════════════════════
  * ÉTAT COMPLET NX48_BTC — C61
  * ════════════════════════════════════════════════════════════════════ */
@@ -219,6 +221,10 @@ typedef struct {
 
     char   run_id[64];
 } nx48_btc_state_t;
+
+/* C127-FIX-OVERRIDE : applique les overrides atomics nx48_ctrl_* sur l'etat NX48.
+ * A appeler apres tune_full (qui modifie les atomics apres init du nx48). */
+void nx48_btc_apply_runtime_overrides(nx48_btc_state_t* s);
 
 /* ════════════════════════════════════════════════════════════════════
  * CONFIGURATION NX48_BTC — C61
