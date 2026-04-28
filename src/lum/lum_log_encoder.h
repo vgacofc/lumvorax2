@@ -22,17 +22,24 @@ extern "C" {
 #endif
 
 /* Types d'évènement loggés (encodés dans lum_t.structure_type).
- * NOTE C111 : préfixe LUM_LOG_KIND_* (et non LUM_LOG_*) pour eviter
- * collision avec l'enum LUM_LOG_INFO/WARN/ERROR du logger historique
- * (cf. kaggle_export/lum_logger.h, conserve mais non-linke au binaire BTC). */
+ * NOTE C112 (REVERT C111) : renommage prophylactique LUM_LOG_KIND_* ANNULÉ
+ * sur demande utilisateur — règle "renommer LES NOUVEAUX avec les ANCIENS noms,
+ * jamais l'inverse (sinon casse modules existants)". Les noms LUM_LOG_INFO/
+ * WARN/ERROR existent aussi dans src/logger/lum_logger.h (legacy, valeurs 0-3),
+ * mais aucun .c lié au binaire BTC n'inclut SIMULTANÉMENT les deux headers
+ * (vérifié C112 : seul memory_tracker.c inclut le legacy, et sans utiliser
+ * ces enums). Valeurs différentes (10-50 ici vs 0-3 legacy) → toute future
+ * double-inclusion provoquera une erreur de redéfinition claire au compile.
+ * Les types METRIC/RECORD/DECISION/QUANTUM_OBS sont nouveaux et ne collisionnent
+ * avec rien. */
 typedef enum {
-    LUM_LOG_KIND_INFO         = 10,
-    LUM_LOG_KIND_WARN         = 11,
-    LUM_LOG_KIND_ERROR        = 12,
-    LUM_LOG_KIND_METRIC       = 20,  /* mesure quantitative (hashrate, etc.) */
-    LUM_LOG_KIND_RECORD       = 30,  /* nouveau record (best_lz, etc.)       */
-    LUM_LOG_KIND_DECISION     = 40,  /* décision NX48 / reasoning            */
-    LUM_LOG_KIND_QUANTUM_OBS  = 50   /* observable quantique mesuré          */
+    LUM_LOG_INFO         = 10,
+    LUM_LOG_WARN         = 11,
+    LUM_LOG_ERROR        = 12,
+    LUM_LOG_METRIC       = 20,  /* mesure quantitative (hashrate, etc.) */
+    LUM_LOG_RECORD       = 30,  /* nouveau record (best_lz, etc.)       */
+    LUM_LOG_DECISION     = 40,  /* décision NX48 / reasoning            */
+    LUM_LOG_QUANTUM_OBS  = 50   /* observable quantique mesuré          */
 } lum_log_kind_t;
 
 typedef struct lum_log_writer lum_log_writer_t;

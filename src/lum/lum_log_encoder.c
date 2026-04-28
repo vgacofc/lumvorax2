@@ -121,7 +121,7 @@ int lum_log_writer_write_metric(lum_log_writer_t* w,
     char buf[256];
     int n = snprintf(buf, sizeof(buf), "%s=%.17g", metric_name, value);
     if (n <= 0) return -EIO;
-    return write_lum(w, LUM_LOG_KIND_METRIC, buf, (size_t)n);
+    return write_lum(w, LUM_LOG_METRIC, buf, (size_t)n);
 }
 
 int lum_log_writer_write_record(lum_log_writer_t* w,
@@ -131,7 +131,7 @@ int lum_log_writer_write_record(lum_log_writer_t* w,
     char buf[256];
     int n = snprintf(buf, sizeof(buf), "%s=%lu", record_name, (unsigned long)value);
     if (n <= 0) return -EIO;
-    return write_lum(w, LUM_LOG_KIND_RECORD, buf, (size_t)n);
+    return write_lum(w, LUM_LOG_RECORD, buf, (size_t)n);
 }
 
 int lum_log_writer_close(lum_log_writer_t* w) {

@@ -38,8 +38,17 @@
 #include "optimization/async_logging/async_logger.h"
 #include "optimization/thermal_regulator.h"
 
+/* C112 — Modules LUM 100 % activés (créés C111, liés mais inutilisés jusque là) */
+#include "lum/lum_log_encoder.h"
+#include "lum/lum_memory_tracer.h"
+
 /* C110 — pointer global exposé pour nx48_btc_controller.c (point décision NX48) */
 reasoning_trace_t* g_btc_reasoning_trace = NULL;
+
+/* C112 — writer log natif format LUM 100 % exposé globalement (futur usage par
+ * btc_mining_engine.c et nx48_btc_controller.c pour double-write event natif).
+ * Activation : env BTC_LUM_LOG=1 → fichier .lum binaire append-only. */
+lum_log_writer_t* g_btc_lum_log = NULL;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,6 +225,55 @@ int main(int argc, char* argv[]) {
             ASYNC_INFO(async_log, "[C110] async_logger actif run_id=%s mode=%s",
                        cfg.run_id, cfg.run_mode);
             printf("[C110-OPT] async_logger actif → %s ✓\n", alog_path);
+        }
+    }
+
+    /* C112 — lum_log_encoder : journal natif format LUM 100 % append-only.
+     * Active si env BTC_LUM_LOG=1 ; logue start/end + métriques agrégées. */
+    if (getenv("BTC_LUM_LOG")) {
+        char lum_path[512];
+        snprintf(lum_path, sizeof(lum_path),
+            "%s/modules/btc_lum_log_%s.lum", cfg.log_dir, cfg.run_id);
+        g_btc_lum_log = lum_log_writer_open(lum_path);
+        if (g_btc_lum_log) {
+            char start_msg[160];
+            snprintf(start_msg, sizeof(start_msg),
+                "C112 START run_id=%s mode=%s threads=%d duration_ns=%" PRIu64,
+                cfg.run_id, cfg.run_mode, cfg.n_threads, cfg.duration_ns);
+            lum_log_writer_write_text(g_btc_lum_log, LUM_LOG_INFO, start_msg);
+            printf("[C112-LUM] lum_log_encoder actif → %s ✓\n", lum_path);
+        }
+    }
+
+    /* C112 — lum_memory_tracer : snapshot mémoire process baseline (granularité PAGE).
+     * Active si env BTC_MEM_TRACE=1 ; produit fichier .lum binaire reconstructible. */
+    if (getenv("BTC_MEM_TRACE")) {
+        char mt_path[512];
+        snprintf(mt_path, sizeof(mt_path),
+            "%s/modules/btc_mem_baseline_%s.lum", cfg.log_dir, cfg.run_id);
+        lum_trace_stats_t mts;
+        memset(&mts, 0, sizeof(mts));
+        int rc = lum_memory_snapshot_self(mt_path,
+                                          LUM_TRACE_GRANULARITY_PAGE,
+                                          true,   /* include_anon */
+                                          false,  /* include_files (trop volumineux) */
+                                          &mts);
+        if (rc == 0) {
+            printf("[C112-LUM] mem snapshot baseline → %s "
+                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets, %" PRIu64 " ns)\n",
+                   mt_path,
+                   (uint64_t)mts.total_lums_emitted,
+                   (uint64_t)mts.total_pages_resident,
+                   (uint64_t)mts.total_bytes_dumped,
+                   (uint64_t)mts.snapshot_ns);
+            if (g_btc_lum_log) {
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_baseline_bytes", (uint64_t)mts.total_bytes_dumped);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_baseline_pages", (uint64_t)mts.total_pages_resident);
+            }
+        } else {
+            fprintf(stderr, "[C112-LUM] mem snapshot baseline ÉCHEC rc=%d\n", rc);
         }
     }
 
@@ -446,6 +504,41 @@ int main(int argc, char* argv[]) {
                async_logger_get_total(async_log),
                async_logger_get_dropped(async_log));
         async_logger_destroy(async_log);
+    }
+
+    /* C112 — snapshot mémoire final (delta vs baseline) + fermeture lum_log_writer */
+    if (getenv("BTC_MEM_TRACE")) {
+        char mt_final[512];
+        snprintf(mt_final, sizeof(mt_final),
+            "%s/modules/btc_mem_final_%s.lum", cfg.log_dir, cfg.run_id);
+        lum_trace_stats_t mtsf;
+        memset(&mtsf, 0, sizeof(mtsf));
+        if (lum_memory_snapshot_self(mt_final,
+                                     LUM_TRACE_GRANULARITY_PAGE,
+                                     true, false, &mtsf) == 0) {
+            printf("[C112-LUM] mem snapshot final → %s "
+                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets)\n",
+                   mt_final,
+                   (uint64_t)mtsf.total_lums_emitted,
+                   (uint64_t)mtsf.total_pages_resident,
+                   (uint64_t)mtsf.total_bytes_dumped);
+            if (g_btc_lum_log) {
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_final_bytes", (uint64_t)mtsf.total_bytes_dumped);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_final_pages", (uint64_t)mtsf.total_pages_resident);
+            }
+        }
+    }
+    if (g_btc_lum_log) {
+        char end_msg[160];
+        snprintf(end_msg, sizeof(end_msg),
+            "C112 END run_id=%s result=%d", cfg.run_id, result);
+        lum_log_writer_write_text(g_btc_lum_log,
+            (result >= 0) ? LUM_LOG_INFO : LUM_LOG_ERROR, end_msg);
+        lum_log_writer_close(g_btc_lum_log);
+        g_btc_lum_log = NULL;
+        printf("[C112-LUM] lum_log_writer fermé proprement (fsync OK).\n");
     }
 
     /* ── Libération ─────────────────────────────────────────────── */
