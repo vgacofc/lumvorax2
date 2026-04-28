@@ -12,7 +12,12 @@ void v42_log_bit(const char* module, const char* event, const char* data) {
 }
 
 bool v41_check_shf_resonance(const void* state_space, float epsilon) {
-    v42_log_bit("SHF", "CHECK_RESONANCE", "epsilon=0.001");
+    /* C122-FIX-WARN : neutralisation parametres non consommes (stub V41 a etoffer
+     * en C125+ ; conformite -Wunused-parameter sans changer la semantique). */
+    (void)state_space;
+    char eps_buf[32];
+    snprintf(eps_buf, sizeof(eps_buf), "epsilon=%.6g", (double)epsilon);
+    v42_log_bit("SHF", "CHECK_RESONANCE", eps_buf);
     return true; 
 }
 

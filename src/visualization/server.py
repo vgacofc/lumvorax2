@@ -525,6 +525,70 @@ def api_viz_multiscale():
     return jsonify({"scales": scales, "cluster_sizes": cluster_sizes})
 
 
+# ── C122 — Metriques systeme temps reel (CPU/RAM/disk + activite agent) ─────
+import psutil as _psutil
+
+@app.route("/api/system_metrics")
+def api_system_metrics():
+    """Expose CPU/RAM/disk + dernieres activites agent Ubuntu et stats forensic.
+    Pas de secret retourne (token reste en header). Conforme C122-MONITORING.
+    """
+    try:
+        cpu_pct = _psutil.cpu_percent(interval=0.05)
+        cpu_freq = _psutil.cpu_freq()
+        cpu_count = _psutil.cpu_count(logical=True)
+        ram = _psutil.virtual_memory()
+        disk = _psutil.disk_usage("/")
+        load = os.getloadavg() if hasattr(os, "getloadavg") else (0.0, 0.0, 0.0)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    ws_count = 0
+    if "_ws_agent_sids" in globals():
+        with _ws_agent_sids_lock:
+            ws_count = len(_ws_agent_sids)
+    agent_summary = {
+        "ws_connected_count": ws_count,
+        "ws_connected": ws_count > 0,
+        "queue_len": len(_agent_queue) if "_agent_queue" in globals() else 0,
+        "results_stored": len(_agent_results) if "_agent_results" in globals() else 0,
+        "forensic_total_received": _forensic_stats.get("total_received", 0),
+        "forensic_anomalies": _forensic_stats.get("anomalies", 0),
+        "forensic_metrics": _forensic_stats.get("metrics", 0),
+        "forensic_last_received_at": _forensic_stats.get("last_received_at", 0),
+    }
+
+    last_result = None
+    if "_agent_results" in globals() and _agent_results:
+        with _agent_lock:
+            last_result = _agent_results[-1] if _agent_results else None
+
+    return jsonify({
+        "cycle": "C122",
+        "ts": int(time.time()) if "time" in globals() else 0,
+        "cpu": {
+            "percent": cpu_pct,
+            "freq_mhz": cpu_freq.current if cpu_freq else None,
+            "count_logical": cpu_count,
+            "loadavg_1_5_15": list(load),
+        },
+        "ram": {
+            "total_bytes": ram.total,
+            "used_bytes": ram.used,
+            "available_bytes": ram.available,
+            "percent": ram.percent,
+        },
+        "disk_root": {
+            "total_bytes": disk.total,
+            "used_bytes": disk.used,
+            "free_bytes": disk.free,
+            "percent": disk.percent,
+        },
+        "agent": agent_summary,
+        "last_agent_result": last_result,
+    })
+
+
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
