@@ -168,7 +168,7 @@ Charge utile envoyee :
 {
   "label": "C122-AB-60s-16t-kabylake",
   "timeout_s": 240,
-  "cmd": "cd ~/L/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining && make clean && make 2>&1 | tail -20 && echo '=== RUN A LUM_LOGGING=0 ===' && env LUM_LOGGING=0 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 2>&1 | tail -40 && echo '=== RUN B LUM_LOGGING=1 ===' && env LUM_LOGGING=1 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 2>&1 | tail -40 && echo '=== LUM FILES ===' && ls -la logs/lum_native/ logs/forensic/modules/btc_lum_log_*.lum 2>/dev/null | tail -10"
+  "cmd": "cd ~/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining && make clean && make 2>&1 | tail -20 && echo '=== RUN A LUM_LOGGING=0 ===' && env LUM_LOGGING=0 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 2>&1 | tail -40 && echo '=== RUN B LUM_LOGGING=1 ===' && env LUM_LOGGING=1 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 2>&1 | tail -40 && echo '=== LUM FILES ===' && ls -la logs/lum_native/ logs/forensic/modules/btc_lum_log_*.lum 2>/dev/null | tail -10"
 }
 ```
 
@@ -187,7 +187,7 @@ Charge utile envoyee :
 {
   "label": "C122-Q1-attractor-3headers",
   "timeout_s": 1500,
-  "cmd": "cd ~/L/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining && for header_seed in 1 2 3; do echo \"=== HEADER SEED $header_seed (~20 min) ===\" && env BTC_HEADER_SEED=$header_seed ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 1200 2>&1 | grep -E 'NEW-RECORD|best_lz|nonce|RECORD ABSOLU' | tail -30; done"
+  "cmd": "cd ~/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining && for header_seed in 1 2 3; do echo \"=== HEADER SEED $header_seed (~20 min) ===\" && env BTC_HEADER_SEED=$header_seed ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 1200 2>&1 | grep -E 'NEW-RECORD|best_lz|nonce|RECORD ABSOLU' | tail -30; done"
 }
 ```
 
