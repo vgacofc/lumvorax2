@@ -294,6 +294,12 @@ int lum_memory_reconstruct(const char* in_path,
                 written++;
                 break;
             }
+            case LUM_TRACE_GRANULARITY_HUGEPAGE: {
+                /* C114 — granularité réservée API future ; reconstruction
+                 * non supportée tant que snapshot ne l'écrit pas. */
+                fclose(in);
+                return -ENOSYS;
+            }
         }
     }
 done:
