@@ -21,13 +21,28 @@
 #define HUGEPAGE_SIZE   (2UL * 1024UL * 1024UL)   /* 2 MiB */
 #define PAGES_PER_HUGEPAGE (HUGEPAGE_SIZE / PAGE_SIZE) /* 512 pages */
 
-/* Format .lum produit :
- *   header (32 octets) :
- *     uint32 magic       = 'LUMT'
- *     uint32 granularity (0=page, 1=byte, 2=bit)
+/* C117-P1 — Algorithmes de checksum supportés */
+#define LUM_CHKSUM_ADLER32  0u   /* Legacy C111-C116 */
+#define LUM_CHKSUM_CRC32C   1u   /* C117 par défaut (Castagnoli) */
+
+/* C117-P1 — Versions du format .lum
+ *   v1 : header 32 octets (legacy C111-C116, fichiers non alignés cache-line)
+ *   v2 : header 64 octets (C117, aligné cache-line, CRC32C, CLOCK_MONOTONIC_RAW)
+ */
+#define LUM_FORMAT_VERSION_LEGACY 1u
+#define LUM_FORMAT_VERSION_C117   2u
+
+/* Format .lum produit (C117-P1, FIX ALIGNEMENT) :
+ *   header (64 octets, aligné cache line) :
+ *     uint32 magic         = 'LUMT'
+ *     uint32 granularity   (0=page, 1=byte, 2=bit, 3=hugepage)
  *     uint64 total_lums
  *     uint64 total_bytes
- *     uint64 timestamp_ns
+ *     uint64 timestamp_realtime_ns  (wall-clock du snapshot, CLOCK_REALTIME)
+ *     uint32 version_major (2 = C117 nouveau format)
+ *     uint32 checksum_algo (0=Adler32, 1=CRC32C)
+ *     uint64 timestamp_monotonic_ns (CLOCK_MONOTONIC_RAW pour mesure)
+ *     uint8  reserved[16]  (alignement 64 octets exact)
  *   N × lum_t (64 octets chacun, aligné cache line)
  */
 typedef struct __attribute__((packed)) {
@@ -35,24 +50,63 @@ typedef struct __attribute__((packed)) {
     uint32_t granularity;
     uint64_t total_lums;
     uint64_t total_bytes;
-    uint64_t timestamp_ns;
+    uint64_t timestamp_realtime_ns;
+    uint32_t version_major;
+    uint32_t checksum_algo;
+    uint64_t timestamp_monotonic_ns;
+    uint8_t  reserved[16];
 } lum_file_header_t;
 
+_Static_assert(sizeof(lum_file_header_t) == 64,
+               "C117-P1: header doit être 64 octets pour alignement cache-line");
+
+/* C117-P4 — Timestamp monotonic raw (immune to NTP slew, plus stable que CLOCK_MONOTONIC) */
 static uint64_t now_ns(void) {
     struct timespec ts;
+#ifdef CLOCK_MONOTONIC_RAW
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &ts) == 0)
+        return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+#endif
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
 }
 
-static uint32_t lum_checksum(const void* data, size_t len) {
-    /* CRC32-like rapide (Adler-32 simplifié pour vitesse, suffisant pour intégrité) */
-    uint32_t a = 1, b = 0;
+/* C117-P4 — Wall-clock pour timestamp du snapshot (lisible humain) */
+static uint64_t now_realtime_ns(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+}
+
+/* C117-P3 — CRC32C (Castagnoli, polynôme 0x1EDC6F41) — hardware SSE4.2 si dispo,
+ * sinon fallback software. Beaucoup plus robuste que Adler-32/XOR/FNV-1a contre
+ * les collisions naturelles et adversariales. */
+static uint32_t lum_crc32c(const void* data, size_t len) {
+    uint32_t crc = ~0u;
     const uint8_t* p = (const uint8_t*)data;
-    for (size_t i = 0; i < len; i++) {
-        a = (a + p[i]) % 65521u;
-        b = (b + a) % 65521u;
+#if defined(__SSE4_2__) && (defined(__x86_64__) || defined(__i386__))
+    while (len >= 8) {
+        crc = (uint32_t)__builtin_ia32_crc32di(crc, *(const uint64_t*)p);
+        p += 8; len -= 8;
     }
-    return (b << 16) | a;
+    while (len >= 1) {
+        crc = __builtin_ia32_crc32qi(crc, *p++);
+        len--;
+    }
+#else
+    /* Fallback software, polynôme reflected 0x82F63B78 */
+    while (len--) {
+        crc ^= *p++;
+        for (int i = 0; i < 8; i++)
+            crc = (crc >> 1) ^ (0x82F63B78u & -(int32_t)(crc & 1u));
+    }
+#endif
+    return ~crc;
+}
+
+/* Wrapper pour préserver l'API interne existante */
+static uint32_t lum_checksum(const void* data, size_t len) {
+    return lum_crc32c(data, len);
 }
 
 /* Encode 1 page (4096 octets) en 1 lum_t.
@@ -142,6 +196,7 @@ int lum_memory_snapshot_self(const char* out_path,
     if (!out_path) return -EINVAL;
 
     uint64_t t0 = now_ns();
+    uint64_t t0_real = now_realtime_ns();
 
     FILE* maps = fopen("/proc/self/maps", "r");
     if (!maps) return -errno;
@@ -159,16 +214,19 @@ int lum_memory_snapshot_self(const char* out_path,
         return -errno;
     }
 
-    /* Header placeholder, rewriten à la fin */
-    lum_file_header_t hdr = {
-        .magic = LUM_TRACER_MAGIC,
-        .granularity = (uint32_t)granularity,
-        .total_lums = 0,
-        .total_bytes = 0,
-        .timestamp_ns = t0,
-    };
+    /* C117-P1 — Header 64 octets (placeholder, réécrit à la fin) */
+    lum_file_header_t hdr;
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.magic = LUM_TRACER_MAGIC;
+    hdr.granularity = (uint32_t)granularity;
+    hdr.total_lums = 0;
+    hdr.total_bytes = 0;
+    hdr.timestamp_realtime_ns = t0_real;
+    hdr.version_major = LUM_FORMAT_VERSION_C117;
+    hdr.checksum_algo = LUM_CHKSUM_CRC32C;
+    hdr.timestamp_monotonic_ns = t0;
     fwrite(&hdr, sizeof(hdr), 1, out);
-    /* Pad to 32 bytes (sizeof(lum_file_header_t)=32 already) */
+    /* sizeof(lum_file_header_t) = 64 octets, validé par _Static_assert ci-dessus */
 
     uint64_t total_lums = 0;
     uint64_t total_bytes = 0;
@@ -292,11 +350,12 @@ int lum_memory_snapshot_self(const char* out_path,
     }
     free(hp_buf); /* NULL-safe */
 
-    /* Réécrire le header avec les compteurs finaux */
+    /* Réécrire le header avec les compteurs finaux (C117 : header 64 octets) */
     hdr.total_lums = total_lums;
     hdr.total_bytes = total_bytes;
     fseek(out, 0, SEEK_SET);
     fwrite(&hdr, sizeof(hdr), 1, out);
+    fflush(out);
     fclose(out);
     close(mem_fd);
     fclose(maps);
@@ -325,6 +384,9 @@ int lum_memory_reconstruct(const char* in_path,
     FILE* in = fopen(in_path, "rb");
     if (!in) return -errno;
 
+    /* C117-P1 — Lecture stricte du header 64 octets. Les fichiers .lum
+     * produits avant C117 (header 32 octets, version_major absent) doivent
+     * être régénérés ; le reader rejette les anciens fichiers explicitement. */
     lum_file_header_t hdr;
     if (fread(&hdr, sizeof(hdr), 1, in) != 1) {
         fclose(in);
@@ -333,6 +395,12 @@ int lum_memory_reconstruct(const char* in_path,
     if (hdr.magic != LUM_TRACER_MAGIC) {
         fclose(in);
         return -EBADMSG;
+    }
+    if (hdr.version_major != LUM_FORMAT_VERSION_C117) {
+        /* Format legacy v1 (header 32 octets) — non supporté en C117.
+         * Le caller doit régénérer le snapshot avec lum_memory_snapshot_self(). */
+        fclose(in);
+        return -ENOTSUP;
     }
 
     uint8_t* dst = (uint8_t*)target_buffer;

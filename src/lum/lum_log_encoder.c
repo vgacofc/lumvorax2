@@ -21,20 +21,47 @@ struct lum_log_writer {
     uint64_t events_written;
 };
 
+/* C117-P4 — Unification timestamps : CLOCK_MONOTONIC_RAW (immune NTP slew).
+ * Avant C117, log_encoder utilisait CLOCK_REALTIME (incohérent avec
+ * lum_memory_tracer qui utilisait CLOCK_MONOTONIC). Depuis C117, tous les
+ * timestamps lum_t.timestamp utilisent la même base monotonic raw, ce qui
+ * permet de corréler/ordonner les évènements entre fichiers .lum sans
+ * artéfact de saut horloge (NTP, leap second, manual time set). */
 static uint64_t now_ns(void) {
     struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
+#ifdef CLOCK_MONOTONIC_RAW
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &ts) == 0)
+        return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+#endif
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
 }
 
+/* C117-P3 — CRC32C (Castagnoli) — hardware SSE4.2 si dispo, sinon software.
+ * Beaucoup plus robuste que FNV-1a/XOR contre collisions. Identique à celui
+ * utilisé par lum_memory_tracer.c → garantit interopérabilité des checksums
+ * entre les deux modules d'encodage LUM. */
 static uint32_t fast_checksum(const void* data, size_t len) {
-    uint32_t h = 2166136261u; /* FNV-1a */
+    uint32_t crc = ~0u;
     const uint8_t* p = (const uint8_t*)data;
-    for (size_t i = 0; i < len; i++) {
-        h ^= p[i];
-        h *= 16777619u;
+#if defined(__SSE4_2__) && (defined(__x86_64__) || defined(__i386__))
+    while (len >= 8) {
+        crc = (uint32_t)__builtin_ia32_crc32di(crc, *(const uint64_t*)p);
+        p += 8; len -= 8;
     }
-    return h;
+    while (len >= 1) {
+        crc = __builtin_ia32_crc32qi(crc, *p++);
+        len--;
+    }
+#else
+    /* Fallback software, polynôme reflected 0x82F63B78 (Castagnoli) */
+    while (len--) {
+        crc ^= *p++;
+        for (int i = 0; i < 8; i++)
+            crc = (crc >> 1) ^ (0x82F63B78u & -(int32_t)(crc & 1u));
+    }
+#endif
+    return ~crc;
 }
 
 lum_log_writer_t* lum_log_writer_open(const char* lum_path) {
