@@ -1,8 +1,46 @@
 # LUMVORAX — Mémoire de session
 
-**Cycle courant : C111** (modules LUM 100% : tracage memoire process + encodeur log natif + fix 3 bugs C110 path GPU, 2026-04-27T22:15Z)
+**Cycle courant : C112** (inversion renommage C111 + activation hooks lum_log_writer/lum_memory_tracer dans main_btc_mining.c, 2026-04-28T12:02Z)
 
-## C111 (en cours) — Modules LUM 100% + Fix bugs C110
+## C112 (en cours) — Inversion + activation modules LUM C111
+
+**Règle d'or appliquée** : utilisateur exige que les anciens noms soient autoritaires. C111 avait préfixé `LUM_LOG_KIND_*` pour éviter une collision sémantique avec `lum_logger.h` legacy → C112 inverse en restaurant `LUM_LOG_*` (valeurs numériques 10..50 conservées pour éviter chevauchement ABI avec valeurs 0..3 du legacy).
+
+**4 modifications** :
+- `src/lum/lum_log_encoder.h` : renommage 7 valeurs d'énum (LUM_LOG_KIND_* → LUM_LOG_*) + commentaire explicatif
+- `src/lum/lum_log_encoder.c` : sed inversion 18 call-sites
+- `src/advanced_calculations/bitcoin_quantum_mining/src/main_btc_mining.c` : hooks lum_log_writer (open/close avec fsync) + lum_memory_tracer (snapshot baseline+final granularité PAGE) gardés par variables d'env `BTC_LUM_LOG=1` et `BTC_MEM_TRACE=1`
+- `Makefile` : fix tabs récurrent (sed -i 's/^        /\t/')
+
+**Audit collision croisée 22 .c BTC** : zéro TU n'inclut simultanément `lum_logger.h` (legacy) et `lum_log_encoder.h` (C111/C112). Seul `src/debug/memory_tracker.c` inclut `lum_logger.h` mais ne consomme aucune valeur d'enum (uniquement macros texte). Inversion sûre.
+
+**Smoke test Replit 5 s** : compile OK (193 K, 1 warning cosmétique pré-existant `cfg->run_id`), 22 .c liés (vs 20 C110, +2 LUM C111), 0.35 MH/s 2 threads CPU pur. **6 artefacts forensiques produits** :
+- `btc_lum_log_*.lum` (832 octets, magic `LMUL` validé on-disk offset 36..39, valeur enum 10 = `LUM_LOG_INFO` confirmée)
+- `btc_mem_baseline_*.lum` (81 MiB, 9811 pages résidentes)
+- `btc_mem_final_*.lum` (39 MiB, delta visible)
+- `btc_async_log_*.log` (255 octets, 2 entries)
+- `btc_qm_engine_forensic_*.log` (104 K)
+- `btc_reasoning_trace_*.json` (169 octets, 0 nœuds — normal car best_lz=24 alltime non dépassé en 5 s)
+
+**MD5 anciens rapports CHAT préservés** : 105 → 109.1 + 111 + 111.1 inchangés (vérifié md5sum, total 6 377 lignes intactes).
+
+**STANDARD_NAMES.md** : +14 entrées C112 (C112-REVERT-LUM-LOG-KIND, BTC_LUM_LOG, BTC_MEM_TRACE, g_btc_lum_log, C112-MAKEFILE-TABS-FIX-RECURRING, C112-AUDIT-COLLISION, C112-SMOKE-PASS, LMUL, btc_mem_baseline, btc_mem_final, btc_lum_log, C112-PARITY-C111-RUNTIME).
+
+**Rapport** : `src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt112.md` (746 L, parité largement dépassée vs cible 484).
+
+**Run mainnet Ubuntu 10 min C112** : commande prête (rapport §5), à exécuter une fois Ubuntu sur HEAD `6e83971 CHATC112` (CONFIRMÉ par utilisateur). Critères validation R1..R8 (rapport §5.1) :
+- Hashrate ≥ 8.5 MH/s (parité C110)
+- Best leading ≥ 34 bits (parité C110)
+- NX48 update_count ≥ 300 (parité C110)
+- Reasoning trace ≥ 100 nœuds (validation effective fix C111 path GPU)
+- `btc_lum_log_<run_id>.lum` ≥ 100 KiB
+- `btc_mem_baseline/final_<run_id>.lum` existent avec tailles différentes
+
+**Bug Makefile tabs RÉCURRENT** depuis C108 : Replit/LSP convertit certains TABs en 8 espaces à chaque édition → toujours `sed -i 's/^        /\t/' Makefile` AVANT `make`.
+
+**Avancement global cycle BTC mainnet (C99 → C112) : 96 %** (+1 pt vs C111).
+
+## C111 (TERMINÉ) — Modules LUM 100% + Fix bugs C110
 **Faisabilite tracage** : process bit-par-bit OUI (faisable, /proc/self/{maps,pagemap,mem}) ; OS/kernel via /proc/kcore PARTIEL (root requis) ; machine/hyperviseur NON ; quantique avant mesure NON (no-cloning theorem)
 **4 nouveaux fichiers** : `src/lum/lum_memory_tracer.{h,c}` (snapshot+reconstruction format .lum binaire 3 granularites PAGE/BYTE/BIT) + `src/lum/lum_log_encoder.{h,c}` (writer thread-safe append-only)
 **3 bugs C110 corriges** :
