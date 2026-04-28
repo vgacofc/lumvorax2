@@ -1,5 +1,9 @@
+/* C125 : _POSIX_C_SOURCE requis pour clock_gettime/CLOCK_MONOTONIC dans tune_full */
+#ifndef _POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE 200809L
+#endif
 /* ============================================================================
- * ASIC BTC Optimizer — Cycle C115
+ * ASIC BTC Optimizer — Cycle C115 (étendu C125 avec tune_full + chronométrage)
  * Simulateur d'optimisation Bitcoin mining classique.
  *
  * Ce module OPTIMISE (pas seulement benchmark) les paramètres :
@@ -407,6 +411,155 @@ int asic_btc_optimizer_tune_batch(asic_btc_optimizer_cfg_t *cfg,
 
     cfg->batch_size = batch_sizes[best_idx];
     return best_idx;
+}
+
+/* ============================================================================
+ * C125 — OPTIMIZE-RUNTIME : sweep multi-dimensionnel COMPLET
+ * Balaye toutes les combinaisons (batch × strategy × delta_init × thermal)
+ * et retourne le profil optimal pour injection dans nx48_ctrl_*.
+ *
+ * Implémentation : 4 boucles imbriquées, scoring par optimization_score,
+ * statistiques mean/stddev/top5, durée totale chronométrée.
+ * ============================================================================ */
+
+/* Valeurs par défaut si NULL passé */
+static const uint32_t DEFAULT_BATCH_SIZES[4]   = { 262144u, 524288u, 1048576u, 2097152u };
+static const int      DEFAULT_STRATEGIES[4]    = { NONCE_SEQUENTIAL, NONCE_RANDOM,
+                                                    NONCE_DELTA_NX48, NONCE_QUANTUM_BIAS };
+static const double   DEFAULT_DELTA_INITS[4]   = { 1.0, 6.0, 32.0, 128.0 };
+static const double   DEFAULT_THERMAL_THROTT[3]= { 60.0, 300.0, 900.0 };
+
+/* Insertion top-5 trié décroissant */
+static void top5_insert(int *idx, double *score, int new_idx, double new_score) {
+    /* Trouver position d'insertion */
+    int pos = 5;
+    for (int k = 0; k < 5; k++) {
+        if (new_score > score[k]) { pos = k; break; }
+    }
+    if (pos >= 5) return;
+    /* Décaler vers la droite */
+    for (int k = 4; k > pos; k--) {
+        idx[k]   = idx[k-1];
+        score[k] = score[k-1];
+    }
+    idx[pos]   = new_idx;
+    score[pos] = new_score;
+}
+
+int asic_btc_optimizer_tune_full(const asic_btc_optimizer_cfg_t *base_cfg,
+                                  const uint32_t *batch_sizes,    int n_batch,
+                                  const int      *strategies,     int n_strat,
+                                  const double   *delta_inits,    int n_delta,
+                                  const double   *thermal_throttles, int n_thermal,
+                                  asic_btc_tune_full_result_t *out) {
+    if (!base_cfg || !out) return -1;
+
+    /* Fallback valeurs par défaut */
+    if (!batch_sizes || n_batch <= 0)        { batch_sizes = DEFAULT_BATCH_SIZES;        n_batch = 4; }
+    if (!strategies  || n_strat <= 0)        { strategies  = DEFAULT_STRATEGIES;          n_strat = 4; }
+    if (!delta_inits || n_delta <= 0)        { delta_inits = DEFAULT_DELTA_INITS;         n_delta = 4; }
+    if (!thermal_throttles || n_thermal <= 0){ thermal_throttles = DEFAULT_THERMAL_THROTT; n_thermal = 3; }
+
+    memset(out, 0, sizeof(*out));
+    out->total_combinations    = n_batch * n_strat * n_delta * n_thermal;
+    out->worst_score           = 1e18;
+    out->best_score            = -1.0;
+    /* Initialiser top5 à -1 / -inf pour qu'ils soient remplis */
+    for (int k = 0; k < 5; k++) {
+        out->top5_indices[k] = -1;
+        out->top5_scores[k]  = -1.0;
+    }
+
+    asic_btc_optimizer_cfg_t tmp_cfg = *base_cfg;
+    asic_btc_result_t        tmp_res;
+
+    double sum_score   = 0.0;
+    double sum_score_sq = 0.0;
+
+    struct timespec t_start, t_now;
+    clock_gettime(CLOCK_MONOTONIC, &t_start);
+
+    int combo_idx = 0;
+    /* 4 boucles imbriquées : batch × strategy × delta × thermal */
+    for (int ib = 0; ib < n_batch; ib++) {
+        for (int is = 0; is < n_strat; is++) {
+            for (int id = 0; id < n_delta; id++) {
+                for (int it = 0; it < n_thermal; it++, combo_idx++) {
+                    tmp_cfg.batch_size         = batch_sizes[ib];
+                    tmp_cfg.strategy           = (asic_nonce_strategy_t)strategies[is];
+                    tmp_cfg.delta_nx48_initial = delta_inits[id];
+                    tmp_cfg.thermal_throttle_s = thermal_throttles[it];
+
+                    if (asic_btc_optimizer_run(&tmp_cfg, &tmp_res) != 0) continue;
+
+                    out->successful_combinations++;
+                    double sc = tmp_res.optimization_score;
+                    sum_score    += sc;
+                    sum_score_sq += sc * sc;
+
+                    if (sc > out->best_score) {
+                        out->best_score              = sc;
+                        out->best_batch_size         = batch_sizes[ib];
+                        out->best_strategy           = (asic_nonce_strategy_t)strategies[is];
+                        out->best_delta_nx48_init    = delta_inits[id];
+                        out->best_thermal_throttle_s = thermal_throttles[it];
+                        out->best_result             = tmp_res;
+                    }
+                    if (sc < out->worst_score) out->worst_score = sc;
+
+                    top5_insert(out->top5_indices, out->top5_scores, combo_idx, sc);
+                }
+            }
+        }
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &t_now);
+    out->sweep_duration_s = (double)(t_now.tv_sec - t_start.tv_sec)
+                          + (double)(t_now.tv_nsec - t_start.tv_nsec) / 1e9;
+
+    if (out->successful_combinations > 0) {
+        out->mean_score = sum_score / (double)out->successful_combinations;
+        double var = sum_score_sq / (double)out->successful_combinations
+                   - out->mean_score * out->mean_score;
+        out->stddev_score = (var > 0) ? sqrt(var) : 0.0;
+    }
+
+    return 0;
+}
+
+void asic_btc_optimizer_print_tune_full_report(const asic_btc_tune_full_result_t *r) {
+    if (!r) return;
+    printf("\n");
+    printf("╔═══════════════════════════════════════════════════════════════╗\n");
+    printf("║   C125 — OPTIMIZE-RUNTIME — Sweep complet (4D)               ║\n");
+    printf("╠═══════════════════════════════════════════════════════════════╣\n");
+    printf("║ Combinaisons  : %d testées (%d succès)                       \n",
+           r->total_combinations, r->successful_combinations);
+    printf("║ Durée sweep   : %.2f s                                         \n",
+           r->sweep_duration_s);
+    printf("║ Score min     : %.2f                                            \n", r->worst_score);
+    printf("║ Score moyen   : %.2f ± %.2f                                    \n",
+           r->mean_score, r->stddev_score);
+    printf("║ Score max     : %.2f (BEST)                                    \n", r->best_score);
+    printf("╠═══════════════════════════════════════════════════════════════╣\n");
+    printf("║ PROFIL OPTIMAL (à injecter dans nx48_ctrl_*) :                ║\n");
+    printf("║   batch_size           : %u                                    \n", r->best_batch_size);
+    printf("║   strategy             : %d                                     \n", (int)r->best_strategy);
+    printf("║   delta_nx48_initial   : %.3f                                  \n", r->best_delta_nx48_init);
+    printf("║   thermal_throttle_s   : %.0f                                  \n", r->best_thermal_throttle_s);
+    printf("║   hashrate_avg         : %.2f MH/s                             \n",
+           r->best_result.hashrate_avg_MH_s);
+    printf("║   best_leading_bits    : %u                                    \n",
+           r->best_result.best_leading_bits);
+    printf("╠═══════════════════════════════════════════════════════════════╣\n");
+    printf("║ TOP-5 combinaisons (combo_idx → score) :                      ║\n");
+    for (int k = 0; k < 5; k++) {
+        if (r->top5_indices[k] < 0) break;
+        printf("║   #%d : combo[%4d] → score %.2f                                \n",
+               k+1, r->top5_indices[k], r->top5_scores[k]);
+    }
+    printf("╚═══════════════════════════════════════════════════════════════╝\n");
+    printf("\n");
 }
 
 /* ============================================================================

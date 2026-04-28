@@ -249,35 +249,89 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /* C112 — lum_memory_tracer : snapshot mémoire process baseline (granularité PAGE).
+    /* C112 + C125 — lum_memory_tracer : snapshot mémoire process baseline.
+     * Granularité contrôlée par env var BTC_MEM_TRACE_GRANULARITY :
+     *   "page"     (défaut) : 1 LUM par page 4KiB     → ~quelques MiB
+     *   "byte"               : 1 LUM par octet         → ~RSS × 64
+     *   "bit"                : 1 LUM par bit           → ~RSS × 512 (640 MiB pour 80MB RSS)
+     *   "hugepage"           : 1 LUM par 2 MiB         → quelques KiB
+     *
+     * USER C125 : exige granularité BIT activable, peu importe taille fichier
+     * ou latence. Trace tout jusqu'au crash si nécessaire (révèle bugs cachés).
      * Active si env BTC_MEM_TRACE=1 ; produit fichier .lum binaire reconstructible. */
     if (getenv("BTC_MEM_TRACE")) {
+        const char *gran_str = getenv("BTC_MEM_TRACE_GRANULARITY");
+        lum_trace_granularity_t gran = LUM_TRACE_GRANULARITY_PAGE;
+        const char *gran_label = "PAGE-4KiB";
+        if (gran_str) {
+            if (strcmp(gran_str, "byte") == 0 || strcmp(gran_str, "BYTE") == 0) {
+                gran = LUM_TRACE_GRANULARITY_BYTE;
+                gran_label = "BYTE-1o";
+            } else if (strcmp(gran_str, "bit") == 0 || strcmp(gran_str, "BIT") == 0) {
+                gran = LUM_TRACE_GRANULARITY_BIT;
+                gran_label = "BIT-1b";
+            } else if (strcmp(gran_str, "hugepage") == 0 || strcmp(gran_str, "HUGEPAGE") == 0) {
+                gran = LUM_TRACE_GRANULARITY_HUGEPAGE;
+                gran_label = "HUGEPAGE-2MiB";
+            }
+        }
+        /* Publier la granularité dans l'atomique pour les snapshots périodiques */
+        atomic_store_explicit(&nx48_ctrl_mem_trace_granularity, (int)gran,
+                              memory_order_relaxed);
+
         char mt_path[512];
         snprintf(mt_path, sizeof(mt_path),
-            "%s/modules/btc_mem_baseline_%s.lum", cfg.log_dir, cfg.run_id);
+            "%s/modules/btc_mem_baseline_%s_%s.lum", cfg.log_dir, cfg.run_id, gran_label);
+
+        printf("[C125-LUM] Snapshot mémoire BIT-LEVEL granularité=%s → %s\n",
+               gran_label, mt_path);
+        printf("[C125-LUM] AVERTISSEMENT : granularité BIT peut produire fichier "
+               ">500 MiB et durer plusieurs minutes (USER ACCEPTÉ)\n");
+        fflush(stdout);
+
         lum_trace_stats_t mts;
         memset(&mts, 0, sizeof(mts));
+        struct timespec ts_snap_start, ts_snap_end;
+        clock_gettime(CLOCK_MONOTONIC, &ts_snap_start);
+
         int rc = lum_memory_snapshot_self(mt_path,
-                                          LUM_TRACE_GRANULARITY_PAGE,
+                                          gran,
                                           true,   /* include_anon */
                                           false,  /* include_files (trop volumineux) */
                                           &mts);
+        clock_gettime(CLOCK_MONOTONIC, &ts_snap_end);
+        double snap_dur = (double)(ts_snap_end.tv_sec - ts_snap_start.tv_sec)
+                        + (double)(ts_snap_end.tv_nsec - ts_snap_start.tv_nsec) / 1e9;
+
         if (rc == 0) {
-            printf("[C112-LUM] mem snapshot baseline → %s "
-                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets, %" PRIu64 " ns)\n",
-                   mt_path,
+            printf("[C125-LUM] mem snapshot %s OK : %" PRIu64 " lums, %" PRIu64 " pages, "
+                   "%" PRIu64 " octets, durée=%.2fs\n",
+                   gran_label,
                    (uint64_t)mts.total_lums_emitted,
                    (uint64_t)mts.total_pages_resident,
                    (uint64_t)mts.total_bytes_dumped,
-                   (uint64_t)mts.snapshot_ns);
+                   snap_dur);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c125_mem_lums_emitted",      (double)mts.total_lums_emitted);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c125_mem_bytes_dumped",      (double)mts.total_bytes_dumped);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c125_mem_snapshot_dur_s",    snap_dur);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c125_mem_granularity_int",   (double)gran);
             if (g_btc_lum_log) {
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_baseline_bytes", (uint64_t)mts.total_bytes_dumped);
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_baseline_pages", (uint64_t)mts.total_pages_resident);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_baseline_lums",  (uint64_t)mts.total_lums_emitted);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_baseline_granularity", (uint64_t)gran);
             }
         } else {
-            fprintf(stderr, "[C112-LUM] mem snapshot baseline ÉCHEC rc=%d\n", rc);
+            fprintf(stderr, "[C125-LUM] mem snapshot %s ÉCHEC rc=%d (errno=%d:%s)\n",
+                    gran_label, rc, -rc, strerror(rc < 0 ? -rc : rc));
         }
     }
 
@@ -383,59 +437,138 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    /* ── C116-P5 + C118-Q5 : ASIC BTC Optimizer — boucle feedback fermée ──
-     * AVANT C118 : optimizer lancé mais résultat IGNORÉ (pure mesure).
-     * APRÈS C118-Q5 : utilise asic_btc_optimizer_tune_batch() pour balayer
-     * 4 tailles de batch [256K, 512K, 1M, 2M], sélectionne celle qui maximise
-     * le score composite, puis injecte ce batch_size dans l'atomique partagée
-     * nx48_ctrl_batch_size (lue par le moteur BTC dans la boucle de mining).
+    /* ── C116-P5 + C118-Q5 + C125-TUNE-FULL : ASIC BTC Optimizer ───────────
+     * Trois modes selon env BTC_TUNE_FULL :
+     *   non défini ou =0 : C118-Q5 → tune_batch (4 tailles seulement, ~20s)
+     *   =1               : C125-TUNE-FULL → sweep 4D complet (192 combos, ~96s)
      *
-     * Référence : RAPPORT_C117_ANALYSE §7 (Q5 — Boucle optimizer→engine fermée)
+     * Le mode FULL balaye :
+     *   - 4 batch_sizes  : 256K / 512K / 1M / 2M
+     *   - 4 strategies   : SEQ / RANDOM / DELTA_NX48 / QUANTUM_BIAS
+     *   - 4 delta_inits  : 1.0 / 6.0 / 32.0 / 128.0
+     *   - 3 thermal_thrs : 60s / 300s / 900s
+     * Total : 192 sims × 0.5s = ~96s overhead avant mining réel.
+     *
+     * Le profil OPTIMAL est injecté dans 4 atomics nx48_ctrl_* :
+     *   nx48_ctrl_batch_size, nx48_ctrl_nonce_strategy,
+     *   nx48_ctrl_delta_nx48_initial_milli, nx48_ctrl_thermal_throttle_s
+     * Ces atomics sont lues par nx48_btc_init() pour overrider compile-time.
+     *
+     * Référence : RAPPORT_C125_ANALYSE §3 (sweep 4D + injection atomique)
      */
     {
         asic_btc_optimizer_cfg_t opt_cfg;
-        asic_btc_result_t        opt_best;
         asic_btc_optimizer_default_cfg(&opt_cfg);
-        opt_cfg.run_duration_s = 5.0;    /* rapide : 5 secondes par taille */
         opt_cfg.batch_size     = (uint32_t)cfg.batch_size;  /* baseline */
         opt_cfg.target_bits    = bits ? (uint32_t)(32 - __builtin_clz(bits & 0x1FFFFF)) : 20;
 
-        const uint32_t batch_candidates[] = { 262144u, 524288u, 1048576u, 2097152u };
-        const int      n_candidates       = (int)(sizeof(batch_candidates) / sizeof(batch_candidates[0]));
+        const char *tune_full_env = getenv("BTC_TUNE_FULL");
+        int do_tune_full = (tune_full_env && strcmp(tune_full_env, "1") == 0);
 
-        printf("[C118-Q5] ASIC optimizer balayage %d tailles batch...\n", n_candidates);
-        fflush(stdout);
-        int best_idx = asic_btc_optimizer_tune_batch(&opt_cfg, batch_candidates,
-                                                     n_candidates, &opt_best);
-        if (best_idx >= 0 && best_idx < n_candidates) {
-            uint32_t best_batch = batch_candidates[best_idx];
-            asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
-            printf("[C118-Q5] BEST batch=%u (idx=%d) | score=%.1f | hashrate_avg=%.2f MH/s\n",
-                   best_batch, best_idx,
-                   opt_best.optimization_score,
-                   opt_best.hashrate_avg_MH_s);
-            /* Boucle fermée : injecter le batch_size optimal dans l'atomique */
-            atomic_store_explicit(&nx48_ctrl_batch_size, (int)best_batch,
-                                  memory_order_relaxed);
-            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
-                "btc_c118q5_best_batch_size", (double)best_batch);
-            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
-                "btc_c118q5_best_score", opt_best.optimization_score);
-            cfg.batch_size = (int)best_batch;  /* propager dans la cfg locale */
-            printf("[C118-Q5] nx48_ctrl_batch_size ← %u (boucle feedback fermée)\n",
-                   best_batch);
+        if (do_tune_full) {
+            /* ─── C125-TUNE-FULL : sweep 4D complet ─── */
+            opt_cfg.run_duration_s = 0.5;  /* 192 × 0.5s = 96s total */
+            asic_btc_tune_full_result_t tune_full_res;
+            printf("[C125-TUNE-FULL] Sweep 4D ASIC : 4×4×4×3 = 192 combinaisons "
+                   "(estimation ~96s overhead)...\n");
             fflush(stdout);
-        } else {
-            /* Fallback : ancien comportement C116-P5 (single run) */
-            printf("[C118-Q5] tune_batch a échoué — fallback single-run C116-P5\n");
-            fflush(stdout);
-            if (asic_btc_optimizer_run(&opt_cfg, &opt_best) == 0) {
-                asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
-                printf("[C116-P5-fb] score=%.1f | best=%u bits | near_miss_rate=%.4f/MH\n",
-                       opt_best.optimization_score,
-                       opt_best.best_leading_bits,
-                       opt_best.near_miss_rate_per_Mh);
+            int rc_tf = asic_btc_optimizer_tune_full(&opt_cfg,
+                                                     NULL, 0,   /* défauts batch */
+                                                     NULL, 0,   /* défauts strat */
+                                                     NULL, 0,   /* défauts delta */
+                                                     NULL, 0,   /* défauts thermal */
+                                                     &tune_full_res);
+            if (rc_tf == 0) {
+                asic_btc_optimizer_print_tune_full_report(&tune_full_res);
+                /* Injecter le profil OPTIMAL dans les 4 atomics */
+                atomic_store_explicit(&nx48_ctrl_batch_size,
+                                      (int)tune_full_res.best_batch_size,
+                                      memory_order_relaxed);
+                atomic_store_explicit(&nx48_ctrl_nonce_strategy,
+                                      (int)tune_full_res.best_strategy,
+                                      memory_order_relaxed);
+                atomic_store_explicit(&nx48_ctrl_delta_nx48_initial_milli,
+                                      (int)(tune_full_res.best_delta_nx48_init * 1000.0),
+                                      memory_order_relaxed);
+                atomic_store_explicit(&nx48_ctrl_thermal_throttle_s,
+                                      (int)tune_full_res.best_thermal_throttle_s,
+                                      memory_order_relaxed);
+                cfg.batch_size = (int)tune_full_res.best_batch_size;
+
+                printf("[C125-TUNE-FULL] PROFIL INJECTÉ → atomics nx48_ctrl_* :\n");
+                printf("[C125-TUNE-FULL]   batch_size=%u strategy=%d delta_init=%.3f thermal=%.0f s\n",
+                       tune_full_res.best_batch_size,
+                       (int)tune_full_res.best_strategy,
+                       tune_full_res.best_delta_nx48_init,
+                       tune_full_res.best_thermal_throttle_s);
+                printf("[C125-TUNE-FULL]   sweep_dur=%.2f s | %d/%d combos OK | "
+                       "score moyen=%.2f ± %.2f | best=%.2f\n",
+                       tune_full_res.sweep_duration_s,
+                       tune_full_res.successful_combinations,
+                       tune_full_res.total_combinations,
+                       tune_full_res.mean_score, tune_full_res.stddev_score,
+                       tune_full_res.best_score);
                 fflush(stdout);
+
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_best_batch", (double)tune_full_res.best_batch_size);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_best_strategy", (double)tune_full_res.best_strategy);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_best_delta_init", tune_full_res.best_delta_nx48_init);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_best_thermal_s", tune_full_res.best_thermal_throttle_s);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_best_score", tune_full_res.best_score);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_mean_score", tune_full_res.mean_score);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_stddev_score", tune_full_res.stddev_score);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c125_tune_full_sweep_duration_s", tune_full_res.sweep_duration_s);
+            } else {
+                fprintf(stderr, "[C125-TUNE-FULL] Sweep 4D ÉCHEC (rc=%d) — aucune injection\n", rc_tf);
+            }
+        } else {
+            /* ─── C118-Q5 : tune_batch (mode rapide hérité) ─── */
+            asic_btc_result_t opt_best;
+            opt_cfg.run_duration_s = 5.0;    /* rapide : 5 secondes par taille */
+            const uint32_t batch_candidates[] = { 262144u, 524288u, 1048576u, 2097152u };
+            const int      n_candidates       = (int)(sizeof(batch_candidates) / sizeof(batch_candidates[0]));
+
+            printf("[C118-Q5] ASIC optimizer balayage %d tailles batch (BTC_TUNE_FULL=1 pour sweep complet)...\n",
+                   n_candidates);
+            fflush(stdout);
+            int best_idx = asic_btc_optimizer_tune_batch(&opt_cfg, batch_candidates,
+                                                         n_candidates, &opt_best);
+            if (best_idx >= 0 && best_idx < n_candidates) {
+                uint32_t best_batch = batch_candidates[best_idx];
+                asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
+                printf("[C118-Q5] BEST batch=%u (idx=%d) | score=%.1f | hashrate_avg=%.2f MH/s\n",
+                       best_batch, best_idx,
+                       opt_best.optimization_score,
+                       opt_best.hashrate_avg_MH_s);
+                atomic_store_explicit(&nx48_ctrl_batch_size, (int)best_batch,
+                                      memory_order_relaxed);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c118q5_best_batch_size", (double)best_batch);
+                FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                    "btc_c118q5_best_score", opt_best.optimization_score);
+                cfg.batch_size = (int)best_batch;
+                printf("[C118-Q5] nx48_ctrl_batch_size ← %u (boucle feedback fermée)\n",
+                       best_batch);
+                fflush(stdout);
+            } else {
+                printf("[C118-Q5] tune_batch a échoué — fallback single-run C116-P5\n");
+                fflush(stdout);
+                if (asic_btc_optimizer_run(&opt_cfg, &opt_best) == 0) {
+                    asic_btc_optimizer_print_report(&opt_cfg, &opt_best);
+                    printf("[C116-P5-fb] score=%.1f | best=%u bits | near_miss_rate=%.4f/MH\n",
+                           opt_best.optimization_score,
+                           opt_best.best_leading_bits,
+                           opt_best.near_miss_rate_per_Mh);
+                    fflush(stdout);
+                }
             }
         }
     }

@@ -150,6 +150,15 @@ extern _Atomic int    nx48_ctrl_batch_size;      /* NX48→moteur: batch overrid
 /* C116-P4 : QDPR adaptatif — NX48 ajuste dynamiquement le seuil near-miss GPU */
 extern _Atomic int    nx48_ctrl_near_miss_bits;  /* NX48→GPU: seuil near-miss [20..38] */
 
+/* C125-OPTIMIZE-RUNTIME : profil ASIC complet injecté par main_btc_mining
+ * (asic_btc_optimizer_tune_full → atomics → moteur).
+ * Valeur 0 = "aucune injection, garder valeurs compile-time". */
+extern _Atomic int    nx48_ctrl_delta_nx48_initial_milli;  /* delta_nx48 initial × 1000 (ex: 6500 = 6.500) */
+extern _Atomic int    nx48_ctrl_thermal_throttle_s;        /* secondes avant throttling [60..1800] */
+extern _Atomic int    nx48_ctrl_nonce_strategy;            /* asic_nonce_strategy_t (0..3) */
+/* C125-MEM-BIT : granularité du traçage mémoire BTC. 0=PAGE, 1=BYTE, 2=BIT, 3=HUGEPAGE. */
+extern _Atomic int    nx48_ctrl_mem_trace_granularity;     /* lecture par snapshot thread périodique */
+
 /* ════════════════════════════════════════════════════════════════════
  * ÉTAT COMPLET NX48_BTC — C61
  * ════════════════════════════════════════════════════════════════════ */

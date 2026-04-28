@@ -1,0 +1,61 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10421
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 
+                                          ssh -T git@github.com
+                                          git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                          git fetch origin
+                                          git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 17, done.
+remote: Counting objects: 100% (17/17), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 10 (delta 7), reused 10 (delta 7), pack-reused 0 (from 0)
+Unpacking objects: 100% (10/10), 3.53 KiB | 138.00 KiB/s, done.
+From github.com:vgacofc/lumvorax2
+   61c294f5..770e5361  main       -> origin/main
+HEAD is now at 770e5361 chatC122.2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining
+                                          make clean && make
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+cc -O3 -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE -DLUMVORAX_ENABLED=1 -march=native -ftree-vectorize -fopenmp -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -DBTC_OPENCL_ENABLED=1 -I../../ -I../../lum -I../../optimization -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c src/nx48_alltime_record.c src/nx48_coupler_bridge.c src/btc_testnet3_runtime.c src/btc_opencl_runner.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c ../../common/lvx_log_rotate.c ../../neural_network/nx48_neuro_coupler.c ../../neural_network/izhikevich_spiking.c ../../neural_network/stdp_plasticity.c ../../optimization/reasoning_path_tracker.c ../../optimization/formal_kernel_v40.c ../../optimization/thermal_regulator.c ../../optimization/async_logging/async_logger.c ../../lum/lum_memory_tracer.c ../../lum/lum_log_encoder.c ../../asic_simulation/asic_btc_optimizer.c -lm -lpthread -lgomp -lssl -lcrypto  -lOpenCL 
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 221K Apr 29 00:00 btc_mining_runner
+lvx@lvx-Vostro-5481 ~/L/l/s/a/bitcoin_quantum_mining (main)> # Etape 2 : compiler
+                                                             cd src/advanced_calculations/bitcoin_quantum_mining
+                                                             make clean && make 2>&1 | tee logs/build_c123_(date +%Y%m%dT%H%M%S).log
+                                                             # Etape 3 : run reference (pre-tune, baseline) 60 s
+                                                             env LUM_LOGGING=0 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 \
+                                                                     > logs/c123_baseline_(date +%Y%m%dT%H%M%S).log 2>&1
+                                                             # Etape 4 : run avec tune_full (post-C123)
+                                                             env LUM_LOGGING=0 BTC_TUNE_FULL=1 ./btc_mining_runner --mode BENCHMARK --threads 16 --duration-s 60 \
+                                                                     > logs/c123_tuned_(date +%Y%m%dT%H%M%S).log 2>&1
+                                                             # Etape 5 : delta hashrate
+                                                             echo "Baseline : "
+                                                             grep -E "Hashrate" logs/c123_baseline_*.log | tail -1
+                                                             echo "Tuned : "
+                                                             grep -E "Hashrate|C123-TUNE-FULL" logs/c123_tuned_*.log | tail -3
+cd: The directory 'src/advanced_calculations/bitcoin_quantum_mining' does not exist
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+cc -O3 -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE -DLUMVORAX_ENABLED=1 -march=native -ftree-vectorize -fopenmp -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -DBTC_OPENCL_ENABLED=1 -I../../ -I../../lum -I../../optimization -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c src/nx48_alltime_record.c src/nx48_coupler_bridge.c src/btc_testnet3_runtime.c src/btc_opencl_runner.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c ../../common/lvx_log_rotate.c ../../neural_network/nx48_neuro_coupler.c ../../neural_network/izhikevich_spiking.c ../../neural_network/stdp_plasticity.c ../../optimization/reasoning_path_tracker.c ../../optimization/formal_kernel_v40.c ../../optimization/thermal_regulator.c ../../optimization/async_logging/async_logger.c ../../lum/lum_memory_tracer.c ../../lum/lum_log_encoder.c ../../asic_simulation/asic_btc_optimizer.c -lm -lpthread -lgomp -lssl -lcrypto  -lOpenCL 
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 221K Apr 29 00:13 btc_mining_runner
+Baseline : 
+[BTC_QM] Hashrate     : 7.31 MH/s
+Tuned : 
+[C69-GPU] Hashrate GPU mesure (benchmark) : 7.15 MH/s
+[BTC_QM] Hashrate     : 7.32 MH/s
+lvx@lvx-Vostro-5481 ~/L/l/s/a/bitcoin_quantum_mining (main)> 

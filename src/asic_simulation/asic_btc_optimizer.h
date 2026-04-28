@@ -116,6 +116,55 @@ int asic_btc_optimizer_tune_batch(asic_btc_optimizer_cfg_t *cfg,
                                    int n_sizes,
                                    asic_btc_result_t *best_result);
 
+/* ============================================================================
+ * C125 — OPTIMIZE-RUNTIME : sweep multi-dimensionnel complet
+ *
+ * Balaye 4 axes :
+ *   - batch_size     : 4 valeurs (ex: 256K, 512K, 1M, 2M)
+ *   - strategy       : 4 valeurs (SEQ, RANDOM, DELTA_NX48, QUANTUM)
+ *   - delta_nx48_init: 4 valeurs (ex: 1.0, 6.0, 32.0, 128.0)
+ *   - thermal_throttle_s : 3 valeurs (ex: 60, 300, 900)
+ *
+ * Total : 4×4×4×3 = 192 simulations (chacune ~5s = 16 min total au pire,
+ *                                     mais avec run_duration_s=0.5s → 96s total)
+ *
+ * Retourne le profil OPTIMAL (meilleur optimization_score), prêt à être
+ * injecté dans les atomics nx48_ctrl_* pour le run de mining réel.
+ * ============================================================================ */
+typedef struct {
+    /* Best profile found (à injecter dans atomics) */
+    uint32_t              best_batch_size;
+    asic_nonce_strategy_t best_strategy;
+    double                best_delta_nx48_init;
+    double                best_thermal_throttle_s;
+    /* Métriques du best */
+    asic_btc_result_t     best_result;
+    /* Statistiques sweep */
+    int                   total_combinations;
+    int                   successful_combinations;
+    double                worst_score;
+    double                best_score;
+    double                mean_score;
+    double                stddev_score;
+    /* Top-5 indices (ordre décroissant) */
+    int                   top5_indices[5];
+    double                top5_scores[5];
+    /* Durée totale du sweep en secondes */
+    double                sweep_duration_s;
+} asic_btc_tune_full_result_t;
+
+/* Lance le sweep complet. n_per_dim_* = 0 utilise les valeurs par défaut.
+ * Retourne 0 succès, -1 si paramètres invalides. */
+int asic_btc_optimizer_tune_full(const asic_btc_optimizer_cfg_t *base_cfg,
+                                  const uint32_t *batch_sizes,    int n_batch,
+                                  const int      *strategies,     int n_strat,
+                                  const double   *delta_inits,    int n_delta,
+                                  const double   *thermal_throttles, int n_thermal,
+                                  asic_btc_tune_full_result_t *out);
+
+/* Affiche un rapport détaillé du sweep. */
+void asic_btc_optimizer_print_tune_full_report(const asic_btc_tune_full_result_t *r);
+
 /* Rapport texte résumant les résultats (imprimé sur stdout). */
 void asic_btc_optimizer_print_report(const asic_btc_optimizer_cfg_t *cfg,
                                       const asic_btc_result_t *result);

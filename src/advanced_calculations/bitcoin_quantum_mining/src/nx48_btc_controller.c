@@ -93,6 +93,16 @@ _Atomic int nx48_ctrl_batch_size     = 1024; /* Défaut C46 */
  * Valeur initiale 20 (baseline C112). Max observé : 38 bits (run 3, t=460s). */
 _Atomic int nx48_ctrl_near_miss_bits = 20;   /* Défaut : 20 bits (C116-P4) */
 
+/* ════════════════════════════════════════════════════════════════════
+ * C125-OPTIMIZE-RUNTIME — Atomics injectés par main_btc_mining après
+ * asic_btc_optimizer_tune_full(). Valeur 0 = aucune injection.
+ * ════════════════════════════════════════════════════════════════════ */
+_Atomic int nx48_ctrl_delta_nx48_initial_milli = 0;  /* 0 = pas d'override (garder compile-time) */
+_Atomic int nx48_ctrl_thermal_throttle_s       = 0;  /* 0 = pas d'override */
+_Atomic int nx48_ctrl_nonce_strategy           = 0;  /* 0 = SEQUENTIAL par défaut */
+/* C125-MEM-BIT — granularité traçage mémoire (0=PAGE 1=BYTE 2=BIT 3=HUGEPAGE) */
+_Atomic int nx48_ctrl_mem_trace_granularity    = 0;  /* défaut PAGE, override par BTC_MEM_TRACE_GRANULARITY */
+
 /* Températures répliques disponibles (identiques btc_mining_engine.c) */
 static const double NX48_REPLICA_TEMPS[8] = {
     1.0, 2.0, 4.0, 8.0, 12.0, 20.0, 35.0, 50.0
@@ -747,7 +757,32 @@ nx48_btc_state_t* nx48_btc_init(const nx48_btc_config_t* cfg, const char* run_id
     atomic_store_explicit(&nx48_ctrl_T_hot_idx,  s->T_hot_idx,        memory_order_relaxed);
     atomic_store_explicit(&nx48_ctrl_T_cold_idx, s->T_cold_idx,       memory_order_relaxed);
     atomic_store_explicit(&nx48_ctrl_avx_level,  s->hw.avx_level,     memory_order_relaxed);
-    atomic_store_explicit(&nx48_ctrl_batch_size, 1024,                 memory_order_relaxed);
+    /* C125 : ne pas écraser nx48_ctrl_batch_size si déjà setté par tune_full/tune_batch */
+    int existing_batch = atomic_load_explicit(&nx48_ctrl_batch_size, memory_order_relaxed);
+    if (existing_batch <= 1024) {
+        atomic_store_explicit(&nx48_ctrl_batch_size, 1024, memory_order_relaxed);
+    }
+
+    /* C125-OPTIMIZE-RUNTIME : si tune_full a injecté un profil dans les atomics,
+     * appliquer override sur l'état NX48 (delta_nonce_scale, etc.). */
+    int delta_milli = atomic_load_explicit(&nx48_ctrl_delta_nx48_initial_milli,
+                                           memory_order_relaxed);
+    int thermal_s   = atomic_load_explicit(&nx48_ctrl_thermal_throttle_s,
+                                           memory_order_relaxed);
+    int strat       = atomic_load_explicit(&nx48_ctrl_nonce_strategy,
+                                           memory_order_relaxed);
+    if (delta_milli > 0) {
+        s->delta_nonce_scale = (double)delta_milli / 1000.0;
+        printf("[C125-NX48-OVERRIDE] delta_nonce_scale ← %.3f (depuis atomic, was tune_full)\n",
+               s->delta_nonce_scale);
+    }
+    if (thermal_s > 0) {
+        printf("[C125-NX48-OVERRIDE] thermal_throttle_s observé = %d (asic_btc_optimizer)\n",
+               thermal_s);
+    }
+    if (strat > 0) {
+        printf("[C125-NX48-OVERRIDE] nonce_strategy observé = %d (asic_btc_optimizer)\n", strat);
+    }
 
     printf("[NX48-INIT] C61 — %d sous-neurones × 2 | exploration_bias=%.2f | LUM=%s\n",
         NX48_N_SUBNEURONS, s->exploration_bias,
