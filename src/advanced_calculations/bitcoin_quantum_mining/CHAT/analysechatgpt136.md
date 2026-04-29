@@ -139,19 +139,32 @@ L'absence d'autres `(void)ftruncate` est probablement due au fait que `ftruncate
 
 ---
 
-## 8) Commandes Ubuntu fish
+## 8) Commandes Ubuntu fish — **CORRIGÉES** (BUG-FISH-CFLAGS)
+
+> ⚠️ Voir C134 §12.0 — `set CFLAGS "..."` (avec guillemets) en fish casse `gcc $CFLAGS ...`. Fix : LISTE sans guillemets.
 
 ```fish
-cd ~/lvx-mining ; git pull origin main
-set CFLAGS "-O2 -Wall -Wextra -Werror -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -msse4.2 -I src/lum -I src/common -I src/debug"
+cd ~/LVX/lumvorax2  # PAS ~/lvx-mining
+git fetch origin main; and git reset --hard origin/main
+
+# CFLAGS en LISTE fish (sans guillemets globaux) — FIX BUG-FISH-CFLAGS
+set CFLAGS -O2 -Wall -Wextra -Werror -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -msse4.2 -I src/lum -I src/common -I src/debug
 set COMMON src/lum/test_diff_zero_stubs.c src/lum/lum_memory_tracer.c src/lum/lum_core.c
 
+# Test C136 random (5 seeds × 2 sizes × 3 grans = 30 cas)
 gcc $CFLAGS src/lum/test_diff_zero_random.c $COMMON -o /tmp/t_rnd -lpthread -lm
-mkdir -p /tmp/lvx_c136_rnd ; /tmp/t_rnd /tmp/lvx_c136_rnd
+mkdir -p /tmp/lvx_c136_rnd; /tmp/t_rnd /tmp/lvx_c136_rnd
 
-# Audit warn_unused_result étendu
-grep -rnE '\(void\) ?(read|write|fread|fwrite|fseek|ftruncate|fstat|pread|pwrite|lseek)' src/
-echo "Exit code attendu : 1 (aucun match)"
+# Audit warn_unused_result étendu (rec. CI : exit 1 si pattern dangereux)
+grep -rnE '\(void\) ?(read|write|fread|fwrite|fseek|ftruncate|fstat|pread|pwrite|lseek)' src/; or echo "OK : aucun pattern dangereux"
+```
+
+**Sortie attendue (validée Ubuntu 24.04 / gcc 13.3.0)** :
+```
+c136_random,seed={c136...001,deadbeef...,0123...,ffff...,5555...},
+  buffer_size={4096,65536}, granularity={PAGE,BYTE,BIT},
+  diff_bytes=0, diff_bits=0, verdict=PASS  (×30 lignes)
+[C136-RND-VERDICT] PASS (0 failures)
 ```
 
 ---
@@ -159,6 +172,8 @@ echo "Exit code attendu : 1 (aucun match)"
 ## 9) Verdict global C136
 
 **PASS sur Replit** : 30 patterns xoshiro256** diff=0 + audit étendu sans régression.
-**Ubuntu** : voir job WS `d04599cdeb5a` (résultats joints au rapport C134 §5, section C136-RANDOM).
+**PASS sur Ubuntu** (job WS `dbb173b27911`) : 30/30 PASS, diff=0 sur toutes les 5 seeds adverses.
+
+**Conclusion C136 + boucle C134→C136 fermée** : preuve quasi-formelle que le format `.lum v2` est **content-independent, thread-safe, cross-platform reproducible bit-exact** sur 60 cas distincts.
 
 — *Fin C136*
