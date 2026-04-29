@@ -1,0 +1,42 @@
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> 
+                                                ssh -T git@github.com
+                                                git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                                git fetch origin
+                                                git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 4 (delta 2), reused 4 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (4/4), 357 bytes | 32.00 KiB/s, done.
+From github.com:vgacofc/lumvorax2
+   a1a71ec2..4bc2bb3e  main       -> origin/main
+HEAD is now at 4bc2bb3e chatC127          # Etape 2 : compiler
+                                          cd src/advanced_calculations/bitcoin_quantum_mining
+                                          make clean && make 2>&1 | tee logs/build_c123_(date +%Y%m%dT%H%M%S).log
+                                          # Etape 3 : run reference (pre-tune, baseline) 60 s
+                                          env LUM_LOGGING=0 ./btc_mining_runner --mode BENCHMARK --threads 8 --duration-s 600 \
+                                                  > logs/c123_baseline_(date +%Y%m%dT%H%M%S).log 2>&1
+                                          # Etape 4 : run avec tune_full (post-C123)
+                                          env LUM_LOGGING=0 BTC_TUNE_FULL=1 ./btc_mining_runner --mode BENCHMARK --threads 8 --duration-s 600 \
+                                                  > logs/c123_tuned_(date +%Y%m%dT%H%M%S).log 2>&1
+                                          # Etape 5 : delta hashrate
+                                          echo "Baseline : "
+                                          grep -E "Hashrate" logs/c123_baseline_*.log | tail -1
+                                          echo "Tuned : "
+                                          grep -E "Hashrate|C123-TUNE-FULL" logs/c123_tuned_*.log | tail -3
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+cc -O3 -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE -DLUMVORAX_ENABLED=1 -march=native -ftree-vectorize -fopenmp -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -DBTC_OPENCL_ENABLED=1 -I../../ -I../../lum -I../../optimization -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c src/nx48_alltime_record.c src/nx48_coupler_bridge.c src/btc_testnet3_runtime.c src/btc_opencl_runner.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c ../../common/lvx_log_rotate.c ../../neural_network/nx48_neuro_coupler.c ../../neural_network/izhikevich_spiking.c ../../neural_network/stdp_plasticity.c ../../optimization/reasoning_path_tracker.c ../../optimization/formal_kernel_v40.c ../../optimization/thermal_regulator.c ../../optimization/async_logging/async_logger.c ../../lum/lum_memory_tracer.c ../../lum/lum_log_encoder.c ../../asic_simulation/asic_btc_optimizer.c -lm -lpthread -lgomp -lssl -lcrypto  -lOpenCL 
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 234K Apr 29 16:59 btc_mining_runner
+Baseline : 
+logs/c123_baseline_20260429T165955.log:[BTC_QM] Hashrate     : 9.58 MH/s
+Tuned : 
+logs/c123_tuned_20260429T124905.log:[BTC_QM] Hashrate     : 6.55 MH/s
+logs/c123_tuned_20260429T170955.log:[C69-GPU] Hashrate GPU mesure (benchmark) : 12.91 MH/s
+logs/c123_tuned_20260429T170955.log:[BTC_QM] Hashrate     : 9.76 MH/s
+lvx@lvx-Vostro-5481

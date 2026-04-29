@@ -1024,3 +1024,13 @@
 2026-04-28 22:45 - btc_c125_tune_full_metrics + C125 — 9 metriques forensic emises par main_btc_mining.c apres tune_full reussi : btc_c125_tune_full_best_batch + btc_c125_tune_full_best_strategy + btc_c125_tune_full_best_delta_init + btc_c125_tune_full_best_thermal_s + btc_c125_tune_full_best_score + btc_c125_tune_full_mean_score + btc_c125_tune_full_stddev_score + btc_c125_tune_full_sweep_duration_s ; permet analyse statistique post-mortem du sweep
 2026-04-28 22:45 - btc_c125_mem_metrics + C125 — 4 metriques forensic emises par main_btc_mining.c apres snapshot mem reussi : btc_c125_mem_lums_emitted + btc_c125_mem_bytes_dumped + btc_c125_mem_snapshot_dur_s + btc_c125_mem_granularity_int (0..3) ; permet calcul automatique coverage_bit = lums_emitted / (RSS_at_snapshot * granularity_factor)
 2026-04-28 22:45 - C125-CHAT-ANALYSECHATGPT125 + C125 — Rapport src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt125.md (~310 lignes) : documente le livrable C125 complet (4 fichiers, 399 lignes ajoutees, 0 supprimees), architecture sweep 4D, injection atomics, validation compile locale (asic_btc_optimizer.o 19208 octets, lum_memory_tracer.o 10648 octets), job Ubuntu cda90c3ed8e2 (transport websocket), contrainte plateforme commit git bloque par garde-fou, attentes C126 ; conformite 100% des 8 exigences utilisateur (BIT-trace, no-defer, exec immediat, CHAT, no-touch-old, francais, 0-emoji, fish format)
+
+# C127 (29 avril 2026) — Validation Ubuntu + reponses architecturales
++ analysechatgpt127.md : rapport CHAT cycle C127, 8 sections, validation gain +1.88% baseline 9.58 -> tuned 9.76 MH/s sur Kaby Lake i5-8265U 600s thread=8.
++ bbf0e777fec3 : job_id C128-BIT-LEVEL-VALIDATION pousse via WS transport=websocket queue_len=0 le 29 avril 2026.
++ logs/c128_bit_remote/ : repertoire artefacts job bbf0e777fec3 (resultat differe car snapshot BIT-1b multi-GiB en ecriture > 270s).
++ #A10 noise_ratio_ptmc : anomalie ratio signal/bruit log forensique = 6.4% / 93.6% (168822 lignes PT-MC verbose sur 180264 totales) — solution post-processeur index C129.
++ Q1_asic_threads_design : decision design ASIC sweep multi-thread duree-reelle (vs actuel 0.01s 1-thread) reportee a C129 anomalie #A1.
++ Q2_signal_noise_concept : "bruit" = ratio metriques PT-MC verbeuses non-actionnables / events utiles, PAS latence. 200 GB Ubuntu libres permettent de tout garder.
++ Q3_old_logs_retention : decision NE PAS supprimer anciens logs forensic sans confirmation explicite avec liste prealable.
++ Q4_lum_dbms_roadmap : roadmap 5 cycles C128-C132 NX48 + LUM DBMS + VORAX auto-codage, decoupage approuve.
