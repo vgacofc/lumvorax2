@@ -383,11 +383,18 @@ int lum_memory_snapshot_self(const char* out_path,
         return -EIO;
     }
     fflush(out);
-    /* Anti-padding NUL : tronquer a la taille reelle (best effort). */
+    /* Anti-padding NUL : tronquer a la taille reelle (best effort).
+     * C134-FIX-WARN-01 : sur gcc >= 13 (Ubuntu 24.04), (void)ftruncate ne
+     * supprime PAS l'attribut warn_unused_result. Capturer le retour
+     * dans une variable + branche if explicite suffit. */
     if (real_size_self > 0) {
         int fd_self = fileno(out);
         if (fd_self >= 0) {
-            (void)ftruncate(fd_self, (off_t)real_size_self);
+            int trc_self = ftruncate(fd_self, (off_t)real_size_self);
+            if (trc_self != 0) {
+                /* best effort : on continue meme si ftruncate echoue,
+                 * le payload reste intact (snapshot deja ecrit). */
+            }
         }
     }
     fclose(out);
@@ -519,11 +526,15 @@ int lum_memory_snapshot_buffer(const void* buffer,
     /* Anti-padding NUL : tronquer à la taille réelle (cohérent C129-FIX-NUL-01).
      * En mode "wb" sans pré-allocation cette troncature est généralement
      * un no-op, mais elle protège contre toute future implémentation qui
-     * pré-allouerait par blocs. */
+     * pré-allouerait par blocs.
+     * C134-FIX-WARN-01 : capture du retour pour gcc >= 13 strict. */
     if (real_size > 0) {
         int fd = fileno(out);
         if (fd >= 0) {
-            (void)ftruncate(fd, (off_t)real_size);
+            int trc_buf = ftruncate(fd, (off_t)real_size);
+            if (trc_buf != 0) {
+                /* best effort */
+            }
         }
     }
     fclose(out);
