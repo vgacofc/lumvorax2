@@ -81,7 +81,10 @@ static bool test_module_basic_operations(void) {
     
     // Test avec petit array pour validation
     const size_t test_size = 64; // Aligné pour SIMD
-    float* test_array = aligned_alloc(64, test_size * sizeof(float));
+    /* C134-FIX-D2-SIMD : test_size*sizeof(float)=256 multiple de 64 OK,
+     * mais on uniformise via le wrapper safe pour cohérence et protection
+     * contre régression future si test_size devient < 16. */
+    float* test_array = (float*)lum_aligned_alloc_safe(64, test_size * sizeof(float));
     if (!test_array) {
         printf("    ❌ Échec allocation array aligné\n");
         simd_capabilities_destroy(caps);
