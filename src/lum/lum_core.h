@@ -49,9 +49,27 @@ typedef enum {
 } lum_structure_type_e;
 
 // Allocation tracking for forensic memory management
+//
+// C133-DOC-D2 (decouverte du cycle C133, audit ftruncate-after-rewind) :
+// L'usage de aligned_alloc(alignment, size) requiert IMPERATIVEMENT que
+// `size` soit un multiple de `alignment` (POSIX/C11 § 7.22.3.1). Sinon
+// le comportement est INDEFINI :
+//   - sur certaines libcs : retourne NULL silencieusement
+//   - sur glibc <= 2.27 / certaines tailles : boucle infinie (deja
+//     observee dans lum_core.c L319-332, fallback posix_memalign installe)
+//   - sur d'autres : memoire allouee mais alignement non garanti
+//
+// Pour LUM (cache line 64 octets) : toujours arrondir size au prochain
+// multiple de 64. Sites a auditer (cf. analysechatgpt133.1.md) :
+//   - src/vorax/vorax_operations.c:107   (8 * parts, suspect si parts < 8)
+//   - src/optimization/lockfree/lockfree_queue.c (3 occurrences)
+//   - src/tests/individual/test_simd_optimizer_individual.c:83
+//
+// En cas de doute : preferer posix_memalign() qui retourne EINVAL au lieu
+// d'avoir un comportement indefini.
 typedef enum {
     LUM_ALLOC_TRACKED = 0,    // TRACKED_MALLOC - use TRACKED_FREE
-    LUM_ALLOC_ALIGNED = 1,    // aligned_alloc - use free()
+    LUM_ALLOC_ALIGNED = 1,    // aligned_alloc - use free() ; voir C133-DOC-D2
     LUM_ALLOC_MMAP = 2        // mmap - use munmap()
 } lum_allocation_method_e;
 

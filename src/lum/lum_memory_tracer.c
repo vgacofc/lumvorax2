@@ -350,12 +350,46 @@ int lum_memory_snapshot_self(const char* out_path,
     }
     free(hp_buf); /* NULL-safe */
 
-    /* Réécrire le header avec les compteurs finaux (C117 : header 64 octets) */
+    /* C133-FIX-FTRUNCATE-02 (defensif, applique sur snapshot_self pour
+     * coherence avec snapshot_buffer C133-FIX-FTRUNCATE-01) :
+     * Capturer la taille TOTALE via SEEK_END AVANT le rewind, puis
+     * eventuellement tronquer a la taille reelle (anti-padding NUL,
+     * coherent avec C129-FIX-NUL-01 d'ultra_forensic_logger).
+     * Sans cela, toute future addition de ftruncate(fd, ftell(out))
+     * apres le rewind tronquerait par erreur a 64 octets (cf bug
+     * historique snapshot_buffer corrige en C133). */
+    long real_size_self = -1;
+    if (fseek(out, 0, SEEK_END) == 0) {
+        real_size_self = ftell(out);
+    }
+    /* Reecrire le header avec les compteurs finaux (C117 : header 64 octets) */
     hdr.total_lums = total_lums;
     hdr.total_bytes = total_bytes;
-    fseek(out, 0, SEEK_SET);
-    fwrite(&hdr, sizeof(hdr), 1, out);
+    if (fseek(out, 0, SEEK_SET) != 0) {
+        /* Best effort : si le rewind echoue, on ferme proprement quand meme.
+         * Le header conservera ses compteurs initiaux (0,0) — non ideal
+         * mais le payload reste intact. */
+        fflush(out);
+        fclose(out);
+        close(mem_fd);
+        fclose(maps);
+        return -EIO;
+    }
+    if (fwrite(&hdr, sizeof(hdr), 1, out) != 1) {
+        fflush(out);
+        fclose(out);
+        close(mem_fd);
+        fclose(maps);
+        return -EIO;
+    }
     fflush(out);
+    /* Anti-padding NUL : tronquer a la taille reelle (best effort). */
+    if (real_size_self > 0) {
+        int fd_self = fileno(out);
+        if (fd_self >= 0) {
+            (void)ftruncate(fd_self, (off_t)real_size_self);
+        }
+    }
     fclose(out);
     close(mem_fd);
     fclose(maps);
