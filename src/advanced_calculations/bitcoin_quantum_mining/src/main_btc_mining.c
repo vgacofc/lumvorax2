@@ -312,17 +312,27 @@ int main(int argc, char* argv[]) {
                         + (double)(ts_snap_end.tv_nsec - ts_snap_start.tv_nsec) / 1e9;
 
         if (rc == 0) {
+            uint64_t file_size_bytes = 0;
+            {
+                struct stat st;
+                if (stat(mt_path, &st) == 0 && st.st_size > 0) {
+                    file_size_bytes = (uint64_t)st.st_size;
+                }
+            }
             printf("[C125-LUM] mem snapshot %s OK : %" PRIu64 " lums, %" PRIu64 " pages, "
-                   "%" PRIu64 " octets, durée=%.2fs\n",
+                   "%" PRIu64 " octets, file_size=%" PRIu64 " B, durée=%.2fs\n",
                    gran_label,
                    (uint64_t)mts.total_lums_emitted,
                    (uint64_t)mts.total_pages_resident,
                    (uint64_t)mts.total_bytes_dumped,
+                   file_size_bytes,
                    snap_dur);
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                 "btc_c125_mem_lums_emitted",      (double)mts.total_lums_emitted);
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                 "btc_c125_mem_bytes_dumped",      (double)mts.total_bytes_dumped);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c129_mem_file_size_bytes",   (double)file_size_bytes);
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
                 "btc_c125_mem_snapshot_dur_s",    snap_dur);
             FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
@@ -336,6 +346,8 @@ int main(int argc, char* argv[]) {
                     "mem_baseline_lums",  (uint64_t)mts.total_lums_emitted);
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_baseline_granularity", (uint64_t)gran);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_baseline_file_size_bytes", file_size_bytes);
             }
         } else {
             fprintf(stderr, "[C125-LUM] mem snapshot %s ÉCHEC rc=%d (errno=%d:%s)\n",

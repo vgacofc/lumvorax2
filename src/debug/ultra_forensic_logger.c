@@ -18,6 +18,7 @@
 #include <pthread.h>
 #include <inttypes.h>
 #include <math.h>
+#include <errno.h>
 
 /*
  * LumVorax Ultra-Forensic Logger — v3.0 — Cycle 17
@@ -177,6 +178,22 @@ static char   g_csv_base[512] = {0};      /* chemin sans .csv        */
 static FILE*  g_csv_fp        = NULL;     /* FD global persistant    */
 static int    g_csv_write_count = 0;      /* compteur lignes → fflush toutes 256 */
 
+/* C129-FIX-NUL-01 : certains environnements/collecteurs peuvent pré-allouer
+ * le fichier et laisser un padding NUL en fin. On force une troncature
+ * explicite à la position courante avant chaque fermeture. */
+static void lv_truncate_file_to_current_pos(FILE* fp, const char* why) {
+    if (!fp) return;
+    long pos = ftell(fp);
+    if (pos < 0) return;
+    int fd = fileno(fp);
+    if (fd < 0) return;
+    if (ftruncate(fd, (off_t)pos) != 0) {
+        /* Warning uniquement : on ne doit pas casser un run à cause de ça. */
+        fprintf(stderr, "[LUMVORAX] AVERTISSEMENT: ftruncate(%s) FAIL errno=%d\n",
+                (why ? why : "?"), errno);
+    }
+}
+
 /* Génère le chemin de la partie N :
  *   0 → g_run_csv_path inchangé (fichier original)
  *   1 → _part_0001.csv
@@ -196,7 +213,12 @@ static void lv_build_part_path(int part_num, char* out, size_t out_sz) {
  * C-FIX-RAM-01 : ferme g_csv_fp (partie courante) et ouvre la suivante. */
 static void lv_rotate_csv(void) {
     /* Fermer le FD de la partie courante avant d'en ouvrir une nouvelle */
-    if (g_csv_fp) { fflush(g_csv_fp); fclose(g_csv_fp); g_csv_fp = NULL; }
+    if (g_csv_fp) {
+        fflush(g_csv_fp);
+        lv_truncate_file_to_current_pos(g_csv_fp, "rotate_close");
+        fclose(g_csv_fp);
+        g_csv_fp = NULL;
+    }
 
     g_csv_part_num++;
     lv_build_part_path(g_csv_part_num, g_run_csv_path, sizeof(g_run_csv_path));
@@ -353,7 +375,12 @@ void ultra_forensic_logger_switch_module_file(const char* logs_dir, const char* 
     pthread_mutex_lock(&g_csv_mutex);
     /* C-FIX-RAM-01 : fermer le FD du module précédent avant d'ouvrir le suivant.
      * CRUCIAL : sans ce fclose, les FDs s'accumulent (1 par module = 15 FDs ouverts) */
-    if (g_csv_fp) { fflush(g_csv_fp); fclose(g_csv_fp); g_csv_fp = NULL; }
+    if (g_csv_fp) {
+        fflush(g_csv_fp);
+        lv_truncate_file_to_current_pos(g_csv_fp, "switch_module_close");
+        fclose(g_csv_fp);
+        g_csv_fp = NULL;
+    }
 
     /* Réinitialise la numérotation de rotation pour ce nouveau module */
     g_csv_part_num = 0;
@@ -415,6 +442,7 @@ void ultra_forensic_logger_destroy(void) {
     pthread_mutex_lock(&g_csv_mutex);
     if (g_csv_fp) {
         fflush(g_csv_fp);
+        lv_truncate_file_to_current_pos(g_csv_fp, "destroy_close");
         fclose(g_csv_fp);
         g_csv_fp = NULL;
     }

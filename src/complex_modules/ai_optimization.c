@@ -210,7 +210,10 @@ bool ai_agent_load_reasoning_state(ai_agent_t* agent, const char* filename) {
         }
         
         for (size_t i = 0; i < kb_count && i < agent->knowledge_base->capacity; i++) {
-            fread(&agent->knowledge_base->lums[i], sizeof(lum_t), 1, file);
+            if (fread(&agent->knowledge_base->lums[i], sizeof(lum_t), 1, file) != 1) {
+                fclose(file);
+                return false;
+            }
             agent->knowledge_base->count++;
         }
     }

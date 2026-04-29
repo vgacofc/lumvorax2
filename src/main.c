@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 #include "core/time_ns.h"
 #include "physics/kerr_metric.h"
 #include "logging/log_writer.h"
@@ -22,8 +23,11 @@ int main() {
 
     for (int i = 0; i <= 100; i++) {
         // Traçabilité hardware et physique
-        log_writer_entry("PHYSICS", "GEODESIC_R", *(uint64_t*)&photon.r);
-        log_writer_entry("PHYSICS", "GEODESIC_THETA", *(uint64_t*)&photon.theta);
+        uint64_t r_u64 = 0, theta_u64 = 0;
+        memcpy(&r_u64, &photon.r, sizeof(r_u64));
+        memcpy(&theta_u64, &photon.theta, sizeof(theta_u64));
+        log_writer_entry("PHYSICS", "GEODESIC_R", r_u64);
+        log_writer_entry("PHYSICS", "GEODESIC_THETA", theta_u64);
         
         if (i % 10 == 0) {
             uint64_t now = time_ns_get_absolute();
