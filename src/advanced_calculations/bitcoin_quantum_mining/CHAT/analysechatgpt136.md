@@ -155,8 +155,12 @@ set COMMON src/lum/test_diff_zero_stubs.c src/lum/lum_memory_tracer.c src/lum/lu
 gcc $CFLAGS src/lum/test_diff_zero_random.c $COMMON -o /tmp/t_rnd -lpthread -lm
 mkdir -p /tmp/lvx_c136_rnd; /tmp/t_rnd /tmp/lvx_c136_rnd
 
-# Audit warn_unused_result étendu (rec. CI : exit 1 si pattern dangereux)
-grep -rnE '\(void\) ?(read|write|fread|fwrite|fseek|ftruncate|fstat|pread|pwrite|lseek)' src/; or echo "OK : aucun pattern dangereux"
+# Audit warn_unused_result étendu — VERSION CORRIGÉE C137.1 (BUG-AUDIT-MD-FALSE-POS)
+# v1 retournait des faux positifs : matches dans rapports .md + commentaires C.
+# Fix : (a) restreindre aux extensions .c et .h, (b) filtrer lignes commentaires.
+grep -rnE --include='*.c' --include='*.h' '\(void\) ?(read|write|fread|fwrite|fseek|ftruncate|fstat|pread|pwrite|lseek)' src/ \
+  | grep -vE '^[^:]+:[0-9]+:[[:space:]]*(\*|/\*|//)' \
+  | grep -vE '\* C[0-9]+-FIX'; or echo "OK : aucun pattern dangereux dans le code C"
 ```
 
 **Sortie attendue (validée Ubuntu 24.04 / gcc 13.3.0)** :
