@@ -63,6 +63,15 @@
 #include "nx48_alltime_record.h"  /* C100 — persistance MONOTONE record absolu */
 #include "reasoning_path_tracker.h"  /* C111 — hook reasoning trace path GPU */
 extern reasoning_trace_t* g_btc_reasoning_trace;  /* C111 — exposé par main_btc_mining.c */
+
+/* C128-FIX-A5/A6 : pointers globaux exposés par main_btc_mining.c
+ *  - g_btc_async_log : journal off-hot-path asynchrone (BTC_ASYNC_LOG=1)
+ *  - g_btc_lum_log   : journal natif binaire format LUM      (BTC_LUM_LOG=1)
+ * Si NULL, les hooks sont des no-op silencieux (zéro overhead). */
+#include "optimization/async_logging/async_logger.h"
+#include "lum/lum_log_encoder.h"
+extern async_logger_t*    g_btc_async_log;
+extern lum_log_writer_t*  g_btc_lum_log;
 #include "../include/btc_mining_forensic.h"
 #include "debug/ultra_forensic_logger.h"
 #include "lumvorax_integration.h"
@@ -528,6 +537,7 @@ static void engine_ptmc_swap(btc_engine_t* eng) {
 
         /* Décision stochastique */
         double u = (double)(rng_next() & 0xFFFFFFFFu) / 4294967296.0;
+        int swap_done = 0;
         if (u < accept) {
             /* Échange des nonces */
             uint32_t tmp_n = r1->nonce; r1->nonce = r2->nonce; r2->nonce = tmp_n;
@@ -535,9 +545,24 @@ static void engine_ptmc_swap(btc_engine_t* eng) {
                         r2->leading_zeros = tmp_l;
             r1->swaps_accepted++;
             r2->swaps_accepted++;
-            BTC_FORENSIC_PTMC_SWAP(r + 1, r, accept);
-        } else {
-            BTC_FORENSIC_PTMC_SWAP(r + 1, r, -accept);
+            swap_done = 1;
+        }
+        /* C128-FIX-A8 : throttling forensic PT-MC swap.
+         * Avant C128 : 60K+ rows btc_ptmc_* / 1200s = 93.6% du log forensic
+         * (mainnet run RUN_ID=c112_ub_1777460784). C'était du bruit pur :
+         * chaque swap = 3 rows (rep_hot / rep_cold / accept) à ~800 swaps/s.
+         * Après C128 : 1 row sur 100 → ~6 rows/s. Le scoring Metropolis reste
+         * inchangé (la logique d'échange est exécutée à chaque sweep) ;
+         * seul le LOG est sous-échantillonné. Compteur atomique partagé
+         * inter-threads pour throttle déterministe. */
+        {
+            static _Atomic uint64_t ptmc_swap_log_counter = 0;
+            uint64_t lc = atomic_fetch_add_explicit(&ptmc_swap_log_counter, 1,
+                                                     memory_order_relaxed);
+            if ((lc % 100ULL) == 0ULL) {
+                BTC_FORENSIC_PTMC_SWAP(r + 1, r,
+                                       swap_done ? accept : -accept);
+            }
         }
 
         pthread_mutex_unlock(&r2->mutex);
@@ -577,6 +602,13 @@ static void* btc_mining_thread(void* arg) {
     uint64_t ts_last_stats     = eng_ts_ns();
     /* C66-PERIODIC-SAVE : sauvegarde CSV toutes les 60s — protège contre SIGSEGV/OOM */
     uint64_t ts_last_save_csv  = eng_ts_ns();
+    /* C128-FIX-A5/A6 : milestone async_logger + lum_log_writer toutes les 60 s.
+     * Avant C128 : async_log restait à 119 octets (un seul ASYNC_INFO d'init)
+     * et lum_log à 768 octets (start+end+mem_baseline×4+mem_final×3).
+     * Après C128 : ~20 milestones / 1200 s, chacune avec hashrate, best_lz,
+     * total_hashes, batches → fichiers de plusieurs Kio, traces exploitables. */
+    uint64_t ts_last_milestone = eng_ts_ns();
+    uint64_t milestone_idx     = 0;
 
     /* Delta nonce initial depuis NX48 (minimum 1 pour éviter division par zéro) */
     double delta_nonce = 65536.0 * eng->nx48->delta_nonce_scale;
@@ -855,6 +887,60 @@ static void* btc_mining_thread(void* arg) {
             int div = atomic_load_explicit(&btc_batch_divisor, memory_order_relaxed);
             if (div > 1) batch = cfg->batch_size / div;
             else         batch = cfg->batch_size;
+        }
+
+        /* ───────────────────────────────────────────────────────────
+         * C128-FIX-A5/A6 — Milestones périodiques async_logger + lum_log
+         * Un seul thread (tid=0) émet les milestones pour éviter une
+         * tempête d'I/O depuis 16 threads. Période = 60 s.
+         * Métriques émises :
+         *   - hashrate_mhs cumulé    (élapsé global)
+         *   - best_leading_global    (record courant)
+         *   - total_hashes           (compteur atomique)
+         *   - batches_processed      (proxy : local_hashes / batch)
+         *   - exploration_bias       (état NX48)
+         *   - delta_nonce_scale      (état NX48)
+         * Si BTC_ASYNC_LOG ou BTC_LUM_LOG non actifs → pointers NULL → no-op.
+         * ─────────────────────────────────────────────────────────── */
+        uint64_t ts_now_ms = eng_ts_ns();
+        if (work->thread_id == 0
+            && (ts_now_ms - ts_last_milestone) > 60000000000ULL) {
+            ts_last_milestone = ts_now_ms;
+            milestone_idx++;
+            uint64_t total_now    = atomic_load(&eng->total_hashes);
+            double   elapsed_now  = (double)(ts_now_ms - eng->ts_start_ns) / 1e9;
+            double   hr_mhs       = (elapsed_now > 0)
+                                    ? (double)total_now / elapsed_now / 1e6 : 0.0;
+            int      best_lz_now  = atomic_load_explicit(&eng->best_leading_global,
+                                                          memory_order_relaxed);
+            double   delta_now    = eng->nx48 ? eng->nx48->delta_nonce_scale : 0.0;
+            double   eb_now       = eng->nx48 ? eng->nx48->exploration_bias  : 0.0;
+
+            if (g_btc_async_log) {
+                ASYNC_INFO(g_btc_async_log,
+                    "[C128-MILESTONE #%" PRIu64 "] t=%.1fs hashrate=%.3fMH/s "
+                    "best_lz=%d total=%" PRIu64 " delta=%.3f eb=%.3f",
+                    milestone_idx, elapsed_now, hr_mhs, best_lz_now,
+                    total_now, delta_now, eb_now);
+            }
+            if (g_btc_lum_log) {
+                /* 6 records LUM par milestone — suffisamment dense pour
+                 * reconstituer la courbe complète post-mortem. */
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_idx",       (uint64_t)milestone_idx);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_t_ms",      (uint64_t)(elapsed_now * 1000.0));
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_hashrate_uHs",
+                    (uint64_t)(hr_mhs * 1e6)); /* µH/s entier */
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_best_lz",   (uint64_t)best_lz_now);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_total_hashes", total_now);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "milestone_delta_milli",
+                    (uint64_t)(delta_now * 1000.0));
+            }
         }
 
         /* Mise à jour NX48 */

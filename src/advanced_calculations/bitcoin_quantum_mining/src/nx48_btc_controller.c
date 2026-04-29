@@ -837,8 +837,11 @@ void nx48_btc_compute_features(
     features[NX48_BTC_F_TIME_STALL]    = (time_since_improvement_s > 0.0)
         ? clamp(-log10(time_since_improvement_s) / 10.0 + 0.5, 0.0, 1.0) : 0.5;
     features[NX48_BTC_F_COVERAGE]      = clamp(nonce_coverage_pct / 100.0, 0.0, 1.0);
-    /* C61 : delta normalisé sur 500.0 (max C61) au lieu de 4294967296.0 */
-    features[NX48_BTC_F_DELTA_NORM]    = clamp(delta_nonce / (65536.0 * 500.0), 0.0, 1.0);
+    /* C61 + C128-FIX-A9 : delta normalisé sur le NOUVEAU cap 200.0
+     * (au lieu de 500.0 C61, lui-même au lieu de 4294967296.0 pré-C61).
+     * Important : la feature doit balayer [0,1] sur la plage utile réelle,
+     * sinon le gradient apprend une distribution trop comprimée. */
+    features[NX48_BTC_F_DELTA_NORM]    = clamp(delta_nonce / (65536.0 * 200.0), 0.0, 1.0);
     features[NX48_BTC_F_THREAD_EFF]    = (hashes_expected > 0.0)
         ? clamp(hashes_done / hashes_expected, 0.0, 1.0) : 0.0;
     features[NX48_BTC_F_TEMP_RATIO]    = (T_cold > 0.0)
@@ -969,8 +972,23 @@ void nx48_btc_update(
     }
 
     /* ════════════════════════════════════════════════════════════════
-     * C61-DELTA-UNLOCK : delta_nonce_scale max 50→500
+     * C61-DELTA-UNLOCK + C128-FIX-A9 : delta_nonce_scale tuning sain
      * Perturbation Xoshiro256++ avec sigma adaptatif
+     *
+     * C128-FIX-A9 — diagnostic :
+     *   Run mainnet C112 (1200s) : 9 anomalies "btc_nx48_delta_cap_500"
+     *   déclenchées par loss_delta très négatif → push >> 1 → exp(push)
+     *   pousse delta brutalement vers le cap 500. Sans rappel, le système
+     *   reste collé au cap pendant des dizaines de secondes (cluster
+     *   d'anomalies) puis reset_c62 brutal.
+     *
+     * Correction :
+     *   1. push clampé à [-0.3, 0.3] avant exp()  → croissance douce ×e^0.3 ≈ ×1.35
+     *      au lieu de ×e^N→explosion. Évite les bonds brutaux.
+     *   2. cap abaissé 500.0 → 200.0. Couvre largement la zone utile
+     *      observée (median delta ≈ 30-80 sur runs C100-C127) et coupe
+     *      la dérive runaway au-delà.
+     *   3. Seuil anomalie aligné sur le nouveau cap (199.0 au lieu de 499.0).
      * ════════════════════════════════════════════════════════════════ */
     {
         double stagnation = clamp(loss_delta * 10.0, 0.0, 1.0);
@@ -979,12 +997,14 @@ void nx48_btc_update(
         double noise = xosh_gaussian(sigma);
         double alpha = 0.8;
         double push  = alpha * (-loss_delta);
+        /* C128-FIX-A9 : clamp push pour éviter exp() runaway */
+        push = clamp(push, -0.30, 0.30);
         s->delta_nonce_scale *= exp(push + noise);
-        /* C61 : max étendu 50→500 */
-        s->delta_nonce_scale = clamp(s->delta_nonce_scale, 0.1, 500.0);
-        if (s->delta_nonce_scale >= 499.0)
+        /* C128-FIX-A9 : cap abaissé 500.0 → 200.0 */
+        s->delta_nonce_scale = clamp(s->delta_nonce_scale, 0.1, 200.0);
+        if (s->delta_nonce_scale >= 199.0)
             FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
-                "btc_nx48_delta_cap_500", s->delta_nonce_scale);
+                "btc_nx48_delta_cap_200", s->delta_nonce_scale);
     }
 
     /* ── batch_size_scale (C65 conservé + SN contrôle) ─────────── */
@@ -1059,17 +1079,18 @@ void nx48_btc_update(
         s->stall_count++;
         s->stall_long_count++;
         if (s->stall_count >= 2) {
-            s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 500.0);
+            /* C128-FIX-A9 : cap aligné 500.0 → 200.0 (cohérent avec bloc principal) */
+            s->delta_nonce_scale = clamp(s->delta_nonce_scale * 1.05, 0.1, 200.0);
             s->stall_count = 0;
         }
-        /* C63 : Reset delta_nonce si bloqué au cap 500 trop longtemps (plateau absolu)
-         * C62 : %50 → trop rare (1 reset sur 139K lines / 7.5min = 1 reset)
-         * C63 FIX : %10 → reset 5× plus fréquent → moins de stalls prolongés */
+        /* C63 + C128-FIX-A9 : Reset delta_nonce si bloqué au cap (plateau absolu).
+         * Seuil aligné sur le nouveau cap (200.0) → reset déclenché à 195.0
+         * (95% du cap, comme avant 490/500). Reset aléatoire conservé [1,16]. */
         if (s->stall_long_count > 0 && (s->stall_long_count % 10) == 0
-            && s->delta_nonce_scale >= 490.0) {
+            && s->delta_nonce_scale >= 195.0) {
             double old_delta = s->delta_nonce_scale;
             s->delta_nonce_scale = 1.0 + xosh_uniform() * 15.0; /* Reset aleatoire [1, 16] */
-            printf("[NX48-C62] Reset delta_nonce %.1f->%.3f (stall_long=%d cap500_plateau)\n",
+            printf("[NX48-C62] Reset delta_nonce %.1f->%.3f (stall_long=%d cap200_plateau)\n",
                 old_delta, s->delta_nonce_scale, s->stall_long_count);
             FORENSIC_LOG_ANOMALY(BTC_MODULE_NAME,
                 "btc_nx48_delta_reset_stall_c62", s->delta_nonce_scale);
@@ -1225,7 +1246,8 @@ void nx48_btc_clamp_scales(nx48_btc_state_t* s) {
     }
 #undef NX48_SAFE_RESET_SCALAR
 
-    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  500.0);
+    /* C128-FIX-A9 : cap aligné 500.0 → 200.0 (post-régulation NaN/Inf safe) */
+    s->delta_nonce_scale  = clamp(s->delta_nonce_scale,  0.1,  200.0);
     s->n_replicas_scale   = clamp(s->n_replicas_scale,   1.0,    2.0);
     s->swap_temp_scale    = clamp(s->swap_temp_scale,    0.5,    3.0);
     s->batch_size_scale   = clamp(s->batch_size_scale,   0.5,    8.0);
@@ -1362,7 +1384,11 @@ int nx48_btc_load_lum(nx48_btc_state_t* s, const char* lum_path) {
     }
     s->exploration_bias   = clamp((double)e.exploration_bias, 0.05, 0.95);
     s->exploration_vel    = clamp((double)e.exploration_vel, -0.5, 0.5);
-    s->delta_nonce_scale  = clamp((double)e.delta_nonce_scale, 0.1, 500.0);
+    /* C128-FIX-A9 : cap aligné 500.0 → 200.0 lors du chargement persisté.
+     * Si l'ancien checkpoint contient delta>200, il sera silencieusement
+     * écrêté — comportement souhaité (on refuse de retourner sur les
+     * caps explosifs des runs C100-C127). */
+    s->delta_nonce_scale  = clamp((double)e.delta_nonce_scale, 0.1, 200.0);
     s->batch_size_scale   = clamp((double)e.batch_size_scale, 0.5, 8.0);
     s->loss_curr          = (double)e.loss_curr;
     s->loss_prev          = s->loss_curr;
@@ -1453,9 +1479,9 @@ int nx48_btc_load_csv(nx48_btc_state_t* s, const char* csv_path) {
             s->executor_bias = s->bias;
             s->dual_blend = 0.20;
         }
-        /* Ajustements C61 */
+        /* Ajustements C61 + C128-FIX-A9 (cap aligné 500.0 → 200.0) */
         s->exploration_bias  = clamp(s->exploration_bias, 0.05, 0.95);
-        s->delta_nonce_scale = clamp(s->delta_nonce_scale, 0.1, 500.0);
+        s->delta_nonce_scale = clamp(s->delta_nonce_scale, 0.1, 200.0);
         s->batch_size_scale  = clamp(s->batch_size_scale, 0.5, 8.0);
         s->loss_prev = s->loss_curr;
         if (s->T_hot_idx == 0)  s->T_hot_idx  = 7;

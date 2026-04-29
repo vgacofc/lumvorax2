@@ -50,6 +50,13 @@ reasoning_trace_t* g_btc_reasoning_trace = NULL;
  * Activation : env BTC_LUM_LOG=1 → fichier .lum binaire append-only. */
 lum_log_writer_t* g_btc_lum_log = NULL;
 
+/* C128-FIX-A5 : async_logger exposé globalement pour permettre les
+ * ASYNC_INFO périodiques émis par btc_mining_engine.c (milestones de
+ * mining toutes les 60 s). Avant C128 le pointeur restait local au main
+ * et le moteur n'avait aucun moyen d'émettre quoi que ce soit → fichier
+ * .log restait à 119 octets. Activation : BTC_ASYNC_LOG=1. */
+async_logger_t*    g_btc_async_log = NULL;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -212,7 +219,6 @@ int main(int argc, char* argv[]) {
      *   - async_logger    : journalisation off-hot-path (ne bloque pas le mining)
      * Activation : variables d'environnement BTC_REASONING_TRACE=1 / BTC_ASYNC_LOG=1 */
     reasoning_trace_t* reasoning_trace = NULL;
-    async_logger_t*    async_log       = NULL;
     if (getenv("BTC_REASONING_TRACE")) {
         reasoning_trace = reasoning_trace_start(cfg.run_id);
         if (reasoning_trace) {
@@ -224,9 +230,11 @@ int main(int argc, char* argv[]) {
         char alog_path[512];
         snprintf(alog_path, sizeof(alog_path),
             "%s/modules/btc_async_log_%s.log", cfg.log_dir, cfg.run_id);
-        async_log = async_logger_create(alog_path, ASYNC_LOG_BUFFER_SIZE);
-        if (async_log) {
-            ASYNC_INFO(async_log, "[C110] async_logger actif run_id=%s mode=%s",
+        /* C128-FIX-A5 : on stocke directement dans le pointeur GLOBAL pour que
+         * btc_mining_engine.c puisse logger ses milestones (ASYNC_INFO). */
+        g_btc_async_log = async_logger_create(alog_path, ASYNC_LOG_BUFFER_SIZE);
+        if (g_btc_async_log) {
+            ASYNC_INFO(g_btc_async_log, "[C110] async_logger actif run_id=%s mode=%s",
                        cfg.run_id, cfg.run_mode);
             printf("[C110-OPT] async_logger actif → %s ✓\n", alog_path);
         }
@@ -466,11 +474,18 @@ int main(int argc, char* argv[]) {
         int do_tune_full = (tune_full_env && strcmp(tune_full_env, "1") == 0);
 
         if (do_tune_full) {
-            /* ─── C125-TUNE-FULL : sweep 4D complet ─── */
-            opt_cfg.run_duration_s = 0.5;  /* 192 × 0.5s = 96s total */
+            /* ─── C125-TUNE-FULL : sweep 4D complet ───
+             * C128-FIX-A1 : run_duration_s 0.5 → 5.0
+             * Bug observé C125/C126 : à 0.5s, hr_MH se figeait à 0.001 MH/s
+             * (un seul batch traité, hashrate quasi nul → score dégénéré).
+             * À 5.0s : 10× plus de samples → score moyen stable, std réelle.
+             * Surcoût : 192 × 5.0s = ~960s (16 min) vs 96s — accepté par
+             * l'utilisateur car le profil OPTIMAL est ensuite injecté pour
+             * toute la durée du run mainnet (>20 min compense largement). */
+            opt_cfg.run_duration_s = 5.0;  /* C128-FIX-A1 : 0.5 → 5.0 (sweep sain) */
             asic_btc_tune_full_result_t tune_full_res;
-            printf("[C125-TUNE-FULL] Sweep 4D ASIC : 4×4×4×3 = 192 combinaisons "
-                   "(estimation ~96s overhead)...\n");
+            printf("[C125-TUNE-FULL/C128-A1] Sweep 4D ASIC : 4×4×4×3 = 192 combinaisons "
+                   "(durée par combo 5.0s, total estimé ~960s overhead)...\n");
             fflush(stdout);
             int rc_tf = asic_btc_optimizer_tune_full(&opt_cfg,
                                                      NULL, 0,   /* défauts batch */
@@ -711,14 +726,15 @@ int main(int argc, char* argv[]) {
                trace_path, reasoning_trace->node_count);
         reasoning_trace_destroy(reasoning_trace);
     }
-    if (async_log) {
-        ASYNC_INFO(async_log, "[C110] async_logger arrêt run_id=%s result=%d",
+    if (g_btc_async_log) {
+        ASYNC_INFO(g_btc_async_log, "[C110] async_logger arrêt run_id=%s result=%d",
                    cfg.run_id, result);
-        async_logger_flush(async_log);
+        async_logger_flush(g_btc_async_log);
         printf("[C110-OPT] async_logger : %" PRIu64 " entries totales, %" PRIu64 " dropped\n",
-               async_logger_get_total(async_log),
-               async_logger_get_dropped(async_log));
-        async_logger_destroy(async_log);
+               async_logger_get_total(g_btc_async_log),
+               async_logger_get_dropped(g_btc_async_log));
+        async_logger_destroy(g_btc_async_log);
+        g_btc_async_log = NULL;
     }
 
     /* C112 + C127-FIX — snapshot mémoire final : utilise la MEME granularite

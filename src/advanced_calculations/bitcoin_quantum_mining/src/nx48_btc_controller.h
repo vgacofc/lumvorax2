@@ -179,7 +179,7 @@ typedef struct {
     nx48_subneuron_t subneurons_exec[NX48_N_SUBNEURONS];   /* sous-applicateurs */
 
     /* ── Hyper-paramètres appris ─────────────────────────────────── */
-    double delta_nonce_scale;   /* Rayon voisinage nonce [0.1, 500.0] — C61 déplafonné */
+    double delta_nonce_scale;   /* Rayon voisinage nonce [0.1, 200.0] — C61 déplafonné, C128-FIX-A9 cap 500→200 */
     double n_replicas_scale;    /* Échelle répliques PT [1.0, 2.0] */
     double swap_temp_scale;     /* Température échange PT [0.5, 3.0] */
     double batch_size_scale;    /* Taille batch SIMD [0.5, 8.0] */
