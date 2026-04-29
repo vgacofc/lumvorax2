@@ -1034,3 +1034,21 @@
 + Q2_signal_noise_concept : "bruit" = ratio metriques PT-MC verbeuses non-actionnables / events utiles, PAS latence. 200 GB Ubuntu libres permettent de tout garder.
 + Q3_old_logs_retention : decision NE PAS supprimer anciens logs forensic sans confirmation explicite avec liste prealable.
 + Q4_lum_dbms_roadmap : roadmap 5 cycles C128-C132 NX48 + LUM DBMS + VORAX auto-codage, decoupage approuve.
+
+# C128 (29 avril 2026) — Realisation TODOs + commandes fish Ubuntu
++ analysechatgpt128.md : rapport CHAT cycle C128, 8 sections, inventaire 11 TODOs (8 deja resolus + 2 livres + 3 reportes C129).
++ tools/btc_log_signal_filter.py : outil C128-A10 post-processeur signal/bruit Python stdlib (220L), produit .signal.csv + .noise.summary.csv sans modifier source. Test local Replit : compression 5.3:1.
++ scripts/c128_ubuntu_full.fish : pipeline Ubuntu 7 etapes (git pull + build + baseline 600s + tuned 600s BIT TUNE_FULL + verif BIT + filter signal + compare hashrate). 270L fish.
++ DURATION_S : variable fish pilotage script C128 (def 600s, override possible).
++ THREADS : variable fish pilotage script C128 (def 8).
++ TUNE_DEEP : variable fish pilotage script C128 (1=192x5s 16min, 0=192x0.5s 96s).
++ #A1_resolved_C127 : main_btc_mining.c L478-485 commentaire "C128-FIX-A1 : run_duration_s 0.5 -> 5.0" deja deploye.
++ #A2_resolved_C127 : nx48_btc_apply_runtime_overrides() L105 + appel L515 main + L802 controller.
++ #A3_resolved_C127 : snapshot final lit nx48_ctrl_mem_trace_granularity atomic L743-785.
++ #A5_operational : async_logger destroy + counters L729-738.
++ #A6_operational : lum_log_writer dans 5 fichiers BTC mining (66 occurrences).
++ #A7_operational : reasoning_trace_save + destroy L720-728 main.
++ #A10_resolved_C128 : signal filter Python livre.
++ lum_dbms_existing : Phase 1+2+3 deja committees (lum_btree, lum_catalog, lum_query, lum_dbms_test).
++ bbf0e777fec3 : job Ubuntu C128-BIT-LEVEL-VALIDATION snapshot BIT bloque > 6 min, plan C129 thread dedie + timeout 1800s.
++ 2ff22bed7e03 : job Ubuntu C128-FISH-SCRIPT-VALIDATE pousse pour valider syntax fish + python sur cible.
