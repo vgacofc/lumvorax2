@@ -357,7 +357,11 @@ void ultra_forensic_logger_init_lum(const char* log_file) {
         fprintf(stderr, "[LUMVORAX] AVERTISSEMENT: impossible d'écrire dans %s\n", log_file);
     }
     pthread_mutex_unlock(&g_csv_mutex);
-    fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s ACTIF v3.0 (FD_PERSISTANT=ON)\n", log_file);
+    if (g_run_csv_path[0]) {
+        fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s ACTIF v3.0 (FD_PERSISTANT=ON)\n", log_file);
+    } else {
+        fprintf(stderr, "[LUMVORAX] init_lum: log_run=%s INACTIF (fopen a echoue)\n", log_file);
+    }
 }
 
 /* C37-MODFILE : Ouvre un nouveau fichier LumVorax nommé par le module courant.

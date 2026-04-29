@@ -1058,3 +1058,8 @@
 + C129-FIX-NUL-01 + C129 — ultra_forensic_logger.c : troncature explicite ftruncate(fd, ftell(fp)) avant chaque fclose (rotation 20MiB, switch module, destroy) pour eliminer tout padding NUL potentiel en fin de fichiers CSV/log collectes.
 + C129-FIX-STRICT-ALIAS-01 + C129 — src/main.c : suppression type-punning *(uint64_t*)&double (warning -Wstrict-aliasing) remplace par memcpy vers uint64_t.
 + C129-FIX-FREAD-UNUSED-01 + C129 — src/complex_modules/ai_optimization.c : verifie retour fread() lors du chargement base de connaissances (supprime warning -Wunused-result).
+
+# C131/C132 (29 avril 2026) — Reparation log_dir imbrique + file_size snapshot final
++ C131-FIX-DIRS-01 + C131 — main_btc_mining.c : ensure_dirs() devient mkdir -p recursif (mkdir_p) pour creer correctement `--log-dir` imbrique (ex logs/c130_bit_validate/modules). Supprime les echecs rc=-2 (ENOENT) et rend les logs/modules effectivement ecrits.
++ C131-FIX-LOGGER-MSG-01 + C131 — ultra_forensic_logger.c : init_lum imprime ACTIF uniquement si fopen() reussi, sinon INACTIF (message non trompeur).
++ btc_c129_mem_final_file_size_bytes + C132 — Nouvelle metrique forensic pour le snapshot mem final (taille reelle du fichier .lum via stat(mt_final)) + record lum_log `mem_final_file_size_bytes`.

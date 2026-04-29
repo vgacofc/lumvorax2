@@ -64,6 +64,7 @@ async_logger_t*    g_btc_async_log = NULL;
 #include <unistd.h>
 #include <inttypes.h>
 #include <sys/stat.h>
+#include <errno.h>
 /* C116-P5 : ASIC optimizer — benchmark rapide avant lancement moteur */
 #include "../../../asic_simulation/asic_btc_optimizer.h"
 /* C116-KERNEL : smaps_rollup — traçage mémoire kernel /proc/self/smaps_rollup */
@@ -127,13 +128,37 @@ static void make_run_id(char* out, size_t n) {
 }
 
 /* ── Crée les répertoires nécessaires ───────────────────────────── */
+static int mkdir_p(const char* path, mode_t mode) {
+    if (!path || !path[0]) return -EINVAL;
+    char tmp[512];
+    size_t len = strnlen(path, sizeof(tmp));
+    if (len == 0 || len >= sizeof(tmp)) return -ENAMETOOLONG;
+    memcpy(tmp, path, len);
+    tmp[len] = '\0';
+
+    /* Ignore trailing slash */
+    if (len > 1 && tmp[len - 1] == '/') tmp[len - 1] = '\0';
+
+    /* Iterate components */
+    for (char* p = tmp + 1; *p; p++) {
+        if (*p == '/') {
+            *p = '\0';
+            if (mkdir(tmp, mode) != 0 && errno != EEXIST) return -errno;
+            *p = '/';
+        }
+    }
+    if (mkdir(tmp, mode) != 0 && errno != EEXIST) return -errno;
+    return 0;
+}
+
 static void ensure_dirs(const char* log_dir) {
     char path[512];
-    snprintf(path, sizeof(path), "%s/modules",  log_dir); mkdir(path, 0755);
-    snprintf(path, sizeof(path), "%s/metrics",  log_dir); mkdir(path, 0755);
-    snprintf(path, sizeof(path), "%s/anomalies",log_dir); mkdir(path, 0755);
-    mkdir("config",  0755);
-    mkdir("results", 0755);
+    (void)mkdir_p(log_dir, 0755);
+    snprintf(path, sizeof(path), "%s/modules",   log_dir); (void)mkdir_p(path, 0755);
+    snprintf(path, sizeof(path), "%s/metrics",   log_dir); (void)mkdir_p(path, 0755);
+    snprintf(path, sizeof(path), "%s/anomalies", log_dir); (void)mkdir_p(path, 0755);
+    (void)mkdir_p("config",  0755);
+    (void)mkdir_p("results", 0755);
 }
 
 /* ── Header testnet Bitcoin (bloc de référence genèse simplifié) ── */
@@ -775,13 +800,23 @@ int main(int argc, char* argv[]) {
         if (lum_memory_snapshot_self(mt_final,
                                      gran_final,
                                      true, false, &mtsf) == 0) {
+            uint64_t file_size_bytes_final = 0;
+            {
+                struct stat st;
+                if (stat(mt_final, &st) == 0 && st.st_size > 0) {
+                    file_size_bytes_final = (uint64_t)st.st_size;
+                }
+            }
             printf("[C112-LUM] mem snapshot final → %s "
-                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets, gran=%s)\n",
+                   "(%" PRIu64 " lums, %" PRIu64 " pages, %" PRIu64 " octets, file_size=%" PRIu64 " B, gran=%s)\n",
                    mt_final,
                    (uint64_t)mtsf.total_lums_emitted,
                    (uint64_t)mtsf.total_pages_resident,
                    (uint64_t)mtsf.total_bytes_dumped,
+                   file_size_bytes_final,
                    gran_label_final);
+            FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                "btc_c129_mem_final_file_size_bytes", (double)file_size_bytes_final);
             if (g_btc_lum_log) {
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_final_bytes", (uint64_t)mtsf.total_bytes_dumped);
@@ -789,6 +824,8 @@ int main(int argc, char* argv[]) {
                     "mem_final_pages", (uint64_t)mtsf.total_pages_resident);
                 lum_log_writer_write_record(g_btc_lum_log,
                     "mem_final_lums",  (uint64_t)mtsf.total_lums_emitted);
+                lum_log_writer_write_record(g_btc_lum_log,
+                    "mem_final_file_size_bytes", file_size_bytes_final);
             }
         } else {
             fprintf(stderr, "[C127-FIX-MEM-FINAL] echec snapshot final (gran=%s)\n",
