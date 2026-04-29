@@ -373,6 +373,136 @@ int lum_memory_snapshot_self(const char* out_path,
 }
 
 /* ----------------------------------------------------------------------------
+ * C133 — Snapshot d'un buffer mémoire arbitraire (zone contrôlée)
+ *
+ * Réutilise le même format binaire (header 64 octets v2 + N×lum_t)
+ * que lum_memory_snapshot_self() pour rester compatible avec
+ * lum_memory_reconstruct() existant.
+ *
+ * Différence majeure : pas de scan /proc/self/maps, l'appelant fournit
+ * un pointeur+taille. Le buffer DOIT être stable pendant l'appel
+ * (sinon diff=0 ne sera pas reproductible).
+ * ---------------------------------------------------------------------------- */
+int lum_memory_snapshot_buffer(const void* buffer,
+                                size_t buffer_size,
+                                const char* out_path,
+                                lum_trace_granularity_t granularity,
+                                lum_trace_stats_t* stats) {
+    if (!buffer || !out_path) return -EINVAL;
+    if (buffer_size == 0) return -EINVAL;
+    if (granularity == LUM_TRACE_GRANULARITY_HUGEPAGE) return -EINVAL;
+    if (granularity == LUM_TRACE_GRANULARITY_PAGE && (buffer_size % PAGE_SIZE) != 0) {
+        return -EINVAL;
+    }
+
+    uint64_t t0 = now_ns();
+    uint64_t t0_real = now_realtime_ns();
+
+    FILE* out = fopen(out_path, "wb");
+    if (!out) return -errno;
+
+    lum_file_header_t hdr;
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.magic = LUM_TRACER_MAGIC;
+    hdr.granularity = (uint32_t)granularity;
+    hdr.total_lums = 0;
+    hdr.total_bytes = 0;
+    hdr.timestamp_realtime_ns = t0_real;
+    hdr.version_major = LUM_FORMAT_VERSION_C117;
+    hdr.checksum_algo = LUM_CHKSUM_CRC32C;
+    hdr.timestamp_monotonic_ns = t0;
+    if (fwrite(&hdr, sizeof(hdr), 1, out) != 1) {
+        fclose(out);
+        return -EIO;
+    }
+
+    const uint8_t* src = (const uint8_t*)buffer;
+    uint64_t total_lums = 0;
+    uint64_t total_bytes = 0;
+    /* Adresse virtuelle de référence : pointeur du buffer */
+    uint64_t base_vaddr = (uint64_t)(uintptr_t)src;
+
+    switch (granularity) {
+        case LUM_TRACE_GRANULARITY_PAGE: {
+            for (size_t off = 0; off < buffer_size; off += PAGE_SIZE) {
+                lum_t lum;
+                memset(&lum, 0, sizeof(lum));
+                encode_page_to_lum(base_vaddr + off, src + off, &lum);
+                if (fwrite(&lum, sizeof(lum_t), 1, out) != 1) goto io_err;
+                if (fwrite(src + off, PAGE_SIZE, 1, out) != 1) goto io_err;
+                total_lums++;
+                total_bytes += PAGE_SIZE;
+            }
+            break;
+        }
+        case LUM_TRACE_GRANULARITY_BYTE: {
+            for (size_t i = 0; i < buffer_size; i++) {
+                lum_t lum;
+                memset(&lum, 0, sizeof(lum));
+                encode_byte_to_lum(base_vaddr + i, src[i], &lum);
+                if (fwrite(&lum, sizeof(lum_t), 1, out) != 1) goto io_err;
+                total_lums++;
+            }
+            total_bytes = buffer_size;
+            break;
+        }
+        case LUM_TRACE_GRANULARITY_BIT: {
+            for (size_t i = 0; i < buffer_size; i++) {
+                for (int b = 0; b < 8; b++) {
+                    uint8_t bit = (src[i] >> b) & 1u;
+                    lum_t lum;
+                    memset(&lum, 0, sizeof(lum));
+                    encode_bit_to_lum((base_vaddr + i) * 8 + b, bit, &lum);
+                    if (fwrite(&lum, sizeof(lum_t), 1, out) != 1) goto io_err;
+                    total_lums++;
+                }
+            }
+            total_bytes = buffer_size;
+            break;
+        }
+        case LUM_TRACE_GRANULARITY_HUGEPAGE:
+            /* Déjà rejeté plus haut */
+            fclose(out);
+            return -EINVAL;
+    }
+
+    /* Réécrire le header avec les compteurs finaux */
+    hdr.total_lums = total_lums;
+    hdr.total_bytes = total_bytes;
+    if (fseek(out, 0, SEEK_SET) != 0) goto io_err;
+    if (fwrite(&hdr, sizeof(hdr), 1, out) != 1) goto io_err;
+    fflush(out);
+    /* C133 : ftruncate explicite à la position courante (anti-padding NUL,
+     * cohérent avec C129-FIX-NUL-01 d'ultra_forensic_logger). */
+    {
+        long pos = ftell(out);
+        if (pos > 0) {
+            int fd = fileno(out);
+            if (fd >= 0) {
+                /* ftruncate retourne -1 sur erreur ; on ignore (best effort) */
+                (void)ftruncate(fd, (off_t)pos);
+            }
+        }
+    }
+    fclose(out);
+
+    uint64_t t1 = now_ns();
+    if (stats) {
+        stats->total_lums_emitted = total_lums;
+        stats->total_pages_scanned = (buffer_size + PAGE_SIZE - 1) / PAGE_SIZE;
+        stats->total_pages_resident = stats->total_pages_scanned; /* 100% résident (heap) */
+        stats->total_bytes_dumped = total_bytes;
+        stats->snapshot_ns = t1 - t0;
+        stats->magic = LUM_TRACER_MAGIC;
+    }
+    return 0;
+
+io_err:
+    fclose(out);
+    return -EIO;
+}
+
+/* ----------------------------------------------------------------------------
  * Reconstruction depuis .lum
  * ---------------------------------------------------------------------------- */
 int lum_memory_reconstruct(const char* in_path,

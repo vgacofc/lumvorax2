@@ -68,6 +68,35 @@ int lum_memory_snapshot_self(const char* out_path,
                               lum_trace_stats_t* stats);
 
 /* ----------------------------------------------------------------------------
+ * C133 — Snapshot d'un buffer mémoire arbitraire (ZONE CONTRÔLÉE)
+ *
+ * Contrairement à lum_memory_snapshot_self() qui scanne /proc/self/maps,
+ * cette fonction encode un buffer fixe fourni par l'appelant. Cible primaire :
+ * test unitaire "trace → reconstruct → diff=0" exigé depuis C129.
+ *
+ * Le buffer NE BOUGE PAS pendant le snapshot (contrairement au self process),
+ * donc diff=0 est strictement reproductible.
+ *
+ * Paramètres :
+ *   buffer       : pointeur vers la zone à snapshoter (lecture seule)
+ *   buffer_size  : taille de la zone en octets
+ *   out_path     : fichier .lum de sortie (sera créé/écrasé)
+ *   granularity  : LUM_TRACE_GRANULARITY_PAGE | _BYTE | _BIT
+ *                  (HUGEPAGE non pertinent pour buffer < 2 MiB ; rejeté)
+ *   stats        : (out) statistiques, NULL accepté
+ *
+ * Retourne : 0 succès, -errno sinon.
+ * Contraintes :
+ *   - buffer_size doit être un multiple de 4096 pour granularité PAGE
+ *   - granularité HUGEPAGE → -EINVAL
+ * ---------------------------------------------------------------------------- */
+int lum_memory_snapshot_buffer(const void* buffer,
+                                size_t buffer_size,
+                                const char* out_path,
+                                lum_trace_granularity_t granularity,
+                                lum_trace_stats_t* stats);
+
+/* ----------------------------------------------------------------------------
  * Reconstruction mémoire depuis .lum dans un buffer cible
  *
  * Paramètres :
