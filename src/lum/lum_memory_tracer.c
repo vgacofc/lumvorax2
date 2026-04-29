@@ -466,22 +466,30 @@ int lum_memory_snapshot_buffer(const void* buffer,
             return -EINVAL;
     }
 
+    /* C133-FIX-01 : capturer la taille TOTALE écrite AVANT de rembobiner.
+     * Le bug initial était : fseek(0)+fwrite(header) repositionne le curseur
+     * à 64 octets, donc ftell(out) retournait 64 et ftruncate(fd, 64)
+     * supprimait tout le payload. On capture donc la taille via SEEK_END
+     * d'abord, puis on réécrit le header, puis on tronque à la taille
+     * réelle (et non à la position courante). */
+    long real_size = -1;
+    if (fseek(out, 0, SEEK_END) == 0) {
+        real_size = ftell(out);
+    }
     /* Réécrire le header avec les compteurs finaux */
     hdr.total_lums = total_lums;
     hdr.total_bytes = total_bytes;
     if (fseek(out, 0, SEEK_SET) != 0) goto io_err;
     if (fwrite(&hdr, sizeof(hdr), 1, out) != 1) goto io_err;
     fflush(out);
-    /* C133 : ftruncate explicite à la position courante (anti-padding NUL,
-     * cohérent avec C129-FIX-NUL-01 d'ultra_forensic_logger). */
-    {
-        long pos = ftell(out);
-        if (pos > 0) {
-            int fd = fileno(out);
-            if (fd >= 0) {
-                /* ftruncate retourne -1 sur erreur ; on ignore (best effort) */
-                (void)ftruncate(fd, (off_t)pos);
-            }
+    /* Anti-padding NUL : tronquer à la taille réelle (cohérent C129-FIX-NUL-01).
+     * En mode "wb" sans pré-allocation cette troncature est généralement
+     * un no-op, mais elle protège contre toute future implémentation qui
+     * pré-allouerait par blocs. */
+    if (real_size > 0) {
+        int fd = fileno(out);
+        if (fd >= 0) {
+            (void)ftruncate(fd, (off_t)real_size);
         }
     }
     fclose(out);
