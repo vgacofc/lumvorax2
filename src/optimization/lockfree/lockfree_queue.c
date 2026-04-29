@@ -1,10 +1,12 @@
 #include "lockfree_queue.h"
+#include "../../lum/lum_aligned_alloc_safe.h"  /* C134-FIX-D2-LOCKFREE */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 lockfree_queue_t* lockfree_queue_create(void) {
-    lockfree_queue_t* queue = (lockfree_queue_t*)aligned_alloc(LOCKFREE_CACHE_LINE, sizeof(lockfree_queue_t));
+    /* C134-FIX-D2-LOCKFREE-Q : safe wrapper (size arrondi au mult cache line) */
+    lockfree_queue_t* queue = (lockfree_queue_t*)lum_aligned_alloc_safe(LOCKFREE_CACHE_LINE, sizeof(lockfree_queue_t));
     if (!queue) return NULL;
     
     memset(queue, 0, sizeof(lockfree_queue_t));
@@ -127,10 +129,12 @@ lockfree_ring_t* lockfree_ring_create(size_t capacity) {
     if (capacity == 0) capacity = LOCKFREE_DEFAULT_CAPACITY;
     capacity = next_power_of_two(capacity);
     
-    lockfree_ring_t* ring = (lockfree_ring_t*)aligned_alloc(LOCKFREE_CACHE_LINE, sizeof(lockfree_ring_t));
+    /* C134-FIX-D2-LOCKFREE-R : safe wrapper */
+    lockfree_ring_t* ring = (lockfree_ring_t*)lum_aligned_alloc_safe(LOCKFREE_CACHE_LINE, sizeof(lockfree_ring_t));
     if (!ring) return NULL;
     
-    ring->buffer = (void**)aligned_alloc(LOCKFREE_CACHE_LINE, capacity * sizeof(void*));
+    /* C134-FIX-D2-LOCKFREE-RB : capacity*sizeof(void*) peut etre < 64 si capacity<8 */
+    ring->buffer = (void**)lum_aligned_alloc_safe(LOCKFREE_CACHE_LINE, capacity * sizeof(void*));
     if (!ring->buffer) {
         free(ring);
         return NULL;
@@ -198,7 +202,8 @@ size_t lockfree_ring_size(lockfree_ring_t* ring) {
 }
 
 lockfree_stack_t* lockfree_stack_create(void) {
-    lockfree_stack_t* stack = (lockfree_stack_t*)aligned_alloc(LOCKFREE_CACHE_LINE, sizeof(lockfree_stack_t));
+    /* C134-FIX-D2-LOCKFREE-S : safe wrapper */
+    lockfree_stack_t* stack = (lockfree_stack_t*)lum_aligned_alloc_safe(LOCKFREE_CACHE_LINE, sizeof(lockfree_stack_t));
     if (!stack) return NULL;
     
     atomic_store(&stack->top, NULL);

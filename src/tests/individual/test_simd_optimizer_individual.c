@@ -2,6 +2,7 @@
 #include "../../optimization/simd_optimizer.h"
 #include "../../debug/memory_tracker.h"
 #include "../../debug/forensic_logger.h"
+#include "../../lum/lum_aligned_alloc_safe.h"  /* C134-FIX-D2-SIMD */
 #include <stdio.h>
 #include <time.h>
 #include <stdint.h>

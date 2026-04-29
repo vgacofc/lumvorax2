@@ -3,6 +3,7 @@
 #include "../debug/memory_tracker.h"  // CORRECTION: Include pour TRACKED_MALLOC/FREE
 #include "../common/magic_numbers.h"  // CORRECTION RAPPORT 129 ANOMALIE #001
 #include "../../include/lumvorax_ibm_constants.h"  // C94: ponts physique IBM (S_pi reel)
+#include "../lum/lum_aligned_alloc_safe.h"  // C134-FIX-D2: aligned_alloc safe wrapper
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -104,7 +105,10 @@ vorax_result_t* vorax_split(lum_group_t* group, size_t parts) {
     size_t lums_per_group = group->count / parts;
     size_t remainder = group->count % parts;
 
-    result->result_groups = (lum_group_t**)aligned_alloc(64, sizeof(lum_group_t*) * parts);
+    /* C134-FIX-D2-VORAX : aligned_alloc requiert size multiple de alignment
+     * (POSIX/C11 § 7.22.3.1). Si parts < 8, sizeof(lum_group_t*)*parts < 64
+     * et n'est pas multiple de 64 → UB. lum_aligned_alloc_safe arrondit. */
+    result->result_groups = (lum_group_t**)lum_aligned_alloc_safe(64, sizeof(lum_group_t*) * parts);
     if (!result->result_groups) {
         vorax_result_set_error(result, "Memory allocation failed for split result");
         return result;
