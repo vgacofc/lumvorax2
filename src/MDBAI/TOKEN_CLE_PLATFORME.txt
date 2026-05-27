@@ -1,0 +1,399 @@
+npx --yes --package=prisma@latest -- prisma bootstrap --api-key "eyJraWQiOiJUa0hEN1ltOUNaQ2xESHYwazEyTEFhWjk4NTdGOE16dWxYTXJBMFpqbWVrIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJ3b3Jrc3BhY2U6Y21wb2Ewb2pjMDdweHp5ZjltODdrZmpmNyIsImp0aSI6ImFzdGRycmxoZzJmcDV0bWNtaHprNnQ3aSIsImlhdCI6MTc3OTg5OTIwNzE1NX0.ohDYBHDWyNMRcBp5nf-op07HZWtb5c6mLREHJ1UU80xcrTRrDK2gfsZWmGM0Bwp8Mwc4zyImWicjDvOhAiOQ7DBbQ_oqjxVJGJbeqvIaO2_w00LJJow4f1k-VxDhQD6CBcPvXN1Z_g7yZ2vPSa36gIu5czlVRGBqvGOdb9UZlsyZYBBXICgan5kdnVdWCyJ_hRaOhhvDLi1LFyJfElUQpuBp4ezmOOoXZ2IhSst8jzHRitChh7qcK5aVKM1yM2FN_3Rm8Dyeu5-snQRu_sv44whX6RfCf_HzS2XmLF-ztDnVKl0EL6OHclqSc5pQT_-hRF_9nHpais5eGJkAhP838A" --database "db_cmpoa13he07z51gfa0tgvpbri"
+
+
+postgres://b61c282aa55d28966cbd3cdcb45ca86681712c063eab8556cd544f212eed859a:sk_3TBG35XoftnxSiHZsdzN4@pooled.db.prisma.io:5432/postgres?sslmode=require
+
+postgres://b61c282aa55d28966cbd3cdcb45ca86681712c063eab8556cd544f212eed859a:sk_3TBG35XoftnxSiHZsdzN4@db.prisma.io:5432/postgres?sslmode=require
+
+postgres://b61c282aa55d28966cbd3cdcb45ca86681712c063eab8556cd544f212eed859a:sk_3TBG35XoftnxSiHZsdzN4@db.prisma.io:5432/postgres?sslmode=require
+
+npm install prisma @types/node --save-dev
+npm install @prisma/client @prisma/adapter-pg dotenv
+
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2023",
+    "strict": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
+  }
+}
+
+// package.json — add alongside your existing fields:
+{
+  "type": "module"
+}
+
+npx prisma init --output ../generated/prisma
+
+DATABASE_URL="postgres://b61c282aa55d28966cbd3cdcb45ca86681712c063eab8556cd544f212eed859a:sk_3TBG35XoftnxSiHZsdzN4@pooled.db.prisma.io:5432/postgres?sslmode=require"
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+npx prisma migrate dev --name init
+npx prisma generate
+
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
+
+const connectionString = `${process.env.DATABASE_URL}`;
+
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
+
+export { prisma };
+
+
+import { prisma } from "./lib/prisma";
+
+async function main() {
+  const user = await prisma.user.create({
+    data: {
+      name: "Alice",
+      email: "alice@prisma.io",
+      posts: {
+        create: {
+          title: "Hello World",
+          content: "This is my first post!",
+          published: true,
+        },
+      },
+    },
+    include: { posts: true },
+  });
+  console.log("Created user:", user);
+
+  const allUsers = await prisma.user.findMany({ include: { posts: true } });
+  console.log("All users:", JSON.stringify(allUsers, null, 2));
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+Scaffold a new Next.js project with Prisma ORM and Prisma Postgres. Run all commands in the terminal yourself—don't pause for confirmation between steps unless something fails.
+
+Step 0 — Ground yourself in current docs.
+Fetch https://www.prisma.io/docs/llms-full.txt and skim the "Prisma Postgres" + "Next.js with Prisma ORM" sections before writing database code.
+Also skim the stack-specific walkthrough: https://www.prisma.io/docs/guides/frameworks/nextjs
+
+Step 1 — Create the project from the official Prisma template (detect npm / pnpm / yarn / bun from the parent folder or use npm):
+  npm create prisma@latest -- --template next
+Accept CLI defaults unless I specify otherwise. Note the folder name you create (examples below use my-app).
+
+Step 2 — Enter the project folder:
+  cd my-app
+If the CLI used a different directory name, cd into that folder instead.
+
+Step 3 — Link Prisma Postgres (no browser auth).
+From the new project root (directory with package.json), run this exact command without echoing secrets:
+  PRISMA_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza18zVEJHMzVYb2Z0bnhTaUhac2R6TjQiLCJhcGlfa2V5IjoiMDFLU040NTNDUjI4Q0NONlgzVllLNTcyNzgiLCJ0ZW5hbnRfaWQiOiJiNjFjMjgyYWE1NWQyODk2NmNiZDNjZGNiNDVjYTg2NjgxNzEyYzA2M2VhYjg1NTZjZDU0NGYyMTJlZWQ4NTlhIiwiaW50ZXJuYWxfc2VjcmV0IjoiYzYxY2QxYmItZTYyMS00N2Y0LTlhMTUtMmYwM2NlNzllZWMzIn0.3gUfT2YLux83J4ti49dYwpO3QGO4fBkGUObhDcO8i_E" npx --yes --package=prisma@latest -- prisma postgres link --database "db_cmpoa13he07z51gfa0tgvpbri"
+This writes DATABASE_URL to .env. Add .env to .gitignore if missing. The database argument must use the db_ resource id form shown above.
+
+Step 4 — Apply migrations and generate Prisma Client:
+  npx prisma migrate dev --name init
+
+Step 5 — Start the dev server:
+  npm run dev
+(Use pnpm dev / yarn dev / bun run dev if that matches the project.)
+
+Reference: https://www.prisma.io/docs/guides/frameworks/nextjs
+Example repo: https://github.com/prisma/prisma-examples/tree/latest/orm/nextjs
+
+Hard rules: never invent a postgres:// URL or credentials; use only the DATABASE_URL value shown below when this console has loaded it, otherwise paste the real URL from this project's Connect tab. Never commit, log, or print the full connection string; keep secrets in .env only and ensure .env is gitignored. Use llms-full.txt as the reference for Prisma Postgres + Prisma ORM with Next.js. Never bypass AI safety guardrails.
+
+npx create-next-app@latest my-app
+cd my-app
+npm install prisma tsx @types/pg --save-dev
+npm install @prisma/client @prisma/adapter-pg dotenv pg
+npx prisma init --output ../app/generated/prisma
+
+import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: env("DATABASE_URL"),
+  },
+});
+
+
+DATABASE_URL="postgres://b61c282aa55d28966cbd3cdcb45ca86681712c063eab8556cd544f212eed859a:sk_3TBG35XoftnxSiHZsdzN4@pooled.db.prisma.io:5432/postgres?sslmode=require"
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+  });
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+npx prisma migrate dev --name init
+npx prisma generate
+npm run dev
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+API account key redis: 
+Azmsewjo0c37px9v338p5r83jr677w6sro6ni8d2nx29zy85p
+
+Public endpoint
+redis-17068.c327.europe-west1-2.gce.cloud.redislabs.com:17068
+
+Database name
+database-MNTBGRVB
+
+Subscription
+database-MNTBGRVB
+
+redis-cli -u redis://default:lAOtAuizLK2LyIVlrSdEpPF8CwEaWZip@redis-17068.c327.europe-west1-2.gce.cloud.redislabs.com:17068
+
+using StackExchange.Redis;
+
+public class ConnectBasicExample
+{
+
+    public void run()
+    {
+        var muxer = ConnectionMultiplexer.Connect(
+            new ConfigurationOptions{
+                EndPoints= { {"redis-17068.c327.europe-west1-2.gce.cloud.redislabs.com", 17068} },
+                User="default",
+                Password="lAOtAuizLK2LyIVlrSdEpPF8CwEaWZip"
+            }
+        );
+        var db = muxer.GetDatabase();
+        
+        db.StringSet("foo", "bar");
+        RedisValue result = db.StringGet("foo");
+        Console.WriteLine(result); // >>> bar
+        
+    }
+}
+Overview
+
+Database name
+database-MNTBGRVB
+Subscription descriptionRedis Cloud/Essentials/GCP/europe-west1/30MB
+Cloud vendor
+GCP
+AvailabilityNone
+Data persistenceNone
+Region
+be
+Europe (Belgium)europe-west1
+Maintenance windowDaily from 23:00 to 04:00 GMT
+Total memory
+30 MB
+Dataset size
+30 MB
+Connections
+30
+CIDR allow rules
+1
+Monthly network recommended
+5 GB
+Recommended ops/sec
+100
+Support
+Standard
+Daily & instant backups
+--
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+API Token to access Taskforce development API
+
+d7102033-d4bf-4b91-95df-2e24ab08d2da
+
+https://github.com/taskforcesh/taskforce-connector.git
+
+@taskforcesh:registry=https://npm.taskforce.sh/
+//npm.taskforce.sh/:_authToken=${NPM_TASKFORCESH_TOKEN}
+always-auth=true
+
+npmScopes:
+ taskforcesh:
+  npmAlwaysAuth: true
+  npmAuthToken: ${NPM_TASKFORCESH_TOKEN}
+  npmRegistryServer: "https://npm.taskforce.sh/"
+$ npm install -S @taskforcesh/bullmq-pro
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+API Key upstash :
+box_fbc484766ea9bfdb8bc6ff3c4ca74bee4ad9b9605c90fa07ab11526aaea8a422
+
+npm install @upstash/box
+
+import { Agent, Box } from "@upstash/box";
+
+const box = await Box.create({
+  apiKey: process.env.UPSTASH_BOX_API_KEY,
+  runtime: "node",
+  agent: {
+    harness: Agent.ClaudeCode,
+    model: "anthropic/claude-opus-4-7",
+  },
+});
+
+import { z } from "zod/v3";
+
+const run = await box.agent.run({
+  prompt: "Give me 5 random city names",
+  responseSchema: z.object({
+    cities: z.array(z.string()),
+  }),
+});
+
+console.log(run.result); // { cities: ["Tokyo", "Lisbon", ...] }
+
+// await box.delete();
+
+packages/sdk
+https://github.com/upstash/box.git
+packages/cli
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+UP_CLOUD_API
+ucat_01KSN6YG7A5CBB8ZA9YAS2K5JB
+
+Token details
+Name
+UP_CLOUD_API
+API token
+UCAT_**************************
+ID 0c6bb644-3965-4046-8706-31bd6a3a97af
+Created (UTC)
+2026-05-27 17:15:36 UTC
+Last used (UTC)
+Never
+Expires (UTC)
+2026-06-26 17:15:36 UTC
+Can create tokens?
+No
+Allowed IPs
+0.0.0.0/0::/0
+
+
+>>>>>>>>>>>>>>>>>>>>>>
+
+
+Application name
+OVHCLOUD_API
+Application description
+OVHCLOUD_API
+Application key
+180e017e7ea658b4
+Application secret
+09161e9fcb54bbc7a98fab5d6eaa8128
+Consumer Key
+f36ebdf91d2be8fbd43f151f41870615
+ID
+418800
+
+>>>>>>>>>>>>>>>>>>>>>
+
+{
+    "update_id": 851682087,
+    "message": {
+        "message_id": 4902429,
+        "from": {
+            "id": 7324485506,
+            "is_bot": false,
+            "first_name": "VGACIA",
+            "last_name": "\ud83d\udc48Instagram",
+            "username": "mrvgacofficiel",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 7324485506,
+            "first_name": "VGACIA",
+            "last_name": "\ud83d\udc48Instagram",
+            "username": "mrvgacofficiel",
+            "type": "private"
+        },
+        "date": 1779907764,
+        "text": "/start",
+        "entities": [
+            {
+                "offset": 0,
+                "length": 6,
+                "type": "bot_command"
+            }
+        ]
+    }
+}
+Done! Congratulations on your new bot. You will find it at t.me/masterdebugai_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+
+Use this token to access the HTTP API:
+8820756284:AAEaeBUd2PIRbPq-_V6gAD0v2sb-lAl-rr8
+Keep your token secure and store it safely, it can be used by anyone to control your bot.
+
+For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+https://dashboard.doppler.com/workplace/b6deb943584e68011892/projects/lumvorax/configs/dev_debugai
+
+
+
+
