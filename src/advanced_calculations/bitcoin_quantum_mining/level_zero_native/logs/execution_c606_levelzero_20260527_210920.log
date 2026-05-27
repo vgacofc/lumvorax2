@@ -1,0 +1,70 @@
+
+[C198-BIT-LEVEL] ========================================
+[C198-BIT-LEVEL] btc_l0_init() START
+[C198-BIT-LEVEL] Timestamp: 1779908961.136420190
+[C198-BIT-LEVEL] Buffer forensique créé : logs/forensic/test_c606_levelzero.lum (capacity=262144)
+[C198-BIT-LEVEL] [1779908961.137764284] INIT_START: Initialisation Level Zero (data=0,0,0)
+[C198-BIT-LEVEL] Étape 0/6 : Chargement driver manuel...
+[C198-BIT-LEVEL] [1779908961.169200357] INIT_STEP: Driver chargé manuellement (data=0,0,0)
+[C198-BIT-LEVEL] Étape 1/6 : zeInit()...
+[C198-BIT-LEVEL] ERREUR : zeInit() = 1879179264
+[C198-BIT-LEVEL] [1779908961.176652776] INIT_ERROR: zeInit() échoué (data=1879179264,0,0)
+[C198-BIT-LEVEL] Flush batché : 3 événements valides en 1 write()
+[C198-BIT-LEVEL] Buffer forensique détruit : total=3 dropped=0
+[C606] ❌ ERREUR: btc_l0_init() échoué
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║  TEST C606 - VALIDATION LEVEL ZERO EU DISPATCH            ║
+║  Objectif: Prouver exécution GPU via Level Zero           ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+[C606] Étape 1/5: Compilation kernel OpenCL...
+[C606] ✅ Kernel compilé avec succès
+[C606] ✅ Binaire Gen9 ISA extrait: 2920 bytes
+
+[C606] Étape 2/5: Initialisation Level Zero...
+
+[C198-DRIVER-LOADER] Chargement manuel driver Level Zero...
+[C198-DRIVER-LOADER] Étape 1/2 : Chargement libigdgmm.so.11...
+[C198-DRIVER-LOADER]   Tentative : /home/lvx/gmmlib_build/lib/libigdgmm.so.11
+[C198-DRIVER-LOADER]   ✅ libigdgmm.so.11 chargé : /home/lvx/gmmlib_build/lib/libigdgmm.so.11
+[C198-DRIVER-LOADER] Étape 2/2 : Chargement libze_intel_gpu.so...
+[C198-DRIVER-LOADER]   Tentative : /usr/lib/x86_64-linux-gnu/libze_intel_gpu.so
+[C198-DRIVER-LOADER]   ✅ Driver chargé : /usr/lib/x86_64-linux-gnu/libze_intel_gpu.so
+[C198-DRIVER-LOADER] Event: DRIVER_LOAD handle=0x56eeebeb6ed0 index=0
+[C198-DRIVER-LOADER] Chargement symboles Level Zero...
+[C198-DRIVER-LOADER]   ✅ zeInit @ 0x72d22920bb50
+[C198-DRIVER-LOADER]   ✅ zeDriverGet @ 0x72d22920bb60
+[C198-DRIVER-LOADER]   ✅ zeDeviceGet @ 0x72d22920ba30
+[C198-DRIVER-LOADER]   ✅ zeDeviceGetProperties @ 0x72d22920ba50
+[C198-DRIVER-LOADER]   ✅ zeDeviceGetMemoryProperties @ 0x72d22920ba90
+[C198-DRIVER-LOADER]   ✅ zeContextCreate @ 0x72d22920b950
+[C198-DRIVER-LOADER]   ✅ zeModuleCreate @ 0x72d22920bdd0
+[C198-DRIVER-LOADER]   ✅ zeKernelCreate @ 0x72d22920be60
+[C198-DRIVER-LOADER]   ✅ zeCommandListCreate @ 0x72d22920b8b0
+[C198-DRIVER-LOADER]   ✅ zeCommandQueueCreate @ 0x72d22920b910
+[C198-DRIVER-LOADER]   ✅ zeMemAllocDevice @ 0x72d22920bd50
+[C198-DRIVER-LOADER]   ✅ zeMemAllocShared @ 0x72d22920bd40
+[C198-DRIVER-LOADER]   ✅ zeMemFree @ 0x72d22920bd70
+[C198-DRIVER-LOADER]   ✅ zeCommandListAppendMemoryCopy @ 0x72d22920b990
+[C198-DRIVER-LOADER]   ✅ zeCommandListAppendLaunchKernel @ 0x72d22920bf30
+[C198-DRIVER-LOADER]   ✅ zeCommandListClose @ 0x72d22920b8e0
+[C198-DRIVER-LOADER]   ✅ zeCommandQueueExecuteCommandLists @ 0x72d22920b930
+[C198-DRIVER-LOADER]   ✅ zeCommandQueueSynchronize @ 0x72d22920b940
+[C198-DRIVER-LOADER]   ✅ zeKernelSetArgumentValue @ 0x72d22920bec0
+[C198-DRIVER-LOADER]   ✅ zeKernelSetGroupSize @ 0x72d22920be90
+[C198-DRIVER-LOADER]   ✅ zeContextDestroy @ 0x72d22920b970
+[C198-DRIVER-LOADER]   ✅ zeCommandQueueDestroy @ 0x72d22920b920
+[C198-DRIVER-LOADER]   ✅ zeCommandListDestroy @ 0x72d22920b8d0
+[C198-DRIVER-LOADER]   ✅ zeCommandListReset @ 0x72d22920b8f0
+[C198-DRIVER-LOADER]   ✅ zeModuleBuildLogGetString @ 0x72d22920be10
+[C198-DRIVER-LOADER]   ✅ zeModuleBuildLogDestroy @ 0x72d22920be00
+[C198-DRIVER-LOADER]   ✅ zeKernelDestroy @ 0x72d22920be70
+[C198-DRIVER-LOADER]   ✅ zeModuleDestroy @ 0x72d22920bde0
+[C198-DRIVER-LOADER] ✅ Tous les symboles chargés avec succès
+[C198-DRIVER-LOADER] Déchargement driver Level Zero...
+[C198-DRIVER-LOADER] Event: DRIVER_UNLOAD handle=0x56eeebeb6ed0
+[C198-DRIVER-LOADER] Déchargement libigdgmm.so.11...
+[C198-DRIVER-LOADER] ✅ Driver déchargé

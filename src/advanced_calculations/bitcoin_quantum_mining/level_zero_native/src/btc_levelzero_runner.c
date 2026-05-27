@@ -569,7 +569,7 @@ btc_l0_context_t* btc_l0_init(const btc_l0_config_t* config) {
     if (ze_ret != ZE_RESULT_SUCCESS) {
         fprintf(stderr, "[C198-BIT-LEVEL] ERREUR : zeCommandQueueCreate() = %d\n", ze_ret);
         btc_l0_log_event(ctx, "INIT_ERROR", "zeCommandQueueCreate() échoué", ze_ret, 0, 0);
-        zeContextDestroy(ze_context);
+        btc_l0_zeContextDestroy(&ze_context);
         free(devices);
         free(drivers);
         destroy_forensic_buffer(ctx->forensic_log);

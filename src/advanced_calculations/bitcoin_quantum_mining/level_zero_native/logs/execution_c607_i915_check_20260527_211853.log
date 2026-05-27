@@ -1,0 +1,70 @@
+[35m
+╔════════════════════════════════════════════════════════════╗
+║  TEST_059 - VÉRIFICATION CONFIGURATION SYSTÈME i915       ║
+║  ROOT CAUSE #156: Level Zero zeInit() échoue              ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+[36m╔════════════════════════════════════════════════════════════╗
+║  1. MODULE KERNEL i915                                     ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m Module i915 chargé: Taille: 4837376 bytes, Usage: 64
+[33m⚠[0m Version module i915: Version non trouvée
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  2. DEVICES DRI                                            ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m Répertoire /dev/dri: Existe
+[32m✓[0m /dev/dri/card1: Permissions: 660, Propriétaire: 0:44
+[32m✓[0m /dev/dri/renderD128: Permissions: 660, Propriétaire: 0:992
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  3. PERMISSIONS UTILISATEUR                                ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m Utilisateur actuel: lvx (UID: 1000)
+[32m✓[0m Groupe 'video': Membre
+[32m✓[0m Groupe 'render': Membre
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  4. FIRMWARE GPU                                           ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m Firmware i915: /lib/firmware/i915
+[32m✓[0m Fichiers firmware: 129 fichiers firmware trouvés
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  5. HARDWARE GPU                                           ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m GPU Intel détecté: card1 - Vendor: 0x8086, Device: 0x3ea0
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  6. CAPACITÉS DRM                                         ║
+╚════════════════════════════════════════════════════════════╝
+[0m[32m✓[0m Ouverture /dev/dri/renderD128: Succès
+[32m✓[0m Version DRM: i915 version 1.6.0
+[32m✓[0m I915_PARAM_HAS_EXECBUF2: Supporté
+[32m✓[0m I915_PARAM_HAS_GPU_RESET: Supporté
+[32m✓[0m I915_PARAM_CHIPSET_ID: 0x3ea0
+[32m✓[0m I915_PARAM_Edmesg: read kernel buffer failed: Operation not permitted
+U_TOTAL: 24 EUs
+[32m✓[0m I915_PARAM_SUBSLICE_TOTAL: 3 subslices
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  7. LOGS KERNEL                                            ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+[33mDerniers logs kernel i915:
+[0m[32m✓[0m Logs kernel i915: 0 erreurs, 0 warnings, 0 infos
+
+[36m╔════════════════════════════════════════════════════════════╗
+║  RÉSUMÉ DIAGNOSTIC                                         ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+Total vérifications: 19
+[32m  ✓ Réussies: 18
+[0m[33m  ⚠ Warnings: 1
+[0m[31m  ✗ Échecs: 0
+[0m
+Taux de réussite: 94.7%
+[33m
+⚠ Configuration i915 ACCEPTABLE
+[0m   → Warnings peuvent causer instabilités
+   → Recommandé de corriger

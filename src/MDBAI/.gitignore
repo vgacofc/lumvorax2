@@ -1,0 +1,188 @@
+# MDBAI - Master Debug AI
+# .gitignore pour projet Node.js + Forensic C
+
+# ============================================
+# SECRETS ET CREDENTIALS (CRITIQUE)
+# ============================================
+.env
+.env.*
+!.env.example
+TOKEN_CLE_PLATFORME.txt
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+doppler.yaml
+
+# ============================================
+# NODE.JS
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# ============================================
+# LOGS
+# ============================================
+logs/*.log
+logs/**/*.log
+*.log
+logs/forensic/*.bin
+logs/forensic/*.dat
+logs/execution/*.txt
+logs/errors/*.err
+
+# Mais garder les dossiers
+!logs/.gitkeep
+!logs/forensic/.gitkeep
+!logs/execution/.gitkeep
+!logs/errors/.gitkeep
+
+# ============================================
+# TESTS ET COVERAGE
+# ============================================
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+junit.xml
+
+# ============================================
+# BUILD ET COMPILATION
+# ============================================
+dist/
+build/
+*.o
+*.so
+*.a
+*.dylib
+*.dll
+*.exe
+forensic/logger/*.o
+forensic/memory/*.o
+forensic/syscall/*.o
+forensic/performance/*.o
+forensic/libforensic.so
+
+# ============================================
+# TEMPORAIRES
+# ============================================
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# IDE ET ÉDITEURS
+# ============================================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.iml
+
+# ============================================
+# SYSTÈME D'EXPLOITATION
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================
+# GITHUB CODESPACES
+# ============================================
+.devcontainer/
+codespace.yml
+
+# ============================================
+# REDIS ET DATABASES
+# ============================================
+dump.rdb
+*.rdb
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# DOCKER (si utilisé)
+# ============================================
+docker-compose.override.yml
+.dockerignore
+
+# ============================================
+# DONNÉES SENSIBLES
+# ============================================
+# Fichiers de données utilisateur
+data/
+uploads/
+downloads/
+
+# Rapports d'analyse contenant potentiellement des données sensibles
+reports/*.md
+!reports/README.md
+
+# ============================================
+# FORENSIC SPÉCIFIQUE
+# ============================================
+# Dumps mémoire
+*.dump
+*.core
+core.*
+
+# Traces système
+*.trace
+*.strace
+*.ltrace
+
+# Profiling
+*.prof
+*.perf
+
+# ============================================
+# BACKUP
+# ============================================
+*.bak
+*.backup
+*~
+
+# ============================================
+# EXCEPTIONS (fichiers à garder)
+# ============================================
+!.gitkeep
+!README.md
+!LICENSE
+!CHANGELOG.md
