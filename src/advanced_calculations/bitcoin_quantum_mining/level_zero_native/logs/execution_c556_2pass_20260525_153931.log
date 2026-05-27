@@ -1,0 +1,170 @@
+=== TEST C556 - STRATÉGIE 2-PASS AVEC ADRESSES GTT ===
+Timestamp: 20260525_153931
+
+[COMPILATION]
+tests/test_c556_gtt_2pass.c: In function ‘main’:
+tests/test_c556_gtt_2pass.c:49:5: error: unknown type name ‘uint32_t’
+   49 |     uint32_t batch_handle = create_batch.handle;
+      |     ^~~~~~~~
+tests/test_c556_gtt_2pass.c:15:1: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+   14 | #include <errno.h>
+  +++ |+#include <stdint.h>
+   15 | 
+tests/test_c556_gtt_2pass.c:59:5: error: unknown type name ‘uint32_t’
+   59 |     uint32_t heap_handle = create_heap.handle;
+      |     ^~~~~~~~
+tests/test_c556_gtt_2pass.c:59:5: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:69:5: error: unknown type name ‘uint32_t’
+   69 |     uint32_t output_handle = create_output.handle;
+      |     ^~~~~~~~
+tests/test_c556_gtt_2pass.c:69:5: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:87:5: error: unknown type name ‘uint32_t’
+   87 |     uint32_t *batch = (uint32_t *)mmap_batch.addr_ptr;
+      |     ^~~~~~~~
+tests/test_c556_gtt_2pass.c:87:5: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:87:24: error: ‘uint32_t’ undeclared (first use in this function)
+   87 |     uint32_t *batch = (uint32_t *)mmap_batch.addr_ptr;
+      |                        ^~~~~~~~
+tests/test_c556_gtt_2pass.c:87:24: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:87:24: note: each undeclared identifier is reported only once for each function it appears in
+tests/test_c556_gtt_2pass.c:87:34: error: expected expression before ‘)’ token
+   87 |     uint32_t *batch = (uint32_t *)mmap_batch.addr_ptr;
+      |                                  ^
+tests/test_c556_gtt_2pass.c:103:5: error: unknown type name ‘uint8_t’
+  103 |     uint8_t *heap = (uint8_t *)mmap_heap.addr_ptr;
+      |     ^~~~~~~
+tests/test_c556_gtt_2pass.c:103:5: note: ‘uint8_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:103:22: error: ‘uint8_t’ undeclared (first use in this function)
+  103 |     uint8_t *heap = (uint8_t *)mmap_heap.addr_ptr;
+      |                      ^~~~~~~
+tests/test_c556_gtt_2pass.c:103:22: note: ‘uint8_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:103:31: error: expected expression before ‘)’ token
+  103 |     uint8_t *heap = (uint8_t *)mmap_heap.addr_ptr;
+      |                               ^
+tests/test_c556_gtt_2pass.c:119:15: error: ‘output’ undeclared (first use in this function)
+  119 |     uint32_t *output = (uint32_t *)mmap_output.addr_ptr;
+      |               ^~~~~~
+tests/test_c556_gtt_2pass.c:119:35: error: expected expression before ‘)’ token
+  119 |     uint32_t *output = (uint32_t *)mmap_output.addr_ptr;
+      |                                   ^
+tests/test_c556_gtt_2pass.c:127:15: error: ‘surface_state’ undeclared (first use in this function)
+  127 |     uint32_t *surface_state = (uint32_t *)heap;
+      |               ^~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:127:42: error: expected expression before ‘)’ token
+  127 |     uint32_t *surface_state = (uint32_t *)heap;
+      |                                          ^
+tests/test_c556_gtt_2pass.c:136:15: error: ‘binding_table’ undeclared (first use in this function)
+  136 |     uint32_t *binding_table = (uint32_t *)(heap + 0x80);
+      |               ^~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:136:42: error: expected expression before ‘)’ token
+  136 |     uint32_t *binding_table = (uint32_t *)(heap + 0x80);
+      |                                          ^
+tests/test_c556_gtt_2pass.c:141:15: error: ‘idrt’ undeclared (first use in this function); did you mean ‘id_t’?
+  141 |     uint32_t *idrt = (uint32_t *)(heap + 0xA0);
+      |               ^~~~
+      |               id_t
+tests/test_c556_gtt_2pass.c:141:33: error: expected expression before ‘)’ token
+  141 |     uint32_t *idrt = (uint32_t *)(heap + 0xA0);
+      |                                 ^
+tests/test_c556_gtt_2pass.c:158:13: error: expected ‘;’ before ‘idx’
+  158 |     uint32_t idx = 0;
+      |             ^~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:161:11: error: ‘idx’ undeclared (first use in this function)
+  161 |     batch[idx++] = 0x69041312;  // Opcode + Length
+      |           ^~~
+tests/test_c556_gtt_2pass.c:172:13: error: expected ‘;’ before ‘surface_base_offset’
+  172 |     uint32_t surface_base_offset = idx * 4;  // Offset pour relocation
+      |             ^~~~~~~~~~~~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:177:13: error: expected ‘;’ before ‘dynamic_base_offset’
+  177 |     uint32_t dynamic_base_offset = idx * 4;  // Offset pour relocation
+      |             ^~~~~~~~~~~~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:184:13: error: expected ‘;’ before ‘instruction_base_offset’
+  184 |     uint32_t instruction_base_offset = idx * 4;  // Offset pour relocation
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:247:13: error: expected ‘;’ before ‘batch_len’
+  247 |     uint32_t batch_len = idx * 4;
+      |             ^~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:248:64: error: ‘batch_len’ undeclared (first use in this function)
+  248 |     printf("\n✓ Batch construit: %u DWords (%u bytes)\n", idx, batch_len);
+      |                                                                ^~~~~~~~~
+tests/test_c556_gtt_2pass.c:272:25: error: ‘uint64_t’ undeclared (first use in this function)
+  272 |         .buffers_ptr = (uint64_t)objects_pass1,
+      |                         ^~~~~~~~
+tests/test_c556_gtt_2pass.c:272:25: note: ‘uint64_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+tests/test_c556_gtt_2pass.c:272:34: error: expected ‘}’ before ‘objects_pass1’
+  272 |         .buffers_ptr = (uint64_t)objects_pass1,
+      |                                  ^~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:271:53: note: to match this ‘{’
+  271 |     struct drm_i915_gem_execbuffer2 execbuf_pass1 = {
+      |                                                     ^
+tests/test_c556_gtt_2pass.c:287:13: error: expected ‘;’ before ‘heap_gtt’
+  287 |     uint64_t heap_gtt = objects_pass1[0].offset;
+      |             ^~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:288:13: error: expected ‘;’ before ‘output_gtt’
+  288 |     uint64_t output_gtt = objects_pass1[1].offset;
+      |             ^~~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:289:13: error: expected ‘;’ before ‘batch_gtt’
+  289 |     uint64_t batch_gtt = objects_pass1[2].offset;
+      |             ^~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:292:36: error: ‘heap_gtt’ undeclared (first use in this function)
+  292 |     printf("  Heap:   0x%016lx\n", heap_gtt);
+      |                                    ^~~~~~~~
+tests/test_c556_gtt_2pass.c:293:36: error: ‘output_gtt’ undeclared (first use in this function)
+  293 |     printf("  Output: 0x%016lx\n", output_gtt);
+      |                                    ^~~~~~~~~~
+tests/test_c556_gtt_2pass.c:294:36: error: ‘batch_gtt’ undeclared (first use in this function)
+  294 |     printf("  Batch:  0x%016lx\n", batch_gtt);
+      |                                    ^~~~~~~~~
+tests/test_c556_gtt_2pass.c:305:13: error: expected ‘;’ before ‘kernel_gtt’
+  305 |     uint64_t kernel_gtt = heap_gtt + 0x100;
+      |             ^~~~~~~~~~~
+      |             ;
+tests/test_c556_gtt_2pass.c:306:26: error: ‘kernel_gtt’ undeclared (first use in this function); did you mean ‘kernel_isa’?
+  306 |     idrt[0] = (uint32_t)(kernel_gtt & 0xFFFFFFFF);
+      |                          ^~~~~~~~~~
+      |                          kernel_isa
+tests/test_c556_gtt_2pass.c:311:11: error: ‘surface_base_offset’ undeclared (first use in this function)
+  311 |     batch[surface_base_offset / 4] = (uint32_t)(heap_gtt & 0xFFFFFFFF);
+      |           ^~~~~~~~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:313:11: error: ‘dynamic_base_offset’ undeclared (first use in this function)
+  313 |     batch[dynamic_base_offset / 4] = (uint32_t)(heap_gtt & 0xFFFFFFFF);
+      |           ^~~~~~~~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:315:11: error: ‘instruction_base_offset’ undeclared (first use in this function)
+  315 |     batch[instruction_base_offset / 4] = (uint32_t)(heap_gtt & 0xFFFFFFFF);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:341:34: error: expected ‘}’ before ‘objects_pass2’
+  341 |         .buffers_ptr = (uint64_t)objects_pass2,
+      |                                  ^~~~~~~~~~~~~
+tests/test_c556_gtt_2pass.c:340:53: note: to match this ‘{’
+  340 |     struct drm_i915_gem_execbuffer2 execbuf_pass2 = {
+      |                                                     ^
+tests/test_c556_gtt_2pass.c:391:5: error: unknown type name ‘bool’
+  391 |     bool success = (output[0] == 0x12345678);
+      |     ^~~~
+tests/test_c556_gtt_2pass.c:15:1: note: ‘bool’ is defined in header ‘<stdbool.h>’; did you forget to ‘#include <stdbool.h>’?
+   14 | #include <errno.h>
+  +++ |+#include <stdbool.h>
+   15 | 
+✓ Compilation réussie
+
+[FORENSIC SETUP]
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+✓ Forensic activé
+
+[EXÉCUTION]
+Début: 15:39:33.111499962
+timeout: failed to run command ‘./test_c556_gtt_2pass’: No such file or directory
+Fin: 15:39:33.694555609
+Durée: 578ms
+Exit code: 0
+
+[DMESG CAPTURE]

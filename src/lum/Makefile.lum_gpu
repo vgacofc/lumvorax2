@@ -1,0 +1,61 @@
+# LumVorax — Makefile Module LUM GPU
+# Compilation et test intégration complète
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=gnu11 -pthread
+CFLAGS += -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+CFLAGS += -I. -I/usr/include/libdrm -I/usr/include/drm
+
+LDFLAGS = -lm -ldrm -lpthread
+
+# Fichiers sources
+SRCS = lum_gpu_context.c
+
+OBJS = $(SRCS:.c=.o)
+
+# Cibles
+.PHONY: all clean test run
+
+all: test_lum_gpu_parallel
+
+# Compilation objets
+%.o: %.c
+	@echo "[CC] $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+# Linkage test
+test_lum_gpu_parallel: $(OBJS) test_lum_gpu_parallel.o
+	@echo "[LD] $@"
+	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+	@echo "✅ Compilation réussie: $@"
+
+# Test
+test: test_lum_gpu_parallel
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════╗"
+	@echo "║  Lancement Test Module LUM GPU                            ║"
+	@echo "╚════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@mkdir -p logs
+	@./test_lum_gpu_parallel
+
+# Run (alias)
+run: test
+
+# Nettoyage
+clean:
+	@echo "[CLEAN] Suppression fichiers objets et exécutables"
+	@rm -f *.o test_lum_gpu_parallel
+	@rm -f logs/*.log
+	@echo "✅ Nettoyage terminé"
+
+# Help
+help:
+	@echo "Makefile Module LUM GPU"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  make all    - Compiler le test"
+	@echo "  make test   - Compiler et exécuter le test"
+	@echo "  make run    - Alias pour 'make test'"
+	@echo "  make clean  - Nettoyer les fichiers générés"
+	@echo "  make help   - Afficher cette aide"

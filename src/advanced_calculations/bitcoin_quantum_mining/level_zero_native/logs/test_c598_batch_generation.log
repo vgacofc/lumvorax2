@@ -1,0 +1,79 @@
+[7767.837773685] [0;34m========================================[0m
+[7767.837792152] [0;34mTEST C598 - GÉNÉRATION MEDIA_IDL + GPGPU_WALKER[0m
+[7767.837792646] [0;34m========================================[0m
+[7767.837792982] Ouverture device DRM /dev/dri/card1...
+[7767.837891972] [0;32mDevice DRM ouvert: fd=5[0m
+[7767.837893156] Initialisation batch_generator...
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+[7767.838097457] [0;32mBatch generator initialisé[0m
+[7767.838097986] [0;34m=== TEST 1: MEDIA_INTERFACE_DESCRIPTOR_LOAD ===[0m
+[7767.838101511] Génération MEDIA_IDL: 127 ns
+[7767.838102054] DWords générés: 3 (attendu: 3)
+[7767.838102514] Validation structure MEDIA_IDL:
+[7767.838102814]   DW0: 0x61020001 (Opcode)
+[7767.838103423] [0;32m  ✓ Opcode correct: MEDIA_INTERFACE_DESCRIPTOR_LOAD, length=3[0m
+[7767.838103779]   DW1: 0x00400000 (IDRT GTT LOW)
+[7767.838104271]   IDRT GTT attendu: 0x0000000000400000
+[7767.838104757] [0;32m  ✓ IDRT GTT LOW correct[0m
+[7767.838105075]   DW2: 0x00000000 (Start Address)
+[7767.838105579] [0;32m  ✓ Start Address correct[0m
+[7767.838105889] [0;32mTEST 1 RÉUSSI: MEDIA_IDL généré correctement[0m
+[7767.838106215] [0;34m=== TEST 2: GPGPU_WALKER ===[0m
+[7767.838106937] Génération GPGPU_WALKER: 270 ns
+[7767.838107354] DWords générés: 15 (attendu: 15)
+[7767.838107816] Validation structure GPGPU_WALKER:
+[7767.838108104]   DW0: 0x18800101 (Opcode)
+[7767.838108567] [0;32m  ✓ Opcode correct: GPGPU_WALKER, length=15[0m
+[7767.838108846]   DW1-2: 0x0000000000400000 (IDRT GTT)
+[7767.838109499]   IDRT GTT attendu: 0x0000000000400000
+[7767.838109932] [0;32m  ✓ IDRT GTT correct[0m
+[7767.838110245]   DW3: 0x00000000 (Indirect Data Length)
+[7767.838110676] [0;32m  ✓ Indirect Data Length correct[0m
+[7767.838110992]   DW4-6: 0x00000000 0x00000000 0x00000000 (Starting X/Y/Z)
+[7767.838111714] [0;32m  ✓ Starting X/Y/Z correct (0,0,0)[0m
+[7767.838112037]   DW8-10: 0x00000000 0x00000000 0x00000000 (Dimensions X/Y/Z)
+[7767.838112635] [0;32m  ✓ Dimensions X/Y/Z correctes (1,1,1 thread groups)[0m
+[7767.838113056]   DW11-12: 0x00000000 0x00000000 (Execution Masks)
+[7767.838113523] [0;32m  ✓ Execution Masks corrects (tous threads actifs)[0m
+[7767.838113839] [0;32mTEST 2 RÉUSSI: GPGPU_WALKER généré correctement[0m
+[7767.838114161] [0;34m=== TEST 3: BATCH COMPLET C598 ===[0m
+[7767.838114888] STATE_BASE_ADDRESS: 19 DWords
+[7767.838115349] MEDIA_VFE_STATE: 9 DWords (total: 28)
+[7767.838123539] MEDIA_IDL: 3 DWords (total: 31)
+[7767.838124174] GPGPU_WALKER: 15 DWords (total: 46)
+[7767.838124707] Génération batch complet C598: 10077 ns
+[7767.838125201] Total DWords générés: 46 (attendu: 46)
+[7767.838125665] [0;32mProgression batch: 46/80 DWords (57.5%)[0m
+[7767.838136229] [0;32mTEST 3 RÉUSSI: Batch complet C598 généré correctement[0m
+[7767.838136760] [0;32m========================================[0m
+[7767.838137142] [0;32mTOUS LES TESTS C598 RÉUSSIS[0m
+[7767.838137436] [0;32m========================================[0m
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé

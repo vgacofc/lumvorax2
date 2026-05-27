@@ -1,0 +1,20 @@
+[24866.593019919] 🚀 TEST C467 - MODE 3D AU LIEU DE GPGPU (TEST CRITIQUE)
+[24866.593029927] 🎯 Objectif: Valider si PIPELINE_SELECT GPGPU est ROOT CAUSE
+[24866.593098065] ✅ DRM ouvert: fd=5
+[24866.593104127] ✅ Contexte GPU créé: id=1
+[24866.593123433] ✅ 5 buffers GPU créés (batch=1, ssh=2, dsh=3, ioh=4, inst=5)
+[24866.593157560] ✅ Batch buffer mappé: 0x7ec56b394000
+[24866.593175784] 📝 [04] PIPELINE_SELECT = 0x69040000 (MODE 3D - bit 0 = 0)
+[24866.593177915] 🔍 DIFFÉRENCE CRITIQUE: bit 0 = 0 (3D) au lieu de 1 (GPGPU)
+[24866.593179019] 📝 [05] STATE_BASE_ADDRESS (19 DWORDs, avec relocations)
+[24866.593180051] 📝 [24] MI_BATCH_BUFFER_END
+[24866.593181115] ✅ Batch: 26 DWORDs (104 bytes, aligné 8-byte)
+[24866.593182244] 📊 MODE 3D - Infrastructure identique à C466 sauf bit 0
+[24866.593183393] ✅ 5 relocations configurées (identiques à C466)
+[24866.593184572] ⚡ Soumission batch (MODE 3D)...
+[24866.593559238] ✅ EXECBUFFER2 réussi!
+[24866.593562587] ⏳ Attente GPU idle (timeout 2s)...
+[24867.301582080] ✅ GPU idle confirmé
+[24867.301592755] 🎉 TEST C467 RÉUSSI - GPU fonctionne en MODE 3D!
+[24867.301593714] 📊 CONCLUSION CRITIQUE: PIPELINE_SELECT GPGPU (bit 0=1) est ROOT CAUSE!
+[24867.301594314] 💡 SOLUTION: Rester en mode 3D OU implémenter infrastructure GPGPU complète

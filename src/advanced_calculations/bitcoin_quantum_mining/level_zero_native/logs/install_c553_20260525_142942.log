@@ -1,0 +1,312 @@
+=== C553 - INSTALLATION STACK INTEL COMPUTE (0%) ===
+Timestamp: 20260525_142942
+
+[5%] Mise à jour cache APT...
+[sudo] password for lvx: 
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 https://packages.microsoft.com/repos/azure-cli noble InRelease
+Get:4 https://dl.google.com/linux/chrome/deb stable InRelease [1,825 B]
+Get:5 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Ign:6 https://apt.datadoghq.com stable InRelease
+Get:7 https://dl.google.com/linux/chrome-stable/deb stable InRelease [1,825 B]
+Hit:8 https://apt.datadoghq.com stable Release
+Get:9 https://packages.doppler.com/public/cli/deb/debian any-version InRelease [11.9 kB]
+Get:10 https://downloads.cursor.com/aptrepo stable InRelease [2,672 B]
+Hit:11 https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/apt stable InRelease
+Get:12 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:13 https://dl.google.com/linux/chrome/deb stable/main amd64 Packages [1,220 B]
+Get:14 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1,698 kB]
+Get:16 https://dl.google.com/linux/chrome-stable/deb stable/main amd64 Packages [1,220 B]
+Get:17 https://downloads.cursor.com/aptrepo stable/main arm64 Packages [1,462 B]
+Get:18 https://downloads.cursor.com/aptrepo stable/main amd64 Packages [1,442 B]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [2,007 kB]
+Get:20 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [42.4 kB]
+Get:21 http://security.ubuntu.com/ubuntu noble-security/universe i386 Packages [803 kB]
+Get:22 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1,189 kB]
+Get:23 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [229 kB]
+Get:24 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+Get:25 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [8,784 B]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [177 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1,690 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/universe i386 Packages [1,132 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [387 kB]
+Get:30 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:31 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5,744 B]
+Get:32 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+Fetched 9,856 kB in 39s (253 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+1 package can be upgraded. Run 'apt list --upgradable' to see it.
+
+[10%] Installation Intel Graphics Compiler...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libigc1 is already the newest version (1.0.15468.25-2ubuntu0.1).
+libigc1 set to manually installed.
+libigdfcl1 is already the newest version (1.0.15468.25-2ubuntu0.1).
+libigdfcl1 set to manually installed.
+The following NEW packages will be installed:
+  libigc-dev libigc-tools libigdfcl-dev
+0 upgraded, 3 newly installed, 0 to remove and 1 not upgraded.
+Need to get 2,250 kB of archives.
+After this operation, 9,842 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 libigc-dev amd64 1.0.15468.25-2ubuntu0.1 [2,112 B]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 libigc-tools amd64 1.0.15468.25-2ubuntu0.1 [2,164 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 libigdfcl-dev amd64 1.0.15468.25-2ubuntu0.1 [83.9 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 2,250 kB in 4s (570 kB/s)
+Selecting previously unselected package libigc-dev:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 396934 files and directories currently installed.)
+Preparing to unpack .../libigc-dev_1.0.15468.25-2ubuntu0.1_amd64.deb ...
+Unpacking libigc-dev:amd64 (1.0.15468.25-2ubuntu0.1) ...
+Selecting previously unselected package libigc-tools.
+Preparing to unpack .../libigc-tools_1.0.15468.25-2ubuntu0.1_amd64.deb ...
+Unpacking libigc-tools (1.0.15468.25-2ubuntu0.1) ...
+Selecting previously unselected package libigdfcl-dev:amd64.
+Preparing to unpack .../libigdfcl-dev_1.0.15468.25-2ubuntu0.1_amd64.deb ...
+Unpacking libigdfcl-dev:amd64 (1.0.15468.25-2ubuntu0.1) ...
+Setting up libigdfcl-dev:amd64 (1.0.15468.25-2ubuntu0.1) ...
+Setting up libigc-tools (1.0.15468.25-2ubuntu0.1) ...
+Setting up libigc-dev:amd64 (1.0.15468.25-2ubuntu0.1) ...
+
+[20%] Installation Intel OpenCL Runtime...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+intel-opencl-icd is already the newest version (23.43.27642.40-1ubuntu3).
+ocl-icd-libopencl1 is already the newest version (2.3.2-1build1).
+ocl-icd-opencl-dev is already the newest version (2.3.2-1build1).
+The following NEW packages will be installed:
+  opencl-headers
+0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+Need to get 1,820 B of archives.
+After this operation, 10.2 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/universe amd64 opencl-headers all 3.0~2023.12.14-1 [1,820 B]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 1,820 B in 0s (12.9 kB/s)
+Selecting previously unselected package opencl-headers.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 397069 files and directories currently installed.)
+Preparing to unpack .../opencl-headers_3.0~2023.12.14-1_all.deb ...
+Unpacking opencl-headers (3.0~2023.12.14-1) ...
+Setting up opencl-headers (3.0~2023.12.14-1) ...
+
+[30%] Installation Intel GPU Tools...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+intel-gpu-tools is already the newest version (1.28-1ubuntu2).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+
+[40%] Installation bibliothèques développement...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libdrm-dev is already the newest version (2.4.125-1ubuntu0.1~24.04.1).
+libdrm-intel1 is already the newest version (2.4.125-1ubuntu0.1~24.04.1).
+libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.1).
+libdrm2 set to manually installed.
+The following additional packages will be installed:
+  libegl-dev libgles-dev libgles1 libglvnd-core-dev libglvnd-dev libopengl-dev
+The following NEW packages will be installed:
+  libegl-dev libegl1-mesa-dev libgl1-mesa-dev libgles-dev libgles1
+  libgles2-mesa-dev libglvnd-core-dev libglvnd-dev libopengl-dev
+  mesa-common-dev
+0 upgraded, 10 newly installed, 0 to remove and 1 not upgraded.
+Need to get 3,305 kB of archives.
+After this operation, 5,033 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/main amd64 libegl-dev amd64 1.7.0-1build1 [18.2 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble/main amd64 libglvnd-core-dev amd64 1.7.0-1build1 [13.6 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble/main amd64 libgles1 amd64 1.7.0-1build1 [11.6 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble/main amd64 libgles-dev amd64 1.7.0-1build1 [50.5 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 libopengl-dev amd64 1.7.0-1build1 [3,454 B]
+Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 libglvnd-dev amd64 1.7.0-1build1 [3,198 B]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl1-mesa-dev amd64 25.2.8-0ubuntu0.24.04.1 [26.4 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgles2-mesa-dev amd64 25.2.8-0ubuntu0.24.04.1 [22.5 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 mesa-common-dev amd64 25.2.8-0ubuntu0.24.04.1 [3,133 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgl1-mesa-dev amd64 25.2.8-0ubuntu0.24.04.1 [22.5 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 3,305 kB in 11s (310 kB/s)
+Selecting previously unselected package libegl-dev:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 397072 files and directories currently installed.)
+Preparing to unpack .../0-libegl-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libegl-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libglvnd-core-dev:amd64.
+Preparing to unpack .../1-libglvnd-core-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libglvnd-core-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgles1:amd64.
+Preparing to unpack .../2-libgles1_1.7.0-1build1_amd64.deb ...
+Unpacking libgles1:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgles-dev:amd64.
+Preparing to unpack .../3-libgles-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libgles-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libopengl-dev:amd64.
+Preparing to unpack .../4-libopengl-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libopengl-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libglvnd-dev:amd64.
+Preparing to unpack .../5-libglvnd-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libglvnd-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libegl1-mesa-dev:amd64.
+Preparing to unpack .../6-libegl1-mesa-dev_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libegl1-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libgles2-mesa-dev:amd64.
+Preparing to unpack .../7-libgles2-mesa-dev_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libgles2-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mesa-common-dev:amd64.
+Preparing to unpack .../8-mesa-common-dev_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mesa-common-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libgl1-mesa-dev:amd64.
+Preparing to unpack .../9-libgl1-mesa-dev_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libgl1-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up libglvnd-core-dev:amd64 (1.7.0-1build1) ...
+Setting up libegl-dev:amd64 (1.7.0-1build1) ...
+Setting up libgles1:amd64 (1.7.0-1build1) ...
+Setting up mesa-common-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up libopengl-dev:amd64 (1.7.0-1build1) ...
+Setting up libgles-dev:amd64 (1.7.0-1build1) ...
+Setting up libglvnd-dev:amd64 (1.7.0-1build1) ...
+Setting up libgl1-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up libegl1-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up libgles2-mesa-dev:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.7) ...
+/sbin/ldconfig.real: /lib/x86_64-linux-gnu/libze_intel_gpu.so.1 is not a symbolic link
+
+
+[50%] Installation outils compilation...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.10ubuntu1).
+cmake is already the newest version (3.28.3-1build7).
+pkg-config is already the newest version (1.8.1-2build1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+
+[60%] Vérification installations...
+✓ IGC installé
+lrwxrwxrwx 1 root root  11 Dec 11  2024 /usr/lib/x86_64-linux-gnu/libigc.so -> libigc.so.1
+lrwxrwxrwx 1 root root  15 Dec 11  2024 /usr/lib/x86_64-linux-gnu/libigc.so.1 -> libigc.so.1.0.1
+-rw-r--r-- 1 root root 43M Dec 11  2024 /usr/lib/x86_64-linux-gnu/libigc.so.1.0.1
+
+✓ OpenCL installé
+lrwxrwxrwx 1 root root  18 Apr 18  2024 /usr/lib/x86_64-linux-gnu/libOpenCL.so -> libOpenCL.so.1.0.0
+lrwxrwxrwx 1 root root  18 Apr 18  2024 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 -> libOpenCL.so.1.0.0
+-rw-r--r-- 1 root root 72K Apr 18  2024 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0
+
+✓ Intel OpenCL ICD installé
+/usr/lib/x86_64-linux-gnu/intel-opencl/libigdrcl.so
+
+[70%] Inventaire fichiers Intel...
+/usr/lib/x86_64-linux-gnu/intel-opencl/libigdrcl.so
+
+[80%] Test OpenCL...
+Number of platforms                               1
+  Platform Name                                   Intel(R) OpenCL Graphics
+  Platform Vendor                                 Intel(R) Corporation
+  Platform Version                                OpenCL 3.0 
+  Platform Profile                                FULL_PROFILE
+  Platform Extensions                             cl_khr_byte_addressable_store cl_khr_device_uuid cl_khr_fp16 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_icd cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_intel_command_queue_families cl_intel_subgroups cl_intel_required_subgroup_size cl_intel_subgroups_short cl_khr_spir cl_intel_accelerator cl_intel_driver_diagnostics cl_khr_priority_hints cl_khr_throttle_hints cl_khr_create_command_queue cl_intel_subgroups_char cl_intel_subgroups_long cl_khr_il_program cl_intel_mem_force_host_memory cl_khr_subgroup_extended_types cl_khr_subgroup_non_uniform_vote cl_khr_subgroup_ballot cl_khr_subgroup_non_uniform_arithmetic cl_khr_subgroup_shuffle cl_khr_subgroup_shuffle_relative cl_khr_subgroup_clustered_reduce cl_intel_device_attribute_query cl_khr_suggested_local_work_size cl_intel_split_work_group_barrier cl_khr_fp64 cl_khr_subgroups cl_intel_spirv_media_block_io cl_intel_spirv_subgroups cl_khr_spirv_linkonce_odr cl_khr_spirv_no_integer_wrap_decoration cl_intel_unified_shared_memory cl_khr_mipmap_image cl_khr_mipmap_image_writes cl_ext_float_atomics cl_khr_external_memory cl_intel_planar_yuv cl_intel_packed_yuv cl_intel_motion_estimation cl_intel_device_side_avc_motion_estimation cl_intel_spirv_device_side_avc_motion_estimation cl_intel_advanced_motion_estimation cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_image2d_from_buffer cl_khr_depth_images cl_khr_3d_image_writes cl_intel_media_block_io cl_khr_gl_sharing cl_khr_gl_depth_images cl_khr_gl_event cl_khr_gl_msaa_sharing cl_intel_va_api_media_sharing cl_intel_sharing_format_query cl_khr_pci_bus_info 
+  Platform Extensions with Version                cl_khr_byte_addressable_store                                    0x400000 (1.0.0)
+                                                  cl_khr_device_uuid                                               0x400000 (1.0.0)
+                                                  cl_khr_fp16                                                      0x400000 (1.0.0)
+                                                  cl_khr_global_int32_base_atomics                                 0x400000 (1.0.0)
+                                                  cl_khr_global_int32_extended_atomics                             0x400000 (1.0.0)
+                                                  cl_khr_icd                                                       0x400000 (1.0.0)
+                                                  cl_khr_local_int32_base_atomics                                  0x400000 (1.0.0)
+                                                  cl_khr_local_int32_extended_atomics                              0x400000 (1.0.0)
+                                                  cl_intel_command_queue_families                                  0x400000 (1.0.0)
+                                                  cl_intel_subgroups                                               0x400000 (1.0.0)
+                                                  cl_intel_required_subgroup_size                                  0x400000 (1.0.0)
+                                                  cl_intel_subgroups_short                                         0x400000 (1.0.0)
+                                                  cl_khr_spir                                                      0x400000 (1.0.0)
+                                                  cl_intel_accelerator                                             0x400000 (1.0.0)
+                                                  cl_intel_driver_diagnostics                                      0x400000 (1.0.0)
+                                                  cl_khr_priority_hints                                            0x400000 (1.0.0)
+                                                  cl_khr_throttle_hints                                            0x400000 (1.0.0)
+                                                  cl_khr_create_command_queue                                      0x400000 (1.0.0)
+                                                  cl_intel_subgroups_char                                          0x400000 (1.0.0)
+                                                  cl_intel_subgroups_long                                          0x400000 (1.0.0)
+                                                  cl_khr_il_program                                                0x400000 (1.0.0)
+                                                  cl_intel_mem_force_host_memory                                   0x400000 (1.0.0)
+                                                  cl_khr_subgroup_extended_types                                   0x400000 (1.0.0)
+                                                  cl_khr_subgroup_non_uniform_vote                                 0x400000 (1.0.0)
+                                                  cl_khr_subgroup_ballot                                           0x400000 (1.0.0)
+                                                  cl_khr_subgroup_non_uniform_arithmetic                           0x400000 (1.0.0)
+                                                  cl_khr_subgroup_shuffle                                          0x400000 (1.0.0)
+                                                  cl_khr_subgroup_shuffle_relative                                 0x400000 (1.0.0)
+                                                  cl_khr_subgroup_clustered_reduce                                 0x400000 (1.0.0)
+                                                  cl_intel_device_attribute_query                                  0x400000 (1.0.0)
+                                                  cl_khr_suggested_local_work_size                                 0x400000 (1.0.0)
+                                                  cl_intel_split_work_group_barrier                                0x400000 (1.0.0)
+                                                  cl_khr_fp64                                                      0x400000 (1.0.0)
+                                                  cl_khr_subgroups                                                 0x400000 (1.0.0)
+                                                  cl_intel_spirv_media_block_io                                    0x400000 (1.0.0)
+                                                  cl_intel_spirv_subgroups                                         0x400000 (1.0.0)
+                                                  cl_khr_spirv_linkonce_odr                                        0x400000 (1.0.0)
+                                                  cl_khr_spirv_no_integer_wrap_decoration                          0x400000 (1.0.0)
+                                                  cl_intel_unified_shared_memory                                   0x400000 (1.0.0)
+                                                  cl_khr_mipmap_image                                              0x400000 (1.0.0)
+                                                  cl_khr_mipmap_image_writes                                       0x400000 (1.0.0)
+                                                  cl_ext_float_atomics                                             0x400000 (1.0.0)
+                                                  cl_khr_external_memory                                           0x400000 (1.0.0)
+                                                  cl_intel_planar_yuv                                              0x400000 (1.0.0)
+
+[90%] Préparation téléchargement sources Intel...
+Clonage Intel Compute Runtime...
+Cloning into 'compute-runtime'...
+Clonage Intel Graphics Compiler...
+Cloning into 'intel-graphics-compiler'...
+
+[100%] Installation complète!
+
+=== RÉSUMÉ C553 ===
+Modules installés:
+  ✓ Intel Graphics Compiler (IGC)
+  ✓ Intel OpenCL Runtime
+  ✓ Intel GPU Tools
+  ✓ Bibliothèques DRM/Mesa
+  ✓ Outils compilation
+
+Sources clonées:
+  ✓ intel/compute-runtime
+  ✓ intel/intel-graphics-compiler
+
+Prochaine étape: C554 - Développer système automatique batch buffers
+Log complet: logs/install_c553_20260525_142942.log

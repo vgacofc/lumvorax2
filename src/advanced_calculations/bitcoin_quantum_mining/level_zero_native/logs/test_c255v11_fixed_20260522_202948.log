@@ -1,0 +1,100 @@
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c255v11_nx48.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+[C311 FIX #2] Block header RÉEL chargé (80 bytes)
+[C311] Nonce connu attendu: 1604817786 (20 leading zeros)
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=262144
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=524288
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=1048576
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=2097152
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=4194304
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=8388608
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=16777216
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=33554432
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=67108864
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C258 — Allocation Dynamique 3GB (RAM Système)   ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+║  Formule OpenCL: 75% RAM système, max 4GB                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[C258] Configuration Allocation Dynamique:
+  - Détection RAM: sysinfo() + formule OpenCL (75% RAM, max 4GB)
+  - Batch size initial: 256K (progression automatique)
+  - Contextes GPU: 2 (adaptatif 1/2/3)
+  - Mémoire GPU: Monitoring temps réel
+  - THP: Activé pour buffers >2MB
+  - Kernel: kernels/btc_sha256_gen9.bin
+  - Log: logs/forensic/test_c255v11_nx48.log
+
+[C258] 📊 RAM système détectée: 7622 MB (7.44 GB)
+[C258] 🎯 Limite GPU calculée: 4096 MB (4.00 GB) [formule: 75% RAM, max 4GB]
+[C258] ✅ Mémoire GPU disponible: 4.00 GB
+
+[C258] Initialisation Gen9 Native avec allocation dynamique...
+✅ Initialisation réussie
+
+[C258] Démarrage progression adaptative (allocation dynamique 3GB)...
+═══════════════════════════════════════════════════════════════
+
+[Batch 1/100] batch_size=262144 (0.26 M nonces)
+  ✅ Succès: 0.013 sec, 20.70 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 262144 → 524288 (0.0% vers max, mem_limit=107374182)
+
+[Batch 2/100] batch_size=524288 (0.52 M nonces)
+  ✅ Succès: 0.001 sec, 380.00 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 524288 → 1048576 (0.1% vers max, mem_limit=107374182)
+
+[Batch 3/100] batch_size=1048576 (1.05 M nonces)
+  ✅ Succès: 0.001 sec, 1142.65 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 1048576 → 2097152 (0.2% vers max, mem_limit=107374182)
+
+[Batch 4/100] batch_size=2097152 (2.10 M nonces)
+  ✅ Succès: 0.001 sec, 3085.11 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 2097152 → 4194304 (0.4% vers max, mem_limit=107374182)
+
+[Batch 5/100] batch_size=4194304 (4.19 M nonces)
+  ✅ Succès: 0.001 sec, 7208.76 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 4194304 → 8388608 (0.8% vers max, mem_limit=107374182)
+
+[Batch 6/100] batch_size=8388608 (8.39 M nonces)
+  ✅ Succès: 0.001 sec, 13789.75 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 8388608 → 16777216 (1.6% vers max, mem_limit=107374182)
+
+[Batch 7/100] batch_size=16777216 (16.78 M nonces)
+  ✅ Succès: 0.019 sec, 865.29 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 16777216 → 33554432 (3.2% vers max, mem_limit=107374182)
+
+[Batch 8/100] batch_size=33554432 (33.55 M nonces)
+  ✅ Succès: 0.047 sec, 716.06 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 33554432 → 67108864 (6.4% vers max, mem_limit=107374182)
+
+[Batch 9/100] batch_size=67108864 (67.11 M nonces)
+  ✅ Succès: 0.188 sec, 357.42 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 67108864 → 107374182 (10.2% vers max, mem_limit=107374182)
+
+[Batch 10/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.185 sec, 581.90 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 11/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 26653.35 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 12/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 38891.91 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 13/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.001 sec, 183871.86 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 14/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.001 sec, 138319.24 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteint[GEN9-EXECUTE] Début: ctx=0x6065ab706490 block_header=0x7ffe816b46a0 start_nonce=0 count=107374182

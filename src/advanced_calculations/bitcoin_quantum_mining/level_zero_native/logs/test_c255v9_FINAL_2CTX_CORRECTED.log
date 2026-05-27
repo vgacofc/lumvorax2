@@ -1,0 +1,56 @@
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c255_multi_dispatch.log
+[DEBUG] Log ouvert avec succès
+[ADAPTIVE-BATCH] Augmentation → batch_size=524288 (5.5% progress, peak=0.373 MH/s)
+[ADAPTIVE-BATCH] Crash #1 → Recul batch_size=471859 (10.0% progress)
+═══════════════════════════════════════════════════════════════
+  LumVorax C255 Multi-Dispatch Test
+═══════════════════════════════════════════════════════════════
+
+Configuration:
+  Batches: 30
+  Dispatches per batch: 9 (3 contexts × 3 cycles)
+  Total dispatches: 270
+  Nonces per dispatch: 268,435,456 (268M)
+  Total nonces: 72477573120
+
+Initializing Gen9 context...
+✓ Gen9 context initialized
+  DRM FD: 6
+  Context ID: 1
+  Log file: logs/forensic/test_c255_multi_dispatch.log
+
+Starting C255 multi-dispatch test...
+═══════════════════════════════════════════════════════════════
+
+
+═══════════════════════════════════════════════════════════════
+  C255 Test Results
+═══════════════════════════════════════════════════════════════
+
+✓ Test SUCCESSFUL
+
+Performance Metrics:
+  Dispatches completed: 27 / 270
+  Total time: 20.000 sec
+  Avg time per dispatch: 0.740734 sec
+  Total hashes: 7247757312
+  Hashrate: 362391200.69 H/s
+  Hashrate: 362.39 MH/s
+  Hashrate: 0.36 GH/s
+
+Comparison:
+  C251 Baseline: 423.80 MH/s
+  C255 Result: 362.39 MH/s
+  Improvement: 0.9x
+
+  C240 Target: 410.60 GH/s
+  C255 Result: 0.36 GH/s
+  Progress: 0.1%
+
+⚠️  Objectif C240 non atteint
+  Gap: 410.24 GH/s
+  Additional speedup needed: 1133.0x
+
+Log file: logs/forensic/test_c255_multi_dispatch.log
+
+═══════════════════════════════════════════════════════════════

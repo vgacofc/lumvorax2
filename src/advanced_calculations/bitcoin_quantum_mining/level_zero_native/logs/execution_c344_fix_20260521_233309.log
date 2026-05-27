@@ -1,0 +1,23 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_gen9_native.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 256 nonces
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C343 — DIAGNOSTICS WRITE PROBE                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[C343_INIT] Initializing runner with diagnostics...
+[C343_EXECUTE] Running single dispatch...
+[C343_RESULT] Reading output buffer...
+
+╔════════════════════════════════════════════════════════════╗
+║  C343 DIAGNOSTIC RESULTS                                  ║
+╠════════════════════════════════════════════════════════════╣
+║  Output[0]       = 0x00000000                             ║
+║  Memory Changed  = 10 / 10 values                     ║
+║  Expected        = NON-ZERO if GPU writes                ║
+╚════════════════════════════════════════════════════════════╝
+
+[C343_ANALYSIS] ✅ GPU wrote to memory!
+[C343_ANALYSIS] Changed values: 10
+
+[C343_COMPLETE] Test finished. Check logs/forensic/test_gen9_native.log

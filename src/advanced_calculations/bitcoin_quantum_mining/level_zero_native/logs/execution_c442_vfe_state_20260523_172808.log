@@ -1,0 +1,61 @@
+[14344.251728674] 🚀 TEST C433 - VALIDATION STORE avec DISPATCH COMPLET
+[14344.251815073] ✅ DRM ouvert: fd=5
+[14344.251822538] ✅ Contexte GPU créé: id=1
+[14344.252080851] ✅ Kernel chargé: 208 bytes
+[14344.252103869] ✅ GEM buffer créé: handle=1 size=208
+[14344.252126726] ✅ Données écrites: 208 bytes
+[14344.252133301] ✅ GEM buffer créé: handle=2 size=1028
+[14344.252158870] ✅ Buffer mappé: 0x78f922f3e000
+[14344.252174764] ✅ GEM buffer créé: handle=3 size=4096
+[14344.252190164] ✅ Buffer mappé: 0x78f922ea3000
+[14344.252197964] ✅ GEM buffer créé: handle=4 size=4096
+[14344.252214323] ✅ Buffer mappé: 0x78f922ea2000
+[14344.252222952] ✅ GEM buffer créé: handle=5 size=4096
+[14344.252228944] ✅ GEM buffer créé: handle=6 size=4096
+[14344.252241602] ✅ Buffer mappé: 0x78f922ea1000
+[14344.252249678] 🔧 C439: Configuration SSH Layout Intel
+[14344.252250817]    BTI[0] = 64 (offset Surface State)
+[14344.252251684] ✅ C439: SSH Layout Intel configuré:
+[14344.252252433]    Binding Table @ offset 0: BTI[0]=64
+[14344.252253352]    Surface State @ offset 64:
+[14344.252254201]      Size=1028 → Aligned=1028
+[14344.252255485]      Width=1028, Height=1, Depth=1
+[14344.252256958]      DW0=0x0008ff80 (VAlign=4, Format=RAW)
+[14344.252258306]      DW1=0x00000003 (MOCS=CACHED_L3)
+[14344.252259685]      DW6=0x00000008 (Coherency=GPU_COHERENT)
+[14344.252264514] ✅ Interface Descriptor configuré
+[14344.252268563] 🔧 C442: Programmation MEDIA_VFE_STATE...
+[14344.252275028] ✅ C442: MEDIA_VFE_STATE programmé:
+[14344.252276109]    Max Threads: 168 (24 EU × 7)
+[14344.252277054]    URB Entries: 64
+[14344.252278087]    CURBE Size: 64 bytes (1 block)
+[14344.252278966]    URB Size: 128 bytes (2 blocks)
+[14344.252280047] ✅ C433: MEDIA_CURBE_LOAD ajouté
+[14344.252280908] ✅ C433: MEDIA_STATE_FLUSH ajouté
+[14344.252281973] ✅ Batch buffer construit: 74 DWORDs
+[14344.252283111] ⚡ Soumission batch buffer...
+[14344.252623468] ✅ Batch buffer soumis avec succès
+[14344.252626313] 🔍 VALIDATION RÉSULTATS
+[14344.252626984] ⏳ Attente GPU idle...
+[14344.255830141] ✅ GPU idle confirmé
+[14344.255852419] ✅ Domaine CPU activé
+[14344.255854085] 📊 output[0] = 0x00000000 (attendu: 0x12345678)
+[14344.255855763] ❌ TEST ABSOLU ÉCHOUÉ: output[0] != 0x12345678
+[14344.255856728] 🔍 Dump premiers 16 uint32_t:
+[14344.255857514]    output[0] = 0x00000000
+[14344.255858719]    output[1] = 0x00000000
+[14344.255859672]    output[2] = 0x00000000
+[14344.255860385]    output[3] = 0x00000000
+[14344.255861166]    output[4] = 0x00000000
+[14344.255861892]    output[5] = 0x00000000
+[14344.255862675]    output[6] = 0x00000000
+[14344.255863351]    output[7] = 0x00000000
+[14344.255864092]    output[8] = 0x00000000
+[14344.255864840]    output[9] = 0x00000000
+[14344.255865528]    output[10] = 0x00000000
+[14344.255866365]    output[11] = 0x00000000
+[14344.255867431]    output[12] = 0x00000000
+[14344.255868185]    output[13] = 0x00000000
+[14344.255869093]    output[14] = 0x00000000
+[14344.255869862]    output[15] = 0x00000000
+[14344.255870784] ❌ TEST C433 ÉCHOUÉ

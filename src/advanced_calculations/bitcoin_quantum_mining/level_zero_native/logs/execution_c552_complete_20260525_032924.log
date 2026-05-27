@@ -1,0 +1,66 @@
+=== TEST C552 - MODÈLE OPENCL COMPLET ===
+Timestamp: 20260525_032924
+
+[COMPILATION]
+✓ Compilation réussie
+
+[FORENSIC SETUP]
+Activation logging i915...
+[sudo] password for lvx: sh: 1: cannot create /sys/module/i915/parameters/debug_guc: Permission denied
+✓ Forensic activé
+
+[EXÉCUTION]
+Début: 03:29:25.179737768
+execbuffer2 pass1: Invalid argument
+=== TEST C552 - MODÈLE OPENCL COMPLET (0%) ===
+Implémentation EXHAUSTIVE de toutes les structures
+
+[5%] DRM ouvert
+[10%] 4 buffers créés
+[15%] Buffers mappés et initialisés
+
+=== CONSTRUCTION HEAP (20%) ===
+[25%] Surface State configuré (64 bytes complets)
+[30%] Binding Table configurée (4 entrées)
+[35%] IDRT configuré (32 bytes complets)
+[40%] Kernel ISA copié (128 bytes)
+[45%] CURBE data initialisé (32 bytes)
+[50%] Cross-Thread data initialisé (52 bytes)
+
+=== CONSTRUCTION BATCH (55%) ===
+[60%] PIPELINE_SELECT
+[65%] STATE_BASE_ADDRESS (19 DWords)
+[70%] BINDING_TABLE_POOL_ALLOC
+[75%] MEDIA_VFE_STATE (9 DWords)
+[80%] MEDIA_CURBE_LOAD
+[85%] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+[90%] GPGPU_WALKER (15 DWords)
+[95%] PIPE_CONTROL
+[100%] Batch complet: 260 bytes
+
+=== CONFIGURATION RELOCATIONS ===
+✓ 4 relocations configurées
+
+=== EXÉCUTION 2-PASS ===
+PASS 1: Pinning...
+Fin: 03:29:25.329376189
+Durée: 116ms
+Exit code: 0
+
+[DMESG CAPTURE]
+✓ Pas de GPU HANG
+
+[STATISTIQUES FORENSIC]
+Fichiers générés:
+  - Log principal: logs/execution_c552_complete_20260525_032924.log
+  - Strace:        logs/forensic/c552_forensic_20260525_032924.log
+  - Dmesg:         logs/forensic/c552_dmesg_20260525_032924.log
+  - Lignes strace: 907
+  - Lignes dmesg:  1286
+  - Appels ioctl:  9
+
+=== RÉSUMÉ C552 ===
+✓ Test terminé avec succès
+⚠️  Test OK mais résultat incorrect
+
+Logs disponibles dans: logs/

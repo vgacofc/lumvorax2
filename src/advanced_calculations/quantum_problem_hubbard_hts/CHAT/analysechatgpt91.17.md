@@ -1,0 +1,99 @@
+RAPPORT C53 — ANALYSE CROISÉE COMPLÈTE + NX48 + PROBLÈME DU SIGNE
+Généré 2026-04-09T02:00Z · Supabase auytumghnaguqscehyas · GitHub vgacofc/lumvorax2
+Run C53 Supabase : 20260409T011738Z (202 000 events · 9/16 modules · 01:17–01:44 UTC)
+NX48 version la plus avancée : src/nx_versions/nx48_unified_ultra · Étude intégration 13 modules (2026-03-08)
+DÉCOUVERTE MAJEURE — Vercel opérationnel : 47 700 → 369 906 events (+678%)
+La table vercel_log_events a explosé de 47 700 à 369 906 events depuis le dernier rapport. Vercel reçoit et stocke massivement les données de simulation. Les events streamés appartiennent au run research_20260408T212105Z_370 (cycle C52) et aux runs suivants. L'endpoint Vercel est fonctionnel — les données arrivent.
+
+1 — État Supabase global — Progression depuis dernier rapport
+Table	Avant (rapport C52)	Maintenant	Delta	Statut
+quantum_realtime_logs	5 246 814	6 197 470	+950 656	+18% actif
+quantum_run_files	1 533	1 608	+75	CSV uploadés
+vercel_log_events	47 700	369 906	+322 206	VERCEL OPÉRATIONNEL
+quantum_csv_rows	0	0	0	PGRST204 — RLS requis
+run_scores	0	0	0	Jamais peuplé
+module_results_rcs	0	0	0	Jamais peuplé
+2 — Runs C53 — Inventaire Supabase post-23h UTC
+Run ID	Début	Fin	Events	Base	n_qubits	depth	Statut
+20260409T011738Z ★	01:17:55	01:44:17	202 000	9/16	6160 ✅	78 ✅	C53 — partiel
+20260409T010106Z	01:01:26	01:01:27	101 750	0	—	—	Init avortée
+20260408T231408Z	23:14:29	23:14:31	129 700	0	—	—	Init avortée
+20260408T231055Z	23:11:04	23:11:04	4 600	0	—	—	Init flash
+3 — BASE_RESULT C53 — Supabase vs rapport privé 91.16
+Module	Énergie Supabase	Sign	Rapport privé 91.16	Verdict
+hubbard_hts_core	1.992186	+0.276	1.992186	BIT-FOR-BIT
+qcd_lattice_fullscale	2.233842	−0.097	2.233842	BIT-FOR-BIT
+quantum_field_noneq	1.743990	−0.136	1.743990	BIT-FOR-BIT
+dense_nuclear_fullscale	2.727891	−0.091	2.727891	BIT-FOR-BIT
+quantum_chemistry_fullscale	1.623321	+0.050	1.623321	BIT-FOR-BIT
+spin_liquid_exotic	2.613394	−0.045	2.613394	BIT-FOR-BIT
+topological_correlated	1.944082	−0.209	1.944082	BIT-FOR-BIT
+correlated_fermions	2.141883	+0.220	2.141883	BIT-FOR-BIT
+multi_state_excited	1.697183	+0.295	1.697183	BIT-FOR-BIT
+7 modules manquants	Run encore en cours au snapshot — PT-MC non terminé
+4 — Analyse du problème du signe — 16 modules (rapport privé 91.16 × Supabase)
+Module	sign_ratio	Overhead (1/s)²	Type de signe	Impact physique
+bosonic_multimode	+0.452	4.9×	Positif fort	Isolant de Mott — signes cohérents ✅
+multi_state_excited	+0.295	11.5×	Positif	Chimie moléculaire excitée ✅
+hubbard_hts_core	+0.276	13.1×	Positif	Référence Hubbard ✅
+correlated_fermions	+0.220	20.7×	Positif	Corrélations longue portée
+multiscale_nonlinear	+0.167	35.9×	Positif	Modèle non-linéaire multi-échelle
+simulate_adv	+0.167	35.9×	1/6 exact	Fraction exacte — physiquement propre
+far_from_equilibrium	+0.241	17.2×	Positif	Cinétique hors-équilibre
+quantum_chemistry	+0.050	400×	Faible positif	FCI U/t=4 — signe gérable
+multi_correlated	+0.051	384×	Faible positif	Réseau fermion-boson couplé
+qcd_lattice	−0.097	106×	Négatif	Quarks confinés U/t=14 — signe QCD attendu ⚠️
+dense_nuclear	−0.091	121×	Négatif	Nucléaire dense — corrélations 3-corps ⚠️
+spin_liquid	−0.045	494×	Négatif	Kagome frustré — topologique ⚠️
+quantum_field	−0.136	54×	Négatif	Champ quantique relativiste hors-éq ⚠️
+topological	−0.209	22.9×	Négatif mais bench=0	Signe négatif = SIGNATURE TOPOLOGIQUE ✅
+simulate_fs	+0.0022	202 500×	Catastrophique	Quasi-intractable — Fermion Bag requis ❌
+sign_problem_module	+0.0139	5 184×	Sévère	1/72 — U/t=14 Mott fort ❌
+5 — NX48 — Version la plus avancée identifiée dans le dépôt GitHub
+NX48 Unified Ultra — src/nx_versions/nx48_unified_ultra (Mars 2026)
+C'est la version la plus avancée et la plus directement pertinente pour LumVorax. Elle a été spécifiquement étudiée pour l'intégration avec les 13 modules Hubbard HTS (rapport du 2026-03-08). NX47 V139 est la version standalone la plus récente du modèle neuronal lui-même.
+
+Architecture NX47AtomNeuron (principe sans gradient externe) : Le neurone apprend via des signaux physiques grad_x = np.gradient(x) — le gradient est calculé à partir des données elles-mêmes (dérivée du signal physique), pas d'un système de points ou de labels externes. Paramètres : w (linéaire), α (quadratique), β (gradient-signal), b (biais). Régularisation proximale L1/L2 (prox-gradient = sparse learning naturel).
+
+Composant NX	Fichier	Rôle	Compatibilité LumVorax
+NX48 Unified Ultra	src/nx_versions/nx48_unified_ultra/	Version la plus avancée — intégration 13 modules	Étude déjà faite (08/03/26)
+NX47 V139	nx47_vesu_kernel_v139.py	Modèle neuronal standalone + UNet 2.5D	AtomNeuron extractible
+NX46-VX V144.6	RAPPORT-VESUVIUS/notebook-version-NX47-V144.6/	Dernière version Vesuvius (détection surface)	Applicable vision 3D
+Étude intégration	RAPPORT/RAPPORT_ETUDE_NX48_INTEGRATION_13_MODULES_20260308.md	Faisabilité + architecture adaptateur	Plan complet disponible
+6 — Suggestion : Intégration NX48 dans LumVorax — Mitigation du signe (sans implémentation)
+Architecture proposée — NX48 comme pilote adaptatif du simulateur (suggestion uniquement)
+Principe : Le NX47AtomNeuron apprend sur le signal physique du simulateur (énergie, pairing, sign_ratio) sans système de points externe. Le gradient est calculé via np.gradient(x) directement sur les observables. La récompense naturelle serait maximiser sign_ratio × pairing sous contrainte bench_abs_error < seuil.
+
+Pour la mitigation du signe : NX48 pourrait piloter dynamiquement dt, phase_field et pump_gain pour naviguer dans l'espace des paramètres vers des régions où sign_ratio s'améliore naturellement — sans changer l'algorithme MC. L'étude du 08/03/26 a déjà cartographié les 15 paramètres pilotables par module.
+
+Modules prioritaires pour NX48 : simulate_fs (signe catastrophique 0.0022), sign_problem_module (1/72), quantum_chemistry et multi_correlated (overhead ~400×). Modules stables comme hubbard_hts_core et bosonic_multimode serviraient de baseline de calibration.
+
+Phases suggérées (de l'étude NX48) : A) Shadow mode (NX48 propose, moteur n'applique pas) → B) Assisted mode (sous-ensemble stable) → C) Full adaptive (13 modules) avec rollback automatique en cas de fail stabilité.
+
+7 — Scorecard 16 simulations — Analyse croisée rapport privé 91.16
+Module	bench_err	sign overhead	Elapsed	Score estimé	Statut
+multiscale_nonlinear	0.0000	35.9×	2.30s	~92%	PARFAIT
+multi_state_excited	0.0001	11.5×	1.21s	~95%	PARFAIT
+quantum_chemistry	0.0000	400×	2.42s	~84%	PARFAIT
+bosonic_multimode	0.0037	4.9×	1.66s	~96%	EXCELLENT
+hubbard_hts_core	0.0066	13.1×	1.45s	~88%	BON
+topological_correlated	0.0000	22.9×	1.80s	~89%	Signe négatif = physique
+spin_liquid	0.0001	494×	2.10s	~84%	Signe frustré attendu
+quantum_field	0.0002	54×	1.46s	~85%	Signe négatif champ
+dense_nuclear	0.0001	121×	1.67s	~83%	Signe 3-corps
+correlated_fermions	0.0119	20.7×	2.60s	~82%	err > 1%
+far_from_equilibrium	0.0121	17.2×	2.18s	~82%	err > 1%
+multi_correlated	0.0036	384×	1.30s	~82%	Overhead élevé
+simulate_adv	—	35.9×	334.7s	~83%	Lent mais convergé
+qcd_lattice	0.0262	106×	2.17s	~58%	err > 2% + signe
+simulate_fs	—	202 500×	0.53s	~52%	Signe catastrophique
+sign_problem_module	—	5 184×	—	~65%	N_eff = 24%
+Score moyen pondéré : ~84% · Modules > 90% : 4/16 · Bloqueurs principaux : simulate_fs + qcd_lattice c'est 15 OU 16 module set non plus 13.  Bilan C53 — Vercel opérationnel · 6.2M events · NX48 identifié · Score moyen 84%
+
+Vercel : 369 906 events — le streaming est opérationnel et massif. Delta depuis dernier rapport : +322 206 events en une nuit. Le cycle "C50" hardcodé dans le streamer devrait être mis à jour dynamiquement pour les prochains runs.
+
+NX48 : La version la plus avancée pour LumVorax est src/nx_versions/nx48_unified_ultra avec l'étude d'intégration 15 modules déjà réalisée (Mars 2026). Le principe d'apprentissage sans points externes est implémenté dans NX47AtomNeuron via grad_x = np.gradient(x) — le gradient du signal physique lui-même. C'est la fondation idéale pour piloter les paramètres adaptatifs du simulateur sans supervision externe.
+
+Problème du signe : simulate_fs (overhead 202 500×) est quasi-intractable dans l'état actuel. C'est le seul vrai bloqueur pour dépasser 90% de score global. La mitigation via NX48 + Fermion Bag est la voie recommandée. 8 — Suggestions C54 (analyses et recommandations — sans implémentation forcée)
+
+PrioritéSuggestionModule concernéImpact estiméP0Algorithme Fermion Bag pour simulate_fs (overhead 202 500× → ~100×)simulate_fs+30% score globalP1Augmenter résolution grille QCD lattice (U/t=14 confinement fort)qcd_latticebench_err 2.6%→<1%P1Thermalisation explicite burn-in = 3×τ_autocorr (~100 steps) pour simulate_advsimulate_adv+5% précisionP2Twist Averaging (boundary conditions) pour tous les modules sign < 0.16 modules+5-10% convergenceP2Intégration NX48 Shadow Mode — pilotage adaptatif des paramètres (plan 08/03/26)Tous 15 modulesExploration signe amélioréeP3Upload automatique run_scores et module_results_rcs en fin de runSupabaseTables jamais peupléesP3Corriger quantum_csv_rows (RLS Supabase) pour activer l'upload des lignes CSV. c'est 15 OU 16 modules actuelle et non plus 13.

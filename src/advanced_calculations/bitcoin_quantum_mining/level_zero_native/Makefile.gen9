@@ -1,0 +1,108 @@
+# Makefile pour module natif Gen9 ISA compiler
+# LumVorax C198 Phase 10B
+# Auteur : Bob
+# Date : 2026-05-09
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11 -fPIC
+LDFLAGS = -lOpenCL -lm -ldl -lrt -lpthread
+
+# Répertoires
+SRC_DIR = src
+TEST_DIR = tests
+BUILD_DIR = build
+BIN_DIR = bin
+
+# Fichiers source
+COMPILER_SRCS = $(SRC_DIR)/btc_gen9_native_compiler.c
+LEVELZERO_SRCS = $(SRC_DIR)/btc_levelzero_driver_loader.c \
+                 $(SRC_DIR)/btc_levelzero_runner.c \
+                 $(SRC_DIR)/btc_levelzero_kernel.c \
+                 $(SRC_DIR)/btc_levelzero_memory.c
+LOGGER_SRCS = ../../src/btc_gpu_async_logger.c
+
+ALL_SRCS = $(COMPILER_SRCS) $(LEVELZERO_SRCS) $(LOGGER_SRCS)
+
+# Fichiers objets
+COMPILER_OBJS = $(BUILD_DIR)/btc_gen9_native_compiler.o
+LEVELZERO_OBJS = $(BUILD_DIR)/btc_levelzero_driver_loader.o \
+                 $(BUILD_DIR)/btc_levelzero_runner.o \
+                 $(BUILD_DIR)/btc_levelzero_kernel.o \
+                 $(BUILD_DIR)/btc_levelzero_memory.o
+LOGGER_OBJS = $(BUILD_DIR)/btc_gpu_async_logger.o
+
+ALL_OBJS = $(COMPILER_OBJS) $(LEVELZERO_OBJS) $(LOGGER_OBJS)
+
+# Tests
+TEST_COMPILER = $(TEST_DIR)/test_gen9_compiler.c
+TEST_COMPILER_BIN = $(BIN_DIR)/test_gen9_compiler
+
+# Includes
+INCLUDES = -I$(SRC_DIR) -I../../src
+
+# Targets
+.PHONY: all clean test dirs
+
+all: dirs $(TEST_COMPILER_BIN)
+
+dirs:
+	@mkdir -p $(BUILD_DIR) $(BIN_DIR)
+
+# Compilation objets
+$(BUILD_DIR)/btc_gen9_native_compiler.o: $(SRC_DIR)/btc_gen9_native_compiler.c $(SRC_DIR)/btc_gen9_native_compiler.h
+	@echo "Compilation btc_gen9_native_compiler.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/btc_levelzero_driver_loader.o: $(SRC_DIR)/btc_levelzero_driver_loader.c $(SRC_DIR)/btc_levelzero_driver_loader.h
+	@echo "Compilation btc_levelzero_driver_loader.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/btc_levelzero_runner.o: $(SRC_DIR)/btc_levelzero_runner.c $(SRC_DIR)/btc_levelzero_runner.h
+	@echo "Compilation btc_levelzero_runner.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/btc_levelzero_kernel.o: $(SRC_DIR)/btc_levelzero_kernel.c $(SRC_DIR)/btc_levelzero_kernel.h
+	@echo "Compilation btc_levelzero_kernel.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/btc_levelzero_memory.o: $(SRC_DIR)/btc_levelzero_memory.c $(SRC_DIR)/btc_levelzero_memory.h
+	@echo "Compilation btc_levelzero_memory.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BUILD_DIR)/btc_gpu_async_logger.o: ../../src/btc_gpu_async_logger.c ../../src/btc_gpu_async_logger.h
+	@echo "Compilation btc_gpu_async_logger.c..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Linkage test
+$(TEST_COMPILER_BIN): $(ALL_OBJS) $(TEST_COMPILER)
+	@echo "Linkage test_gen9_compiler..."
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_COMPILER) $(ALL_OBJS) $(LDFLAGS) -o $@
+	@echo "✅ Compilation réussie : $(TEST_COMPILER_BIN)"
+
+# Test
+test: $(TEST_COMPILER_BIN)
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════════╗"
+	@echo "║  EXÉCUTION TEST MODULE NATIF GEN9 ISA COMPILER                 ║"
+	@echo "╚════════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@$(TEST_COMPILER_BIN)
+
+# Clean
+clean:
+	@echo "Nettoyage..."
+	@rm -rf $(BUILD_DIR) $(BIN_DIR)
+	@echo "✅ Nettoyage terminé"
+
+# Help
+help:
+	@echo "Makefile module natif Gen9 ISA compiler"
+	@echo ""
+	@echo "Targets disponibles :"
+	@echo "  make          - Compile le module natif + tests"
+	@echo "  make test     - Compile et exécute les tests"
+	@echo "  make clean    - Nettoie les fichiers compilés"
+	@echo "  make help     - Affiche cette aide"
+	@echo ""
+	@echo "Fichiers générés :"
+	@echo "  $(TEST_COMPILER_BIN)"

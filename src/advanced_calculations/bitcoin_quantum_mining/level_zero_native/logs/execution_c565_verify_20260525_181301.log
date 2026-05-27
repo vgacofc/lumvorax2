@@ -1,0 +1,74 @@
+=== TEST C565 - VÉRIFICATION RÉSULTAT GPU ===
+ROOT CAUSE #77: Accès output après munmap
+CORRECTION: Sauvegarder résultat AVANT cleanup
+
+=== PHASE 1: OUVERTURE DRM (0%) ===
+[5%] ✓ DRM ouvert (fd=5)
+
+=== PHASE 2: CRÉATION CONTEXT (10%) ===
+[15%] ✓ Context créé (ID=1)
+
+=== PHASE 3: ALLOCATION BUFFERS (20%) ===
+[25%] ✓ Output buffer créé (handle=1, 4KB)
+[30%] ✓ Heap buffer créé (handle=2, 16KB)
+[35%] ✓ Batch buffer créé (handle=3, 4KB)
+
+=== PHASE 4: MAPPING BUFFERS (40%) ===
+[45%] ✓ Batch mappé @ 0x7fccc43eb000
+[50%] ✓ Heap mappé @ 0x7fccc434d000
+[55%] ✓ Output mappé @ 0x7fccc434c000
+
+=== PHASE 5: CONSTRUCTION BATCH (60%) ===
+[65%] ✓ Batch construit: 32 bytes (8 DWords)
+       Validation alignement: (0 | 32) & 0x7 = 0x0
+
+=== PHASE 6: PASS 1 - ALLOCATION GTT (70%) ===
+[DEBUG] PASS 1 Configuration:
+[DEBUG]   buffer_count = 3
+[DEBUG]   batch_len = 16 bytes
+[DEBUG]   context_id = 1
+[DEBUG]   Ordre création: output, heap, batch
+[75%] ✓ PASS 1 réussi - GTT allouées:
+       output_gtt = 0x0000000000000000
+       heap_gtt = 0x0000000000001000
+       batch_gtt = 0x0000000000005000
+
+=== PHASE 7: PASS 2 - EXÉCUTION GPU (80%) ===
+[DEBUG] PASS 2 Configuration:
+[DEBUG]   batch_gtt = 0x0000000000005000 (PINNED)
+[DEBUG]   heap_gtt = 0x0000000000001000 (PINNED)
+[DEBUG]   output: NON-PINNED (relocation auto)
+[DEBUG]   flags = I915_EXEC_RENDER
+[DEBUG]   batch_len = 32 bytes (aligné 8)
+[DEBUG]   Validation: (0 | 32) & 0x7 = 0x0
+[85%] ✓ PASS 2 réussi - Batch soumis au GPU
+
+=== PHASE 8: ATTENTE GPU (90%) ===
+[92%] ✓ GPU terminé
+
+=== PHASE 9: SYNCHRONISATION CACHE (94%) ===
+[96%] ✓ Cache CPU/GPU synchronisé
+
+=== PHASE 10: VÉRIFICATION RÉSULTAT (97%) ===
+output[0] = 0x00000000 (attendu: 0x12345678)
+output[1] = 0x00000000
+output[2] = 0x00000000
+output[3] = 0x00000000
+
+=== PHASE 11: CLEANUP (98%) ===
+[98.3%] ✓ Batch unmappé
+[98.6%] ✓ Heap unmappé
+[99%] ✓ Output unmappé
+[99.5%] ✓ Context détruit
+[100%] ✓ DRM fermé
+
+=== RÉSULTAT FINAL ===
+❌ ÉCHEC: output[0]=0x00000000 != 0x12345678
+⚠️  GPU a exécuté mais résultat incorrect
+⚠️  Analyser batch buffer ou kernel ISA
+
+=== ANALYSE FORENSIQUE REQUISE ===
+1. Vérifier relocation output_gtt
+2. Analyser MI_STORE_REGISTER_MEM
+3. Vérifier registre 0x2440
+4. Analyser cache coherency

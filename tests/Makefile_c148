@@ -1,0 +1,60 @@
+# Makefile pour tests d'intégration C148
+# Compile et exécute les tests de scalabilité, performance et stress
+
+CC = gcc
+CFLAGS = -std=c11 -Wall -Wextra -Werror -O2 -g -D_POSIX_C_SOURCE=200809L
+LDFLAGS = -lpthread -lm
+
+# Couleurs pour output
+COLOR_GREEN = \033[0;32m
+COLOR_BLUE = \033[0;34m
+COLOR_YELLOW = \033[0;33m
+COLOR_RED = \033[0;31m
+COLOR_RESET = \033[0m
+
+# Fichiers
+TEST_FRAMEWORK = unit_test_framework.c
+TEST_INTEGRATION = test_c148_integration.c
+EXECUTABLE = test_c148_integration
+
+# Répertoire de sortie
+OUTPUT_DIR = test_results_c148
+
+.PHONY: all test clean help
+
+all: $(EXECUTABLE)
+	@echo "$(COLOR_GREEN)✓ Compilation terminée avec succès$(COLOR_RESET)"
+
+$(EXECUTABLE): $(TEST_FRAMEWORK) $(TEST_INTEGRATION)
+	@echo "$(COLOR_BLUE)Compilation des tests d'intégration C148...$(COLOR_RESET)"
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+test: $(EXECUTABLE)
+	@echo "$(COLOR_YELLOW)════════════════════════════════════════════════════════════$(COLOR_RESET)"
+	@echo "$(COLOR_YELLOW)  Exécution des tests d'intégration C148$(COLOR_RESET)"
+	@echo "$(COLOR_YELLOW)════════════════════════════════════════════════════════════$(COLOR_RESET)"
+	@mkdir -p $(OUTPUT_DIR)
+	@./$(EXECUTABLE) | tee $(OUTPUT_DIR)/test_output.log
+	@echo ""
+	@echo "$(COLOR_GREEN)✓ Tests terminés - Logs sauvegardés dans $(OUTPUT_DIR)/$(COLOR_RESET)"
+
+clean:
+	@echo "$(COLOR_RED)Nettoyage...$(COLOR_RESET)"
+	rm -f $(EXECUTABLE)
+	rm -rf $(OUTPUT_DIR)
+	@echo "$(COLOR_GREEN)✓ Nettoyage terminé$(COLOR_RESET)"
+
+help:
+	@echo "$(COLOR_BLUE)Makefile C148 - Tests d'Intégration$(COLOR_RESET)"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  $(COLOR_GREEN)make$(COLOR_RESET)       - Compile les tests"
+	@echo "  $(COLOR_GREEN)make test$(COLOR_RESET)  - Compile et exécute les tests"
+	@echo "  $(COLOR_GREEN)make clean$(COLOR_RESET) - Nettoie les fichiers générés"
+	@echo "  $(COLOR_GREEN)make help$(COLOR_RESET)  - Affiche cette aide"
+	@echo ""
+	@echo "Tests inclus:"
+	@echo "  • Tests inter-modules (3 tests)"
+	@echo "  • Benchmarks performance (2 tests)"
+	@echo "  • Tests scalabilité (3 tests: 1000 clients, 100 slaves, 50 peers)"
+	@echo "  • Tests stress (2 tests: 1M ops, memory pressure)"

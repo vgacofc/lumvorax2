@@ -1,0 +1,50 @@
+[+0.000000139] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000062560] [INFO]   LUMVORAX TEST C576_BATCH_DECODER_VALIDATION
+[+0.000070382] [INFO]   CYCLE: C576
+[+0.000074911] [INFO]   PRIORITÉ: #2 - Batch Decoder Engine
+[+0.000079157] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000083107] [INFO] 
+[+0.000087199] [INFO] ✅ Batch Decoder initialisé
+[+0.000091101] [INFO] 
+[+0.010549562] [INFO] ═══ TEST 1: Décodage Batch OpenCL SHA256 ═══
+[+0.010858811] [INFO] Décodage batch OpenCL (208 bytes)...
+[+0.011142532] [INFO] ✅ Décodage réussi
+[+0.011161035] [INFO] Commandes décodées: 8
+[+0.011167206] [INFO]   - MI Commands: 0
+[+0.011172948] [INFO]   - Pipeline Commands: 2
+[+0.011178670] [INFO]   - Media Commands: 1
+[+0.011184213] [INFO]   - Compute Commands: 0
+[+0.011202642] [INFO] Erreurs de validation: 5
+[+0.011209178] [WARN] Batch contient des erreurs
+[+0.011214762] [INFO] Génération sortie Wireshark...
+[+0.011526448] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_opencl_sha256_wireshark.txt
+[+0.017940936] [INFO] Vérifications spécifiques...
+[+0.017958081] [INFO] ✅ PIPELINE_SELECT trouvé à offset 0x0000
+[+0.017964264] [INFO] ✅ STATE_BASE_ADDRESS trouvé à offset 0x0004
+[+0.017969980] [INFO]   Surface State Base: 0x00001001
+[+0.017975621] [INFO]   Instruction Base: 0x00001001
+[+0.017981001] [ERROR] ❌ GPGPU_WALKER manquant
+[+0.017986020] [INFO] 
+[+0.018005265] [INFO] ═══ TEST 2: Décodage Batch Natif Minimal ═══
+[+0.018270988] [INFO] Décodage batch natif (4 bytes)...
+[+0.018535015] [INFO] ✅ Décodage réussi
+[+0.018545368] [INFO] Commandes décodées: 1
+[+0.018549640] [INFO] ✅ Commande correcte: MI_BATCH_BUFFER_END
+[+0.018798591] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_native_minimal_wireshark.txt
+[+0.018861436] [INFO] ✅ TEST 2 RÉUSSI
+[+0.018885199] [INFO] 
+[+0.018900203] [INFO] ═══ TEST 3: Détection Anomalies ═══
+[+0.019281818] [INFO] Anomalies détectées: 1
+[+0.019293616] [INFO] ✅ Anomalie correctement détectée
+[+0.019299071] [INFO] ✅ TEST 3 RÉUSSI
+[+0.019304079] [INFO] 
+[+0.037465892] [INFO] ═══ TEST 4: Analyse Différentielle ═══
+[+0.038122314] [INFO] Comparaison:
+[+0.038161513] [INFO]   OpenCL: 8 commandes
+[+0.038167773] [INFO]   Natif:  1 commandes
+[+0.038417939] [INFO] ✅ Analyse différentielle: logs/forensic/batch_differential_opencl_vs_native.txt
+[+0.038500972] [INFO] ✅ TEST 4 RÉUSSI
+[+0.038506957] [INFO] 
+[+0.038511092] [INFO] ═══════════════════════════════════════════════════════════
+[+0.038515808] [ERROR] ❌ ÉCHEC DE TESTS
+[+0.038520126] [INFO] ═══════════════════════════════════════════════════════════

@@ -1,0 +1,35 @@
+[sudo] password for lvx: [C575-FORENSIC][22168.528383592] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528431556] TEST C575 - MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22168.528434379] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528436064] Hypothèse: Instruction WRITE + flag WRITE force GTT
+[C575-FORENSIC][22168.528437288] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528438753] Ouverture /dev/dri/renderD128
+[C575-FORENSIC][22168.528575692] DRM fd=5 ouvert
+[C575-FORENSIC][22168.528596414] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528598483] PASS 0: MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22168.528599939] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528621394] Buffer GEM créé: handle=1 size=4096
+[C575-FORENSIC][22168.528629819] Buffer GEM créé: handle=2 size=4096
+[C575-FORENSIC][22168.528646379] Output initialisé à 0
+[C575-FORENSIC][22168.528648716] Batch PASS 0 construit:
+[C575-FORENSIC][22168.528649962]   - MI_STORE_DATA_IMM (ÉCRITURE dans output)
+[C575-FORENSIC][22168.528651293]   - Valeur PASS 0: 0xdeadbeef
+[C575-FORENSIC][22168.528653119]   - Taille: 5 DWords
+[C575-FORENSIC][22168.528660694] Relocations configurées:
+[C575-FORENSIC][22168.528662146]   - target_handle: 1 (output)
+[C575-FORENSIC][22168.528663197]   - write_domain: RENDER (ÉCRITURE)
+[C575-FORENSIC][22168.528664143]   - Nombre: 2 (low + high)
+[C575-FORENSIC][22168.528664985] Output flags: WRITE | 48B_ADDRESS (allocation libre)
+[C575-FORENSIC][22168.528666010] Soumission PASS 0 (MI_STORE + WRITE flag)
+[C575-ERROR][22168.528668492] Échec EXECBUFFER2 PASS 0: Invalid argument
+[C575-FORENSIC][22168.528682365] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.528685188] CAPTURE ERROR STATE: PASS0_EXECBUFFER2_FAILED
+[C575-FORENSIC][22168.528686309] ═══════════════════════════════════════════════════════
+Error state not available
+[C575-FORENSIC][22168.574114540] ✅ Error state capturé
+[C575-FORENSIC][22168.574128788] Nettoyage ressources
+[C575-FORENSIC][22168.574181610] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.574184879] TEST C575 TERMINÉ
+[C575-FORENSIC][22168.574186840] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22168.574188402] Durée totale: 45.000742 ms
+[C575-FORENSIC][22168.574190782] Code retour: -1

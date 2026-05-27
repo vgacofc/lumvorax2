@@ -1,0 +1,65 @@
+🚀 TEST C584 - PREMIER WRITE GPU NATIF i915 (RELOCATIONS)
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (75.842 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (4.427 µs)
+
+[ 20%] Creating heap buffer (64KB)...
+✅ Heap buffer created: handle=1, size=65536 (10.625 µs)
+
+[ 25%] Creating batch buffer (4KB)...
+✅ Batch buffer created: handle=2, size=4096 (2.870 µs)
+
+[ 30%] Mapping heap buffer...
+✅ Heap buffer mapped: 0x76df476f5000 (86.201 µs)
+
+[ 35%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x76df4779f000 (18.691 µs)
+
+[ 40%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.198 µs)
+
+[ 50%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (relocation target)
+    [26] MEDIA_VFE_STATE
+    [35] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [39] GPGPU_WALKER
+    [54] PIPE_CONTROL (flush final)
+    [60] MI_BATCH_BUFFER_END
+✅ Batch built: 61 DWords (244 bytes, 1.608 µs)
+
+[ 60%] Creating relocation entry...
+✅ Relocation created (0.031 µs)
+  Target handle: 1 (heap)
+  Delta: 0 (heap base)
+  Offset: 0x1c (batch DWord 7)
+  Read domains: 0x00000002 (RENDER)
+  Write domain: 0x00000002 (RENDER)
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Buffer count: 2 (heap + batch)
+    Batch length: 244 bytes
+    Relocations: 1 (STATE_BASE_ADDRESS → heap base)
+
+[ 80%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22)
+   Duration: 3.394 µs
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C584 ÉCHOUÉ                                      ║
+╚════════════════════════════════════════════════════════════╝

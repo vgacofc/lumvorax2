@@ -1,0 +1,36 @@
+[sudo] password for lvx: [27991.594470484] 🚀 TEST C476 - KERNEL EXECUTION RÉEL
+[27991.594479677] 📊 État: 10% - Démarrage
+[27991.594542688] ✅ DRM ouvert: fd=5
+[27991.594545253] 📊 État: 15%
+[27991.594549456] ✅ Contexte GPU créé: id=1
+[27991.594585315] ✅ Buffers créés: batch=1 kernel=2 output=3 idrt=4 relocs=[5,6,7,8]
+[27991.594588839] 📊 État: 25%
+[27991.594632646] ✅ Kernel ISA Gen9 RÉEL écrit: 3192 bytes
+[27991.594635735] 📊 État: 35%
+[27991.594668360] ✅ Interface Descriptor configuré
+[27991.594676769] 📊 État: 50%
+[27991.594716909] ✅ Batch null_state copié: 3840 bytes (960 DWORDs)
+[27991.594724522] ✅ Batch complet: 1006 DWORDs (4024 bytes)
+[27991.594726269]    - Null state: 960 DWORDs
+[27991.594727110]    - GPGPU: 46 DWORDs
+[27991.594728034] 📊 État: 65%
+[27991.594729109] ✅ Relocations préparées: 6 total
+[27991.594729965] 📊 État: 75%
+[27991.594730956] ⚡ Soumission batch (null_state + GPGPU + kernel)...
+[27991.594731812] 📊 État: 80%
+[27991.595199264] ✅ EXECBUFFER2 réussi! (0.466 ms)
+[27991.595213741] ⏳ Attente GPU idle...
+[27991.595507377] ✅ GPU idle confirmé (0.292 ms)
+[27991.595516734] 📊 État: 90%
+[27991.595559473] 
+[27991.595562667] 📊 RÉSULTATS OUTPUT:
+[27991.595563630] output[0] = 0x00000000 (attendu: 0xDEADBEEF)
+[27991.595570352] output[1] = 0x00000000 (attendu: 0xCAFEBABE)
+[27991.595571442] output[2] = 0x00000000 (attendu: 0x12345678)
+[27991.595572398] output[3] = 0x00000000 (attendu: 0xABCDEF00)
+[27991.595579509] 📊 État: 100%
+[27991.595580860] 
+[27991.595581519] ⚠️  TEST C476 PARTIEL
+[27991.595582372] ✅ Batch stable
+[27991.595583188] ❌ Kernel non exécuté (output = 0x00000000)
+[27991.595584244] 💡 Debugging requis: ISA kernel ou relocations

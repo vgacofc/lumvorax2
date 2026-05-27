@@ -1,0 +1,13 @@
+Je récupère les données live et croise avec le rapport C56.J'ai tout. Je produis le rapport complet.**[RAPPORT C56 → Notion](https://www.notion.so/33e3ca4cddbb8136a6e5d251b0d3383a)** ✅
+
+---
+
+Voici ce que ce rapport C56 révèle, point par point.
+
+**La correction la plus impactante : equiv_qubits ×8.** Depuis C38, la formule était `2 × n_sites`, ignorant silencieusement les 8 répliques PT-MC. Or le PT-MC explore R copies indépendantes du système en parallèle — l'espace de Hilbert total est donc 2^(N×R) et non 2^N. La correction C56 donne `2 × n_sites × R` : hubbard_hts_core passe de 392 à 3 136 qubits effectifs, et RCS de 12 320 à 98 560. NX48 projette déjà 169 092 qubits pour le run C57. C'est un ordre de grandeur entier gagné dans la représentation de l'espace exploré.
+
+**NX48 Phase B est active mais pas encore appliquée.** Les 5 nouveaux paramètres (n_sites_scale, n_replicas_scale, temp_K_scale, U_eV_scale, t_eV_scale) sont calculés et loggués pour les 16 modules. NX48 montre une cohérence physique remarquable : temp_K_scale=1.00 uniquement pour hubbard_hts_core (le seul module avec un signe élevé et stable), 0.94 pour tous les autres (refroidissement pour améliorer le signe), U_eV_scale=0.98 pour fermionic_sign_problem (NX48 identifie que U/t=14 est trop fort et réduit). Mais ces recommendations sont encore loggées sans être injectées dans la simulation. C57 sera le premier run où NX48 pilotera réellement les paramètres physiques — c'est la prochaine étape la plus critique.
+
+**3 runs consécutifs 16/16 PASS avec F_XEB=0.333191 identique.** Le bench RMSE=0.008873 est stable pour la troisième journée consécutive. Le run le plus rapide dure 20.5 minutes — légère amélioration vs les 22 minutes de C55. La 9ème confirmation consécutive de F_XEB≈1/3 couvre maintenant un facteur 251× en nombre de qubits effectifs (392 → 98 560).
+
+**Vercel atteint 4 037 976 events** avec C55 en tête (1.73M). C56 n'est pas encore étiqueté dans Vercel — le script injecte encore "C55". Correction à faire sur Replit pour la traçabilité des prochains runs.

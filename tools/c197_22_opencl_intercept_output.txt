@@ -1,0 +1,28 @@
+=== OpenCL ioctl() Interceptor Loaded ===
+Log file: /tmp/opencl_ioctl_intercept.log
+=== OpenCL write_magic Test ===
+
+✅ Platform obtained
+✅ Device obtained
+✅ Context created
+✅ Command queue created
+✅ Program created
+Building program...
+✅ Program built
+✅ Kernel created
+✅ Output buffer created
+✅ Kernel argument set
+
+🔥 EXECUTING KERNEL (ioctl() will be captured) 🔥
+
+✅ Kernel enqueued
+✅ Kernel completed
+✅ Result read
+
+Validation:
+  result[0] = 0x12345678
+✅✅✅ SUCCESS: GPU wrote 0x12345678 ✅✅✅
+
+=== Check /tmp/opencl_ioctl_intercept.log for captured ioctl() ===
+=== OpenCL ioctl() Interceptor Unloaded ===
+Total ioctl() calls: 0

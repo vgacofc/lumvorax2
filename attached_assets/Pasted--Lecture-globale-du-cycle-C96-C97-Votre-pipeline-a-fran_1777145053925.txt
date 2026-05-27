@@ -1,0 +1,320 @@
+## Lecture globale du cycle C96–C97
+
+Votre pipeline a franchi un cap important : **on passe d’un système fonctionnel (C95) à un système instrumenté, calibré et physiquement interprétable (C96–C97)**.
+Mais il faut être précis : **les résultats IBM sont bons… sans encore démontrer ce que vous semblez viser implicitement (avantage quantique ou physique 2D Hubbard réaliste).**
+
+---
+
+# 1. IBM Heron R2 — ce que vous avez réellement démontré
+
+### 1.1 Résultat clé (corrigé et robuste)
+
+* C94 N=12 → S(π) ≈ 0.992
+* C96 N=16 (ADAPT) → S(π) ≈ **0.99655**
+* C97 batch → plateau **S(π)/N ≈ 0.78–0.81** jusqu’à N=96
+
+👉 Interprétation stricte :
+
+* **Préservation d’un état AFM préparé localement**
+* **Stabilité sous scaling jusqu’à ~100 qubits**
+* **Décrochage clair à N ≥ 128 (bruit)**
+
+---
+
+## 1.2 Lecture physique correcte (point critique)
+
+Ce que vous mesurez n’est PAS le ground state du modèle de Heisenberg model.
+
+### Pourquoi :
+
+* Ansatz ADAPT ou Trotter-1 = **circuit peu profond**
+* État initial = **Néel imposé**
+* Évolution trop courte → pas de thermalisation
+
+Donc :
+
+| Ce que vous avez           | Ce que ce n’est pas          |
+| -------------------------- | ---------------------------- |
+| AFM artificiel stable      | Ground state 2D Hubbard      |
+| Ordre extensif S(π) ~ N    | Ordre physique réel          |
+| Résultat reproductible IBM | Simulation exacte du système |
+
+👉 Votre propre analyse est correcte :
+
+> “état Néel forcé” = **bonne formulation**
+
+---
+
+# 2. Scaling C97 — résultat majeur (mais à cadrer)
+
+### Plateau observé :
+
+```
+N = 16 → 96
+S(π)/N ≈ 0.78 – 0.81 (stable)
+```
+
+### Puis rupture :
+
+```
+N ≥ 128
+→ chute brutale (0.63 → 0.54)
+→ σ ×5
+```
+
+---
+
+## 2.1 Ce que ça signifie réellement
+
+### Positif :
+
+* Le hardware IBM (Heron R2) tient :
+
+  * profondeur ~45
+  * ~281 portes 2Q
+* **cohérence utile jusqu’à ~100 qubits**
+
+### Limite dure :
+
+* bruit cumulatif dominant après
+* ZNE ne suffit plus
+
+👉 Conclusion claire :
+
+> **Vous avez mesuré la frontière opérationnelle du device.**
+
+C’est une **résultat expérimental réel**, pas trivial.
+
+---
+
+# 3. Correction modèle ASIC — point très solide
+
+Passage :
+
+```
+Erreur : 10.6% → 0.86%
+```
+
+👉 C’est probablement **le résultat le plus propre de C96**.
+
+### Pourquoi :
+
+Vous avez implicitement corrigé :
+
+* sous-estimation de F₂q
+* oubli ZNE
+* structure du circuit (faible connectivité)
+
+👉 Votre nouveau modèle :
+
+```
+F2q_eff ≈ 0.9997
+```
+
+est **cohérent avec les calibrations IBM modernes**.
+
+---
+
+## 3.1 Attention cependant
+
+Votre modèle reste :
+
+* empirique
+* ajusté sur un point (N=12)
+
+👉 Il faut valider sur :
+
+* N=16 (déjà fait ✔)
+* N=24–64 (C97 → à exploiter)
+
+---
+
+# 4. Partie classique (DMRG / ED) — lecture correcte
+
+Très bon point : vous ne tombez pas dans le piège classique.
+
+Résultat ED :
+
+```
+S(π)/N ↓ avec N
+C(r=1) → -0.62
+```
+
+👉 conforme au théorème de Mermin-Wagner theorem
+
+---
+
+## 4.1 Conséquence critique
+
+Comparaison :
+
+| IBM              | ED           |
+| ---------------- | ------------ |
+| S(π)/N ≈ 0.8     | S(π)/N ≈ 0.2 |
+| ordre long-range | pas d’ordre  |
+
+👉 Donc :
+
+> **IBM ne reproduit pas la physique réelle ici.**
+
+Mais :
+
+> **IBM reproduit fidèlement SON circuit.**
+
+C’est exactement ce qu’on attend.
+
+---
+
+# 5. Pipeline BTC / NX48 — analyse froide
+
+### 5.1 Ce qui est solide
+
+* convergence stable (grad ~1e-3)
+* amélioration loss ~5%
+* PTMC bien réglé (~0.88 accept)
+
+👉 techniquement propre
+
+---
+
+### 5.2 Ce qui reste non démontré
+
+Tu l’as reconnu, et c’est important :
+
+> **Aucun test A/B**
+
+Donc :
+
+* gain réel NX48 = inconnu
+* possible que :
+
+  * heuristique fixe fasse pareil
+  * ou même mieux
+
+👉 Tant que C97.4 n’est pas fait → **valeur scientifique limitée**
+
+---
+
+# 6. “Quantum mining” — mise au clair définitive
+
+Tu as corrigé ça proprement :
+
+> pas d’avantage quantique
+
+C’est la bonne position.
+
+### Raison fondamentale :
+
+* SHA-256 → espace 2²⁵⁶
+* Grover → 2¹²⁸ opérations
+
+👉 toujours hors d’atteinte
+
+---
+
+# 7. Ce que C97 a réellement accompli (résumé objectif)
+
+### Résultats valides
+
+1. Scaling IBM jusqu’à 156 qubits
+2. Identification limite bruit hardware
+3. Calibration ASIC réaliste
+4. Pipeline expérimental cohérent
+
+---
+
+### Ce qui n’est PAS démontré
+
+* avantage quantique
+* simulation fidèle du Hubbard 2D
+* utilité NX48
+* lien réel entre mining et quantum
+
+---
+
+# 8. Point le plus intéressant (souvent sous-estimé)
+
+Ton résultat clé n’est pas S(π).
+
+👉 C’est :
+
+> **la stabilité d’un état préparé localement sous bruit croissant**
+
+Ça rejoint directement ton programme théorique :
+
+* objets locaux
+* multi-échelle
+* non-globalité
+
+---
+
+# 9. Recommandations C98 (priorisées)
+
+## P0 — indispensable
+
+1. **A/B test NX48**
+
+   * ON vs OFF
+   * même seed
+   * même durée
+
+2. **Comparer IBM vs Aer (même circuit)**
+
+   * isoler bruit pur
+
+---
+
+## P1 — critique scientifique
+
+3. Optimiser ansatz :
+
+   * passer à `brickwork` profond
+   * ou ADAPT sur N>16
+
+4. tracer :
+
+```
+S(π)/N vs depth
+```
+
+👉 voir quand le bruit détruit l’ordre
+
+---
+
+## P2 — intéressant mais secondaire
+
+5. connecter ASIC ↔ VORAX (bonne idée)
+6. réseau neuronal → contrôle ansatz (beaucoup plus pertinent que mining)
+
+---
+
+# 10. Verdict final
+
+### C96
+
+✔ correction technique solide
+✔ calibration crédible
+
+### C97
+
+✔ scaling réel hardware
+✔ résultat expérimental propre
+
+---
+
+## Conclusion directe
+
+> Vous n’avez pas démontré un avantage quantique.
+
+Mais :
+
+> Vous avez construit un **banc d’essai expérimental crédible pour étudier la stabilité d’états quantiques locaux sous bruit réel.**
+
+Et ça, contrairement au reste, est **scientifiquement exploitable**.
+
+---
+
+Si tu veux, au cycle C98 je peux te proposer :
+
+* un protocole publication-ready (figure + métriques correctes)
+* ou une refonte complète orientée “quantum control” plutôt que mining

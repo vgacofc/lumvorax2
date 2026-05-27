@@ -1,0 +1,201 @@
+=== TEST C361 - VALIDATION PATTERN GID + DUMP 256 BYTES ===
+Kernel: tests/test_c361_gid_pattern.bin_kbl.bin
+Objectif: Identifier OU GPU ecrit (offset exact, SIMD, BTI)
+
+✓ Kernel copie vers kernels/btc_sha256_gen9.bin_kbl.bin
+
+=== TEST 1: 1 thread (gid=0) ===
+Attendu: output[0]=0
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 10000000 nonces
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=0 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=10000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=20000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=30000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=40000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=50000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=60000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=70000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=80000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x5b8dfe30e490 block_header=0x7fff44c31290 start_nonce=90000000 count=10000000
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C320] Block header configuré: version=0x20000000 difficulty=0x1d00ffff
+[C320] Test 1/10: start_nonce=0 count=10M
+[C320] Résultat 1: best_nonce=0 leading_zeros=0
+[C320] Test 2/10: start_nonce=10000000 count=10M
+[C320] Résultat 2: best_nonce=0 leading_zeros=0
+[C320] Test 3/10: start_nonce=20000000 count=10M
+[C320] Résultat 3: best_nonce=0 leading_zeros=0
+[C320] Test 4/10: start_nonce=30000000 count=10M
+[C320] Résultat 4: best_nonce=0 leading_zeros=0
+[C320] Test 5/10: start_nonce=40000000 count=10M
+[C320] Résultat 5: best_nonce=0 leading_zeros=0
+[C320] Test 6/10: start_nonce=50000000 count=10M
+[C320] Résultat 6: best_nonce=0 leading_zeros=0
+[C320] Test 7/10: start_nonce=60000000 count=10M
+[C320] Résultat 7: best_nonce=0 leading_zeros=0
+[C320] Test 8/10: start_nonce=70000000 count=10M
+[C320] Résultat 8: best_nonce=0 leading_zeros=0
+[C320] Test 9/10: start_nonce=80000000 count=10M
+[C320] Résultat 9: best_nonce=0 leading_zeros=0
+[C320] Test 10/10: start_nonce=90000000 count=10M
+[C320] Résultat 10: best_nonce=0 leading_zeros=0
+
+╔════════════════════════════════════════════════════════════╗
+║  C320 FIX ROOT CAUSE - RÉSULTATS MINAGE BITCOIN RÉEL      ║
+╚════════════════════════════════════════════════════════════╝
+SUCCESS: 10/10 dispatches completed
+Best nonce trouvé: 0
+Max leading zeros: 0
+Total leading zeros: 0
+GPU fonctionne: ❌ NON
+
+=== TEST 2: 8 threads (gid=0-7) ===
+Attendu: output[0]=0, output[1]=1, ..., output[7]=7
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 10000000 nonces
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=0 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=10000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=20000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=30000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=40000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=50000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=60000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=70000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=80000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x64a71c83b490 block_header=0x7fff8625f110 start_nonce=90000000 count=10000000
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C320] Block header configuré: version=0x20000000 difficulty=0x1d00ffff
+[C320] Test 1/10: start_nonce=0 count=10M
+[C320] Résultat 1: best_nonce=0 leading_zeros=0
+[C320] Test 2/10: start_nonce=10000000 count=10M
+[C320] Résultat 2: best_nonce=0 leading_zeros=0
+[C320] Test 3/10: start_nonce=20000000 count=10M
+[C320] Résultat 3: best_nonce=0 leading_zeros=0
+[C320] Test 4/10: start_nonce=30000000 count=10M
+[C320] Résultat 4: best_nonce=0 leading_zeros=0
+[C320] Test 5/10: start_nonce=40000000 count=10M
+[C320] Résultat 5: best_nonce=0 leading_zeros=0
+[C320] Test 6/10: start_nonce=50000000 count=10M
+[C320] Résultat 6: best_nonce=0 leading_zeros=0
+[C320] Test 7/10: start_nonce=60000000 count=10M
+[C320] Résultat 7: best_nonce=0 leading_zeros=0
+[C320] Test 8/10: start_nonce=70000000 count=10M
+[C320] Résultat 8: best_nonce=0 leading_zeros=0
+[C320] Test 9/10: start_nonce=80000000 count=10M
+[C320] Résultat 9: best_nonce=0 leading_zeros=0
+[C320] Test 10/10: start_nonce=90000000 count=10M
+[C320] Résultat 10: best_nonce=0 leading_zeros=0
+
+╔════════════════════════════════════════════════════════════╗
+║  C320 FIX ROOT CAUSE - RÉSULTATS MINAGE BITCOIN RÉEL      ║
+╚════════════════════════════════════════════════════════════╝
+SUCCESS: 10/10 dispatches completed
+Best nonce trouvé: 0
+Max leading zeros: 0
+Total leading zeros: 0
+GPU fonctionne: ❌ NON
+
+=== TEST 3: 64 threads (gid=0-63) ===
+Attendu: output[i]=i pour i=0..63
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 10000000 nonces
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=0 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=10000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=20000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=30000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=40000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=50000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=60000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=70000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=80000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x62e8c55a2490 block_header=0x7fffc93f4e30 start_nonce=90000000 count=10000000
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C320] Block header configuré: version=0x20000000 difficulty=0x1d00ffff
+[C320] Test 1/10: start_nonce=0 count=10M
+[C320] Résultat 1: best_nonce=0 leading_zeros=0
+[C320] Test 2/10: start_nonce=10000000 count=10M
+[C320] Résultat 2: best_nonce=0 leading_zeros=0
+[C320] Test 3/10: start_nonce=20000000 count=10M
+[C320] Résultat 3: best_nonce=0 leading_zeros=0
+[C320] Test 4/10: start_nonce=30000000 count=10M
+[C320] Résultat 4: best_nonce=0 leading_zeros=0
+[C320] Test 5/10: start_nonce=40000000 count=10M
+[C320] Résultat 5: best_nonce=0 leading_zeros=0
+[C320] Test 6/10: start_nonce=50000000 count=10M
+[C320] Résultat 6: best_nonce=0 leading_zeros=0
+[C320] Test 7/10: start_nonce=60000000 count=10M
+[C320] Résultat 7: best_nonce=0 leading_zeros=0
+[C320] Test 8/10: start_nonce=70000000 count=10M
+[C320] Résultat 8: best_nonce=0 leading_zeros=0
+[C320] Test 9/10: start_nonce=80000000 count=10M
+[C320] Résultat 9: best_nonce=0 leading_zeros=0
+[C320] Test 10/10: start_nonce=90000000 count=10M
+[C320] Résultat 10: best_nonce=0 leading_zeros=0
+
+╔════════════════════════════════════════════════════════════╗
+║  C320 FIX ROOT CAUSE - RÉSULTATS MINAGE BITCOIN RÉEL      ║
+╚════════════════════════════════════════════════════════════╝
+SUCCESS: 10/10 dispatches completed
+Best nonce trouvé: 0
+Max leading zeros: 0
+Total leading zeros: 0
+GPU fonctionne: ❌ NON
+
+=== ANALYSE RESULTATS ===
+
+Analyse C361 Buffer Dump:
+[29468.060626921] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.060952320] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.060956550] C361_CHANGED_OFFSETS: count=64
+[29468.061028879] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.063300616] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.063617825] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.063622815] C361_CHANGED_OFFSETS: count=64
+[29468.063679756] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.065092482] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.065601978] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.065605176] C361_CHANGED_OFFSETS: count=64
+[29468.065649274] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.066158374] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.066460285] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.066465259] C361_CHANGED_OFFSETS: count=64
+[29468.066511239] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.070260635] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.070558075] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.070562722] C361_CHANGED_OFFSETS: count=64
+[29468.070619795] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.072452586] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.072742894] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.072746842] C361_CHANGED_OFFSETS: count=64
+[29468.072792593] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.074131375] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.074321723] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.074324949] C361_CHANGED_OFFSETS: count=64
+[29468.074361245] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.074886654] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.075105355] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.075108054] C361_CHANGED_OFFSETS: count=64
+[29468.075141210] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.075726445] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.075926107] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.075928902] C361_CHANGED_OFFSETS: count=64
+[29468.075962953] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+[29468.102247243] C361_BUFFER_DUMP_START: 256 bytes (64 uint32)
+[29468.102506972] C361_BUFFER_DUMP_END: 64/64 values changed
+[29468.102511595] C361_CHANGED_OFFSETS: count=64
+[29468.102572120] C361_PATTERN: Multiple writes, stride=1 (0x4 bytes)
+
+✅ PATTERN DETECTE dans les logs!
+   → Analyser offsets et valeurs pour identifier probleme
+
+=== FIN TEST C361 ===

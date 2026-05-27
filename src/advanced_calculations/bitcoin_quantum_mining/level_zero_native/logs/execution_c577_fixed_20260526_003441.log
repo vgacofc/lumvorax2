@@ -1,0 +1,57 @@
+[+0.000322103] [INFO] ╔════════════════════════════════════════════════════════════════╗
+[+0.000391233] [INFO] ║          LUMVORAX TEST C577 - SURFACE STATES GEN9              ║
+[+0.000400358] [INFO] ║                  PRIORITÉ ABSOLUE - GTT UNLOCK                 ║
+[+0.000405774] [INFO] ╚════════════════════════════════════════════════════════════════╝
+[+0.000410906] [INFO] 
+[+0.000416564] [INFO] === TEST 1: Décodage Surface State OpenCL ===
+[+0.000422920] [INFO] Surface State OpenCL décodé avec succès
+[+0.002224903] [INFO] Wireshark sauvegardé: logs/forensic/surface_state_opencl_wireshark.txt
+[+0.002247019] [INFO] Surface State OpenCL VALIDE
+[+0.002251561] [INFO] Type: BUFFER
+[+0.002255260] [INFO] Format: R32_UINT
+[+0.002258790] [INFO] Tiling: LINEAR
+[+0.002262175] [INFO] Dimensions: 256x1
+[+0.002265919] [INFO] Pitch: 1024 bytes
+[+0.002269713] [INFO] Base Address: 0x0000000000001000
+[+0.002273536] [INFO] MOCS: UNCACHED
+[+0.002276962] [INFO] Taille calculée: 1024 bytes
+[+0.002280650] [INFO] Alignement: OK
+[+0.002283972] [INFO] TEST 1: RÉUSSI
+[+0.002287221] [INFO] === TEST 2: Génération Surface State Natif ===
+[+0.002290816] [INFO] Surface State natif généré avec succès
+[+0.003280026] [INFO] Wireshark sauvegardé: logs/forensic/surface_state_native_wireshark.txt
+[+0.003303730] [INFO] Validation: RÉUSSI
+[+0.003310945] [INFO] TEST 2: RÉUSSI
+[+0.003316853] [INFO] === TEST 3: Comparaison OpenCL vs Natif ===
+[+0.003493163] [INFO] Différences trouvées: 2
+[+0.003509917] [INFO] Rapport différentiel sauvegardé: logs/forensic/surface_state_diff_opencl_vs_native.txt
+[+0.003516064] [INFO] Champs critiques identiques (Type, Format, Tiling)
+[+0.003521368] [INFO] TEST 3: RÉUSSI
+[+0.003530921] [INFO] === TEST 4: Extraction depuis Batch OpenCL ===
+[+0.003540128] [INFO] Surface States extraits: 2
+[+0.003545884] [INFO] Surface State #0:
+[+0.003551259] [INFO]   Type: 1D
+[+0.003556086] [INFO]   Format: UNKNOWN
+[+0.003560796] [INFO]   Dimensions: 4098x1
+[+0.003740591] [INFO] Surface State #1:
+[+0.003757920] [INFO]   Type: 1D
+[+0.003764707] [INFO]   Format: UNKNOWN
+[+0.003770297] [INFO]   Dimensions: 3x12545
+[+0.003951157] [INFO] TEST 4: RÉUSSI
+[+0.003972340] [INFO] === TEST 5: Simulation Allocation GTT ===
+[+0.004007934] [ERROR] Échec ouverture /dev/dri/card0: No such file or directory
+[+0.004015399] [INFO] 
+[+0.004020889] [INFO] ╔════════════════════════════════════════════════════════════════╗
+[+0.004120131] [INFO] ║                      RÉSUMÉ DES TESTS                          ║
+[+0.004136600] [INFO] ╠════════════════════════════════════════════════════════════════╣
+[+0.004142811] [INFO] ║ TEST 1: Décodage OpenCL          : ✓ RÉUSSI                      ║
+[+0.004147904] [INFO] ║ TEST 2: Génération Natif          : ✓ RÉUSSI                      ║
+[+0.004153215] [INFO] ║ TEST 3: Comparaison OpenCL/Natif  : ✓ RÉUSSI                      ║
+[+0.004160301] [INFO] ║ TEST 4: Extraction Batch          : ✓ RÉUSSI                      ║
+[+0.004166166] [INFO] ║ TEST 5: Simulation GTT            : ✗ ÉCHOUÉ                      ║
+[+0.004171372] [INFO] ╠════════════════════════════════════════════════════════════════╣
+[+0.004176740] [INFO] ║ RÉSULTAT GLOBAL: ✗ ÉCHECS DÉTECTÉS                                        ║
+[+0.004182173] [INFO] ╚════════════════════════════════════════════════════════════════╝
+[+0.004212970] [INFO] Durée totale: 4.212 ms
+
+Log sauvegardé: logs/execution_C577_20260526_003441.log

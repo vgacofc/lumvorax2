@@ -1,0 +1,12 @@
+event syntax error: 'i915:*'
+                     \___ can't access trace events
+
+Error:	No permissions to read /sys/kernel/tracing//events/i915/i915_reg_rw
+Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/tracing/'
+
+Run 'perf list' for a list of valid events
+
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events

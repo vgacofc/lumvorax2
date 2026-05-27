@@ -1,0 +1,37 @@
+❌ EXECBUFFER2 failed: -22 (Invalid argument)
+dmesg: read kernel buffer failed: Operation not permitted
+=== CYCLE C493: BATCH MINIMAL STYLE OPENCL ===
+
+[1/12] Ouverture /dev/dri/renderD128...
+  ✓ fd = 5
+
+[2/12] Initialisation drm_intel_bufmgr...
+  ✓ bufmgr initialisé
+
+[3/12] Allocation 10 buffers séparés...
+  ✓ 10 buffers alloués
+
+[4/12] Initialisation output buffer...
+  ✓ Output initialisé avec 0xFFFFFFFF
+
+[5/12] Copie kernel ISA Gen9 (320 bytes)...
+  ✓ Kernel copié
+
+[6/12] Construction Surface State...
+  ✓ Surface State créé
+
+[7/12] Construction Binding Table...
+  ✓ Binding Table créé
+
+[8/12] Construction Interface Descriptor...
+  ✓ Interface Descriptor créé
+
+[9/12] Construction batch minimal...
+  ✓ Batch créé: 92 bytes (23 DWORDs)
+
+[10/12] Création contexte GPU...
+  ✓ Contexte créé
+
+[11/12] EXÉCUTION GPU...
+
+Vérifier dmesg pour GPU HANG:

@@ -1,0 +1,154 @@
+[C255v8n] Compilation: src/btc_gen9_mining_adapter.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_gen9_mining_adapter.c -o build/btc_gen9_mining_adapter.o
+src/btc_gen9_mining_adapter.c: In function ‘lum_gpu_mine_batch_async’:
+src/btc_gen9_mining_adapter.c:100:15: warning: unused parameter ‘out_nonce’ [-Wunused-parameter]
+  100 |     uint32_t* out_nonce,
+      |     ~~~~~~~~~~^~~~~~~~~
+src/btc_gen9_mining_adapter.c:101:14: warning: unused parameter ‘out_hash’ [-Wunused-parameter]
+  101 |     uint32_t out_hash[8],
+      |     ~~~~~~~~~^~~~~~~~~~~
+src/btc_gen9_mining_adapter.c:102:15: warning: unused parameter ‘out_best’ [-Wunused-parameter]
+  102 |     uint32_t* out_best
+      |     ~~~~~~~~~~^~~~~~~~
+[C255v8n] Compilation: src/btc_mining_engine.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_mining_engine.c -o build/btc_mining_engine.o
+[C255v8n] Compilation: src/main_btc_mining.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/main_btc_mining.c -o build/main_btc_mining.o
+[C255v8n] Compilation: src/nx48_btc_controller.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/nx48_btc_controller.c -o build/nx48_btc_controller.o
+[C255v8n] Compilation: src/nx48_alltime_record.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/nx48_alltime_record.c -o build/nx48_alltime_record.o
+[C255v8n] Compilation: src/nx48_coupler_bridge.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/nx48_coupler_bridge.c -o build/nx48_coupler_bridge.o
+[C255v8n] Compilation: src/nx49_biological_neuron.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/nx49_biological_neuron.c -o build/nx49_biological_neuron.o
+[C255v8n] Compilation: src/asic_btc_optimizer.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/asic_btc_optimizer.c -o build/asic_btc_optimizer.o
+[C255v8n] Compilation: src/btc_wallet.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_wallet.c -o build/btc_wallet.o
+src/btc_wallet.c: In function ‘btc_hash160’:
+src/btc_wallet.c:68:5: warning: ‘RIPEMD160’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   68 |     RIPEMD160(sha256_buf, 32, out);
+      |     ^~~~~~~~~
+In file included from src/btc_wallet.c:34:
+/usr/include/openssl/ripemd.h:49:38: note: declared here
+   49 | OSSL_DEPRECATEDIN_3_0 unsigned char *RIPEMD160(const unsigned char *d, size_t n,
+      |                                      ^~~~~~~~~
+src/btc_wallet.c: In function ‘wallet_fill_from_ec_key’:
+src/btc_wallet.c:211:5: warning: ‘EC_KEY_get0_group’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  211 |     const EC_GROUP* group = EC_KEY_get0_group(ec_key);
+      |     ^~~~~
+In file included from src/btc_wallet.c:30:
+/usr/include/openssl/ec.h:1034:39: note: declared here
+ 1034 | OSSL_DEPRECATEDIN_3_0 const EC_GROUP *EC_KEY_get0_group(const EC_KEY *key);
+      |                                       ^~~~~~~~~~~~~~~~~
+src/btc_wallet.c:212:5: warning: ‘EC_KEY_get0_public_key’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  212 |     const EC_POINT* pub   = EC_KEY_get0_public_key(ec_key);
+      |     ^~~~~
+/usr/include/openssl/ec.h:1062:39: note: declared here
+ 1062 | OSSL_DEPRECATEDIN_3_0 const EC_POINT *EC_KEY_get0_public_key(const EC_KEY *key);
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~
+src/btc_wallet.c:213:5: warning: ‘EC_KEY_get0_private_key’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  213 |     const BIGNUM*   priv  = EC_KEY_get0_private_key(ec_key);
+      |     ^~~~~
+/usr/include/openssl/ec.h:1048:37: note: declared here
+ 1048 | OSSL_DEPRECATEDIN_3_0 const BIGNUM *EC_KEY_get0_private_key(const EC_KEY *key);
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~
+src/btc_wallet.c: In function ‘btc_wallet_create’:
+src/btc_wallet.c:315:5: warning: ‘EC_KEY_new’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  315 |     EC_KEY* ec_key = EC_KEY_new();
+      |     ^~~~~~
+/usr/include/openssl/ec.h:968:31: note: declared here
+  968 | OSSL_DEPRECATEDIN_3_0 EC_KEY *EC_KEY_new(void);
+      |                               ^~~~~~~~~~
+src/btc_wallet.c:316:5: warning: ‘EC_KEY_set_group’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  316 |     if (!ec_key || EC_KEY_set_group(ec_key, group) != 1) {
+      |     ^~
+/usr/include/openssl/ec.h:1042:27: note: declared here
+ 1042 | OSSL_DEPRECATEDIN_3_0 int EC_KEY_set_group(EC_KEY *key, const EC_GROUP *group);
+      |                           ^~~~~~~~~~~~~~~~
+src/btc_wallet.c:323:5: warning: ‘EC_KEY_generate_key’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  323 |     if (EC_KEY_generate_key(ec_key) != 1) {
+      |     ^~
+/usr/include/openssl/ec.h:1101:27: note: declared here
+ 1101 | OSSL_DEPRECATEDIN_3_0 int EC_KEY_generate_key(EC_KEY *key);
+      |                           ^~~~~~~~~~~~~~~~~~~
+src/btc_wallet.c:325:9: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  325 |         EC_KEY_free(ec_key); EC_GROUP_free(group); LV_FREE(w);
+      |         ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c:331:5: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  331 |     EC_KEY_free(ec_key);
+      |     ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c: In function ‘btc_wallet_from_privkey’:
+src/btc_wallet.c:363:5: warning: ‘EC_KEY_new’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  363 |     EC_KEY*   ec_key = EC_KEY_new();
+      |     ^~~~~~
+/usr/include/openssl/ec.h:968:31: note: declared here
+  968 | OSSL_DEPRECATEDIN_3_0 EC_KEY *EC_KEY_new(void);
+      |                               ^~~~~~~~~~
+src/btc_wallet.c:364:5: warning: ‘EC_KEY_set_group’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  364 |     if (!group || !ec_key || EC_KEY_set_group(ec_key, group) != 1) {
+      |     ^~
+/usr/include/openssl/ec.h:1042:27: note: declared here
+ 1042 | OSSL_DEPRECATEDIN_3_0 int EC_KEY_set_group(EC_KEY *key, const EC_GROUP *group);
+      |                           ^~~~~~~~~~~~~~~~
+src/btc_wallet.c:365:9: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  365 |         EC_KEY_free(ec_key); EC_GROUP_free(group); LV_FREE(w);
+      |         ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c:372:9: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  372 |         EC_KEY_free(ec_key); EC_GROUP_free(group); LV_FREE(w);
+      |         ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c:377:5: warning: ‘EC_KEY_set_private_key’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  377 |     if (EC_KEY_set_private_key(ec_key, priv_bn) != 1) {
+      |     ^~
+/usr/include/openssl/ec.h:1056:27: note: declared here
+ 1056 | OSSL_DEPRECATEDIN_3_0 int EC_KEY_set_private_key(EC_KEY *key, const BIGNUM *prv);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~
+src/btc_wallet.c:378:9: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  378 |         BN_free(priv_bn); EC_KEY_free(ec_key); EC_GROUP_free(group); LV_FREE(w);
+      |         ^~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c:388:9: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  388 |         EC_KEY_free(ec_key); EC_GROUP_free(group); LV_FREE(w);
+      |         ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+src/btc_wallet.c:391:5: warning: ‘EC_KEY_set_public_key’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  391 |     EC_KEY_set_public_key(ec_key, pub_point);
+      |     ^~~~~~~~~~~~~~~~~~~~~
+/usr/include/openssl/ec.h:1070:27: note: declared here
+ 1070 | OSSL_DEPRECATEDIN_3_0 int EC_KEY_set_public_key(EC_KEY *key, const EC_POINT *pub);
+      |                           ^~~~~~~~~~~~~~~~~~~~~
+src/btc_wallet.c:398:5: warning: ‘EC_KEY_free’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  398 |     EC_KEY_free(ec_key);
+      |     ^~~~~~~~~~~
+/usr/include/openssl/ec.h:1003:28: note: declared here
+ 1003 | OSSL_DEPRECATEDIN_3_0 void EC_KEY_free(EC_KEY *key);
+      |                            ^~~~~~~~~~~
+[C255v8n] Compilation: src/btc_block_validator.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_block_validator.c -o build/btc_block_validator.o
+[C255v8n] Compilation: src/nx48_neuro_coupler.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/nx48_neuro_coupler.c -o build/nx48_neuro_coupler.o
+[C255v8n] Compilation: src/btc_gpu_async_logger.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_gpu_async_logger.c -o build/btc_gpu_async_logger.o
+[C255v8n] Compilation: src/sha256_lumvorax.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/sha256_lumvorax.c -o build/sha256_lumvorax.o
+[C255v8n] Linkage: bin/btc_mining_runner
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm build/main_btc_mining.o build/btc_mining_engine.o build/nx48_btc_controller.o build/nx48_alltime_record.o build/nx48_coupler_bridge.o build/nx49_biological_neuron.o build/asic_btc_optimizer.o build/btc_wallet.o build/btc_block_validator.o build/nx48_neuro_coupler.o build/btc_gpu_async_logger.o build/sha256_lumvorax.o build/btc_gen9_native_runner.o build/btc_i915_drm_forensic_tracker.o build/btc_gen9_mining_adapter.o lib/libdeps.a -ldrm -lpthread -lm -lssl -lcrypto -o bin/btc_mining_runner
+[C255v8n] ✅ Binaire production COMPLET créé: bin/btc_mining_runner
+[C255v8n] Architecture : PT-MC (8 répliques) + NX48 + NX49 + ASIC

@@ -1,0 +1,148 @@
+═══════════════════════════════════════════════════════════════
+  RAPPORT FINAL C197.47 : ANALYSE DÉPENDANCES MULTI-COUCHE
+═══════════════════════════════════════════════════════════════
+
+Date: Wed May  6 01:29:35 PM CEST 2026
+Fichier analysé: /tmp/c197_47_layer_all_syscalls.log
+Total lignes: 1732
+
+RÉSUMÉ PAR COUCHE
+=================
+
+COUCHE 1 : Bibliothèques (42)
+----------------------------------------
+/etc/ld.so.cache
+/etc/ld.so.preload
+/lib/glibc-hwcaps/x86-64-v2/libigdml.so.1
+/lib/glibc-hwcaps/x86-64-v3/libigdml.so.1
+/lib/libigdml.so.1
+/lib/x86_64-linux-gnu/glibc-hwcaps/x86-64-v2/libigdml.so.1
+/lib/x86_64-linux-gnu/glibc-hwcaps/x86-64-v3/libigdml.so.1
+/lib/x86_64-linux-gnu/libbsd.so.0
+/lib/x86_64-linux-gnu/libclang-cpp.so.14
+/lib/x86_64-linux-gnu/libc.so.6
+/lib/x86_64-linux-gnu/libedit.so.2
+/lib/x86_64-linux-gnu/libffi.so.8
+/lib/x86_64-linux-gnu/libgcc_s.so.1
+/lib/x86_64-linux-gnu/../lib/glibc-hwcaps/x86-64-v2/libffi.so.8
+/lib/x86_64-linux-gnu/../lib/glibc-hwcaps/x86-64-v3/libffi.so.8
+/lib/x86_64-linux-gnu/libicudata.so.74
+/lib/x86_64-linux-gnu/libicuuc.so.74
+/lib/x86_64-linux-gnu/libigc.so.1
+/lib/x86_64-linux-gnu/libigdfcl.so.1
+/lib/x86_64-linux-gnu/libigdgmm.so.12
+/lib/x86_64-linux-gnu/libigdml.so.1
+/lib/x86_64-linux-gnu/../lib/libffi.so.8
+/lib/x86_64-linux-gnu/libLLVM-14.so.1
+/lib/x86_64-linux-gnu/libLLVMSPIRVLib.so.14
+/lib/x86_64-linux-gnu/liblzma.so.5
+/lib/x86_64-linux-gnu/libmd.so.0
+/lib/x86_64-linux-gnu/libm.so.6
+/lib/x86_64-linux-gnu/libopencl-clang.so.14
+/lib/x86_64-linux-gnu/libOpenCL.so.1
+/lib/x86_64-linux-gnu/libstdc++.so.6
+/lib/x86_64-linux-gnu/libtinfo.so.6
+/lib/x86_64-linux-gnu/libva.so.2
+/lib/x86_64-linux-gnu/libxml2.so.2
+/lib/x86_64-linux-gnu/libz.so.1
+/opt/datadog-packages/datadog-apm-inject/stable/inject/launcher.preload.so
+/usr/lib/glibc-hwcaps/x86-64-v2/libigdml.so.1
+/usr/lib/glibc-hwcaps/x86-64-v3/libigdml.so.1
+/usr/lib/libigdml.so.1
+/usr/lib/x86_64-linux-gnu/glibc-hwcaps/x86-64-v2/libigdml.so.1
+/usr/lib/x86_64-linux-gnu/glibc-hwcaps/x86-64-v3/libigdml.so.1
+/usr/lib/x86_64-linux-gnu/intel-opencl/libigdrcl.so
+/usr/lib/x86_64-linux-gnu/libigdml.so.1
+
+COUCHE 2 : Top 10 Syscalls
+---------------------------
+    252 <...
+    167 mmap
+    135 write
+    127 rt_sigaction
+    103 brk
+     97 nanosleep
+     95 futex
+     94 ioctl
+     90 openat
+     76 read
+
+COUCHE 3 : ioctls DRM (94 appels)
+--------------------------------------------
+23375 ioctl(6, DRM_IOCTL_VERSION, 0x7ffee2f8d0d0) = 0
+23375 ioctl(6, DRM_IOCTL_I915_GETPARAM, 0x7ffee2f8d340) = 0
+23375 ioctl(6, DRM_IOCTL_I915_GETPARAM, 0x7ffee2f8d340) = 0
+23375 ioctl(6, DRM_IOCTL_I915_REG_READ, 0x7ffee2f8d2a0) = 0
+23375 ioctl(6, DRM_IOCTL_I915_QUERY, 0x7ffee2f8d230) = 0
+...
+
+COUCHE 4 : Allocations Mémoire (171)
+----------------------------------------------
+Total mémoire allouée: 171 appels mmap
+
+COUCHE 5 : Fichiers Accédés (37)
+-------------------------------------------
+
+c197_17_forensic_reverse_engineering.csv
+c197_17_memory_tracker.csv
+/dev/dri/by-path
+/dev/dri/by-path/pci-0000:00:02.0-render
+/dev/null
+/etc/datadog-agent/inject/host_config.yaml
+/etc/datadog-agent/inject/policies.binpb
+/etc/datadog-agent/managed/rc-orgwide-wls-policy.bin
+/etc/datadog-agent/managed/rc-targeted-wls-policy.bin
+
+COUCHE 6 : Arbre Dépendances
+-----------------------------
+Voir: layer6_dependency_tree.txt
+
+COUCHE 7 : Bibliothèques Dynamiques (0)
+---------------------------------------------------
+
+COUCHE 8 : Performance
+----------------------
+Voir: layer8_top_syscalls.txt
+
+COUCHE 9 : Fichiers Sensibles (21)
+---------------------------------------------
+/dev/dri/by-path
+/dev/dri/by-path/pci-0000:00:02.0-render
+/dev/null
+/proc/1/environ
+/proc/23375/cmdline
+/proc/23375/environ
+/proc/23375/fd
+/proc/23375/fd/4
+/proc/23375/stat
+/proc/bus/pci/devices
+/proc/cpuinfo
+/proc/modules
+/proc/self/cgroup
+/proc/self/mountinfo
+/proc/self/status
+/proc/stat
+/sys/bus/pci/devices/0000:00:02.0/drm
+/sys/bus/pci/devices/0000:00:02.0/drm/card1/gt_max_freq_mhz
+/sys/bus/pci/devices/0000:00:02.0/drm/card1/prelim_uapi_version
+/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-org.chromium.Chromium-19135.scope/cpu.max
+/sys/kernel/mm/transparent_hugepage/hpage_pmd_size
+
+═══════════════════════════════════════════════════════════════
+  ANALYSE COMPLÈTE TERMINÉE
+═══════════════════════════════════════════════════════════════
+
+Tous les fichiers d'analyse sont dans: /tmp/c197_47_analysis/
+
+Fichiers générés:
+  - layer1_libraries.txt          : Bibliothèques chargées
+  - layer2_syscalls_stats.txt     : Statistiques syscalls
+  - layer3_drm_ioctls.txt         : Appels DRM/GPU
+  - layer4_memory_allocations.txt : Allocations mémoire
+  - layer5_files_accessed.txt     : Fichiers accédés
+  - layer6_dependency_tree.txt    : Arbre dépendances
+  - layer7_dynamic_libraries.txt  : Bibliothèques dynamiques
+  - layer8_top_syscalls.txt       : Top syscalls
+  - layer9_sensitive_files.txt    : Fichiers sensibles
+  - RAPPORT_FINAL_C197_47.txt     : Ce rapport
+

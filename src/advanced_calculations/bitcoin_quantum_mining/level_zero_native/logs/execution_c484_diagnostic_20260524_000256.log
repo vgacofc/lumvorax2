@@ -1,0 +1,91 @@
+=== CYCLE C484: DIAGNOSTIC COMPLET ===
+
+[1/12] Ouverture /dev/dri/renderD128...
+  ✓ fd = 5
+
+[2/12] Initialisation drm_intel_bufmgr...
+  ✓ bufmgr initialisé
+
+[3/12] Allocation buffers...
+  ✓ batch_bo: 65536 bytes
+  ✓ output_bo: 4096 bytes
+  ✓ aux_buf_bo: 65536 bytes
+  ✓ kernel_bo: 4096 bytes
+
+[4/12] Initialisation output buffer...
+  ✓ Output rempli avec 0xFFFFFFFF
+
+[5/12] Copie kernel ISA Gen9...
+  ✓ Kernel ISA copié: 320 bytes
+
+[6/12] Configuration Binding Table (Beignet)...
+  ✓ Binding Table configurée
+  ✓ Surface State Gen7 configurée
+  ✓ Relocation enregistrée
+
+[7/12] Configuration Interface Descriptor...
+  ✓ Interface Descriptor configuré
+  ✓ Relocation kernel enregistrée
+
+[8/12] Construction batch GPGPU COMPLET...
+  ✓ Batch construit: 240 bytes
+  ✓ PIPE_CONTROL
+  ✓ PIPELINE_SELECT GPGPU
+  ✓ STATE_BASE_ADDRESS + relocations
+  ✓ MEDIA_VFE_STATE
+  ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD
+  ✓ GPGPU_WALKER
+  ✓ MI_BATCH_BUFFER_END
+
+[9/12] DUMP Binding Table...
+
+=== Binding Table (4 DWORDs) ===
+  [ 0] 0x00000400  [ 1] 0x00000000  [ 2] 0x00000000  [ 3] 0x00000000
+
+[10/12] DUMP Surface State...
+
+=== Surface State Gen7 (8 DWORDs) ===
+  [ 0] 0x87fc0000  [ 1] 0x00000000  [ 2] 0x001f007f  [ 3] 0x00000000
+  [ 4] 0x00000000  [ 5] 0x00000000  [ 6] 0x00000000  [ 7] 0x00000000
+
+[11/12] DUMP Interface Descriptor...
+
+=== Interface Descriptor Gen8 (8 DWORDs) ===
+  [ 0] 0x00000000  [ 1] 0x00000000  [ 2] 0x00000000  [ 3] 0x00003000
+  [ 4] 0x00000001  [ 5] 0x00000000  [ 6] 0x01000000  [ 7] 0x00000000
+
+[12/12] DUMP Batch Buffer...
+
+=== Batch Buffer (240 bytes) ===
+0000: 04 00 00 7a 40 00 14 00 00 00 00 00 00 00 00 00 
+0010: 00 00 00 00 00 00 00 00 01 00 04 69 11 00 01 61 
+0020: 31 00 00 00 00 00 00 00 00 00 03 00 31 00 00 00 
+0030: 00 00 00 00 31 00 00 00 00 00 00 00 31 00 00 00 
+0040: 00 00 00 00 31 00 00 00 00 00 00 00 01 f0 ff ff 
+0050: 01 f0 ff ff 01 f0 ff ff 01 f0 ff ff 31 00 00 00 
+0060: 00 00 00 00 00 f0 ff ff 07 00 00 70 00 00 00 00 
+0070: 00 00 00 00 c0 02 3f 00 00 00 00 00 00 00 02 00 
+0080: 00 00 00 00 00 00 00 00 00 00 00 00 02 00 02 70 
+0090: 00 00 00 00 20 00 00 00 00 20 00 00 0d 00 05 71 
+00a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00c0: 01 00 00 00 01 00 00 00 01 00 00 00 ff ff ff ff 
+00d0: ff ff ff ff 04 00 00 7a 40 00 14 00 00 00 00 00 
+00e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0a 
+
+[EXEC] Soumission EXECBUFFER2...
+  ✓ Context créé
+  ✓✓✓ EXECBUFFER2 SUCCÈS! ✓✓✓
+
+[RESULT] Vérification résultat...
+  Output[0] = 0xffffffff (attendu: 0xDEADBEEF)
+  Output[1] = 0xffffffff (attendu: 0xCAFEBABE)
+  Output[2] = 0xffffffff (attendu: 0x12345678)
+  Output[3] = 0xffffffff (attendu: 0xABCDEF00)
+
+=== RÉSUMÉ C484 ===
+Durée totale: 666.078 ms
+EXECBUFFER2: ✓ SUCCÈS
+Batch: GPGPU COMPLET (Beignet)
+Relocations: Automatiques (STATE_BASE_ADDRESS + IDRT + BTI)
+Statut: ⚠ Pas de modification

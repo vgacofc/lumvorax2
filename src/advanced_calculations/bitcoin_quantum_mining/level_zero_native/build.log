@@ -1,0 +1,12 @@
+[C198] Répertoires créés
+[C198] Compilation: src/btc_levelzero_runner.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -pthread -I/usr/include/level_zero -Iinclude -c src/btc_levelzero_runner.c -o build/btc_levelzero_runner.o
+src/btc_levelzero_runner.c:15: warning: "_GNU_SOURCE" redefined
+   15 | #define _GNU_SOURCE
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_levelzero_runner.c:29:10: fatal error: level_zero/ze_api.h: No such file or directory
+   29 | #include <level_zero/ze_api.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [Makefile:63: build/btc_levelzero_runner.o] Error 1

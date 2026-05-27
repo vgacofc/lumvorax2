@@ -1,0 +1,45 @@
+=== TEST C541 - COMPARAISON OPENCL ===
+
+Exécution kernel OpenCL...
+
+=== EXECBUFFER2 #1 INTERCEPTÉ ===
+buffer_count: 10
+batch_start_offset: 0x0
+batch_len: 320 bytes
+flags: 0x800
+
+=== BUFFERS ===
+Buffer[0]: handle=9, offset=0x7c7df4943000, size=0, flags=0x18
+Buffer[1]: handle=10, offset=0xffff8001fffed000, size=0, flags=0x18
+Buffer[2]: handle=12, offset=0x7c7df4815000, size=0, flags=0x18
+Buffer[3]: handle=14, offset=0x7c7df4506000, size=0, flags=0x18
+Buffer[4]: handle=13, offset=0xffff8001fffdd000, size=0, flags=0x18
+Buffer[5]: handle=2, offset=0x7c7df4949000, size=0, flags=0x18
+Buffer[6]: handle=3, offset=0x7c7df1800000, size=0, flags=0x18
+Buffer[7]: handle=8, offset=0xffff8001fffee000, size=0, flags=0x18
+Buffer[8]: handle=11, offset=0x7c7df4846000, size=0, flags=0x18
+Buffer[9]: handle=15, offset=0x7c7df44f5000, size=0, flags=0x18
+
+=== DUMP BATCH BUFFER (via fd existant) ===
+Batch buffer mappé @ 0x7c7df49e5000
+
+BATCH CONTENT (320 bytes complets):
+0000: 69041312 7a000004 00100000 00000000 00000000 00000000 00000000 11000001 
+0020: 0000e404 00000100 11000001 00007034 60000321 61040001 f1800000 00007c7d 
+0040: 7a000004 00101021 00000000 00000000 00000000 00000000 70000007 00000000 
+0060: 00000000 00a70100 00000000 07820000 00000000 00000000 00000000 11000001 
+0080: 00002580 00060000 7a000004 00100420 00000000 00000000 00000000 00000000 
+00a0: 61010011 00000001 00000000 00040000 f4506001 00007c7d f4815001 00007c7d 
+00c0: 00000001 ffff8001 00000041 00008001 fffff001 00010001 fffff001 fffff001 
+00e0: f4506001 00007c7d 003bf000 61020001 fffee000 00000000 7a000004 00100000 
+0100: 00000000 00000000 00000000 00000000 18800101 f4846000 00007c7d 00000000 
+0120: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+
+✓ Batch sauvegardé: logs/opencl_batch_1.bin (320 bytes)
+
+
+=== RÉSULTAT OPENCL ===
+output[0] = 0x12345678
+output[1] = 0xffffffff
+
+✓✓✓ OpenCL fonctionne correctement!

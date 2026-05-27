@@ -1,0 +1,41 @@
+# Makefile pour tests NX49 Neurone Biologique
+# Cycle C151 - 2026-04-30
+
+CC = gcc
+CFLAGS = -O2 -Wall -Wextra -Werror -std=c11 -D_POSIX_C_SOURCE=200809L -D_GNU_SOURCE
+CFLAGS += -march=native -msse4.2 -pthread -lm
+CFLAGS += -I../src -I../src/lum -I../src/common -I../src/debug -I../src/neural_network
+
+# Couleurs
+RED = \033[0;31m
+GREEN = \033[0;32m
+YELLOW = \033[1;33m
+BLUE = \033[0;34m
+NC = \033[0m
+
+# Fichiers
+TEST_NX49 = test_nx49_biological_neuron
+SRC_NX49 = ../src/neural_network/nx49_biological_neuron.c
+FRAMEWORK = unit_test_framework.c
+
+.PHONY: all test clean
+
+all: test
+
+test: $(TEST_NX49)
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@echo "$(BLUE)║         EXÉCUTION TESTS NX49 NEURONE BIOLOGIQUE               ║$(NC)"
+	@echo "$(BLUE)════════════════════════════════════════════════════════════════$(NC)"
+	@./$(TEST_NX49)
+	@echo ""
+	@echo "$(GREEN)✅ Tests NX49 terminés avec succès !$(NC)"
+
+$(TEST_NX49): $(TEST_NX49).c $(SRC_NX49) $(FRAMEWORK)
+	@echo "$(YELLOW)🔨 Compilation $(TEST_NX49)...$(NC)"
+	$(CC) $(CFLAGS) -o $(TEST_NX49) $(TEST_NX49).c $(SRC_NX49) $(FRAMEWORK)
+	@echo "$(GREEN)✅ Compilation réussie !$(NC)"
+
+clean:
+	@echo "$(YELLOW)🧹 Nettoyage...$(NC)"
+	rm -f $(TEST_NX49)
+	@echo "$(GREEN)✅ Nettoyage terminé !$(NC)"

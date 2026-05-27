@@ -1,0 +1,45 @@
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 9965
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> bash tools/run_c94_ubuntu.sh full-12
+=== [C94] Compile-check des modules C avec ibm_quantum_constants.h C94 ===
+  -> src/advanced_calculations/quantum_problem_hubbard_hts/src/vorax_kernel.c
+  -> src/vorax/vorax_operations.c
+src/vorax/vorax_operations.c: In function ‘vorax_fuse’:
+src/vorax/vorax_operations.c:40:5: warning: implicit declaration of function ‘clock_gettime’ [-Wimplicit-function-declaration]
+   40 |     clock_gettime(CLOCK_MONOTONIC, &start);
+      |     ^~~~~~~~~~~~~
+src/vorax/vorax_operations.c:40:19: error: ‘CLOCK_MONOTONIC’ undeclared (first use in this function)
+   40 |     clock_gettime(CLOCK_MONOTONIC, &start);
+      |                   ^~~~~~~~~~~~~~~
+src/vorax/vorax_operations.c:40:19: note: each undeclared identifier is reported only once for each function it appears in
+  -> src/parser/vorax_parser.c
+  -> src/lum/lum_core.c
+src/lum/lum_core.c: In function ‘lum_security_init’:
+src/lum/lum_core.c:85:9: warning: implicit declaration of function ‘clock_gettime’ [-Wimplicit-function-declaration]
+   85 |         clock_gettime(CLOCK_MONOTONIC, &ts);
+      |         ^~~~~~~~~~~~~
+src/lum/lum_core.c:85:23: error: ‘CLOCK_MONOTONIC’ undeclared (first use in this function)
+   85 |         clock_gettime(CLOCK_MONOTONIC, &ts);
+      |                       ^~~~~~~~~~~~~~~
+src/lum/lum_core.c:85:23: note: each undeclared identifier is reported only once for each function it appears in
+  -> src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c
+src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c: In function ‘nx48_btc_init’:
+src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c:638:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  638 |     strncpy(s->csv_path, cfg->csv_path[0] ? cfg->csv_path : "", sizeof(s->csv_path)-1);
+      |     ^
+src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c:639:5: warning: ‘__builtin_strncpy’ output may be truncated copying 255 bytes from a string of length 255 [-Wstringop-truncation]
+  639 |     strncpy(s->lum_path, cfg->lum_path[0] ? cfg->lum_path : "", sizeof(s->lum_path)-1);
+      |     ^
+C91 HVA8  = 0.2999
+C93 S_pi  = 0.9944 +/- 0.0040  (gain x3.316)
+C94 N=12  = 0.9944 +/- 0.0040
+C94 N=16  = 0.3558 +/- 0.0049
+Best N=12 = 0.9944
+Best N=16 = 0.3558
+=== [C94] DRY-RUN puis SUBMIT IBM N=12 ===
+tools/run_c94_ubuntu.sh: line 101: python: command not found
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [127]> 

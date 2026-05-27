@@ -1,0 +1,142 @@
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║  TEST C605 - BRUTEFORCE GPGPU_WALKER                      ║
+║  Mini Compute Runtime i915 DRM Natif                      ║
+║                                                            ║
+║  Objectif: Trouver configuration GPGPU_WALKER valide      ║
+║  ROOT CAUSE #155: Configuration incorrecte                ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ DRM ouvert: /dev/dri/card1
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+✓ Générateur initialisé
+✓ Kernel copié (64 bytes)
+
+[C600] ========================================
+[C600] CONFIGURATION IDRT
+[C600] ========================================
+
+[C600] ✓ CURBE configuré:
+[C600]   Argument 0 (output*): 0x0000000000100000
+[C600] ✓ IDRT configuré (32 bytes):
+[C600]   Kernel GTT:        0x0000000000700000
+[C600]   Binding Table:     offset 0x00000010 DWords (64 bytes depuis Surface State Base)
+[C600]   Num Threads:       1
+[C600]   Binding Entries:   1
+[C600] 
+[C600] IDRT Dump (8 DWords):
+[C600]   DW0: 0x00700000
+[C600]   DW1: 0x00000000
+[C600]   DW2: 0x00000042
+[C600]   DW3: 0x00000000
+[C600]   DW4: 0x00000200
+[C600]   DW5: 0x00010000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION SURFACE STATE #0
+[C600] ========================================
+
+[C600] ✓ Surface State #0 configuré (64 bytes):
+[C600]   Type:              BUFFER
+[C600]   Format:            RAW
+[C600]   Base Address:      0x0000000000100000
+[C600]   Size:              4096 bytes
+[C600] 
+[C600] Surface State Dump (16 DWords):
+[C600]   DW0: 0x87fc0000
+[C600]   DW1: 0x00100000
+[C600]   DW2: 0x00000000
+[C600]   DW3: 0x00000fff
+[C600]   DW4: 0x00000000
+[C600]   DW5: 0x00000000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600]   DW8: 0x00000000
+[C600]   DW9: 0x00000000
+[C600]   DW10: 0x00000000
+[C600]   DW11: 0x00000000
+[C600]   DW12: 0x00000000
+[C600]   DW13: 0x00000000
+[C600]   DW14: 0x00000000
+[C600]   DW15: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION BINDING TABLE
+[C600] ========================================
+
+[C600] ✓ Binding Table configurée:
+[C600]   Entry 0: offset 0x00000000 DWords (Surface State #0)
+[C600]   Placée à offset 64 bytes dans buffer Surface State
+[C600]   (Respecte contrainte: < 8KB depuis Surface State Base)
+[C600] ========================================
+
+✓ Structures GPU configurées
+
+╔════════════════════════════════════════════════════════════╗
+║  BRUTEFORCE GPGPU_WALKER CONFIGURATION                    ║
+╚════════════════════════════════════════════════════════════╝
+
+Espace de recherche:
+  Thread X: 9 valeurs
+  Thread Y: 5 valeurs
+  Thread Z: 3 valeurs
+  SIMD Size: 3 valeurs
+  IDRT Offset: 6 valeurs
+  Total combinaisons: 2430
+
+Début bruteforce...
+
+[100/2430] Testing: 1x2x4 SIMD16 IDRT=4[200/2430] Testing: 1x8x4 SIMD8 IDRT=1[300/2430] Testing: 2x1x2 SIMD16 IDRT=16[400/2430] Testing: 2x4x2 SIMD8 IDRT=4[500/2430] Testing: 2x16x1 SIMD32 IDRT=1[600/2430] Testing: 4x2x1 SIMD8 IDRT=16[700/2430] Testing: 4x4x4 SIMD32 IDRT=4[800/2430] Testing: 4x16x4 SIMD16 IDRT=1[900/2430] Testing: 8x2x2 SIMD32 IDRT=16[1000/2430] Testing: 8x8x2 SIMD16 IDRT=4[1100/2430] Testing: 16x1x2 SIMD8 IDRT=1[1200/2430] Testing: 16x4x1 SIMD16 IDRT=16[1300/2430] Testing: 16x16x1 SIMD8 IDRT=4[1400/2430] Testing: 32x1x4 SIMD32 IDRT=1[1500/2430] Testing: 32x4x4 SIMD8 IDRT=16[1600/2430] Testing: 32x16x2 SIMD32 IDRT=4[1700/2430] Testing: 64x2x2 SIMD16 IDRT=1[1800/2430] Testing: 64x8x1 SIMD32 IDRT=16[1900/2430] Testing: 128x1x1 SIMD16 IDRT=4[2000/2430] Testing: 128x4x1 SIMD8 IDRT=1[2100/2430] Testing: 128x8x4 SIMD16 IDRT=16[2200/2430] Testing: 256x1x4 SIMD8 IDRT=4[2300/2430] Testing: 256x4x2 SIMD32 IDRT=1[2400/2430] Testing: 256x16x2 SIMD8 IDRT=16
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTATS BRUTEFORCE                                      ║
+╚════════════════════════════════════════════════════════════╝
+
+Tests effectués: 2430
+Configurations réussies: 0
+Temps écoulé: 3 secondes
+Taux de réussite: 0.00%
+
+❌ AUCUNE CONFIGURATION VALIDE TROUVÉE
+   → Problème plus profond que GPGPU_WALKER
+   → Vérifier IDRT, Surface State, Kernel ISA
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+✅ TEST C605 TERMINÉ
+

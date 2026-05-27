@@ -1,0 +1,111 @@
+# LumVorax C278 — Test 4 Solutions Anti-GPU Hang
+# Makefile pour compilation tests DRM natifs
+
+# ══════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ══════════════════════════════════════════════════════════════════════
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=gnu11
+CFLAGS += -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+CFLAGS += -pthread
+
+# DRM headers
+DRM_CFLAGS = -I/usr/include/drm -I/usr/include/libdrm
+DRM_LIBS = -ldrm
+
+# Autres dépendances
+LIBS = -lm -lz -lpthread -ldl
+
+# Chemins
+SRC_DIR = src
+BUILD_DIR = build
+BIN_DIR = bin
+LOG_DIR = logs/c278
+
+# ══════════════════════════════════════════════════════════════════════
+# RÈGLES PRINCIPALES
+# ══════════════════════════════════════════════════════════════════════
+
+.PHONY: all clean dirs test_solution1 test_solution2 test_solution3 test_solution4
+
+all: dirs test_solution1 test_solution2 test_solution3 test_solution4
+
+dirs:
+	@mkdir -p $(BUILD_DIR) $(BIN_DIR) $(LOG_DIR)
+	@echo "[C278] Répertoires créés"
+
+# ── Solution 1: Batch Size Réduit ──────────────────────────────────────
+
+test_solution1: dirs
+	@echo "[C278] Compilation Solution 1: Batch Size Réduit (32K)"
+	$(CC) $(CFLAGS) $(DRM_CFLAGS) \
+		tests/test_c278_solution1.c \
+		$(DRM_LIBS) $(LIBS) -o $(BIN_DIR)/test_c278_solution1
+	@echo "[C278] ✅ Solution 1 compilée"
+
+# ── Solution 2: Timeout Augmenté ───────────────────────────────────────
+
+test_solution2: dirs
+	@echo "[C278] Compilation Solution 2: Timeout Augmenté (5000ms)"
+	$(CC) $(CFLAGS) $(DRM_CFLAGS) \
+		tests/test_c278_solution2.c \
+		$(DRM_LIBS) $(LIBS) -o $(BIN_DIR)/test_c278_solution2
+	@echo "[C278] ✅ Solution 2 compilée"
+
+# ── Solution 3: Architecture OpenCL ────────────────────────────────────
+
+test_solution3: dirs
+	@echo "[C278] Compilation Solution 3: Architecture OpenCL"
+	$(CC) $(CFLAGS) $(DRM_CFLAGS) \
+		tests/test_c278_solution3.c \
+		$(SRC_DIR)/btc_i915_drm_forensic_tracker.c \
+		$(DRM_LIBS) $(LIBS) -o $(BIN_DIR)/test_c278_solution3
+	@echo "[C278] ✅ Solution 3 compilée"
+
+# ── Solution 4: Batch Size Dynamique ───────────────────────────────────
+
+test_solution4: dirs
+	@echo "[C278] Compilation Solution 4: Batch Size Dynamique"
+	$(CC) $(CFLAGS) $(DRM_CFLAGS) \
+		tests/test_c278_solution4.c \
+		$(DRM_LIBS) $(LIBS) -o $(BIN_DIR)/test_c278_solution4
+	@echo "[C278] ✅ Solution 4 compilée"
+
+# ── Nettoyage ──────────────────────────────────────────────────────────
+
+clean:
+	@echo "[C278] Nettoyage..."
+	@rm -f $(BIN_DIR)/test_c278_solution*
+	@echo "[C278] ✅ Nettoyage terminé"
+
+clean-logs:
+	@echo "[C278] Nettoyage logs..."
+	@rm -rf $(LOG_DIR)/*
+	@echo "[C278] ✅ Logs supprimés"
+
+clean-all: clean clean-logs
+
+# ══════════════════════════════════════════════════════════════════════
+# AIDE
+# ══════════════════════════════════════════════════════════════════════
+
+help:
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  LumVorax C278 — Test 4 Solutions Anti-GPU Hang"
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Cibles:"
+	@echo "  make -f Makefile.c278 all              - Compile toutes les solutions"
+	@echo "  make -f Makefile.c278 test_solution1   - Solution 1: Batch 32K"
+	@echo "  make -f Makefile.c278 test_solution2   - Solution 2: Timeout 5000ms"
+	@echo "  make -f Makefile.c278 test_solution3   - Solution 3: Architecture OpenCL"
+	@echo "  make -f Makefile.c278 test_solution4   - Solution 4: Batch Dynamique"
+	@echo "  make -f Makefile.c278 clean            - Nettoie binaires"
+	@echo "  make -f Makefile.c278 clean-all        - Nettoie tout"
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+
+# Made with Bob - LumVorax C278

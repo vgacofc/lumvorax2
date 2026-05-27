@@ -1,0 +1,26 @@
+=== TEST C532 - COMPILATION OPENCL + EXTRACTION ISA ===
+
+Kernel source chargé: 83 bytes
+
+Compilation du kernel...
+✓ Compilation réussie
+
+Taille binaire: 2952 bytes
+✓ Binaire sauvegardé: /tmp/opencl_kernel_c532.bin
+
+Premiers 128 bytes du binaire:
+  0000: 7f 45 4c 46 02 01 01 00 01 00 00 00 00 00 00 00 
+  0010: 01 00 cd 00 01 00 00 00 00 00 00 00 00 00 00 00 
+  0020: 00 00 00 00 00 00 00 00 48 09 00 00 00 00 00 00 
+  0030: 00 00 00 00 40 00 00 00 00 00 40 00 09 00 08 00 
+  0040: 01 00 60 00 0c 02 40 20 00 00 20 00 00 00 00 00 
+  0050: 06 80 00 00 04 00 00 30 00 10 00 16 c0 04 c0 04 
+  0060: 01 00 00 00 0c 43 80 20 60 00 00 00 00 00 00 00 
+  0070: 01 00 00 00 2c 0e c0 20 00 00 00 00 78 56 34 12 
+
+=== TEST EXÉCUTION ===
+Résultat OpenCL:
+  output[0] = 0x12345678
+  output[1] = 0xffffffff
+
+✓✓✓ OpenCL fonctionne correctement!

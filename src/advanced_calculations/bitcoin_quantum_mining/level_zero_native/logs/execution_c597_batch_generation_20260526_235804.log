@@ -1,0 +1,102 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST C597 - GÉNÉRATION BATCH AUTOMATIQUE                  ║
+║  Validation STATE_BASE_ADDRESS + MEDIA_VFE_STATE          ║
+╚════════════════════════════════════════════════════════════╝
+
+[TEST] Phase 1: Ouverture device DRM...
+[TEST] ✓ DRM device ouvert: fd=5
+
+[TEST] Phase 2: Initialisation générateur...
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+[TEST] ✓ Générateur initialisé
+
+[TEST] Phase 3: Génération STATE_BASE_ADDRESS...
+[TEST] ✓ STATE_BASE_ADDRESS généré: 19 DWords
+[TEST] Validation structure:
+[TEST]   DW0 (Opcode):     0x61010011 (attendu: 0x61010011)
+[TEST]   DW1 (Modify):     0x00000001 (attendu: 0x00000001)
+[TEST]   DW4 (Surface):    0x00200000
+[TEST]   DW5 (Surface H):  0x00000000
+[TEST]   DW12 (Kernel):    0x00700000
+[TEST]   DW13 (Kernel H):  0x00000000
+[TEST] ✓ Structure STATE_BASE_ADDRESS validée
+
+[TEST] Phase 4: Génération MEDIA_VFE_STATE...
+[TEST] ✓ MEDIA_VFE_STATE généré: 9 DWords
+[TEST] Validation structure:
+[TEST]   DW0 (Opcode):     0x70000007 (attendu: 0x70000007)
+[TEST]   DW3 (Threads):    0x00a70100 (attendu: 0x00a70100)
+[TEST]   DW5 (CURBE):      0x07820000 (attendu: 0x07820000)
+[TEST] ✓ Structure MEDIA_VFE_STATE validée
+
+[TEST] Phase 5: Validation batch complet...
+[TEST] Total DWords générés: 28
+[TEST] Total bytes: 112
+[TEST] Attendu OpenCL: 320 bytes (80 DWords)
+[TEST] Progression: 28 / 80 DWords (35.0%)
+
+[TEST] Dump batch généré (premiers 28 DWords):
+[TEST]   0x61010011 0x00000001 0x00000000 0x00000000 
+[TEST]   0x00200000 0x00000000 0x00800000 0x00000000 
+[TEST]   0x00000001 0x00a00000 0x00000041 0x00008001 
+[TEST]   0x00700000 0x00000000 0xfffff001 0xfffff001 
+[TEST]   0x00a00000 0x00000000 0x003bf000 0x70000007 
+[TEST]   0x00600000 0x00000000 0x00a70100 0x00000000 
+[TEST]   0x07820000 0x00000000 0x00000000 0x00000000 
+
+[TEST] Comparaison avec batch OpenCL C545:
+[TEST] Correspondance structure: 5 / 5 DWords critiques
+[TEST] ✓ Batch généré validé
+
+[TEST] Phase 6: Nettoyage...
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+[TEST] ✓ Nettoyage terminé
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTAT TEST C597                                        ║
+╠════════════════════════════════════════════════════════════╣
+║  ✓ Génération STATE_BASE_ADDRESS: OK (19 DWords)          ║
+║  ✓ Génération MEDIA_VFE_STATE: OK (9 DWords)              ║
+║  ✓ Structure batch validée: OK                            ║
+║  ✓ Comparaison OpenCL: OK                                 ║
+║                                                            ║
+║  Progression batch: 28 / 80 DWords (35%)                  ║
+║                                                            ║
+║  Prochaines étapes (C598-C600):                           ║
+║  - Implémenter génération MEDIA_INTERFACE_DESCRIPTOR_LOAD ║
+║  - Implémenter génération GPGPU_WALKER                    ║
+║  - Implémenter génération PIPE_CONTROL                    ║
+║  - Finaliser batch_generator_generate() (80 DWords)       ║
+║  - Implémenter batch_generator_submit()                   ║
+║  - Tests validation GPU                                   ║
+╚════════════════════════════════════════════════════════════╝
+

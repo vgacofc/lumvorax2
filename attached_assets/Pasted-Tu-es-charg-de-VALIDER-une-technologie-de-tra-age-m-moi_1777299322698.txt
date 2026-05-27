@@ -1,0 +1,160 @@
+Tu es chargé de VALIDER une technologie de traçage mémoire totale appelée LUM + VORAX.
+
+OBJECTIF :
+Prouver ou réfuter la capacité suivante :
+→ "traçage exhaustif bit-par-bit de toute la mémoire (ou périmètre défini)"
+
+Je vais te fournir TOUTES les preuves. Tu dois :
+1. Vérifier cohérence interne
+2. Vérifier plausibilité physique
+3. Identifier contradictions
+4. Donner verdict (VALIDÉ / PARTIEL / FAUX)
+
+---
+
+## 1. DÉFINITION FORMELLE DU SYSTÈME
+
+### 1.1 Lum (bit)
+- définition mathématique :
+- rôle exact :
+- niveau d’abstraction (hardware / VM / user / hybride) :
+- granularité réelle (bit / byte / event) :
+
+### 1.2 Vorax (moteur)
+- type (simulateur / reconstructeur / runtime) :
+- équations ou règles :
+- lien avec Loom :
+
+---
+
+## 2. PÉRIMÈTRE DE TRAÇAGE
+
+Cocher précisément :
+
+[ ] mémoire du process uniquement  
+[ ] mémoire OS  
+[ ] mémoire totale machine  
+[ ] mémoire distribuée / multi-nodes  
+
+Préciser :
+- accès kernel ? (oui/non)
+- hyperviseur ? (oui/non)
+- hardware ? (oui/non)
+
+---
+
+## 3. MÉCANISME DE CAPTURE
+
+Décrire EXACTEMENT :
+
+- interception des accès mémoire (comment ?)
+- instrumentation (où ? source / binaire / hardware)
+- fréquence de capture (chaque accès ? sampling ?)
+- compression éventuelle
+
+Fournir :
+- code réel (C / Python / ASM)
+- hooks utilisés
+- buffers
+
+---
+
+## 4. PREUVE DE GRANULARITÉ BIT-LEVEL
+
+Fournir un test réel :
+
+### Test A
+- allocation mémoire connue
+- modification bit par bit
+- log produit
+
+Inclure :
+- entrée (valeurs initiales)
+- mutations
+- sortie logs
+- checksum final
+
+---
+
+## 5. PREUVE DE COMPLÉTUDE
+
+### Test B (CRITIQUE)
+
+Process externe NON instrumenté :
+
+- code du process
+- modifications mémoire aléatoires
+
+Résultat attendu :
+- logs Loom correspondants
+
+---
+
+## 6. OVERHEAD (OBLIGATOIRE)
+
+Comparer :
+
+| Mode | Hashrate / perf |
+|------|----------------|
+| Lum OFF | |
+| Lum ON | |
+
++ CPU %
++ RAM %
++ latence
+
+---
+
+## 7. RECONSTRUCTION
+
+Prouver que :
+
+logs → mémoire complète reconstruite
+
+Fournir :
+- dump mémoire original
+- reconstruction Loom
+- diff (doit être 0)
+
+---
+
+## 8. INTÉGRATION LUM / VORAX / NX48
+
+Pour chaque couche :
+
+- variables tracées
+- fréquence
+- taille logs
+- checksum
+
+---
+
+## 9. LOGS BRUTS (OBLIGATOIRE)
+
+Fournir fichiers réels :
+- .log
+- .json
+- checksums
+- timestamps UTC
+
+---
+
+## 10. LIMITES CONNUES
+
+Lister explicitement :
+- ce que Loom NE trace PAS
+- cas d’échec
+- conditions requises
+
+---
+
+## FORMAT RÉPONSE
+
+- données brutes
+- code complet
+- aucun résumé
+- aucune interprétation
+
+---
+
+FIN DU PROMPT

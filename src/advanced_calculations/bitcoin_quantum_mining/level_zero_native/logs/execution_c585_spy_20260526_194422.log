@@ -1,0 +1,28 @@
+✅ i915 SPY initialized - logging to logs/i915_spy_20260526_194422.log
+✅ i915 SPY initialized - logging to logs/i915_spy_20260526_194422.log
+=== TEST C585: CAPTURE BATCH OPENCL COMPLET ===
+
+📊 Device: Intel(R) UHD Graphics 620
+📊 Compute Units: 24
+📊 Max Work Group Size: 256
+
+🔧 Compiling kernel...
+✅ Kernel compiled
+
+🚀 Executing kernel (global=256, local=16)...
+⏱️  Capture i915 batch pendant exécution...
+
+✅ Kernel executed successfully
+📊 Result: 0xFFFFFFFF
+⏱️  Total time: 0.302150 seconds
+
+=== INSTRUCTIONS POUR CAPTURER BATCH ===
+1. Installer: sudo apt-get install intel-gpu-tools
+2. Pendant exécution, dans autre terminal:
+   sudo intel_gpu_top
+   sudo cat /sys/kernel/debug/dri/1/i915_gem_objects
+3. Pour capturer batch complet:
+   echo 1 | sudo tee /sys/module/i915/parameters/enable_cmd_parser
+   Puis relancer ce test
+
+✅ i915 SPY: Captured 1 EXECBUFFER2 calls

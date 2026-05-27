@@ -1,0 +1,31 @@
+Compiling btc_gen9_native_runner.c...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc -c src/btc_gen9_native_runner.c -o src/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c:356:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  356 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+Compiling btc_gen9_async_submit.c...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc -c src/btc_gen9_async_submit.c -o src/btc_gen9_async_submit.o
+src/btc_gen9_async_submit.c: In function ‘btc_gen9_submit_async’:
+src/btc_gen9_async_submit.c:65:25: warning: implicit declaration of function ‘btc_gen9_get_input_bo’; did you mean ‘btc_gen9_get_output_bo’? [-Wimplicit-function-declaration]
+   65 |     uint32_t input_bo = btc_gen9_get_input_bo(ctx);
+      |                         ^~~~~~~~~~~~~~~~~~~~~
+      |                         btc_gen9_get_output_bo
+Compiling btc_gen9_multi_dispatch_c255v2.c...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc -c src/btc_gen9_multi_dispatch_c255v2.c -o src/btc_gen9_multi_dispatch_c255v2.o
+src/btc_gen9_multi_dispatch_c255v2.c: In function ‘c255v2_dispatch_worker’:
+src/btc_gen9_multi_dispatch_c255v2.c:98:5: warning: implicit declaration of function ‘btc_gen9_set_nonce_start’ [-Wimplicit-function-declaration]
+   98 |     btc_gen9_set_nonce_start(dctx->main_ctx, dctx->nonce_start);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+Compiling btc_i915_drm_forensic_tracker.c...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc -c src/btc_i915_drm_forensic_tracker.c -o src/btc_i915_drm_forensic_tracker.o
+Compiling test_c255v2_multi_dispatch.c...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc -c src/test_c255v2_multi_dispatch.c -o src/test_c255v2_multi_dispatch.o
+src/test_c255v2_multi_dispatch.c: In function ‘main’:
+src/test_c255v2_multi_dispatch.c:45:31: warning: implicit declaration of function ‘btc_gen9_init_simple’; did you mean ‘btc_gen9_init’? [-Wimplicit-function-declaration]
+   45 |     btc_gen9_context_t* ctx = btc_gen9_init_simple(
+      |                               ^~~~~~~~~~~~~~~~~~~~
+      |                               btc_gen9_init
+src/test_c255v2_multi_dispatch.c:45:31: warning: initialization of ‘btc_gen9_context_t *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+Linking test_c255v2_multi_dispatch...
+gcc -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc src/btc_gen9_native_runner.o src/btc_gen9_async_submit.o src/btc_gen9_multi_dispatch_c255v2.o src/btc_i915_drm_forensic_tracker.o src/test_c255v2_multi_dispatch.o -o test_c255v2_multi_dispatch -lm -pthread -ldrm
+Build complete: test_c255v2_multi_dispatch

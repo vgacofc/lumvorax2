@@ -1,0 +1,87 @@
+# LumVorax C255v8n Phase 2 — Makefile Dépendances Complètes
+# Compile TOUTES les dépendances en bibliothèque statique libdeps.a
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE
+INCLUDES = -Iinclude -I../include -I/usr/include/libdrm
+AR = ar
+ARFLAGS = rcs
+
+# Répertoires
+BUILD_DIR = build/deps
+LIB_DIR = lib
+
+# Fichiers essentiels SEULEMENT (pas de dépendances externes comme vorax)
+DEPS_SRC = \
+	include/optimization/reasoning_path_tracker.c \
+	include/optimization/formal_kernel_v40.c \
+	include/optimization/async_logging/async_logger.c \
+	include/optimization/thermal_regulator.c \
+	include/debug/ultra_forensic_logger.c \
+	include/debug/forensic_logger.c \
+	include/debug/logging_system.c \
+	include/debug/memory_tracker.c \
+	include/lum/lum_log_encoder.c \
+	include/lum/lum_memory_tracer.c \
+	include/lum/lum_core.c \
+	include/lum/lum_btree.c \
+	include/lum/lum_catalog.c \
+	include/common/time_ns.c \
+	include/common/lvx_log_rotate.c \
+	include/logger/lum_logger.c \
+	src/stdp_plasticity.c \
+	src/izhikevich_spiking.c \
+	src/ion_channel_markov.c \
+	src/receptor_ampa_nmda_gaba.c
+
+# Objets depuis include/ et src/
+DEPS_OBJ_INCLUDE = $(patsubst include/%.c,$(BUILD_DIR)/%.o,$(filter include/%,$(DEPS_SRC)))
+DEPS_OBJ_SRC = $(patsubst src/%.c,$(BUILD_DIR)/%.o,$(filter src/%,$(DEPS_SRC)))
+DEPS_OBJ = $(DEPS_OBJ_INCLUDE) $(DEPS_OBJ_SRC)
+
+# Bibliothèque statique
+LIBDEPS = $(LIB_DIR)/libdeps.a
+
+.PHONY: all clean dirs
+
+all: dirs $(LIBDEPS)
+
+dirs:
+	@mkdir -p $(BUILD_DIR) $(LIB_DIR)
+	@mkdir -p $(BUILD_DIR)/optimization
+	@mkdir -p $(BUILD_DIR)/optimization/async_logging
+	@mkdir -p $(BUILD_DIR)/optimization/lz4_compression
+	@mkdir -p $(BUILD_DIR)/optimization/slab_allocator
+	@mkdir -p $(BUILD_DIR)/optimization/mmap_io
+	@mkdir -p $(BUILD_DIR)/optimization/simd_batch
+	@mkdir -p $(BUILD_DIR)/optimization/lockfree
+	@mkdir -p $(BUILD_DIR)/debug
+	@mkdir -p $(BUILD_DIR)/common
+	@mkdir -p $(BUILD_DIR)/lum
+	@mkdir -p $(BUILD_DIR)/logger
+
+# Règle générique pour compiler les .c en .o depuis include/
+$(BUILD_DIR)/%.o: include/%.c | dirs
+	@echo "[DEPS] Compilation: $<"
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Règle générique pour compiler les .c en .o depuis src/
+$(BUILD_DIR)/%.o: src/%.c | dirs
+	@echo "[DEPS] Compilation: $<"
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Créer bibliothèque statique
+$(LIBDEPS): $(DEPS_OBJ)
+	@echo "[DEPS] Création bibliothèque: $@"
+	@$(AR) $(ARFLAGS) $@ $^
+	@echo "[DEPS] ✅ Bibliothèque créée: $@ ($(words $(DEPS_OBJ)) objets)"
+
+clean:
+	@echo "[DEPS] Nettoyage..."
+	@rm -rf $(BUILD_DIR) $(LIB_DIR)
+	@echo "[DEPS] ✅ Nettoyage terminé"
+
+# Afficher liste fichiers
+list:
+	@echo "Fichiers sources ($(words $(DEPS_SRC))):"
+	@echo "$(DEPS_SRC)" | tr ' ' '\n'

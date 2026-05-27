@@ -1,0 +1,29 @@
+[sudo] password for lvx: ╔════════════════════════════════════════╗
+║  Test Atomiques Gen9 Skylake C293     ║
+╚════════════════════════════════════════╝
+
+✅ Device: Intel(R) UHD Graphics 620
+
+✅ Kernel compiled
+
+═══ TEST 1: atomic_max() sur LOCAL memory ═══
+Valeur attendue: 355 (100 + 255)
+Valeur obtenue:  355
+✅ atomic_max() LOCAL fonctionne!
+
+═══ TEST 2: atomic_max() sur GLOBAL memory ═══
+Valeur attendue: 355 (100 + 255)
+Valeur obtenue:  355
+✅ atomic_max() GLOBAL fonctionne!
+
+═══ TEST 3: clz() builtin ═══
+0x00000001 → 31 leading zeros (attendu: 31) ✅
+0x00000010 → 27 leading zeros (attendu: 27) ✅
+0x00001000 → 19 leading zeros (attendu: 19) ✅
+0x80000000 → 0 leading zeros (attendu: 0) ✅
+0xFFFFFFFF → 0 leading zeros (attendu: 0) ✅
+✅ clz() builtin fonctionne!
+
+╔════════════════════════════════════════╗
+║  Tests terminés                        ║
+╚════════════════════════════════════════╝

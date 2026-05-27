@@ -1,0 +1,38 @@
+╔═══════════════════════════════════════════════════╗
+║  Test C353 - Validation SHA-256 CPU vs GPU       ║
+╚═══════════════════════════════════════════════════╝
+
+═══ TEST CPU (OpenSSL) ═══
+  nonce=0 → 1 leading zeros
+    hash: 6afe9b465e17364b4148fa0ecd30e8ccd1c0bb69a79c98852f08f99f36b4060c
+  nonce=1 → 0 leading zeros
+  nonce=2 → 0 leading zeros
+  nonce=3 → 0 leading zeros
+  nonce=4 → 6 leading zeros
+    hash: 0205a2da3eca4c8328dd14d355143be9718d4a64bf8412944f0975437161c1fb
+  nonce=5 → 2 leading zeros
+    hash: 2803f31a18f2bdf7db42c09ec81e88859c336f27ba2a99d771cfed87854dc5f2
+
+═══ SETUP GPU (OpenCL) ═══
+✅ Device: Intel(R) UHD Graphics 620
+✅ Kernel loaded: 7720 bytes
+✅ Kernel compiled
+
+═══ TEST GPU (Kernel C353) ═══
+✅ GPU execution complete
+  output[0] (best_nonce) = 32
+  output[1] (best_zeros) = 1
+  output[2-9] (hash) = f0235969 abcc5a89 0281fbc5 0acec1b3 872362e1 d8379380 c73f06b7 c14d4f50 
+
+═══ COMPARAISON CPU vs GPU ═══
+  CPU: nonce=32 → 0 zeros
+    hash: c447e3a8003f039ace9fb74a22be06f82a0cd3a27469fadfba420ca1fc5a7ff0
+  GPU: nonce=32 → 1 zeros
+
+═══ VÉRIFICATION NONCE=4 (devrait avoir 6 zeros) ═══
+  CPU: nonce=4 → 6 zeros
+    hash: 0205a2da3eca4c8328dd14d355143be9718d4a64bf8412944f0975437161c1fb
+
+❌ FAILURE: GPU n'a pas trouvé le meilleur nonce
+   Attendu: nonce=4 avec 6 zeros
+   Trouvé:  nonce=32 avec 1 zeros

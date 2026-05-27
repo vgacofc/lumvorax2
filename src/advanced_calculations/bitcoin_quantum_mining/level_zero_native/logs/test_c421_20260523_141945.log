@@ -1,0 +1,29 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  C421 TEST - CACHE FLUSH COMPLET (TOUS LES BITS)          ║
+║  DC + RT + Texture + Instruction + Constant Cache         ║
+╚════════════════════════════════════════════════════════════╝
+
+[3041310048104 ns] C421 START - Complete Cache Flush Test
+[3041310145910 ns] DRM opened: fd=5
+[3041310151586 ns] GPU context created: ctx_id=1
+[3041310421621 ns] Kernel loaded: 80 bytes
+[3041310484420 ns] Kernel buffer: handle=1
+[3041310502755 ns] Output buffer: handle=2 (filled 0xCC)
+[3041310527038 ns] SSH configured - SURFTYPE=0x00 FORMAT=R32_UINT MOCS=LLC
+[3041310543398 ns] DSH configured - Interface Descriptor ready
+[3041310555728 ns] PIPE_CONTROL configured: ALL FLUSH BITS (0x01F00000)
+[3041310555984 ns] Batch buffer: 52 dwords
+[3041310556644 ns] Executing C421 with complete cache flush...
+[3041310851287 ns] ✓ EXECBUFFER2 success: 294306 ns
+[3042018622190 ns] ✓ GPU execution complete: 707769280 ns
+
+📊 RÉSULTATS C421:
+═══════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════
+  Valid (0xDEADBEEF): 0 / 16
+  Unchanged (0xCC):   16 / 16
+═══════════════════════════════════════════════════════════
+
+⚠️  Still no results - trying C422 (CPU cache invalidation)...
+[3042018629384 ns] C421 FAILED - 0 valid results, proceeding to C422

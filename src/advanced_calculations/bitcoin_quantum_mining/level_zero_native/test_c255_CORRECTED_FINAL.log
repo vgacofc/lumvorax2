@@ -1,0 +1,62 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_c255_multi_dispatch.log
+[DEBUG] Log ouvert avec succès
+[ADAPTIVE-BATCH] Augmentation → batch_size=4800000 (95.0% progress, peak=5.683 MH/s)
+[ADAPTIVE-BATCH] Crash #1 → Recul batch_size=4320000 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #2 → Recul batch_size=3888000 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #3 → Recul batch_size=3499200 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #4 → Recul batch_size=3149280 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #5 → Recul batch_size=2834352 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #6 → Recul batch_size=2550916 (10.0% progress)
+[ADAPTIVE-BATCH] Crash #7 → Recul batch_size=2295824 (10.0% progress)
+═══════════════════════════════════════════════════════════════
+  LumVorax C255 Multi-Dispatch Test
+═══════════════════════════════════════════════════════════════
+
+Configuration:
+  Batches: 10
+  Dispatches per batch: 9 (3 contexts × 3 cycles)
+  Total dispatches: 90
+  Nonces per dispatch: 268,435,456 (268M)
+  Total nonces: 24159191040
+
+Initializing Gen9 context...
+✓ Gen9 context initialized
+  DRM FD: 6
+  Context ID: 1
+  Log file: logs/forensic/test_c255_multi_dispatch.log
+
+Starting C255 multi-dispatch test...
+═══════════════════════════════════════════════════════════════
+
+
+═══════════════════════════════════════════════════════════════
+  C255 Test Results
+═══════════════════════════════════════════════════════════════
+
+✓ Test SUCCESSFUL
+
+Performance Metrics:
+  Dispatches completed: 27 / 90
+  Total time: 19.441 sec
+  Avg time per dispatch: 0.720020 sec
+  Total hashes: 7247757312
+  Hashrate: 372816887.20 H/s
+  Hashrate: 372.82 MH/s
+  Hashrate: 0.37 GH/s
+
+Comparison:
+  C251 Baseline: 423.80 MH/s
+  C255 Result: 372.82 MH/s
+  Improvement: 0.9x
+
+  C240 Target: 410.60 GH/s
+  C255 Result: 0.37 GH/s
+  Progress: 0.1%
+
+⚠️  Objectif C240 non atteint
+  Gap: 410.23 GH/s
+  Additional speedup needed: 1101.3x
+
+Log file: logs/forensic/test_c255_multi_dispatch.log
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,444 @@
+Compiling src/lum_thermal_monitor_c241.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/lum_thermal_monitor_c241.c -o build/lum_thermal_monitor_c241.o
+src/lum_thermal_monitor_c241.c:63:12: warning: ‘read_sysfs_double’ defined but not used [-Wunused-function]
+   63 | static int read_sysfs_double(const char* path, double* value) {
+      |            ^~~~~~~~~~~~~~~~~
+src/lum_thermal_monitor_c241.c: In function ‘lum_thermal_init’:
+src/lum_thermal_monitor_c241.c:111:56: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 222 [-Wformat-truncation=]
+  111 |                     "/sys/class/drm/card0/device/hwmon/%s/temp1_input", entry->d_name);
+      |                                                        ^~
+In file included from /usr/include/stdio.h:980,
+                 from src/lum_thermal_monitor_c241.c:9:
+In function ‘snprintf’,
+    inlined from ‘find_gpu_temp_sensor’ at src/lum_thermal_monitor_c241.c:110:13,
+    inlined from ‘lum_thermal_init’ at src/lum_thermal_monitor_c241.c:158:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 47 and 302 bytes into a destination of size 256
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+Compiling src/lum_sha256_validator_c241.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/lum_sha256_validator_c241.c -o build/lum_sha256_validator_c241.o
+src/lum_sha256_validator_c241.c: In function ‘lum_sha256_compute_openssl’:
+src/lum_sha256_validator_c241.c:69:5: warning: ‘SHA256_Init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   69 |     SHA256_Init(&ctx);
+      |     ^~~~~~~~~~~
+In file included from src/lum_sha256_validator_c241.c:13:
+/usr/include/openssl/sha.h:73:27: note: declared here
+   73 | OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+      |                           ^~~~~~~~~~~
+src/lum_sha256_validator_c241.c:70:5: warning: ‘SHA256_Update’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   70 |     SHA256_Update(&ctx, data, len);
+      |     ^~~~~~~~~~~~~
+/usr/include/openssl/sha.h:74:27: note: declared here
+   74 | OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+      |                           ^~~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:71:5: warning: ‘SHA256_Final’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   71 |     SHA256_Final(hash1, &ctx);
+      |     ^~~~~~~~~~~~
+/usr/include/openssl/sha.h:76:27: note: declared here
+   76 | OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+      |                           ^~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:74:5: warning: ‘SHA256_Init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   74 |     SHA256_Init(&ctx);
+      |     ^~~~~~~~~~~
+/usr/include/openssl/sha.h:73:27: note: declared here
+   73 | OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+      |                           ^~~~~~~~~~~
+src/lum_sha256_validator_c241.c:75:5: warning: ‘SHA256_Update’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   75 |     SHA256_Update(&ctx, hash1, 32);
+      |     ^~~~~~~~~~~~~
+/usr/include/openssl/sha.h:74:27: note: declared here
+   74 | OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+      |                           ^~~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:76:5: warning: ‘SHA256_Final’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   76 |     SHA256_Final(hash_out, &ctx);
+      |     ^~~~~~~~~~~~
+/usr/include/openssl/sha.h:76:27: note: declared here
+   76 | OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+      |                           ^~~~~~~~~~~~
+Compiling src/btc_gen9_native_runner.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c: In function ‘check_gpu_thermal’:
+src/btc_gen9_native_runner.c:213:9: warning: implicit declaration of function ‘usleep’; did you mean ‘sleep’? [-Wimplicit-function-declaration]
+  213 |         usleep(10000000);  /* 10 secondes */
+      |         ^~~~~~
+      |         sleep
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:297:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  297 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+Compiling src/btc_gen9_parallel_gpu.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_parallel_gpu.c -o build/btc_gen9_parallel_gpu.o
+src/btc_gen9_parallel_gpu.c:29:10: fatal error: btc_gpu_async_logger.h: No such file or directory
+   29 | #include "btc_gpu_async_logger.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [Makefile.c249:72: build/btc_gen9_parallel_gpu.o] Error 1
+Compiling src/btc_gen9_parallel_gpu.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_parallel_gpu.c -o build/btc_gen9_parallel_gpu.o
+src/btc_gen9_parallel_gpu.c:58:3: error: conflicting types for ‘gpu_parallel_result_t’; have ‘struct <anonymous>’
+   58 | } gpu_parallel_result_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+In file included from src/btc_gen9_parallel_gpu.c:28:
+include/btc_gen9_native_runner.h:123:3: note: previous declaration of ‘gpu_parallel_result_t’ with type ‘gpu_parallel_result_t’
+  123 | } gpu_parallel_result_t;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_parallel_gpu.c: In function ‘build_parallel_gpgpu_walker’:
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:82:9: note: in expansion of macro ‘LOG_EVENT’
+   82 |         LOG_EVENT(ctx, "PARALLEL_GPU_BUILD_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:34:27: warning: implicit declaration of function ‘get_timestamp_ns’ [-Wimplicit-function-declaration]
+   34 |             uint64_t ts = get_timestamp_ns(); \
+      |                           ^~~~~~~~~~~~~~~~
+src/btc_gen9_parallel_gpu.c:82:9: note: in expansion of macro ‘LOG_EVENT’
+   82 |         LOG_EVENT(ctx, "PARALLEL_GPU_BUILD_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:82:9: note: in expansion of macro ‘LOG_EVENT’
+   82 |         LOG_EVENT(ctx, "PARALLEL_GPU_BUILD_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:82:9: note: in expansion of macro ‘LOG_EVENT’
+   82 |         LOG_EVENT(ctx, "PARALLEL_GPU_BUILD_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:103:32: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  103 |     uint64_t surface_addr = ctx->output_bo_handle;  /* Handle GEM buffer résultats */
+      |                                ^~
+src/btc_gen9_parallel_gpu.c:116:31: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  116 |     uint64_t kernel_addr = ctx->kernel_bo_handle;  /* Handle GEM kernel ISA */
+      |                               ^~
+src/btc_gen9_parallel_gpu.c:215:25: warning: implicit declaration of function ‘ns_to_sec’ [-Wimplicit-function-declaration]
+  215 |     double build_time = ns_to_sec(end_ts - start_ts);
+      |                         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:217:5: note: in expansion of macro ‘LOG_EVENT’
+  217 |     LOG_EVENT(ctx, "PARALLEL_GPU_BATCH_BUILD: work_items=%d local_size=%d num_groups=%d batch_size=%zu build_time=%.6f",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:217:5: note: in expansion of macro ‘LOG_EVENT’
+  217 |     LOG_EVENT(ctx, "PARALLEL_GPU_BATCH_BUILD: work_items=%d local_size=%d num_groups=%d batch_size=%zu build_time=%.6f",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:217:5: note: in expansion of macro ‘LOG_EVENT’
+  217 |     LOG_EVENT(ctx, "PARALLEL_GPU_BATCH_BUILD: work_items=%d local_size=%d num_groups=%d batch_size=%zu build_time=%.6f",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c: At top level:
+src/btc_gen9_parallel_gpu.c:233:5: error: conflicting types for ‘btc_gen9_execute_parallel_gpu’; have ‘int(btc_gen9_context_t *, uint32_t,  gpu_parallel_result_t *, int *)’ {aka ‘int(btc_gen9_context_t *, unsigned int,  gpu_parallel_result_t *, int *)’}
+  233 | int btc_gen9_execute_parallel_gpu(btc_gen9_context_t* ctx,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/btc_gen9_native_runner.h:134:5: note: previous declaration of ‘btc_gen9_execute_parallel_gpu’ with type ‘int(btc_gen9_context_t *, uint32_t,  gpu_parallel_result_t *, int *)’ {aka ‘int(btc_gen9_context_t *, unsigned int,  gpu_parallel_result_t *, int *)’}
+  134 | int btc_gen9_execute_parallel_gpu(btc_gen9_context_t* ctx,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_parallel_gpu.c: In function ‘btc_gen9_execute_parallel_gpu’:
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:239:9: note: in expansion of macro ‘LOG_EVENT’
+  239 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:239:9: note: in expansion of macro ‘LOG_EVENT’
+  239 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:239:9: note: in expansion of macro ‘LOG_EVENT’
+  239 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:245:5: note: in expansion of macro ‘LOG_EVENT’
+  245 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_START: nonce_start=%u work_items=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:245:5: note: in expansion of macro ‘LOG_EVENT’
+  245 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_START: nonce_start=%u work_items=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:245:5: note: in expansion of macro ‘LOG_EVENT’
+  245 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_START: nonce_start=%u work_items=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:253:9: note: in expansion of macro ‘LOG_EVENT’
+  253 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Failed to build batch buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:253:9: note: in expansion of macro ‘LOG_EVENT’
+  253 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Failed to build batch buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:253:9: note: in expansion of macro ‘LOG_EVENT’
+  253 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: Failed to build batch buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:259:22: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  259 |         .handle = ctx->batch_bo_handle,
+      |                      ^~
+src/btc_gen9_parallel_gpu.c:265:18: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  265 |     if (ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_PWRITE, &pwrite) != 0) {
+      |                  ^~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:266:9: note: in expansion of macro ‘LOG_EVENT’
+  266 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PWRITE failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:266:9: note: in expansion of macro ‘LOG_EVENT’
+  266 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PWRITE failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:266:9: note: in expansion of macro ‘LOG_EVENT’
+  266 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PWRITE failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:272:22: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  272 |         .handle = ctx->batch_bo_handle,
+      |                      ^~
+src/btc_gen9_parallel_gpu.c:292:21: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  292 |         .rsvd1 = ctx->ctx_id,  /* Context ID */
+      |                     ^~
+src/btc_gen9_parallel_gpu.c:298:18: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  298 |     if (ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_EXECBUFFER2, &execbuf) != 0) {
+      |                  ^~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:299:9: note: in expansion of macro ‘LOG_EVENT’
+  299 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: EXECBUFFER2 failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:299:9: note: in expansion of macro ‘LOG_EVENT’
+  299 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: EXECBUFFER2 failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:299:9: note: in expansion of macro ‘LOG_EVENT’
+  299 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: EXECBUFFER2 failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:308:22: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  308 |         .handle = ctx->output_bo_handle,
+      |                      ^~
+src/btc_gen9_parallel_gpu.c:314:18: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+  314 |     if (ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_PREAD, &pread) != 0) {
+      |                  ^~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:315:9: note: in expansion of macro ‘LOG_EVENT’
+  315 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PREAD failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:315:9: note: in expansion of macro ‘LOG_EVENT’
+  315 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PREAD failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:315:9: note: in expansion of macro ‘LOG_EVENT’
+  315 |         LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_ERROR: GEM_PREAD failed errno=%d", errno);
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:324:13: note: in expansion of macro ‘LOG_EVENT’
+  324 |             LOG_EVENT(ctx, "PARALLEL_GPU_FOUND: work_item=%d nonce=%u", i, results[i].nonce);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:324:13: note: in expansion of macro ‘LOG_EVENT’
+  324 |             LOG_EVENT(ctx, "PARALLEL_GPU_FOUND: work_item=%d nonce=%u", i, results[i].nonce);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:324:13: note: in expansion of macro ‘LOG_EVENT’
+  324 |             LOG_EVENT(ctx, "PARALLEL_GPU_FOUND: work_item=%d nonce=%u", i, results[i].nonce);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:331:5: note: in expansion of macro ‘LOG_EVENT’
+  331 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_SUCCESS: work_items=%d exec_time=%.6f total_time=%.6f found=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:331:5: note: in expansion of macro ‘LOG_EVENT’
+  331 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_SUCCESS: work_items=%d exec_time=%.6f total_time=%.6f found=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:331:5: note: in expansion of macro ‘LOG_EVENT’
+  331 |     LOG_EVENT(ctx, "PARALLEL_GPU_EXEC_SUCCESS: work_items=%d exec_time=%.6f total_time=%.6f found=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c: In function ‘btc_gen9_execute_parallel_batch’:
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:347:9: note: in expansion of macro ‘LOG_EVENT’
+  347 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:347:9: note: in expansion of macro ‘LOG_EVENT’
+  347 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:347:9: note: in expansion of macro ‘LOG_EVENT’
+  347 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Invalid parameters");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:353:5: note: in expansion of macro ‘LOG_EVENT’
+  353 |     LOG_EVENT(ctx, "PARALLEL_BATCH_START: total_dispatches=%d work_items_per_dispatch=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:353:5: note: in expansion of macro ‘LOG_EVENT’
+  353 |     LOG_EVENT(ctx, "PARALLEL_BATCH_START: total_dispatches=%d work_items_per_dispatch=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:353:5: note: in expansion of macro ‘LOG_EVENT’
+  353 |     LOG_EVENT(ctx, "PARALLEL_BATCH_START: total_dispatches=%d work_items_per_dispatch=%d",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:363:9: note: in expansion of macro ‘LOG_EVENT’
+  363 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Failed to allocate results buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:363:9: note: in expansion of macro ‘LOG_EVENT’
+  363 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Failed to allocate results buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:363:9: note: in expansion of macro ‘LOG_EVENT’
+  363 |         LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Failed to allocate results buffer");
+      |         ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:372:13: note: in expansion of macro ‘LOG_EVENT’
+  372 |             LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Dispatch %d failed", i);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:372:13: note: in expansion of macro ‘LOG_EVENT’
+  372 |             LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Dispatch %d failed", i);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:372:13: note: in expansion of macro ‘LOG_EVENT’
+  372 |             LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: Dispatch %d failed", i);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:383:13: note: in expansion of macro ‘LOG_EVENT’
+  383 |             LOG_EVENT(ctx, "PARALLEL_BATCH_REOPEN: dispatch=%d", i + 1);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:383:13: note: in expansion of macro ‘LOG_EVENT’
+  383 |             LOG_EVENT(ctx, "PARALLEL_BATCH_REOPEN: dispatch=%d", i + 1);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:383:13: note: in expansion of macro ‘LOG_EVENT’
+  383 |             LOG_EVENT(ctx, "PARALLEL_BATCH_REOPEN: dispatch=%d", i + 1);
+      |             ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:385:17: warning: implicit declaration of function ‘btc_gen9_reopen_drm’ [-Wimplicit-function-declaration]
+  385 |             if (btc_gen9_reopen_drm(ctx) != 0) {
+      |                 ^~~~~~~~~~~~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:386:17: note: in expansion of macro ‘LOG_EVENT’
+  386 |                 LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: DRM reopen failed at dispatch %d", i + 1);
+      |                 ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:386:17: note: in expansion of macro ‘LOG_EVENT’
+  386 |                 LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: DRM reopen failed at dispatch %d", i + 1);
+      |                 ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:386:17: note: in expansion of macro ‘LOG_EVENT’
+  386 |                 LOG_EVENT(ctx, "PARALLEL_BATCH_ERROR: DRM reopen failed at dispatch %d", i + 1);
+      |                 ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:33:27: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   33 |         if ((ctx) && (ctx)->log_file) { \
+      |                           ^~
+src/btc_gen9_parallel_gpu.c:399:5: note: in expansion of macro ‘LOG_EVENT’
+  399 |     LOG_EVENT(ctx, "PARALLEL_BATCH_SUCCESS: dispatches=%d total_found=%d total_time=%.3f avg_time=%.6f",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:35:26: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   35 |             fprintf((ctx)->log_file, "[%lu.%09lu] " fmt "\n", \
+      |                          ^~
+src/btc_gen9_parallel_gpu.c:399:5: note: in expansion of macro ‘LOG_EVENT’
+  399 |     LOG_EVENT(ctx, "PARALLEL_BATCH_SUCCESS: dispatches=%d total_found=%d total_time=%.3f avg_time=%.6f",
+      |     ^~~~~~~~~
+src/btc_gen9_parallel_gpu.c:39:25: error: invalid use of incomplete typedef ‘btc_gen9_context_t’
+   39 |             fflush((ctx)->log_file); \
+      |                         ^~
+src/btc_gen9_parallel_gpu.c:399:5: note: in expansion of macro ‘LOG_EVENT’
+  399 |     LOG_EVENT(ctx, "PARALLEL_BATCH_SUCCESS: dispatches=%d total_found=%d total_time=%.3f avg_time=%.6f",
+      |     ^~~~~~~~~
+make: *** [Makefile.c249:72: build/btc_gen9_parallel_gpu.o] Error 1

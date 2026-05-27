@@ -1,0 +1,29 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C517 - RÉSOLUTION VA GPU PAR i915 (APPROCHE CORRECTE)  ║
+╚════════════════════════════════════════════════════════════════╝
+
+ROOT CAUSE #21: Adresses GTT arbitraires INVALIDES!
+Solution: Laisser i915 choisir les VA GPU, puis reconstruire batch
+
+[1/12] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/12] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/12] Allocation buffers (VA GPU non spécifiées)...
+  ✓ 7 buffers alloués (VA GPU = 0, i915 choisira)
+
+[4/12] Mapping et initialisation buffers...
+  ✓ Buffers initialisés
+
+[5/12] Construction batch TEMPORAIRE (adresses = 0)...
+  ✓ Batch temporaire: 348 bytes (adresses = 0)
+
+[6/12] Unmap buffers...
+  ✓ Buffers unmappés
+
+[7/12] PASS 1: Soumission pour résolution VA GPU par i915...
+  🔧 PASS 1 - Flags: 0x1 (RENDER uniquement)
+  ❌ PASS 1 failed (ret=-1, errno=22: Invalid argument)

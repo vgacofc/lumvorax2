@@ -1,0 +1,60 @@
+EXECBUFFER2: Invalid argument
+❌ EXECBUFFER2 failed (ret=-22)
+=== CYCLE C499: BATCH BUFFER AUTOMATIQUE SIMD32 ===
+
+🎯 OBJECTIF: PREMIER 0xDEADBEEF GPU NATIF avec batch automatique!
+
+Configuration C497-C498:
+  ✓ Work Group Size: 256
+  ✓ SIMD Size: 32 (au lieu de 8)
+  ✓ Thread Width: 8 (256/32, au lieu de 1)
+  ✓ Max Threads: 256 (au lieu de 64)
+  ✓ GRF Count: 128
+
+[1/10] Ouverture /dev/dri/renderD128...
+  ✓ fd = 5
+
+[2/10] Initialisation drm_intel_bufmgr...
+  ✓ bufmgr initialisé
+
+[3/10] Allocation buffers...
+  ✓ batch_bo: 65536 bytes
+  ✓ output_bo: 4096 bytes
+  ✓ aux_buf_bo: 65536 bytes
+  ✓ kernel_bo: 4096 bytes
+
+[4/10] Initialisation output buffer...
+  ✓ Output rempli avec 0xFFFFFFFF
+
+[5/10] Copie kernel ISA Gen9 OpenCL...
+  ✓ Kernel ISA OpenCL copié: 320 bytes
+  ✓ Kernel VALIDÉ en C489 avec OpenCL
+
+[6/10] Configuration Binding Table (Beignet)...
+  ✓ Binding Table configurée
+  ✓ Surface State Gen7 configurée
+  ✓ Relocation enregistrée
+
+[7/10] Configuration Interface Descriptor...
+  ✓ Interface Descriptor configuré
+  ✓ Relocation kernel enregistrée
+  ✓ Number of Threads: 256 (metadata C497)
+
+[8/10] Construction batch GPGPU AUTOMATIQUE SIMD32...
+  Configuration automatique C498:
+    Thread Width: 8 (256/32)
+    Max Threads: 256
+    SIMD Size: 32 (dynamique)
+  ✓ Batch construit: 252 bytes
+  ✓ PIPE_CONTROL
+  ✓ PIPELINE_SELECT GPGPU
+  ✓ STATE_BASE_ADDRESS + relocations
+  ✓ MEDIA_VFE_STATE
+  ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD
+  ✓ GPGPU_WALKER SIMD32 ✅ (au lieu de SIMD8)
+  ✓ MEDIA_STATE_FLUSH
+  ✓ PIPE_CONTROL
+  ✓ MI_BATCH_BUFFER_END
+
+[9/10] Soumission EXECBUFFER2...
+  ✓ Context créé

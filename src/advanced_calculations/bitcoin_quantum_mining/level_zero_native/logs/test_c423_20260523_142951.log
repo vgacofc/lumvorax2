@@ -1,0 +1,35 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  C423 TEST - TRIPLE FIX (ROOT CAUSE CORRECTIONS)          ║
+║  Fix #1: Interface Descriptor DW3 (64 → 2)                ║
+║  Fix #2: GPGPU_WALKER (Thread 16→12, Group 0→1, ID→0)     ║
+║  Fix #3: MEDIA_VFE_STATE (MaxThreads→192, URB→1)          ║
+╚════════════════════════════════════════════════════════════╝
+
+[3647518311583 ns] C423 START - Triple Fix Application
+[3647518377343 ns] DRM opened: fd=5
+[3647518382689 ns] GPU context created: ctx_id=1
+[3647518662891 ns] Kernel loaded: 80 bytes
+[3647518697904 ns] Kernel buffer: handle=1
+[3647518711875 ns] Output buffer: handle=2 (filled 0xCC)
+[3647518728674 ns] SSH configured - SURFTYPE=0x00 FORMAT=R32_UINT MOCS=LLC
+[3647518740321 ns] DSH configured - Interface Descriptor FIX #1: DW3=2 (was 64), DW5=12 (was 16)
+[3647518751342 ns] MEDIA_VFE_STATE FIX #3: MaxThreads=192 (was 0), URB=1 (was 0)
+[3647518752188 ns] GPGPU_WALKER FIX #2: ThreadWidth=12, ThreadGroup=1,1,1, StartingID=0
+[3647518752631 ns] Batch buffer: 52 dwords (all 3 fixes applied)
+[3647518753250 ns] Executing C423 with TRIPLE FIX...
+[3647518961747 ns] ✓ EXECBUFFER2 success: 207978 ns
+[3648229351823 ns] ✓ GPU execution complete: 710388264 ns
+[3648229367603 ns] Invalidating CPU cache...
+[3648229370679 ns] ✓ CPU cache invalidated: 2011 ns
+
+📊 RÉSULTATS C423 (TRIPLE FIX):
+═══════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════
+  Valid (0xDEADBEEF): 0 / 16
+  Unchanged (0xCC):   16 / 16
+  Unexpected:         0 / 16
+═══════════════════════════════════════════════════════════
+
+❌ CRITICAL: Triple fix failed - deeper investigation needed
+[3648229374832 ns] C423 FAILED - All 3 fixes applied but still 0 results

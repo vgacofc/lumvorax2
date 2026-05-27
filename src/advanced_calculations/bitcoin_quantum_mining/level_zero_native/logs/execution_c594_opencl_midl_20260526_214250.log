@@ -1,0 +1,70 @@
+🚀 TEST C594 - PARAMÈTRES MIDL OPENCL + GPGPU_WALKER 3 DWORDS
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (57.847 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (4.959 µs)
+
+[ 20%] Creating heap buffer (64KB)...
+✅ Heap buffer created: handle=1, size=65536 (10.005 µs)
+
+[ 25%] Creating batch buffer (8KB)...
+✅ Batch buffer created: handle=2, size=8192 (3.237 µs)
+
+[ 30%] Mapping heap buffer...
+✅ Heap buffer mapped: 0x7a83908d7000 (72.136 µs)
+
+[ 35%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x7a83908d5000 (23.339 µs)
+
+[ 40%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.517 µs)
+
+[ 50%] Building batch commands (OpenCL C593 format)...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (OpenCL format)
+    [25] MEDIA_VFE_STATE (OpenCL config)
+    [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD (19 DWords OpenCL)
+    [53] GPGPU_WALKER (3 DWords OpenCL)
+    [56] PIPE_CONTROL (flush final)
+    [62] MI_FLUSH_DW (OpenCL)
+    [66] MI_BATCH_BUFFER_END
+✅ Batch built: 67 DWords (268 bytes, 1.796 µs)
+
+[ 60%] Creating relocation entries (7 relocations)...
+✅ Relocations created (0.037 µs)
+  [0] STATE_BASE_ADDRESS: heap base @ DWord 7
+  [1] MIDL IDRT Low: 0x1200 @ DWord 38
+  [2] MIDL IDRT High: 0x0 @ DWord 39
+  [3] MIDL BT Low: 0x1100 @ DWord 40
+  [4] MIDL BT High: 0x0 @ DWord 41
+  [5] MIDL Reserved Low: 0x1200 @ DWord 50
+  [6] MIDL Reserved High: 0x0 @ DWord 51
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render) - Flags 0x1
+    Buffer count: 2 (heap + batch)
+    Batch length: 268 bytes (67 DWords)
+    Relocations: 7 (SBA + 6 MIDL adresses)
+    MIDL format: 19 DWords (OpenCL C593)
+    GPGPU_WALKER format: 3 DWords (OpenCL C593)
+
+[ 80%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22)
+   Duration: 5.111 µs
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C594 ÉCHOUÉ                                      ║
+╚════════════════════════════════════════════════════════════╝

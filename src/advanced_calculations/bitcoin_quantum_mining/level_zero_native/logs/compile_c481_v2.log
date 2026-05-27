@@ -1,0 +1,42 @@
+tests/test_c481_batch_gpgpu_complete.c: In function ‘main’:
+tests/test_c481_batch_gpgpu_complete.c:124:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc0’
+  124 |     idrt->desc0.kernel_start_pointer = 0;  // Sera relocalisé
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:125:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc2’
+  125 |     idrt->desc2.single_program_flow = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:126:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc2’
+  126 |     idrt->desc2.floating_point_mode = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:127:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc6’
+  127 |     idrt->desc6.rounding_mode = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:130:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc3’
+  130 |     idrt->desc3.sampler_state_pointer = 12288 >> 5;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:131:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc4’
+  131 |     idrt->desc4.binding_table_entry_count = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:132:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc4’
+  132 |     idrt->desc4.binding_table_pointer = 0;  // Offset binding table
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:133:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc5’
+  133 |     idrt->desc5.curbe_read_len = 0;  // Pas de CURBE
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:134:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc5’
+  134 |     idrt->desc5.curbe_read_offset = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:137:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc6’
+  137 |     idrt->desc6.group_threads_num = 1;  // 1 thread par groupe
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:138:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc6’
+  138 |     idrt->desc6.barrier_enable = 0;
+      |         ^~
+tests/test_c481_batch_gpgpu_complete.c:139:9: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc6’
+  139 |     idrt->desc6.slm_sz = 0;  // Pas de SLM
+      |         ^~
+In file included from tests/../beignet_i915/beignet_i915_minimal.h:18,
+                 from tests/test_c481_batch_gpgpu_complete.c:21:
+tests/test_c481_batch_gpgpu_complete.c:145:43: error: ‘gen8_interface_descriptor_t’ {aka ‘struct gen8_interface_descriptor’} has no member named ‘desc0’
+  145 |                             idrt_offset + offsetof(gen8_interface_descriptor_t, desc0),
+      |                                           ^~~~~~~~

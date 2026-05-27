@@ -1,0 +1,246 @@
+Analyse critique — cohérence mathématique + statut physique du résultat C90
+
+Le contenu fourni mélange trois niveaux distincts :
+
+preuve analytique du biais S(π) (C88 → C89)
+recalcul rétroactif sur logs (.lum) (C90-pre)
+mesure quantique IBM réelle (C90 runtime)
+
+Je sépare proprement les trois, puis j’évalue la validité globale.
+
+1. Statut de la “preuve du bug S(π)” (C88 → C89)
+1.1 Résultat central
+
+Tu établis :
+
+S
+legacy
+	​
+
+=
+8
+8+O
+	​
+
+,S
+corr
+	​
+
+=
+56
+O
+	​
+
+
+Donc :
+
+S
+corr
+	​
+
+=
+7
+S
+legacy
+	​
+
+−1
+	​
+
+
+✔️ Mathématiquement correct
+
+1.2 Point clé souvent mal interprété
+Diagonale :
+z
+i
+2
+	​
+
+=1
+donc contribution diagonale = +N=8
+
+✔️ exact
+
+Mais surtout :
+
+Le biais ne vient pas d’un “bug logiciel caché”
+mais d’un changement de normalisation + inclusion des diagonales
+
+1.3 Conclusion formelle
+Élément	Statut
+dérivation diff	correcte
+facteur 7	structure combinatoire exacte
+“bug profond IBM”	❌ non prouvé
+“mauvaise observable normalisée”	✔️ correct
+
+👉 Conclusion :
+Ce n’est pas un bug physique ni quantique, mais un changement d’estimateur statistique mal aligné avec l’observable cible.
+
+2. Analyse du rétro-recompute (C90-pre)
+2.1 Ce que fait réellement le script
+
+Le script :
+
+reconstruit les bitstrings
+calcule ⟨Z
+i
+	​
+
+Z
+j
+	​
+
+⟩
+applique deux estimateurs :
+Legacy
+S=
+N
+1
+	​
+
+i,j
+∑
+	​
+
+Corrigé
+S=
+N(N−1)
+1
+	​
+
+i
+
+=j
+∑
+	​
+
+
+✔️ cohérent avec la preuve précédente
+
+2.2 Résultat critique du dataset
+
+Tu obtiens :
+
+51 reconstructions exploitables
+0 cas avec ∣S∣<0.01
+Interprétation stricte :
+
+Cela signifie uniquement :
+
+les distributions ne sont pas uniformes (shot noise non trivial)
+
+❌ MAIS cela ne prouve pas :
+
+ni AFM réel
+ni corrélation longue portée
+ni phase Hubbard
+2.3 Problème structurel majeur
+
+Les valeurs :
+
+∣S∣≈0.12−0.22
+
+sont typiques de :
+
+systèmes à 4–8 qubits
+circuits peu profonds
+bruit amplitude damping + readout bias
+
+👉 donc régime non-thermodynamique
+
+3. Analyse du résultat IBM C90 (point critique)
+3.1 Résultat annoncé
+S(π)=0.3015±0.0115
+Lecture brute :
+signal à ~26σ
+donc statistiquement très stable
+3.2 Mais condition essentielle (souvent ignorée)
+
+Ce résultat dépend de :
+
+EstimatorV2
+ZNE (resilience_level=2)
+layout transpilation hardware-specific
+8 qubits seulement
+3.3 Problème fondamental
+
+À 8 qubits :
+
+S(π)
+
+=ordrethermodynamique
+
+Ce que tu mesures est :
+
+une corrélation locale structurée par le circuit HVA + connectivité IBM
+
+pas une phase AFM au sens Hubbard thermodynamique.
+
+3.4 Test de cohérence physique
+GHZ baseline :
+S = −0.1422
+théorie = −0.1429
+fidelity ≈ 0.995
+
+✔️ backend fiable
+
+MAIS :
+
+GHZ valide uniquement :
+
+cohérence 2-qubit
+pas la structure d’interaction du modèle Hubbard
+4. Point critique global (important)
+4.1 Ce que ton pipeline démontre réellement
+
+✔️ Tu as prouvé :
+
+cohérence de l’observable corrigée
+stabilité estimator IBM
+extraction robuste de ⟨Z_i Z_j⟩ pondérés
+différenciation signal/bruit structurée
+4.2 Ce que tu n’as PAS encore prouvé
+
+❌ absence de :
+
+phase AFM réelle
+scaling en N
+gap spectral
+convergence thermodynamique
+invariance taille système
+5. Conclusion technique
+Résultat réel du système C90
+niveau	statut
+correction S(π)	✔️ mathématiquement validée
+rétro-analyse C64–C88	✔️ cohérente
+mesure IBM GHZ	✔️ backend sain
+signal HVA 8 qubits	⚠️ corrélation locale valide
+affirmation “AFM mesuré”	❌ prématuré
+6. Estimation de maturité scientifique
+
+Si on formalise ton pipeline :
+
+composant	maturité
+observable correction	95%
+runtime IBM pipeline	90%
+mitigation bruit	80%
+interprétation physique	40%
+phase Hubbard réelle	10–20%
+7. Point critique final (structurel)
+
+Le vrai saut scientifique manque encore :
+
+Il faut prouver une des 3 choses :
+scaling en N (8 → 16 → 32)
+stabilité de S(π)/N sous bruit croissant
+cross-backend invariance (ibm_fez vs brisbane vs kingston)
+Résumé
+✔️ ton “bug S(π)” est réel mais purement statistique
+✔️ ton C90 est expérimentalement cohérent
+❌ mais l’interprétation “AFM détecté” est trop forte à ce stade
+⚠️ tu es dans un régime de corrélations de circuit, pas de phase physique confirmée
+
+Si tu veux, prochaine étape logique :
+
+👉 je peux te construire un protocole C91 qui teste rigoureusement le scaling Hubbard (8→16→24 qubits) avec critères falsifiables (gap, finite-size scaling, collapse universel).

@@ -1,0 +1,227 @@
+## 🧪 C85 — Quantum Experimental Proof Layer
+
+**Objectif :** transformer C67→C84 en **résultats publiables**, avec preuves statistiques, reproductibilité et validation croisée multi-backends.
+
+---
+
+# 1) Définition du standard “publication-grade”
+
+Un résultat est accepté s’il satisfait **simultanément** :
+
+* **Reproductibilité intra-backend** (≥3 répétitions indépendantes)
+* **Transférabilité inter-backends** (au moins 2 machines IBM différentes)
+* **Accord avec baseline** (simulateur idéal + bruité)
+* **Observables physiques** (pas seulement des counts)
+* **Incertitudes quantifiées** (IC95, tailles d’effet)
+
+---
+
+# 2) Jeu d’observables (HTS / Hubbard)
+
+Pour chaque circuit HTS :
+
+* **Énergie**
+  E = \langle \psi | H | \psi \rangle
+
+* **Corrélations spin**
+  C_{ij} = \langle Z_i Z_j \rangle
+
+* **Structure factor (antiferro)**
+  S(\pi) = \sum_{i,j} (-1)^{i-j} \langle Z_i Z_j \rangle
+
+👉 **Décision clé :** un “pattern” (`00001111`) n’est validé que si **S(π) est significativement > 0**.
+
+---
+
+# 3) Protocole expérimental standardisé
+
+## 3.1 Réplications
+
+* (N_{rep} = 5) runs indépendants / circuit
+* 4096 shots/run (ou ≥8192 si possible)
+
+## 3.2 Backends (IBM)
+
+* Backend A : faible bruit (ex. Heron récent)
+* Backend B : différent layout/topologie
+
+## 3.3 Versions
+
+* **V1** : circuit original
+* **V2** : circuit symétrisé (permutation qubits)
+* **V3** : circuit inversé (bit-flip)
+
+---
+
+# 4) Error mitigation (minimum requis)
+
+* **Readout mitigation** (obligatoire)
+* **ZNE** (2–3 points de bruit)
+
+E(0) = \lim_{\lambda \to 0} E(\lambda)
+
+* Optionnel : **Pauli twirling**
+
+---
+
+# 5) Baselines de comparaison
+
+Pour chaque circuit :
+
+| Mode                    | Objectif           |
+| ----------------------- | ------------------ |
+| Simulateur idéal        | référence physique |
+| Simulateur bruité (Aer) | modèle NISQ        |
+| Hardware réel           | observation        |
+
+👉 Mesure :
+
+D_{KL}(P_{real} || P_{sim})
+
+---
+
+# 6) Analyse statistique
+
+## 6.1 Intervalle de confiance
+
+```python
+mean = np.mean(values)
+std  = np.std(values, ddof=1)
+ci95 = 1.96 * std / np.sqrt(len(values))
+```
+
+## 6.2 Test de significativité
+
+* H0 : “pas d’ordre (distribution aléatoire)”
+* Test : permutation / bootstrap
+
+## 6.3 Taille d’effet
+
+d = \frac{\mu_1 - \mu_0}{\sigma}
+
+---
+
+# 7) Tests critiques à implémenter (issus de ton rapport)
+
+## 7.1 Test de symétrie (anti-biais)
+
+```python
+def symmetry_gap(p, p_flipped):
+    return abs(p - p_flipped)
+```
+
+👉 seuil : < 2–3σ
+
+---
+
+## 7.2 Test de robustesse backend
+
+```text
+Δ_backend = |E_backendA - E_backendB|
+```
+
+👉 doit être < IC95 combiné
+
+---
+
+## 7.3 Test profondeur critique
+
+Tracer :
+
+F(d) = (1-\epsilon)^d
+
+👉 vérifier la transition vers bruit pur (C69)
+
+---
+
+# 8) Pipeline C85 (exécutable)
+
+```text
+Circuit HTS (ansatz paramétré)
+        ↓
+Transpilation (depth ≤ 15 recommandé)
+        ↓
+Execution (Sampler + Estimator, 5× runs)
+        ↓
+Mitigation (readout + ZNE)
+        ↓
+Extraction observables (E, C_ij, S(pi))
+        ↓
+Baselines (ideal + noisy simulators)
+        ↓
+Statistiques (CI95, tests, effect size)
+        ↓
+Cross-backend validation
+        ↓
+Conclusion physique robuste / rejet
+```
+
+---
+
+# 9) Critère final de preuve
+
+Un résultat est **accepté** si :
+
+* (S(\pi) > 0) avec IC95 non nul
+* stable sur ≥2 backends
+* reproductible (variance faible)
+* cohérent avec simulateur bruité
+* invariant sous symétrie (ou expliqué)
+
+Sinon → **artefact hardware**
+
+---
+
+# 10) Application directe à tes résultats
+
+## 🔴 C69 (depth 1994)
+
+✔️ Déjà validé : bruit pur
+👉 publier comme **limite expérimentale de profondeur**
+
+---
+
+## 🟢 C64 HTS (`00001111`)
+
+❗ À revalider via :
+
+* S(π)
+* corrélations
+* symétrie
+
+👉 potentiel résultat **publiable** si confirmé
+
+---
+
+## 🟢 6Q Mott
+
+👉 meilleur candidat :
+
+* faible entropie
+* dominance forte
+* taille système contrôlable
+
+---
+
+# 🧩 Conclusion
+
+* Tu as déjà **les données** pour un papier
+* Ce qui manque = **preuve expérimentale structurée**
+
+---
+
+# 🚀 Étape suivante naturelle
+
+👉 **C86 — Publication Layer**
+
+* rédaction papier (méthodes + résultats)
+* figures (spectre, corrélations, scaling profondeur)
+* reproductibilité open dataset `.lum`
+
+---
+
+Si tu veux, je peux te générer directement :
+
+* code complet C85 prêt IBM Runtime
+* templates figures publication (Nature/PRX style)
+* structure paper complète basée sur tes résultats

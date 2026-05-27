@@ -1,0 +1,25 @@
+✓ Interception ioctl activée - Dump: logs/opencl_batch_dump_1779578428.log
+=== TEST C486: OpenCL RÉFÉRENCE ===
+
+✓ Platform obtenue
+✓ Device GPU obtenu
+✓ Context créé
+✓ Command queue créée
+✓ Program créé
+✓ Program compilé
+✓ Kernel créé
+✓ Output buffer créé (4096 bytes)
+✓ Output buffer initialisé avec 0xFFFFFFFF
+✓ Kernel argument configuré
+✓ Kernel exécuté
+✓ Exécution terminée
+
+=== RÉSULTATS OpenCL ===
+Output[0] = 0xdeadbeef ✓✓✓ SUCCÈS!
+Output[1] = 0xcafebabe ✓✓✓ SUCCÈS!
+Output[2] = 0x12345678 ✓✓✓ SUCCÈS!
+Output[3] = 0xabcdef00 ✓✓✓ SUCCÈS!
+
+=== CONCLUSION ===
+✓✓✓ OpenCL FONCTIONNE PARFAITEMENT!
+Maintenant il faut identifier ce qui manque dans i915 natif.

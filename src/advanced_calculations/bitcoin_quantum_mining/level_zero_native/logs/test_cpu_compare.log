@@ -1,0 +1,42 @@
+═══════════════════════════════════════════════════════════
+  TEST CPU MINING - Comparaison avec GPU
+  MÊME block header que test GPU
+═══════════════════════════════════════════════════════════
+
+[CPU] Block header configuré:
+  version=0x20000000
+  timestamp=1779401622
+  bits=0x1d00ffff
+
+[CPU] Mining 10000000 nonces (0 → 9999999)...
+[CPU] Near-miss trouvé! nonce=3 leading_zeros=5
+      Hash: 040c7474ca60528734a57422ecc3e9100b92fd6a5f3511665a1ba00a85c6a0d4
+[CPU] Near-miss trouvé! nonce=5 leading_zeros=6
+      Hash: 0311697eaffba78426b526886acc09fc224d37612384f32e85f70526808c57ae
+[CPU] Near-miss trouvé! nonce=92 leading_zeros=8
+      Hash: 00975b74079eff151a1542b792b1059558c1616be80c7c0fab643bc02276300d
+[CPU] Near-miss trouvé! nonce=359 leading_zeros=9
+      Hash: 0069a11bbc5c4384233aad10fe8cf744b9f9cb6cf2953e79f673d7347c998341
+[CPU] Near-miss trouvé! nonce=793 leading_zeros=14
+      Hash: 00036529ce6290af7961c3e42dcc577cc9104b51237a924b6356b8ab233ce8b7
+[CPU] Near-miss trouvé! nonce=30468 leading_zeros=16
+      Hash: 0000cd27a728d08477876d4477414b94ce3a4032e8e7c2a50af8f861ef61f064
+[CPU] Near-miss trouvé! nonce=176709 leading_zeros=17
+      Hash: 00005766ac73ad3ae1bde0a08377f669a542d7f653683b87b58ef7b2a669dac3
+[CPU] Near-miss trouvé! nonce=601998 leading_zeros=19
+      Hash: 00001959db9bd4b0344159140375d948b14674288b55dc55815f62122a55b2f0
+[CPU] Near-miss trouvé! nonce=6567206 leading_zeros=20
+      Hash: 00000a64e40506576f392841c9eb880252e5b47de7d22d290def00e73d98cc5f
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTATS CPU MINING                                      ║
+╚════════════════════════════════════════════════════════════╝
+Nonces testés: 10000000
+Temps: 23.94 secondes
+Hashrate: 0.42 MH/s
+Best nonce: 6567206
+Max leading zeros: 20
+Total near-miss: 9
+
+✅ Near-miss trouvés! Le CPU a trouvé 9 nonces avec leading zeros.
+   Si le GPU ne trouve rien, c'est un BUG GPU.

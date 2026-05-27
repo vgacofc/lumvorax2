@@ -1,0 +1,49 @@
+[14889.798958570] 🚀 TEST C433 - VALIDATION STORE avec DISPATCH COMPLET
+[14889.799055101] ✅ DRM ouvert: fd=5
+[14889.799064551] ✅ Contexte GPU créé: id=1
+[14889.799341333] ✅ Kernel chargé: 208 bytes
+[14889.799362008] ✅ GEM buffer créé: handle=1 size=208
+[14889.799382713] ✅ Données écrites: 208 bytes
+[14889.799386830] ✅ GEM buffer créé: handle=2 size=1028
+[14889.799405874] ✅ Buffer mappé: 0x734614d2d000
+[14889.799417374] ✅ GEM buffer créé: handle=3 size=4096
+[14889.799427758] ✅ Buffer mappé: 0x734614c92000
+[14889.799431810] ✅ GEM buffer créé: handle=4 size=4096
+[14889.799443060] ✅ Buffer mappé: 0x734614c91000
+[14889.799447384] ✅ GEM buffer créé: handle=5 size=4096
+[14889.799451333] ✅ GEM buffer créé: handle=6 size=4096
+[14889.799460365] ✅ Buffer mappé: 0x734614c90000
+[14889.799467579] 🔧 C439: Configuration SSH Layout Intel
+[14889.799469018]    BTI[0] = 64 (offset Surface State)
+[14889.799470202] ✅ C439: SSH Layout Intel configuré:
+[14889.799471083]    Binding Table @ offset 0: BTI[0]=64
+[14889.799472046]    Surface State @ offset 64:
+[14889.799473007]      Size=1028 → Aligned=1028
+[14889.799474357]      Width=1028, Height=1, Depth=1
+[14889.799475706]      DW0=0x0008ff80 (VAlign=4, Format=RAW)
+[14889.799477009]      DW1=0x00000003 (MOCS=CACHED_L3)
+[14889.799478419]      DW6=0x00000008 (Coherency=GPU_COHERENT)
+[14889.799483123] ✅ Interface Descriptor configuré
+[14889.799486229] 🔧 C443: Programmation MEDIA_VFE_STATE (position correcte)...
+[14889.799487192] ✅ C443: MEDIA_VFE_STATE programmé (Max Threads: 168, URB: 64)
+[14889.799487768] ✅ C433: MEDIA_CURBE_LOAD ajouté
+[14889.799488458] ✅ C433: MEDIA_STATE_FLUSH ajouté
+[14889.799489402] ✅ Batch buffer construit: 65 DWORDs
+[14889.799490272] ⚡ Soumission batch buffer...
+[14889.799490876] 🔍 C444 FORENSIC: EXECBUFFER2 params:
+[14889.799491480]    buffers_ptr = 0x00007ffc3ebc6980
+[14889.799492476]    buffer_count = 6
+[14889.799493233]    batch_len = 260 bytes (65 DWORDs)
+[14889.799494053]    flags = 0x00000001
+[14889.799494778]    rsvd1 (ctx_id) = 1
+[14889.799495618]    batch_start_offset = 0
+[14889.799496362] 🔍 C444: exec_objects[5] (batch):
+[14889.799497157]    handle = 6
+[14889.799497868]    relocation_count = 4
+[14889.799498523]    relocs_ptr = 0x00007ffc3ebc68c0
+[14889.799499226]    alignment = 0
+[14889.799499888]    offset = 0x0000000000000000
+[14889.799500618]    flags = 0x0000000000000000
+[14889.799503283] ❌ EXECBUFFER2 failed: Invalid argument (errno=22)
+[14889.799513533] 🔍 C444: Analyse errno:
+[14889.799514180]    EINVAL (22) = Invalid argument - Paramètre batch buffer incorrect

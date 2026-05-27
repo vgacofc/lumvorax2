@@ -1,0 +1,45 @@
+═══════════════════════════════════════════════════════════
+  C369 VALIDATION COMPLÈTE GPU GEN9
+═══════════════════════════════════════════════════════════
+
+[C369] Étape 1/4: Compilation kernel de test...
+  Kernel: kernels/test_c369_gpu_write.cl
+  Cible: Intel Gen9 (Kaby Lake)
+Build succeeded.
+  ❌ ERREUR: Compilation ocloc échouée
+  ⚠️  Utilisation kernel production à la place
+
+[C369] Étape 2/4: Compilation runner avec validation...
+  Makefile: Makefile.gen9_native
+  Cible: test_c369_validation
+      |                  ^~
+src/btc_gen9_validation_tests.c:60:18: error: invalid use of incomplete typedef ‘btc_gen9_context_t’ {aka ‘struct btc_gen9_context’}
+   60 |     if (ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_MMAP, &mmap_req) < 0) {
+      |                  ^~
+src/btc_gen9_validation_tests.c:83:14: error: invalid use of incomplete typedef ‘btc_gen9_context_t’ {aka ‘struct btc_gen9_context’}
+   83 |     ioctl(ctx->drm_fd, DRM_IOCTL_GEM_CLOSE, &close_req);
+      |              ^~
+src/btc_gen9_validation_tests.c: In function ‘btc_gen9_test_output_buffer’:
+src/btc_gen9_validation_tests.c:96:24: warning: implicit declaration of function ‘btc_gen9_get_output_map’; did you mean ‘btc_gen9_test_output_buffer’? [-Wimplicit-function-declaration]
+   96 |     void* output_map = btc_gen9_get_output_map(ctx);
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~
+      |                        btc_gen9_test_output_buffer
+src/btc_gen9_validation_tests.c:96:24: warning: initialization of ‘void *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+src/btc_gen9_validation_tests.c:117:28: warning: implicit declaration of function ‘btc_gen9_get_output_size’; did you mean ‘btc_gen9_test_output_buffer’? [-Wimplicit-function-declaration]
+  117 |     size_t expected_size = btc_gen9_get_output_size(ctx);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~
+      |                            btc_gen9_test_output_buffer
+src/btc_gen9_validation_tests.c: In function ‘btc_gen9_test_isa_validation’:
+src/btc_gen9_validation_tests.c:163:24: warning: implicit declaration of function ‘btc_gen9_get_kernel_map’ [-Wimplicit-function-declaration]
+  163 |     void* kernel_map = btc_gen9_get_kernel_map(ctx);
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_validation_tests.c:163:24: warning: initialization of ‘void *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+src/btc_gen9_validation_tests.c:180:26: warning: implicit declaration of function ‘btc_gen9_get_kernel_size’ [-Wimplicit-function-declaration]
+  180 |     size_t kernel_size = btc_gen9_get_kernel_size(ctx);
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_validation_tests.c: At top level:
+src/btc_gen9_validation_tests.c:19:20: warning: ‘test_kernel_write_pattern’ defined but not used [-Wunused-variable]
+   19 | static const char* test_kernel_write_pattern =
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+make: *** [Makefile.gen9_native:90: build/btc_gen9_validation_tests.o] Error 1
+  ❌ ERREUR: Compilation runner échouée

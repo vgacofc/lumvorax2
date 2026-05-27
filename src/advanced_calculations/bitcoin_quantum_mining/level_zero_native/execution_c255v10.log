@@ -1,0 +1,49 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_c255_multi_dispatch.log
+[DEBUG] ÉCHEC fopen(): errno=13 (Permission denied)
+[ADAPTIVE-BATCH-V10] Doublement → batch_size=524288 (0.025% vers 1000M, peak=0.000 MH/s)
+[ADAPTIVE-BATCH-V10] Doublement → batch_size=1048576 (0.075% vers 1000M, peak=0.679 MH/s)
+[ADAPTIVE-BATCH-V10] Doublement → batch_size=2097152 (0.175% vers 1000M, peak=1.489 MH/s)
+[ADAPTIVE-BATCH-V10] Doublement → batch_size=4194304 (0.375% vers 1000M, peak=2.980 MH/s)
+[ADAPTIVE-BATCH-V10] Doublement → batch_size=8388608 (0.775% vers 1000M, peak=5.951 MH/s)
+[ADAPTIVE-BATCH-V10] Crash #1 → Recul batch_size=4194304 (0.375% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #2 → Recul batch_size=2097152 (0.175% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #3 → Recul batch_size=1048576 (0.075% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #4 → Recul batch_size=524288 (0.025% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #5 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #6 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #7 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #8 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #9 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #10 → Recul batch_size=262144 (0.000% vers 1000M)
+[ADAPTIVE-BATCH-V10] Crash #11 → Recul batch_size=262144 (0.000% vers 1000M)
+═══════════════════════════════════════════════════════════════
+  LumVorax C255 Multi-Dispatch Test
+═══════════════════════════════════════════════════════════════
+
+Configuration:
+  Batches: 30
+  Dispatches per batch: 9 (3 contexts × 3 cycles)
+  Total dispatches: 270
+  Nonces per dispatch: 268,435,456 (268M)
+  Total nonces: 72477573120
+
+Initializing Gen9 context...
+✓ Gen9 context initialized
+  DRM FD: 5
+  Context ID: 1
+  Log file: logs/forensic/test_c255_multi_dispatch.log
+
+Starting C255 multi-dispatch test...
+═══════════════════════════════════════════════════════════════
+
+
+═══════════════════════════════════════════════════════════════
+  C255 Test Results
+═══════════════════════════════════════════════════════════════
+
+✗ Test FAILED
+  No dispatches completed successfully
+
+Log file: logs/forensic/test_c255_multi_dispatch.log
+
+═══════════════════════════════════════════════════════════════

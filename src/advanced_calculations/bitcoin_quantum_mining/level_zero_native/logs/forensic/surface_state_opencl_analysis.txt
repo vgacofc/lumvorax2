@@ -1,0 +1,15 @@
+╔════════════════════════════════════════════════════════════════╗
+║           SURFACE STATE FAILURE ROOT CAUSE ANALYSIS            ║
+╠════════════════════════════════════════════════════════════════╣
+║ POTENTIAL ROOT CAUSES:                                         ║
+║ ✗ Invalid dimensions: 256x1                                   ║
+║   → Surface State not initialized                              ║
+║ ⚠ MOCS is UNCACHED                                             ║
+║   → Performance impact (no LLC/L3 caching)                     ║
+╠════════════════════════════════════════════════════════════════╣
+║ RECOMMENDED ACTIONS:                                           ║
+║ 1. Verify buffer allocated via GEM_CREATE                      ║
+║ 2. Add relocation entry for surface base address              ║
+║ 3. Ensure Surface State in batch before GPGPU_WALKER          ║
+║ 4. Use MOCS_CACHED_LLC_L3 for optimal performance             ║
+╚════════════════════════════════════════════════════════════════╝

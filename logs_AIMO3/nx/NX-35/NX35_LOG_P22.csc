@@ -1,0 +1,2 @@
+timestamp,event_id,metric_lyapunov,entropy,merkle_root
+1769814770998541814,NX35-P22-EV0,0.944884,69,369be4c4fca9828775f230c3cce04fe7dd83f8c42629d376074a3d731aaa01ed

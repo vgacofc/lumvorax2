@@ -1,0 +1,26 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c350_simple.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 10000000 nonces
+[GEN9-EXECUTE] Début: ctx=0x5bddab69b490 block_header=0x7ffebd41d0f0 start_nonce=0 count=10000000
+[C350] Test kernel ULTRA SIMPLE sans atomics
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c350_simple.log
+[DEBUG] Log ouvert avec succès
+[C350] Block header configuré (MÊME que test CPU)
+[C350] Attendu: 9 near-miss, max_leading_zeros=20
+[C350] Test GPU: start_nonce=0 count=10M
+[C350] Résultat GPU: best_nonce=0 leading_zeros=0
+
+╔════════════════════════════════════════════════════════════╗
+║  C350 KERNEL ULTRA SIMPLE - RÉSULTATS TEST GPU            ║
+╚════════════════════════════════════════════════════════════╝
+Kernel: btc_sha256_c350_simple.bin_kbl.bin (93KB)
+Nonces testés: 10,000,000
+Best nonce trouvé: 0
+Leading zeros: 0
+
+COMPARAISON CPU vs GPU:
+CPU (OpenSSL): 9 near-miss, max=20 leading zeros
+GPU (C350):    ❌ NE DÉTECTE PAS
+
+Nonces attendus: 3, 5, 92, 359, 793, 30468, 176709, 601998, 6567206
+Nonce GPU trouvé: 0 ❓ DIFFÉRENT

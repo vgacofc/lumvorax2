@@ -1,0 +1,25 @@
+[27213.826311035] 🚀 TEST C475v3 - BATCH NULL_STATE + GPGPU SIMPLE
+[27213.826372314] ✅ DRM ouvert: fd=5
+[27213.826379356] ✅ Contexte GPU créé: id=1
+[27213.826400604] ✅ Buffers créés: batch=1, relocs=[2,3,4,5]
+[27213.826427726] ✅ Batch buffer mappé: 0x70e5c6b25000
+[27213.826447456] ✅ Batch null_state copié: 3840 bytes (960 DWORDs)
+[27213.826448877] ✅ PIPE_CONTROL ajouté
+[27213.826449493] ✅ PIPELINE_SELECT GPGPU ajouté
+[27213.826450197] ✅ MEDIA_VFE_STATE ajouté
+[27213.826451071] ✅ GPGPU_WALKER ajouté (1x1x1)
+[27213.826452030] ✅ Batch complet: 998 DWORDs (3992 bytes)
+[27213.826452987]    - Null state: 960 DWORDs
+[27213.826453519]    - GPGPU: 38 DWORDs
+[27213.826461527] ⚡ Soumission batch (null_state + GPGPU)...
+[27213.826722309] ✅ EXECBUFFER2 réussi! (0.260 ms)
+[27213.826730991] ⏳ Attente GPU idle (timeout 2s)...
+[27213.826811120] ✅ GPU idle confirmé (0.080 ms)
+[27213.826813340] 
+[27213.826813831] 🎉 TEST C475v3 RÉUSSI!
+[27213.826814297] 📊 RÉSULTATS:
+[27213.826814807]    - Batch stable: ✅
+[27213.826815251]    - Pipeline GPGPU: ✅
+[27213.826815700]    - Aucun GPU HANG: ✅
+[27213.826816129] 
+[27213.826816577] 💡 PROCHAINE ÉTAPE: Ajouter kernel réel + output buffer

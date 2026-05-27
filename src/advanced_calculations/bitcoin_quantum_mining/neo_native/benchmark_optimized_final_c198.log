@@ -1,0 +1,116 @@
+[NEO_WRAPPER] Initializing Intel NEO OpenCL wrapper...
+[NEO_WRAPPER] Found 1 OpenCL platform(s)
+[NEO_WRAPPER] Platform 0: Intel(R) OpenCL Graphics
+[NEO_WRAPPER] Selected Intel platform
+[NEO_WRAPPER] Found 1 GPU device(s)
+[NEO_WRAPPER] Selected device: Intel(R) UHD Graphics 620
+[NEO_WRAPPER] Context created successfully
+[NEO_WRAPPER] Command queue created with profiling enabled
+[NEO_WRAPPER] Initialization complete
+[NEO_WRAPPER] Loading kernel 'vector_add'...
+[NEO_WRAPPER] Program compiled successfully
+[NEO_WRAPPER] Kernel 'vector_add' created successfully
+[NEO_WRAPPER] Création buffer persistant #0 (4194304 bytes)
+[NEO_WRAPPER] Création buffer persistant #1 (4194304 bytes)
+[NEO_WRAPPER] Création buffer persistant #2 (4194304 bytes)
+[NEO_WRAPPER] Libération buffer persistant #0 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #0 (67108864 bytes)
+[NEO_WRAPPER] Libération buffer persistant #1 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #1 (67108864 bytes)
+[NEO_WRAPPER] Libération buffer persistant #2 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #2 (67108864 bytes)
+═══════════════════════════════════════════════════════════
+  BENCHMARK MASSIF — NEO Wrapper OpenCL
+  Objectif : Saturer GPU et mesurer performance réelle
+  Device : Intel UHD Graphics 620 (Gen9)
+═══════════════════════════════════════════════════════════
+
+[INIT] Initialisation NEO Wrapper...
+✅ Wrapper initialisé
+
+[COMPILE] Compilation kernel...
+✅ Kernel compilé
+
+═══════════════════════════════════════════════════════════
+  BENCHMARK : 1M éléments (saturation EU) (1048576 éléments = 12.00 MB)
+═══════════════════════════════════════════════════════════
+
+[1/7] Initialisation données host...
+      Temps init : 4.017 ms (vectorisé)
+[2/7] Création buffers GPU...
+      Temps alloc : 0.642 ms (persistants)
+[3/7] Transfert Host → Device...
+      Temps H2D : 3.431 ms (2.28 GB/s)
+[4/7] Configuration kernel...
+      Arguments configurés
+[5/7] Dispatch kernel...
+      Temps dispatch : 5.086 ms
+      Temps GPU : 1.181 ms (0.89 GFLOPS)
+[6/7] Transfert Device → Host...
+      Temps D2H : 3.530 ms (1.11 GB/s)
+[7/7] Vérification résultats...
+      ✅ Tous les résultats corrects (1000 échantillons vérifiés)
+
+───────────────────────────────────────────────────────────
+  RÉSUMÉ 1M éléments (saturation EU)
+───────────────────────────────────────────────────────────
+  Init données    :    4.017 ms ( 24.0%)
+  Alloc GPU       :    0.642 ms (  3.8%)
+  Transfert H2D   :    3.431 ms ( 20.5%) — 2.28 GB/s
+  Dispatch kernel :    5.086 ms ( 30.4%)
+  Temps GPU       :    1.181 ms — 0.89 GFLOPS
+  Transfert D2H   :    3.530 ms ( 21.1%) — 1.11 GB/s
+  ─────────────────────────────────────────────────────────
+  TOTAL           :   16.706 ms
+  Ratio GPU/Total :      7.1%
+═══════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════
+  BENCHMARK : 16M éléments (pression L3) (16777216 éléments = 192.00 MB)
+═══════════════════════════════════════════════════════════
+
+[1/7] Initialisation données host...
+      Temps init : 69.190 ms (vectorisé)
+[2/7] Création buffers GPU...
+      Temps alloc : 39.135 ms (persistants)
+[3/7] Transfert Host → Device...
+      Temps H2D : 31.690 ms (3.94 GB/s)
+[4/7] Configuration kernel...
+      Arguments configurés
+[5/7] Dispatch kernel...
+      Temps dispatch : 19.248 ms
+      Temps GPU : 17.285 ms (0.97 GFLOPS)
+[6/7] Transfert Device → Host...
+      Temps D2H : 41.477 ms (1.51 GB/s)
+[7/7] Vérification résultats...
+      ✅ Tous les résultats corrects (1000 échantillons vérifiés)
+
+───────────────────────────────────────────────────────────
+  RÉSUMÉ 16M éléments (pression L3)
+──────────────────────────────────────────────────────────[NEO_WRAPPER] Cleaning up...
+[NEO_WRAPPER] Kernel released
+[NEO_WRAPPER] Program released
+[NEO_WRAPPER] Buffer persistant #0 released (67108864 bytes)
+[NEO_WRAPPER] Buffer persistant #1 released (67108864 bytes)
+[NEO_WRAPPER] Buffer persistant #2 released (67108864 bytes)
+[NEO_WRAPPER] Command queue released
+[NEO_WRAPPER] Context released
+[NEO_WRAPPER] Cleanup complete
+─
+  Init données    :   69.190 ms ( 34.5%)
+  Alloc GPU       :   39.135 ms ( 19.5%)
+  Transfert H2D   :   31.690 ms ( 15.8%) — 3.94 GB/s
+  Dispatch kernel :   19.248 ms (  9.6%)
+  Temps GPU       :   17.285 ms — 0.97 GFLOPS
+  Transfert D2H   :   41.477 ms ( 20.7%) — 1.51 GB/s
+  ─────────────────────────────────────────────────────────
+  TOTAL           :  200.740 ms
+  Ratio GPU/Total :      8.6%
+═══════════════════════════════════════════════════════════
+
+[CLEANUP] Nettoyage...
+✅ Cleanup terminé
+
+═══════════════════════════════════════════════════════════
+  ✅ TOUS LES BENCHMARKS RÉUSSIS
+═══════════════════════════════════════════════════════════

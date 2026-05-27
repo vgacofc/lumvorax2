@@ -1,0 +1,304 @@
+[sudo] password for lvx: # LumVorax C255v2 — Multi-Dispatch Parallèle CORRIGÉ
+# Architecture: Soumission asynchrone + DRM reopen thread-safe
+# Device: Intel UHD Graphics 620 (Gen9)
+# Objectif: Hashrate ≥ 2 GH/s (×9 vs C255)
+
+Configuration:
+  Batches: 20
+  Dispatches per batch: 9
+  Total dispatches: 180
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_gen9_native.log
+[DEBUG] Log ouvert avec succès
+Initialization: 0.001377 sec
+
+[3514.319897628] C255V2_MULTI_DISPATCH_START: num_batches=20 dispatches_per_batch=9 total_dispatches=180
+[3514.319903939] C255V2_BATCH_START: batch=1/20 nonce_start=0
+[3514.319967627] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=2 cycle=0 dispatch=1 nonce_start=0
+[3514.320059078] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=2 cycle=1 dispatch=2 nonce_start=1073741824
+[3514.320083012] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=2 cycle=2 dispatch=3 nonce_start=2147483648
+[3514.320139093] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=3 cycle=0 dispatch=4 nonce_start=3221225472
+[3514.321300876] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=3 cycle=1 dispatch=5 nonce_start=4294967296
+[3514.321404626] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=4 cycle=0 dispatch=7 nonce_start=6442450944
+[3514.321481783] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=4 cycle=1 dispatch=8 nonce_start=7516192768
+[3514.321528858] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=4 cycle=2 dispatch=9 nonce_start=8589934592
+[3514.321419496] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=3 cycle=2 dispatch=6 nonce_start=5368709120
+[3514.781412502] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=2 time=0.461168 sec
+[3514.781412451] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=2 time=0.461253 sec
+[3514.781433975] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=0.461459
+[3514.781441180] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.461369
+[3514.784294082] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=2 time=0.464142 sec
+[3514.784305111] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=0.464161
+[3514.784306650] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=2 time=0.464216 sec
+[3514.784314238] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.464226
+[3514.784328994] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=2 time=0.462782 sec
+[3514.784334306] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.462788
+[3514.788784932] ASYNC_SUBMIT_SUCCESS: ctx_id=4 batch_bo=2 time=0.467167 sec
+[3514.788791761] ASYNC_SUBMIT_SUCCESS: ctx_id=4 batch_bo=2 time=0.467223 sec
+[3514.788795082] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.467184
+[3514.788803865] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.467237
+[3514.788814618] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=2 time=0.467150 sec
+[3514.788819524] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.467157
+[3514.788854967] ASYNC_SUBMIT_SUCCESS: ctx_id=4 batch_bo=2 time=0.467149 sec
+[3514.788859773] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.467155
+[3514.788913027] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=0.469005 sec
+[3521.129187135] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=2 wait_time=6.340256 total_time=6.809191
+[3521.129216044] C255V2_DISPATCH_COMPLETE: dispatch=1 ctx_idx=0 exec_time=6.340295
+[3521.129241712] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=2 wait_time=0.000011 total_time=6.809165
+[3521.129249762] C255V2_DISPATCH_COMPLETE: dispatch=2 ctx_idx=0 exec_time=0.000022
+[3521.129260295] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=2 wait_time=0.000003 total_time=6.809170
+[3521.129268788] C255V2_DISPATCH_COMPLETE: dispatch=3 ctx_idx=0 exec_time=0.000012
+[3521.129283866] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=2 wait_time=0.000004 total_time=6.809137
+[3521.129291961] C255V2_DISPATCH_COMPLETE: dispatch=4 ctx_idx=1 exec_time=0.000014
+[3521.129303600] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=2 wait_time=0.000003 total_time=6.807756
+[3521.129311573] C255V2_DISPATCH_COMPLETE: dispatch=5 ctx_idx=1 exec_time=0.000012
+[3521.129326275] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=2 wait_time=0.000004 total_time=6.807660
+[3521.129335802] C255V2_DISPATCH_COMPLETE: dispatch=6 ctx_idx=1 exec_time=0.000015
+[3521.129350593] ASYNC_WAIT_SUCCESS: ctx_id=4 batch_bo=2 wait_time=0.000004 total_time=6.807781
+[3521.129359135] C255V2_DISPATCH_COMPLETE: dispatch=7 ctx_idx=2 exec_time=0.000014
+[3521.129372399] ASYNC_WAIT_SUCCESS: ctx_id=4 batch_bo=2 wait_time=0.000004 total_time=6.807759
+[3521.129379892] C255V2_DISPATCH_COMPLETE: dispatch=8 ctx_idx=2 exec_time=0.000013
+[3521.129392152] ASYNC_WAIT_SUCCESS: ctx_id=4 batch_bo=2 wait_time=0.000004 total_time=6.807686
+[3521.129400277] C255V2_DISPATCH_COMPLETE: dispatch=9 ctx_idx=2 exec_time=0.000013
+[3521.129409163] C255V2_SYNC_PHASE_COMPLETE: success=9/9 time=6.340490 sec
+[3521.129416236] C255V2_DRM_REOPEN_TRIGGER: dispatches=9 (multiple de 9)
+[3521.129433937] ASYNC_REOPEN_MUTEX_ACQUIRED: 
+[3521.137980767] ASYNC_REOPEN_MUTEX_RELEASED: success
+[3521.137996819] C255V2_BATCH_COMPLETE: batch=1/20 success=9/9 cache_misses=0 time=6.818 sec submit=0.469005 sync=6.340490 hashrate=1.42 GH/s
+[3521.138240737] C255V2_BATCH_START: batch=2/20 nonce_start=9663676416
+[3521.138372690] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=0 dispatch=1 nonce_start=9663676416
+[3521.138441572] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=1 dispatch=2 nonce_start=10737418240
+[3521.138492765] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=2 dispatch=3 nonce_start=11811160064
+[3521.138582378] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=0 dispatch=4 nonce_start=12884901888
+[3522.104700920] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=1 dispatch=5 nonce_start=13958643712
+[3522.104897256] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=0 dispatch=7 nonce_start=16106127360
+[3522.104956992] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=2 dispatch=6 nonce_start=15032385536
+[3522.104967693] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=2 dispatch=9 nonce_start=18253611008
+[3522.104901671] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=1 dispatch=8 nonce_start=17179869184
+[3522.110612808] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.006079 sec
+[3522.110701215] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=0.972107
+[3522.116696404] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.011857 sec
+[3522.116775996] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.011945
+[3522.116719805] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.011544 sec
+[3522.116926334] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.011682 sec
+[3522.116968475] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.011726
+[3522.116702999] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.018915 sec
+[3522.116726861] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.012283 sec
+[3522.117070274] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.015153 sec
+[3522.117102541] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.978643
+[3522.117037208] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.011210 sec
+[3522.117115979] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.978609
+[3522.117052807] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.012129 sec
+[3522.117127440] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.012205
+[3522.117092653] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=0.978701
+[3522.117200138] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.012024
+[3522.117204649] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.011378
+[3522.117326399] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=0.979073 sec
+[3526.307911822] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=4.190573 total_time=4.210119
+[3526.307924623] C255V2_DISPATCH_COMPLETE: dispatch=1 ctx_idx=0 exec_time=4.190592
+[3526.307932995] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000004 total_time=4.203489
+[3526.307935415] C255V2_DISPATCH_COMPLETE: dispatch=2 ctx_idx=0 exec_time=0.000007
+[3526.307938941] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=4.206022
+[3526.307940874] C255V2_DISPATCH_COMPLETE: dispatch=3 ctx_idx=0 exec_time=0.000003
+[3526.307943836] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=4.203421
+[3526.307945873] C255V2_DISPATCH_COMPLETE: dispatch=4 ctx_idx=1 exec_time=0.000003
+[3526.307948607] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000001 total_time=4.203118
+[3526.307950474] C255V2_DISPATCH_COMPLETE: dispatch=5 ctx_idx=1 exec_time=0.000003
+[3526.307953312] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000001 total_time=4.202778
+[3526.307955170] C255V2_DISPATCH_COMPLETE: dispatch=6 ctx_idx=1 exec_time=0.000003
+[3526.307958271] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=4.203037
+[3526.307960404] C255V2_DISPATCH_COMPLETE: dispatch=7 ctx_idx=2 exec_time=0.000003
+[3526.307963763] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=4.202138
+[3526.307965679] C255V2_DISPATCH_COMPLETE: dispatch=8 ctx_idx=2 exec_time=0.000003
+[3526.307968524] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=4.202727
+[3526.307970404] C255V2_DISPATCH_COMPLETE: dispatch=9 ctx_idx=2 exec_time=0.000003
+[3526.307972523] C255V2_SYNC_PHASE_COMPLETE: success=9/9 time=4.190641 sec
+[3526.307974290] C255V2_DRM_REOPEN_TRIGGER: dispatches=9 (multiple de 9)
+[3526.307976536] ASYNC_REOPEN_MUTEX_ACQUIRED: 
+[3526.308446069] ASYNC_REOPEN_MUTEX_RELEASED: success
+[3526.308457243] C255V2_BATCH_COMPLETE: batch=2/20 success=9/9 cache_misses=0 time=5.170 sec submit=0.979073 sync=4.190641 hashrate=1.87 GH/s
+[3526.308459793] C255V2_BATCH_START: batch=3/20 nonce_start=19327352832
+[3526.308584456] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=2 dispatch=3 nonce_start=21474836480
+[3526.308642768] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=0 dispatch=1 nonce_start=19327352832
+[3526.308689317] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=1 dispatch=2 nonce_start=20401094656
+[3526.308710279] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=0 dispatch=4 nonce_start=22548578304
+[3526.308732423] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=1 dispatch=5 nonce_start=23622320128
+[3527.135581131] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=0 dispatch=7 nonce_start=25769803776
+[3527.135594886] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=2 dispatch=9 nonce_start=27917287424
+[3527.135586767] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=2 dispatch=6 nonce_start=24696061952
+[3527.135592440] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=1 dispatch=8 nonce_start=26843545600
+[3527.139601356] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.004025 sec
+[3527.139603677] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.004009 sec
+[3527.139662795] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=0.830948
+[3527.139681526] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.830944
+[3527.139622867] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.003668 sec
+[3527.139739161] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.003785
+[3527.139741454] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.003797 sec
+[3527.139744893] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.003801
+[3527.139638420] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.004073 sec
+[3527.139642588] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.004083 sec
+[3527.140024015] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.831324
+[3527.139651811] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.003677 sec
+[3527.140033451] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.004060
+[3527.139614037] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.004039 sec
+[3527.140055320] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.831427
+[3527.139664605] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.003740 sec
+[3527.140019426] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=0.831332
+[3527.140102853] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.004179
+[3527.140149437] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=0.831686 sec
+[3529.252033356] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=2.111872 total_time=2.116462
+[3529.252054201] C255V2_DISPATCH_COMPLETE: dispatch=1 ctx_idx=0 exec_time=2.111900
+[3529.252065156] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000005 total_time=2.116505
+[3529.252069167] C255V2_DISPATCH_COMPLETE: dispatch=2 ctx_idx=0 exec_time=0.000010
+[3529.252074448] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116500
+[3529.252078309] C255V2_DISPATCH_COMPLETE: dispatch=3 ctx_idx=0 exec_time=0.000006
+[3529.252083947] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000002 total_time=2.116490
+[3529.252087665] C255V2_DISPATCH_COMPLETE: dispatch=4 ctx_idx=1 exec_time=0.000006
+[3529.252092701] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116523
+[3529.252095909] C255V2_DISPATCH_COMPLETE: dispatch=5 ctx_idx=1 exec_time=0.000005
+[3529.252101029] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116147
+[3529.252104362] C255V2_DISPATCH_COMPLETE: dispatch=6 ctx_idx=1 exec_time=0.000005
+[3529.252110011] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116186
+[3529.252113540] C255V2_DISPATCH_COMPLETE: dispatch=7 ctx_idx=2 exec_time=0.000005
+[3529.252118595] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116145
+[3529.252122214] C255V2_DISPATCH_COMPLETE: dispatch=8 ctx_idx=2 exec_time=0.000005
+[3529.252127596] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000001 total_time=2.116184
+[3529.252131096] C255V2_DISPATCH_COMPLETE: dispatch=9 ctx_idx=2 exec_time=0.000005
+[3529.252134396] C255V2_SYNC_PHASE_COMPLETE: success=9/9 time=2.111981 sec
+[3529.252137182] C255V2_DRM_REOPEN_TRIGGER: dispatches=9 (multiple de 9)
+[3529.252140151] ASYNC_REOPEN_MUTEX_ACQUIRED: 
+[3529.253606872] ASYNC_REOPEN_MUTEX_RELEASED: success
+[3529.253625509] C255V2_BATCH_COMPLETE: batch=3/20 success=9/9 cache_misses=0 time=2.945 sec submit=0.831686 sync=2.111981 hashrate=3.28 GH/s
+[3529.253629628] C255V2_BATCH_START: batch=4/20 nonce_start=28991029248
+[3529.253766824] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=0 dispatch=1 nonce_start=28991029248
+[3529.254030173] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=1 dispatch=2 nonce_start=30064771072
+[3529.254066339] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=2 dispatch=3 nonce_start=31138512896
+[3529.254078708] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=0 dispatch=4 nonce_start=32212254720
+[3529.874399486] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=1 dispatch=5 nonce_start=33285996544
+[3529.874530577] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=2 dispatch=6 nonce_start=34359738368
+[3529.875012585] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=0 dispatch=7 nonce_start=35433480192
+[3529.875117798] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=1 dispatch=8 nonce_start=36507222016
+[3529.875126827] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=2 dispatch=9 nonce_start=37580963840
+[3529.878340477] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004202 sec
+[3529.878354050] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=0.624578
+[3529.878347827] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.003933 sec
+[3529.878368601] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.003955
+[3529.878372120] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004180 sec
+[3529.878376585] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.624306
+[3529.878383901] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004193 sec
+[3529.878387750] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.624332
+[3529.878394400] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.003856 sec
+[3529.878398840] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.003862
+[3529.878426803] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004235 sec
+[3529.878430004] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=0.624348
+[3529.882263320] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.007133 sec
+[3529.882275968] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.007148
+[3529.882263326] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.007203 sec
+[3529.882284560] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.007152 sec
+[3529.882291087] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.007160
+[3529.882285436] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.007235
+[3529.882431112] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=0.628796 sec
+[3534.119974188] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=4.237498 total_time=4.245805
+[3534.120149024] C255V2_DISPATCH_COMPLETE: dispatch=1 ctx_idx=0 exec_time=4.237705
+[3534.120183221] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000011 total_time=4.245988
+[3534.120194903] C255V2_DISPATCH_COMPLETE: dispatch=2 ctx_idx=0 exec_time=0.000026
+[3534.120214298] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000004 total_time=4.246021
+[3534.120223993] C255V2_DISPATCH_COMPLETE: dispatch=3 ctx_idx=0 exec_time=0.000016
+[3534.120238409] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000003 total_time=4.246044
+[3534.120247528] C255V2_DISPATCH_COMPLETE: dispatch=4 ctx_idx=1 exec_time=0.000014
+[3534.120260576] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000004 total_time=4.245845
+[3534.120268749] C255V2_DISPATCH_COMPLETE: dispatch=5 ctx_idx=1 exec_time=0.000013
+[3534.120281130] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000003 total_time=4.245742
+[3534.120289619] C255V2_DISPATCH_COMPLETE: dispatch=6 ctx_idx=1 exec_time=0.000013
+[3534.120303986] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000004 total_time=4.245250
+[3534.120312111] C255V2_DISPATCH_COMPLETE: dispatch=7 ctx_idx=2 exec_time=0.000013
+[3534.120326001] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000004 total_time=4.245195
+[3534.120334975] C255V2_DISPATCH_COMPLETE: dispatch=8 ctx_idx=2 exec_time=0.000014
+[3534.120349168] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000004 total_time=4.245216
+[3534.120358855] C255V2_DISPATCH_COMPLETE: dispatch=9 ctx_idx=2 exec_time=0.000015
+[3534.120368105] C255V2_SYNC_PHASE_COMPLETE: success=9/9 time=4.237929 sec
+[3534.120374623] C255V2_DRM_REOPEN_TRIGGER: dispatches=9 (multiple de 9)
+[3534.120381298] ASYNC_REOPEN_MUTEX_ACQUIRED: 
+[3534.121569962] ASYNC_REOPEN_MUTEX_RELEASED: success
+[3534.121613664] C255V2_BATCH_COMPLETE: batch=4/20 success=9/9 cache_misses=0 time=4.868 sec submit=0.628796 sync=4.237929 hashrate=1.99 GH/s
+[3534.121624401] C255V2_BATCH_START: batch=5/20 nonce_start=38654705664
+[3534.121786194] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=0 dispatch=1 nonce_start=38654705664
+[3534.121997769] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=1 dispatch=2 nonce_start=39728447488
+[3534.122073783] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=2 dispatch=3 nonce_start=40802189312
+[3534.122102651] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=0 dispatch=4 nonce_start=41875931136
+[3534.676672566] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=1 dispatch=5 nonce_start=42949672960
+[3534.676829644] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=2 dispatch=6 nonce_start=44023414784
+[3534.677209233] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=0 dispatch=7 nonce_start=45097156608
+[3534.678042560] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=1 dispatch=8 nonce_start=46170898432
+[3534.678044950] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=2 dispatch=9 nonce_start=47244640256
+[3534.681121678] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004541 sec
+[3534.681129888] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004293 sec
+[3534.681131247] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=0.559016
+[3534.681142517] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.004307
+[3534.681136543] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.007752 sec
+[3534.681151623] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=0.559318
+[3534.681155713] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.004600 sec
+[3534.681159736] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.559121
+[3534.686475274] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.009254 sec
+[3534.686482867] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.009269
+[3534.686494874] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.009918 sec
+[3534.686508517] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.564421
+[3534.686511628] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.008456 sec
+[3534.686516537] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.008462
+[3534.686519977] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.008458 sec
+[3534.686524213] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.008463
+[3534.686500932] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.009812 sec
+[3534.686550329] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.009863
+[3534.686639873] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=0.565005 sec
+[3539.430881307] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=4.744219 total_time=4.757481
+[3539.430905444] C255V2_DISPATCH_COMPLETE: dispatch=1 ctx_idx=0 exec_time=4.744258
+[3539.430929617] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000010 total_time=4.754370
+[3539.430941409] C255V2_DISPATCH_COMPLETE: dispatch=2 ctx_idx=0 exec_time=0.000024
+[3539.430954218] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000003 total_time=4.754377
+[3539.430960784] C255V2_DISPATCH_COMPLETE: dispatch=3 ctx_idx=0 exec_time=0.000011
+[3539.430969991] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000002 total_time=4.754395
+[3539.430976051] C255V2_DISPATCH_COMPLETE: dispatch=4 ctx_idx=1 exec_time=0.000009
+[3539.430985624] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000002 total_time=4.754297
+[3539.430993222] C255V2_DISPATCH_COMPLETE: dispatch=5 ctx_idx=1 exec_time=0.000010
+[3539.431028752] ASYNC_WAIT_SUCCESS: ctx_id=2 batch_bo=1 wait_time=0.000004 total_time=4.754191
+[3539.431037342] C255V2_DISPATCH_COMPLETE: dispatch=6 ctx_idx=1 exec_time=0.000015
+[3539.431050640] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000004 total_time=4.753835
+[3539.431058867] C255V2_DISPATCH_COMPLETE: dispatch=7 ctx_idx=2 exec_time=0.000013
+[3539.431071627] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000003 total_time=4.753008
+[3539.431080305] C255V2_DISPATCH_COMPLETE: dispatch=8 ctx_idx=2 exec_time=0.000013
+[3539.431094853] ASYNC_WAIT_SUCCESS: ctx_id=3 batch_bo=1 wait_time=0.000004 total_time=4.753038
+[3539.431111848] C255V2_DISPATCH_COMPLETE: dispatch=9 ctx_idx=2 exec_time=0.000022
+[3539.431122210] C255V2_SYNC_PHASE_COMPLETE: success=9/9 time=4.744475 sec
+[3539.431129813] C255V2_DRM_REOPEN_TRIGGER: dispatches=9 (multiple de 9)
+[3539.431137942] ASYNC_REOPEN_MUTEX_ACQUIRED: 
+[3539.432278490] ASYNC_REOPEN_MUTEX_RELEASED: success
+[3539.432321263] C255V2_BATCH_COMPLETE: batch=5/20 success=9/9 cache_misses=0 time=5.311 sec submit=0.565005 sync=4.744475 hashrate=1.82 GH/s
+[3539.432331830] C255V2_BATCH_START: batch=6/20 nonce_start=48318382080
+[3539.432461731] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=0 dispatch=1 nonce_start=48318382080
+[3539.434194738] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=1 dispatch=2 nonce_start=49392123904
+[3539.434335297] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=0 dispatch=4 nonce_start=51539607552
+[3539.434416628] C255V2_DISPATCH_WORKER_START: ctx_idx=0 ctx_id=1 cycle=2 dispatch=3 nonce_start=50465865728
+[3540.429389021] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=1 dispatch=5 nonce_start=52613349376
+[3540.429397167] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=1 dispatch=8 nonce_start=55834574848
+[3540.429400400] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=2 dispatch=9 nonce_start=56908316672
+[3540.429414233] C255V2_DISPATCH_WORKER_START: ctx_idx=2 ctx_id=3 cycle=0 dispatch=7 nonce_start=54760833024
+[3540.429395986] C255V2_DISPATCH_WORKER_START: ctx_idx=1 ctx_id=2 cycle=2 dispatch=6 nonce_start=53687091200
+[3540.433049850] ASYNC_SUBMIT_SUCCESS: ctx_id=1 batch_bo=1 time=0.004442 sec
+[3540.433058394] ASYNC_SUBMIT_SUCCESS: ctx_id=1 batch_bo=1 time=0.004230 sec
+[3540.433059641] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=3 result=0 submit_time=0.998627
+[3540.433053308] ASYNC_SUBMIT_SUCCESS: ctx_id=1 batch_bo=1 time=0.004397 sec
+[3540.433066983] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=2 result=0 submit_time=0.998845
+[3540.433075334] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=0 dispatch=1 result=0 submit_time=1.000602
+[3540.436211481] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.006271 sec
+[3540.436217442] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=5 result=0 submit_time=0.006281
+[3540.436271255] ASYNC_SUBMIT_SUCCESS: ctx_id=1 batch_bo=1 time=0.007597 sec
+[3540.436280813] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=4 result=0 submit_time=1.001891
+[3540.439436154] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.009466 sec
+[3540.439442073] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=9 result=0 submit_time=0.009476
+[3540.439445013] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.009487 sec
+[3540.439449000] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=8 result=0 submit_time=0.009493
+[3540.439456532] ASYNC_SUBMIT_SUCCESS: ctx_id=3 batch_bo=1 time=0.009272 sec
+[3540.439461034] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=2 dispatch=7 result=0 submit_time=0.009278
+[3540.439467182] ASYNC_SUBMIT_SUCCESS: ctx_id=2 batch_bo=1 time=0.009231 sec
+[3540.439470465] C255V2_DISPATCH_WORKER_COMPLETE: ctx_idx=1 dispatch=6 result=0 submit_time=0.009235
+[3540.439525658] C255V2_SUBMIT_PHASE_COMPLETE: dispatches=9 time=1.007183 sec

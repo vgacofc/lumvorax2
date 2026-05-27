@@ -1,0 +1,32 @@
+[31m❌ EXECBUFFER2 failed: Input/output error (errno=5)
+[0m[31m
+❌ Dispatch #4 failed, arrêt test
+[0m
+[1m╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 Phase 15Y-F19 — TEST MINIMAL NO POST_SYNC  ║
+║  Batch : PIPE_CONTROL (CS_STALL) + MI_BATCH_BUFFER_END   ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+[36m[CONFIG] Dispatches : 1000
+[0m[36m[CONFIG] Batch : PIPE_CONTROL (CS_STALL seul) + END
+[0m[36m[CONFIG] POST_SYNC : AUCUN (désactivé)
+[0m
+[32m✅ Init: ctx_id=1 batch_handle=1
+[0m[36m[TEST] Exécution 1000 dispatches...
+[0m
+
+[1m╔════════════════════════════════════════════════════════════╗
+║  Résultats Test Minimal No POST_SYNC                      ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+Dispatches réussis:  [32m3[0m
+Dispatches échoués:  [31m1[0m
+Temps total:         2.078 sec
+Temps moyen/dispatch: 691.608 ms
+Throughput:          1.44 dispatches/sec
+
+[31m[1m╔════════════════════════════════════════════════════════════╗
+║  ❌ ÉCHEC — Seulement 3/1000 dispatches                    ║
+║  Problème persiste                                        ║
+╚════════════════════════════════════════════════════════════╝
+[0m

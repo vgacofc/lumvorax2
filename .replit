@@ -1,0 +1,75 @@
+modules = ["bash", "nodejs-20", "python-3.11"]
+[agent]
+expertMode = true
+stack = "FLASK_VANILLA_JS"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "git fetch "
+mode = "sequential"
+author = 54178035
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git fetch origin git reset --hard origin/main"
+
+[[workflows.workflow]]
+name = "Start application"
+mode = "sequential"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m gunicorn --worker-class gthread --threads 8 --bind 0.0.0.0:5000 --timeout 300 --keep-alive 65 main:app"
+waitForPort = 5000
+
+[nix]
+packages = ["arrow-cpp", "cairo", "catch2", "clang", "doppler", "fetchutils", "ffmpeg-full", "file", "fmt", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "iana-etc", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "muparserx", "nano", "nlohmann_json", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "spdlog", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
+channel = "stable-25_05"
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+build = ["make", "clean", "all"]
+
+[userenv]
+
+[userenv.shared]
+KAGGLE_USERNAME = "ndarray2000"
+KAGGLE_CONFIG_DIR = "/home/runner/.kaggle"
+DD_SITE = "datadoghq.eu"
+DD_ENV = "dev"
+DD_RUM_APPLICATION_ID = "bb33a5e8-33de-4ab1-b7ee-127c58afc2c2"
+DD_RUM_CLIENT_TOKEN = "pubc75578b047a4e05c64024799f357e852"
+DD_RUM_REMOTE_CONFIGURATION_ID = "d09360f3-2596-4952-aa22-ec41ada5b1ed"
+DD_RUM_SITE = "datadoghq.eu"
+SUPABASE_PROJECT_REF = "auytumghnaguqscehyas"
+SUPABASE_DB_HOST = "db.auytumghnaguqscehyas.supabase.co"
+SUPABASE_DB_HOST2 = "aws-0-eu-west-1.pooler.supabase.com"
+SUPABASE_DB_PORT = "5432"
+SUPABASE_DB_PORT2 = "6543"
+SUPABASE_DB_NAME = "postgres"
+SUPABASE_DB_USER = "postgres"
+SUPERMEMORY_API_KEY = "sm_P3dg7vfnUf9C1zsVfKKUTh_LtAic9FiYrj3nWVxH9tq1ApQG6NwyqGAyRB1vwVeCCC4L30Z3nTixFgFBSGuKm61"
+
+[userenv.development]
+
+[userenv.production]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

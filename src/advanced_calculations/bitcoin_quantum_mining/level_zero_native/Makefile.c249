@@ -1,0 +1,196 @@
+# LumVorax C249 — Parallélisme GPU Natif Multi-EUs
+# Makefile pour compilation avec parallélisation 168 work-items
+#
+# CYCLE : C249
+# DATE : 2026-05-13
+# OBJECTIF : Exploiter 24 Execution Units × 7 threads = 168 threads GPU simultanés
+
+# ══════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ══════════════════════════════════════════════════════════════════════
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11
+CFLAGS += -Iinclude
+CFLAGS += -I/usr/include/libdrm
+CFLAGS += -I/usr/include/drm
+
+# Répertoires
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
+BIN_DIR = bin
+TEST_DIR = tests
+LOG_DIR = logs/forensic
+
+# Bibliothèques
+LIBS = -lm -lpthread -lssl -lcrypto -ldrm
+
+# ══════════════════════════════════════════════════════════════════════
+# FICHIERS SOURCES
+# ══════════════════════════════════════════════════════════════════════
+
+# Modules de base
+CORE_SOURCES = \
+	$(SRC_DIR)/lum_thermal_monitor_c241.c \
+	$(SRC_DIR)/lum_sha256_validator_c241.c \
+	$(SRC_DIR)/btc_gen9_native_runner.c \
+	$(SRC_DIR)/btc_gen9_parallel_gpu.c
+
+# Objets
+CORE_OBJECTS = \
+	$(BUILD_DIR)/lum_thermal_monitor_c241.o \
+	$(BUILD_DIR)/lum_sha256_validator_c241.o \
+	$(BUILD_DIR)/btc_gen9_native_runner.o \
+	$(BUILD_DIR)/btc_gen9_parallel_gpu.o
+
+# Test C249 (séquentiel - ancien)
+TEST_C249 = $(TEST_DIR)/test_btc_mining_native.c
+BIN_C249 = $(BIN_DIR)/test_btc_mining_c249_parallel_gpu
+
+# Test C250 Phase 3 (parallèle - nouveau)
+TEST_C250 = $(TEST_DIR)/test_btc_mining_parallel.c
+BIN_C250 = $(BIN_DIR)/test_btc_mining_c250_parallel
+
+# ══════════════════════════════════════════════════════════════════════
+# RÈGLES
+# ══════════════════════════════════════════════════════════════════════
+
+.PHONY: all clean test c250 test_c250
+
+all: $(BIN_C249)
+
+# Créer répertoires
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
+
+$(BIN_DIR):
+	@mkdir -p $(BIN_DIR)
+
+$(LOG_DIR):
+	@mkdir -p $(LOG_DIR)
+
+# Compiler objets
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compiler test C249 avec parallélisation GPU (ancien - séquentiel)
+$(BIN_C249): $(CORE_OBJECTS) $(TEST_C249) | $(BIN_DIR) $(LOG_DIR)
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "  COMPILATION C249 : Parallélisme GPU Natif (168 work-items)"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	$(CC) $(CFLAGS) $(TEST_C249) $(CORE_OBJECTS) -o $@ $(LIBS)
+	@echo ""
+	@echo "✅ Test C249 Parallel GPU compiled successfully"
+	@echo "   Binary: $(BIN_C249)"
+	@echo "   Config: 168 work-items (24 EUs × 7 threads)"
+	@echo "   Test: 100 dispatches"
+	@echo ""
+
+# C250 Phase 3 : Compiler test parallélisme GPU RÉEL (168 work-items)
+$(BIN_C250): $(CORE_OBJECTS) $(TEST_C250) | $(BIN_DIR) $(LOG_DIR)
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "  COMPILATION C250 Phase 3 : Test Parallélisme GPU RÉEL"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Différence vs C249 :"
+	@echo "  - C249 : Utilise btc_gen9_execute() (séquentiel)"
+	@echo "  - C250 : Utilise btc_gen9_execute_parallel_batch() (parallèle)"
+	@echo ""
+	$(CC) $(CFLAGS) $(TEST_C250) $(CORE_OBJECTS) -o $@ $(LIBS)
+	@echo ""
+	@echo "✅ Test C250 Parallel GPU RÉEL compiled successfully"
+	@echo "   Binary: $(BIN_C250)"
+	@echo "   Config: 168 work-items simultanés (24 EUs × 7 threads)"
+	@echo "   Test: 100 dispatches parallèles"
+	@echo "   Gain attendu: 168x vs séquentiel (~4.16 ms/dispatch)"
+	@echo ""
+
+# Cible pour compiler C250 directement
+c250: $(BIN_C250)
+
+# Nettoyer
+clean:
+	@echo "Cleaning C249 build artifacts..."
+	rm -rf $(BUILD_DIR)
+	rm -f $(LOG_DIR)/c249_*.log
+	rm -f $(LOG_DIR)/c249_*.csv
+	@echo "Clean complete."
+
+# Exécuter test
+test: $(BIN_C249)
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "  EXÉCUTION TEST C249 : 100 Dispatches Parallèles GPU"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Architecture GPU Gen9 HD Graphics 620 :"
+	@echo "  - 24 Execution Units (EUs)"
+	@echo "  - 7 threads hardware par EU"
+	@echo "  - Total : 168 threads GPU simultanés"
+	@echo ""
+	@echo "Configuration test :"
+	@echo "  - Dispatches : 100"
+	@echo "  - Work-items par dispatch : 168"
+	@echo "  - Total work-items : 16,800"
+	@echo "  - Gain attendu : 168x vs séquentiel"
+	@echo ""
+	@echo "Lancement test..."
+	@echo ""
+	$(BIN_C249)
+	@echo ""
+	@echo "✅ Test C249 terminé"
+	@echo ""
+
+# Exécuter test C250 parallèle
+test_c250: $(BIN_C250)
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "  EXÉCUTION TEST C250 Phase 3 : 100 Dispatches Parallèles GPU"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Architecture GPU Gen9 HD Graphics 620 :"
+	@echo "  - 24 Execution Units (EUs)"
+	@echo "  - 7 threads hardware par EU"
+	@echo "  - Total : 168 threads GPU simultanés"
+	@echo ""
+	@echo "Configuration test :"
+	@echo "  - Dispatches : 100"
+	@echo "  - Work-items par dispatch : 168"
+	@echo "  - Total work-items : 16,800"
+	@echo "  - Gain attendu : 168x vs séquentiel"
+	@echo "  - Temps attendu : ~4.16 ms/dispatch (vs 699 ms C248)"
+	@echo ""
+	@echo "Lancement test parallèle RÉEL..."
+	@echo ""
+	$(BIN_C250)
+	@echo ""
+	@echo "✅ Test C250 Phase 3 terminé"
+	@echo ""
+
+# Aide
+help:
+	@echo "Makefile C249/C250 — Parallélisme GPU Natif Multi-EUs"
+	@echo ""
+	@echo "Cibles disponibles :"
+	@echo "  make          : Compiler test C249 (séquentiel)"
+	@echo "  make test     : Compiler et exécuter test C249"
+	@echo "  make c250     : Compiler test C250 (parallèle RÉEL)"
+	@echo "  make test_c250: Compiler et exécuter test C250 parallèle"
+	@echo "  make clean    : Nettoyer artefacts de compilation"
+	@echo "  make help     : Afficher cette aide"
+	@echo ""
+	@echo "Configuration :"
+	@echo "  - 168 work-items GPU (24 EUs × 7 threads)"
+	@echo "  - 100 dispatches de test"
+	@echo "  - Logging forensique bit-level"
+	@echo ""
+	@echo "Différence C249 vs C250 :"
+	@echo "  - C249 : btc_gen9_execute() (séquentiel, 1 work-item)"
+	@echo "  - C250 : btc_gen9_execute_parallel_batch() (168 work-items)"
+	@echo "  - Gain attendu C250 : 168x throughput"
+	@echo ""

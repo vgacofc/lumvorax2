@@ -1,0 +1,37 @@
+cc1: fatal error: tests/test_c255v8a.c: No such file or directory
+compilation terminated.
+src/btc_gen9_native_runner.c:20: warning: "_GNU_SOURCE" redefined
+   20 | #define _GNU_SOURCE  /* C255v8n: Pour MADV_HUGEPAGE et usleep */
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_native_runner.c:21: warning: "_POSIX_C_SOURCE" redefined
+   21 | #define _POSIX_C_SOURCE 199309L
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_native_runner.c:356:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  356 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_multi_dispatch_c255.c:22: warning: "_POSIX_C_SOURCE" redefined
+   22 | #define _POSIX_C_SOURCE 199309L
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_mining_adapter.c:20: warning: "_POSIX_C_SOURCE" redefined
+   20 | #define _POSIX_C_SOURCE 199309L
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_mining_adapter.c:30:1: warning: "/*" within comment [-Wcomment]
+   30 | /* ══════════════════════════════════════════════════════════════════════
+      |  
+src/btc_gen9_mining_adapter.c: In function ‘lum_gpu_mine_batch_async’:
+src/btc_gen9_mining_adapter.c:256:14: warning: unused variable ‘new_batch_size’ [-Wunused-variable]
+  256 |     uint32_t new_batch_size = btc_gen9_adaptive_batch_size(hashrate_mhs, ret == 0);
+      |              ^~~~~~~~~~~~~~
+src/btc_gen9_mining_adapter.c:181:15: warning: unused parameter ‘out_nonce’ [-Wunused-parameter]
+  181 |     uint32_t* out_nonce,
+      |     ~~~~~~~~~~^~~~~~~~~
+src/btc_gen9_mining_adapter.c:182:14: warning: unused parameter ‘out_hash’ [-Wunused-parameter]
+  182 |     uint32_t out_hash[8],
+      |     ~~~~~~~~~^~~~~~~~~~~
+src/btc_gen9_mining_adapter.c:183:15: warning: unused parameter ‘out_best’ [-Wunused-parameter]
+  183 |     uint32_t* out_best
+      |     ~~~~~~~~~~^~~~~~~~

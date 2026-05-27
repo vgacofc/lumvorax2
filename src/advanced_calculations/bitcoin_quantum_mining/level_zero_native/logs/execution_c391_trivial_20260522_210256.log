@@ -1,0 +1,17 @@
+=== LumVorax C391 - Test TRIVIAL Sans Optimisation ===
+Timestamp: 20260522_210256
+
+[1/4] Compilation kernel TRIVIAL (sans optimisation)...
+kernels/test_c391_trivial.cl:6:37: error: unknown type name 'uint'; did you mean 'int'?
+    6 | __kernel void test_trivial(__global uint* output) {
+      |                                     ^~~~
+      |                                     int
+kernels/test_c391_trivial.cl:10:3: error: unknown type name 'Made'
+   10 | ; Made with Bob
+      |   ^
+kernels/test_c391_trivial.cl:10:12: error: expected ';' after top level declarator
+   10 | ; Made with Bob
+      |            ^
+      |            ;
+3 errors generated.
+❌ ERREUR: Compilation LLVM échouée

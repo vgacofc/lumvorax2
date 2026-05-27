@@ -1,0 +1,40 @@
+=== C197.21 STEP 2 - STATE_BASE_ADDRESS ===
+
+Step 1: Opening DRM device...
+✅ DRM device opened (fd=5)
+
+Step 2: Creating VM...
+✅ VM created (vm_id=1)
+
+Step 3: Creating context...
+✅ Context created (ctx_id=1)
+
+Step 4: Creating buffers...
+✅ Batch buffer created (handle=1, ptr=0x7673ac408000)
+✅ State buffer created (handle=2, ptr=0x7673ac36d000)
+
+Step 5: Building batch buffer...
+Building Step 2 batch buffer (STATE_BASE_ADDRESS)...
+✅ Batch buffer built: 33 DWords (132 bytes)
+   Commands: PIPE_CONTROL + STATE_BASE_ADDRESS + PIPE_CONTROL + END
+
+Step 6: Dispatching batch...
+Dispatching Step 2 batch via execbuffer2...
+  batch_handle: 1
+  state_handle: 2
+  batch_len: 256 bytes
+  context_id: 1
+✅ Dispatch successful (297.789 µs)
+Waiting for GPU completion...
+✅ GPU completed (229.940 µs)
+✅ Total dispatch time: 527.729 µs
+
+Step 7: Validation...
+✅✅✅ STATE_BASE_ADDRESS DISPATCH RÉUSSI ✅✅✅
+GPU state configuré sans crash
+Prêt pour Step 3 (INTERFACE_DESCRIPTOR)
+
+Step 8: Cleanup...
+✅ Cleanup complete
+
+Total time: 0.854 ms

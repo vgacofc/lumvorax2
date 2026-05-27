@@ -1,0 +1,23 @@
+🚀 TEST C585-A2 - PIPE_CONTROL POST-SYNC WRITE
+═══════════════════════════════════════════════════════════════════════
+
+✅ DRM opened
+✅ Context: 1
+✅ Output: handle=1, sentinel=0xdeadbeef
+✅ Batch: handle=2
+
+Building batch:
+  [ 0] PIPE_CONTROL (post-sync write immediate)
+  [ 6] MI_BATCH_BUFFER_END
+✅ Batch: 7 DWords (28 bytes)
+
+Relocation:
+  Target: output (handle=1)
+  Offset: 0x8 (DWord 2)
+
+Submitting...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22, 1.704 µs)
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C585-A2 ÉCHOUÉ                                   ║
+╚════════════════════════════════════════════════════════════╝

@@ -1,0 +1,87 @@
+{
+  "cycle": "C90",
+  "stamp": "20260423T191212Z",
+  "backend": "ibm_fez",
+  "N": 8,
+  "shots": 2048,
+  "resilience": 2,
+  "version": {
+    "commit": "60ce2ef",
+    "branch": "main",
+    "date": "2026-04-23 18:55:51 +0000",
+    "subject": "Update documentation with detailed analysis of past research findings",
+    "remote": "git@github.com:vgacofc/lumvorax2.git",
+    "host": "6d514b4d8b17",
+    "user": "runner",
+    "pwd": "/home/runner/workspace",
+    "now_utc": "2026-04-23 19:12:12Z"
+  },
+  "ghz": {
+    "S_pi": -0.1421743605455948,
+    "S_pi_std": 0.007709861300627083,
+    "depth_phys": 24,
+    "n2q_phys": 7,
+    "elapsed_s": 42.27,
+    "S_pi_theorie_ideal": -0.14285714285714285,
+    "fidelity_proxy": 0.9952205238191636
+  },
+  "hva": {
+    "S_pi": 0.3015247320291767,
+    "S_pi_std": 0.011528819349716881,
+    "depth_phys": 68,
+    "n2q_phys": 21,
+    "elapsed_s": 19.79
+  },
+  "forensic": [
+    {
+      "ts": 0.1901,
+      "tag": "start",
+      "msg": "backend=ibm_fez N=8",
+      "val": 0.0,
+      "cycle": "C90"
+    },
+    {
+      "ts": 4.3977,
+      "tag": "backend",
+      "msg": "ibm_fez",
+      "val": 156.0,
+      "cycle": "C90"
+    },
+    {
+      "ts": 4.3989,
+      "tag": "observable",
+      "msg": "56 termes",
+      "val": 56.0,
+      "cycle": "C90"
+    },
+    {
+      "ts": 4.5086,
+      "tag": "ghz_transpile",
+      "msg": "depth=24 2Q=7",
+      "val": 24.0,
+      "cycle": "C90"
+    },
+    {
+      "ts": 46.7765,
+      "tag": "ghz_result",
+      "msg": "S=-0.1422+-0.0077 dt=42.3s",
+      "val": -0.1421743605455948,
+      "cycle": "C90"
+    },
+    {
+      "ts": 46.8014,
+      "tag": "hva_transpile",
+      "msg": "depth=68 2Q=21",
+      "val": 68.0,
+      "cycle": "C90"
+    },
+    {
+      "ts": 66.5962,
+      "tag": "hva_result",
+      "msg": "S=+0.3015+-0.0115 dt=19.8s",
+      "val": 0.3015247320291767,
+      "cycle": "C90"
+    }
+  ],
+  "elapsed_total_s": 66.6
+}

@@ -1,0 +1,99 @@
+🔍 C590 OpenCL Batch Capture initialized
+Intercepting DRM_IOCTL_I915_GEM_EXECBUFFER2...
+🚀 TEST C590 - OpenCL Simple
+═══════════════════════════════════════
+
+✅ Platform obtained
+✅ GPU device obtained
+✅ Context created
+✅ Command queue created
+✅ Program created
+✅ Program built
+✅ Kernel created
+✅ Output buffer created (256 uints)
+✅ Kernel argument set
+
+🎯 Executing kernel (256 work items)...
+🔍 DRM device detected: fd=6
+
+🚀 EXECBUFFER2 #1 CAPTURE (C590)
+═══════════════════════════════════════════════════════════════
+Buffer count: 10
+Batch start offset: 0x0
+Batch length: 320 bytes (80 DWords)
+Flags: 0x800
+Context: 1
+Buffer[0]: handle=10, offset=0x790336667000, flags=0x18
+Buffer[1]: handle=9, offset=0xffff8001fffed000, flags=0x18
+Buffer[2]: handle=12, offset=0x7903362f1000, flags=0x18
+Buffer[3]: handle=14, offset=0x7903362e0000, flags=0x18
+Buffer[4]: handle=13, offset=0xffff8001fffdd000, flags=0x18
+Buffer[5]: handle=2, offset=0x79033666d000, flags=0x18
+Buffer[6]: handle=3, offset=0x790333600000, flags=0x18
+Buffer[7]: handle=8, offset=0xffff8001fffee000, flags=0x18
+Buffer[8]: handle=11, offset=0x790336353000, flags=0x18
+Buffer[9]: handle=15, offset=0x7903362cf000, flags=0x18
+
+📦 Mapping batch buffer (handle=15, size=320)...
+✅ Batch buffer mapped: 0x790336709000
+Analyzing 80 DWords...
+
+🎯 MEDIA_VFE_STATE found at DWord 22!
+
+  🔍 MEDIA_VFE_STATE Analysis (OpenCL):
+    Offset: DWord 22 (0x58 bytes)
+    ✅ Valid MEDIA_VFE_STATE, Length: 8 DWords
+    DWord 0: 0x70000007 (Opcode + Length)
+    DWord 1: 0x00000000 (Scratch Space Base Pointer Low)
+    DWord 2: 0x00000000 (Scratch Space Base Pointer High)
+    DWord 3: 0x00a70100
+      Max Threads: 256
+      Num URB Entries: 167
+      Reset Gateway Timer: 0
+      Bypass Gateway Control: 0
+    DWord 4: 0x00000000 (Reserved)
+    DWord 5: 0x07820000
+      URB Entry Allocation Size: 0 (x64 bytes = 0 bytes)
+    DWord 6: 0x00000000
+      CURBE Allocation Size: 0 (x32 bytes = 0 bytes)
+    DWord 7: 0x00000000 (Scoreboard Mask)
+    DWord 8: 0x00000000
+      Scoreboard Type: 0 (Non-stalling)
+
+📊 COMPARISON WITH i915 NATIVE:
+  i915 C584/C589 MEDIA_VFE_STATE (DWord 25-32):
+    DWord 0: 0x70000007 (Opcode + Length=7)
+    DWord 1: 0x00000000 (Scratch Space Base Low)
+    DWord 2: 0x00000000 (Scratch Space Base High)
+    DWord 3: 0x00820000 (Max Threads=130, URB Entries=2)
+    DWord 4: 0x00000000 (Reserved)
+    DWord 5: 0x00000000 (URB Entry Size=0)
+    DWord 6: 0x00000000 (CURBE Size=0)
+    DWord 7: 0x00000000 (Scoreboard Mask)
+    DWord 8: 0x00000000 (Scoreboard Type=Non-stalling)
+
+🔴 CRITICAL DIFFERENCE FOUND!
+  OpenCL DWord 3: 0x00a70100
+  i915   DWord 3: 0x00820000
+  This could be ROOT CAUSE #138!
+
+🔴 URB ENTRY SIZE DIFFERENCE!
+  OpenCL URB Size: 0x07820000
+  i915   URB Size: 0x00000000
+    ✅ Batch buffer dumped to ../logs/opencl_batch_c590_capture_1.txt
+
+✅ Capture completed in 0.166 ms
+═══════════════════════════════════════════════════════════════
+✅ Kernel executed successfully
+
+📊 Results (first 4 values):
+  output[0] = 0x12345678
+  output[1] = 0x12345679
+  output[2] = 0x1234567a
+  output[3] = 0x1234567b
+
+✅ TEST C590 TERMINÉ
+🔍 C590 OpenCL Batch Capture finished
+Total EXECBUFFER2 calls captured: 1
+🔍 C590 OpenCL Batch Capture initialized
+Intercepting DRM_IOCTL_I915_GEM_EXECBUFFER2...

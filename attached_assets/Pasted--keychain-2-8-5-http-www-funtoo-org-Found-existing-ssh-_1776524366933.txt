@@ -1,0 +1,480 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10329
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd
+lvx@lvx-Vostro-5481 ~> pkill chrome
+                       pkill firefox
+lvx@lvx-Vostro-5481 ~ [1]> cd ~/LVX/lumvorax2 && git pull origin main
+                           doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T12:45:31Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T12:45:31Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T12:45:31Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T12:45:31Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T12:45:31Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T12:45:31Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T12:45:31Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T12:45:31Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T12:45:32Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:32Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:45:37Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:37Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:45:43Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:43Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:45:49Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:49Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:45:54Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:54Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:45:59Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:45:59Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:46:04Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:04Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:46:10Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:10Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:46:15Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:15Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+^CTraceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 347, in _connect_websocket
+    ws = websocket.create_connection(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 664, in create_connection
+    websock.connect(url, **options)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 268, in connect
+    self.handshake_response = handshake(self.sock, url, *addrs, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 66, in handshake
+    status, resp = _get_resp_headers(sock)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 158, in _get_resp_headers
+    raise WebSocketBadStatusException(
+websocket._exceptions.WebSocketBadStatusException: Handshake status 502 Bad Gateway -+-+- {'cache-control': 'no-store', 'replit-cluster': 'spock', 'replit-proxy-error': 'repl unreachable', 'x-robots-tag': 'none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex', 'date': 'Sat, 18 Apr 2026 10:46:15 GMT', 'content-type': 'text/html; charset=utf-8', 'transfer-encoding': 'chunked'} -+-+- None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 149, in connect
+    self.eio.connect(real_url, headers=real_headers,
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 96, in connect
+    return getattr(self, '_connect_' + self.transports[0])(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 355, in _connect_websocket
+    raise exceptions.ConnectionError('Connection error')
+engineio.exceptions.ConnectionError: Connection error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 197, in main
+    sio.connect(
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 161, in connect
+    raise exceptions.ConnectionError(exc.args[0]) from exc
+socketio.exceptions.ConnectionError: Connection error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 222, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 209, in main
+    time.sleep(RECONNECT_DELAY)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/base_client.py", line 21, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/base_client.py", line 24, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/datadog-packages/datadog-apm-library-python/4.8.0rc4/ddtrace_pkgs/site-packages-ddtrace-py3.12-manylinux2014-x86_64/ddtrace/internal/utils/signals.py", line 47, in wrap_signals
+    old_signal(*args, **kwargs)
+KeyboardInterrupt
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> cd ~/LVX/lumvorax2 && git pull origin main
+                                                doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T12:46:43Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T12:46:43Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T12:46:43Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T12:46:43Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T12:46:43Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T12:46:43Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T12:46:43Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T12:46:43Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T12:46:44Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:44Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:46:49Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:49Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:46:55Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:46:55Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:01Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:01Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:06Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:06Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:13Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:13Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:18Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:18Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:24Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:24Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:30Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:30Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:36Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:36Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:41Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:41Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:47Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:47Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:52Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:52Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:47:58Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:47:58Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+2026-04-18T12:48:04Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T12:48:04Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+^C2026-04-18T12:48:09Z INFO [C57-WS] Arrêt (CTRL+C)
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main
+                                          doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T12:48:16Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T12:48:16Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T12:48:16Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T12:48:16Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T12:48:16Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T12:48:16Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T12:48:16Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T12:48:16Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T12:48:17Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T12:48:17Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T12:48:17Z INFO [C57-WS] Connexion établie — boucle d'attente active
+2026-04-18T13:39:19Z INFO [C57-WS] JOB id=9bd460e50b59 label='btc_log_c59'
+2026-04-18T13:39:19Z INFO [C57-WS]   cmd: cat /home/lvx/btc_ubuntu_20260418T102900Z.log | tail -200
+2026-04-18T13:39:19Z INFO [C57-WS] JOB id=1d03348cfe61 label='hw_c59'
+2026-04-18T13:39:19Z INFO [C57-WS]   cmd: free -h && cat /proc/cpuinfo | grep -E "model name|cpu MHz|cache size" | head -20 && lscpu | grep -E
+2026-04-18T13:39:19Z INFO [C57-WS]   rc=0 durée=0.06s output=10811c
+2026-04-18T13:39:19Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:39:19Z INFO [C57-WS] JOB id=2c59eb4a4c8d label='forensic_ls_c59'
+2026-04-18T13:39:19Z INFO [C57-WS]   cmd: ls -la ~/LVX/lumvorax2/logs/forensic/modules/ | grep btc_20260418T102900Z && echo "---" && wc -l ~/L
+2026-04-18T13:39:19Z INFO [C57-WS]   rc=1 durée=0.05s output=0c
+2026-04-18T13:39:19Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:39:19Z INFO [C57-WS]   rc=0 durée=0.12s output=1527c
+2026-04-18T13:39:19Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:40:20Z INFO [C57-WS] JOB id=cd1011de2a3f label='find_forensic_c59'
+2026-04-18T13:40:20Z INFO [C57-WS]   cmd: find ~/LVX/lumvorax2 -name "*.log" -newer ~/LVX/lumvorax2/tools/btc_run_ubuntu.sh 2>/dev/null | head
+2026-04-18T13:40:20Z INFO [C57-WS] JOB id=5616e9cea164 label='sigill_objdump_c59'
+2026-04-18T13:40:20Z INFO [C57-WS]   cmd: file ~/LVX/lumvorax2/src/qdayprize/qdayprize_engine.o ~/LVX/lumvorax2/src/qdayprize/main_qdayprize.o
+2026-04-18T13:40:20Z INFO [C57-WS]   rc=0 durée=0.05s output=250c
+2026-04-18T13:40:20Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:40:20Z INFO [C57-WS]   rc=0 durée=0.3s output=2966c
+2026-04-18T13:40:20Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:41:04Z INFO [C57-WS] JOB id=ce83b2aaadfa label='forensic_raw_c59'
+2026-04-18T13:41:04Z INFO [C57-WS]   cmd: tail -300 ~/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/btc
+2026-04-18T13:41:04Z INFO [C57-WS] JOB id=d067fa2b9a55 label='sigill_deep_c59'
+2026-04-18T13:41:04Z INFO [C57-WS]   cmd: objdump -d ~/LVX/lumvorax2/src/qdayprize/qdayprize_engine.o 2>&1 | grep -c "avx\|xmm\|ymm\|zmm\|vmov
+2026-04-18T13:41:04Z INFO [C57-WS]   rc=0 durée=0.07s output=16384c
+2026-04-18T13:41:04Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T13:41:04Z INFO [C57-WS]   rc=0 durée=0.04s output=216c
+2026-04-18T13:41:04Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T14:02:31Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T14:02:37Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:02:48Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:03:09Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:03:39Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:04:10Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:04:40Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:05:10Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:05:42Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:06:12Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:06:42Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:07:13Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:07:43Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:08:14Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:08:44Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:09:15Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:09:46Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T14:09:46Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+^C2026-04-18T14:37:05Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T14:37:06Z INFO [C57-WS] Arrêt (CTRL+C)
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> cd ~/LVX/lumvorax2 && git pull origin main
+                                                doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T14:37:13Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T14:37:13Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T14:37:13Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T14:37:13Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T14:37:13Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T14:37:13Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T14:37:13Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T14:37:13Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T14:37:14Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T14:37:14Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T14:37:14Z INFO [C57-WS] Connexion établie — boucle d'attente active
+^C2026-04-18T14:40:25Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T14:40:26Z INFO [C57-WS] Arrêt (CTRL+C)
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> ssh -T git@github.com
+                                          git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                          git fetch origin
+                                          git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 46, done.
+remote: Counting objects: 100% (46/46), done.
+remote: Compressing objects: 100% (9/9), done.
+remote: Total 25 (delta 14), reused 25 (delta 14), pack-reused 0 (from 0)
+Unpacking objects: 100% (25/25), 2.95 MiB | 3.06 MiB/s, done.
+From github.com:vgacofc/lumvorax2
+   9cda2ab..cee1942  main       -> origin/main
+HEAD is now at cee1942 chat91.58.
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main
+                                          doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T14:41:01Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T14:41:01Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T14:41:01Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T14:41:01Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T14:41:01Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T14:41:01Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T14:41:01Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T14:41:01Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T14:41:02Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T14:41:02Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T14:41:02Z INFO [C57-WS] Connexion établie — boucle d'attente active
+2026-04-18T14:45:41Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T14:45:47Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:45:57Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+^C2026-04-18T14:46:13Z INFO [C57-WS] Arrêt (CTRL+C)
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main
+                                          doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+[C57-WS] Token     : 552ced77...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T14:46:19Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T14:46:19Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T14:46:19Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T14:46:19Z INFO [C57-WS] Replit URL   : https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev
+2026-04-18T14:46:19Z INFO [C57-WS] Token (8ch)  : 552ced77...
+2026-04-18T14:46:19Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T14:46:19Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T14:46:19Z INFO [C57-WS] Connexion WebSocket → https://10005cba-8971-424e-b9ed-558ad13ae3af-00-2resaduncns6i.spock.replit.dev/ws/socket.io ...
+2026-04-18T14:46:20Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T14:46:20Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+^CTraceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 347, in _connect_websocket
+    ws = websocket.create_connection(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 664, in create_connection
+    websock.connect(url, **options)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 268, in connect
+    self.handshake_response = handshake(self.sock, url, *addrs, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 66, in handshake
+    status, resp = _get_resp_headers(sock)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 158, in _get_resp_headers
+    raise WebSocketBadStatusException(
+websocket._exceptions.WebSocketBadStatusException: Handshake status 404 Not Found -+-+- {'replit-cluster': 'spock', 'x-robots-tag': 'none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex', 'date': 'Sat, 18 Apr 2026 12:46:20 GMT', 'content-type': 'text/html; charset=utf-8', 'transfer-encoding': 'chunked'} -+-+- None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 149, in connect
+    self.eio.connect(real_url, headers=real_headers,
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 96, in connect
+    return getattr(self, '_connect_' + self.transports[0])(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 355, in _connect_websocket
+    raise exceptions.ConnectionError('Connection error')
+engineio.exceptions.ConnectionError: Connection error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 197, in main
+    sio.connect(
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 161, in connect
+    raise exceptions.ConnectionError(exc.args[0]) from exc
+socketio.exceptions.ConnectionError: Connection error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 222, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 209, in main
+    time.sleep(RECONNECT_DELAY)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/base_client.py", line 21, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/base_client.py", line 24, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/datadog-packages/datadog-apm-library-python/4.8.0rc4/ddtrace_pkgs/site-packages-ddtrace-py3.12-manylinux2014-x86_64/ddtrace/internal/utils/signals.py", line 47, in wrap_signals
+    old_signal(*args, **kwargs)
+KeyboardInterrupt
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> cd ~/LVX/lumvorax2 && git pull origin main
+                                                doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev
+[C57-WS] Token     : 0d679c8c...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T14:59:51Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T14:59:51Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T14:59:51Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T14:59:51Z INFO [C57-WS] Replit URL   : https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev
+2026-04-18T14:59:51Z INFO [C57-WS] Token (8ch)  : 0d679c8c...
+2026-04-18T14:59:51Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T14:59:51Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T14:59:51Z INFO [C57-WS] Connexion WebSocket → https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev/ws/socket.io ...
+2026-04-18T14:59:52Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T14:59:52Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T14:59:52Z INFO [C57-WS] Connexion établie — boucle d'attente active
+2026-04-18T15:00:23Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:00:28Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:00:28Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:00:59Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:01:05Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:01:05Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:01:35Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:01:40Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:01:40Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:02:11Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:02:17Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:02:17Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:02:47Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:02:53Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:02:53Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:03:23Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:03:28Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:03:28Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:03:59Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:04:05Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:04:05Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:04:35Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:04:41Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:04:41Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:05:11Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:05:17Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:05:17Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:05:48Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:05:53Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:05:53Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:06:24Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:06:30Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:06:30Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:07:00Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:07:06Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:07:06Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:07:36Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:07:42Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-18T15:07:42Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T15:07:54Z WARNING [C57-WS] ⚠️  Déconnecté — reconnexion automatique...
+2026-04-18T15:08:00Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:08:11Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:08:31Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:09:01Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:09:32Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:10:03Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:10:34Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:11:04Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:11:34Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:12:05Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:12:36Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:13:06Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:13:37Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:14:07Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:14:37Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:15:08Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:15:38Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:16:09Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:16:39Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:17:10Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:17:40Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:18:11Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:18:42Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:19:13Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:19:44Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:20:15Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:20:46Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:21:17Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:21:48Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:22:19Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:22:50Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:23:20Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:23:51Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:24:21Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:24:52Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:25:22Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:25:53Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:26:24Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:26:55Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:27:25Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:27:56Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:28:27Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:28:58Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:29:29Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T15:30:00Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+^C2026-04-18T15:30:12Z INFO [C57-WS] Arrêt (CTRL+C)
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 

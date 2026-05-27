@@ -1,0 +1,31 @@
+=== TEST C541 - COMPARAISON OPENCL ===
+
+Exécution kernel OpenCL...
+
+=== EXECBUFFER2 #1 INTERCEPTÉ ===
+buffer_count: 10
+batch_start_offset: 0x0
+batch_len: 320 bytes
+flags: 0x800
+
+=== BUFFERS ===
+Buffer[0]: handle=9, offset=0x72d732872000, size=0, flags=0x18
+Buffer[1]: handle=10, offset=0xffff8001fffed000, size=0, flags=0x18
+Buffer[2]: handle=12, offset=0x72d732522000, size=0, flags=0x18
+Buffer[3]: handle=14, offset=0x72d732511000, size=0, flags=0x18
+Buffer[4]: handle=13, offset=0xffff8001fffdd000, size=0, flags=0x18
+Buffer[5]: handle=2, offset=0x72d732878000, size=0, flags=0x18
+Buffer[6]: handle=3, offset=0x72d72f800000, size=0, flags=0x18
+Buffer[7]: handle=8, offset=0xffff8001fffee000, size=0, flags=0x18
+Buffer[8]: handle=11, offset=0x72d732553000, size=0, flags=0x18
+Buffer[9]: handle=15, offset=0x72d732500000, size=0, flags=0x18
+
+=== TENTATIVE DUMP BATCH BUFFER ===
+❌ Impossible d'ouvrir /dev/dri/card0
+
+
+=== RÉSULTAT OPENCL ===
+output[0] = 0x12345678
+output[1] = 0xffffffff
+
+✓✓✓ OpenCL fonctionne correctement!

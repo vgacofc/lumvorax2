@@ -1,0 +1,64 @@
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c255v7_optimized.log
+[DEBUG] Log ouvert avec succès
+
+╔════════════════════════════════════════════════════════════════╗
+║  LumVorax C255v7 — TOUTES OPTIMISATIONS SIMULTANÉES          ║
+║  Objectif: 2.5 GH/s avec 4 optimisations combinées           ║
+╚════════════════════════════════════════════════════════════════╝
+
+OPTIMISATIONS APPLIQUÉES:
+  1. ✅ Kernel SHA-256 réel (btc_sha256_gen9.bin)
+  2. ✅ EU Utilization 100% (24 EUs × 7 threads = 168)
+  3. ✅ Parallélisme multi-contextes (3 dispatches simultanés)
+  4. ✅ Pool 27 batch_bo (3× plus grand)
+
+[TEST] Configuration:
+  - num_dispatches: 27
+  - batch_size: 268435456
+  - work_group_size: 256
+  - kernel_path: kernels/btc_sha256_gen9.bin (OPTIMISATION #1)
+  - log_path: logs/forensic/test_c255v7_optimized.log
+
+[TEST 1/4] Initialisation avec kernel SHA-256...
+✅ Initialisation réussie (pool 27 batch_bo créé)
+
+[TEST 2/4] Exécution 27 dispatches avec parallélisme 3 contextes...
+INFO: Utilisation btc_gen9_execute_batch() avec pool contextes (OPTIMISATION #3)
+✅ 27/27 dispatches réussis
+
+[TEST 3/4] Vérification pool 27 batch_bo...
+✅ Pool intact (27 batch_bo distincts utilisés)
+
+[TEST 4/4] Calcul métriques...
+
+╔════════════════════════════════════════════════════════════════╗
+║  RÉSULTATS C255v7 — OPTIMISATIONS COMPLÈTES                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+Device: Intel UHD Graphics 620 (Gen9)
+API: i915 DRM Direct (0% OpenCL, 0% Level Zero)
+
+Configuration:
+  - Dispatches: 27/27 (100.0%)
+  - Batch size: 268435456 nonces (256 MH)
+  - Pool batch_bo: 27 handles
+  - EU utilization: 100% (168 threads GPU)
+
+Performance:
+  - Temps total: 26.106 sec
+  - Temps moyen/dispatch: 966.890 ms
+  - Hashrate: 0.278 GH/s
+  - Nonces testés: 7248 M
+
+Comparaison:
+  - Baseline C255v4: 0.376 GH/s
+  - C255v7 optimisé: 0.278 GH/s
+  - Gain: -26.2%
+
+⏳ PROGRESSION: 11.1% de l'objectif 2.5 GH/s
+
+╔════════════════════════════════════════════════════════════════╗
+║  ✅ TEST C255v7 TERMINÉ                                        ║
+║  Toutes optimisations appliquées simultanément                ║
+╚════════════════════════════════════════════════════════════════╝
+

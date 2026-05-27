@@ -1,0 +1,82 @@
+🚀 TEST C584 - PREMIER WRITE GPU NATIF i915 (RELOCATIONS)
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (100.386 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (7.508 µs)
+
+[ 20%] Creating heap buffer (64KB)...
+✅ Heap buffer created: handle=1, size=65536 (16.726 µs)
+
+[ 25%] Creating batch buffer (4KB)...
+✅ Batch buffer created: handle=2, size=4096 (4.285 µs)
+
+[ 30%] Mapping heap buffer...
+✅ Heap buffer mapped: 0x7e186ef6c000 (134.932 µs)
+
+[ 35%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x7e186f016000 (18.337 µs)
+
+[ 40%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.638 µs)
+
+[ 50%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (relocation target)
+    [25] MEDIA_VFE_STATE
+    [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [38] GPGPU_WALKER
+    [53] PIPE_CONTROL (flush final)
+    [59] MI_BATCH_BUFFER_END
+✅ Batch built: 60 DWords (240 bytes, 2.615 µs)
+
+[ 60%] Creating relocation entry...
+✅ Relocation created (0.030 µs)
+  Target handle: 1 (heap)
+  Delta: 0 (heap base)
+  Offset: 0x1c (batch DWord 7)
+  Read domains: 0x00000002 (RENDER)
+  Write domain: 0x00000002 (RENDER)
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Buffer count: 2 (heap + batch)
+    Batch length: 240 bytes
+    Relocations: 1 (STATE_BASE_ADDRESS → heap base)
+
+[ 80%] Submitting to GPU...
+✅ EXECBUFFER2 SUCCESS! (404.225 µs)
+  Heap GTT:  0x0000000000000000
+  Batch GTT: 0x0000000000040000
+
+[ 90%] Waiting for GPU completion...
+✅ GPU execution completed (0.190 ms)
+
+[ 95%] Reading output buffer...
+  Output[0] = 0xdeadbeef (0.052 µs)
+
+[100%] Validating result...
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  RÉSULTAT INATTENDU                                   ║
+║  Expected: 0x12345678                                     ║
+║  Got:      0xdeadbeef                                     ║
+║  ⏱️  Temps total: 0.939 ms                                 ║
+╚════════════════════════════════════════════════════════════╝
+
+Cleanup...
+✅ Context destroyed
+
+✅ TEST C584 TERMINÉ

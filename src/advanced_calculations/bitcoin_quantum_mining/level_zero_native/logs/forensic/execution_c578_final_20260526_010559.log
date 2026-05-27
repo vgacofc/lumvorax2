@@ -1,0 +1,176 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C578 - EXECBUFFER2 FORENSIC              ║
+╚════════════════════════════════════════════════════════════╝
+tests/test_c578_execbuffer2_forensic.c: In function ‘write_batch_with_surface_states’:
+tests/test_c578_execbuffer2_forensic.c:69:53: warning: unused parameter ‘input_handle’ [-Wunused-parameter]
+   69 |                                            uint32_t input_handle, uint32_t output_handle) {
+      |                                            ~~~~~~~~~^~~~~~~~~~~~
+tests/test_c578_execbuffer2_forensic.c:69:76: warning: unused parameter ‘output_handle’ [-Wunused-parameter]
+   69 |                                            uint32_t input_handle, uint32_t output_handle) {
+      |                                                                   ~~~~~~~~~^~~~~~~~~~~~~
+forensic/execbuffer2_forensic.c: In function ‘decode_relocations’:
+forensic/execbuffer2_forensic.c:151:60: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 6 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  151 |                  "Reloc[%u]: target_handle=%u, offset=0x%llx, delta=0x%x, read=%s, write=%s",
+      |                                                         ~~~^
+      |                                                            |
+      |                                                            long long unsigned int
+      |                                                         %lx
+  152 |                  i, decoded[i].target_handle, decoded[i].offset, decoded[i].delta,
+      |                                               ~~~~~~~~~~~~~~~~~
+      |                                                         |
+      |                                                         uint64_t {aka long unsigned int}
+forensic/execbuffer2_forensic.c: In function ‘capture_gtt_allocations’:
+forensic/execbuffer2_forensic.c:166:38: warning: unused parameter ‘drm_fd’ [-Wunused-parameter]
+  166 | uint32_t capture_gtt_allocations(int drm_fd,
+      |                                  ~~~~^~~~~~
+forensic/execbuffer2_forensic.c: In function ‘capture_seqno’:
+forensic/execbuffer2_forensic.c:252:28: warning: unused parameter ‘ring_id’ [-Wunused-parameter]
+  252 |                   uint32_t ring_id,
+      |                   ~~~~~~~~~^~~~~~~
+forensic/execbuffer2_forensic.c: In function ‘print_execbuffer2_wireshark’:
+forensic/execbuffer2_forensic.c:461:39: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  461 |     fprintf(fp, "context_id = 0x%016llx\n", result->params.context_id);
+      |                                 ~~~~~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                       |                   |
+      |                                       |                   uint64_t {aka long unsigned int}
+      |                                       long long unsigned int
+      |                                 %016lx
+forensic/execbuffer2_forensic.c:462:40: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  462 |     fprintf(fp, "timestamp_submit = %llu ns\n", result->params.timestamp_submit_ns);
+      |                                     ~~~^        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                        |                      |
+      |                                        long long unsigned int uint64_t {aka long unsigned int}
+      |                                     %lu
+forensic/execbuffer2_forensic.c:463:37: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  463 |     fprintf(fp, "latency_ioctl = %llu ns (%.3f µs)\n",
+      |                                  ~~~^
+      |                                     |
+      |                                     long long unsigned int
+      |                                  %lu
+  464 |             result->latency_ioctl_ns, result->latency_ioctl_ns / 1000.0);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~ 
+      |                   |
+      |                   uint64_t {aka long unsigned int}
+forensic/execbuffer2_forensic.c:472:45: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  472 |         fprintf(fp, "  gtt_offset = 0x%016llx\n", result->objects[i].offset);
+      |                                       ~~~~~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                             |                       |
+      |                                             long long unsigned int  uint64_t {aka long unsigned int}
+      |                                       %016lx
+forensic/execbuffer2_forensic.c:483:45: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  483 |             fprintf(fp, "  offset = 0x%016llx\n", result->relocations[i].offset);
+      |                                       ~~~~~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                             |                           |
+      |                                             long long unsigned int      uint64_t {aka long unsigned int}
+      |                                       %016lx
+forensic/execbuffer2_forensic.c:484:52: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  484 |             fprintf(fp, "  resolved_addr = 0x%016llx\n", result->relocations[i].resolved_address);
+      |                                              ~~~~~~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                    |                           |
+      |                                                    long long unsigned int      uint64_t {aka long unsigned int}
+      |                                              %016lx
+forensic/surface_state_gen9.c: In function ‘calculate_surface_size’:
+forensic/surface_state_gen9.c:612:14: warning: unused variable ‘width’ [-Wunused-variable]
+  612 |     uint64_t width = state->width + 1;
+      |              ^~~~~
+✅ Compilation réussie
+
+╔════════════════════════════════════════════════════════════╗
+║  EXÉCUTION TEST C578                                       ║
+╚════════════════════════════════════════════════════════════╝
+[1258.892913202] [INFO] ╔════════════════════════════════════════════════════════════╗
+[1258.893104820] [INFO] ║  TEST C578 - EXECBUFFER2 FORENSIC COMPLET                 ║
+[1258.893127787] [INFO] ╚════════════════════════════════════════════════════════════╝
+[1258.893343432] [INFO] Opened DRM device: fd=6
+[1258.893374878] [INFO] 
+=== TEST 1: EXECBUFFER2 Minimal ===
+[1258.893428802] [INFO] Created buffer: handle=1, size=4096
+[1258.893561783] [INFO] Wrote minimal batch (MI_BATCH_BUFFER_END)
+[1258.893591801] [INFO] === EXECBUFFER2 SUBMIT START ===
+[1258.893612712] [INFO] Params: buffers=1, batch_offset=0, batch_len=4
+[1258.893627450] [INFO] Ring: BCS (Blitter), Context: 0x0
+[1258.893646416] [DEBUG] Object[0]: handle=1, name=batch_buffer, offset=0x0, flags=NONE
+[1258.893710610] [INFO] Seqno before: 0
+[1258.893779688] [ERROR] EXECBUFFER2 failed: Invalid argument (errno=22)
+[1258.893807599] [INFO] Latency ioctl: 4.602 µs
+[1258.893830759] [INFO] === EXECBUFFER2 SUBMIT END (0.239 ms) ===
+
+╔════════════════════════════════════════════════════════════╗
+║         EXECBUFFER2 FORENSIC ANALYSIS                      ║
+╚════════════════════════════════════════════════════════════╝
+
+Status: ❌ FAILED
+Ring: BCS (Blitter)
+Buffers: 1 submitted, 0 allocated GTT
+Relocations: 0 total, 0 applied
+Latency ioctl: 4.602 µs
+
+[1258.893857093] [ERROR] EXECBUFFER2 failed: EXECBUFFER2 failed: Invalid argument (errno=22)
+[1258.893871101] [INFO] 
+=== TEST 2: EXECBUFFER2 avec Relocations ===
+[1258.893932763] [INFO] Created buffer: handle=2, size=1024
+[1258.893969469] [INFO] Created buffer: handle=3, size=1024
+[1258.893998982] [INFO] Created buffer: handle=4, size=4096
+[1258.894135575] [INFO] Wrote batch with Surface States:
+[1258.894179316] [INFO]   - STATE_BASE_ADDRESS at offset 0
+[1258.894193763] [INFO]   - Input Surface State at offset 40
+[1258.894205649] [INFO]   - Output Surface State at offset 104
+[1258.894218867] [INFO]   - Binding Table at offset 168
+[1258.894229916] [INFO] === EXECBUFFER2 SUBMIT START ===
+[1258.894240576] [INFO] Params: buffers=3, batch_offset=0, batch_len=200
+[1258.894252632] [INFO] Ring: BCS (Blitter), Context: 0x0
+[1258.894274848] [DEBUG] Object[0]: handle=2, name=input_buffer_0, offset=0x0, flags=NONE
+[1258.894287743] [DEBUG] Object[1]: handle=3, name=output_buffer, offset=0x0, flags=WRITE
+[1258.894300757] [DEBUG] Object[2]: handle=4, name=batch_buffer, offset=0x0, flags=NONE
+[1258.894318124] [DEBUG] Reloc[0]: target_handle=2, offset=0x2c, delta=0x0, read=RENDER, write=NONE
+[1258.894337432] [DEBUG] Reloc[1]: target_handle=3, offset=0x6c, delta=0x0, read=RENDER, write=RENDER
+[1258.894394091] [INFO] Seqno before: 0
+[1258.896046871] [INFO] EXECBUFFER2 SUCCESS
+[1258.896700143] [WARNING] GTT NOT allocated: handle=2
+[1258.896850625] [INFO] GTT Allocation: handle=3, offset=0x0000000000001000
+[1258.896922823] [INFO] GTT Allocation: handle=4, offset=0x0000000000040000
+[1258.896985349] [INFO] GTT Allocations: 2/3 buffers allocated
+[1258.897208437] [INFO] Relocation[0] APPLIED: offset=0x2c → addr=0x000000ff07001000
+[1258.897311942] [INFO] Relocation[1] APPLIED: offset=0x6c → addr=0x0000000000001000
+[1258.897423444] [INFO] All 2 relocations validated
+[1258.897495677] [INFO] Seqno after: 2
+[1258.897558451] [INFO] Latency ioctl: 1634.485 µs
+[1258.897630452] [INFO] === EXECBUFFER2 SUBMIT END (3.400 ms) ===
+
+╔════════════════════════════════════════════════════════════╗
+║         EXECBUFFER2 FORENSIC ANALYSIS                      ║
+╚════════════════════════════════════════════════════════════╝
+
+Status: ✅ SUCCESS
+Ring: BCS (Blitter)
+Buffers: 3 submitted, 2 allocated GTT
+Relocations: 2 total, 2 applied
+Latency ioctl: 1634.485 µs
+
+[1258.898189918] [INFO] Saved Wireshark format to logs/forensic/test_c578_execbuffer2_wireshark.txt
+[1258.898287959] [ERROR] Expected 3 buffers allocated GTT, got 2
+[1258.898349656] [INFO] 
+=== TEST 3: Timeline CPU/GPU Corrélée ===
+[1258.898441988] [INFO] Created buffer: handle=5, size=4096
+[1258.898598902] [INFO] Wrote minimal batch (MI_BATCH_BUFFER_END)
+[1258.898684138] [INFO] === EXECBUFFER2 SUBMIT START ===
+[1258.898749597] [INFO] Params: buffers=1, batch_offset=0, batch_len=4
+[1258.898818737] [INFO] Ring: BCS (Blitter), Context: 0x0
+[1258.898914814] [DEBUG] Object[0]: handle=5, name=batch_buffer, offset=0x0, flags=NONE
+[1258.899203320] [INFO] Seqno before: 0
+[1258.899303808] [ERROR] EXECBUFFER2 failed: Invalid argument (errno=22)
+[1258.899370683] [INFO] Latency ioctl: 6.241 µs
+[1258.899446524] [INFO] === EXECBUFFER2 SUBMIT END (0.762 ms) ===
+[1258.899527661] [INFO] Timeline correlation:
+[1258.899587044] [INFO]   CPU submit → ioctl start: 603.527 µs
+[1258.899653371] [INFO]   ioctl end → CPU complete: 233.791 µs
+[1258.899733634] [INFO] ✅ TEST 3 PASSED:
+[1258.899793560] [INFO]   - CPU submit → ioctl: 603.527 µs
+[1258.899869158] [INFO]   - ioctl duration: 6.241 µs
+[1258.899927139] [INFO]   - ioctl → CPU complete: 233.791 µs
+[1258.900272298] [INFO] 
+╔════════════════════════════════════════════════════════════╗
+[1258.900304830] [INFO] ║  RÉSUMÉ TESTS C578                                         ║
+[1258.900319729] [INFO] ╚════════════════════════════════════════════════════════════╝
+[1258.900343263] [INFO] Tests réussis: 1/3 (33.3%)
+[1258.900361404] [ERROR] ❌ 2 TEST(S) ÉCHOUÉ(S)

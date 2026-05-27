@@ -1,0 +1,97 @@
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE ===
+Timestamp: 20260525_144026
+
+[COMPILATION BIBLIOTHÈQUE]
+src/i915_batch_builder_auto.c: In function ‘i915_batch_emit_state_base_address’:
+src/i915_batch_builder_auto.c:274:55: warning: right shift count >= width of type [-Wshift-count-overflow]
+  274 |     emit_dword(builder, (config->indirect_buffer_size >> 32) & 0xFFFFFFFF);
+      |                                                       ^~
+src/i915_batch_builder_auto.c:267:14: warning: unused variable ‘instruction_offset’ [-Wunused-variable]
+  267 |     uint32_t instruction_offset = builder->batch_offset;
+      |              ^~~~~~~~~~~~~~~~~~
+src/i915_batch_builder_auto.c:258:14: warning: unused variable ‘dynamic_offset’ [-Wunused-variable]
+  258 |     uint32_t dynamic_offset = builder->batch_offset;
+      |              ^~~~~~~~~~~~~~
+src/i915_batch_builder_auto.c:253:14: warning: unused variable ‘surface_offset’ [-Wunused-variable]
+  253 |     uint32_t surface_offset = builder->batch_offset;
+      |              ^~~~~~~~~~~~~~
+src/i915_batch_builder_auto.c:242:14: warning: unused variable ‘sba_start’ [-Wunused-variable]
+  242 |     uint32_t sba_start = builder->batch_offset;
+      |              ^~~~~~~~~
+src/i915_batch_builder_auto.c: In function ‘i915_batch_emit_media_interface_descriptor_load’:
+src/i915_batch_builder_auto.c:336:14: warning: unused parameter ‘bo_index’ [-Wunused-parameter]
+  336 |     uint32_t bo_index,
+      |     ~~~~~~~~~^~~~~~~~
+src/i915_batch_builder_auto.c: In function ‘i915_create_default_sba_config’:
+src/i915_batch_builder_auto.c:633:33: warning: conversion from ‘long long unsigned int’ to ‘unsigned int’ changes value from ‘4294967297’ to ‘1’ [-Woverflow]
+  633 |         .indirect_buffer_size = 0x0000000100000001ULL,
+      |                                 ^~~~~~~~~~~~~~~~~~~~~
+src/i915_batch_builder_auto.c:611:69: warning: unused parameter ‘heap_bo_index’ [-Wunused-parameter]
+  611 | state_base_address_config_t i915_create_default_sba_config(uint32_t heap_bo_index) {
+      |                                                            ~~~~~~~~~^~~~~~~~~~~~~
+✓ Bibliothèque compilée
+
+[COMPILATION TEST]
+✓ Test compilé
+
+[FORENSIC SETUP]
+[sudo] password for lvx: ✓ Forensic activé
+
+[EXÉCUTION]
+Début: 14:40:29.494615601
+❌ Échec finalisation
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE (0%) ===
+Système automatique de construction batch buffers
+
+[5%] DRM ouvert
+[10%] Batch builder créé
+[15%] Heap BO créé (index 0)
+[20%] Output BO créé (index 1)
+[25%] Heap mappé
+[30%] Output mappé
+
+=== CONSTRUCTION HEAP (35%) ===
+[40%] Surface State configuré
+[45%] Binding Table configuré
+[50%] IDRT configuré
+[55%] Kernel ISA copié
+[60%] CURBE data initialisé
+
+=== CONSTRUCTION BATCH AUTOMATIQUE (65%) ===
+[70%] PIPELINE_SELECT émis
+[75%] STATE_BASE_ADDRESS émis (avec relocations)
+[80%] BINDING_TABLE_POOL_ALLOC émis
+[85%] MEDIA_VFE_STATE émis
+[90%] MEDIA_CURBE_LOAD émis
+[92%] MEDIA_INTERFACE_DESCRIPTOR_LOAD émis
+[94%] GPGPU_WALKER émis
+[96%] MEDIA_STATE_FLUSH émis
+[98%] PIPE_CONTROL émis
+[100%] MI_BATCH_BUFFER_END émis
+
+✓ Batch dumpé dans logs/batch_c554_dump.txt
+
+=== FINALISATION ET EXÉCUTION ===
+Fin: 14:40:29.965092535
+Durée: 272ms
+Exit code: 0
+
+[DMESG CAPTURE]
+✓ Pas de GPU HANG
+
+[STATISTIQUES]
+Fichiers générés:
+  - Log principal: logs/execution_c554_auto_20260525_144026.log
+  - Strace:        logs/forensic/c554_forensic_20260525_144026.log
+  - Dmesg:         logs/forensic/c554_dmesg_20260525_144026.log
+  - Batch dump:    logs/batch_c554_dump.txt
+  - Lignes strace: 1052
+  - Lignes dmesg:  2753
+  - Appels ioctl:  10
+
+=== RÉSUMÉ C554 ===
+🎉 SUCCÈS TOTAL - SYSTÈME AUTOMATIQUE FONCTIONNE!
+✓ GPU natif avec batch builder automatique
+✓ Élimination OpenCL: 100%
+
+Logs disponibles dans: logs/

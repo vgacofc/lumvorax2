@@ -1,0 +1,67 @@
+=== C197.22 - GPU EXECUTION PROOF WITH REAL ISA ===
+⚠️ ATTENTION: PREMIÈRE EXÉCUTION GPU AVEC ISA RÉEL
+⚠️ OBJECTIF: PROUVER output[0] == 0x12345678
+
+Step 1: Opening DRM device...
+✅ DRM device opened (fd=5)
+
+Step 2: Creating VM...
+✅ VM created (vm_id=1)
+
+Step 3: Creating context...
+✅ Context created (ctx_id=1)
+
+Step 4: Creating buffers...
+✅ Batch buffer created (handle=1)
+✅ State buffer created (handle=2)
+✅ Kernel buffer created (handle=3)
+✅ Output buffer created (handle=4)
+
+Step 5: Initializing output buffer...
+✅ Output buffer initialized: output[0] = 0xDEADBEEF
+
+Step 6: Loading kernel ISA...
+Loading kernel ISA from: /tmp/kernel_isa_raw.bin
+  ISA size: 256 bytes
+✅ Kernel ISA loaded: 256 bytes
+  First 64 bytes (hex):
+  01006000 0c024020 00002000 00000000
+  06800000 04000030 00100016 c004c004
+  01000000 0c438020 60000000 00000000
+  01000000 2c0ec020 00000000 78563412
+  
+
+Step 7: Building state buffer...
+Building state buffer (complete compute state)...
+  [0x0000] INTERFACE_DESCRIPTOR_DATA
+  [0x0020] BINDING_TABLE (1 entry)
+  [0x0040] SURFACE_STATE (output buffer)
+✅ State buffer built: 128 bytes
+   Kernel address: 0x0000721934aaa000
+   Output address: 0x0000721934a07000
+   Binding table: offset 32, 1 entry
+   Surface state: offset 64, 64 bytes
+
+Step 8: Building batch buffer...
+Building C197.22 batch buffer (complete compute pipeline)...
+✅ Batch buffer built: 128 DWords (512 bytes)
+   Commands: PIPE + STATE_BASE + VFE_STATE + INTERFACE_LOAD + GPGPU_WALKER + PIPE + END
+
+Step 9: Dispatching batch...
+Dispatching C197.22 batch via execbuffer2...
+  batch_handle: 1
+  state_handle: 2
+  kernel_handle: 3
+  output_handle: 4
+  batch_len: 1024 bytes
+✅ Dispatch successful (458.259 µs)
+Waiting for GPU completion (timeout: 10s)...
+✅ GPU completed (1.215 ms)
+✅ Total dispatch time: 1.674 ms
+
+Step 10: VALIDATION (MOMENT DE VÉRITÉ)...
+Reading output buffer...
+  output[0] = 0xDEADBEEF
+
+❌ ÉCHEC: Output unchanged (0xDEADBEEF)
+GPU n'a pas exécuté le kernel ou ISA incorrect

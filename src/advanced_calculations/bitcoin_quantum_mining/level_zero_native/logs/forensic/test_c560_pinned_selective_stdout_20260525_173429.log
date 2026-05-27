@@ -1,0 +1,71 @@
+[DEBUG] PASS 1 Configuration:
+[DEBUG]   buffer_count = 3
+[DEBUG]   batch_len = 16 bytes
+[DEBUG]   context_id = 1
+[DEBUG]   Ordre création: output(1) → heap(2) → batch(3)
+[DEBUG] GTT Addresses PASS 1:
+[DEBUG]   output_gtt = 0x0000000000000000
+[DEBUG]   heap_gtt = 0x0000000000001000
+[DEBUG]   batch_gtt = 0x0000000000005000
+[DEBUG] PASS 2 Configuration:
+[DEBUG]   batch_gtt = 0x0000000000005000 (PINNED) ✅
+[DEBUG]   heap_gtt = 0x0000000000001000 (PINNED) ✅
+[DEBUG]   output_gtt = 0x0000000000000000 (PAS PINNED) ✅
+[DEBUG]   batch_len = 228 bytes
+❌ PASS 2 ÉCHEC: Invalid argument (errno=22)
+[DEBUG] Vérifier dmesg pour GPU HANG
+=== TEST C560 - CORRECTION ROOT CAUSE #68 ===
+ROOT CAUSE #68: output_gtt=0x0 avec PINNED invalide
+CORRECTION: Retirer PINNED pour output (GTT=0x0)
+
+[1%] ✓ DRM ouvert (fd=5)
+
+=== CRÉATION CONTEXT i915 (2%) ===
+[3%] ✓ Context créé: ID=1
+
+=== CRÉATION BUFFERS - ORDRE MODIFIÉ (5%) ===
+STRATÉGIE C560: Output → Heap → Batch (batch EN DERNIER)
+[7%] ✓ Output BO créé (handle=1) - PREMIER (GTT=0x0 attendu)
+[9%] ✓ Heap BO créé (handle=2) - DEUXIÈME (GTT=0x1000 attendu)
+[11%] ✓ Batch BO créé (handle=3) - DERNIER (GTT!=0x0 attendu) ✅
+
+=== MAPPING BUFFERS (13%) ===
+[15%] ✓ Batch mappé @ 0x7f866f1e8000
+[17%] ✓ Heap mappé @ 0x7f866f14a000
+[19%] ✓ Output mappé @ 0x7f866f149000
+
+=== CONSTRUCTION HEAP (21%) ===
+[23%] ✓ Surface State créé
+[25%] ✓ Binding Table créé
+[27%] ✓ IDRT créé
+[29%] ✓ Kernel ISA copié (64 bytes)
+
+=== PASS 1: OBTENIR GTT ADDRESSES (31%) ===
+[33%] ✓ Batch minimal: 4 DWords (16 bytes)
+[35%] Soumission PASS 1 (obtenir GTT addresses)...
+[40%] ✓ PASS 1 RÉUSSI! 🎉
+       Output: 0x0000000000000000 ✅ NULL (premier)
+       Heap:   0x0000000000001000 ✅ NON-NULL
+       Batch:  0x0000000000005000 ✅ NON-NULL (DERNIER)
+
+[45%] ✅ VALIDATION: batch_gtt != 0x0 (0x0000000000005000)
+       ✅ VALIDATION: heap_gtt != 0x0 (0x0000000000001000)
+
+=== PATCHER STRUCTURES (47%) ===
+[49%] ✓ Surface State patché (output @ 0x0000000000000000)
+[51%] ✓ IDRT patché (kernel @ 0x0000000000001100)
+
+=== CONSTRUCTION BATCH COMPLET (53%) ===
+[55%] ✓ PIPELINE_SELECT
+[60%] ✓ STATE_BASE_ADDRESS (heap GTT=0x0000000000001000)
+[65%] ✓ MEDIA_VFE_STATE
+[70%] ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD
+[75%] ✓ GPGPU_WALKER (1 work-item)
+[80%] ✓ MEDIA_STATE_FLUSH
+[85%] ✓ PIPE_CONTROL
+[87%] ✓ MI_BATCH_BUFFER_END
+[89%] ✓ Batch complet: 57 DWords (228 bytes)
+
+=== PASS 2: EXÉCUTION GPU FINALE (90%) ===
+STRATÉGIE: PINNED seulement pour GTT != 0x0
+[92%] Soumission PASS 2 (batch complet, PINNED sélectif)...

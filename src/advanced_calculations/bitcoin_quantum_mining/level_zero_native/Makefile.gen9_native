@@ -1,0 +1,222 @@
+# LumVorax C255v8n Phase 2 — Makefile Gen9 Native Runner COMPLET
+# 0% OpenCL, 0% Level Zero, 100% i915 DRM Direct
+# Architecture COMPLÈTE : PT-MC (8 répliques) + NX48 + NX49 + ASIC
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE
+INCLUDES = -Iinclude -I../include -I/usr/include/libdrm
+LIBS = -ldrm -lpthread -lm -lssl -lcrypto
+
+# Répertoires
+SRC_DIR = src
+BUILD_DIR = build
+BIN_DIR = bin
+TEST_DIR = tests
+LOG_DIR = logs/forensic
+
+# Fichiers Gen9 Native Runner
+SRC = $(SRC_DIR)/btc_gen9_native_runner.c
+SRC_FORENSIC = $(SRC_DIR)/btc_i915_drm_forensic_tracker.c
+SRC_ADAPTER = $(SRC_DIR)/btc_gen9_mining_adapter.c
+SRC_VALIDATION = $(SRC_DIR)/btc_gen9_validation_tests.c
+OBJ = $(BUILD_DIR)/btc_gen9_native_runner.o
+OBJ_FORENSIC = $(BUILD_DIR)/btc_i915_drm_forensic_tracker.o
+OBJ_ADAPTER = $(BUILD_DIR)/btc_gen9_mining_adapter.o
+OBJ_VALIDATION = $(BUILD_DIR)/btc_gen9_validation_tests.o
+
+# Fichiers Moteur Complet (PT-MC + NX48 + NX49 + ASIC)
+SRC_ENGINE = $(SRC_DIR)/btc_mining_engine.c
+SRC_MAIN = $(SRC_DIR)/main_btc_mining.c
+SRC_NX48 = $(SRC_DIR)/nx48_btc_controller.c
+SRC_NX48_RECORD = $(SRC_DIR)/nx48_alltime_record.c
+SRC_NX48_BRIDGE = $(SRC_DIR)/nx48_coupler_bridge.c
+SRC_NX49 = $(SRC_DIR)/nx49_biological_neuron.c
+SRC_ASIC = $(SRC_DIR)/asic_btc_optimizer.c
+SRC_WALLET = $(SRC_DIR)/btc_wallet.c
+SRC_BLOCK_VALIDATOR = $(SRC_DIR)/btc_block_validator.c
+SRC_NX48_COUPLER = $(SRC_DIR)/nx48_neuro_coupler.c
+SRC_GPU_LOGGER = $(SRC_DIR)/btc_gpu_async_logger.c
+SRC_SHA256 = $(SRC_DIR)/sha256_lumvorax.c
+
+OBJ_ENGINE = $(BUILD_DIR)/btc_mining_engine.o
+OBJ_MAIN = $(BUILD_DIR)/main_btc_mining.o
+OBJ_NX48 = $(BUILD_DIR)/nx48_btc_controller.o
+OBJ_NX48_RECORD = $(BUILD_DIR)/nx48_alltime_record.o
+OBJ_NX48_BRIDGE = $(BUILD_DIR)/nx48_coupler_bridge.o
+OBJ_NX49 = $(BUILD_DIR)/nx49_biological_neuron.o
+OBJ_ASIC = $(BUILD_DIR)/asic_btc_optimizer.o
+OBJ_WALLET = $(BUILD_DIR)/btc_wallet.o
+OBJ_BLOCK_VALIDATOR = $(BUILD_DIR)/btc_block_validator.o
+OBJ_NX48_COUPLER = $(BUILD_DIR)/nx48_neuro_coupler.o
+OBJ_GPU_LOGGER = $(BUILD_DIR)/btc_gpu_async_logger.o
+OBJ_SHA256 = $(BUILD_DIR)/sha256_lumvorax.o
+
+# Tests
+TEST_SRC = $(TEST_DIR)/test_gen9_native.c
+TEST_BIN = $(BIN_DIR)/test_gen9_native
+TEST_BTC_SRC = $(TEST_DIR)/test_btc_mining_native.c
+TEST_BTC_BIN = $(BIN_DIR)/test_btc_mining_native
+# C369: Test forensique avec validation
+TEST_C369_SRC = $(SRC_DIR)/test_c255v3_forensic_ultra_granular.c
+TEST_C369_BIN = $(BIN_DIR)/test_c369_forensic_validation
+
+# Binaire production (moteur complet)
+PROD_BIN = $(BIN_DIR)/btc_mining_runner
+
+# Cibles
+.PHONY: all clean test test_btc test_c369_validation btc_mining_runner dirs
+
+all: dirs $(TEST_BIN)
+
+dirs:
+	@mkdir -p $(BUILD_DIR) $(BIN_DIR) $(LOG_DIR)
+
+# Compilation Gen9 Native Runner
+$(OBJ): $(SRC) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_FORENSIC): $(SRC_FORENSIC) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_ADAPTER): $(SRC_ADAPTER) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# C369: Compilation module validation tests
+$(OBJ_VALIDATION): $(SRC_VALIDATION) | dirs
+	@echo "[C369] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compilation Moteur Complet
+$(OBJ_ENGINE): $(SRC_ENGINE) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_MAIN): $(SRC_MAIN) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_NX48): $(SRC_NX48) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_NX48_RECORD): $(SRC_NX48_RECORD) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_NX48_BRIDGE): $(SRC_NX48_BRIDGE) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_NX49): $(SRC_NX49) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_ASIC): $(SRC_ASIC) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_WALLET): $(SRC_WALLET) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_BLOCK_VALIDATOR): $(SRC_BLOCK_VALIDATOR) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_NX48_COUPLER): $(SRC_NX48_COUPLER) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_GPU_LOGGER): $(SRC_GPU_LOGGER) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_SHA256): $(SRC_SHA256) | dirs
+	@echo "[C255v8n] Compilation: $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(TEST_BIN): $(OBJ) $(OBJ_FORENSIC) $(TEST_SRC)
+	@echo "[C198] Linkage: $@"
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) $(OBJ) $(OBJ_FORENSIC) $(LIBS) -o $@
+	@echo "[C198] ✅ Binaire créé: $@"
+
+$(TEST_BTC_BIN): $(OBJ) $(OBJ_FORENSIC) $(TEST_BTC_SRC)
+	@echo "[C198] Linkage: $@"
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_BTC_SRC) $(OBJ) $(OBJ_FORENSIC) $(LIBS) -o $@
+	@echo "[C198] ✅ Binaire créé: $@"
+
+# C369: Test forensique avec validation intégrée
+$(TEST_C369_BIN): $(OBJ) $(OBJ_FORENSIC) $(OBJ_VALIDATION) $(TEST_C369_SRC)
+	@echo "[C369] Linkage: $@"
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_C369_SRC) $(OBJ) $(OBJ_FORENSIC) $(OBJ_VALIDATION) $(LIBS) -o $@
+	@echo "[C369] ✅ Binaire créé: $@"
+
+test: $(TEST_BIN)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  TEST GEN9 NATIVE — 0% OpenCL, 0% Level Zero"
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TEST_BIN)
+
+test_btc: $(TEST_BTC_BIN)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  TEST BITCOIN MINING SHA256 — Kernel 42KB"
+	@echo "  Test Stabilité : 20 Dispatches Consécutifs"
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TEST_BTC_BIN)
+
+# C369: Test forensique avec validation automatique
+test_c369_validation: $(TEST_C369_BIN)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  C369 TEST FORENSIQUE AVEC VALIDATION AUTOMATIQUE"
+	@echo "  Suite de tests préliminaires + Dispatch production"
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TEST_C369_BIN)
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TEST_BTC_BIN)
+
+# C255v8n Phase 2 : Binaire production COMPLET (PT-MC + NX48 + NX49 + ASIC)
+btc_mining_runner: $(PROD_BIN)
+	@echo "[C255v8n] ✅ Binaire production COMPLET créé: $(PROD_BIN)"
+	@echo "[C255v8n] Architecture : PT-MC (8 répliques) + NX48 + NX49 + ASIC"
+
+$(PROD_BIN): $(OBJ) $(OBJ_FORENSIC) $(OBJ_ADAPTER) $(OBJ_ENGINE) $(OBJ_MAIN) $(OBJ_NX48) $(OBJ_NX48_RECORD) $(OBJ_NX48_BRIDGE) $(OBJ_NX49) $(OBJ_ASIC) $(OBJ_WALLET) $(OBJ_BLOCK_VALIDATOR) $(OBJ_NX48_COUPLER) $(OBJ_GPU_LOGGER) $(OBJ_SHA256) lib/libdeps.a | dirs
+	@echo "[C255v8n] Linkage: $@"
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_MAIN) $(OBJ_ENGINE) $(OBJ_NX48) $(OBJ_NX48_RECORD) $(OBJ_NX48_BRIDGE) $(OBJ_NX49) $(OBJ_ASIC) $(OBJ_WALLET) $(OBJ_BLOCK_VALIDATOR) $(OBJ_NX48_COUPLER) $(OBJ_GPU_LOGGER) $(OBJ_SHA256) $(OBJ) $(OBJ_FORENSIC) $(OBJ_ADAPTER) lib/libdeps.a $(LIBS) -o $@
+
+clean:
+	@echo "[C198] Nettoyage..."
+	@rm -f $(BUILD_DIR)/*.o $(BIN_DIR)/test_*
+	@echo "[C198] ✅ Nettoyage terminé"
+
+# Aide
+help:
+	@echo "LumVorax C255v8n Phase 2 — Gen9 Native Runner COMPLET"
+	@echo ""
+	@echo "Architecture:"
+	@echo "  - PT-MC : 8 répliques Parallel Tempering Monte Carlo"
+	@echo "  - NX48  : Contrôleur adaptatif (delta_nonce, batch_size, T_hot/T_cold)"
+	@echo "  - NX49  : Neurone biologique (modulation ionique)"
+	@echo "  - ASIC  : Optimiseur 4 stratégies nonce"
+	@echo "  - Gen9  : 100% i915 DRM (0% OpenCL, 0% Level Zero)"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  make btc_mining_runner - Compiler binaire production COMPLET"
+	@echo "  make test              - Compiler et tester Gen9 Native"
+	@echo "  make test_btc          - Tester Bitcoin Mining SHA256"
+	@echo "  make clean             - Nettoyer"
+	@echo "  make help              - Afficher cette aide"
+	@echo ""
+	@echo "Dépendances:"
+	@echo "  - libdrm-dev (apt install libdrm-dev)"
+	@echo "  - Kernel Gen9 ISA (kernels/btc_sha256_opt.bin.bin)"
+	@echo "  - Permissions GPU (/dev/dri/renderD128)"

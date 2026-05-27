@@ -1,0 +1,316 @@
+Analyse franche : tu as franchi un cap réel, mais il reste encore **deux écarts critiques avant “publication solide”**.
+
+---
+
+# 🧠 1. VERDICT GLOBAL
+
+## ✔️ Ce qui est objectivement fort
+
+* Exécution **réelle IBM (ibm_fez)** → validée
+* Passage **counts → observables physiques (S(π))** → correct
+* Mise en place :
+
+  * IC95
+  * symétrie
+  * baseline Aer
+* Pipeline complet → **niveau pré-publication réel**
+
+👉 Tu n’es plus dans un projet expérimental amateur.
+
+---
+
+## ⚠️ Mais “ACCEPT publication-grade” est **prématuré**
+
+Tu es **très proche**, mais pas encore au standard paper.
+
+---
+
+# 🔬 2. ANALYSE DU RÉSULTAT CLÉ (C84-B AFM)
+
+## 📊 Résultat principal
+
+* S(π) = **0,6123 ± 0,0038**
+* symmetry_gap ≈ 0
+* KL élevé (6.14 bits)
+
+---
+
+## ✔️ Interprétation correcte
+
+* présence d’ordre **corrélé**
+* non trivial
+* non expliqué par symétrie triviale
+
+---
+
+## ❗ Problème majeur (important)
+
+### KL divergence très élevée
+
+👉 signifie :
+
+> le système réel est **très loin de l’état idéal**
+
+Donc :
+
+* soit bruit dominant
+* soit état préparé ≠ état théorique
+
+---
+
+## 👉 Conclusion rigoureuse
+
+❌ tu n’as PAS encore démontré :
+
+> un état AFM du modèle Hubbard
+
+✔️ tu as démontré :
+
+> **une structure corrélée robuste sous bruit**
+
+---
+
+# ⚠️ 3. PROBLÈME N°1 — SHOTS TROP FAIBLES
+
+Tu utilises :
+
+```
+512 shots
+n_rep = 2
+```
+
+👉 ça n’est pas publication-grade
+
+---
+
+## Minimum requis réel :
+
+* 4096 shots (idéalement 8192)
+* n_rep ≥ 5
+
+---
+
+## Pourquoi c’est critique
+
+Ton IC95 est artificiellement serré :
+
+```
+± 0.0038
+```
+
+👉 mais basé sur trop peu d’échantillons
+
+---
+
+# ⚠️ 4. PROBLÈME N°2 — ABSENCE DE MESURE D’ÉNERGIE
+
+Tu valides avec :
+
+* S(π)
+* symétrie
+
+👉 mais il manque :
+
+### énergie du Hamiltonien
+
+E = \langle \psi | H | \psi \rangle
+
+---
+
+## Pourquoi c’est critique
+
+Sans énergie :
+
+❌ tu ne prouves pas que l’état est physique
+✔️ tu montres seulement une corrélation
+
+---
+
+# ⚠️ 5. PROBLÈME N°3 — VARIATION BACKEND INSUFFISANTE
+
+Tu fais :
+
+* ibm_fez
+* (prévu) ibm_marrakesh
+
+👉 mais il faut :
+
+* **≥ 3 backends différents**
+* ou répétition sur plusieurs calibrations
+
+---
+
+## Pourquoi
+
+Ton propre résultat 6Q montre :
+
+```
+111100 → 111111
+```
+
+👉 donc :
+
+> la physique dépend du mapping hardware
+
+---
+
+# ⚠️ 6. PROBLÈME N°4 — INTERPRÉTATION AFM
+
+Tu relies :
+
+```
+pattern → AFM
+```
+
+👉 erreur classique
+
+---
+
+## Ce qu’il faut prouver
+
+* signe alterné des corrélations :
+
+[
+\langle Z_i Z_{i+1} \rangle < 0
+]
+
+* structure factor cohérent
+
+---
+
+## Actuellement
+
+✔️ S(π) élevé
+❗ mais pas de preuve que :
+
+* c’est bien AFM (et pas autre structure)
+
+---
+
+# 🧪 7. POINT TRÈS POSITIF (IMPORTANT)
+
+## Test Q3 (X-init)
+
+👉 excellent choix
+
+Résultat :
+
+* invariance → bon signe
+* élimine artefact trivial
+
+✔️ c’est **niveau papier sérieux**
+
+---
+
+# ⚙️ 8. BTC — ANALYSE
+
+## ✔️ ton analyse est parfaite
+
+* 0 % validation quantique → correct
+* estimation ressources → réaliste
+
+👉 rien à corriger ici
+
+---
+
+# 🧠 9. CE QUE TU AS VRAIMENT DÉMONTRÉ
+
+Version scientifique rigoureuse :
+
+### ✔️ 1. Limite de profondeur (C69)
+
+→ démonstration expérimentale NISQ
+
+### ✔️ 2. Structures corrélées survivantes
+
+→ sous faible profondeur
+
+### ✔️ 3. Sensibilité forte au mapping hardware
+
+→ résultat important et souvent sous-estimé
+
+---
+
+# 🚀 10. CE QUI MANQUE POUR VRAI “PAPER”
+
+## PRIORITÉ ABSOLUE
+
+### 1. Ajouter énergie
+
+EstimatorV2 obligatoire
+
+---
+
+### 2. Augmenter statistiques
+
+* shots ≥ 4096
+* n_rep ≥ 5
+
+---
+
+### 3. Ajouter corrélations complètes
+
+* matrice ⟨Z_i Z_j⟩
+* pas seulement S(π)
+
+---
+
+### 4. Cross-backend réel
+
+* fez
+* marrakesh
+* kingston
+
+---
+
+### 5. Comparaison simulation
+
+* idéal
+* bruité
+
+---
+
+# 🧩 11. VERDICT FINAL
+
+## ✔️ Niveau actuel
+
+👉 **Pré-publication avancée**
+
+## ❌ Pas encore
+
+👉 publication robuste
+
+---
+
+# 🎯 VERSION HONNÊTE À ÉCRIRE
+
+Au lieu de :
+
+> “PHYSIQUE_AFM_PROBABLE”
+
+Tu dois écrire :
+
+> “Observation robuste de corrélations de type antiferromagnétique sous contraintes NISQ, avec divergence significative de l’état idéal due au bruit matériel.”
+
+---
+
+# 🔥 CONCLUSION
+
+Tu es **très proche d’un vrai résultat publiable**, mais :
+
+* il te manque **validation énergétique**
+* et **statistiques solides**
+
+---
+
+# 🚀 PROCHAINE ÉTAPE
+
+👉 **C86 — Publication & Proof Consolidation Layer**
+
+Je peux te générer :
+
+* pipeline complet avec EstimatorV2 + ZNE + CI95
+* protocole exact pour soumission type PRX / Nature Quantum
+* figures automatiques (corrélations + scaling profondeur)
+
+C’est là que ton projet devient **scientifiquement incontestable**.

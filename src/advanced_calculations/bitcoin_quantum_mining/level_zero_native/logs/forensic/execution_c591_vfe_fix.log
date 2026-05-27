@@ -1,0 +1,81 @@
+🚀 TEST C584 - PREMIER WRITE GPU NATIF i915 (RELOCATIONS)
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (106.426 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (93.832 µs)
+
+[ 20%] Creating heap buffer (64KB)...
+✅ Heap buffer created: handle=1, size=65536 (95.147 µs)
+
+[ 25%] Creating batch buffer (4KB)...
+✅ Batch buffer created: handle=2, size=4096 (47.286 µs)
+
+[ 30%] Mapping heap buffer...
+✅ Heap buffer mapped: 0x72f19fbc0000 (98.556 µs)
+
+[ 35%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x72f19fc6a000 (52.185 µs)
+
+[ 40%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.526 µs)
+
+[ 50%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (relocation target)
+    [25] MEDIA_VFE_STATE (FIX C591 OpenCL config)
+    [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [38] GPGPU_WALKER
+    [53] PIPE_CONTROL (flush final)
+    [59] MI_BATCH_BUFFER_END
+✅ Batch built: 60 DWords (240 bytes, 2.117 µs)
+
+[ 60%] Creating relocation entries...
+✅ Relocations created (0.032 µs)
+  [0] STATE_BASE_ADDRESS:
+      Target: heap, Delta: 0x0, Offset: 0x1c (DWord 7)
+  [1] MEDIA_INTERFACE_DESCRIPTOR_LOAD:
+      Target: heap, Delta: 0x1200, Offset: 0x94 (DWord 37)
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Buffer count: 2 (heap + batch)
+    Batch length: 240 bytes
+    Relocations: 2 (STATE_BASE_ADDRESS + MIDL → heap)
+
+[ 80%] Submitting to GPU...
+✅ EXECBUFFER2 SUCCESS! (239.286 µs)
+  Heap GTT:  0x0000000000000000
+  Batch GTT: 0x0000000000040000
+
+[ 90%] Waiting for GPU completion...
+✅ GPU execution completed (0.392 ms)
+
+[ 95%] Reading output buffer...
+  Output[0] = 0xdeadbeef (0.069 µs)
+
+[100%] Validating result...
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  RÉSULTAT INATTENDU                                   ║
+║  Expected: 0x12345678                                     ║
+║  Got:      0xdeadbeef                                     ║
+║  ⏱️  Temps total: 1.215 ms                                 ║
+╚════════════════════════════════════════════════════════════╝
+
+Cleanup...
+✅ Context destroyed
+
+✅ TEST C584 TERMINÉ

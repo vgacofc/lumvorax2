@@ -1,0 +1,147 @@
+# LumVorax C245 — Makefile Tests Batch Size Réduit + Reopen Fréquent
+# Objectif: Identifier cause crash après 20-23 dispatches
+# Hypothèse: Fuite mémoire GPU liée à batch size trop élevé
+# 0% OpenCL, 100% Native i915 DRM
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11
+LDFLAGS = -lm -lpthread -lssl -lcrypto -ldrm
+
+# Directories
+SRC_DIR = src
+INC_DIR = include
+TEST_DIR = tests
+BUILD_DIR = build
+LOG_DIR = logs/forensic
+
+# Include paths
+INCLUDES = -I$(INC_DIR) -I/usr/include/libdrm -I/usr/include/drm
+
+# Source files
+THERMAL_SRC = $(SRC_DIR)/lum_thermal_monitor_c241.c
+SHA256_SRC = $(SRC_DIR)/lum_sha256_validator_c241.c
+RUNNER_SRC = $(SRC_DIR)/btc_gen9_native_runner.c
+
+# Object files
+THERMAL_OBJ = $(BUILD_DIR)/lum_thermal_monitor_c241.o
+SHA256_OBJ = $(BUILD_DIR)/lum_sha256_validator_c241.o
+RUNNER_OBJ = $(BUILD_DIR)/btc_gen9_native_runner.o
+
+# Test executables C245
+TEST_C245_BATCH_134M = $(BUILD_DIR)/test_btc_mining_c245_batch_134m
+TEST_C245_REOPEN_5 = $(BUILD_DIR)/test_btc_mining_c245_reopen_5
+TEST_C245_COMBINED = $(BUILD_DIR)/test_btc_mining_c245_combined
+
+# Targets
+.PHONY: all clean test_c245_batch_134m test_c245_reopen_5 test_c245_combined dirs help
+
+all: dirs $(TEST_C245_BATCH_134M) $(TEST_C245_REOPEN_5) $(TEST_C245_COMBINED)
+
+dirs:
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(LOG_DIR)
+
+# Compile thermal monitor
+$(THERMAL_OBJ): $(THERMAL_SRC) $(INC_DIR)/lum_thermal_monitor_c241.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile SHA256 validator
+$(SHA256_OBJ): $(SHA256_SRC) $(INC_DIR)/lum_sha256_validator_c241.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile runner
+$(RUNNER_OBJ): $(RUNNER_SRC) $(INC_DIR)/btc_gen9_native_runner.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# ═══════════════════════════════════════════════════════════════════════
+# TEST C245 #1 : BATCH SIZE RÉDUIT (134M au lieu de 268M)
+# ═══════════════════════════════════════════════════════════════════════
+$(TEST_C245_BATCH_134M): $(TEST_DIR)/test_btc_mining_c245_batch_134m.c $(THERMAL_OBJ) $(SHA256_OBJ) $(RUNNER_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) -DBATCH_SIZE=134217728 -DREOPEN_INTERVAL=9 $^ -o $@ $(LDFLAGS)
+	@echo ""
+	@echo "✅ Test C245 Batch 134M compiled successfully"
+	@echo "   Binary: $(TEST_C245_BATCH_134M)"
+	@echo "   Config: BATCH_SIZE=134217728 (134M), REOPEN_INTERVAL=9"
+	@echo ""
+
+test_c245_batch_134m: $(TEST_C245_BATCH_134M)
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo "  C245 TEST #1 : BATCH SIZE RÉDUIT"
+	@echo "  Batch Size: 134M nonces (268M/2)"
+	@echo "  Reopen Interval: 9 dispatches (baseline)"
+	@echo "  Dispatches: 100"
+	@echo "  Objectif: Tester si crash lié à taille batch"
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo ""
+	$(TEST_C245_BATCH_134M) strategy_c 100
+
+# ═══════════════════════════════════════════════════════════════════════
+# TEST C245 #2 : REOPEN FRÉQUENT (interval=5 au lieu de 9)
+# ═══════════════════════════════════════════════════════════════════════
+$(TEST_C245_REOPEN_5): $(TEST_DIR)/test_btc_mining_c245_reopen_5.c $(THERMAL_OBJ) $(SHA256_OBJ) $(RUNNER_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) -DBATCH_SIZE=268435456 -DREOPEN_INTERVAL=5 $^ -o $@ $(LDFLAGS)
+	@echo ""
+	@echo "✅ Test C245 Reopen 5 compiled successfully"
+	@echo "   Binary: $(TEST_C245_REOPEN_5)"
+	@echo "   Config: BATCH_SIZE=268435456 (268M), REOPEN_INTERVAL=5"
+	@echo ""
+
+test_c245_reopen_5: $(TEST_C245_REOPEN_5)
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo "  C245 TEST #2 : REOPEN FRÉQUENT"
+	@echo "  Batch Size: 268M nonces (baseline)"
+	@echo "  Reopen Interval: 5 dispatches (9/2)"
+	@echo "  Dispatches: 100"
+	@echo "  Objectif: Tester si reopen plus fréquent évite crash"
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo ""
+	$(TEST_C245_REOPEN_5) strategy_c 100
+
+# ═══════════════════════════════════════════════════════════════════════
+# TEST C245 #3 : COMBINÉ (batch 134M + reopen 5)
+# ═══════════════════════════════════════════════════════════════════════
+$(TEST_C245_COMBINED): $(TEST_DIR)/test_btc_mining_c245_combined.c $(THERMAL_OBJ) $(SHA256_OBJ) $(RUNNER_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) -DBATCH_SIZE=134217728 -DREOPEN_INTERVAL=5 $^ -o $@ $(LDFLAGS)
+	@echo ""
+	@echo "✅ Test C245 Combined compiled successfully"
+	@echo "   Binary: $(TEST_C245_COMBINED)"
+	@echo "   Config: BATCH_SIZE=134217728 (134M), REOPEN_INTERVAL=5"
+	@echo ""
+
+test_c245_combined: $(TEST_C245_COMBINED)
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo "  C245 TEST #3 : COMBINÉ (BATCH 134M + REOPEN 5)"
+	@echo "  Batch Size: 134M nonces (268M/2)"
+	@echo "  Reopen Interval: 5 dispatches (9/2)"
+	@echo "  Dispatches: 100"
+	@echo "  Objectif: Tester combinaison optimale"
+	@echo "══════════════════════════════════════════════════════════════"
+	@echo ""
+	$(TEST_C245_COMBINED) strategy_c 100
+
+# Clean
+clean:
+	rm -rf $(BUILD_DIR)
+	rm -f $(LOG_DIR)/c245_*.log
+	rm -f $(LOG_DIR)/c245_*.csv
+
+# Help
+help:
+	@echo "LumVorax C245 — Makefile Tests Batch Size Réduit + Reopen Fréquent"
+	@echo ""
+	@echo "Targets:"
+	@echo "  all                    - Compile tous les tests C245"
+	@echo "  test_c245_batch_134m   - Test #1: Batch 134M (268M/2)"
+	@echo "  test_c245_reopen_5     - Test #2: Reopen interval 5 (9/2)"
+	@echo "  test_c245_combined     - Test #3: Batch 134M + Reopen 5"
+	@echo "  clean                  - Remove build artifacts and logs"
+	@echo "  help                   - Show this help"
+	@echo ""
+	@echo "Tests C245:"
+	@echo "  #1 Batch 134M    : BATCH_SIZE=134217728, REOPEN_INTERVAL=9"
+	@echo "  #2 Reopen 5      : BATCH_SIZE=268435456, REOPEN_INTERVAL=5"
+	@echo "  #3 Combined      : BATCH_SIZE=134217728, REOPEN_INTERVAL=5"
+	@echo ""
+	@echo "Objectif: Identifier cause crash après 20-23 dispatches"
+	@echo "Hypothèse: Fuite mémoire GPU liée à batch size ou reopen interval"
+	@echo ""

@@ -1,0 +1,84 @@
+=== TEST C569 - VALIDATION GTT ALLOCATION ===
+ROOT CAUSE #82: GTT allocation PASS 1 échoue silencieusement
+OBJECTIF: Vérifier si output_gtt == 0x0 après PASS 1
+
+=== PHASE 1: OUVERTURE DRM (0%) ===
+[5%] ✓ DRM ouvert (fd=5)
+
+=== PHASE 2: CRÉATION CONTEXT (10%) ===
+[15%] ✓ Context créé (ID=1)
+
+=== PHASE 3: ALLOCATION BUFFERS (20%) ===
+[25%] ✓ Output buffer créé (handle=1, 4KB)
+[30%] ✓ Batch buffer créé (handle=2, 4KB)
+
+=== PHASE 4: MAPPING BATCH (35%) ===
+[40%] ✓ Batch mappé @ 0x7fc01d41f000
+
+=== PHASE 5: CONSTRUCTION BATCH MINIMAL (45%) ===
+[50%] ✓ Batch minimal construit: 8 bytes
+       Contenu: MI_BATCH_BUFFER_END + NOOP
+       ⚠️  AUCUNE référence à output buffer!
+
+=== PHASE 6: PASS 1 - ALLOCATION GTT (55%) ===
+⚠️  TEST CRITIQUE: output buffer NON référencé dans batch
+⚠️  Hypothèse: i915 n'allouera PAS de GTT pour output
+
+[DEBUG] AVANT PASS 1:
+[DEBUG]   objects[0].offset = 0x0000000000000000 (output)
+[DEBUG]   objects[1].offset = 0x0000000000000000 (batch)
+
+[60%] ✓ PASS 1 réussi - Analyse GTT:
+       output_gtt = 0x0000000000000000
+       batch_gtt  = 0x0000000000001000
+
+=== PHASE 7: VALIDATION ROOT CAUSE #82 (70%) ===
+
+📊 RÉSULTATS VALIDATION:
+   output_gtt valide: ❌ NON
+   batch_gtt valide:  ✅ OUI
+
+🎯 ROOT CAUSE #82 CONFIRMÉ!
+═══════════════════════════════════════════════════════
+DÉCOUVERTE: i915 n'alloue PAS de GTT pour buffers
+            NON référencés dans le batch PASS 1!
+═══════════════════════════════════════════════════════
+
+📋 ANALYSE DÉTAILLÉE:
+   1. Batch PASS 1 contient: MI_BATCH_BUFFER_END + NOOP
+   2. Aucune instruction ne référence output buffer
+   3. i915 parse batch et détecte: 0 références à output
+   4. i915 décide: pas besoin d'allouer GTT pour output
+   5. Résultat: output_gtt reste 0x0
+
+⚠️  CONSÉQUENCE:
+   - PASS 2 utilise output_gtt = 0x0
+   - MI_STORE_DATA_IMM écrit vers adresse 0x0
+   - GPU Memory Protection Fault
+   - GPU HANG (ecode 9:1:e757fefe)
+
+✅ SOLUTION IDENTIFIÉE:
+   Option 1: Batch PASS 1 doit référencer output
+   Option 2: Utiliser relocation entries
+   Option 3: Reproduire pattern OpenCL complet
+
+
+=== PHASE 8: STATISTIQUES (80%) ===
+📊 Métriques GTT allocation:
+   Buffers soumis:     2
+   GTT allouées:       1
+   Taux succès:        50%
+   Références batch:   0 (output), 1 (batch via execution)
+
+=== PHASE 9: CLEANUP (90%) ===
+[95%] ✓ Batch unmappé
+[98%] ✓ Context détruit
+[100%] ✓ DRM fermé
+
+═══════════════════════════════════════════════════════
+           RÉSULTAT FINAL TEST C569
+═══════════════════════════════════════════════════════
+✅ ROOT CAUSE #82 CONFIRMÉ
+✅ Cause identifiée: GTT allocation lazy
+✅ Solution: Référencer output dans PASS 1
+🎯 Prochaine étape: C570 - Batch avec relocation

@@ -1,0 +1,114 @@
+# LumVorax C255v2 — Makefile Multi-Dispatch Parallèle CORRIGÉ
+# Architecture: Soumission asynchrone + DRM reopen thread-safe
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -pthread -I/usr/include/libdrm -Iinclude -Isrc
+LDFLAGS = -lm -pthread -ldrm
+
+# Répertoires
+SRC_DIR = src
+LOG_DIR = logs/forensic
+KERNEL_DIR = kernels
+
+# Fichiers source
+RUNNER_SRC = $(SRC_DIR)/btc_gen9_native_runner.c
+ASYNC_SRC = $(SRC_DIR)/btc_gen9_async_submit.c
+MULTI_DISPATCH_SRC = $(SRC_DIR)/btc_gen9_multi_dispatch_c255v2.c
+FORENSIC_SRC = $(SRC_DIR)/btc_i915_drm_forensic_tracker.c
+TEST_SRC = $(SRC_DIR)/test_c255v2_multi_dispatch.c
+
+# Fichiers objets
+RUNNER_OBJ = $(SRC_DIR)/btc_gen9_native_runner.o
+ASYNC_OBJ = $(SRC_DIR)/btc_gen9_async_submit.o
+MULTI_DISPATCH_OBJ = $(SRC_DIR)/btc_gen9_multi_dispatch_c255v2.o
+FORENSIC_OBJ = $(SRC_DIR)/btc_i915_drm_forensic_tracker.o
+TEST_OBJ = $(SRC_DIR)/test_c255v2_multi_dispatch.o
+
+# Exécutable
+TEST_BIN = test_c255v2_multi_dispatch
+
+# Fichier log
+LOG_FILE = $(LOG_DIR)/test_c255v2_multi_dispatch.log
+
+.PHONY: all clean run test
+
+all: $(TEST_BIN)
+
+# Compiler runner
+$(RUNNER_OBJ): $(RUNNER_SRC)
+	@echo "Compiling btc_gen9_native_runner.c..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compiler async submit
+$(ASYNC_OBJ): $(ASYNC_SRC)
+	@echo "Compiling btc_gen9_async_submit.c..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compiler multi-dispatch C255v2
+$(MULTI_DISPATCH_OBJ): $(MULTI_DISPATCH_SRC)
+	@echo "Compiling btc_gen9_multi_dispatch_c255v2.c..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compiler forensic tracker
+$(FORENSIC_OBJ): $(FORENSIC_SRC)
+	@echo "Compiling btc_i915_drm_forensic_tracker.c..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compiler test
+$(TEST_OBJ): $(TEST_SRC)
+	@echo "Compiling test_c255v2_multi_dispatch.c..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Linker
+$(TEST_BIN): $(RUNNER_OBJ) $(ASYNC_OBJ) $(MULTI_DISPATCH_OBJ) $(FORENSIC_OBJ) $(TEST_OBJ)
+	@echo "Linking $(TEST_BIN)..."
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	@echo "Build complete: $(TEST_BIN)"
+
+# Créer répertoires logs
+$(LOG_DIR):
+	@mkdir -p $(LOG_DIR)
+
+# Exécuter test (1 batch = 9 dispatches)
+run: $(TEST_BIN) $(LOG_DIR)
+	@echo ""
+	@echo "=== EXÉCUTION C255v2 (1 batch = 9 dispatches) ==="
+	@echo "Logs: $(LOG_FILE)"
+	@echo ""
+	sudo -S ./$(TEST_BIN) 1 2>&1 | tee $(LOG_FILE)
+	@echo ""
+	@echo "Logs sauvegardés: $(LOG_FILE)"
+
+# Test complet (3 batches = 27 dispatches)
+test: $(TEST_BIN) $(LOG_DIR)
+	@echo ""
+	@echo "=== TEST COMPLET C255v2 (3 batches = 27 dispatches) ==="
+	@echo "Logs: $(LOG_FILE)"
+	@echo ""
+	sudo -S ./$(TEST_BIN) 3 2>&1 | tee $(LOG_FILE)
+	@echo ""
+	@echo "Logs sauvegardés: $(LOG_FILE)"
+
+# Nettoyer
+clean:
+	@echo "Cleaning..."
+	rm -f $(RUNNER_OBJ) $(ASYNC_OBJ) $(MULTI_DISPATCH_OBJ) $(FORENSIC_OBJ) $(TEST_OBJ) $(TEST_BIN)
+	@echo "Clean complete"
+
+# Aide
+help:
+	@echo "LumVorax C255v2 — Makefile"
+	@echo ""
+	@echo "Targets:"
+	@echo "  make all     - Compiler test_c255v2_multi_dispatch"
+	@echo "  make run     - Exécuter 1 batch (9 dispatches)"
+	@echo "  make test    - Exécuter 3 batches (27 dispatches)"
+	@echo "  make clean   - Nettoyer fichiers objets"
+	@echo "  make help    - Afficher cette aide"
+	@echo ""
+	@echo "Architecture C255v2:"
+	@echo "  - Soumission asynchrone (btc_gen9_submit_async)"
+	@echo "  - DRM reopen thread-safe (mutex global)"
+	@echo "  - Métriques exec time correctes"
+	@echo ""
+	@echo "Objectif: Hashrate ≥ 2 GH/s (×9 vs C255)"

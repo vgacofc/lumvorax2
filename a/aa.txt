@@ -1,0 +1,28 @@
+https://www.youtube.com/watch?v=cZ2YZ7zFAX4
+
+ssh -T git@github.com
+git push -f origin main
+
+# Remettre le remote en SSH
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+
+# Afficher la nouvelle clé publique
+cat github_ssh_key.txt
+ssh -T git@github.com
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+git add .
+git commit -m "chatC162runibm.7"
+git push -f origin bob
+
+ssh -T git@github.com
+git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+git fetch origin
+git reset --hard origin/bob
+
+git reset --hard origin/bob
+git pull origin bob
+
+
+git branch --set-upstream-to=origin/bob
+
+a/generate_ssh_key.sh

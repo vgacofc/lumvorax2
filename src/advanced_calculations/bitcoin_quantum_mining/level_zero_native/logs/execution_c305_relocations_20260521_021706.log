@@ -1,0 +1,580 @@
+╔════════════════════════════════════════════════════════════╗
+║  Compilation C255V11 NX48 avec Buffer Dynamique           ║
+╚════════════════════════════════════════════════════════════╝
+[1/2] Compilation...
+src/btc_gen9_native_runner.c: In function ‘calculate_optimal_batch_size’:
+src/btc_gen9_native_runner.c:348:55: warning: unused parameter ‘timeout_ms’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                              ~~~~~~~~~^~~~~~~~~~
+src/btc_gen9_native_runner.c:348:76: warning: unused parameter ‘hashrate’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                                                   ~~~~~~~~~^~~~~~~~
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_init’:
+src/btc_gen9_native_runner.c:1002:60: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 4 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+ 1002 |     fprintf(stderr, "[C293] Output buffer: %zu bytes pour %u nonces\n",
+      |                                                           ~^
+      |                                                            |
+      |                                                            unsigned int
+      |                                                           %lu
+ 1003 |             ctx->output_size, ctx->batch_size);
+      |                               ~~~~~~~~~~~~~~~               
+      |                                  |
+      |                                  size_t {aka long unsigned int}
+✅ Compilation réussie
+
+[2/2] Exécution avec sudo...
+Mot de passe sudo: emmaus
+
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c255v11_nx48.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=262144
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=524288
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=1048576
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=2097152
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=4194304
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=8388608
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=16777216
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=33554432
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=67108864
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C258 — Allocation Dynamique 3GB (RAM Système)   ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+║  Formule OpenCL: 75% RAM système, max 4GB                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[C258] Configuration Allocation Dynamique:
+  - Détection RAM: sysinfo() + formule OpenCL (75% RAM, max 4GB)
+  - Batch size initial: 256K (progression automatique)
+  - Contextes GPU: 2 (adaptatif 1/2/3)
+  - Mémoire GPU: Monitoring temps réel
+  - THP: Activé pour buffers >2MB
+  - Kernel: kernels/btc_sha256_gen9.bin
+  - Log: logs/forensic/test_c255v11_nx48.log
+
+[C258] 📊 RAM système détectée: 7622 MB (7.44 GB)
+[C258] 🎯 Limite GPU calculée: 4096 MB (4.00 GB) [formule: 75% RAM, max 4GB]
+[C258] ✅ Mémoire GPU disponible: 4.00 GB
+
+[C258] Initialisation Gen9 Native avec allocation dynamique...
+✅ Initialisation réussie
+
+[C258] Démarrage progression adaptative (allocation dynamique 3GB)...
+═══════════════════════════════════════════════════════════════
+
+[Batch 1/100] batch_size=262144 (0.26 M nonces)
+  ✅ Succès: 0.026 sec, 10.15 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 262144 → 524288 (0.0% vers max, mem_limit=107374182)
+
+[Batch 2/100] batch_size=524288 (0.52 M nonces)
+  ✅ Succès: 0.003 sec, 191.73 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 524288 → 1048576 (0.1% vers max, mem_limit=107374182)
+
+[Batch 3/100] batch_size=1048576 (1.05 M nonces)
+  ✅ Succès: 0.003 sec, 313.83 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 1048576 → 2097152 (0.2% vers max, mem_limit=107374182)
+
+[Batch 4/100] batch_size=2097152 (2.10 M nonces)
+  ✅ Succès: 0.002 sec, 1237.21 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 2097152 → 4194304 (0.4% vers max, mem_limit=107374182)
+
+[Batch 5/100] batch_size=4194304 (4.19 M nonces)
+  ✅ Succès: 0.002 sec, 2468.33 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 4194304 → 8388608 (0.8% vers max, mem_limit=107374182)
+
+[Batch 6/100] batch_size=8388608 (8.39 M nonces)
+  ✅ Succès: 0.002 sec, 3484.54 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 8388608 → 16777216 (1.6% vers max, mem_limit=107374182)
+
+[Batch 7/100] batch_size=16777216 (16.78 M nonces)
+  ✅ Succès: 0.047 sec, 356.53 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 16777216 → 33554432 (3.2% vers max, mem_limit=107374182)
+
+[Batch 8/100] batch_size=33554432 (33.55 M nonces)
+  ✅ Succès: 0.119 sec, 281.67 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 33554432 → 67108864 (6.4% vers max, mem_limit=107374182)
+
+[Batch 9/100] batch_size=67108864 (67.11 M nonces)
+  ✅ Succès: 0.161 sec, 417.65 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 67108864 → 107374182 (10.2% vers max, mem_limit=107374182)
+
+[Batch 10/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.254 sec, 423.46 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 11/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.012 sec, 8735.72 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 12/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9724.02 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 13/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.007 sec, 16401.10 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 14/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 48844.37 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: bat[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+ch_size=107374182
+
+[Batch 15/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.012 sec, 8656.26 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 16/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 23234.01 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 17/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 22039.08 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 18/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.007 sec, 14765.62 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 19/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.269 sec, 398.91 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 20/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9339.59 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 21/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.008 sec, 13133.24 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 22/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 34523.11 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 23/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 38264.04 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 24/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.006 sec, 18552.59 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 25/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31005.55 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 26/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31708.00 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 27/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 24553.63 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 28/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.273 sec, 393.41 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 29/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9512.44 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 30/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.006 sec, 17590.65 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 31/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 55841.40 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 32/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 63602.38 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 33/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 60269.48 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 34/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 23314.67 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 35/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 24871.66 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 36/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 30141.52 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 37/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.250 sec, 429.54 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 38/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.012 sec, 8957.10 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 39/100] batch_size=107374182 (107.37 M nonces)
+ [GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+ ✅ Succès: 0.010 sec, 10691.98 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 40/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.006 sec, 17353.71 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 41/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 28793.62 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 42/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 41569.48 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 43/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 24774.78 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 44/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 22584.03 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 45/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 22676.47 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 46/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.214 sec, 502.82 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 47/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.018 sec, 5946.28 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 48/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.063 sec, 1715.12 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 49/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 22976.45 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 50/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.007 sec, 16278.77 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 51/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 25422.24 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 52/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.005 sec, 20804.39 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 53/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 27824.51 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 54/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 27221.53 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 55/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.211 sec, 509.80 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 56/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9565.62 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 57/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.008 sec, 13405.01 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 58/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 49068.16 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 59/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.006 sec, 18523.60 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 60/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.002 sec, 48149.53 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 61/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 30013.93 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 62/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 29566.44 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 63/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31533.84 MH/s
+[NX48-C255V11] 🏁 Vitesse de c[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+roisière atteinte: batch_size=107374182
+
+[Batch 64/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.195 sec, 549.66 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 65/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.017 sec, 6361.59 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 66/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.083 sec, 1298.03 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 67/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.020 sec, 5348.95 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 68/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.013 sec, 8440.72 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 69/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9529.31 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 70/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.009 sec, 12482.50 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 71/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.014 sec, 7544.03 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 72/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.019 sec, 5717.69 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 73/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.172 sec, 625.62 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 74/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.012 sec, 8691.88 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 75/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 9411.11 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 76/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 35239.51 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 77/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 29544.80 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 78/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.006 sec, 18699.82 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 79/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31791.08 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 80/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 35046.88 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 81/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 28713.98 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 82/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.221 sec, 486.35 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 83/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 10008.31 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 84/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.012 sec, 8830.59 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 85/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31840.61 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 86/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.004 sec, 25437.22 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 87/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 39822.58 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 88/100] batch_size=107374182 (1[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+[GEN9-EXECUTE] Début: ctx=0x5967369ea490 block_header=0x7ffe07ab6830 start_nonce=0 count=107374182
+07.37 M nonces)
+  ✅ Succès: 0.008 sec, 14118.82 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 89/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.003 sec, 31963.85 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 90/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.064 sec, 1678.82 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 91/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.208 sec, 516.49 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 92/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.064 sec, 1686.33 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 93/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.021 sec, 5056.26 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 94/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.010 sec, 10262.87 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 95/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.010 sec, 11221.04 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 96/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.011 sec, 10177.65 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 97/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.007 sec, 15419.04 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 98/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.072 sec, 1481.57 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 99/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.022 sec, 4933.92 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 100/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.174 sec, 616.11 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+═══════════════════════════════════════════════════════════════
+║  MÉTRIQUES FINALES C258 — ALLOCATION DYNAMIQUE 3GB          ║
+═══════════════════════════════════════════════════════════════
+
+Résultats:
+  - Dispatches réussis: 100/100 (100.0%)
+  - Crashes: 0
+  - Batch size final: 107374182 (107.37 M nonces)
+  - Contextes GPU: 2
+
+Performance:
+  - Total nonces: 9905006146 (9905.01 M)
+  - Temps total: 3.697 sec
+  - Hashrate moyen: 2678.93 MH/s
+  - Temps moyen/dispatch: 0.037 sec
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ TEST RÉUSSI — ALLOCATION DYNAMIQUE 3GB FONCTIONNELLE   ║
+║  Détection RAM système + formule OpenCL (75%, max 4GB)    ║
+║  Progression adaptative 256K → Maximum GPU                ║
+╚════════════════════════════════════════════════════════════╝
+
+✅ Exécution terminée
+📊 Log sauvegardé dans logs/

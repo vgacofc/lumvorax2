@@ -1,0 +1,121 @@
+18:04:06.050426 execve("./tests/test_c563_no_pinned_output", ["./tests/test_c563_no_pinned_outp"...], 0x7fff9bd2c640 /* 69 vars */) = 0 <0.000831>
+18:04:06.051536 brk(NULL)               = 0x57ff37d97000 <0.000023>
+18:04:06.051674 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7910a7620000 <0.000051>
+18:04:06.051825 access("/etc/ld.so.preload", R_OK) = 0 <0.000041>
+18:04:06.051971 openat(AT_FDCWD, "/etc/ld.so.preload", O_RDONLY|O_CLOEXEC) = 3 <0.000068>
+18:04:06.052188 fstat(3, {st_mode=S_IFREG|0644, st_size=75, ...}) = 0 <0.000030>
+18:04:06.052329 mmap(NULL, 75, PROT_READ|PROT_WRITE, MAP_PRIVATE, 3, 0) = 0x7910a761f000 <0.000049>
+18:04:06.052441 close(3)                = 0 <0.000021>
+18:04:06.052542 openat(AT_FDCWD, "/opt/datadog-packages/datadog-apm-inject/stable/inject/launcher.preload.so", O_RDONLY|O_CLOEXEC) = 3 <0.000061>
+18:04:06.052695 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832 <0.000023>
+18:04:06.052827 fstat(3, {st_mode=S_IFREG|0755, st_size=741833, ...}) = 0 <0.000025>
+18:04:06.052965 mmap(NULL, 627144, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7910a7585000 <0.000065>
+18:04:06.053107 mprotect(0x7910a758a000, 602112, PROT_NONE) = 0 <0.000043>
+18:04:06.053212 mmap(0x7910a758a000, 368640, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x5000) = 0x7910a758a000 <0.000063>
+18:04:06.053342 mmap(0x7910a75e4000, 98304, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x5f000) = 0x7910a75e4000 <0.000045>
+18:04:06.053453 mmap(0x7910a75fc000, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x77000) = 0x7910a75fc000 <0.000049>
+18:04:06.053603 mmap(0x7910a7600000, 116904, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7910a7600000 <0.000054>
+18:04:06.053755 mmap(0x7910a761d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xb4000) = 0x7910a761d000 <0.000086>
+18:04:06.053981 close(3)                = 0 <0.000033>
+18:04:06.054162 munmap(0x7910a761f000, 75) = 0 <0.000048>
+18:04:06.054326 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3 <0.000109>
+18:04:06.054558 fstat(3, {st_mode=S_IFREG|0644, st_size=86423, ...}) = 0 <0.000026>
+18:04:06.054694 mmap(NULL, 86423, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7910a756f000 <0.000081>
+18:04:06.054908 close(3)                = 0 <0.000033>
+18:04:06.055049 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3 <0.000073>
+18:04:06.055212 read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0"..., 832) = 832 <0.000021>
+18:04:06.055307 pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784 <0.000021>
+18:04:06.055398 fstat(3, {st_mode=S_IFREG|0755, st_size=2125328, ...}) = 0 <0.000021>
+18:04:06.055497 pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784 <0.000025>
+18:04:06.055600 mmap(NULL, 2170256, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7910a7200000 <0.000057>
+18:04:06.055739 mmap(0x7910a7228000, 1605632, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7910a7228000 <0.000307>
+18:04:06.056141 mmap(0x7910a73b0000, 323584, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b0000) = 0x7910a73b0000 <0.000072>
+18:04:06.056286 mmap(0x7910a73ff000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1fe000) = 0x7910a73ff000 <0.000049>
+18:04:06.056414 mmap(0x7910a7405000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7910a7405000 <0.000047>
+18:04:06.056553 close(3)                = 0 <0.000023>
+18:04:06.056686 mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7910a756c000 <0.000080>
+18:04:06.056877 arch_prctl(ARCH_SET_FS, 0x7910a756c740) = 0 <0.000036>
+18:04:06.057006 set_tid_address(0x7910a756ca10) = 125763 <0.000036>
+18:04:06.057111 set_robust_list(0x7910a756ca20, 24) = 0 <0.000026>
+18:04:06.057207 rseq(0x7910a756d060, 0x20, 0, 0x53053053) = 0 <0.000031>
+18:04:06.057450 mprotect(0x7910a73ff000, 16384, PROT_READ) = 0 <0.000051>
+18:04:06.057684 mprotect(0x7910a75fc000, 8192, PROT_READ) = 0 <0.000037>
+18:04:06.057819 mprotect(0x57ff1edb8000, 4096, PROT_READ) = 0 <0.000032>
+18:04:06.057917 mprotect(0x7910a7660000, 8192, PROT_READ) = 0 <0.000036>
+18:04:06.058040 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0 <0.000023>
+18:04:06.058160 munmap(0x7910a756f000, 86423) = 0 <0.000042>
+18:04:06.058292 rt_sigaction(SIGSEGV, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000021>
+18:04:06.058384 rt_sigaction(SIGSEGV, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000020>
+18:04:06.058476 rt_sigaction(SIGABRT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000019>
+18:04:06.058554 rt_sigaction(SIGABRT, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000021>
+18:04:06.058640 rt_sigaction(SIGBUS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000019>
+18:04:06.058718 rt_sigaction(SIGBUS, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0 <0.000026>
+18:04:06.058843 getrandom("\x8f\x9d\xdf\xcc\xd8\xbc\x20\xfb", 8, GRND_NONBLOCK) = 8 <0.000023>
+18:04:06.058932 brk(NULL)               = 0x57ff37d97000 <0.000019>
+18:04:06.059005 brk(0x57ff37db8000)     = 0x57ff37db8000 <0.000024>
+18:04:06.059163 openat(AT_FDCWD, "/etc/datadog-agent/managed/rc-orgwide-wls-policy.bin", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory) <0.000063>
+18:04:06.059695 openat(AT_FDCWD, "/etc/datadog-agent/user-wls-policy.bin", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory) <0.000107>
+18:04:06.059921 openat(AT_FDCWD, "/etc/datadog-agent/managed/rc-targeted-wls-policy.bin", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory) <0.000040>
+18:04:06.060047 getrandom("\xfc\xa8\x36\xc7\x01\x51\x7c\x7c\x4c\xf5\x7a\x74\xea\x30\xe0\xc3", 16, GRND_NONBLOCK) = 16 <0.000022>
+18:04:06.060151 openat(AT_FDCWD, "/etc/os-release", O_RDONLY|O_CLOEXEC) = 3 <0.000047>
+18:04:06.060279 read(3, "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\""..., 4095) = 400 <0.000023>
+18:04:06.060442 close(3)                = 0 <0.000019>
+18:04:06.060542 uname({sysname="Linux", nodename="lvx-Vostro-5481", ...}) = 0 <0.000018>
+18:04:06.060674 uname({sysname="Linux", nodename="lvx-Vostro-5481", ...}) = 0 <0.000029>
+18:04:06.060831 readlink("/proc/self/exe", "/home/lvx/LVX/lumvorax2/src/adva"..., 4095) = 123 <0.000062>
+18:04:06.060992 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0 <0.000022>
+18:04:06.061089 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0 <0.000020>
+18:04:06.061192 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0 <0.000018>
+18:04:06.061286 getcwd("/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native", 4096) = 91 <0.000031>
+18:04:06.061439 memfd_create("dd_language_detected", MFD_CLOEXEC|MFD_ALLOW_SEALING) = 3 <0.000060>
+18:04:06.061569 write(3, "", 0)         = 0 <0.000024>
+18:04:06.061674 fcntl(3, F_ADD_SEALS, F_SEAL_SHRINK|F_SEAL_GROW|F_SEAL_WRITE) = 0 <0.000031>
+18:04:06.061813 memfd_create("dd_inject_info", MFD_CLOEXEC|MFD_ALLOW_SEALING) = 4 <0.000042>
+18:04:06.061954 write(4, "{\n    \"runtime_id\": \"fca836c7-01"..., 114) = 114 <0.000043>
+18:04:06.062079 fcntl(4, F_ADD_SEALS, F_SEAL_SHRINK|F_SEAL_GROW|F_SEAL_WRITE) = 0 <0.000070>
+18:04:06.062353 pipe2([5, 6], 0)        = 0 <0.000044>
+18:04:06.062512 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7910a756ca10) = 125767 <0.000194>
+18:04:06.062889 close(6)                = 0 <0.000022>
+18:04:06.062988 read(5, "\0\0\0\0\0\0\0\0", 65536) = 8 <0.010045>
+18:04:06.073226 read(5, "", 65528)      = 0 <0.000034>
+18:04:06.073343 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=125767, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+18:04:06.073418 close(5)                = 0 <0.000033>
+18:04:06.073510 wait4(125767, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 125767 <0.000041>
+18:04:06.073656 rt_sigaction(SIGSEGV, NULL, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, 8) = 0 <0.000032>
+18:04:06.073758 rt_sigaction(SIGSEGV, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7910a7245330}, NULL, 8) = 0 <0.000034>
+18:04:06.073866 rt_sigaction(SIGABRT, NULL, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, 8) = 0 <0.000095>
+18:04:06.074157 rt_sigaction(SIGABRT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7910a7245330}, NULL, 8) = 0 <0.000436>
+18:04:06.074841 rt_sigaction(SIGBUS, NULL, {sa_handler=0x7910a75ac22a, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7910a7245330}, 8) = 0 <0.000029>
+18:04:06.075018 rt_sigaction(SIGBUS, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7910a7245330}, NULL, 8) = 0 <0.000034>
+18:04:06.075170 fstat(1, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0 <0.000031>
+18:04:06.075333 openat(AT_FDCWD, "/dev/dri/card1", O_RDWR) = 5 <0.000139>
+18:04:06.075614 ioctl(5, DRM_IOCTL_I915_GEM_CONTEXT_CREATE, 0x7ffee83cb2d4) = 0 <0.000039>
+18:04:06.075742 ioctl(5, DRM_IOCTL_I915_GEM_CREATE, 0x7ffee83cb2f0) = 0 <0.000066>
+18:04:06.075899 ioctl(5, DRM_IOCTL_I915_GEM_CREATE, 0x7ffee83cb300) = 0 <0.000045>
+18:04:06.076120 ioctl(5, DRM_IOCTL_I915_GEM_CREATE, 0x7ffee83cb310) = 0 <0.000052>
+18:04:06.076281 ioctl(5, DRM_IOCTL_I915_GEM_MMAP, 0x7ffee83cb330) = 0 <0.000072>
+18:04:06.076487 ioctl(5, DRM_IOCTL_I915_GEM_MMAP, 0x7ffee83cb360) = 0 <0.000116>
+18:04:06.076724 ioctl(5, DRM_IOCTL_I915_GEM_MMAP, 0x7ffee83cb390) = 0 <0.000085>
+18:04:06.076939 write(2, "[DEBUG] PASS 1 Configuration:\n", 30) = 30 <0.000105>
+18:04:06.077146 write(2, "[DEBUG]   buffer_count = 3\n", 27) = 27 <0.000030>
+18:04:06.077257 write(2, "[DEBUG]   batch_len = 16 bytes\n", 31) = 31 <0.000056>
+18:04:06.077397 write(2, "[DEBUG]   context_id = 1\n", 25) = 25 <0.000052>
+18:04:06.077526 write(2, "[DEBUG]   Ordre cr\303\251ation: outpu"..., 62) = 62 <0.000027>
+18:04:06.077650 ioctl(5, DRM_IOCTL_I915_GEM_EXECBUFFER2, 0x7ffee83cb3c0) = 0 <0.000508>
+18:04:06.078267 write(2, "[DEBUG] GTT Addresses PASS 1:\n", 30) = 30 <0.000045>
+18:04:06.078463 write(2, "[DEBUG]   output_gtt = 0x0000000"..., 42) = 42 <0.000040>
+18:04:06.078599 write(2, "[DEBUG]   heap_gtt = 0x000000000"..., 40) = 40 <0.000032>
+18:04:06.078717 write(2, "[DEBUG]   batch_gtt = 0x00000000"..., 41) = 41 <0.000034>
+18:04:06.078908 write(2, "[DEBUG] PASS 2 Configuration:\n", 30) = 30 <0.000037>
+18:04:06.079036 write(2, "[DEBUG]   batch_gtt = 0x00000000"..., 54) = 54 <0.000031>
+18:04:06.079147 write(2, "[DEBUG]   heap_gtt = 0x000000000"..., 53) = 53 <0.000034>
+18:04:06.079272 write(2, "[DEBUG]   output: NON-PINNED (re"..., 51) = 51 <0.000089>
+18:04:06.079450 write(2, "[DEBUG]   flags = I915_EXEC_REND"..., 39) = 39 <0.000034>
+18:04:06.079592 write(2, "[DEBUG]   batch_len = 228 bytes\n", 32) = 32 <0.000025>
+18:04:06.079710 ioctl(5, DRM_IOCTL_I915_GEM_EXECBUFFER2, 0x7ffee83cb400) = -1 EINVAL (Invalid argument) <0.000030>
+18:04:06.079855 write(2, "\342\235\214 PASS 2 \303\211CHEC: Invalid argum"..., 47) = 47 <0.000064>
+18:04:06.080023 write(2, "[DEBUG] V\303\251rifier dmesg pour GPU"..., 38) = 38 <0.000054>
+18:04:06.080157 close(5)                = 0 <0.000101>
+18:04:06.080349 write(1, "=== TEST C563 - CORRECTION ROOT "..., 1995) = 1995 <0.000032>
+18:04:06.080469 exit_group(1)           = ?
+18:04:06.081413 +++ exited with 1 +++

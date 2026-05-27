@@ -1,0 +1,47 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C578 - EXECBUFFER2 FORENSIC              ║
+╚════════════════════════════════════════════════════════════╝
+In file included from tests/test_c578_execbuffer2_forensic.c:1:
+tests/../forensic/execbuffer2_forensic.h:164:5: error: unknown type name ‘FILE’
+  164 |     FILE *log_file;
+      |     ^~~~
+tests/../forensic/execbuffer2_forensic.h:277:70: error: unknown type name ‘FILE’
+  277 | void print_execbuffer2_wireshark(const execbuffer2_result_t *result, FILE *fp);
+      |                                                                      ^~~~
+tests/../forensic/execbuffer2_forensic.h:9:1: note: ‘FILE’ is defined in header ‘<stdio.h>’; did you forget to ‘#include <stdio.h>’?
+    8 | #include <drm/i915_drm.h>
+  +++ |+#include <stdio.h>
+    9 | 
+tests/../forensic/execbuffer2_forensic.h:285:66: error: unknown type name ‘FILE’
+  285 | void print_execbuffer2_human(const execbuffer2_result_t *result, FILE *fp);
+      |                                                                  ^~~~
+tests/../forensic/execbuffer2_forensic.h:285:66: note: ‘FILE’ is defined in header ‘<stdio.h>’; did you forget to ‘#include <stdio.h>’?
+tests/test_c578_execbuffer2_forensic.c:3:10: fatal error: ../forensic/forensic_logger.h: No such file or directory
+    3 | #include "../forensic/forensic_logger.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+In file included from forensic/execbuffer2_forensic.c:1:
+forensic/execbuffer2_forensic.h:164:5: error: unknown type name ‘FILE’
+  164 |     FILE *log_file;
+      |     ^~~~
+forensic/execbuffer2_forensic.h:277:70: error: unknown type name ‘FILE’
+  277 | void print_execbuffer2_wireshark(const execbuffer2_result_t *result, FILE *fp);
+      |                                                                      ^~~~
+forensic/execbuffer2_forensic.h:9:1: note: ‘FILE’ is defined in header ‘<stdio.h>’; did you forget to ‘#include <stdio.h>’?
+    8 | #include <drm/i915_drm.h>
+  +++ |+#include <stdio.h>
+    9 | 
+forensic/execbuffer2_forensic.h:285:66: error: unknown type name ‘FILE’
+  285 | void print_execbuffer2_human(const execbuffer2_result_t *result, FILE *fp);
+      |                                                                  ^~~~
+forensic/execbuffer2_forensic.h:285:66: note: ‘FILE’ is defined in header ‘<stdio.h>’; did you forget to ‘#include <stdio.h>’?
+forensic/execbuffer2_forensic.c:2:10: fatal error: forensic_logger.h: No such file or directory
+    2 | #include "forensic_logger.h"
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+forensic/surface_state_gen9.c: In function ‘calculate_surface_size’:
+forensic/surface_state_gen9.c:612:14: warning: unused variable ‘width’ [-Wunused-variable]
+  612 |     uint64_t width = state->width + 1;
+      |              ^~~~~
+cc1: fatal error: forensic/forensic_logger.c: No such file or directory
+compilation terminated.

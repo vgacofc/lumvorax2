@@ -1,0 +1,95 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_c255v11_nx48.log
+[DEBUG] Log ouvert avec succès
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C255V11 — NX48 Gestion Dynamique COMPLÈTE       ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+║  NX48 contrôle: batch_size + contextes + mémoire GPU      ║
+╚════════════════════════════════════════════════════════════╝
+
+[C255V11] Configuration NX48 Dynamique:
+  - Batch size initial: 256K (progression automatique)
+  - Contextes GPU: 2 (adaptatif 1/2/3)
+  - Mémoire GPU: Monitoring temps réel
+  - THP: Activé pour buffers >2MB
+  - Kernel: kernels/btc_sha256_gen9.bin
+  - Log: logs/forensic/test_c255v11_nx48.log
+
+[C255V11] Mémoire GPU disponible: 1.50 GB
+
+[C255V11] Initialisation Gen9 Native avec NX48...
+✅ Initialisation réussie
+
+[C255V11] Démarrage progression adaptative (comme une voiture)...
+═══════════════════════════════════════════════════════════════
+
+[Batch 1/30] batch_size=262144 (0.26 M nonces)
+  ✅ Succès: 0.712 sec, 0.37 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 262144 → 524288 (0.0% vers max, mem_limit=40265318)
+
+[Batch 2/30] batch_size=524288 (0.52 M nonces)
+  ✅ Succès: 0.703 sec, 0.75 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 524288 → 1048576 (0.1% vers max, mem_limit=40265318)
+
+[Batch 3/30] batch_size=1048576 (1.05 M nonces)
+  ✅ Succès: 0.704 sec, 1.49 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 1048576 → 2097152 (0.2% vers max, mem_limit=40265318)
+
+[Batch 4/30] batch_size=2097152 (2.10 M nonces)
+  ✅ Succès: 0.707 sec, 2.97 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 2097152 → 4194304 (0.4% vers max, mem_limit=40265318)
+
+[Batch 5/30] batch_size=4194304 (4.19 M nonces)
+  ✅ Succès: 0.706 sec, 5.94 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 4194304 → 8388608 (0.8% vers max, mem_limit=40265318)
+
+[Batch 6/30] batch_size=8388608 (8.39 M nonces)
+  ✅ Succès: 0.767 sec, 10.93 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 8388608 → 16777216 (1.6% vers max, mem_limit=40265318)
+
+[Batch 7/30] batch_size=16777216 (16.78 M nonces)
+  ✅ Succès: 0.701 sec, 23.94 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 16777216 → 33554432 (3.2% vers max, mem_limit=40265318)
+
+[Batch 8/30] batch_size=33554432 (33.55 M nonces)
+  ✅ Succès: 1.284 sec, 26.13 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 33554432 → 40265318 (3.8% vers max, mem_limit=40265318)
+
+[Batch 9/30] batch_size=40265318 (40.27 M nonces)
+  ✅ Succès: 1.274 sec, 31.59 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=40265318
+
+[Batch 10/30] batch_size=40265318 (40.27 M nonces)
+  ✅ Succès: 0.706 sec, 57.03 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=40265318
+
+[Batch 11/30] batch_size=40265318 (40.27 M nonces)
+  ✅ Succès: 1.088 sec, 37.02 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=40265318
+
+[Batch 12/30] batch_size=40265318 (40.27 M nonces)
+  ✅ Succès: 0.702 sec, 57.35 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=40265318
+
+[C255V11] 🏁 Vitesse de croisière stable détectée
+═══════════════════════════════════════════════════════════════
+║  MÉTRIQUES FINALES C255V11 — NX48 DYNAMIQUE                 ║
+═══════════════════════════════════════════════════════════════
+
+Résultats:
+  - Dispatches réussis: 12/12 (100.0%)
+  - Crashes: 0
+  - Batch size final: 40265318 (40.27 M nonces)
+  - Contextes GPU: 2
+
+Performance:
+  - Total nonces: 227907992 (227.91 M)
+  - Temps total: 10.055 sec
+  - Hashrate moyen: 22.67 MH/s
+  - Temps moyen/dispatch: 0.838 sec
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ TEST RÉUSSI — NX48 GESTION DYNAMIQUE FONCTIONNELLE     ║
+║  Progression adaptative 256K → Maximum GPU                ║
+║  Protection mémoire + THP + Contextes dynamiques          ║
+╚════════════════════════════════════════════════════════════╝

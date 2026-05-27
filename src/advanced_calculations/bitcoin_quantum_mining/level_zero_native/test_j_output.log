@@ -1,0 +1,48 @@
+[sudo] password for lvx: ╔════════════════════════════════════════════════════════════════╗
+║  TEST J — PREEMPTION / CONTEXT SAVE/RESTORE                   ║
+║  Hypothèse : Le problème est dans save/restore contexte       ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 Configuration Test :
+  - Batch : MI_BATCH_BUFFER_END minimal
+  - Iterations : 10 dispatches
+  - Objectif : Prouver que save/restore contexte est le problème
+
+═══════════════════════════════════════════════════════════════
+
+╔════════════════════════════════════════════════════════════════╗
+║  CAS A : DESTROY/RECREATE CONTEXTE ENTRE DISPATCHES           ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Iteration 1 SUCCESS (0.000176s)
+✅ Iteration 2 SUCCESS (0.000436s)
+✅ Iteration 3 SUCCESS (0.000217s)
+✅ Iteration 4 SUCCESS (0.000364s)
+✅ Iteration 5 SUCCESS (0.000420s)
+✅ Iteration 6 SUCCESS (0.000402s)
+✅ Iteration 7 SUCCESS (0.000326s)
+✅ Iteration 8 SUCCESS (0.000448s)
+✅ Iteration 9 SUCCESS (0.000439s)
+Erreur create context iteration 10: Input/output error
+
+═══════════════════════════════════════════════════════════════
+
+╔════════════════════════════════════════════════════════════════╗
+║  CAS B : MÊME CONTEXTE POUR TOUS LES DISPATCHES               ║
+╚════════════════════════════════════════════════════════════════╝
+
+Erreur create context: Input/output error
+
+╔════════════════════════════════════════════════════════════════╗
+║  RÉSULTATS ANALYSE                                             ║
+╚════════════════════════════════════════════════════════════════╝
+
+CAS A (destroy/recreate) : ❌ Crash au dispatch -1
+CAS B (même contexte)    : ❌ Crash au dispatch -1
+
+╔════════════════════════════════════════════════════════════════╗
+║  CONCLUSION                                                    ║
+╚════════════════════════════════════════════════════════════════╝
+
+❌ Les deux cas crashent
+Le problème est peut-être plus profond (batch invalide).

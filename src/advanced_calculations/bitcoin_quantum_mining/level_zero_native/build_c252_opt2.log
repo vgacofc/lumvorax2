@@ -1,0 +1,28 @@
+Compiling src/btc_gen9_native_runner.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c: In function ‘check_gpu_thermal’:
+src/btc_gen9_native_runner.c:214:9: warning: implicit declaration of function ‘usleep’; did you mean ‘sleep’? [-Wimplicit-function-declaration]
+  214 |         usleep(10000000);  /* 10 secondes */
+      |         ^~~~~~
+      |         sleep
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:298:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  298 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+
+════════════════════════════════════════════════════════════════
+  COMPILATION C250 Phase 3 : Test Parallélisme GPU RÉEL
+════════════════════════════════════════════════════════════════
+
+Différence vs C249 :
+  - C249 : Utilise btc_gen9_execute() (séquentiel)
+  - C250 : Utilise btc_gen9_execute_parallel_batch() (parallèle)
+
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm tests/test_btc_mining_parallel.c build/lum_thermal_monitor_c241.o build/lum_sha256_validator_c241.o build/btc_gen9_native_runner.o build/btc_gen9_parallel_gpu.o -o bin/test_btc_mining_c250_parallel -lm -lpthread -lssl -lcrypto -ldrm
+
+✅ Test C250 Parallel GPU RÉEL compiled successfully
+   Binary: bin/test_btc_mining_c250_parallel
+   Config: 168 work-items simultanés (24 EUs × 7 threads)
+   Test: 100 dispatches parallèles
+   Gain attendu: 168x vs séquentiel (~4.16 ms/dispatch)
+

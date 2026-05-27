@@ -1,0 +1,30 @@
+==========================================
+RAPPORT TEST GPU HANG
+Date: Mon May 18 08:17:51 PM CEST 2026
+==========================================
+
+=== RÉSULTATS ===
+
+Dispatches exécutés: 0
+0
+Preemption timeout: 9
+GPU hangs: 9
+Resets GPU: 9
+Erreurs kernel: 0
+0
+
+=== DIAGNOSTIC ===
+
+🔴 HYPOTHÈSE B (Preemption watchdog) — CONFIRMÉE
+
+Actions recommandées:
+  1. Réduire work-group size
+  2. Activer scoreboard dans MEDIA_VFE_STATE
+  3. Ajouter yield points dans kernel
+
+==========================================
+Fichiers générés:
+  - test_output.txt (sortie programme)
+  - dmesg_after.txt (logs kernel)
+  - RAPPORT_TEST.txt (ce fichier)
+==========================================

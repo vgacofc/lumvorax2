@@ -1,0 +1,74 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C535 - PATCH TOUTES ADRESSES (ROOT CAUSE #41)         ║
+╚════════════════════════════════════════════════════════════════╝
+
+ROOT CAUSE #41: Batch OpenCL contient 13+ adresses dynamiques
+Solution: Patcher TOUTES les adresses avec nos offsets i915
+
+[1/15] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/15] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/15] Allocation buffers...
+  ✓ 6 buffers alloués
+
+[4/15] Initialisation output + kernel .TEXT PURE...
+  ✓ Output et kernel .TEXT PURE initialisés (256 bytes)
+
+[5/15] PASS 1: Résolution offsets i915...
+  ✅ PASS 1 RÉUSSI
+
+[6/15] Lecture offsets i915...
+  ✓ OFFSETS i915:
+    surface_state: 0x0000000000000000
+    dynamic_state: 0x0000000000001000
+    idrt:          0x0000000000002000
+    kernel:        0x0000000000003000
+    output:        0x0000000000004000
+    batch:         0x0000000000005000
+
+[7/15] Chargement buffers OpenCL depuis dumps...
+  ✓ Buffers OpenCL chargés
+
+[8/15] Patch output address dans Surface State...
+  ✓ Output address patché: 0x0000000000004000
+
+[9/15] Patch kernel pointer dans IDRT...
+  ✓ Kernel pointer patché: 0x0000000000003000
+
+[10/15] PATCHER TOUTES LES ADRESSES BATCH (ROOT CAUSE #41)...
+  ✓ Patch @ 0x0B0: idrt 0x000078FA37D06001 → 0x0000000000002000
+  ✓ Patch @ 0x0B8: idrt 0x000078FA3801E001 → 0x0000000000002000
+  ✓ Patch @ 0x0E0: idrt 0x000078FA37D06001 → 0x0000000000002000
+  ✓ Patch @ 0x114: kernel 0x000078FA3804F000 → 0x0000000000003000
+  ✓ Patch @ 0x118: dynamic 0x0000000000000000 → 0x0000000000001000
+
+  ✅ 5 adresses patchées dans le batch
+
+[11/15] Construction exec_objects final...
+  ✓ 6 exec_objects configurés avec PINNED
+
+[12/15] PASS 2: Soumission batch AVEC TOUTES ADRESSES PATCHÉES...
+  🔧 PASS 2 - ADRESSES DYNAMIQUES PATCHÉES:
+     Batch: Copie OpenCL avec 5 adresses patchées
+     Kernel: @ 0x0000000000003000
+     Output: @ 0x0000000000004000
+
+  ✅✅✅ PASS 2 RÉUSSI! ✅✅✅
+
+[13/15] Attente GPU...
+  ✓ GPU terminé
+
+[14/15] VÉRIFICATION RÉSULTAT GPU NATIF...
+═══════════════════════════════════════════════════════════════
+output[0] = 0xFFFFFFFF (attendu: 0x12345678)
+output[1] = 0xFFFFFFFF
+output[2] = 0xFFFFFFFF
+output[3] = 0xFFFFFFFF
+
+[RÉSULTAT FINAL]
+  ⚠️  Adresses patchées mais résultat incorrect
+  → Vérifier les autres adresses dans le batch

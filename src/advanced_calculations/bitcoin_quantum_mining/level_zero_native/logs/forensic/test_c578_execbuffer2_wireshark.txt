@@ -1,0 +1,52 @@
+=== EXECBUFFER2 FORENSIC WIRESHARK ===
+
+[PARAMS]
+buffer_count = 3
+batch_len = 200 bytes
+ring = RCS (Render)
+context_id = 0x0000000000000000
+timestamp_submit = 3882927330721 ns
+latency_ioctl = 60288 ns (60.288 µs)
+
+[OBJECTS]
+object[0]:
+  handle = 2
+  name = input_buffer_0
+  gtt_offset = 0x0000000000000000
+  flags = NEEDS_GTT
+  relocations = 0
+
+object[1]:
+  handle = 3
+  name = output_buffer
+  gtt_offset = 0x0000000000000000
+  flags = WRITE
+  relocations = 0
+
+object[2]:
+  handle = 4
+  name = batch_buffer
+  gtt_offset = 0x0000000000000000
+  flags = NONE
+  relocations = 2
+
+[RELOCATIONS]
+reloc[0]:
+  target_handle = 2
+  offset = 0x000000000000002c
+  resolved_addr = 0x0000000000000000
+  applied = NO
+
+reloc[1]:
+  target_handle = 3
+  offset = 0x000000000000006c
+  resolved_addr = 0x0000000000000000
+  applied = NO
+
+[RESULT]
+success = FALSE
+buffers_allocated_gtt = 0/3
+relocations_applied = 0/2
+seqno_before = 0
+seqno_after = 1
+error = EXECBUFFER2 failed: Invalid argument (errno=22)

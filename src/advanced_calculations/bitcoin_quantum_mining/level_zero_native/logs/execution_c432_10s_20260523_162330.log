@@ -1,0 +1,22 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_gen9_native.log
+[DEBUG] Log ouvert avec succès
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 Phase 15C — Test Gen9 Native Runner        ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+╚════════════════════════════════════════════════════════════╝
+
+[TEST] Configuration:
+  - batch_size: 262144
+  - work_group_size: 256
+  - kernel_path: 262144
+  - log_path: logs/forensic/test_gen9_native.log
+
+[TEST 1/3] Initialisation Gen9 Native...
+❌ ÉCHEC : Initialisation échouée
+
+DIAGNOSTIC :
+  - Device DRM i915 accessible ? (ls /dev/dri/)
+  - Permissions GPU ? (groups | grep render)
+  - Kernel Gen9 ISA existe ? (ls 262144)
+

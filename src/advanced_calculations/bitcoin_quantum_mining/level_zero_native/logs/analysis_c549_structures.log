@@ -1,0 +1,62 @@
+================================================================================
+ANALYSE STRUCTURES OPENCL CAPTURÉES - C549
+================================================================================
+
+### BUFFER[8] - IDRT + STRUCTURES GPU ###
+
+--- IDRT @ offset 0x0000 ---
+
+================================================================================
+INTERFACE DESCRIPTOR (IDRT) - 32 bytes
+================================================================================
+
+DW0: 0x70040000
+  Kernel Start Pointer: 0x70040000 (offset relatif)
+
+DW1: 0x00000000
+  Reserved
+
+DW2: 0x70020002
+  Sampler Count: 0
+  Sampler State Pointer: 0x70020000
+
+DW3: 0x00000000
+  Binding Table Entry Count: 0
+  Binding Table Pointer: 0x00000000
+
+DW4: 0x00000020
+  CURBE Read Offset: 0x0000 (0 bytes)
+  CURBE Read Length: 0x0020 (32 bytes)
+
+DW5: 0x00000000
+  Barrier Enable: 0
+  Shared Local Memory Size: 0
+  Number of Threads in GPGPU Thread Group: 0
+
+DW6: 0x7105000d
+  Cross-Thread Constant Data Read Length: 13
+
+DW7: 0x00000000
+  Reserved
+
+--- Recherche Surface State ---
+
+
+### BUFFER[9] - BATCH BUFFER ###
+
+Taille: 320 bytes
+Premiers 128 bytes:
+0000: 69041312 7a000004 00100000 00000000 00000000 00000000 00000000 11000001 
+0020: 0000e404 00000100 11000001 00007034 60000321 61040001 6f600000 000071b3 
+0040: 7a000004 00101021 00000000 00000000 00000000 00000000 70000007 00000000 
+0060: 00000000 00a70100 00000000 07820000 00000000 00000000 00000000 11000001 
+
+
+### BUFFER[2] - STRUCTURES ADDITIONNELLES ###
+
+Taille: 8192 bytes
+Premiers 128 bytes:
+0000: fffed000 00000000 00000000 00000000 00000000 00010000 00000001 00000002 
+0020: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+0040: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+0060: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 

@@ -1,0 +1,33 @@
+Compiling src/btc_gen9_native_runner.c...
+gcc -Wall -Wextra -O0 -g -march=native -pthread -Iinclude -Isrc -I/usr/include/libdrm -fno-inline -fno-omit-frame-pointer -c src/btc_gen9_native_runner.c -o src/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c: In function ‘check_gpu_thermal’:
+src/btc_gen9_native_runner.c:219:9: warning: implicit declaration of function ‘usleep’; did you mean ‘sleep’? [-Wimplicit-function-declaration]
+  219 |         usleep(10000000);  /* 10 secondes */
+      |         ^~~~~~
+      |         sleep
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:303:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  303 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+Compiling src/btc_i915_drm_forensic_tracker.c...
+gcc -Wall -Wextra -O0 -g -march=native -pthread -Iinclude -Isrc -I/usr/include/libdrm -fno-inline -fno-omit-frame-pointer -c src/btc_i915_drm_forensic_tracker.c -o src/btc_i915_drm_forensic_tracker.o
+Compiling src/test_c255v3_forensic_ultra_granular.c...
+gcc -Wall -Wextra -O0 -g -march=native -pthread -Iinclude -Isrc -I/usr/include/libdrm -fno-inline -fno-omit-frame-pointer -c src/test_c255v3_forensic_ultra_granular.c -o src/test_c255v3_forensic_ultra_granular.o
+src/test_c255v3_forensic_ultra_granular.c: In function ‘main’:
+src/test_c255v3_forensic_ultra_granular.c:52:31: warning: implicit declaration of function ‘btc_gen9_init_simple’; did you mean ‘btc_gen9_init’? [-Wimplicit-function-declaration]
+   52 |     btc_gen9_context_t* ctx = btc_gen9_init_simple(268435456, 256);
+      |                               ^~~~~~~~~~~~~~~~~~~~
+      |                               btc_gen9_init
+src/test_c255v3_forensic_ultra_granular.c:52:31: warning: initialization of ‘btc_gen9_context_t *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+src/test_c255v3_forensic_ultra_granular.c:82:9: warning: implicit declaration of function ‘btc_gen9_build_batch_buffer’ [-Wimplicit-function-declaration]
+   82 |     if (btc_gen9_build_batch_buffer(ctx) < 0) {
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/test_c255v3_forensic_ultra_granular.c:36:14: warning: unused parameter ‘argc’ [-Wunused-parameter]
+   36 | int main(int argc, char** argv) {
+      |          ~~~~^~~~
+src/test_c255v3_forensic_ultra_granular.c:36:27: warning: unused parameter ‘argv’ [-Wunused-parameter]
+   36 | int main(int argc, char** argv) {
+      |                    ~~~~~~~^~~~
+Linking test_c255v3_forensic_ultra_granular...
+gcc -Wall -Wextra -O0 -g -march=native -pthread -Iinclude -Isrc -I/usr/include/libdrm -fno-inline -fno-omit-frame-pointer src/btc_gen9_native_runner.o src/btc_i915_drm_forensic_tracker.o src/test_c255v3_forensic_ultra_granular.o -o test_c255v3_forensic_ultra_granular -lm -pthread -ldrm
+Build complete: test_c255v3_forensic_ultra_granular

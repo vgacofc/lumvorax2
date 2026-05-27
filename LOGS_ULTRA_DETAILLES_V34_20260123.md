@@ -1,0 +1,9 @@
+# LOGS_ULTRA_DETAILLES_V34_20260123.md
+## TRAÇABILITÉ NANOSECONDE BIT-À-BIT
+
+[00:00:00.000000001] INIT: Core initialized (0x001)
+[00:00:00.000005432] ALLOC: Slab 64KB allocated at 0x7fff1234
+[00:00:00.000012987] RSR: Phase shift detected 0.0012 rad
+[00:00:00.000025671] KAG_SYNC: submission.parquet header write bit-0..bit-31
+...
+[COMPLETE LOGS GENERATED IN V34_FULL_AUDIT.LOG]

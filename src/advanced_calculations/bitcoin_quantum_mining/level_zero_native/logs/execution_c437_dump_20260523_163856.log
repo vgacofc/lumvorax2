@@ -1,0 +1,22 @@
+[11392.269684696] 🚀 TEST C437 - DUMP SSH OPENCL
+[11392.304390667] ✅ Kernel OpenCL compilé
+[11392.305028795] ✅ Output buffer créé: 1028 bytes
+[11392.305036504] ⚡ Dispatch kernel OpenCL: 256 threads
+[11392.307891410] ✅ Kernel exécuté
+[11392.308438500] 📊 output[0] = 0x12345678 (attendu: 0x12345678)
+[11392.308442585] ✅ OpenCL TEST RÉUSSI!
+[11392.308443494] 
+[11392.308444148] 🔍 TENTATIVE CAPTURE GEM OBJECTS i915...
+[11392.308521804] ✅ DRM ouvert: fd=5
+[11392.308524834] ⚠️  Cannot access OpenCL's GEM objects (different fd)
+[11392.308624299] 
+[11392.308627466] ✅ TEST C437 TERMINÉ
+[11392.308628341] 
+[11392.308629055] 📝 CONCLUSION:
+[11392.308629756]    OpenCL réussit à écrire output[0]=0x12345678
+[11392.308630465]    Notre natif échoue avec output[0]=0x00000000
+[11392.308631106]    Différence: Configuration Surface State + Binding Table
+[11392.308631752] 
+[11392.308632911] 🔍 PROCHAINE ÉTAPE:
+[11392.308633626]    Analyser sources Intel compute-runtime pour voir
+[11392.308634326]    EXACTEMENT comment configurer Surface State Gen9

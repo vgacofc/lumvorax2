@@ -1,0 +1,11 @@
+Compilation btc_gen9_native_compiler.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -fPIC -Isrc -I../../src -c src/btc_gen9_native_compiler.c -o build/btc_gen9_native_compiler.o
+In file included from src/btc_gen9_native_compiler.c:9:
+src/btc_gen9_native_compiler.h:72:5: error: unknown type name ‘FILE’
+   72 |     FILE* forensic_log;         /**< Fichier log forensique */
+      |     ^~~~
+src/btc_gen9_native_compiler.c:10:10: fatal error: btc_gpu_async_logger.h: No such file or directory
+   10 | #include "btc_gpu_async_logger.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [Makefile.gen9:54: build/btc_gen9_native_compiler.o] Error 1

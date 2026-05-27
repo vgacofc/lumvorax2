@@ -1,0 +1,30 @@
+[sudo] password for lvx: [Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[Detaching after fork from child process 139550]
+# LumVorax C255v2 — Multi-Dispatch Parallèle CORRIGÉ
+# Architecture: Soumission asynchrone + DRM reopen thread-safe
+# Device: Intel UHD Graphics 620 (Gen9)
+# Objectif: Hashrate ≥ 2 GH/s (×9 vs C255)
+
+Configuration:
+  Batches: 1
+  Dispatches per batch: 9
+  Total dispatches: 9
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_gen9_native.log
+[DEBUG] Log ouvert avec succès
+[New Thread 0x7fffb79fe6c0 (LWP 139561)]
+Initialization: 0.004502 sec
+
+[22675.735851591] C255V2_MULTI_DISPATCH_START: num_batches=1 dispatches_per_batch=9 total_dispatches=9
+
+Thread 1 "test_c255v2_mul" received signal SIGSEGV, Segmentation fault.
+0x000055555555d16b in btc_gen9_get_input_size ()
+#0  0x000055555555d16b in btc_gen9_get_input_size ()
+#1  0x000055555555e16f in c255v2_execute_multi_dispatch_batch ()
+#2  0x00005555555566d3 in main ()
+A debugging session is active.
+
+	Inferior 1 [process 139522] will be killed.
+
+Quit anyway? (y or n) [answered Y; input not from terminal]

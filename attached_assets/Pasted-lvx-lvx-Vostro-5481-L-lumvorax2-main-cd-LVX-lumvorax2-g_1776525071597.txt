@@ -1,0 +1,42 @@
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main
+                                          doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://dc1c5763-73e8-4eb4-941b-6653c8549a84-00-3284e7c21m0fp.spock.replit.dev
+[C57-WS] Token     : 53a6ca97...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T17:10:51Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T17:10:51Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T17:10:51Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T17:10:51Z INFO [C57-WS] Replit URL   : https://dc1c5763-73e8-4eb4-941b-6653c8549a84-00-3284e7c21m0fp.spock.replit.dev
+2026-04-18T17:10:51Z INFO [C57-WS] Token (8ch)  : 53a6ca97...
+2026-04-18T17:10:51Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T17:10:51Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T17:10:51Z INFO [C57-WS] Connexion WebSocket → https://dc1c5763-73e8-4eb4-941b-6653c8549a84-00-3284e7c21m0fp.spock.replit.dev/ws/socket.io ...
+2026-04-18T17:10:52Z INFO [C57-WS] JOB id=478d5fe602cb label='git_sync_c60'
+2026-04-18T17:10:52Z INFO [C57-WS]   cmd: cd ~/LVX/lumvorax2 && git stash save auto-c60 && git pull origin main && find ~/LVX/lumvorax2/src -n
+2026-04-18T17:10:52Z INFO [C57-WS] JOB id=53d98d76c7f1 label='compile_qdayprize_c60'
+2026-04-18T17:10:52Z INFO [C57-WS] JOB id=e57ba9293b98 label='test_qdayprize_12bits'
+2026-04-18T17:10:52Z INFO [C57-WS]   cmd: cd ~/LVX/lumvorax2/src/qdayprize && make clean && make 2>&1 | tail -5 && echo QDAYPRIZE_COMPILE_OK
+2026-04-18T17:10:52Z INFO [C57-WS]   cmd: cd ~/LVX/lumvorax2 && QDPR_SIM_BITS=12 QDPR_DURATION_S=15 bash tools/qdayprize_run.sh 2>&1 | tail -2
+2026-04-18T17:10:52Z INFO [C57-WS] JOB id=8148280b6594 label='hw_gpu_ubuntu_c60'
+2026-04-18T17:10:52Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 4
+2026-04-18T17:10:52Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-18T17:10:52Z INFO [C57-WS]   cmd: echo === CPU === && cat /proc/cpuinfo | grep -E "model name|flags" | head -4 && echo === GPU === && 
+2026-04-18T17:10:52Z INFO [C57-WS] Connexion établie — boucle d'attente active
+2026-04-18T17:10:52Z INFO [C57-WS]   rc=0 durée=0.08s output=1126c
+2026-04-18T17:10:52Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T17:10:52Z INFO [C57-WS]   rc=0 durée=0.44s output=626c
+2026-04-18T17:10:52Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T17:10:54Z INFO [C57-WS]   rc=0 durée=1.93s output=170c
+2026-04-18T17:10:54Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+2026-04-18T17:10:56Z INFO [C57-WS]   rc=0 durée=4.46s output=979c
+2026-04-18T17:10:56Z INFO [C57-WS]   ✅ Résultat envoyé via WebSocket
+
+

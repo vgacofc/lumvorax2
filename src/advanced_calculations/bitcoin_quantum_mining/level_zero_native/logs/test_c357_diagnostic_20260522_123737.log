@@ -1,0 +1,35 @@
+=== TEST C356 - VALIDATION MÉMOIRE GPU ===
+Kernel: tests/test_c356_memory_write.bin_kbl.bin
+Objectif: Vérifier écriture GPU de valeurs magiques
+
+✓ Kernel copié vers kernels/btc_sha256_gen9.bin_kbl.bin
+
+Exécution test avec 256 work-items (1 work-group)...
+
+[DEBUG] Tentative ouverture log: logs/forensic/test_c255v11_nx48.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+[C311 FIX #2] Block header RÉEL chargé (80 bytes)
+[C311] Nonce connu attendu: 1604817786 (20 leading zeros)
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=262144
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=524288
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=1048576
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=2097152
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=4194304
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=8388608
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=16777216
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=33554432
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=67108864
+[GEN9-EXECUTE] Début: ctx=0x562d9fea9490 block_header=0x7fffb8a9d5a0 start_nonce=0 count=107374182
+timeout: the monitored command dumped core
+./test_c356_memory_validation.sh: line 31: 33562 Segmentation fault      timeout 5s ./test_btc_mining_native <<EOF
+$BLOCK_HEADER
+256
+EOF
+
+
+=== ANALYSE RÉSULTATS ===
+
+❌ Pas de log forensique trouvé
+
+=== FIN TEST C356 ===

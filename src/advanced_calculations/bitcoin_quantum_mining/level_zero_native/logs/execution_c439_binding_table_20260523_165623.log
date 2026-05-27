@@ -1,0 +1,55 @@
+[12439.314866047] 🚀 TEST C433 - VALIDATION STORE avec DISPATCH COMPLET
+[12439.314929492] ✅ DRM ouvert: fd=5
+[12439.314935427] ✅ Contexte GPU créé: id=1
+[12439.315297972] ✅ Kernel chargé: 2696 bytes
+[12439.315313201] ✅ GEM buffer créé: handle=1 size=2696
+[12439.315322271] ✅ Données écrites: 2696 bytes
+[12439.315326473] ✅ GEM buffer créé: handle=2 size=1028
+[12439.315345911] ✅ Buffer mappé: 0x7cff00693000
+[12439.315357918] ✅ GEM buffer créé: handle=3 size=4096
+[12439.315367027] ✅ Buffer mappé: 0x7cff005f8000
+[12439.315370531] ✅ GEM buffer créé: handle=4 size=4096
+[12439.315382058] ✅ Buffer mappé: 0x7cff005f7000
+[12439.315386254] ✅ GEM buffer créé: handle=5 size=4096
+[12439.315389123] ✅ GEM buffer créé: handle=6 size=4096
+[12439.315395492] ✅ Buffer mappé: 0x7cff005f6000
+[12439.315400050] 🔧 C439: Configuration SSH Layout Intel
+[12439.315400662]    BTI[0] = 64 (offset Surface State)
+[12439.315401286] ✅ C439: SSH Layout Intel configuré:
+[12439.315401744]    Binding Table @ offset 0: BTI[0]=64
+[12439.315402283]    Surface State @ offset 64:
+[12439.315402834]      Size=1028 → Aligned=1028
+[12439.315403496]      Width=1028, Height=1, Depth=1
+[12439.315404279]      DW0=0x0008ff80 (VAlign=4, Format=RAW)
+[12439.315405113]      DW1=0x00000003 (MOCS=CACHED_L3)
+[12439.315405754]      DW6=0x00000008 (Coherency=GPU_COHERENT)
+[12439.315415747] ✅ Interface Descriptor configuré
+[12439.315418575] ✅ C433: MEDIA_CURBE_LOAD ajouté
+[12439.315419187] ✅ C433: MEDIA_STATE_FLUSH ajouté
+[12439.315419808] ✅ Batch buffer construit: 66 DWORDs
+[12439.315420502] ⚡ Soumission batch buffer...
+[12439.315716853] ✅ Batch buffer soumis avec succès
+[12439.315719753] 🔍 VALIDATION RÉSULTATS
+[12439.315720392] ⏳ Attente GPU idle...
+[12439.318187306] ✅ GPU idle confirmé
+[12439.318201815] ✅ Domaine CPU activé
+[12439.318203014] 📊 output[0] = 0x00000000 (attendu: 0x12345678)
+[12439.318204414] ❌ TEST ABSOLU ÉCHOUÉ: output[0] != 0x12345678
+[12439.318205388] 🔍 Dump premiers 16 uint32_t:
+[12439.318206127]    output[0] = 0x00000000
+[12439.318207117]    output[1] = 0x00000000
+[12439.318208030]    output[2] = 0x00000000
+[12439.318208809]    output[3] = 0x00000000
+[12439.318209550]    output[4] = 0x00000000
+[12439.318210336]    output[5] = 0x00000000
+[12439.318211251]    output[6] = 0x00000000
+[12439.318212142]    output[7] = 0x00000000
+[12439.318212838]    output[8] = 0x00000000
+[12439.318213700]    output[9] = 0x00000000
+[12439.318214417]    output[10] = 0x00000000
+[12439.318215088]    output[11] = 0x00000000
+[12439.318215789]    output[12] = 0x00000000
+[12439.318216681]    output[13] = 0x00000000
+[12439.318217369]    output[14] = 0x00000000
+[12439.318218267]    output[15] = 0x00000000
+[12439.318218980] ❌ TEST C433 ÉCHOUÉ

@@ -1,0 +1,71 @@
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> ssh -T git@github.com
+                                          git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                          git fetch origin
+                                          git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 26, done.
+remote: Counting objects: 100% (26/26), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 14 (delta 11), reused 14 (delta 11), pack-reused 0 (from 0)
+Unpacking objects: 100% (14/14), 9.58 KiB | 153.00 KiB/s, done.
+From github.com:vgacofc/lumvorax2
+   34b3859d..339f8493  main       -> origin/main
+HEAD is now at 339f8493 chatC133.11
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2  # PAS ~/lvx-mining
+                                          git fetch origin main; and git reset --hard origin/main
+
+                                          # CFLAGS en LISTE fish (sans guillemets globaux) — FIX BUG-FISH-CFLAGS
+                                          set CFLAGS -O2 -Wall -Wextra -Werror -std=c11 -D_POSIX_C_SOURCE=200809L -march=native -msse4.2 -I src/lum -I src/common -I src/debug
+                                          set COMMON src/lum/test_diff_zero_stubs.c src/lum/lum_memory_tracer.c src/lum/lum_core.c
+
+                                          # Test C136 random (5 seeds × 2 sizes × 3 grans = 30 cas)
+                                          gcc $CFLAGS src/lum/test_diff_zero_random.c $COMMON -o /tmp/t_rnd -lpthread -lm
+                                          mkdir -p /tmp/lvx_c136_rnd; /tmp/t_rnd /tmp/lvx_c136_rnd
+
+                                          # Audit warn_unused_result étendu (rec. CI : exit 1 si pattern dangereux)
+                                          grep -rnE '\(void\) ?(read|write|fread|fwrite|fseek|ftruncate|fstat|pread|pwrite|lseek)' src/; or echo "OK : aucun pattern dangereux"
+From github.com:vgacofc/lumvorax2
+ * branch              main       -> FETCH_HEAD
+HEAD is now at 339f8493 chatC133.11
+c136_random,seed=c136000000000001,buffer_size=4096,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=c136000000000001,buffer_size=4096,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=c136000000000001,buffer_size=4096,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=c136000000000001,buffer_size=65536,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=c136000000000001,buffer_size=65536,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=c136000000000001,buffer_size=65536,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=4096,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=4096,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=4096,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=65536,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=65536,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=deadbeefcafebabe,buffer_size=65536,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=4096,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=4096,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=4096,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=65536,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=65536,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=0123456789abcdef,buffer_size=65536,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=4096,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=4096,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=4096,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=65536,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=65536,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=ffffffffffffffff,buffer_size=65536,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=4096,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=4096,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=4096,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=65536,granularity=PAGE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=65536,granularity=BYTE,diff_bytes=0,diff_bits=0,verdict=PASS
+c136_random,seed=5555555555555555,buffer_size=65536,granularity=BIT,diff_bytes=0,diff_bits=0,verdict=PASS
+[C136-RND-VERDICT] PASS (0 failures)
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:16:| Compile gcc 13.3.0 strict (Ubuntu 24.04) | ❌ erreurs `-Werror=unused-result` sur `(void)ftruncate` | ✅ OK | **PASS** |
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:34:  390 |             (void)ftruncate(fd_self, (off_t)real_size_self);
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:40:Sur **glibc moderne (Ubuntu 24.04)**, le header `<unistd.h>` déclare `ftruncate` avec l'attribut `__attribute__((warn_unused_result))`. Sur **gcc ≥ 13**, le cast `(void)ftruncate(...)` **ne supprime plus** ce warning (changement de comportement strict). Sur Replit (gcc plus ancien / glibc plus tolérante), le cast `(void)` masquait encore le warning, ce qui a fait passer C133 / C133.1 silencieusement. **Découverte non documentée dans la littérature C standard** : la portabilité du `(void)cast` pour neutraliser `warn_unused_result` n'est PAS garantie au-delà de gcc 12.
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:48:(void)ftruncate(fd, (off_t)real_size);
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:271:| 1 | C134-BUG-WARN-FTRUNCATE | **CRITIQUE** | `(void)ftruncate` passé sur Replit, échoue sur Ubuntu — fix WARN-01 appliqué |
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt134.md:364:- **`C134-FIX-WARN-01`** : `(void)ftruncate` ne supprime plus `warn_unused_result` sur gcc 13.3.0 → corrigé.
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt136.md:93:L'absence d'autres `(void)ftruncate` est probablement due au fait que `ftruncate` n'est utilisé **que** dans le tracer (besoin spécifique de la garantie anti-padding NUL). Les autres modules utilisent `fwrite` + `fclose` standard sans nécessité de troncature explicite.
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt133.md:142:    if (fd >= 0) (void)ftruncate(fd, (off_t)real_size);
+src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt116_suite.1.md:702:btc_block_validator.c:107 — write_varint défini mais non utilisé → il est défini en static mais pas appelé dans le fichier. Il faut soit le supprimer, soit ajouter (void)write_varint; ou mieux un __attribute__((unused)).
+src/lum/lum_memory_tracer.c:387:     * C134-FIX-WARN-01 : sur gcc >= 13 (Ubuntu 24.04), (void)ftruncate ne
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 

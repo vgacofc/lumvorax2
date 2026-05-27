@@ -1,0 +1,167 @@
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 222, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 209, in main
+    time.sleep(RECONNECT_DELAY)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/base_client.py", line 21, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/base_client.py", line 24, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/datadog-packages/datadog-apm-library-python/4.8.0rc4/ddtrace_pkgs/site-packages-ddtrace-py3.12-manylinux2014-x86_64/ddtrace/internal/utils/signals.py", line 47, in wrap_signals
+    old_signal(*args, **kwargs)
+KeyboardInterrupt
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> cd ~/LVX/lumvorax2 && git pull origin main
+                                                doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev
+[C57-WS] Token     : 4545f832...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T21:53:22Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T21:53:22Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T21:53:22Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T21:53:22Z INFO [C57-WS] Replit URL   : https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev
+2026-04-18T21:53:22Z INFO [C57-WS] Token (8ch)  : 4545f832...
+2026-04-18T21:53:22Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T21:53:22Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T21:53:22Z INFO [C57-WS] Connexion WebSocket → https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev/ws/socket.io ...
+2026-04-18T21:53:22Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T21:53:22Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+^CTraceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 347, in _connect_websocket
+    ws = websocket.create_connection(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 664, in create_connection
+    websock.connect(url, **options)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 268, in connect
+    self.handshake_response = handshake(self.sock, url, *addrs, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 66, in handshake
+    status, resp = _get_resp_headers(sock)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 158, in _get_resp_headers
+    raise WebSocketBadStatusException(
+websocket._exceptions.WebSocketBadStatusException: Handshake status 404 Not Found -+-+- {'replit-cluster': 'riker', 'x-robots-tag': 'none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex', 'date': 'Sat, 18 Apr 2026 19:53:22 GMT', 'content-type': 'text/html; charset=utf-8', 'transfer-encoding': 'chunked'} -+-+- None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 149, in connect
+    self.eio.connect(real_url, headers=real_headers,
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 96, in connect
+    return getattr(self, '_connect_' + self.transports[0])(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 355, in _connect_websocket
+    raise exceptions.ConnectionError('Connection error')
+engineio.exceptions.ConnectionError: Connection error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 197, in main
+    sio.connect(
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 161, in connect
+    raise exceptions.ConnectionError(exc.args[0]) from exc
+socketio.exceptions.ConnectionError: Connection error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 222, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 209, in main
+    time.sleep(RECONNECT_DELAY)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/base_client.py", line 21, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/base_client.py", line 24, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/datadog-packages/datadog-apm-library-python/4.8.0rc4/ddtrace_pkgs/site-packages-ddtrace-py3.12-manylinux2014-x86_64/ddtrace/internal/utils/signals.py", line 47, in wrap_signals
+    old_signal(*args, **kwargs)
+KeyboardInterrupt
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> cd ~/LVX/lumvorax2 && git pull origin main
+                                                doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev
+[C57-WS] Token     : 4545f832...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-18T21:54:14Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-18T21:54:14Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-18T21:54:14Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-18T21:54:14Z INFO [C57-WS] Replit URL   : https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev
+2026-04-18T21:54:14Z INFO [C57-WS] Token (8ch)  : 4545f832...
+2026-04-18T21:54:14Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-18T21:54:14Z INFO [C57-WS] Job timeout  : illimité
+2026-04-18T21:54:14Z INFO [C57-WS] Connexion WebSocket → https://bd9f6c34-9476-41bd-9bde-66c643346965-00-2vn7us0p0rsg.riker.replit.dev/ws/socket.io ...
+2026-04-18T21:54:14Z WARNING [C57-WS] ❌ Erreur de connexion : Connection error
+2026-04-18T21:54:14Z WARNING [C57-WS] Connexion refusée : Connection error — retry 5s
+^CTraceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 347, in _connect_websocket
+    ws = websocket.create_connection(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 664, in create_connection
+    websock.connect(url, **options)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_core.py", line 268, in connect
+    self.handshake_response = handshake(self.sock, url, *addrs, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 66, in handshake
+    status, resp = _get_resp_headers(sock)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/websocket/_handshake.py", line 158, in _get_resp_headers
+    raise WebSocketBadStatusException(
+websocket._exceptions.WebSocketBadStatusException: Handshake status 404 Not Found -+-+- {'replit-cluster': 'riker', 'x-robots-tag': 'none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex', 'date': 'Sat, 18 Apr 2026 19:54:14 GMT', 'content-type': 'text/html; charset=utf-8', 'transfer-encoding': 'chunked'} -+-+- None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 149, in connect
+    self.eio.connect(real_url, headers=real_headers,
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 96, in connect
+    return getattr(self, '_connect_' + self.transports[0])(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/client.py", line 355, in _connect_websocket
+    raise exceptions.ConnectionError('Connection error')
+engineio.exceptions.ConnectionError: Connection error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 197, in main
+    sio.connect(
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/client.py", line 161, in connect
+    raise exceptions.ConnectionError(exc.args[0]) from exc
+socketio.exceptions.ConnectionError: Connection error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 222, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/tools/agent_ubuntu_ws.py", line 209, in main
+    time.sleep(RECONNECT_DELAY)
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/engineio/base_client.py", line 21, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.lumvorax_ws_venv/lib/python3.12/site-packages/socketio/base_client.py", line 24, in signal_handler
+    return original_signal_handler(sig, frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/datadog-packages/datadog-apm-library-python/4.8.0rc4/ddtrace_pkgs/site-packages-ddtrace-py3.12-manylinux2014-x86_64/ddtrace/internal/utils/signals.py", line 47, in wrap_signals
+    old_signal(*args, **kwargs)
+KeyboardInterrupt
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [255]> 
+

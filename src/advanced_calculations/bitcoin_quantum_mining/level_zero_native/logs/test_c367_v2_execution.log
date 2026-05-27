@@ -1,0 +1,33 @@
+[0;34m╔═══════════════════════════════════════════════════════════════╗[0m
+[0;34m║  TEST C366 - SUITE FORENSIQUE COMPLÈTE                       ║[0m
+[0;34m║  Instrumentation: CRC32 + Timestamps + Hex Dumps             ║[0m
+[0;34m╚═══════════════════════════════════════════════════════════════╝[0m
+
+[1;33m[1/6] Compilation du runner forensique...[0m
+/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/tests/test_c366_forensic_runner.c: In function ‘main’:
+/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/tests/test_c366_forensic_runner.c:131:30: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 5 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  131 |     fprintf((ctx)->log_file, "[%llu.%09llu] " fmt "\n", \
+      |                              ^~~~~~~~~~~~~~~~
+/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/tests/test_c366_forensic_runner.c:713:5: note: in expansion of macro ‘LOG_EVENT’
+  713 |     LOG_EVENT(&ctx, "║  TEST C366 COMPLETE - Total events: %llu                     ║", ctx.event_counter);
+      |     ^~~~~~~~~
+[0;32m✅ Runner compilé: /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/bin/test_c366_forensic_runner[0m
+
+[1;33m[2/6] Compilation des kernels OpenCL → Gen9 ISA...[0m
+  Compilation: t11_compute_minimal...
+Build succeeded.
+[0;32m    ✅ t11_compute_minimal: 3848 bytes[0m
+  Compilation: t1_isa_signature...
+Build succeeded.
+[0;31m    ❌ Échec compilation t1_isa_signature[0m
+[1;33m⚠️  T1 non compilé (non bloquant)[0m
+  Compilation: t2_kernel_cache...
+Build succeeded.
+[0;31m    ❌ Échec compilation t2_kernel_cache[0m
+[1;33m⚠️  T2 non compilé (non bloquant)[0m
+
+[1;33m[3/6] Exécution TEST T11 - Compute Minimal (PRIORITÉ ABSOLUE)...[0m
+  Kernel: t11_compute_minimal.bin
+  Log: /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/logs/forensic/test_c366_t11_20260522_144742.log
+  Résultat attendu: output[i] = 0xCAFE0000 + i
+

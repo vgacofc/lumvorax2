@@ -1,0 +1,70 @@
+=== TEST C568 - MI_STORE_DATA_IMM ===
+ROOT CAUSE #81: MI_STORE_REGISTER_MEM cause GPU HANG
+CORRECTION: MI_STORE_DATA_IMM écriture directe mémoire
+
+=== PHASE 1: OUVERTURE DRM (0%) ===
+[5%] ✓ DRM ouvert (fd=5)
+
+=== PHASE 2: CRÉATION CONTEXT (10%) ===
+[15%] ✓ Context créé (ID=1)
+
+=== PHASE 3: ALLOCATION BUFFERS (20%) ===
+[25%] ✓ Output buffer créé (handle=1, 4KB)
+[30%] ✓ Batch buffer créé (handle=2, 4KB)
+
+=== PHASE 4: MAPPING BUFFERS (35%) ===
+[40%] ✓ Batch mappé @ 0x725705254000
+[45%] ✓ Output mappé @ 0x7257051b9000
+
+=== PHASE 5: PASS 1 - ALLOCATION GTT (50%) ===
+[55%] ✓ PASS 1 réussi - GTT allouées:
+       output_gtt = 0x0000000000000000
+       batch_gtt = 0x0000000000001000
+
+=== PHASE 6: CONSTRUCTION BATCH (60%) ===
+[65%] ✓ Batch construit: 24 bytes (6 DWords)
+       Validation alignement: (0 | 24) & 0x7 = 0x0
+
+[DEBUG] Batch buffer complet (6 DWords):
+[DEBUG]   batch[0] = 0x20400003 // MI_STORE_DATA_IMM
+[DEBUG]   batch[1] = 0x00000000 // addr_low = 0x0000000000000000
+[DEBUG]   batch[2] = 0x00000000 // addr_high
+[DEBUG]   batch[3] = 0x12345678 // value = 0x12345678
+[DEBUG]   batch[4] = 0x0a000000 // MI_BATCH_BUFFER_END
+[DEBUG]   batch[5] = 0x00000000
+
+=== PHASE 7: PASS 2 - EXÉCUTION GPU (70%) ===
+[DEBUG] PASS 2 Configuration:
+[DEBUG]   output_gtt = 0x0000000000000000 (PINNED)
+[DEBUG]   batch_gtt = 0x0000000000001000 (PINNED)
+[DEBUG]   batch_len = 24 bytes (aligné 8)
+[75%] ✓ PASS 2 réussi - Batch soumis au GPU
+
+=== PHASE 8: ATTENTE GPU (80%) ===
+[85%] ✓ GPU terminé
+
+=== PHASE 9: SYNCHRONISATION CACHE (90%) ===
+[95%] ✓ Cache CPU/GPU synchronisé
+
+=== PHASE 10: VÉRIFICATION RÉSULTAT (97%) ===
+output[0] = 0x00000000 (attendu: 0x12345678)
+output[1] = 0x00000000
+output[2] = 0x00000000
+output[3] = 0x00000000
+
+=== PHASE 11: CLEANUP (98%) ===
+[98.5%] ✓ Batch unmappé
+[99%] ✓ Output unmappé
+[99.5%] ✓ Context détruit
+[100%] ✓ DRM fermé
+
+=== RÉSULTAT FINAL ===
+❌ ÉCHEC: output[0]=0x00000000 != 0x12345678
+⚠️  GPU a exécuté mais résultat incorrect
+⚠️  Vérifier MI_STORE_DATA_IMM format Gen9
+
+=== ANALYSE FORENSIQUE REQUISE ===
+1. Vérifier opcode MI_STORE_DATA_IMM
+2. Vérifier format adresse 48-bit
+3. Analyser dmesg pour GPU HANG
+4. Vérifier cache coherency

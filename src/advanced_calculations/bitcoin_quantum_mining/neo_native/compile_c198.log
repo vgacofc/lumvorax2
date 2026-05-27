@@ -1,0 +1,37 @@
+gcc -Wall -Wextra -O2 -g -I../src -c btc_neo_wrapper.c -o btc_neo_wrapper.o
+In file included from /usr/include/CL/cl.h:20,
+                 from btc_neo_wrapper.h:11,
+                 from btc_neo_wrapper.c:10:
+/usr/include/CL/cl_version.h:22:9: note: ‘#pragma message: cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)’
+   22 | #pragma message("cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)")
+      |         ^~~~~~~
+btc_neo_wrapper.c: In function ‘btc_neo_wrapper_init’:
+btc_neo_wrapper.c:153:5: warning: ‘clCreateCommandQueue’ is deprecated [-Wdeprecated-declarations]
+  153 |     wrapper->queue = clCreateCommandQueue(wrapper->context, wrapper->device,
+      |     ^~~~~~~
+/usr/include/CL/cl.h:1914:1: note: declared here
+ 1914 | clCreateCommandQueue(cl_context                     context,
+      | ^~~~~~~~~~~~~~~~~~~~
+gcc -Wall -Wextra -O2 -g -I../src -c test_neo_wrapper.c -o test_neo_wrapper.o
+In file included from /usr/include/CL/cl.h:20,
+                 from btc_neo_wrapper.h:11,
+                 from test_neo_wrapper.c:14:
+/usr/include/CL/cl_version.h:22:9: note: ‘#pragma message: cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)’
+   22 | #pragma message("cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)")
+      |         ^~~~~~~
+gcc btc_neo_wrapper.o test_neo_wrapper.o -o test_neo_wrapper -lOpenCL -lpthread -lm
+gcc -Wall -Wextra -O2 -g -I../src -c test_massive_benchmark.c -o test_massive_benchmark.o
+In file included from /usr/include/CL/cl.h:20,
+                 from btc_neo_wrapper.h:11,
+                 from test_massive_benchmark.c:7:
+/usr/include/CL/cl_version.h:22:9: note: ‘#pragma message: cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)’
+   22 | #pragma message("cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)")
+      |         ^~~~~~~
+test_massive_benchmark.c: In function ‘test_size’:
+test_massive_benchmark.c:231:30: warning: ‘errors’ may be used uninitialized [-Wmaybe-uninitialized]
+  231 |     return (errors == 0) ? 0 : -1;
+      |            ~~~~~~~~~~~~~~~~~~^~~~
+test_massive_benchmark.c:185:9: note: ‘errors’ was declared here
+  185 |     int errors = 0;
+      |         ^~~~~~
+gcc btc_neo_wrapper.o test_massive_benchmark.o -o test_massive_benchmark -lOpenCL -lpthread -lm

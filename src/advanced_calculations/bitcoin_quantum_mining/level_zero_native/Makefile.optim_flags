@@ -1,0 +1,13 @@
+# Flags optimisation agressifs C255v8n
+OPTIM_FLAGS = -O3 -march=native -mtune=native
+OPTIM_FLAGS += -ffast-math -funroll-loops -finline-functions
+OPTIM_FLAGS += -fomit-frame-pointer -fno-stack-protector
+OPTIM_FLAGS += -flto -fwhole-program
+OPTIM_FLAGS += -msse4.2 -mavx -mavx2 -mfma
+OPTIM_FLAGS += -DNDEBUG -DOPTIMIZED_BUILD
+
+# Flags GPU Gen9 spécifiques
+GPU_FLAGS = -DGE
+
+N9_NATIVE -DCACHE_WARMUP_ENABLED
+GPU_FLAGS += -DBATCH_SIZE_OPTIMIZED -DMINI_BATCH_OPTIMIZED

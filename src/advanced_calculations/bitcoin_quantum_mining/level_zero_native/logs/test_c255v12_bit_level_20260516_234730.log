@@ -1,0 +1,27 @@
+[sudo] password for lvx: 
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C255V12 — BIT-LEVEL FORENSIC TEST               ║
+║  Reverse Engineering du Bug Dispatch #28                  ║
+╚════════════════════════════════════════════════════════════╝
+
+✅ DRM ouvert: fd=6
+✅ Contexte principal créé: ctx_id=1
+✅ Pool de 9 contextes créé
+✅ Buffers GPU créés: input_bo=1, output_bo=2
+✅ Buffers mappés
+✅ Batch buffer créé et rempli
+
+Démarrage test 30 dispatches...
+
+[Dispatch 1/30] ctx_id=2 batch_bo=3
+  ❌ ÉCHEC errno=22 (Invalid argument)
+
+⚠️  Arrêt après échec au dispatch #1
+
+═══════════════════════════════════════════════════════════════
+RÉSULTATS FINAUX
+═══════════════════════════════════════════════════════════════
+Dispatches réussis: 0/30
+Log forensique: logs/forensic/c255v12_bit_level.log
+═══════════════════════════════════════════════════════════════
+

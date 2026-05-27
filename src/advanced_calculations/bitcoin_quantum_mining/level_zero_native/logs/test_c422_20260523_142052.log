@@ -1,0 +1,32 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  C422 TEST - CPU CACHE INVALIDATION                       ║
+║  clflush + mfence pour forcer lecture depuis RAM          ║
+╚════════════════════════════════════════════════════════════╝
+
+[3108623505254 ns] C422 START - CPU Cache Invalidation Test
+[3108623559602 ns] DRM opened: fd=5
+[3108623563906 ns] GPU context created: ctx_id=1
+[3108623852931 ns] Kernel loaded: 80 bytes
+[3108623886813 ns] Kernel buffer: handle=1
+[3108623898319 ns] Output buffer: handle=2 (filled 0xCC)
+[3108623912790 ns] SSH configured - SURFTYPE=0x00 FORMAT=R32_UINT MOCS=LLC
+[3108623923198 ns] DSH configured - Interface Descriptor ready
+[3108623934028 ns] Batch buffer: 52 dwords
+[3108623934529 ns] Executing C422 with CPU cache invalidation...
+[3108624155704 ns] ✓ EXECBUFFER2 success: 220977 ns
+[3109474888301 ns] ✓ GPU execution complete: 850731932 ns
+[3109474894167 ns] Invalidating CPU cache for output buffer...
+[3109474896299 ns] ✓ CPU cache invalidated: 1934 ns
+
+📊 RÉSULTATS C422:
+═══════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════
+  Valid (0xDEADBEEF): 0 / 16
+  Unchanged (0xCC):   16 / 16
+  Unexpected:         0 / 16
+═══════════════════════════════════════════════════════════
+
+❌ CRITICAL: All 3 fixes failed (Surface State + Cache + CPU)
+    Problem is deeper - likely kernel not executing at all
+[3109474898952 ns] C422 FAILED - Problem is kernel execution, not memory

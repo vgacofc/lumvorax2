@@ -1,0 +1,121 @@
+[C342] Created context: ctx_id=1
+[C342] Allocated buffer: handle=1 size=4336 addr=0x7e9516b49000
+[C342] Loaded kernel: kernels/test_diagnostic_c342.bin_kbl.bin size=4336
+[C342] Allocated buffer: handle=2 size=4096 addr=0x7e9516be5000
+[C342] Allocated buffer: handle=3 size=4096 addr=0x7e9516b48000
+[C342] Allocated buffer: handle=4 size=4096 addr=0x7e9516b47000
+[C342] Allocated buffer: handle=5 size=4096 addr=0x7e9516b46000
+[C342] Allocated buffer: handle=6 size=4096 addr=0x7e9516b45000
+[C342] Allocated buffer: handle=7 size=4096 addr=0x7e9516b44000
+[C342] Created surface states + binding table (Gen9 16-DWORD format)
+[C342] Created interface descriptor in DSH: binding_table=0x40 threads=256 kernel_offset=0x40
+[C342] ========================================
+[C342] TEST: TEST #1: Hardcoded Write (kernel_offset=0)
+[C342] ========================================
+[C342] Batch buffer: 62 commands, 248 bytes
+[C342] ========================================
+[C342] DUMP GPU STRUCTURES (AVANT SUBMIT)
+[C342] ========================================
+[C342] 
+=== STATE_BASE_ADDRESS (19 DWORDs) ===
+[C342]   DW00: 0x61010011
+[C342]   DW01: 0x00000031
+[C342]   DW02: 0x00000000
+[C342]   DW03: 0x00030000
+[C342]   DW04: 0x00000031
+[C342]   DW05: 0x00000000
+[C342]   DW06: 0x00000031
+[C342]   DW07: 0x00000000
+[C342]   DW08: 0x00000031
+[C342]   DW09: 0x00000000
+[C342]   DW10: 0x00000031
+[C342]   DW11: 0x00000000
+[C342]   DW12: 0xfffff001
+[C342]   DW13: 0xfffff001
+[C342]   DW14: 0xfffff001
+[C342]   DW15: 0xfffff001
+[C342]   DW16: 0x00000031
+[C342]   DW17: 0x00000000
+[C342]   DW18: 0xfffff000
+[C342] 
+=== INTERFACE_DESCRIPTOR (8 DWORDs in DSH) ===
+[C342]   DW00: 0x00000040
+[C342]   DW01: 0x00000000
+[C342]   DW02: 0x00000000
+[C342]   DW03: 0x00000040
+[C342]   DW04: 0x00000000
+[C342]   DW05: 0x00400000
+[C342]   DW06: 0x00000000
+[C342]   DW07: 0x00000000
+[C342] 
+=== BINDING_TABLE (2 entries at SSH+0x40) ===
+[C342]   BTI[0]: 0x00000000 (Surface State 0 offset)
+[C342]   BTI[1]: 0x00000048 (Surface State 1 offset)
+[C342] 
+=== SURFACE_STATE 0 (Input, 16 DWORDs @ 0x00) ===
+[C342]   DW00: 0x87fc0000
+[C342]   DW01: 0x00000000
+[C342]   DW02: 0x00ffffff
+[C342]   DW03: 0x00000000
+[C342]   DW04: 0x00000000
+[C342]   DW05: 0x00000000
+[C342]   DW06: 0x00000000
+[C342]   DW07: 0x00000000
+[C342]   DW08: 0x87fc0000
+[C342]   DW09: 0x00000000
+[C342]   DW10: 0x00ffffff
+[C342]   DW11: 0x00000000
+[C342]   DW12: 0x00000000
+[C342]   DW13: 0x00000000
+[C342]   DW14: 0x00000000
+[C342]   DW15: 0x00000000
+[C342] 
+=== SURFACE_STATE 1 (Output, 16 DWORDs @ 0x48) ===
+[C342]   DW00: 0x87fc0000
+[C342]   DW01: 0x00000000
+[C342]   DW02: 0x00ffffff
+[C342]   DW03: 0x00000000
+[C342]   DW04: 0x00000000
+[C342]   DW05: 0x00000000
+[C342]   DW06: 0x00000000
+[C342]   DW07: 0x00000000
+[C342]   DW08: 0x00000000
+[C342]   DW09: 0x00000000
+[C342]   DW10: 0x00000000
+[C342]   DW11: 0x00000000
+[C342]   DW12: 0x00000000
+[C342]   DW13: 0x00000000
+[C342]   DW14: 0x00000000
+[C342]   DW15: 0x00000000
+[C342] 
+=== BUFFER ADDRESSES ===
+[C342]   kernel_bo:  handle=1 addr=0x7e9516b49000 size=4336
+[C342]   input_bo:   handle=2 addr=0x7e9516be5000
+[C342]   output_bo:  handle=3 addr=0x7e9516b48000
+[C342]   ssh_bo:     handle=5 addr=0x7e9516b46000
+[C342]   dsh_bo:     handle=6 addr=0x7e9516b45000
+[C342]   ioh_bo:     handle=7 addr=0x7e9516b44000
+[C342]   batch_bo:   handle=4 addr=0x7e9516b47000
+[C342] ========================================
+
+[C342] EXECBUFFER2 success!
+[C342] Results:
+[C342]   output[0] = 0x00000000 (0)
+[C342]   output[1] = 0x00000000 (0)
+[C342]   output[2] = 0x00000000 (0)
+[C342]   output[3] = 0x00000000 (0)
+[C342]   output[4] = 0x00000000 (0)
+[C342]   output[5] = 0x00000000 (0)
+[C342]   output[6] = 0x00000000 (0)
+[C342]   output[7] = 0x00000000 (0)
+[C342]   output[8] = 0x00000000 (0)
+[C342]   output[9] = 0x00000000 (0)
+[C342]   output[10] = 0x00000000 (0)
+[C342]   output[11] = 0x00000000 (0)
+[C342]   output[12] = 0x00000000 (0)
+[C342]   output[13] = 0x00000000 (0)
+[C342]   output[14] = 0x00000000 (0)
+[C342]   output[15] = 0x00000000 (0)
+[C342] ========================================
+[C342] Test completed
+[C342] ========================================

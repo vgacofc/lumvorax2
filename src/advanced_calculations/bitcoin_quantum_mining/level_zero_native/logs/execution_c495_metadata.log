@@ -1,0 +1,57 @@
+=== C495: EXTRACTION METADATA KERNEL OPENCL ===
+
+[1/6] Initialisation OpenCL...
+  ✓ Device GPU trouvé
+
+[2/6] Création contexte...
+  ✓ Contexte créé
+
+[3/6] Lecture kernel source...
+  ✓ Kernel source lu: 168 bytes
+
+[4/6] Compilation kernel...
+  ✓ Kernel compilé
+
+[5/6] Création kernel...
+  ✓ Kernel créé
+
+[6/6] Extraction metadata kernel...
+
+=== METADATA KERNEL OPENCL ===
+
+CL_KERNEL_WORK_GROUP_SIZE: 256
+CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE: 32
+CL_KERNEL_LOCAL_MEM_SIZE: 0 bytes
+CL_KERNEL_PRIVATE_MEM_SIZE: 0 bytes
+CL_KERNEL_COMPILE_WORK_GROUP_SIZE: [0, 0, 0]
+CL_KERNEL_FUNCTION_NAME: minimal_write
+CL_KERNEL_NUM_ARGS: 1
+
+=== INFORMATIONS DEVICE ===
+
+CL_DEVICE_MAX_COMPUTE_UNITS: 24
+CL_DEVICE_MAX_WORK_GROUP_SIZE: 256
+CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS: 3
+CL_DEVICE_MAX_WORK_ITEM_SIZES: [256, 256, 256]
+CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT: 4
+
+=== ANALYSE CONFIGURATION ===
+
+Configuration recommandée pour i915 natif:
+  - Work Group Size: 256 (ou multiple de 32)
+  - SIMD Size: SIMD16 (basé sur preferred vector width)
+  - Thread Count: 256 threads
+  - Max Threads: 256 (device limit)
+
+=== CONFIGURATION GPGPU_WALKER ===
+
+GPGPU_WALKER.DW4 devrait être:
+  DW4 = (2 << 30) | 255  // SIMD32
+
+Interface Descriptor.dw6 devrait être:
+  dw6 = (256 << 24)  // Number of threads
+
+=== RÉSUMÉ C495 ===
+✓ Metadata extraites avec succès
+✓ Configuration pour i915 natif identifiée
+✓ Prochaine étape: Appliquer configuration en C496

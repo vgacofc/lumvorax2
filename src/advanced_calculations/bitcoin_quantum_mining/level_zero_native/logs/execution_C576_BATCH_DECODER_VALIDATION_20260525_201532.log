@@ -1,0 +1,46 @@
+[+0.000000140] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000052002] [INFO]   LUMVORAX TEST C576_BATCH_DECODER_VALIDATION
+[+0.000058422] [INFO]   CYCLE: C576
+[+0.000062025] [INFO]   PRIORITÉ: #2 - Batch Decoder Engine
+[+0.000065314] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000068682] [INFO] 
+[+0.000072408] [INFO] ✅ Batch Decoder initialisé
+[+0.000075648] [INFO] 
+[+0.005339420] [INFO] ═══ TEST 1: Décodage Batch OpenCL SHA256 ═══
+[+0.006230454] [INFO] Décodage batch OpenCL (208 bytes)...
+[+0.007553587] [INFO] ✅ Décodage réussi
+[+0.007585803] [INFO] Commandes décodées: 7
+[+0.007593428] [INFO]   - MI Commands: 0
+[+0.007598785] [INFO]   - Pipeline Commands: 0
+[+0.007604364] [INFO]   - Media Commands: 0
+[+0.007609537] [INFO]   - Compute Commands: 0
+[+0.007614929] [INFO] Erreurs de validation: 8
+[+0.007619995] [WARN] Batch contient des erreurs
+[+0.007624688] [INFO] Génération sortie Wireshark...
+[+0.010352564] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_opencl_sha256_wireshark.txt
+[+0.010385458] [INFO] Vérifications spécifiques...
+[+0.010391789] [ERROR] ❌ PIPELINE_SELECT manquant
+[+0.010397920] [INFO] 
+[+0.010416353] [INFO] ═══ TEST 2: Décodage Batch Natif Minimal ═══
+[+0.010664825] [INFO] Décodage batch natif (4 bytes)...
+[+0.011927854] [INFO] ✅ Décodage réussi
+[+0.012003609] [INFO] Commandes décodées: 1
+[+0.012011284] [INFO] ✅ Commande correcte: MI_BATCH_BUFFER_END
+[+0.013210741] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_native_minimal_wireshark.txt
+[+0.013241487] [INFO] ✅ TEST 2 RÉUSSI
+[+0.013248926] [INFO] 
+[+0.013275631] [INFO] ═══ TEST 3: Détection Anomalies ═══
+[+0.013911811] [INFO] Anomalies détectées: 1
+[+0.013944577] [INFO] ✅ Anomalie correctement détectée
+[+0.013950832] [INFO] ✅ TEST 3 RÉUSSI
+[+0.013956323] [INFO] 
+[+0.018040751] [INFO] ═══ TEST 4: Analyse Différentielle ═══
+[+0.018678307] [INFO] Comparaison:
+[+0.018702700] [INFO]   OpenCL: 7 commandes
+[+0.018709527] [INFO]   Natif:  1 commandes
+[+0.020361940] [INFO] ✅ Analyse différentielle: logs/forensic/batch_differential_opencl_vs_native.txt
+[+0.020383496] [INFO] ✅ TEST 4 RÉUSSI
+[+0.020389898] [INFO] 
+[+0.020395626] [INFO] ═══════════════════════════════════════════════════════════
+[+0.020401417] [ERROR] ❌ ÉCHEC DE TESTS
+[+0.020407090] [INFO] ═══════════════════════════════════════════════════════════

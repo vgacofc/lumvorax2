@@ -1,0 +1,81 @@
+# Makefile pour les tests unitaires C147
+# LumVorax Unit Test Framework
+# Date: 2026-04-30
+
+CC = gcc
+CFLAGS = -std=c11 -Wall -Wextra -Werror -O2 -g
+CFLAGS += -D_POSIX_C_SOURCE=200809L
+CFLAGS += -I. -I../src
+LDFLAGS = -pthread -lm
+
+# Cibles
+TARGET = test_c147_all_modules
+FRAMEWORK_OBJ = unit_test_framework.o
+TEST_OBJ = test_c147_all_modules.o
+
+# Couleurs pour output
+COLOR_GREEN = \033[32m
+COLOR_RED = \033[31m
+COLOR_YELLOW = \033[33m
+COLOR_RESET = \033[0m
+
+.PHONY: all clean test run help
+
+all: $(TARGET)
+
+# Compilation du framework
+unit_test_framework.o: unit_test_framework.c unit_test_framework.h
+	@echo "$(COLOR_YELLOW)[COMPILE]$(COLOR_RESET) $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+# Compilation des tests
+test_c147_all_modules.o: test_c147_all_modules.c unit_test_framework.h
+	@echo "$(COLOR_YELLOW)[COMPILE]$(COLOR_RESET) $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+# Linkage
+$(TARGET): $(FRAMEWORK_OBJ) $(TEST_OBJ)
+	@echo "$(COLOR_YELLOW)[LINK]$(COLOR_RESET) $@"
+	@$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	@echo "$(COLOR_GREEN)[SUCCESS]$(COLOR_RESET) Binary created: $(TARGET)"
+
+# Exécution des tests
+test: $(TARGET)
+	@echo ""
+	@echo "$(COLOR_GREEN)╔════════════════════════════════════════════════════════════╗$(COLOR_RESET)"
+	@echo "$(COLOR_GREEN)║          Exécution des tests unitaires C147                ║$(COLOR_RESET)"
+	@echo "$(COLOR_GREEN)╚════════════════════════════════════════════════════════════╝$(COLOR_RESET)"
+	@echo ""
+	@./$(TARGET)
+	@echo ""
+	@if [ $$? -eq 0 ]; then \
+		echo "$(COLOR_GREEN)✓ Tests PASSED$(COLOR_RESET)"; \
+	else \
+		echo "$(COLOR_RED)✗ Tests FAILED$(COLOR_RESET)"; \
+	fi
+
+# Exécution simple
+run: test
+
+# Nettoyage
+clean:
+	@echo "$(COLOR_YELLOW)[CLEAN]$(COLOR_RESET) Removing object files and binaries"
+	@rm -f $(FRAMEWORK_OBJ) $(TEST_OBJ) $(TARGET)
+	@rm -f test_report_c147.txt test_report_c147.json
+	@echo "$(COLOR_GREEN)[DONE]$(COLOR_RESET) Clean complete"
+
+# Aide
+help:
+	@echo "LumVorax C147 Unit Test Framework - Makefile"
+	@echo ""
+	@echo "Targets:"
+	@echo "  all     - Compile le framework et les tests (défaut)"
+	@echo "  test    - Compile et exécute les tests"
+	@echo "  run     - Alias pour 'test'"
+	@echo "  clean   - Nettoie les fichiers compilés"
+	@echo "  help    - Affiche cette aide"
+	@echo ""
+	@echo "Usage:"
+	@echo "  make          # Compile tout"
+	@echo "  make test     # Compile et exécute les tests"
+	@echo "  make clean    # Nettoie"

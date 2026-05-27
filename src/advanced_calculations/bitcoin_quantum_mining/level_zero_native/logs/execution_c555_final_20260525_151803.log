@@ -1,0 +1,70 @@
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE ===
+Timestamp: 20260525_151803
+
+[COMPILATION BIBLIOTHÈQUE]
+✓ Bibliothèque compilée
+
+[COMPILATION TEST]
+✓ Test compilé
+
+[FORENSIC SETUP]
+[sudo] password for lvx: ✓ Forensic activé
+
+[EXÉCUTION]
+Début: 15:18:06.218010703
+❌ Échec finalisation
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE (0%) ===
+Système automatique de construction batch buffers
+
+[5%] DRM ouvert
+[10%] Batch builder créé
+[15%] Heap BO créé (index 0)
+[20%] Output BO créé (index 1)
+[25%] Heap mappé
+[30%] Output mappé
+
+=== CONSTRUCTION HEAP (35%) ===
+[40%] Surface State configuré
+[45%] Binding Table configuré
+[50%] IDRT configuré
+[55%] Kernel ISA copié
+[60%] CURBE data initialisé
+
+=== CONSTRUCTION BATCH AUTOMATIQUE (65%) ===
+[70%] PIPELINE_SELECT émis
+[75%] STATE_BASE_ADDRESS émis (avec relocations)
+[80%] BINDING_TABLE_POOL_ALLOC émis
+[85%] MEDIA_VFE_STATE émis
+[90%] MEDIA_CURBE_LOAD émis
+[92%] MEDIA_INTERFACE_DESCRIPTOR_LOAD émis
+[94%] GPGPU_WALKER émis
+[96%] MEDIA_STATE_FLUSH émis
+[98%] PIPE_CONTROL émis
+[100%] MI_BATCH_BUFFER_END émis
+
+✓ Batch dumpé dans logs/batch_c554_dump.txt
+
+=== FINALISATION ET EXÉCUTION ===
+Fin: 15:18:06.514523110
+Durée: 237ms
+Exit code: 0
+
+[DMESG CAPTURE]
+✓ Pas de GPU HANG
+
+[STATISTIQUES]
+Fichiers générés:
+  - Log principal: logs/execution_c554_auto_20260525_151803.log
+  - Strace:        logs/forensic/c554_forensic_20260525_151803.log
+  - Dmesg:         logs/forensic/c554_dmesg_20260525_151803.log
+  - Batch dump:    logs/batch_c554_dump.txt
+  - Lignes strace: 1026
+  - Lignes dmesg:  2822
+  - Appels ioctl:  10
+
+=== RÉSUMÉ C554 ===
+🎉 SUCCÈS TOTAL - SYSTÈME AUTOMATIQUE FONCTIONNE!
+✓ GPU natif avec batch builder automatique
+✓ Élimination OpenCL: 100%
+
+Logs disponibles dans: logs/

@@ -1,0 +1,70 @@
+[+0.000000106] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000058879] [INFO]   LUMVORAX TEST C576_BATCH_DECODER_VALIDATION
+[+0.000068262] [INFO]   CYCLE: C576
+[+0.000073070] [INFO]   PRIORITÉ: #2 - Batch Decoder Engine
+[+0.000077423] [INFO] ═══════════════════════════════════════════════════════════
+[+0.000081650] [INFO] 
+[+0.000086791] [INFO] ✅ Batch Decoder initialisé
+[+0.000091476] [INFO] 
+[+0.006919189] [INFO] ═══ TEST 1: Décodage Batch OpenCL SHA256 ═══
+[+0.007238663] [INFO] Décodage batch OpenCL (208 bytes)...
+[+0.007530529] [INFO] ✅ Décodage réussi
+[+0.007558927] [INFO] Commandes décodées: 8
+[+0.007565381] [INFO]   - MI Commands: 0
+[+0.007571316] [INFO]   - Pipeline Commands: 2
+[+0.007577542] [INFO]   - Media Commands: 4
+[+0.007583380] [INFO]   - Compute Commands: 1
+[+0.007589891] [INFO] Erreurs de validation: 1
+[+0.007595215] [WARN] Batch contient des erreurs
+[+0.007600746] [INFO] Génération sortie Wireshark...
+[+0.007958721] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_opencl_sha256_wireshark.txt
+[+0.008020071] [INFO] Vérifications spécifiques...
+[+0.008026574] [INFO] ✅ PIPELINE_SELECT trouvé à offset 0x0000
+[+0.008032943] [INFO] ✅ STATE_BASE_ADDRESS trouvé à offset 0x0004
+[+0.008040153] [INFO]   Surface State Base: 0x00001001
+[+0.008046784] [INFO]   Instruction Base: 0x00001001
+[+0.008052889] [INFO] ✅ GPGPU_WALKER trouvé à offset 0x0088
+[+0.008059505] [INFO]   Thread Group ID X Dimension: 256
+[+0.008064461] [INFO]   Thread Group ID Y Dimension: 1
+[+0.008069345] [INFO]   Thread Group ID Z Dimension: 1
+[+0.008074176] [INFO] ✅ MI_BATCH_BUFFER_END présent
+[+0.008078900] [INFO] ✅ TEST 1 RÉUSSI
+[+0.008084220] [INFO] 
+[+0.008100783] [INFO] ═══ TEST 2: Décodage Batch Natif Minimal ═══
+[+0.008368974] [INFO] Décodage batch natif (4 bytes)...
+[+0.010507598] [INFO] ✅ Décodage réussi
+[+0.010578027] [INFO] Commandes décodées: 1
+[+0.010595444] [INFO] ✅ Commande correcte: MI_BATCH_BUFFER_END
+[+0.010813313] [INFO] ✅ Sortie Wireshark: logs/forensic/batch_native_minimal_wireshark.txt
+[+0.010844694] [INFO] ✅ TEST 2 RÉUSSI
+[+0.010851229] [INFO] 
+[+0.010870049] [INFO] ═══ TEST 3: Détection Anomalies ═══
+[+0.011302227] [INFO] Anomalies détectées: 1
+[+0.013357076] [INFO] ✅ Anomalie correctement détectée
+[+0.013363580] [INFO] ✅ TEST 3 RÉUSSI
+[+0.013369115] [INFO] 
+[+0.017362358] [INFO] ═══ TEST 4: Analyse Différentielle ═══
+[+0.018577092] [INFO] Comparaison:
+[+0.019221993] [INFO]   OpenCL: 8 commandes
+[+0.019243165] [INFO]   Natif:  1 commandes
+[+0.019517409] [INFO] ✅ Analyse différentielle: logs/forensic/batch_differential_opencl_vs_native.txt
+[+0.019545340] [INFO] ✅ TEST 4 RÉUSSI
+[+0.019551205] [INFO] 
+[+0.019555704] [INFO] ═══════════════════════════════════════════════════════════
+[+0.019561380] [INFO] ✅ TOUS LES TESTS RÉUSSIS
+[+0.019566207] [INFO] 
+[+0.019570956] [INFO] PRIORITÉ #2 COMPLÉTÉE: Batch Decoder Engine opérationnel
+[+0.019575662] [INFO] 
+[+0.019580115] [INFO] Capacités validées:
+[+0.019584709] [INFO]   ✅ Décodage batch OpenCL complet
+[+0.019589496] [INFO]   ✅ Décodage batch natif
+[+0.019594234] [INFO]   ✅ Validation commandes Gen9
+[+0.019598965] [INFO]   ✅ Détection anomalies
+[+0.019603589] [INFO]   ✅ Analyse différentielle
+[+0.019608115] [INFO]   ✅ Sortie format Wireshark
+[+0.019612285] [INFO] 
+[+0.019617381] [INFO] Prochaine étape: Test C577 - Surface States Gen9
+[+0.019621921] [INFO] ═══════════════════════════════════════════════════════════
+
+Log complet: logs/execution_C576_BATCH_DECODER_VALIDATION_20260526_001454.log
+

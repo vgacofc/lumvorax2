@@ -1,0 +1,36 @@
+mkdir -p logs
+mkdir -p logs/forensic
+═══════════════════════════════════════════════════════════════════════════
+COMPILATION C223 - Gen9 Native (0% OpenCL)
+═══════════════════════════════════════════════════════════════════════════
+
+[C223-COMPILE] Architecture: Application → i915 DRM → GPU Gen9
+[C223-COMPILE] Dépendances: libdrm (DRM standard Linux)
+[C223-COMPILE] OpenCL: 0% (objectif atteint)
+
+[C223-COMPILE] Sources Gen9 Native:
+  - level_zero_native/src/btc_gen9_native_runner.c
+
+[C223-COMPILE] Programme minimal test:
+  - src/main_btc_mining_gen9_minimal.c
+
+[C223-COMPILE] Compilation en cours...
+gcc -Wall -Wextra -O3 -march=native -pthread -I. -Isrc -Iinclude -I../../../include -I../../../src -I../../../src/optimization -I../../../src/debug -I../../../src/advanced_calculations/quantum_problem_hubbard_hts/lumvorax -I../../../src/advanced_calculations/quantum_problem_hubbard_hts_work/include -Ilevel_zero_native/include -I/usr/include/libdrm \
+	src/main_btc_mining_gen9_minimal.c \
+	level_zero_native/src/btc_gen9_native_runner.c \
+	-lm -lpthread -ldrm \
+	-o bin/btc_mining_runner_gen9_native
+src/main_btc_mining_gen9_minimal.c: In function ‘main’:
+src/main_btc_mining_gen9_minimal.c:44:14: warning: unused parameter ‘argc’ [-Wunused-parameter]
+   44 | int main(int argc, char** argv) {
+      |          ~~~~^~~~
+src/main_btc_mining_gen9_minimal.c:44:27: warning: unused parameter ‘argv’ [-Wunused-parameter]
+   44 | int main(int argc, char** argv) {
+      |                    ~~~~~~~^~~~
+
+[C223-COMPILE] ✅ Compilation réussie: bin/btc_mining_runner_gen9_native
+
+[C223-COMPILE] Vérification dépendances binaire:
+  ✅ 0% OpenCL confirmé
+
+═══════════════════════════════════════════════════════════════════════════

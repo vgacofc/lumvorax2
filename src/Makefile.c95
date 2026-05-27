@@ -1,0 +1,83 @@
+# Makefile.c95 — Build des 3 nouveaux modules C95 + tests unitaires.
+#
+# Usage :
+#   make -f Makefile.c95 all
+#   make -f Makefile.c95 test
+#   make -f Makefile.c95 clean
+#
+# Cible : 0 warning avec -Wall -Wextra -O2.
+
+CC      ?= gcc
+CFLAGS   = -Wall -Wextra -Wpedantic -O2 -std=c11 -D_POSIX_C_SOURCE=200809L
+LDFLAGS  = -lm
+BIN_DIR  = ../build/c95
+
+# ---------------------------------------------------------------------------
+# Module neural_network
+# ---------------------------------------------------------------------------
+NN_SRCS = neural_network/izhikevich_spiking.c \
+          neural_network/ion_channel_markov.c \
+          neural_network/receptor_ampa_nmda_gaba.c \
+          neural_network/stdp_plasticity.c
+NN_OBJS = $(NN_SRCS:.c=.o)
+NN_TEST = $(BIN_DIR)/test_neural
+
+# ---------------------------------------------------------------------------
+# Module blockchain_lumvorax
+# ---------------------------------------------------------------------------
+BC_SRCS = blockchain_lumvorax/sha256_mini.c \
+          blockchain_lumvorax/block_header.c \
+          blockchain_lumvorax/merkle_tree.c
+BC_OBJS = $(BC_SRCS:.c=.o)
+BC_TEST = $(BIN_DIR)/test_blockchain
+
+# ---------------------------------------------------------------------------
+# Module asic_simulation
+# ---------------------------------------------------------------------------
+ASIC_SRCS = asic_simulation/sha256_pipeline_classical.c \
+            asic_simulation/asic_quantum_array.c \
+            asic_simulation/ibm_heron_r2_model.c
+ASIC_OBJS = $(ASIC_SRCS:.c=.o)
+ASIC_TEST = $(BIN_DIR)/test_asic
+
+ALL_OBJS  = $(NN_OBJS) $(BC_OBJS) $(ASIC_OBJS)
+
+.PHONY: all test clean dirs
+.DEFAULT_GOAL = all
+
+all: dirs $(NN_TEST) $(BC_TEST) $(ASIC_TEST)
+
+dirs:
+	@mkdir -p $(BIN_DIR)
+
+# Tests
+$(NN_TEST): $(NN_OBJS) neural_network/test_neural.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(BC_TEST): $(BC_OBJS) blockchain_lumvorax/test_blockchain.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(ASIC_TEST): $(ASIC_OBJS) asic_simulation/test_asic.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Compilation .c -> .o
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# Lance tous les tests
+test: all
+	@echo "============================================"
+	@echo " TESTS UNITAIRES C95"
+	@echo "============================================"
+	@$(NN_TEST) || (echo "TEST NEURAL FAILED" && exit 1)
+	@echo
+	@$(BC_TEST) || (echo "TEST BLOCKCHAIN FAILED" && exit 1)
+	@echo
+	@$(ASIC_TEST) || (echo "TEST ASIC FAILED" && exit 1)
+	@echo
+	@echo "============================================"
+	@echo " TOUS LES TESTS C95 PASSENT"
+	@echo "============================================"
+
+clean:
+	rm -f $(ALL_OBJS) $(NN_TEST) $(BC_TEST) $(ASIC_TEST)

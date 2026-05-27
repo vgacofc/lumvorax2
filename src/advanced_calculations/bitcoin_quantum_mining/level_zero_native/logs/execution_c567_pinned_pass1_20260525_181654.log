@@ -1,0 +1,27 @@
+execbuffer2 pass1: No space left on device
+=== TEST C567 - PINNED + OFFSET=0 PASS 1 ===
+ROOT CAUSE #79: PASS 1 NON-PINNED n'alloue pas GTT
+CORRECTION: PINNED + offset=0 force allocation automatique
+
+=== PHASE 1: OUVERTURE DRM (0%) ===
+[5%] ✓ DRM ouvert (fd=5)
+
+=== PHASE 2: CRÉATION CONTEXT (10%) ===
+[15%] ✓ Context créé (ID=1)
+
+=== PHASE 3: ALLOCATION BUFFERS (20%) ===
+[25%] ✓ Output buffer créé (handle=1, 4KB)
+[30%] ✓ Heap buffer créé (handle=2, 16KB)
+[35%] ✓ Batch buffer créé (handle=3, 4KB)
+
+=== PHASE 4: MAPPING BUFFERS (40%) ===
+[45%] ✓ Batch mappé @ 0x761a26aec000
+[50%] ✓ Heap mappé @ 0x761a26a4e000
+[55%] ✓ Output mappé @ 0x761a26a4d000
+
+=== PHASE 5: CONSTRUCTION BATCH INITIAL (60%) ===
+[65%] ✓ Batch initial construit: 32 bytes (8 DWords)
+       Placeholders @ index 5-6: 0xDEADBEEF
+
+=== PHASE 6: PASS 1 - ALLOCATION GTT (70%) ===
+❌ PASS 1 ÉCHOUÉ - errno=22

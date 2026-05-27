@@ -1,0 +1,91 @@
+Compiling src/lum_thermal_monitor_c241.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/lum_thermal_monitor_c241.c -o build/lum_thermal_monitor_c241.o
+src/lum_thermal_monitor_c241.c:63:12: warning: ‘read_sysfs_double’ defined but not used [-Wunused-function]
+   63 | static int read_sysfs_double(const char* path, double* value) {
+      |            ^~~~~~~~~~~~~~~~~
+src/lum_thermal_monitor_c241.c: In function ‘lum_thermal_init’:
+src/lum_thermal_monitor_c241.c:111:56: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 222 [-Wformat-truncation=]
+  111 |                     "/sys/class/drm/card0/device/hwmon/%s/temp1_input", entry->d_name);
+      |                                                        ^~
+In file included from /usr/include/stdio.h:980,
+                 from src/lum_thermal_monitor_c241.c:9:
+In function ‘snprintf’,
+    inlined from ‘find_gpu_temp_sensor’ at src/lum_thermal_monitor_c241.c:110:13,
+    inlined from ‘lum_thermal_init’ at src/lum_thermal_monitor_c241.c:158:13:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin___snprintf_chk’ output between 47 and 302 bytes into a destination of size 256
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+Compiling src/lum_sha256_validator_c241.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/lum_sha256_validator_c241.c -o build/lum_sha256_validator_c241.o
+src/lum_sha256_validator_c241.c: In function ‘lum_sha256_compute_openssl’:
+src/lum_sha256_validator_c241.c:69:5: warning: ‘SHA256_Init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   69 |     SHA256_Init(&ctx);
+      |     ^~~~~~~~~~~
+In file included from src/lum_sha256_validator_c241.c:13:
+/usr/include/openssl/sha.h:73:27: note: declared here
+   73 | OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+      |                           ^~~~~~~~~~~
+src/lum_sha256_validator_c241.c:70:5: warning: ‘SHA256_Update’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   70 |     SHA256_Update(&ctx, data, len);
+      |     ^~~~~~~~~~~~~
+/usr/include/openssl/sha.h:74:27: note: declared here
+   74 | OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+      |                           ^~~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:71:5: warning: ‘SHA256_Final’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   71 |     SHA256_Final(hash1, &ctx);
+      |     ^~~~~~~~~~~~
+/usr/include/openssl/sha.h:76:27: note: declared here
+   76 | OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+      |                           ^~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:74:5: warning: ‘SHA256_Init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   74 |     SHA256_Init(&ctx);
+      |     ^~~~~~~~~~~
+/usr/include/openssl/sha.h:73:27: note: declared here
+   73 | OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+      |                           ^~~~~~~~~~~
+src/lum_sha256_validator_c241.c:75:5: warning: ‘SHA256_Update’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   75 |     SHA256_Update(&ctx, hash1, 32);
+      |     ^~~~~~~~~~~~~
+/usr/include/openssl/sha.h:74:27: note: declared here
+   74 | OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+      |                           ^~~~~~~~~~~~~
+src/lum_sha256_validator_c241.c:76:5: warning: ‘SHA256_Final’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   76 |     SHA256_Final(hash_out, &ctx);
+      |     ^~~~~~~~~~~~
+/usr/include/openssl/sha.h:76:27: note: declared here
+   76 | OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+      |                           ^~~~~~~~~~~~
+Compiling src/btc_gen9_native_runner.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c: In function ‘check_gpu_thermal’:
+src/btc_gen9_native_runner.c:214:9: warning: implicit declaration of function ‘usleep’; did you mean ‘sleep’? [-Wimplicit-function-declaration]
+  214 |         usleep(10000000);  /* 10 secondes */
+      |         ^~~~~~
+      |         sleep
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:298:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  298 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+Compiling src/btc_gen9_parallel_gpu.c...
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm -c src/btc_gen9_parallel_gpu.c -o build/btc_gen9_parallel_gpu.o
+
+════════════════════════════════════════════════════════════════
+  COMPILATION C250 Phase 3 : Test Parallélisme GPU RÉEL
+════════════════════════════════════════════════════════════════
+
+Différence vs C249 :
+  - C249 : Utilise btc_gen9_execute() (séquentiel)
+  - C250 : Utilise btc_gen9_execute_parallel_batch() (parallèle)
+
+gcc -Wall -Wextra -O2 -g -std=c11 -Iinclude -I/usr/include/libdrm -I/usr/include/drm tests/test_btc_mining_parallel.c build/lum_thermal_monitor_c241.o build/lum_sha256_validator_c241.o build/btc_gen9_native_runner.o build/btc_gen9_parallel_gpu.o -o bin/test_btc_mining_c250_parallel -lm -lpthread -lssl -lcrypto -ldrm
+
+✅ Test C250 Parallel GPU RÉEL compiled successfully
+   Binary: bin/test_btc_mining_c250_parallel
+   Config: 168 work-items simultanés (24 EUs × 7 threads)
+   Test: 100 dispatches parallèles
+   Gain attendu: 168x vs séquentiel (~4.16 ms/dispatch)
+

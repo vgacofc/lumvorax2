@@ -1,0 +1,45 @@
+[36m
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 — OpenCL Batch Buffer Interceptor         ║
+║  Capturing all i915 EXECBUFFER2 calls                     ║
+╚════════════════════════════════════════════════════════════╝
+[0m
+[33m[INTERCEPT #1] EXECBUFFER2: batch_len=320 bytes, 10 objects
+[0m[33m[INTERCEPT #2] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #3] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #4] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #5] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #6] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #7] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #8] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #9] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m[33m[INTERCEPT #10] EXECBUFFER2: batch_len=192 bytes, 9 objects
+[0m╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 — OpenCL Simple Test                      ║
+║  Exécution 10 dispatches pour capture batch buffers      ║
+╚════════════════════════════════════════════════════════════╝
+
+Device: Intel(R) UHD Graphics 620
+
+Executing 10 kernel dispatches...
+
+  Dispatch #1: OK
+  Dispatch #2: OK
+  Dispatch #3: OK
+  Dispatch #4: OK
+  Dispatch #5: OK
+  Dispatch #6: OK
+  Dispatch #7: OK
+  Dispatch #8: OK
+  Dispatch #9: OK
+  Dispatch #10: OK
+
+✅ All 10 dispatches completed successfully
+Check opencl_batch_dump.txt for captured batch buffers
+
+[32m
+╔════════════════════════════════════════════════════════════╗
+║  Interception complete: 10 EXECBUFFER2 calls              ║
+║  Dump saved to: opencl_batch_dump.txt                     ║
+╚════════════════════════════════════════════════════════════╝
+[0m

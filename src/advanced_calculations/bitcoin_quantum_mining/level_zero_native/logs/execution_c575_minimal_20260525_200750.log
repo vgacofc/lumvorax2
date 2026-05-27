@@ -1,0 +1,32 @@
+[sudo] password for lvx: [C575-FORENSIC][22231.651329100] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.651440010] TEST C575 - MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22231.651447545] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.651451723] Hypothèse: Instruction WRITE + flag WRITE force GTT
+[C575-FORENSIC][22231.651455001] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.651459149] Ouverture /dev/dri/renderD128
+[C575-FORENSIC][22231.652035240] DRM fd=5 ouvert
+[C575-FORENSIC][22231.652172329] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.652185784] PASS 0: MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22231.652189245] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.652236265] Buffer GEM créé: handle=1 size=4096
+[C575-FORENSIC][22231.652256173] Buffer GEM créé: handle=2 size=4096
+[C575-FORENSIC][22231.652362187] Output initialisé à 0
+[C575-FORENSIC][22231.652368688] Batch PASS 0 construit:
+[C575-FORENSIC][22231.652375792]   - MI_BATCH_BUFFER_END (batch minimal)
+[C575-FORENSIC][22231.652379805]   - Taille: 1 DWords
+[C575-FORENSIC][22231.652384378]   - Stratégie: Flag WRITE seul force allocation GTT
+[C575-FORENSIC][22231.652407642] PAS de relocations (test flag WRITE seul)
+[C575-FORENSIC][22231.652412177] Output flags: WRITE | 48B_ADDRESS
+[C575-FORENSIC][22231.652415988] Soumission PASS 0 (MI_STORE + WRITE flag)
+[C575-ERROR][22231.652426943] Échec EXECBUFFER2 PASS 0: Invalid argument
+[C575-FORENSIC][22231.652467141] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.652471494] CAPTURE ERROR STATE: PASS0_EXECBUFFER2_FAILED
+[C575-FORENSIC][22231.652475634] ═══════════════════════════════════════════════════════
+Error state not available
+[C575-FORENSIC][22231.755928479] ✅ Error state capturé
+[C575-FORENSIC][22231.755949736] Nettoyage ressources
+[C575-FORENSIC][22231.756074230] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.756083937] TEST C575 TERMINÉ
+[C575-FORENSIC][22231.756087144] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22231.756090942] Durée totale: 104.000615 ms
+[C575-FORENSIC][22231.756094985] Code retour: -1

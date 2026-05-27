@@ -1,0 +1,63 @@
+[+0.000000269] [INFO] ╔════════════════════════════════════════════════════════════════╗
+[+0.000584951] [INFO] ║          LUMVORAX TEST C577 - SURFACE STATES GEN9              ║
+[+0.000606567] [INFO] ║                  PRIORITÉ ABSOLUE - GTT UNLOCK                 ║
+[+0.000613376] [INFO] ╚════════════════════════════════════════════════════════════════╝
+[+0.000620436] [INFO] 
+[+0.000627258] [INFO] === TEST 1: Décodage Surface State OpenCL ===
+[+0.000634128] [INFO] Surface State OpenCL décodé avec succès
+[+0.008528496] [INFO] Wireshark sauvegardé: logs/forensic/surface_state_opencl_wireshark.txt
+[+0.008588494] [INFO] Surface State OpenCL VALIDE
+[+0.008596357] [INFO] Type: BUFFER
+[+0.008601974] [INFO] Format: R32_UINT
+[+0.008607244] [INFO] Tiling: LINEAR
+[+0.008612237] [INFO] Dimensions: 256x1
+[+0.008617675] [INFO] Pitch: 1024 bytes
+[+0.008622704] [INFO] Base Address: 0x0000000000001000
+[+0.008628506] [INFO] MOCS: UNCACHED
+[+0.008633544] [INFO] Taille calculée: 1024 bytes
+[+0.008638606] [INFO] Alignement: OK
+[+0.008643414] [INFO] TEST 1: RÉUSSI
+[+0.008648233] [INFO] === TEST 2: Génération Surface State Natif ===
+[+0.008653547] [INFO] Surface State natif généré avec succès
+[+0.010271640] [INFO] Wireshark sauvegardé: logs/forensic/surface_state_native_wireshark.txt
+[+0.010304314] [INFO] Validation: RÉUSSI
+[+0.010311636] [INFO] TEST 2: RÉUSSI
+[+0.010318013] [INFO] === TEST 3: Comparaison OpenCL vs Natif ===
+[+0.011426710] [INFO] Différences trouvées: 2
+[+0.011456464] [INFO] Rapport différentiel sauvegardé: logs/forensic/surface_state_diff_opencl_vs_native.txt
+[+0.011463441] [INFO] Champs critiques identiques (Type, Format, Tiling)
+[+0.011468498] [INFO] TEST 3: RÉUSSI
+[+0.011474121] [INFO] === TEST 4: Extraction depuis Batch OpenCL ===
+[+0.011488419] [INFO] Surface States extraits: 2
+[+0.011493499] [INFO] Surface State #0:
+[+0.011499089] [INFO]   Type: 1D
+[+0.011503862] [INFO]   Format: UNKNOWN
+[+0.011509179] [INFO]   Dimensions: 4098x1
+[+0.012369270] [INFO] Surface State #1:
+[+0.012398835] [INFO]   Type: 1D
+[+0.012404679] [INFO]   Format: UNKNOWN
+[+0.012441321] [INFO]   Dimensions: 3x12545
+[+0.012858771] [INFO] TEST 4: RÉUSSI
+[+0.012882484] [INFO] === TEST 5: Simulation Allocation GTT ===
+[+0.014495399] [INFO] DRM ouvert: fd=6
+[+0.015086475] [INFO] Buffer output créé: handle=1, size=4096
+[+0.015104551] [INFO] Surface State généré avec adresse symbolique 0x1001
+[+0.015110880] [INFO] Base Address avant relocation: 0x0000000007001000
+[+0.015117700] [INFO] Relocation nécessaire:
+[+0.015123836] [INFO]   - Target: Surface State DWord 1 (offset +4)
+[+0.015129302] [INFO]   - Buffer: output_handle=1
+[+0.015135271] [INFO]   - Présumé: 0x1001 → adresse GTT réelle
+[+0.015184331] [INFO] TEST 5: RÉUSSI (simulation)
+[+0.015192426] [INFO] 
+[+0.015198879] [INFO] ╔════════════════════════════════════════════════════════════════╗
+[+0.015205924] [INFO] ║                      RÉSUMÉ DES TESTS                          ║
+[+0.015212344] [INFO] ╠════════════════════════════════════════════════════════════════╣
+[+0.015218373] [INFO] ║ TEST 1: Décodage OpenCL          : ✓ RÉUSSI                      ║
+[+0.015224771] [INFO] ║ TEST 2: Génération Natif          : ✓ RÉUSSI                      ║
+[+0.015229933] [INFO] ║ TEST 3: Comparaison OpenCL/Natif  : ✓ RÉUSSI                      ║
+[+0.015235746] [INFO] ║ TEST 4: Extraction Batch          : ✓ RÉUSSI                      ║
+[+0.015241323] [INFO] ║ TEST 5: Simulation GTT            : ✓ RÉUSSI                      ║
+[+0.015272723] [INFO] ╠════════════════════════════════════════════════════════════════╣
+[+0.015279234] [INFO] ║ RÉSULTAT GLOBAL: ✓ TOUS RÉUSSIS                                        ║
+[+0.015285333] [INFO] ╚════════════════════════════════════════════════════════════════╝
+[+0.015292115] [INFO] Durée totale: 15.292 ms

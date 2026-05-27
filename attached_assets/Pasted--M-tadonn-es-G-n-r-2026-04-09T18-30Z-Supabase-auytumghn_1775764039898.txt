@@ -1,0 +1,157 @@
+## Métadonnées
+
+Généré 2026-04-09T18:30Z · Supabase `auytumghnaguqscehyas` · GitHub `vgacofc/lumvorax2`
+
+Run référence C53 : `20260409T175041Z` · 216 750 events · 17:50–18:20 UTC
+
+Action SQL effectuée dans cette session : label cycle C50→C53 pour 921 269 events Vercel (9 avril)
+
+---
+
+## Section 0 — Première historique
+
+**Run 175041Z : premier 16/16 modules complets avec bench_rt_qmc_summary PASS**
+
+Tous les modules ont terminé dans un même run pour la première fois : random_circuit_sampling (F_XEB=0.333013), ed_validation_2x2, fermionic_sign_problem et les 13 modules Hubbard. RMSE=0.0089, MAE=0.0050, Within=100%, m=16, Status=PASS. RAM peak tombée à 49% (était 72-73%).
+
+---
+
+## Section 1 — État Supabase global
+
+| Table | Rapport C52 | Maintenant | Delta |
+| --- | --- | --- | --- |
+| quantum_realtime_logs | 6 197 470 | **6 823 984** | +626 514 |
+| quantum_run_files | 1 608 | **1 932** | +324 |
+| vercel_log_events | 369 906 | **1 061 869** | +691 963 |
+| quantum_csv_rows | 0 | 0 | RLS manquant |
+| run_scores | 0 | 0 | Jamais peuplé |
+| module_results_rcs | 0 | 0 | Jamais peuplé |
+
+---
+
+## Section 2 — Inventaire runs 9 avril 2026
+
+| Run ID | Début UTC | Events | Modules | Bench | Statut |
+| --- | --- | --- | --- | --- | --- |
+| 20260409T175041Z ★ | 17:50:58 | 216 750 | **16/16** | **PASS** | C53 COMPLET |
+| 20260409T171858Z | 17:34:19 | 100 300 | 0 | — | Init avortée |
+| 20260409T165859Z | 16:59:18 | 72 351 | 0 | — | Init avortée |
+| 20260409T011738Z | 01:17:55 | 202 000 | 9/16 | — | C53 partiel |
+
+---
+
+## Section 3 — 16 modules — résultats Supabase run 175041Z
+
+| Module | Énergie (eV) | Pairing | Sign | Statut |
+| --- | --- | --- | --- | --- |
+| hubbard_hts_core | 1.992186 | 0.754744 | +0.276 | BIT-FOR-BIT C43→C53 |
+| qcd_lattice_fullscale | 2.233842 | 0.349443 | −0.097 | Signe QCD attendu |
+| quantum_field_noneq | 1.743990 | 0.721757 | −0.136 | Signe champ |
+| dense_nuclear_fullscale | 2.727891 | 0.548042 | −0.091 | Signe nucléaire 3-corps |
+| quantum_chemistry_fullscale | 1.623321 | 0.931272 | +0.050 | Stable |
+| spin_liquid_exotic | 2.613394 | 0.781754 | −0.045 | Kagome frustré |
+| topological_correlated | 1.944082 | 0.855803 | −0.209 | Signe négatif = signature topo ✅ |
+| correlated_fermions | 2.141883 | 0.820857 | +0.220 | Stable |
+| multi_state_excited | 1.697183 | 0.942560 | +0.295 | Stable |
+| bosonic_multimode | 1.293653 | 0.530615 | +0.452 | Signe optimal |
+| multiscale_nonlinear | 2.292522 | 0.802814 | +0.167 | Stable |
+| far_from_equilibrium | 1.992123 | 0.637133 | +0.241 | Stable |
+| multi_correlated | 1.843579 | 0.781582 | +0.051 | Overhead 384× |
+| ed_validation_2x2 | 0.739243 | 0.909771 | 0.000 | Exact Diag référence ✅ |
+| fermionic_sign_problem | 3.473904 | 0.884735 | +0.014 | N_eff = 24% |
+| **random_circuit_sampling** | **0.333013** | 0.639135 | 0.333 | **F_XEB = 1/3 ★** |
+
+---
+
+## Section 4 — RCS — Invariance F_XEB = 1/3 (C43→C53)
+
+| Cycle | n_qubits | depth | bruit | F_XEB |
+| --- | --- | --- | --- | --- |
+| C43 | 392 | 40 | 0.020 | 0.3332 |
+| C47 | 3080 | 40 | 0.020 | 0.3333 |
+| C49 | 3080 | 40 | 0.020 | 0.3334 |
+| C50 | 6160 | 40 | 0.020 | 0.3334 |
+| C51 | 6160 | 78 | 0.039 | 0.3334 |
+| **C53** | **6160** | **78** | **0.039** | **0.3330** |
+
+Invariance confirmée sur facteur 16× en qubits. Point fixe Hubbard-Porter-Thomas.
+
+---
+
+## Section 5 — Benchmark QMC complet (16 modules)
+
+RMSE=0.0089 · MAE=0.0050 · Within=100% · CI95=0.0043 · m=16 · Status=PASS
+
+Premier bench complet sur les 16 modules de la configuration problems_cycle06.csv.
+
+---
+
+## Section 6 — Vercel — 1 061 869 events (label corrigé)
+
+Croissance : 47 700 (C52) → 369 906 (rapport précédent) → 1 061 869 (aujourd'hui). +187% en une nuit.
+
+Correction SQL effectuée dans cette session : 921 269 events du 9 avril mis à jour de C50 → C53.
+
+Label cycle hardcodé "C50" dans vercel_log_[streamer.py](http://streamer.py) sur Replit : à corriger pour injection dynamique.
+
+---
+
+## Section 7 — NX48 — Version la plus avancée et plan d'intégration
+
+**Version la plus avancée pour LumVorax :** `src/nx_versions/nx48_unified_ultra/`
+
+Étude d'intégration 13 modules complète (2026-03-08) : `RAPPORT/RAPPORT_ETUDE_NX48_INTEGRATION_13_MODULES_20260308.md`
+
+Modèle standalone le plus récent : `nx47_vesu_kernel_v139.py` (V139 = 97 KB)
+
+**Principe NX47AtomNeuron (sans points externes) :**
+
+- Apprentissage via `grad_x = np.gradient(x)` — gradient du signal physique lui-même
+- Paramètres : w (linéaire), α (quadratique), β (gradient-signal), b (biais)
+- Régularisation proximale L1/L2 = sparse learning naturel
+- Récompense naturelle LumVorax : maximiser `pairing × sign_ratio` sous contrainte `bench_error < seuil`
+
+**Architecture d'intégration (étude 08/03/26) :**
+
+1. Adapter Layer → mappe paramètres NX48 vers problem_t + control_flags_t
+2. Safety Layer → garde-fous hard (bornes dt/U/t/temp, mémoire, timeout)
+3. Evaluator Layer → score composite (convergence + stabilité + benchmark + coût)
+4. Replay Store → historise (paramètres, observables, score)
+5. Policy Update Loop → ajuste NX48 en batch, validation avant application
+
+**Phases proposées :** A) Shadow mode → B) Assisted mode → C) Full adaptive (13 modules)
+
+---
+
+## Section 8 — Problème du signe — Hiérarchie
+
+| Module | sign_ratio | Overhead | Statut |
+| --- | --- | --- | --- |
+| bosonic_multimode | +0.452 | 4.9× | Optimal |
+| multi_state | +0.295 | 11.5× | Bon |
+| hubbard_hts_core | +0.276 | 13.1× | Bon |
+| topological | −0.209 | 22.9× | Signe topo = physique ✅ |
+| simulate_adv | +0.167 | 35.9× | Gérable |
+| qcd_lattice | −0.097 | 106× | Signe QCD attendu |
+| quantum_chemistry | +0.050 | 400× | Élevé |
+| multi_correlated | +0.051 | 384× | Élevé |
+| fermionic_sign | +0.014 | 5 184× | Critique |
+| **simulate_fs** | **+0.002** | **202 500×** | **Quasi-intractable** |
+
+---
+
+## Section 9 — Priorités C54
+
+| Rang | Suggestion | Module | Impact |
+| --- | --- | --- | --- |
+| P0 | Fermion Bag Algorithm pour simulate_fs | simulate_fs | +30% score global |
+| P1 | Augmenter résolution QCD (bench_err 2.6%) | qcd_lattice | err→<1% |
+| P1 | Thermalisation burn-in = 3×τ_autocorr | simulate_adv | +5% précision |
+| P2 | NX48 Shadow Mode — pilotage adaptatif | 13 modules | Exploration signe |
+| P2 | Corriger label cycle vercel_log_[streamer.py](http://streamer.py) | Replit | Traçabilité |
+| P3 | Upload run_scores + module_results_rcs | Supabase | Tables vides |
+| P3 | Corriger RLS quantum_csv_rows | Supabase | 0→N lignes CSV |
+
+---
+
+*Rapport généré par Claude · Supabase 6.8M events · Vercel 1.06M events · 16/16 modules PASS · F_XEB=1/3 invariant C43→C53*

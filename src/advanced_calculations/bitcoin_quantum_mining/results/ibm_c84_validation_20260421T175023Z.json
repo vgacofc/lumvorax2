@@ -1,0 +1,98 @@
+{
+  "cycle": "C84",
+  "stamp": "20260421T175023Z",
+  "backend": "fake_brisbane",
+  "fake": true,
+  "calibration": {
+    "t1_us_mean": 250.0,
+    "t2_us_mean": 180.0,
+    "gate2q_err_mean": 0.0025,
+    "readout_err_mean": 0.008,
+    "num_qubits": 127,
+    "name": "fake_brisbane",
+    "is_fake": true
+  },
+  "shots": 256,
+  "n_rep": 2,
+  "objective": "C84-B Experimental Validation Layer (observables + mitigation + stats)",
+  "applied_suggestions": [
+    "Q3 ChatGPT: test |+> initialisation pour valider 00001111 (anti-artefact)",
+    "Claude: observables E + <ZZ> + S(pi) au lieu de juste counts",
+    "ChatGPT: readout mitigation locale obligatoire",
+    "ChatGPT: ZNE 1/3/5 noise factors",
+    "Claude: baselines Aer ideal + noisy (KL divergence)",
+    "ChatGPT: IC95 + symmetry gap < 2-3 sigma"
+  ],
+  "hts_8q": {
+    "n_qubits": 8,
+    "depth_log": 11,
+    "depth_phys": 40,
+    "gates_2q": 21,
+    "fid_estimee": 0.94879,
+    "n_rep": 2,
+    "shots_per_rep": 256,
+    "merged_top10": {
+      "10000000": 0.13855004991127368,
+      "10000100": 0.03964161428049619,
+      "10000001": 0.033130093235598686,
+      "10000110": 0.032190183024763834,
+      "10010110": 0.030044170823112906,
+      "11000000": 0.027241219162971016,
+      "11010000": 0.025145740765819404,
+      "11000001": 0.02342506338279247,
+      "10011000": 0.023017391104285585,
+      "10010100": 0.02295040826765569
+    },
+    "dominant": "10000000",
+    "dom_prob_mean": 0.13857,
+    "dom_prob_ic95": 0.02436,
+    "entropy_bits": 6.1347,
+    "S_pi_mean": 0.67383,
+    "S_pi_ic95": 0.04977,
+    "symmetry_gap_00001111_vs_11110000": 0.00274,
+    "kl_divergence_real_vs_ideal": 9.706367851420435,
+    "x_init_test_Q3": {
+      "circuit": "HTS_8Q_X_INIT",
+      "p_00001111": 0.0053,
+      "p_11110000": 0.0,
+      "symmetry_gap": 0.0053,
+      "verdict_Q3_chatgpt": "PHYSIQUE_AFM_PROBABLE"
+    },
+    "zne": null,
+    "criterion_publication": "ACCEPT",
+    "criterion_detail": {
+      "S_pi_strictement_positif": true,
+      "IC95_S_pi_non_nul": true,
+      "symmetry_gap_lt_5pc": true,
+      "dom_prob_gt_10pc": true
+    }
+  },
+  "hts_6q_mott": {
+    "n_qubits": 6,
+    "depth_log": 5,
+    "depth_phys": 15,
+    "gates_2q": 5,
+    "shots": 256,
+    "top10": {
+      "111111": 0.8359375,
+      "101111": 0.0625,
+      "110111": 0.0234375,
+      "111101": 0.0234375,
+      "110101": 0.01171875,
+      "111011": 0.01171875,
+      "011111": 0.0078125,
+      "111110": 0.0078125,
+      "101101": 0.00390625,
+      "000111": 0.00390625
+    },
+    "dominant": "111111",
+    "dom_prob": 0.83594,
+    "entropy_bits": 1.1047,
+    "S_pi": 0.125,
+    "symmetry_gap_111100": 0.0,
+    "symmetry_gap_100101": 0.0,
+    "kl_divergence_real_vs_ideal": 5.271308671602267
+  },
+  "total_runtime_s": 23.49,
+  "forensic_entries": 10
+}

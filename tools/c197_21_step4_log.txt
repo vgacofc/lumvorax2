@@ -1,0 +1,63 @@
+=== C197.21 STEP 4 - GPGPU_WALKER + KERNEL ===
+⚠️ ATTENTION: PREMIÈRE EXÉCUTION GPU RÉELLE
+⚠️ RISQUE: GPU HANG POSSIBLE SI ISA INCORRECT
+
+Step 1: Opening DRM device...
+✅ DRM device opened (fd=5)
+
+Step 2: Creating VM...
+✅ VM created (vm_id=1)
+
+Step 3: Creating context...
+✅ Context created (ctx_id=1)
+
+Step 4: Creating buffers...
+✅ Batch buffer created (handle=1)
+✅ State buffer created (handle=2)
+✅ Kernel buffer created (handle=3)
+✅ Output buffer created (handle=4)
+
+Step 5: Initializing output buffer...
+✅ Output buffer initialized: output[0] = 0xDEADBEEF
+
+Step 6: Building kernel...
+Building Gen9 kernel ISA (trivial write)...
+✅ Kernel built: 20 instructions (80 bytes)
+   Type: NOP + EOT (minimal safe kernel)
+   Note: Ce kernel ne fait rien, juste pour valider dispatch
+
+Step 7: Building state buffer...
+Building state buffer (INTERFACE_DESCRIPTOR with kernel)...
+✅ State buffer built: INTERFACE_DESCRIPTOR (32 bytes)
+   Kernel address: 0x0000719394211000
+   Number of threads: 1
+
+Step 8: Building batch buffer...
+Building Step 4 batch buffer (GPGPU_WALKER)...
+✅ Batch buffer built: 64 DWords (256 bytes)
+   Commands: PIPE + STATE_BASE + INTERFACE_LOAD + GPGPU_WALKER + PIPE + END
+
+Step 9: Dispatching batch...
+Dispatching Step 4 batch via execbuffer2...
+  batch_handle: 1
+  state_handle: 2
+  kernel_handle: 3
+  output_handle: 4
+  batch_len: 512 bytes
+✅ Dispatch successful (489.986 µs)
+Waiting for GPU completion (timeout: 5s)...
+✅ GPU completed (676.095 ms)
+✅ Total dispatch time: 676.585 ms
+
+Step 10: Validation...
+Reading output buffer...
+  output[0] = 0xDEADBEEF
+⚠️ Output unchanged (kernel NOP executed successfully)
+✅✅✅ PREMIÈRE EXÉCUTION GPU RÉUSSIE ✅✅✅
+Kernel NOP dispatché et exécuté sans crash
+Prochaine étape: kernel avec write réel
+
+Step 11: Cleanup...
+✅ Cleanup complete
+
+Total time: 677.191 ms

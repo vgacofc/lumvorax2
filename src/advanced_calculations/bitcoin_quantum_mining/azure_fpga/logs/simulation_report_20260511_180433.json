@@ -1,0 +1,140 @@
+{
+  "deployment_type": "SIMULATION",
+  "timestamp": "2026-05-11T18:04:33.610144",
+  "duration_sec": 32.00543570518494,
+  "config": {
+    "subscription_id": "SIMULATED-SUBSCRIPTION-ID",
+    "location": "eastus",
+    "resource_group": "lumvorax-fpga-rg",
+    "vm_name": "lumvorax-fpga-vm",
+    "vm_size": "Standard_NP10s",
+    "vm_ip": "SIMULATED-IP-ADDRESS",
+    "admin_user": "lumvorax"
+  },
+  "steps_completed": [
+    {
+      "step": "Check Python version",
+      "timestamp": "2026-05-11T18:04:02.104792",
+      "duration_sec": 0.5
+    },
+    {
+      "step": "Check project structure",
+      "timestamp": "2026-05-11T18:04:02.604947",
+      "duration_sec": 0.5
+    },
+    {
+      "step": "Check Azure CLI (simulated)",
+      "timestamp": "2026-05-11T18:04:03.105765",
+      "duration_sec": 0.5
+    },
+    {
+      "step": "Create resource group",
+      "timestamp": "2026-05-11T18:04:05.105963",
+      "duration_sec": 2
+    },
+    {
+      "step": "Create VM FPGA (Standard_NP10s)",
+      "timestamp": "2026-05-11T18:04:10.106325",
+      "duration_sec": 5
+    },
+    {
+      "step": "Connect to VM via SSH",
+      "timestamp": "2026-05-11T18:04:11.106633",
+      "duration_sec": 1
+    },
+    {
+      "step": "Update apt packages",
+      "timestamp": "2026-05-11T18:04:13.106906",
+      "duration_sec": 2
+    },
+    {
+      "step": "Install dependencies",
+      "timestamp": "2026-05-11T18:04:15.107082",
+      "duration_sec": 2
+    },
+    {
+      "step": "Download XRT 2.14.354",
+      "timestamp": "2026-05-11T18:04:18.107235",
+      "duration_sec": 3
+    },
+    {
+      "step": "Install XRT",
+      "timestamp": "2026-05-11T18:04:20.107375",
+      "duration_sec": 2
+    },
+    {
+      "step": "Verify XRT installation",
+      "timestamp": "2026-05-11T18:04:21.107551",
+      "duration_sec": 1
+    },
+    {
+      "step": "Detect FPGA devices",
+      "timestamp": "2026-05-11T18:04:22.107738",
+      "duration_sec": 1
+    },
+    {
+      "step": "Transfer Verilog files to VM",
+      "timestamp": "2026-05-11T18:04:24.108060",
+      "duration_sec": 2
+    },
+    {
+      "step": "Create Vivado project",
+      "timestamp": "2026-05-11T18:04:25.108256",
+      "duration_sec": 1
+    },
+    {
+      "step": "Transfer driver files to VM",
+      "timestamp": "2026-05-11T18:04:26.108534",
+      "duration_sec": 1
+    },
+    {
+      "step": "Transfer forensic logger",
+      "timestamp": "2026-05-11T18:04:27.108779",
+      "duration_sec": 1
+    },
+    {
+      "step": "Transfer memory tracker",
+      "timestamp": "2026-05-11T18:04:28.109074",
+      "duration_sec": 1
+    },
+    {
+      "step": "Create Makefile",
+      "timestamp": "2026-05-11T18:04:28.609295",
+      "duration_sec": 0.5
+    },
+    {
+      "step": "Compile driver",
+      "timestamp": "2026-05-11T18:04:30.609469",
+      "duration_sec": 2
+    },
+    {
+      "step": "Create test program",
+      "timestamp": "2026-05-11T18:04:31.609688",
+      "duration_sec": 1
+    },
+    {
+      "step": "Run validation tests",
+      "timestamp": "2026-05-11T18:04:33.609951",
+      "duration_sec": 2
+    }
+  ],
+  "files_created": {
+    "verilog": "btc_sha256_fpga_lumvorax.v (350 lines)",
+    "driver": "btc_fpga_pcie_driver.c (500 lines)",
+    "deployment_script": "deploy_azure_fpga.sh (450 lines)"
+  },
+  "integration": {
+    "forensic_logger": "\u2713 Integrated",
+    "memory_tracker": "\u2713 Integrated",
+    "bit_level_tracing": "\u2713 Implemented",
+    "lum_format": "\u2713 Compatible"
+  },
+  "next_steps": [
+    "Finalize Azure CLI connection",
+    "Execute real deployment: ./deploy_azure_fpga.sh",
+    "Synthesize Verilog with Vivado",
+    "Flash FPGA bitstream",
+    "Run validation tests",
+    "Bitcoin mining benchmarks"
+  ]
+}

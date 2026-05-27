@@ -1,0 +1,822 @@
+#!/usr/bin/env bash
+# ============================================================================
+# run_research_cycle.sh — Cycle de recherche Hubbard/LumVorax
+# ============================================================================
+# INSTRUCTION PERMANENTE : Répondre TOUJOURS en français dans les rapports.
+# INSTRUCTION PERMANENTE : NE JAMAIS RÉDUIRE LES LOGS — augmenter la traçabilité.
+# INSTRUCTION PERMANENTE : Si un run est arrêté (SIGTERM/timeout), relancer
+#   automatiquement depuis le dernier checkpoint jusqu'à finalisation 100%.
+# INSTRUCTION PERMANENTE : Utiliser 99% CPU/RAM/DISK disponible.
+# INSTRUCTION PERMANENTE : NOMS D'ORIGINE CONSERVÉS — FORENSIC_LOG_MODULE_METRIC
+#   est le nom officiel (71 usages runner) ; LV_MODULE_METRIC = bridge secondaire.
+# INSTRUCTION PERMANENTE : Rotation automatique des fichiers CSV à 95 MB
+#   (lv_rotate_csv dans ultra_forensic_logger.c + ftell inter-module PT-MC).
+# ============================================================================
+
+set -euo pipefail
+
+# ── GUARD AUTO-START : double verrou — fichier persistant + env var ──────────
+# Bloque le lancement automatique au boot de Replit.
+# LANCEMENT MANUEL (2 méthodes équivalentes) :
+#   Méthode 1 (recommandée) : C37_AUTORUN_ENABLED=1 bash run_research_cycle.sh
+#   Méthode 2 (classique)   : rm .c37_autorun_disabled && bash run_research_cycle.sh
+# Le guard fichier est recréé automatiquement à chaque fin de run réussie,
+# ce qui empêche tout relancement automatique non voulu après un run complet.
+_GUARD_DIR="$(cd "$(dirname "$0")" && pwd)"
+_GUARD_FILE="$_GUARD_DIR/.c37_autorun_disabled"
+if [ -f "$_GUARD_FILE" ] && [ "${C37_AUTORUN_ENABLED:-0}" != "1" ]; then
+    echo "[C37-GUARD] $(date -u +%Y-%m-%dT%H:%M:%SZ) Cycle C37 : démarrage automatique BLOQUÉ."
+    echo "[C37-GUARD] Fichier guard présent : $_GUARD_FILE"
+    echo "[C37-GUARD] Méthode 1 : C37_AUTORUN_ENABLED=1 bash $_GUARD_DIR/run_research_cycle.sh"
+    echo "[C37-GUARD] Méthode 2 : rm $_GUARD_FILE && bash $_GUARD_DIR/run_research_cycle.sh"
+    exit 0
+fi
+# Lancement autorisé — guard absent ou C37_AUTORUN_ENABLED=1
+rm -f "$_GUARD_FILE" 2>/dev/null || true
+echo "[C37-GUARD] $(date -u +%Y-%m-%dT%H:%M:%SZ) Lancement autorisé — guard levé pour cette session."
+
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_PATH="$(realpath "$0")"
+STAMP_UTC="$(date -u +%Y%m%dT%H%M%SZ)"
+BACKUP_DIR="$ROOT_DIR/backups/research_cycle_$STAMP_UTC"
+SESSION_LOG_DIR="$ROOT_DIR/logs"
+SESSION_LOG="$SESSION_LOG_DIR/research_cycle_session_${STAMP_UTC}.log"
+
+# ── C26-CHECKPOINT : fichier d'état persistant pour résumption automatique ──
+CHECKPOINT_FILE="$ROOT_DIR/.run_checkpoint"
+CHECKPOINT_PHASE_FILE="$ROOT_DIR/.run_current_phase"
+# Bug#4-FIX : fichier marqueur pour éviter le "résumption skip en boucle".
+# Le runner advanced_parallel crée un nouveau run_id à chaque démarrage, même si
+# toutes les phases sont terminées. Sans ce marqueur, chaque session Replit relance
+# le runner inutilement → séries de runs "SKIP" (76 KB, 5 lignes) qui consomment
+# disque et faussent les statistiques. Ce fichier est écrit après ADV_OK=1.
+# Ref : analysechatgpt85.md §1.1 (runs SKIP) + analysechatgpt85.2.md Bug#4 — 2026-04-03
+ADVANCED_DONE_FILE="$ROOT_DIR/.advanced_runner_done"
+
+# ── C26-RESUME : lire le dernier checkpoint si présent ──────────────────────
+RESUME_FROM_PHASE=0
+if [ -f "$CHECKPOINT_PHASE_FILE" ]; then
+    RESUME_FROM_PHASE="$(cat "$CHECKPOINT_PHASE_FILE" 2>/dev/null || echo 0)"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RÉSUMPTION détectée — reprise depuis phase ${RESUME_FROM_PHASE}"
+fi
+
+# Sauvegarde de phase courante (appelée après chaque étape réussie)
+checkpoint_save() {
+    local phase_num="$1"
+    echo "$phase_num" > "$CHECKPOINT_PHASE_FILE"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] CHECKPOINT sauvegardé : phase ${phase_num}"
+}
+
+# ── C26-SIGTERM : Handler — relance automatique depuis le checkpoint ─────────
+handle_sigterm() {
+    local current_phase
+    current_phase="$(cat "$CHECKPOINT_PHASE_FILE" 2>/dev/null || echo 0)"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] SIGTERM reçu — checkpoint phase=${current_phase}"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Relancement automatique depuis phase ${current_phase}..."
+    # Relancer en background avec nohup pour survivre à la mort du parent
+    nohup bash "$SCRIPT_PATH" >> "$SESSION_LOG" 2>&1 &
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Relancement PID=$! lancé en background"
+    exit 0
+}
+trap handle_sigterm SIGTERM SIGINT
+
+mkdir -p "$BACKUP_DIR"
+mkdir -p "$SESSION_LOG_DIR"
+
+# Persistent real-time log (console + file)
+exec > >(stdbuf -oL tee -a "$SESSION_LOG") 2>&1
+
+# ── LD_LIBRARY_PATH : préchargement libstdc++ pour numpy/pandas sous NixOS ──
+# Sans ce fix, numpy échoue avec "libstdc++.so.6: cannot open shared object file"
+# car le store Nix n'est pas dans le chemin de la bibliothèque par défaut.
+_LIBSTDCPP="/nix/store/bmi5znnqk4kg2grkrhk6py0irc8phf6l-gcc-14.2.1.20250322-lib/lib"
+if [ -f "${_LIBSTDCPP}/libstdc++.so.6" ]; then
+    export LD_LIBRARY_PATH="${_LIBSTDCPP}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [LD_LIBRARY_PATH] libstdc++.so.6 chargée depuis ${_LIBSTDCPP}"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [LD_LIBRARY_PATH-WARN] libstdc++.so.6 non trouvée à ${_LIBSTDCPP} — numpy peut échouer"
+fi
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] run_research_cycle start stamp=${STAMP_UTC}"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] RESUME_FROM_PHASE=${RESUME_FROM_PHASE}"
+
+# ── NX48-SUPERMEMORY-INIT : mémoire persistante du neurone NX48 ──────────────
+# Récupère les apprentissages des sessions précédentes depuis Supermemory.
+# Le cache local (.nx48_memory_cache.json) NE DOIT JAMAIS ÊTRE SUPPRIMÉ.
+# Si le cache local est absent, Supermemory est la source de vérité inter-sessions.
+# C57-FIX-CYCLE-ID : fallback mis à jour C54→C57 (label de traçabilité NX48 + Vercel)
+# Si LUMVORAX_CYCLE_ID est passé explicitement par le workflow, il prend la priorité.
+export LUMVORAX_CYCLE_ID="${LUMVORAX_CYCLE_ID:-C57}"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Initialisation mémoire persistante (run=${STAMP_UTC}, cycle=${LUMVORAX_CYCLE_ID})"
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --init "${STAMP_UTC}" 2>&1 | sed "s/^/[NX48-MEM] /" || true
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --seed 2>&1 | sed "s/^/[NX48-SEED] /" || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Mémoire initialisée"
+
+# ── C60-SUPABASE-DOWNLOAD : récupération des fichiers depuis Supabase au démarrage ──
+# Garantit que chaque nouvelle session Replit dispose des benchmarks et du dernier run
+# même si LFS est désactivé et que les fichiers locaux ont disparu après un push.
+# ── AUTO-INSTALL : vérification et installation de toutes les dépendances Python ──
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [AUTO-DEPS] Vérification et auto-installation des dépendances..."
+python3 - <<'PYCHECK'
+import subprocess, sys
+DEPS = [
+    ("requests",         "requests"),
+    ("psycopg2-binary",  "psycopg2"),
+    ("numpy",            "numpy"),
+    ("pandas",           "pandas"),
+    ("scipy",            "scipy"),
+]
+missing = []
+for pkg, imp in DEPS:
+    try:
+        __import__(imp)
+    except ImportError:
+        missing.append(pkg)
+if missing:
+    print(f"[AUTO-DEPS] Installation : {missing}", flush=True)
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q"] + missing, check=False)
+    for pkg, imp in DEPS:
+        try:
+            __import__(imp)
+            print(f"[AUTO-DEPS] {pkg} : OK", flush=True)
+        except ImportError:
+            print(f"[AUTO-DEPS] {pkg} : ECHEC", flush=True)
+else:
+    print("[AUTO-DEPS] Toutes les dépendances déjà présentes", flush=True)
+PYCHECK
+
+# ── TEST SUPABASE + DOPPLER : validation des connexions avant run ─────────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST] Test connexion Supabase + Doppler..."
+if python3 "$ROOT_DIR/tools/test_supabase_doppler.py" 2>&1; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST] ✔ Connexion Supabase + Doppler validée"
+    export SUPABASE_CONNEXION_OK=1
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TEST-WARN] ⚠ Connexion partielle — vérifier les secrets"
+    export SUPABASE_CONNEXION_OK=0
+fi
+
+# ── CRÉATION DES TABLES SUPABASE MANQUANTES ─────────────────────────────
+if [ "${SUPABASE_CONNEXION_OK:-0}" = "1" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-TABLES] Création tables manquantes..."
+    python3 "$ROOT_DIR/tools/test_supabase_doppler.py" --create-tables 2>&1 || true
+fi
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Téléchargement depuis Supabase..."
+if python3 "$ROOT_DIR/tools/download_from_supabase.py" 2>&1; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL] Download Supabase OK"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-DL-WARN] Download partiel ou pas de connexion — continue sans"
+fi
+
+# ── C61-P0 : Rotation automatique logs forensics > 100 MB ────────────────────
+# Prévient la saturation disque (pattern C60 : 50 GB atteints avant cleaning).
+# Supprime uniquement les fichiers volatils > 100 MB, jamais le cache NX48.
+_ROT_COUNT=0
+for _ROT_DIR in "$ROOT_DIR/logs/forensic" "$ROOT_DIR/logs" "$ROOT_DIR/results"; do
+    if [ -d "$_ROT_DIR" ]; then
+        while IFS= read -r -d '' _F; do
+            rm -f "$_F" 2>/dev/null && _ROT_COUNT=$((_ROT_COUNT+1))
+        done < <(find "$_ROT_DIR" \
+            \( -name "pt_mc_swap_detail_*" -o -name "simulate_adv_*" \
+               -o -name "simulate_fs_*" -o -name "worm_mc_ultra_*" \
+               -o -name "ultra_forensic_*.log" -o -name "lumvorax_module_*" \) \
+            -size +100M -print0 2>/dev/null)
+    fi
+done
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C61-ROT] ${_ROT_COUNT} fichier(s) forensics > 100MB supprimés (prévention saturation disque)"
+unset _ROT_COUNT _ROT_DIR _F
+
+# ── BC-LV04 fix : Suppression TOTALE de toutes les restrictions de ressources ──
+# Aucun ulimit RAM/CPU — test jusqu'aux limites hardware réelles (99% dynamique)
+ulimit -v unlimited 2>/dev/null || true
+ulimit -m unlimited 2>/dev/null || true
+ulimit -s unlimited 2>/dev/null || true
+# C60-BUG-LV01-FIX : augmenter la limite de fichiers ouverts pour le runner advanced_parallel
+# Sans ce fix, FOPEN_DIAG échoue (EMFILE) → research_execution.log reste 0 bytes → score=0
+ulimit -n 8192 2>/dev/null || ulimit -n 4096 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60] ulimit -n=$(ulimit -n) (limite descripteurs fichiers)"
+# Priorité maximale pour le processus (nice -20 si possible)
+renice -n -10 $$ 2>/dev/null || true
+
+# ── C65-THREADS : utiliser tous les cœurs disponibles (local + Replit) ─────
+# Sans ces exports, OpenBLAS/OMP peuvent rester à 1 thread → sous-utilisation CPU.
+_NPROC="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)"
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-$_NPROC}"
+export OMP_DYNAMIC="${OMP_DYNAMIC:-FALSE}"
+export OPENBLAS_NUM_THREADS="${OPENBLAS_NUM_THREADS:-$_NPROC}"
+export MKL_NUM_THREADS="${MKL_NUM_THREADS:-$_NPROC}"
+export NUMEXPR_NUM_THREADS="${NUMEXPR_NUM_THREADS:-$_NPROC}"
+export GOTO_NUM_THREADS="${GOTO_NUM_THREADS:-$_NPROC}"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C65-THREADS] nproc=${_NPROC} OMP_NUM_THREADS=${OMP_NUM_THREADS} OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS}"
+
+# ── BC-LV04 fix : Wrapper LumVorax pour phases Python 8-39 ──────────
+# Lit LUMVORAX_CSV_PATH (défini après le run C) et instrumente chaque phase Python
+_LV_PHASE_NUM=7  # Compteur de phase Python (commence à 8 = après 7 phases C)
+
+lv_wrap() {
+  # Usage: lv_wrap phase_num python3 script.py [args...]
+  local phase="$1"; shift
+  local t_start; t_start="$(date +%s%N)"
+  local iso; iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  local pid="$$"
+  local script_name; script_name="$(basename "$1" 2>/dev/null || echo unknown)"
+
+  # Écriture PHASE_BRIDGE START + HW_SAMPLE dans le CSV LumVorax
+  if [ -n "${LUMVORAX_CSV_PATH:-}" ] && [ -f "${LUMVORAX_CSV_PATH:-}" ]; then
+    local mem_pct cpu_info
+    mem_pct="$(awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%.2f", 100*(t-a)/t}' /proc/meminfo 2>/dev/null || echo -1)"
+    cpu_info="$(awk 'NR==1{u=$2+$4; i=$5; t=u+i; printf "%.2f", 100*u/t}' /proc/stat 2>/dev/null || echo -1)"
+    local ts; ts="$(date +%s%N)"
+    {
+      printf "PHASE_BRIDGE,%s,%s,%s,phase%02d:%s,START\n" "$iso" "$ts" "$pid" "$phase" "$script_name"
+      printf "HW_SAMPLE,%s,%s,%s,phase%02d:mem_pct,%s\n" "$iso" "$ts" "$pid" "$phase" "$mem_pct"
+      printf "HW_SAMPLE,%s,%s,%s,phase%02d:cpu_snapshot,%s\n" "$iso" "$ts" "$pid" "$phase" "$cpu_info"
+    } >> "${LUMVORAX_CSV_PATH}"
+  fi
+
+  # Exécution du script Python avec capture de statut
+  local exit_code=0
+  "$@" || exit_code=$?
+
+  # Écriture PHASE_BRIDGE END + durée
+  if [ -n "${LUMVORAX_CSV_PATH:-}" ] && [ -f "${LUMVORAX_CSV_PATH:-}" ]; then
+    local t_end; t_end="$(date +%s%N)"
+    local duration_ns=$(( t_end - t_start ))
+    local status="SUCCESS"
+    [ "$exit_code" -ne 0 ] && status="FAILURE_exit${exit_code}"
+    local mem_pct_end; mem_pct_end="$(awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%.2f", 100*(t-a)/t}' /proc/meminfo 2>/dev/null || echo -1)"
+    local iso2; iso2="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    {
+      printf "PHASE_BRIDGE,%s,%s,%s,phase%02d:%s,%s\n" "$iso2" "$t_end" "$pid" "$phase" "$script_name" "$status"
+      printf "METRIC,%s,%s,%s,phase%02d:duration_ns,%s\n" "$iso2" "$t_end" "$pid" "$phase" "$duration_ns"
+      printf "HW_SAMPLE,%s,%s,%s,phase%02d:mem_pct_end,%s\n" "$iso2" "$t_end" "$pid" "$phase" "$mem_pct_end"
+    } >> "${LUMVORAX_CSV_PATH}"
+    # Détection anomalie si exit_code != 0
+    if [ "$exit_code" -ne 0 ]; then
+      printf "ANOMALY,%s,%s,%s,phase%02d:exit_code,%s\n" "$iso2" "$t_end" "$pid" "$phase" "$exit_code" >> "${LUMVORAX_CSV_PATH}"
+    fi
+  fi
+  # C22-BUG-POST : Ne pas propager l'exit_code vers le shell.
+  # Avec set -euo pipefail actif, un exit_code != 0 tuerait le run entier.
+  # L'exit_code est déjà tracé dans le CSV LumVorax via ANOMALY — aucune perte d'info.
+  return 0
+}
+cp -a "$ROOT_DIR/include" "$BACKUP_DIR/"
+cp -a "$ROOT_DIR/src" "$BACKUP_DIR/"
+cp -a "$ROOT_DIR/Makefile" "$BACKUP_DIR/"
+cp -a "$ROOT_DIR/benchmarks" "$BACKUP_DIR/"
+
+TOTAL_STEPS="$(grep -c '^[[:space:]]*print_progress "' "$SCRIPT_PATH")"
+if [ "${TOTAL_STEPS:-0}" -le 0 ]; then
+  TOTAL_STEPS=1
+fi
+CURRENT_STEP=0
+
+print_progress() {
+  CURRENT_STEP=$((CURRENT_STEP + 1))
+  local label="$1"
+  local width=40
+  local filled=$((CURRENT_STEP * width / TOTAL_STEPS))
+  local empty=$((width - filled))
+
+  local bar
+  bar=$(printf '%*s' "$filled" '' | tr ' ' '#')
+  bar+=$(printf '%*s' "$empty" '' | tr ' ' '-')
+
+  printf "\r[%s] %3d%% (%d/%d) %s" \
+    "$bar" \
+    "$((CURRENT_STEP * 100 / TOTAL_STEPS))" \
+    "$CURRENT_STEP" \
+    "$TOTAL_STEPS" \
+    "$label"
+
+  if [ "$CURRENT_STEP" -eq "$TOTAL_STEPS" ]; then
+    printf "\n"
+  fi
+}
+
+write_checksums() {
+  local target_run_dir="$1"
+  (
+    cd "$target_run_dir"
+    rm -f logs/checksums.sha256
+    find . -type f ! -path './logs/checksums.sha256' -print0 | sort -z | xargs -0 sha256sum > logs/checksums.sha256
+  )
+}
+
+# T02/T18 — GLOBAL_CHECKSUM.sha512 : traçabilité totale par run (sha512 de tous les fichiers résultats)
+write_global_sha512() {
+  local target_run_dir="$1"
+  (
+    cd "$target_run_dir"
+    find . -type f ! -name 'GLOBAL_CHECKSUM.sha512' -print0 | sort -z | xargs -0 sha512sum > GLOBAL_CHECKSUM.sha512
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] GLOBAL_CHECKSUM.sha512 generated — $(wc -l < GLOBAL_CHECKSUM.sha512) files hashed"
+  )
+}
+
+verify_checksums() {
+  local target_run_dir="$1"
+  (
+    cd "$target_run_dir"
+    sha256sum -c logs/checksums.sha256 >/dev/null
+  )
+}
+
+checkpoint_save 1
+# C37-SKIPBUILD : si SKIP_MAKE=1 ET binaires déjà présents → sauter recompilation
+_RUNNER_BIN="$ROOT_DIR/hubbard_hts_research_runner_advanced_parallel"
+if [ "${SKIP_MAKE:-0}" = "1" ] && [ -x "$_RUNNER_BIN" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SKIPBUILD] Binaires déjà présents — compilation ignorée (SKIP_MAKE=1)"
+else
+    make -C "$ROOT_DIR" clean all
+fi
+print_progress "build"
+checkpoint_save 2
+
+# ── C37-RESUME : reprise intelligente par module ─────────────────────────────
+# Scanne TOUS les runs dans results/ et agrège les BASE_RESULT convergés
+# Le runner C lit LUMVORAX_PROBLEMS_CSV pour choisir sa config (getenv ligne 1019)
+_PROBLEMS_CSV="$ROOT_DIR/config/problems_cycle06.csv"
+_RESULTS_DIR="$ROOT_DIR/results"
+if [ -d "$_RESULTS_DIR" ] && [ -n "$(ls -A "$_RESULTS_DIR" 2>/dev/null)" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Scan de tous les runs dans $_RESULTS_DIR"
+    _RESUME_OUT="$(python3 "$ROOT_DIR/tools/generate_resume_config.py" "$_PROBLEMS_CSV" "$_RESULTS_DIR" 2>&1)"
+    echo "$_RESUME_OUT"
+    _RESUME_CSV="$(echo "$_RESUME_OUT" | tail -1)"
+    if [ -f "${_RESUME_CSV:-}" ]; then
+        export LUMVORAX_PROBLEMS_CSV="$_RESUME_CSV"
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] LUMVORAX_PROBLEMS_CSV=$LUMVORAX_PROBLEMS_CSV"
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] CSV resume invalide — config complète utilisée"
+    fi
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-RESUME] Aucun run précédent — config complète utilisée"
+fi
+
+# Force forensic runtime toggles ON for full traceability contract
+export LUMVORAX_FORENSIC_REALTIME="1"
+export LUMVORAX_LOG_PERSISTENCE="1"
+export LUMVORAX_HFBL360_ENABLED="1"
+export LUMVORAX_MEMORY_TRACKER="1"
+export LUMVORAX_RUN_GROUP="campaign_${STAMP_UTC}"
+# C65 : journaux d’orchestration shell (phases runner) — n’altère pas le CSV LumVorax
+export LUMVORAX_SHELL_TRACE="${LUMVORAX_SHELL_TRACE:-1}"
+
+# ── C26-RUNNER-RETRY : relance automatique si le runner fullscale est tué ───
+# Retry jusqu'à MAX_RUNNER_RETRY tentatives, sans jamais réduire les logs
+MAX_RUNNER_RETRY=5
+FULLSCALE_OK=0
+for _try in $(seq 1 $MAX_RUNNER_RETRY); do
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner fullscale — tentative ${_try}/${MAX_RUNNER_RETRY}"
+    if [ "${LUMVORAX_SHELL_TRACE:-0}" = "1" ]; then
+      echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [PHASE] fullscale_try=${_try} binary=hubbard_hts_research_runner root=${ROOT_DIR}"
+    fi
+    export LUMVORAX_SOLVER_VARIANT="fullscale"
+    if "$ROOT_DIR/hubbard_hts_research_runner" "$ROOT_DIR"; then
+        FULLSCALE_OK=1
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner fullscale terminé avec succès (tentative ${_try})"
+        break
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner fullscale interrompu (exit=$?) — relance dans 2s..."
+        sleep 2
+    fi
+done
+[ "$FULLSCALE_OK" -eq 0 ] && echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] WARNING: Runner fullscale non terminé après ${MAX_RUNNER_RETRY} tentatives — continuation quand même"
+print_progress "fullscale simulation"
+checkpoint_save 3
+
+LATEST_FULLSCALE_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | grep '^research_' | head -n 1 || true)"
+FULLSCALE_RUN_DIR="$ROOT_DIR/results/$LATEST_FULLSCALE_RUN"
+
+# ── C37-SPLITLOG : séparation lumvorax par module (runner fullscale) ──────────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SPLITLOG] Split lumvorax → modules individuels : $FULLSCALE_RUN_DIR"
+python3 "$ROOT_DIR/tools/split_lumvorax_by_module.py" "$FULLSCALE_RUN_DIR" 2>&1 || true
+
+# C22-BUG04 FIX : entourer avec lv_wrap pour que SystemExit(1) du script Python
+# ne propage pas d'exit code non-zero au shell (set -euo pipefail).
+# Sans lv_wrap, une incohérence de colonnes dans le CSV forensique
+# (ex. lignes ANOMALY vs METRIC) interrompait le run avant la phase advanced parallel.
+lv_wrap 7 python3 "$ROOT_DIR/tools/post_run_csv_schema_guard.py" "$FULLSCALE_RUN_DIR"
+print_progress "fullscale csv schema guard"
+
+write_checksums "$FULLSCALE_RUN_DIR"
+print_progress "fullscale checksums"
+write_global_sha512 "$FULLSCALE_RUN_DIR"
+print_progress "fullscale sha512 global"
+verify_checksums "$FULLSCALE_RUN_DIR"
+print_progress "fullscale checksum verify"
+
+# ── C60-PTMC-WATCHER : upload temps réel CSV PTMC → évite accumulation disque + SIGKILL ──
+# Lance un watcher Python en background qui détecte le nouveau run_dir ADV,
+# uploade chaque fichier _part_*.csv dès sa fermeture et le supprime du disque.
+_WATCHER_RESULTS="$ROOT_DIR/results"
+_WATCHER_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+(
+    for _w in $(seq 1 60); do
+        sleep 3
+        _NEW_RUN="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+        if [ -n "$_NEW_RUN" ] && [ "$_NEW_RUN" != "$_WATCHER_BEFORE" ]; then
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Nouveau run détecté: $_NEW_RUN"
+            python3 "$ROOT_DIR/tools/ptmc_realtime_uploader.py" "$_NEW_RUN"
+            break
+        fi
+    done
+) &
+WATCHER_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] PID=$WATCHER_PID lancé en background"
+
+# ── C70-STREAM : streaming temps réel logs LumVorax → Supabase quantum_realtime_logs ──
+# Attend la création du nouveau run_dir (même base que C60-WATCHER),
+# puis lance supabase_realtime_streamer.py en DirectoryWatcher sur ce répertoire.
+# Surveille tous les *.csv et *.log : lumvorax_*.csv, research_execution.log, etc.
+# Pas de --delete-after : conservation locale des logs LumVorax après upload.
+(
+    _STREAM_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+    for _ws in $(seq 1 120); do
+        sleep 2
+        _NEW_RUN_STREAM="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+        if [ -n "$_NEW_RUN_STREAM" ] && [ "$_NEW_RUN_STREAM" != "$_STREAM_BEFORE" ]; then
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Run détecté: $_NEW_RUN_STREAM"
+            python3 "$ROOT_DIR/tools/supabase_realtime_streamer.py" \
+                --watch "$_NEW_RUN_STREAM" \
+                --run-id "$STAMP_UTC"
+            break
+        fi
+    done
+) &
+LUMVORAX_STREAM_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax PID=$LUMVORAX_STREAM_PID"
+
+# ── C80-VERCEL : streaming logs CSV → Vercel + Supabase DB1+DB2 en temps réel ──
+# C52 : vercel_log_streamer.py surveille les CSV du dernier run et les streame
+# vers Vercel (VERCEL_URL/api/lumvorax-logs) ET vers Supabase (table vercel_log_events).
+# Lance en background dès le démarrage, se connecte au dernier run_dir détecté.
+(
+    _VERCEL_BEFORE="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+    for _wv in $(seq 1 120); do
+        sleep 2
+        _NEW_RUN_VERCEL="$(ls -1d "$_WATCHER_RESULTS"/research_* 2>/dev/null | sort | tail -n 1 || echo '')"
+        if [ -n "$_NEW_RUN_VERCEL" ] && [ "$_NEW_RUN_VERCEL" != "$_VERCEL_BEFORE" ]; then
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Run détecté: $_NEW_RUN_VERCEL"
+            python3 "$ROOT_DIR/tools/vercel_log_streamer.py" \
+                --run-dir "$_NEW_RUN_VERCEL"
+            break
+        fi
+    done
+) &
+VERCEL_STREAM_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Streamer Vercel PID=$VERCEL_STREAM_PID"
+
+# ── Bug#4-FIX : skip runner si déjà complété (évite les runs "SKIP" en boucle) ──
+# Si ADVANCED_DONE_FILE existe et RESUME_FROM_PHASE >= 10 → le runner a déjà fini.
+# Cas d'invalidation : RESUME_FROM_PHASE == 0 (nouveau cycle) → supprimer le marqueur.
+if [ "${RESUME_FROM_PHASE:-0}" -eq 0 ]; then
+    rm -f "$ADVANCED_DONE_FILE"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Nouveau cycle — marqueur ADVANCED_DONE supprimé"
+fi
+
+# ── C60-OPENML-RT-WATCHER : surveillance du signal JSON OpenML en temps réel ─
+# Ce watcher bash lit config/nx48_openml_rt.json (écrit par C60_OPENML_RT dans le
+# runner C) et affiche l'avancement en % dans les logs du workflow.
+# Chaque module NX48 traité met à jour le fichier JSON, ce watcher l'affiche.
+# Fréquence de polling : 10 secondes (compromis entre réactivité et overhead).
+OPENML_SIGNAL="$ROOT_DIR/config/nx48_openml_rt.json"
+_last_module_seen=""
+(
+  while true; do
+    sleep 10
+    if [ -f "$OPENML_SIGNAL" ]; then
+      _pct=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('pct',0))" 2>/dev/null || echo "?")
+      _mod=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('module','?'))" 2>/dev/null || echo "?")
+      _adv=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(str(d.get('avancement','?'))+'/'+str(d.get('total','?')))" 2>/dev/null || echo "?/?")
+      _tscale=$(python3 -c "import json,sys; d=json.load(open('$OPENML_SIGNAL')); print(d.get('temp_K_scale',0))" 2>/dev/null || echo "?")
+      if [ "$_mod" != "$_last_module_seen" ]; then
+        echo "[C60-OPENML-RT-WATCHER] $(date -u +%Y-%m-%dT%H:%M:%SZ) AVANCEMENT=${_pct}% — module=${_mod} (${_adv}) temp_K_scale=${_tscale}"
+        _last_module_seen="$_mod"
+      fi
+    fi
+  done
+) &
+OPENML_WATCHER_PID=$!
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-OPENML-RT-WATCHER] Watcher démarré PID=$OPENML_WATCHER_PID"
+
+# ── C26-RUNNER-RETRY : relance automatique si le runner advanced_parallel est tué ─
+ADV_OK=0
+if [ -f "$ADVANCED_DONE_FILE" ] && [ "${RESUME_FROM_PHASE:-0}" -ge 10 ]; then
+    ADV_OK=1
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Runner advanced_parallel déjà complété (marqueur présent) — SKIP"
+else
+for _try in $(seq 1 $MAX_RUNNER_RETRY); do
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel — tentative ${_try}/${MAX_RUNNER_RETRY}"
+    if [ "${LUMVORAX_SHELL_TRACE:-0}" = "1" ]; then
+      echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [PHASE] advanced_parallel_try=${_try} binary=hubbard_hts_research_runner_advanced_parallel root=${ROOT_DIR} last_fullscale_dir=${FULLSCALE_RUN_DIR:-unknown}"
+    fi
+    export LUMVORAX_SOLVER_VARIANT="advanced_parallel"
+    if "$ROOT_DIR/hubbard_hts_research_runner_advanced_parallel" "$ROOT_DIR"; then
+        ADV_OK=1
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel terminé avec succès (tentative ${_try})"
+        # Bug#4-FIX : écrire le marqueur de complétion pour éviter les re-runs inutiles
+        touch "$ADVANCED_DONE_FILE"
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [Bug4-FIX] Marqueur ADVANCED_DONE écrit : $ADVANCED_DONE_FILE"
+        break
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Runner advanced_parallel interrompu (exit=$?) — relance dans 2s..."
+        sleep 2
+    fi
+done
+fi  # Bug#4-FIX : fermeture du bloc else "skip si déjà complété"
+
+# Arrêt propre du watcher PTMC et du streamer LumVorax après fin du runner
+kill "$WATCHER_PID" 2>/dev/null || true
+wait "$WATCHER_PID" 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C60-WATCHER] Watcher PTMC arrêté"
+kill "$LUMVORAX_STREAM_PID" 2>/dev/null || true
+wait "$LUMVORAX_STREAM_PID" 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C70-STREAM] Streamer LumVorax arrêté"
+kill "$VERCEL_STREAM_PID" 2>/dev/null || true
+wait "$VERCEL_STREAM_PID" 2>/dev/null || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] [C80-VERCEL] Streamer Vercel arrêté"
+[ "$ADV_OK" -eq 0 ] && echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] WARNING: Runner advanced_parallel non terminé après ${MAX_RUNNER_RETRY} tentatives — continuation quand même"
+print_progress "advanced parallel simulation"
+checkpoint_save 10
+
+LATEST_ADV_RUN="$(ls -1t "$ROOT_DIR/results" 2>/dev/null | grep '^research_' | head -n 1 || true)"
+ADV_RUN_DIR="$ROOT_DIR/results/$LATEST_ADV_RUN"
+
+# ── C61-P1 : Archivage anomalies D² par run_id ──────────────────────────────
+# Copie le fichier d'anomalies temporelles D² dans le répertoire du run courant.
+# Évite l'accumulation multi-runs (489 lignes cumulées C60) et permet la traçabilité.
+# Ref : analysechatgpt91.30.md §5.3 PATTERN-D2-ANOMALIES-MULTI-RUNS.
+if [ -n "$LATEST_ADV_RUN" ] && [ -d "$ADV_RUN_DIR" ]; then
+    for _D2F in \
+        "$ROOT_DIR/logs/forensic/anomalies/temporal_d2_anomalies.log" \
+        "$ROOT_DIR/logs/forensic/temporal_d2_anomalies.log" \
+        "$ROOT_DIR/logs/temporal_d2_anomalies.log"; do
+        if [ -f "$_D2F" ]; then
+            cp "$_D2F" "$ADV_RUN_DIR/temporal_d2_anomalies_${LATEST_ADV_RUN}.log" 2>/dev/null || true
+            echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C61-D2-ARCHIVE] temporal_d2_anomalies.log → $ADV_RUN_DIR (run_id=$LATEST_ADV_RUN)"
+            > "$_D2F" 2>/dev/null || true
+            break
+        fi
+    done
+fi
+unset _D2F
+
+# ── C37-SPLITLOG : séparation lumvorax par module (runner advanced_parallel) ──
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C37-SPLITLOG] Split lumvorax → modules individuels : $ADV_RUN_DIR"
+python3 "$ROOT_DIR/tools/split_lumvorax_by_module.py" "$ADV_RUN_DIR" 2>&1 || true
+
+RUN_DIR="$ADV_RUN_DIR"
+LATEST_RUN="$LATEST_ADV_RUN"
+
+# ── BC-LV04 fix : Export LUMVORAX_CSV_PATH pour les phases Python 8-39 ──
+# Trouve le dernier CSV LumVorax créé par le runner C (advanced_parallel)
+LUMVORAX_CSV_PATH="$(find "$RUN_DIR/logs" -name 'lumvorax_*.csv' -type f 2>/dev/null | sort | tail -n 1 || true)"
+export LUMVORAX_CSV_PATH
+if [ -n "${LUMVORAX_CSV_PATH:-}" ]; then
+  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] LUMVORAX_CSV_PATH=$LUMVORAX_CSV_PATH (phases 8-39 instrumented)"
+else
+  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] LUMVORAX_CSV_PATH not found — phases 8-39 will run uninstrumented"
+fi
+
+lv_wrap 8 python3 "$ROOT_DIR/tools/post_run_csv_schema_guard.py" "$RUN_DIR"
+print_progress "advanced csv schema guard"
+
+{
+  echo "timestamp_utc=$STAMP_UTC"
+  echo "hostname=$(hostname)"
+  echo "uname=$(uname -a)"
+  echo "gcc_version=$(gcc --version | head -n 1)"
+} > "$RUN_DIR/logs/environment_versions.log"
+
+# Cycle integrations: metadata first, then guard/gates, then physics pack.
+
+lv_wrap 9  python3 "$ROOT_DIR/tools/post_run_metadata_capture.py" "$RUN_DIR"
+print_progress "metadata capture"
+
+lv_wrap 10 python3 "$ROOT_DIR/tools/post_run_cycle_guard.py" "$ROOT_DIR" "$RUN_DIR"
+print_progress "cycle guard"
+
+lv_wrap 11 python3 "$ROOT_DIR/tools/post_run_physics_readiness_pack.py" "$RUN_DIR"
+print_progress "physics readiness"
+
+# BC-10 : mise à jour automatique runtime benchmark (R13 — RMSE < 0.05 requis)
+lv_wrap 12 python3 "$ROOT_DIR/tools/post_run_update_runtime_benchmark.py" "$RUN_DIR" "$ROOT_DIR/benchmarks"
+print_progress "runtime benchmark update"
+
+lv_wrap 13 python3 "$ROOT_DIR/tools/post_run_v4next_integration_status.py" "$RUN_DIR"
+print_progress "v4next status"
+
+ROLL_MODE="${LUMVORAX_ROLLOUT_MODE:-full}"   # C37-P4 : CANARY→FULL (seuils conn=80%,realism=95%,shadow=85% satisfaits)
+lv_wrap 14 python3 "$ROOT_DIR/tools/v4next_rollout_controller.py" "$RUN_DIR" "$ROLL_MODE"
+print_progress "rollout controller"
+
+lv_wrap 15 python3 "$ROOT_DIR/tools/post_run_v4next_rollout_progress.py" "$RUN_DIR"
+print_progress "rollout progress"
+
+lv_wrap 16 python3 "$ROOT_DIR/tools/post_run_v4next_realtime_evolution.py" "$ROOT_DIR" "$RUN_DIR"
+print_progress "realtime evolution"
+
+lv_wrap 17 python3 "$ROOT_DIR/tools/post_run_low_level_telemetry.py" "$RUN_DIR"
+print_progress "low-level telemetry"
+
+lv_wrap 18 python3 "$ROOT_DIR/tools/post_run_advanced_observables_pack.py" "$RUN_DIR"
+print_progress "advanced observables"
+
+lv_wrap 19 python3 "$ROOT_DIR/tools/run_independent_physics_modules.py" "$RUN_DIR"
+print_progress "independent qmc/dmrg/arpes/stm"
+
+# C55-Q28-FIX : fss_binder AVANT chatgpt_critical_tests (Q28 dépend de fss_binder_cumulants.csv)
+lv_wrap 191 python3 "$ROOT_DIR/tools/post_run_fss_tc_binder.py" "$RUN_DIR"
+print_progress "fss tc binder (pre-critical)"
+
+# C55-Q29-FIX : optical_conductivity AVANT chatgpt_critical_tests (Q29 dépend de integration_optical_conductivity.csv)
+lv_wrap 192 python3 "$ROOT_DIR/tools/post_run_optical_conductivity.py" "$RUN_DIR"
+print_progress "optical conductivity (pre-critical)"
+
+lv_wrap 20 python3 "$ROOT_DIR/tools/post_run_chatgpt_critical_tests.py" "$RUN_DIR"
+print_progress "critical tests"
+
+lv_wrap 21 python3 "$ROOT_DIR/tools/post_run_problem_solution_progress.py" "$RUN_DIR"
+print_progress "solution progress"
+
+lv_wrap 22 python3 "$ROOT_DIR/tools/post_run_authenticity_audit.py" "$ROOT_DIR" "$RUN_DIR"
+print_progress "authenticity audit"
+
+lv_wrap 23 python3 "$ROOT_DIR/tools/post_run_cycle35_exhaustive_report.py" "$ROOT_DIR" "$RUN_DIR"
+print_progress "cycle35 report"
+
+lv_wrap 24 python3 "$ROOT_DIR/tools/post_run_full_scope_integrator.py" --root "$ROOT_DIR" "$RUN_DIR"
+print_progress "full-scope integration"
+
+# C59-P1 FIX : Régénérer SHA512 + SHA256 AVANT le rapport scientifique.
+# L'ancien bloc supprimait logs/checksums.sha256 sans régénérer → traceability_pct < 100%.
+# write_global_sha512 AVANT write_checksums : le sha256 inclut le sha512 final (règle T02/T18).
+write_global_sha512 "$RUN_DIR"
+print_progress "pre-report sha512 global (C59-P1)"
+write_checksums "$RUN_DIR"
+print_progress "pre-report checksums (C59-P1)"
+
+lv_wrap 25 python3 "$ROOT_DIR/tools/post_run_scientific_report_cycle.py" "$RUN_DIR"
+print_progress "scientific report"
+
+lv_wrap 26 python3 "$ROOT_DIR/tools/post_run_independent_log_review.py" "$RUN_DIR"
+print_progress "independent review"
+
+lv_wrap 27 python3 "$ROOT_DIR/tools/post_run_3d_modelization_export.py" "$RUN_DIR"
+print_progress "3d model export"
+
+lv_wrap 28 python3 "$ROOT_DIR/tools/post_run_remote_depot_independent_analysis.py" "$ROOT_DIR" --run-dir "$RUN_DIR"
+print_progress "remote independent analysis"
+
+lv_wrap 29 python3 "$ROOT_DIR/tools/post_run_parallel_calibration_bridge.py" "$RUN_DIR"
+print_progress "parallel calibration bridge"
+
+lv_wrap 30 python3 "$ROOT_DIR/tools/post_run_hfbl360_forensic_logger.py" "$RUN_DIR" --standard-names "$ROOT_DIR/../../../STANDARD_NAMES.md"
+print_progress "hfbl360 forensic logger"
+
+# C36-P4 : ARPES synthétique + FSS Tc Binder
+lv_wrap 31 python3 "$ROOT_DIR/tools/post_run_arpes_synthetic.py" "$ROOT_DIR" "$RUN_DIR"
+print_progress "arpes synthetic"
+
+lv_wrap 32 python3 "$ROOT_DIR/tools/post_run_fss_tc_binder.py" "$RUN_DIR"
+print_progress "fss tc binder"
+
+# C36-P2 : cross-center consensus node-2
+lv_wrap 33 python3 "$ROOT_DIR/tools/post_run_cross_center_consensus.py" "$RUN_DIR"
+print_progress "cross center consensus"
+
+# C38-P8-DYNSCALE : Scan dynamique de la taille de réseau jusqu'à 99% ressources CPU/RAM
+lv_wrap 34 python3 "$ROOT_DIR/tools/post_run_dynamic_hilbert_scan.py" "$RUN_DIR"
+print_progress "dynamic hilbert scan"
+
+# C39-F1 : Conductivité optique σ(ω) via formule Kubo-Drude (corrélations J-J)
+# Lit parallel_tempering_mc_results.csv + model_metadata.csv
+# Produit integration_optical_conductivity.csv (σ(ω) par module et T) et
+# integration_drude_weight.csv (poids D(T) — signature de la phase SC)
+lv_wrap 35 python3 "$ROOT_DIR/tools/post_run_optical_conductivity.py" "$RUN_DIR"
+print_progress "optical conductivity sigma(omega)"
+
+# C39-H1 : Autocorrélation et temps d'intégration τ_int (estimateur Sokal)
+# Calcule τ_int pour l'énergie et le pairing par module — nécessaire pour dTc correct
+lv_wrap 36 python3 "$ROOT_DIR/tools/post_run_autocorr.py" --run-dir "$RUN_DIR" --output "$RUN_DIR/tests/autocorr_tau_int_sokal.csv" --c-factor 6.0 --max-window 5000
+print_progress "autocorr tau_int Sokal"
+
+# ── Phase 37 — Module 17 BTC_QM_ENGINE (STANDARD_NAMES.md §M-BTC17) ──────────
+# Conforme analysechatgpt91.32.md + analysechatgpt91.33.md (C63 — Cycle C37)
+# Exécution en parallèle — ne bloque pas la simulation Hubbard
+# Gate BTC_SHA256_INTEGRITY_GATE : SHA-256("abc") = NIST vecteur OK ✓
+# ─────────────────────────────────────────────────────────────────────────────
+_BTC_DIR="$ROOT_DIR/../bitcoin_quantum_mining"
+if [ -f "$_BTC_DIR/btc_mining_runner" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Lancement Module 17 Bitcoin Quantum Mining Engine"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] run_id=${STAMP_UTC} — mode=BENCHMARK — threads=4 — duration=60s"
+    (
+        cd "$_BTC_DIR" && \
+        ./btc_mining_runner \
+            --mode BENCHMARK \
+            --duration-s 60 \
+            --threads 4 \
+            --nx48-csv config/btc_nx48_last.csv \
+            --log-dir logs/forensic \
+        2>&1 | sed "s/^/[BTC17] /"
+    ) &
+    BTC_PID=$!
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Module 17 lancé en background — PID=${BTC_PID}"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] btc_mining_runner non trouvé — recompilation requise"
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] Exécuter : cd src/advanced_calculations/bitcoin_quantum_mining && make all"
+    BTC_PID=""
+fi
+print_progress "Module 17 BTC_QM_ENGINE lancé"
+
+write_checksums "$RUN_DIR"
+print_progress "checksums"
+write_global_sha512 "$RUN_DIR"
+print_progress "sha512 global"
+
+
+CAMPAIGN_DIR="$ROOT_DIR/results/${LUMVORAX_RUN_GROUP}"
+mkdir -p "$CAMPAIGN_DIR"
+cat > "$CAMPAIGN_DIR/campaign_manifest.txt" <<MANIFEST
+stamp_utc=$STAMP_UTC
+run_group=${LUMVORAX_RUN_GROUP}
+fullscale_run=$LATEST_FULLSCALE_RUN
+advanced_run=$LATEST_ADV_RUN
+fullscale_run_dir=$FULLSCALE_RUN_DIR
+advanced_run_dir=$ADV_RUN_DIR
+MANIFEST
+print_progress "campaign manifest"
+
+python3 "$ROOT_DIR/tools/post_run_fullscale_vs_advanced_compare.py" "$FULLSCALE_RUN_DIR" "$ADV_RUN_DIR" --out-dir "$CAMPAIGN_DIR"
+print_progress "fullscale vs advanced compare"
+
+python3 "$ROOT_DIR/tools/post_run_fullscale_vs_fullscale_benchmark.py" "$RUN_DIR"
+print_progress "fullscale vs fullscale benchmark"
+
+echo "Research cycle terminé (advanced): $RUN_DIR"
+echo "Fullscale run: $FULLSCALE_RUN_DIR"
+echo "Advanced run: $ADV_RUN_DIR"
+echo "Campaign artifacts: $CAMPAIGN_DIR"
+echo "Session log: $SESSION_LOG"
+
+# ── Phase 37 — Attente Module 17 BTC_QM_ENGINE (wait PID) ────────────────────
+if [ -n "${BTC_PID:-}" ] && kill -0 "$BTC_PID" 2>/dev/null; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Attente fin Module 17 (PID=${BTC_PID})..."
+    wait "$BTC_PID"
+    BTC_EXIT=$?
+    if [ "$BTC_EXIT" -eq 0 ]; then
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC] Module 17 terminé avec succès (exit=0)"
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [C63-BTC-WARN] Module 17 terminé exit=${BTC_EXIT}"
+    fi
+fi
+print_progress "Module 17 BTC_QM_ENGINE terminé"
+
+if [ "${LUMVORAX_FULLSCALE_STRICT:-1}" = "1" ]; then
+  "$ROOT_DIR/run_fullscale_strict_protocol.sh" "$RUN_DIR"
+  print_progress "fullscale strict protocol audit"
+fi
+
+# Finalize checksums at very end so later post-steps cannot stale the manifest.
+# T02/T18 : SHA512 AVANT SHA256 pour que le sha256 inclue le sha512 final (évite mismatch).
+write_global_sha512 "$RUN_DIR"
+print_progress "final sha512 global (T02/T18)"
+write_checksums "$RUN_DIR"
+print_progress "final checksums"
+verify_checksums "$RUN_DIR"
+print_progress "final checksum verify"
+checkpoint_save 99
+
+# ── C26-CHECKPOINT-CLEAR : Succès complet — supprimer le checkpoint ──────────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] Run complet à 100% — checkpoint supprimé"
+rm -f "$CHECKPOINT_PHASE_FILE" "$CHECKPOINT_FILE"
+
+# ── C59-SUPABASE : Upload automatique vers Supabase + suppression locale ──────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE] Upload du run vers Supabase..."
+if python3 "$ROOT_DIR/tools/upload_to_supabase.py" "$RUN_DIR" --delete-after 2>&1; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE] Upload fullscale run OK — fichiers locaux supprimés"
+else
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-WARN] Upload partiel ou échoué — fichiers conservés localement"
+fi
+if [ -n "$ADV_RUN_DIR" ] && [ -d "$ADV_RUN_DIR" ]; then
+    if python3 "$ROOT_DIR/tools/upload_to_supabase.py" "$ADV_RUN_DIR" --delete-after 2>&1; then
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE] Upload advanced run OK — fichiers locaux supprimés"
+    else
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [SUPABASE-WARN] Upload advanced partiel — fichiers conservés localement"
+    fi
+fi
+print_progress "supabase upload + nettoyage local"
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] ===== run_research_cycle.sh TERMINÉ AVEC SUCCÈS ====="
+
+# ── NX48-SUPERMEMORY-END : persistance du résumé de run dans Supermemory ─────
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Envoi résumé final run=${STAMP_UTC} vers Supermemory..."
+python3 "$ROOT_DIR/tools/nx48_supermemory.py" --init "${STAMP_UTC}" 2>&1 | sed "s/^/[NX48-END] /" || true
+echo "[$(date -u +%Y-%m-%dT%H:%M:%S.%N)Z] [NX48-MEM] Mémoire persistante mise à jour — inter-sessions conservée"
+
+# ── GUARD : Recréation automatique après run complet ─────────────────────────
+# Empêche le relancement automatique non voulu au prochain démarrage Replit.
+touch "$_GUARD_FILE" 2>/dev/null || true
+echo "[C37-GUARD] Guard recréé automatiquement — prochain boot Replit sera bloqué."
+echo "[C37-GUARD] Pour relancer : C37_AUTORUN_ENABLED=1 bash $_GUARD_DIR/run_research_cycle.sh"

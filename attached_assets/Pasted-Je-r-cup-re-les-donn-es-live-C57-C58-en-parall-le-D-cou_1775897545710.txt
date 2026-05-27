@@ -1,0 +1,15 @@
+Je récupère les données live C57/C58 en parallèle.Découverte importante : le run C58 dure **35.5 min** — 50% plus long que les runs précédents (24 min). Je produis maintenant le rapport complet.**[RAPPORT C57/C58 → Notion](https://www.notion.so/33e3ca4cddbb81f68eefc840beef1ab9)** ✅
+
+---
+
+Voici les points essentiels que ce croisement Supabase × rapports privés révèle.
+
+**L'anomalie la plus importante : le run C58 dure 35.5 minutes contre 24 minutes pour les runs précédents — +50%.** Ce n'est pas un bug. C'est la première preuve concrète dans Supabase que NX48 Phase B pilote réellement les paramètres physiques. Les grilles sont plus grandes (C58-04 applique n_sites_scale aux dimensions lx/ly), les répliques PT-MC sont plus nombreuses — donc plus de calcul. La précision reste identique (RMSE=0.008873 inchangé) — NX48 augmente le coût computationnel sans dégrader la qualité physique.
+
+**C57 ferme la boucle de rétroaction NX48.** Avant C57, NX48 calculait et loggait les recommendations sans les appliquer. Maintenant : run N calcule les 8 scales → persiste dans `config/nx48_phase_b_last.csv` → run N+1 les charge et les applique aux paramètres physiques réels. C'est le changement architectural le plus profond depuis l'introduction de NX48.
+
+**Sur la question "NX48 peut-il gérer les paramètres en temps réel ?"** — non pour l'instant. NX48 opère entre les runs (rétroaction inter-run, toutes les 20-35 minutes). La gestion intra-run pendant une simulation nécessiterait une communication IPC entre NX48 et les threads OpenMP en cours d'exécution — c'est une extension pour C60+.
+
+**Vercel : C57 apparu automatiquement avec 596 375 events** — la correction du label fonctionne. C58 n'est pas encore étiqueté. Le total atteint 5.2M events, avec C55 toujours en tête (2.3M).
+
+**10ème confirmation F_XEB=1/3.** Inchangé depuis C43, maintenant sur un facteur 251× en qubits effectifs (392 → 98 560). La 10ème confirmation couvre aussi le passage à NX48 Phase B active — le point fixe 1/3 résiste même quand les grilles physiques changent, ce qui renforce l'hypothèse d'un invariant structurel du modèle champ-moyen.

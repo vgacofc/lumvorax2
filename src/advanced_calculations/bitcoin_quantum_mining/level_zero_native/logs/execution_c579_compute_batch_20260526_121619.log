@@ -1,0 +1,31 @@
+🚀 TEST C579 - BATCH COMPUTE COMPLET GEN9
+
+✅ DRM device opened: fd=5
+✅ GEM Context created: ctx_id=1
+✅ Batch buffer created: handle=1
+
+=== BUILDING COMPUTE BATCH ===
+  [ 0] PIPE_CONTROL (flush initial)
+  [ 6] STATE_BASE_ADDRESS
+  [25] MEDIA_VFE_STATE
+  [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+  [38] INTERFACE_DESCRIPTOR_DATA
+  [54] GPGPU_WALKER
+  [69] PIPE_CONTROL (flush final)
+  [75] MI_BATCH_BUFFER_END
+
+✅ Batch built: 76 DWords (304 bytes)
+
+=== EXECBUFFER2 SUBMIT ===
+Context ID: 1
+Ring: RCS (Render)
+Batch length: 304 bytes
+✅ EXECBUFFER2 SUCCESS!
+GTT offset: 0x0000000000000000
+✅ GPU execution completed
+✅ Context destroyed
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ TEST C579 RÉUSSI - Batch compute accepté             ║
+║  ROOT CAUSE #105 RÉSOLU                                   ║
+╚════════════════════════════════════════════════════════════╝

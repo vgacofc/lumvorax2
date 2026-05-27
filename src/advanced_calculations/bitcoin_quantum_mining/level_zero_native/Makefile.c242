@@ -1,0 +1,97 @@
+# Makefile pour cycle C242 - Corrections et améliorations
+# Compile les nouveaux modules: monitoring GPU amélioré + warm-up post-reopen
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11 -D_GNU_SOURCE
+LDFLAGS = -ldrm -lm -lpthread -lcrypto
+
+# Répertoires
+SRC_DIR = src
+TEST_DIR = tests
+BUILD_DIR = build
+LOG_DIR = logs/forensic
+
+# Fichiers sources des nouveaux modules C242
+MONITOR_ENHANCED_SRC = $(SRC_DIR)/btc_gpu_monitor_enhanced.c
+WARMUP_SRC = $(SRC_DIR)/btc_warmup_post_reopen.c
+
+# Fichiers sources existants (C241)
+RUNNER_SRC = $(SRC_DIR)/btc_opencl_runner.c
+LOGGER_SRC = $(SRC_DIR)/btc_gpu_async_logger.c
+VALIDATOR_SRC = $(SRC_DIR)/btc_sha256_validator.c
+THERMAL_SRC = $(SRC_DIR)/btc_thermal_monitor.c
+
+# Headers
+HEADERS = $(SRC_DIR)/btc_gpu_monitor_enhanced.h \
+          $(SRC_DIR)/btc_warmup_post_reopen.h \
+          $(SRC_DIR)/btc_opencl_runner.h \
+          $(SRC_DIR)/btc_gpu_async_logger.h \
+          $(SRC_DIR)/btc_sha256_validator.h \
+          $(SRC_DIR)/btc_thermal_monitor.h
+
+# Test principal C242
+TEST_C242_SRC = $(TEST_DIR)/test_btc_mining_c242_with_corrections.c
+TEST_C242_BIN = $(BUILD_DIR)/test_btc_mining_c242
+
+# Tous les objets
+OBJS = $(BUILD_DIR)/btc_gpu_monitor_enhanced.o \
+       $(BUILD_DIR)/btc_warmup_post_reopen.o \
+       $(BUILD_DIR)/btc_opencl_runner.o \
+       $(BUILD_DIR)/btc_gpu_async_logger.o \
+       $(BUILD_DIR)/btc_sha256_validator.o \
+       $(BUILD_DIR)/btc_thermal_monitor.o
+
+.PHONY: all clean test run_c242 dirs
+
+all: dirs $(TEST_C242_BIN)
+
+dirs:
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(LOG_DIR)
+
+# Compilation des objets
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compilation du test C242
+$(TEST_C242_BIN): $(TEST_C242_SRC) $(OBJS)
+	@echo "Linking $@..."
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	@echo "✓ Build complete: $@"
+
+# Exécution du test C242 avec 100 dispatches
+run_c242: $(TEST_C242_BIN)
+	@echo "=========================================="
+	@echo "Running C242 Test (100 dispatches)"
+	@echo "=========================================="
+	@sudo $(TEST_C242_BIN) 100
+	@echo ""
+	@echo "Logs generated in $(LOG_DIR)/"
+	@ls -lh $(LOG_DIR)/c242_*
+
+# Test rapide (10 dispatches)
+test: $(TEST_C242_BIN)
+	@echo "Running quick test (10 dispatches)..."
+	@sudo $(TEST_C242_BIN) 10
+
+# Nettoyage
+clean:
+	@echo "Cleaning build artifacts..."
+	@rm -rf $(BUILD_DIR)
+	@echo "✓ Clean complete"
+
+# Nettoyage complet (inclut les logs)
+distclean: clean
+	@echo "Cleaning logs..."
+	@rm -f $(LOG_DIR)/c242_*
+	@echo "✓ Distclean complete"
+
+# Afficher les informations de compilation
+info:
+	@echo "C242 Build Configuration:"
+	@echo "  CC:      $(CC)"
+	@echo "  CFLAGS:  $(CFLAGS)"
+	@echo "  LDFLAGS: $(LDFLAGS)"
+	@echo "  Sources: $(MONITOR_ENHANCED_SRC) $(WARMUP_SRC)"
+	@echo "  Test:    $(TEST_C242_BIN)"

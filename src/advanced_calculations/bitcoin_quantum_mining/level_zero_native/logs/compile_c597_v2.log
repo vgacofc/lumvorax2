@@ -1,0 +1,33 @@
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~
+src/batch_generator_auto.c: In function ‘generate_state_base_address’:
+src/batch_generator_auto.c:357:74: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  357 |     batch[(*idx)++] = (uint32_t)(gen->buffers[BUFFER_TYPE_GENERAL_STATE].gtt_offset >> 32);
+      |                                                                          ^~~~~~~~~~
+      |                                                                          offset
+src/batch_generator_auto.c:360:68: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  360 |     uint64_t surface_gtt = gen->buffers[BUFFER_TYPE_SURFACE_STATE].gtt_offset;
+      |                                                                    ^~~~~~~~~~
+      |                                                                    offset
+src/batch_generator_auto.c:365:68: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  365 |     uint64_t dynamic_gtt = gen->buffers[BUFFER_TYPE_DYNAMIC_STATE].gtt_offset;
+      |                                                                    ^~~~~~~~~~
+      |                                                                    offset
+src/batch_generator_auto.c:373:64: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  373 |     uint64_t indirect_gtt = gen->buffers[BUFFER_TYPE_INDIRECT].gtt_offset;
+      |                                                                ^~~~~~~~~~
+      |                                                                offset
+src/batch_generator_auto.c:383:60: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  383 |     uint64_t kernel_gtt = gen->buffers[BUFFER_TYPE_KERNEL].gtt_offset;
+      |                                                            ^~~~~~~~~~
+      |                                                            offset
+src/batch_generator_auto.c: In function ‘generate_media_vfe_state’:
+src/batch_generator_auto.c:412:62: error: ‘auto_buffer_t’ has no member named ‘gtt_offset’; did you mean ‘offset’?
+  412 |     uint64_t scratch_gtt = gen->buffers[BUFFER_TYPE_SCRATCH].gtt_offset;
+      |                                                              ^~~~~~~~~~
+      |                                                              offset

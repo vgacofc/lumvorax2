@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<title>LumVorax — Visualisation Hubbard-HTS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050a14;color:#c8d8f0;font-family:'Courier New',monospace;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* ── HEADER ── */
+#header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:#08111f;border-bottom:1px solid #1a3a6a;
+  flex-shrink:0;z-index:10;
+}
+#header h1{font-size:13px;letter-spacing:2px;color:#4af;text-transform:uppercase}
+#run-info{font-size:10px;color:#567;margin-left:12px}
+#fps{font-size:10px;color:#3a6;margin-left:auto;margin-right:16px}
+
+/* ── TABS ── */
+#tabs{
+  display:flex;gap:2px;padding:6px 12px;background:#070e1c;
+  border-bottom:1px solid #132540;flex-shrink:0;
+}
+.tab{
+  padding:5px 14px;border:1px solid #1a3a6a;border-radius:3px;
+  cursor:pointer;font-size:11px;letter-spacing:1px;color:#6a9;
+  background:#08111f;transition:all .15s;
+}
+.tab:hover{background:#0d1f38;color:#8cf}
+.tab.active{background:#0d2a50;border-color:#4af;color:#4af}
+.tab-icon{margin-right:5px}
+
+/* ── CANVAS ── */
+#canvas-wrap{flex:1;position:relative;overflow:hidden}
+#three-canvas{width:100%;height:100%;display:block}
+
+/* ── OVERLAY INFO ── */
+#overlay{
+  position:absolute;top:10px;right:10px;width:260px;
+  background:rgba(5,10,20,.85);border:1px solid #1a3a6a;
+  border-radius:4px;padding:12px;font-size:10px;line-height:1.7;
+  pointer-events:none;
+}
+#overlay h3{font-size:11px;color:#4af;margin-bottom:6px;letter-spacing:1px}
+#overlay-body span.k{color:#6a9}
+#overlay-body span.v{color:#fc9}
+
+/* ── MODULE SELECTOR ── */
+#mod-select-wrap{
+  position:absolute;bottom:10px;left:10px;
+  background:rgba(5,10,20,.85);border:1px solid #1a3a6a;
+  border-radius:4px;padding:8px;
+}
+#mod-select-wrap label{font-size:10px;color:#6a9;display:block;margin-bottom:4px}
+#mod-select{
+  background:#08111f;color:#c8d8f0;border:1px solid #1a3a6a;
+  font-family:inherit;font-size:10px;padding:3px 6px;border-radius:3px;
+  width:220px;
+}
+
+/* ── LEGEND ── */
+#legend{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(5,10,20,.85);border:1px solid #1a3a6a;
+  border-radius:4px;padding:10px;font-size:10px;
+}
+#legend h4{color:#4af;margin-bottom:6px;letter-spacing:1px;font-size:10px}
+.leg-row{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.leg-color{width:14px;height:8px;border-radius:2px}
+
+/* ── LOADING ── */
+#loading{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;background:#050a14;z-index:50;flex-direction:column;gap:12px;
+}
+#loading p{font-size:12px;color:#4af;letter-spacing:2px}
+#loading-bar-wrap{width:220px;height:3px;background:#1a3a6a;border-radius:2px}
+#loading-bar{height:100%;background:#4af;border-radius:2px;transition:width .3s}
+
+/* ── TOOLTIP ── */
+#tooltip{
+  position:absolute;display:none;background:rgba(5,10,20,.95);
+  border:1px solid #4af;border-radius:3px;padding:8px 10px;font-size:10px;
+  pointer-events:none;z-index:30;line-height:1.7;max-width:200px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="header">
+  <h1>⚛ LumVorax — Hubbard-HTS Visualisation</h1>
+  <span id="run-info">run_id : —</span>
+  <span id="fps">FPS: —</span>
+</div>
+
+<div id="tabs">
+  <div class="tab active" data-mode="scalar_field">
+    <span class="tab-icon">🌡</span>Champs Scalaires
+  </div>
+  <div class="tab" data-mode="trajectories">
+    <span class="tab-icon">〰</span>Trajectoires
+  </div>
+  <div class="tab" data-mode="lattice">
+    <span class="tab-icon">⬡</span>Réseau Hubbard
+  </div>
+  <div class="tab" data-mode="graph">
+    <span class="tab-icon">⬡</span>Graphe d'Interaction
+  </div>
+  <div class="tab" data-mode="multiscale">
+    <span class="tab-icon">🔬</span>Multi-Échelles LOD
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="three-canvas"></canvas>
+  <div id="loading">
+    <p id="loading-msg">INITIALISATION…</p>
+    <div id="loading-bar-wrap"><div id="loading-bar" style="width:0%"></div></div>
+  </div>
+  <div id="overlay"><h3>Sélection</h3><div id="overlay-body">—</div></div>
+  <div id="mod-select-wrap">
+    <label>Module</label>
+    <select id="mod-select"></select>
+  </div>
+  <div id="legend"><h4>Légende</h4><div id="legend-body"></div></div>
+  <div id="tooltip"></div>
+</div>
+
+</div>
+
+<!-- Three.js r128 — servi localement -->
+<script src="/three.min.js"></script>
+<!-- OrbitControls -->
+<script>
+/* Minimal OrbitControls inline (Three.js r128) */
+THREE.OrbitControls=function(a,b){this.object=a;this.domElement=b;this.enabled=!0;this.target=new THREE.Vector3;this.minDistance=0;this.maxDistance=Infinity;this.enableZoom=!0;this.zoomSpeed=1.2;this.enableRotate=!0;this.rotateSpeed=1;this.enablePan=!0;this.panSpeed=1;this.screenSpacePanning=!0;var c=this,d=new THREE.Vector3,e=new THREE.Spherical,f=new THREE.Spherical,g=new THREE.Vector2,h=new THREE.Vector2,i=new THREE.Vector2,j=0,k=0,l=0,m=!1;this.update=function(){var n=a.position.clone().sub(c.target);f.setFromVector3(n);e.theta=f.theta+k;e.phi=f.phi+j;e.phi=Math.max(0.01,Math.min(Math.PI-.01,e.phi));e.radius=f.radius*Math.pow(.95,l);var o=new THREE.Vector3().setFromSpherical(e);a.position.copy(c.target).add(o);a.lookAt(c.target);k=0;j=0;l=0;return!1};this.dispose=function(){c.domElement.removeEventListener("mousedown",p);c.domElement.removeEventListener("wheel",q)};var p=function(n){if(c.enabled){m=!0;g.set(n.clientX,n.clientY);document.addEventListener("mousemove",r);document.addEventListener("mouseup",s)}},r=function(n){if(m){var o=n.clientX-g.x,p=n.clientY-g.y;if(n.buttons===1){k-=2*Math.PI*o/b.clientWidth*c.rotateSpeed;j-=2*Math.PI*p/b.clientHeight*c.rotateSpeed}else if(n.buttons===2||n.buttons===4){var t=new THREE.Vector3;if(c.screenSpacePanning){t.setFromMatrixColumn(a.matrix,0);t.multiplyScalar(-o*c.panSpeed/b.clientWidth*10);c.target.add(t);a.position.add(t);t.setFromMatrixColumn(a.matrix,1);t.multiplyScalar(p*c.panSpeed/b.clientHeight*10);c.target.add(t);a.position.add(t)}}g.set(n.clientX,n.clientY);c.update()}},s=function(){m=!1;document.removeEventListener("mousemove",r);document.removeEventListener("mouseup",s)},q=function(n){if(c.enabled&&c.enableZoom){n.preventDefault();l+=n.deltaY>0?1:-1;c.update()}};b.addEventListener("mousedown",p);b.addEventListener("wheel",q,{passive:!1});b.addEventListener("contextmenu",function(n){n.preventDefault()})};
+</script>
+
+<script>
+'use strict';
+// ════════════════════════════════════════════════════════════════════
+//  LumVorax — Visualisation Hubbard-HTS
+//  Noms canoniques : STANDARD_NAMES.md v3.0 (C68-REALTIME-BENCH)
+// ════════════════════════════════════════════════════════════════════
+
+const API = '';    // même origine
+
+// ── Fallback sans WebGL ──────────────────────────────────────────────
+function showWebGLError(){
+  const wrap = document.getElementById('canvas-wrap');
+  // Masquer le loading
+  document.getElementById('loading').style.display='none';
+  // Créer un canvas 2D de secours
+  const c2 = document.createElement('canvas');
+  c2.id='canvas2d';
+  c2.style.cssText='position:absolute;inset:0;width:100%;height:100%';
+  c2.width = wrap.clientWidth;
+  c2.height = wrap.clientHeight;
+  wrap.appendChild(c2);
+  state.canvas2d = c2.getContext('2d');
+  state.webgl = false;
+  // Lancer quand même le chargement des données
+  loadMode(state.mode);
+}
+
+async function draw2DFallback(pts, title){
+  const ctx = state.canvas2d;
+  if(!ctx) return;
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#050a14'; ctx.fillRect(0,0,W,H);
+
+  // Titre
+  ctx.fillStyle='#44aaff'; ctx.font='bold 13px monospace';
+  ctx.fillText(title, 20, 30);
+
+  if(!pts||!pts.length){ ctx.fillStyle='#567'; ctx.fillText('Aucune donnée.', 20, 60); return; }
+
+  // Trouver min/max energy
+  const energies = pts.map(p=>parseFloat(p.energy_eV||p.value||0));
+  const pairings  = pts.map(p=>parseFloat(p.pairing||0));
+  const eMin=Math.min(...energies), eMax=Math.max(...energies)||1;
+  const pMin=Math.min(...pairings), pMax=Math.max(...pairings)||1;
+
+  const PAD=60, W2=W-PAD*2, H2=H-PAD*2-60;
+  // Axes
+  ctx.strokeStyle='#1a3a6a'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(PAD,PAD+H2); ctx.lineTo(PAD+W2,PAD+H2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(PAD,PAD); ctx.lineTo(PAD,PAD+H2); ctx.stroke();
+
+  // Points
+  pts.forEach((p,i)=>{
+    const x = PAD + (i/(pts.length-1||1))*W2;
+    const e = parseFloat(p.energy_eV||p.value||0);
+    const y = PAD + H2 - ((e-eMin)/(eMax-eMin||1))*H2;
+    const r = 4+parseFloat(p.pairing||0.5)*6;
+    // Couleur heatmap energy
+    const t=(e-eMin)/(eMax-eMin||1);
+    const r2=Math.round(lerp(0x11,0xff,t)), g2=Math.round(lerp(0x44,0x44,t>0.5?1-t:t)), b2=Math.round(lerp(0xff,0x00,t));
+    ctx.fillStyle=`rgb(${r2},${g2},${b2})`;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    // Label
+    ctx.fillStyle='#c8d8f0'; ctx.font='9px monospace';
+    if(p.module){
+      const short = p.module.replace(/_/g,'\n').split('\n')[0].substring(0,12);
+      ctx.fillText(short, x-20, PAD+H2+14);
+    }
+    // Valeur
+    ctx.fillStyle='#6a9';
+    ctx.fillText(e.toFixed(3), x-14, y-r-4);
+  });
+
+  // Légende
+  ctx.fillStyle='#567'; ctx.font='10px monospace';
+  ctx.fillText('● energy_eV (couleur heatmap)  ● taille = pairing', PAD, H-10);
+  ctx.fillStyle='#4af'; ctx.font='10px monospace';
+  ctx.fillText('Axe X = module_index  |  Axe Y = energy_eV', PAD, H-25);
+}
+
+// ── État global ──────────────────────────────────────────────────────
+const state = {
+  mode: 'scalar_field',
+  data: {},          // cache des données par mode
+  selectedModule: 0,
+  scene: null, camera: null, renderer: null, controls: null,
+  objects: [],       // mesh/group courants dans la scène
+  raycaster: new THREE.Raycaster(),
+  mouse: new THREE.Vector2(),
+  fps: 0, lastTime: performance.now(), frames: 0,
+};
+
+const PALETTE = {
+  energy:  [0x1144ff, 0x00aaff, 0x00ffcc, 0xffcc00, 0xff4400],
+  pairing: [0x220055, 0x6600cc, 0xcc00ff, 0xff66ff],
+  sign:    [0xff2200, 0x888800, 0x00cc44],
+  within:  0x00ff88,
+  outside: 0xff3300,
+  ref:     0xffaa00,
+  bg:      0x050a14,
+};
+
+// ── UTILITAIRES ──────────────────────────────────────────────────────
+function lerp(a,b,t){return a+(b-a)*t}
+
+function colorMap(v, vMin, vMax, stops){
+  const t = Math.max(0,Math.min(1,(v-vMin)/(vMax-vMin||1)));
+  const n = stops.length-1;
+  const i = Math.min(Math.floor(t*n), n-1);
+  const f = t*n - i;
+  const c0 = new THREE.Color(stops[i]);
+  const c1 = new THREE.Color(stops[i+1]);
+  return c0.lerp(c1, f);
+}
+
+function setLoading(msg, pct){
+  document.getElementById('loading-msg').textContent = msg;
+  document.getElementById('loading-bar').style.width = pct+'%';
+}
+function hideLoading(){ document.getElementById('loading').style.display='none'; }
+function showLoading(){ document.getElementById('loading').style.display='flex'; }
+
+function setOverlay(html){ document.getElementById('overlay-body').innerHTML=html; }
+function setLegend(html){ document.getElementById('legend-body').innerHTML=html; }
+
+function fmtKV(k,v){
+  return `<span class="k">${k}</span> <span class="v">${v}</span><br>`;
+}
+
+async function fetchData(endpoint){
+  if(state.data[endpoint]) return state.data[endpoint];
+  const r = await fetch(API+endpoint);
+  const d = await r.json();
+  state.data[endpoint] = d;
+  return d;
+}
+
+// ── THREE.JS INIT ────────────────────────────────────────────────────
+function initThree(){
+  const canvas = document.getElementById('three-canvas');
+  const wrap   = document.getElementById('canvas-wrap');
+
+  try {
+    state.renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+  } catch(e) {
+    showWebGLError(); return;
+  }
+  if(!state.renderer || !state.renderer.getContext || !state.renderer.getContext()) {
+    showWebGLError(); return;
+  }
+  state.renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  state.renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  state.renderer.setClearColor(PALETTE.bg);
+
+  state.camera = new THREE.PerspectiveCamera(55, wrap.clientWidth/wrap.clientHeight, 0.01, 2000);
+  state.camera.position.set(0,0,30);
+
+  state.scene = new THREE.Scene();
+  state.scene.fog = new THREE.FogExp2(PALETTE.bg, 0.012);
+
+  // Lumières
+  const ambient = new THREE.AmbientLight(0x1a3a6a, 0.6);
+  const point   = new THREE.PointLight(0x44aaff, 1.5, 80);
+  point.position.set(10,20,15);
+  state.scene.add(ambient, point);
+
+  state.controls = new THREE.OrbitControls(state.camera, canvas);
+  state.controls.enablePan = true;
+
+  window.addEventListener('resize', onResize);
+  canvas.addEventListener('mousemove', onMouseMove);
+
+  requestAnimationFrame(animate);
+}
+
+function onResize(){
+  const wrap = document.getElementById('canvas-wrap');
+  state.camera.aspect = wrap.clientWidth/wrap.clientHeight;
+  state.camera.updateProjectionMatrix();
+  state.renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+}
+
+function animate(t){
+  requestAnimationFrame(animate);
+  state.controls.update();
+  state.renderer.render(state.scene, state.camera);
+  // FPS
+  state.frames++;
+  if(t - state.lastTime > 1000){
+    document.getElementById('fps').textContent = 'FPS: '+state.frames;
+    state.frames=0; state.lastTime=t;
+  }
+}
+
+function clearScene(){
+  for(const o of state.objects){ state.scene.remove(o); if(o.geometry) o.geometry.dispose(); }
+  state.objects=[];
+}
+
+// ── RAYCASTING / TOOLTIP ─────────────────────────────────────────────
+function onMouseMove(e){
+  const canvas = document.getElementById('three-canvas');
+  const rect = canvas.getBoundingClientRect();
+  state.mouse.x = ((e.clientX-rect.left)/rect.width)*2-1;
+  state.mouse.y = -((e.clientY-rect.top)/rect.height)*2+1;
+  state.raycaster.setFromCamera(state.mouse, state.camera);
+  const hits = state.raycaster.intersectObjects(
+    state.objects.filter(o=>o.userData && o.userData.hoverable), true
+  );
+  const tip = document.getElementById('tooltip');
+  if(hits.length>0){
+    const obj = hits[0].object;
+    const ud  = obj.userData;
+    let html='';
+    if(ud.module) html+=`<b style="color:#4af">${ud.module}</b><br>`;
+    for(const [k,v] of Object.entries(ud)){
+      if(k==='module'||k==='hoverable') continue;
+      if(typeof v==='number') html+=fmtKV(k, v.toFixed(6));
+      else html+=fmtKV(k, v);
+    }
+    tip.innerHTML=html;
+    tip.style.display='block';
+    tip.style.left=(e.clientX+12)+'px';
+    tip.style.top =(e.clientY-10)+'px';
+  } else {
+    tip.style.display='none';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODE 1 — Champs scalaires → volume heatmap 3D
+//  Axes : T_K (X), U/t (Y), module_index (Z)
+//  Couleur : energy_eV  |  Taille : pairing
+// ════════════════════════════════════════════════════════════════════
+async function buildScalarField(){
+  showLoading(); setLoading('Chargement champs scalaires…', 10);
+  const d = await fetchData('/api/viz/scalar_field');
+  setLoading('Construction volume heatmap…', 60);
+
+  document.getElementById('run-info').textContent = 'run_id : '+(d.run_id||'—');
+  const pts = d.points;
+  if(!pts||pts.length===0){ hideLoading(); return; }
+
+  // Fallback 2D si WebGL non disponible
+  if(state.webgl===false){
+    await draw2DFallback(pts, 'Champs Scalaires — simulate_fs: energy_eV / pairing');
+    setOverlay(fmtKV('mode','scalar_field — simulate_fs:')+fmtKV('modules',pts.length)+fmtKV('run_id',d.run_id));
+    setLegend('● energy_eV (heatmap couleur)<br>● taille = pairing<br>source: BASE_RESULT');
+    hideLoading(); updateModuleSelector(pts.map(p=>p.module)); return;
+  }
+
+  clearScene();
+
+  const energies = pts.map(p=>p.energy_eV);
+  const eMin = Math.min(...energies), eMax = Math.max(...energies);
+  const pairings = pts.map(p=>Math.abs(p.pairing));
+  const pMax = Math.max(...pairings)||1;
+  const tVals = pts.map(p=>p.t_K), tMin=Math.min(...tVals), tMax=Math.max(...tVals);
+  const uVals = pts.map(p=>p.u_eV), uMin=Math.min(...uVals), uMax=Math.max(...uVals);
+
+  const geo = new THREE.SphereGeometry(1, 8, 8);
+  const mat = new THREE.MeshPhongMaterial({shininess:80});
+
+  for(let i=0; i<pts.length; i++){
+    const p = pts[i];
+    const m = mat.clone();
+    const c = colorMap(p.energy_eV, eMin, eMax, PALETTE.energy);
+    m.color = c;
+    m.emissive = c.clone().multiplyScalar(0.15);
+
+    const mesh = new THREE.Mesh(geo, m);
+
+    // Placement 3D dans l'espace (T_K, U_eV, index)
+    const x = ((p.t_K - tMin)/(tMax-tMin||1))*20 - 10;
+    const y = ((p.u_eV - uMin)/(uMax-uMin||1))*16 - 8;
+    const z = (i/(pts.length-1||1))*14 - 7;
+
+    mesh.position.set(x, y, z);
+    const s = 0.3 + (Math.abs(p.pairing)/pMax)*1.0;
+    mesh.scale.setScalar(s);
+
+    mesh.userData = {
+      hoverable: true,
+      module:    p.module,
+      energy_eV: p.energy_eV,
+      pairing:   p.pairing,
+      sign:      p.sign,
+      t_K:       p.t_K,
+      u_eV:      p.u_eV,
+      cpu_peak:  p.cpu_peak,
+      mem_peak:  p.mem_peak,
+    };
+    state.scene.add(mesh);
+    state.objects.push(mesh);
+
+    // Référence QMC/DMRG : sphère anneau
+    if(p.ref_energy!==null){
+      const rg = new THREE.RingGeometry(s*1.4, s*1.6, 16);
+      const rm = new THREE.MeshBasicMaterial({
+        color: Math.abs(p.energy_eV-p.ref_energy)<=p.ref_error_bar ? PALETTE.within : PALETTE.outside,
+        side: THREE.DoubleSide, transparent:true, opacity:0.6,
+      });
+      const ring = new THREE.Mesh(rg, rm);
+      ring.position.copy(mesh.position);
+      ring.lookAt(state.camera.position);
+      state.scene.add(ring);
+      state.objects.push(ring);
+    }
+
+    // Axe vertical sign
+    if(Math.abs(p.sign)>0.01){
+      const lg = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x,y,z), new THREE.Vector3(x, y+p.sign*3, z)
+      ]);
+      const lm = new THREE.LineBasicMaterial({
+        color: colorMap(p.sign,-0.6,0.6,PALETTE.sign),
+        transparent:true, opacity:0.5,
+      });
+      const line = new THREE.Line(lg,lm);
+      state.scene.add(line); state.objects.push(line);
+    }
+  }
+
+  // Axes
+  addAxisLabels('T (K)', 'U/t (eV)', 'Module');
+
+  setLoading('Rendu…', 95);
+  state.camera.position.set(5, 8, 28);
+  state.camera.lookAt(0,0,0);
+
+  setLegend(
+    '<div class="leg-row"><div class="leg-color" style="background:linear-gradient(to right,#1144ff,#00ffcc,#ff4400)"></div>energy_eV</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#00ff88"></div>within_error_bar ✓</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ff3300"></div>outside ✗</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ffaa00"></div>ref QMC/DMRG</div>'
+  );
+  setOverlay(
+    fmtKV('mode','scalar_field — simulate_fs:')+
+    fmtKV('modules', pts.length)+
+    fmtKV('eMin', eMin.toFixed(4)+' eV')+
+    fmtKV('eMax', eMax.toFixed(4)+' eV')+
+    fmtKV('observable','energy_eV / pairing / sign')+
+    fmtKV('source','BASE_RESULT + qmc_dmrg_reference_runtime.csv')
+  );
+  hideLoading();
+  updateModuleSelector(pts.map(p=>p.module));
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODE 2 — Trajectoires → curves (simulate_fs: step_energy_norm_step0)
+// ════════════════════════════════════════════════════════════════════
+async function buildTrajectories(){
+  showLoading(); setLoading('Chargement trajectoires Lumvorax…', 10);
+  const d  = await fetchData('/api/viz/scalar_field');   // pour avoir les modules
+  const tr = await fetchData('/api/viz/trajectories');
+  setLoading('Construction courbes…', 60);
+  const pts = (d.points||[]);
+  document.getElementById('run-info').textContent = 'run_id : '+(d.run_id||'—');
+
+  if(state.webgl===false){
+    await draw2DFallback(pts, 'Trajectoires — simulate_fs: step_energy_norm_step0');
+    setOverlay(fmtKV('mode','trajectories — simulate_fs:')+fmtKV('modules',pts.length));
+    hideLoading(); updateModuleSelector(pts.map(p=>p.module)); return;
+  }
+  clearScene();
+
+  let traj = tr.trajectories || [];
+  const hasTraj = traj.length > 0;
+
+  if(!hasTraj){
+    // Fallback : générer des trajectoires synthétiques physiquement cohérentes
+    // à partir des BASE_RESULT (convergence MC simulée — Hubbard HTS)
+    traj = pts.map((p,i) => {
+      const nSteps = 60;
+      const arr = [];
+      for(let s=0; s<nSteps; s++){
+        const t = s/(nSteps-1);
+        // Convergence exponentielle vers la valeur finale
+        const tau = 0.25 + Math.random()*0.15;
+        const noise = (Math.random()-0.5)*0.08*Math.exp(-t/0.4);
+        const val = p.energy_eV * (1 - Math.exp(-t/tau)) + noise;
+        arr.push({metric:'step_energy_norm_step0', value:val, ns:String(s*1e6)});
+        const pval = p.pairing * (1 - Math.exp(-t/(tau*1.2))) + (Math.random()-0.5)*0.03;
+        arr.push({metric:'step_pairing_norm_step0', value:pval, ns:String(s*1e6)});
+      }
+      return {module: p.module, points: arr};
+    });
+  }
+
+  const colors = [0x4af,0xf84,0x8f4,0xf4a,0x48f,0xfa4,0xa4f,0x4fa,0xf48,0x84f].map(c=>new THREE.Color(c));
+
+  traj.forEach((tr, mi)=>{
+    const energyPts = tr.points.filter(p=>p.metric==='step_energy_norm_step0');
+    const pairingPts= tr.points.filter(p=>p.metric==='step_pairing_norm_step0');
+
+    const N = Math.max(energyPts.length, pairingPts.length);
+    if(N<2) return;
+
+    const offsetX = (mi % 5)*6 - 12;
+    const offsetZ = Math.floor(mi/5)*6 - 6;
+
+    // Courbe energie
+    const ePoints = energyPts.map((p,i)=>
+      new THREE.Vector3(offsetX + (i/(N-1))*4, p.value*2, offsetZ)
+    );
+    if(ePoints.length>=2){
+      const curve = new THREE.CatmullRomCurve3(ePoints);
+      const pts3 = curve.getPoints(80);
+      const g = new THREE.BufferGeometry().setFromPoints(pts3);
+      const m = new THREE.LineBasicMaterial({color:colors[mi%colors.length], linewidth:2});
+      const line = new THREE.Line(g,m);
+      line.userData = {hoverable:true, module:tr.module, metric:'step_energy_norm_step0 (simulate_fs:)'};
+      state.scene.add(line); state.objects.push(line);
+    }
+
+    // Courbe pairing
+    if(pairingPts.length>=2){
+      const ppPoints = pairingPts.map((p,i)=>
+        new THREE.Vector3(offsetX + (i/(N-1))*4, p.value*3, offsetZ+0.5)
+      );
+      const curve2 = new THREE.CatmullRomCurve3(ppPoints);
+      const pts3b = curve2.getPoints(80);
+      const g2 = new THREE.BufferGeometry().setFromPoints(pts3b);
+      const m2 = new THREE.LineBasicMaterial({
+        color:colors[mi%colors.length].clone().multiplyScalar(0.5),
+        transparent:true, opacity:0.6,
+      });
+      const line2 = new THREE.Line(g2,m2);
+      state.scene.add(line2); state.objects.push(line2);
+    }
+
+    // Label module
+    if(energyPts.length>0){
+      const sp = new THREE.Mesh(
+        new THREE.SphereGeometry(0.15,8,8),
+        new THREE.MeshBasicMaterial({color:colors[mi%colors.length]})
+      );
+      sp.position.set(offsetX, 0, offsetZ);
+      sp.userData = {hoverable:true, module:tr.module};
+      state.scene.add(sp); state.objects.push(sp);
+    }
+  });
+
+  addAxisLabels('Steps MC', 'E / Pairing norm.', 'Module');
+
+  state.camera.position.set(0, 12, 28);
+  state.camera.lookAt(0,0,0);
+
+  setLegend(
+    '<div class="leg-row"><div class="leg-color" style="background:#44aaff"></div>energy_eV (simulate_fs:)</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#336699"></div>pairing (simulate_fs:)</div>'+
+    (hasTraj?'':'<div style="color:#f84;margin-top:4px;font-size:9px">⚠ Données synthétiques<br>(CSV Lumvorax non trouvé)</div>')
+  );
+  setOverlay(
+    fmtKV('mode','trajectories — simulate_fs:')+
+    fmtKV('préfixe','step_energy_norm_step0')+
+    fmtKV('préfixe','step_pairing_norm_step0')+
+    fmtKV('courbes', traj.length)+
+    fmtKV('source', hasTraj?'lumvorax_hubbard_hts_fullscale_*.csv':'BASE_RESULT (synthétique)')
+  );
+  hideLoading();
+  updateModuleSelector(traj.map(t=>t.module));
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODE 3 — Particules → Instancing (réseau Hubbard lx × ly)
+// ════════════════════════════════════════════════════════════════════
+async function buildLattice(){
+  showLoading(); setLoading('Chargement réseau Hubbard…', 15);
+  const d = await fetchData('/api/viz/lattice');
+  setLoading('Construction instancing…', 60);
+  const lattices = d.lattices||[];
+  const selIdx = state.selectedModule < lattices.length ? state.selectedModule : 0;
+  const lat = lattices[selIdx];
+  if(!lat){ hideLoading(); return; }
+
+  if(state.webgl===false){
+    const pts2 = lattices.map(l=>({module:l.module,energy_eV:l.energy_eV,pairing:l.pairing,sign:l.sign}));
+    await draw2DFallback(pts2,'Réseau Hubbard — instancing pairing local (d-wave)');
+    setOverlay(fmtKV('module',lat.module)+fmtKV('réseau',lat.lx+'×'+lat.ly)+fmtKV('sites',lat.sites.length));
+    hideLoading(); updateModuleSelector(lattices.map(l=>l.module)); return;
+  }
+  clearScene();
+
+  const sites = lat.sites;
+  const N = sites.length;
+  if(N===0){ hideLoading(); return; }
+
+  const pairings = sites.map(s=>s.pairing_local);
+  const pMin = Math.min(...pairings), pMax = Math.max(...pairings)||1;
+  const spins  = sites.map(s=>s.spin);
+  const sMin = Math.min(...spins), sMax = Math.max(...spins)||1;
+
+  // InstancedMesh pour les sites
+  const geo = new THREE.SphereGeometry(0.3, 12, 8);
+  const mat = new THREE.MeshPhongMaterial({shininess:100, vertexColors:false});
+  const inst = new THREE.InstancedMesh(geo, mat, N);
+  inst.userData = {hoverable:true};
+
+  const dummy = new THREE.Object3D();
+  const color  = new THREE.Color();
+
+  for(let i=0; i<N; i++){
+    const s = sites[i];
+    dummy.position.set(s.x, s.y, 0);
+    const scale = 0.5 + Math.abs(s.pairing_local)/Math.max(Math.abs(pMax),0.01)*0.8;
+    dummy.scale.setScalar(scale);
+    dummy.updateMatrix();
+    inst.setMatrixAt(i, dummy.matrix);
+    const c = colorMap(s.pairing_local, pMin, pMax, PALETTE.pairing);
+    inst.setColorAt(i, c);
+  }
+  inst.instanceMatrix.needsUpdate = true;
+  if(inst.instanceColor) inst.instanceColor.needsUpdate = true;
+  state.scene.add(inst); state.objects.push(inst);
+
+  // Liaisons entre sites voisins (bonds Hubbard)
+  const bondMat = new THREE.LineBasicMaterial({color:0x1a3a6a, transparent:true, opacity:0.25});
+  for(const s of sites){
+    // Voisin droit
+    const right = sites.find(r=>r.ix===s.ix+1&&r.iy===s.iy);
+    // Voisin haut
+    const up    = sites.find(r=>r.ix===s.ix&&r.iy===s.iy+1);
+    for(const nb of [right,up]){
+      if(!nb) continue;
+      const tHop = lat.t_eV;
+      const bg = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(s.x,s.y,0), new THREE.Vector3(nb.x,nb.y,0)
+      ]);
+      const bond = new THREE.Line(bg, bondMat.clone());
+      state.scene.add(bond); state.objects.push(bond);
+    }
+  }
+
+  // Flèches de spin (z = ±0.6)
+  for(const s of sites){
+    if(Math.abs(s.spin)<0.05) continue;
+    const dir = new THREE.Vector3(0, s.spin>0?1:-1, 0);
+    const origin = new THREE.Vector3(s.x, s.y, 0.4);
+    const ah = new THREE.ArrowHelper(dir.normalize(), origin, 0.5+Math.abs(s.spin),
+      s.spin>0?0x44ffcc:0xff4466, 0.18, 0.1);
+    state.scene.add(ah); state.objects.push(ah);
+  }
+
+  state.camera.position.set(0, 0, lat.lx*1.6);
+  state.camera.lookAt(0,0,0);
+
+  setLegend(
+    '<div class="leg-row"><div class="leg-color" style="background:linear-gradient(to right,#220055,#cc00ff,#ff66ff)"></div>pairing local (d-wave)</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#44ffcc"></div>spin ↑</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ff4466"></div>spin ↓</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#1a3a6a"></div>bond t_eV</div>'
+  );
+  setOverlay(
+    fmtKV('module', lat.module)+
+    fmtKV('réseau', lat.lx+'×'+lat.ly)+
+    fmtKV('sites', N)+
+    fmtKV('t_eV', lat.t_eV)+
+    fmtKV('u_eV', lat.u_eV)+
+    fmtKV('temp_K', lat.temp_K)+
+    fmtKV('energy_eV', lat.energy_eV.toFixed(6))+
+    fmtKV('pairing', lat.pairing.toFixed(6))+
+    fmtKV('sign', lat.sign.toFixed(6))+
+    fmtKV('source','problems_cycle06.csv + simulate_fs:')
+  );
+  hideLoading();
+  updateModuleSelector(lattices.map(l=>l.module));
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODE 4 — Graphe d'interaction → nodes + edges
+//  benchmark_adv: QMC/DMRG et modules externes
+// ════════════════════════════════════════════════════════════════════
+async function buildGraph(){
+  showLoading(); setLoading('Chargement graphe…', 15);
+  const d = await fetchData('/api/viz/graph');
+  setLoading('Disposition force-directed…', 50);
+  const nodes = d.nodes||[];
+  const edges = d.edges||[];
+  document.getElementById('run-info').textContent = 'run_id : '+(d.run_id||'—');
+
+  if(state.webgl===false){
+    const pts3 = nodes.filter(n=>n.type==='simulate_fs')
+      .map(n=>({module:n.label,energy_eV:n.energy_eV||0,pairing:n.pairing||0,sign:n.sign||0}));
+    await draw2DFallback(pts3,'Graphe d\'Interaction — benchmark_adv: nodes + edges');
+    setOverlay(fmtKV('nœuds',nodes.length)+fmtKV('arêtes',edges.length)+fmtKV('within_ok',edges.filter(e=>e.within_error_bar).length+'/'+edges.length));
+    hideLoading(); updateModuleSelector(pts3.map(p=>p.module)); return;
+  }
+  clearScene();
+
+  // Layout force-directed (itérations simples)
+  const pos = {};
+  const types = {simulate_fs:0, qmc_dmrg_ref:1, external_ref:2};
+  nodes.forEach((n,i)=>{
+    const ring = (types[n.type]||0)*7;
+    const angle = (i/(nodes.filter(m=>m.type===n.type).length))*Math.PI*2;
+    pos[n.id]={
+      x: Math.cos(angle)*ring + (Math.random()-.5)*2,
+      y: Math.sin(angle)*ring + (Math.random()-.5)*2,
+      z: (Math.random()-.5)*2,
+      vx:0, vy:0, vz:0,
+    };
+  });
+
+  // 30 itérations force-directed
+  const K=2, REPEL=8;
+  for(let iter=0; iter<30; iter++){
+    for(const n of nodes){
+      const pi = pos[n.id];
+      // Répulsion
+      for(const m of nodes){
+        if(m.id===n.id) continue;
+        const pm = pos[m.id];
+        const dx=pi.x-pm.x, dy=pi.y-pm.y;
+        const r2=dx*dx+dy*dy+0.1;
+        const f=REPEL/r2;
+        pi.vx+=f*dx; pi.vy+=f*dy;
+      }
+    }
+    // Attraction sur les arêtes
+    for(const e of edges){
+      const ps=pos[e.source], pt=pos[e.target];
+      if(!ps||!pt) continue;
+      const dx=pt.x-ps.x, dy=pt.y-ps.y;
+      const r=Math.sqrt(dx*dx+dy*dy)+0.01;
+      const f=(r-K)/r*0.05;
+      ps.vx+=f*dx; ps.vy+=f*dy;
+      pt.vx-=f*dx; pt.vy-=f*dy;
+    }
+    for(const n of nodes){
+      const pi=pos[n.id];
+      pi.x+=pi.vx*0.9; pi.y+=pi.vy*0.9; pi.z+=pi.vz*0.9;
+      pi.vx*=0.5; pi.vy*=0.5; pi.vz*=0.5;
+    }
+  }
+
+  setLoading('Construction nœuds…', 75);
+
+  const typeColors = {simulate_fs:0x44aaff, qmc_dmrg_ref:0xffaa00, external_ref:0x88ff44};
+  const typeSizes  = {simulate_fs:0.7, qmc_dmrg_ref:0.5, external_ref:0.4};
+
+  for(const n of nodes){
+    const p = pos[n.id];
+    const g = new THREE.SphereGeometry(typeSizes[n.type]||0.5, 12, 8);
+    const m = new THREE.MeshPhongMaterial({color:typeColors[n.type]||0xffffff, shininess:80});
+    if(n.energy_eV){
+      m.emissive = new THREE.Color(typeColors[n.type]||0xffffff).multiplyScalar(0.1);
+    }
+    const mesh = new THREE.Mesh(g,m);
+    mesh.position.set(p.x, p.y, p.z);
+    mesh.userData = {hoverable:true, id:n.id, ...n};
+    state.scene.add(mesh); state.objects.push(mesh);
+  }
+
+  for(const e of edges){
+    const ps=pos[e.source], pt=pos[e.target];
+    if(!ps||!pt) continue;
+    const pts3 = [new THREE.Vector3(ps.x,ps.y,ps.z), new THREE.Vector3(pt.x,pt.y,pt.z)];
+    const bg = new THREE.BufferGeometry().setFromPoints(pts3);
+    const bm = new THREE.LineBasicMaterial({
+      color: e.within_error_bar ? PALETTE.within : PALETTE.outside,
+      transparent:true, opacity: 0.5,
+    });
+    const line = new THREE.Line(bg,bm);
+    line.userData = {
+      hoverable:true,
+      type:'benchmark_adv',
+      observable: e.observable,
+      abs_error:  e.abs_error,
+      within_error_bar: e.within_error_bar,
+    };
+    state.scene.add(line); state.objects.push(line);
+  }
+
+  state.camera.position.set(0, 0, 30);
+  state.camera.lookAt(0,0,0);
+
+  const nSim = nodes.filter(n=>n.type==='simulate_fs').length;
+  const nRef = nodes.filter(n=>n.type==='qmc_dmrg_ref').length;
+  const nExt = nodes.filter(n=>n.type==='external_ref').length;
+  const nOk  = edges.filter(e=>e.within_error_bar).length;
+
+  setLegend(
+    '<div class="leg-row"><div class="leg-color" style="background:#44aaff"></div>simulate_fs (module)</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ffaa00"></div>qmc_dmrg_ref</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#88ff44"></div>external_ref</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#00ff88"></div>within_error_bar ✓</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ff3300"></div>outside ✗</div>'
+  );
+  setOverlay(
+    fmtKV('mode','graph — benchmark_adv:')+
+    fmtKV('nœuds simulate_fs', nSim)+
+    fmtKV('nœuds qmc_dmrg_ref', nRef)+
+    fmtKV('nœuds external_ref', nExt)+
+    fmtKV('arêtes total', edges.length)+
+    fmtKV('within_error_bar', nOk+'/'+edges.length)+
+    fmtKV('source','qmc_dmrg_reference_runtime.csv\nexternal_module_benchmarks_runtime.csv')
+  );
+  hideLoading();
+  updateModuleSelector(nodes.filter(n=>n.type==='simulate_fs').map(n=>n.label));
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MODE 5 — Structures multi-échelles → LOD fractal (cluster_scale)
+//  thermodynamic_limit : extrapolation 1/N
+// ════════════════════════════════════════════════════════════════════
+async function buildMultiscale(){
+  showLoading(); setLoading('Chargement multi-échelles…', 15);
+  const d = await fetchData('/api/viz/multiscale');
+  setLoading('Construction LOD fractal…', 60);
+  const scales = d.scales||[];
+  const selIdx = state.selectedModule < scales.length ? state.selectedModule : 0;
+  const sc = scales[selIdx];
+  if(!sc){ hideLoading(); return; }
+
+  if(state.webgl===false){
+    const pts4 = sc.lod_points.map(p=>({module:'N='+p.N,energy_eV:p.energy_eV,pairing:p.pairing,sign:p.sign}));
+    await draw2DFallback(pts4,'Multi-Échelles LOD — cluster_scale → thermodynamic_limit (1/N)');
+    setOverlay(fmtKV('module',sc.module)+fmtKV('LOD',d.cluster_sizes.join(' → '))+fmtKV('famille','cluster_scale'));
+    hideLoading(); updateModuleSelector(scales.map(s=>s.module)); return;
+  }
+  clearScene();
+
+  const lod_pts = sc.lod_points;
+  const N = lod_pts.length;
+
+  const energies = lod_pts.map(p=>p.energy_eV);
+  const eMin=Math.min(...energies), eMax=Math.max(...energies);
+  const pairings = lod_pts.map(p=>p.pairing);
+  const pMin=Math.min(...pairings), pMax=Math.max(...pairings);
+
+  // Courbe 1/N → thermodynamic_limit
+  const limPts = lod_pts.map(p=>new THREE.Vector3(p.inv_N*100, p.energy_eV*3, 0));
+  const limitCurve = new THREE.CatmullRomCurve3(limPts);
+  const curveGeo = new THREE.BufferGeometry().setFromPoints(limitCurve.getPoints(120));
+  const curveMat = new THREE.LineBasicMaterial({color:0x44aaff, linewidth:2});
+  const curveLine = new THREE.Line(curveGeo, curveMat);
+  state.scene.add(curveLine); state.objects.push(curveLine);
+
+  // Courbe pairing
+  const pPts = lod_pts.map(p=>new THREE.Vector3(p.inv_N*100, p.pairing*4, 1));
+  const pCurve = new THREE.CatmullRomCurve3(pPts);
+  const pGeo = new THREE.BufferGeometry().setFromPoints(pCurve.getPoints(120));
+  const pMat = new THREE.LineBasicMaterial({color:0xcc00ff, linewidth:2});
+  const pLine = new THREE.Line(pGeo, pMat);
+  state.scene.add(pLine); state.objects.push(pLine);
+
+  // Points LOD — taille proportionnelle à N² (cluster_scale)
+  for(const pt of lod_pts){
+    const g = new THREE.SphereGeometry(0.2, 8, 8);
+    const c = colorMap(pt.energy_eV, eMin, eMax, PALETTE.energy);
+    const m = new THREE.MeshPhongMaterial({color:c, shininess:80, emissive:c.clone().multiplyScalar(0.1)});
+    const mesh = new THREE.Mesh(g,m);
+    mesh.position.set(pt.inv_N*100, pt.energy_eV*3, 0);
+    const logScale = Math.log(pt.N+1)/Math.log(256);
+    mesh.scale.setScalar(0.15 + logScale*0.6);
+    mesh.userData = {
+      hoverable:true,
+      N_sites:  pt.N,
+      N_total:  pt.sites,
+      inv_N:    pt.inv_N,
+      energy_eV:pt.energy_eV,
+      pairing:  pt.pairing,
+      sign:     pt.sign,
+      lod_level:pt.lod_level,
+      famille:  'cluster_scale',
+    };
+    state.scene.add(mesh); state.objects.push(mesh);
+
+    // Ligne verticale signe
+    if(pt.lod_level % 4 === 0){
+      const tickG = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(pt.inv_N*100, pt.energy_eV*3, 0),
+        new THREE.Vector3(pt.inv_N*100, pt.energy_eV*3+pt.sign, 0),
+      ]);
+      const tickM = new THREE.LineBasicMaterial({color:0x4af,transparent:true,opacity:0.4});
+      const tick = new THREE.Line(tickG,tickM);
+      state.scene.add(tick); state.objects.push(tick);
+    }
+  }
+
+  // Extrapolation vers 1/N → 0 (limite thermodynamique)
+  const lastE = lod_pts[lod_pts.length-1].energy_eV;
+  const limitG = new THREE.SphereGeometry(0.4, 16, 16);
+  const limitM = new THREE.MeshPhongMaterial({color:0xffaa00, emissive:0xffaa00, emissiveIntensity:0.4, shininess:120});
+  const limitMesh = new THREE.Mesh(limitG, limitM);
+  limitMesh.position.set(0, lastE*3, 0);
+  limitMesh.userData = {hoverable:true, famille:'thermodynamic_limit', energy_eV:lastE, N:'∞'};
+  state.scene.add(limitMesh); state.objects.push(limitMesh);
+
+  // Ligne pointillée vers l'infini
+  const infG = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, lastE*3, 0), new THREE.Vector3(0.5, lastE*3, 0)
+  ]);
+  const infM = new THREE.LineDashedMaterial({color:0xffaa00,dashSize:0.2,gapSize:0.15});
+  const infL = new THREE.Line(infG, infM);
+  infL.computeLineDistances();
+  state.scene.add(infL); state.objects.push(infL);
+
+  addAxisLabels('1/N → 0 = ∞', 'E(N) (eV)', 'LOD');
+
+  state.camera.position.set(5, 8, 18);
+  state.camera.lookAt(2.5,4,0);
+
+  setLegend(
+    '<div class="leg-row"><div class="leg-color" style="background:#44aaff"></div>energy_eV (cluster_scale)</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#cc00ff"></div>pairing (cluster_scale)</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:#ffaa00"></div>thermodynamic_limit</div>'+
+    '<div class="leg-row"><div class="leg-color" style="background:linear-gradient(to right,#1144ff,#ff4400)"></div>LOD: 8×8 → 255×255</div>'
+  );
+  setOverlay(
+    fmtKV('mode','multiscale — cluster_scale')+
+    fmtKV('module', sc.module)+
+    fmtKV('tailles LOD', d.cluster_sizes.join(', '))+
+    fmtKV('u_eV', sc.u_eV)+
+    fmtKV('t_eV', sc.t_eV)+
+    fmtKV('famille','cluster_scale / thermodynamic_limit')+
+    fmtKV('source','problems_cycle06.csv + BASE_RESULT')
+  );
+  hideLoading();
+  updateModuleSelector(scales.map(s=>s.module));
+}
+
+// ── Axes helpers ──────────────────────────────────────────────────────
+function addAxisLabels(xLabel, yLabel, zLabel){
+  const mat = new THREE.LineBasicMaterial({color:0x1a3a6a});
+  const axes = [
+    [[-15,0,0],[15,0,0]],
+    [[0,-12,0],[0,12,0]],
+    [[0,0,-10],[0,0,10]],
+  ];
+  axes.forEach(([a,b])=>{
+    const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]);
+    const l = new THREE.Line(g,mat);
+    state.scene.add(l); state.objects.push(l);
+  });
+}
+
+// ── Sélecteur de module ───────────────────────────────────────────────
+function updateModuleSelector(modules){
+  const sel = document.getElementById('mod-select');
+  sel.innerHTML = modules.map((m,i)=>`<option value="${i}">${m}</option>`).join('');
+  sel.value = state.selectedModule;
+}
+
+document.getElementById('mod-select').addEventListener('change', function(){
+  state.selectedModule = parseInt(this.value)||0;
+  // Reconstruire le mode courant avec le nouveau module sélectionné
+  state.data = {};  // vider le cache pour recharger
+  loadMode(state.mode);
+});
+
+// ── Routing modes ─────────────────────────────────────────────────────
+const modeBuilders = {
+  scalar_field:  buildScalarField,
+  trajectories:  buildTrajectories,
+  lattice:       buildLattice,
+  graph:         buildGraph,
+  multiscale:    buildMultiscale,
+};
+
+async function loadMode(mode){
+  state.mode = mode;
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.mode===mode);
+  });
+  await modeBuilders[mode]();
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=> loadMode(tab.dataset.mode));
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────
+initThree();
+loadMode('scalar_field');
+</script>
+</body>
+</html>

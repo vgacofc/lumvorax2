@@ -1,0 +1,33 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  C424 TEST - SIMD1 MINIMAL (Intel PRM Descriptor)        ║
+║  1 thread, 1 lane, 1 write - Validation dataport         ║
+╚════════════════════════════════════════════════════════════╝
+
+[4658219661672 ns] C424 START - SIMD1 Minimal Test
+[4658219742540 ns] DRM opened: fd=5
+[4658219746893 ns] GPU context created: ctx_id=1
+[4658219902360 ns] Kernel loaded: 64 bytes
+[4658219914583 ns] Kernel buffer: handle=1
+[4658219960848 ns] Output buffer: handle=2 (filled 0xCC)
+[4658219976516 ns] SSH configured - BTI 1 = output buffer
+[4658219989787 ns] DSH configured - Interface Descriptor ready (1 thread)
+[4658220011943 ns] Batch buffer: 52 dwords (SIMD1 configuration)
+[4658220012595 ns] Executing C424 with SIMD1 minimal...
+[4658220215540 ns] ✓ EXECBUFFER2 success: 202748 ns
+[4658915604241 ns] ✓ GPU execution complete: 695387867 ns
+[4658915606577 ns] Invalidating CPU cache...
+[4658915607248 ns] ✓ CPU cache invalidated: 500 ns
+
+📊 RÉSULTATS C424 (SIMD1 MINIMAL):
+═══════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════
+  Valid (0xDEADBEEF): 0 / 16
+  Unchanged (0xCC):   16 / 16
+  Unexpected:         0 / 16
+═══════════════════════════════════════════════════════════
+
+❌ CRITICAL: Still 0 writes with SIMD1 + Intel PRM descriptor
+   Problem is deeper than SIMD mode
+   Likely: descriptor still invalid OR payload format wrong
+[4658915609672 ns] C424 FAILED - SIMD1 still produces 0 writes

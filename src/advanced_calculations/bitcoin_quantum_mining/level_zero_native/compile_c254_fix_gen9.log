@@ -1,0 +1,8 @@
+[C198] Compilation: src/btc_gen9_native_runner.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I/usr/include/libdrm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c:298:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  298 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+[C198] Linkage: bin/test_gen9_native
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I/usr/include/libdrm tests/test_gen9_native.c build/btc_gen9_native_runner.o -ldrm -lpthread -lm -o bin/test_gen9_native
+[C198] ✅ Binaire créé: bin/test_gen9_native

@@ -1,0 +1,44 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C529 - MÊME VA MAP QUE OPENCL                         ║
+╚════════════════════════════════════════════════════════════════╝
+
+Stratégie: Utiliser EXACTEMENT les mêmes GPU VA qu'OpenCL
+Soft-pinning avec offsets du log OpenCL
+
+[1/8] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/8] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/8] Allocation 10 buffers...
+  ✓ 10 buffers alloués
+
+[4/8] Chargement dumps OpenCL...
+  ✓ Buffers chargés
+
+[5/8] Création output buffer...
+  ✓ Output buffer créé
+
+[6/8] Création context...
+  ✓ Context créé (id=1)
+
+[7/8] Soumission avec MÊMES VA qu'OpenCL...
+  buffer_00: 0x000078fa3814c000
+  buffer_01: 0xffff8001fffed000
+  buffer_02: 0x000078fa3801e000
+  buffer_03: 0x000078fa37d06000
+  buffer_04: 0xffff8001fffdd000
+  buffer_05: 0x000078fa38152000
+  buffer_06: 0x000078fa35000000
+  buffer_07: 0xffff8001fffee000
+  buffer_08: 0x000078fa3804f000
+  buffer_09: 0x000078fa37cf5000
+  output:     0x000078fa40000000
+
+  Patch output dans Surface State...
+  ✓ Output patché
+
+  🔧 Soumission avec VA map OpenCL exacte...
+  ❌ EXECBUFFER2 failed (ret=-1, errno=22: Invalid argument)

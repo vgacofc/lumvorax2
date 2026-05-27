@@ -1,0 +1,86 @@
+[C198] Nettoyage...
+[C198] ✅ Nettoyage terminé
+[C255v8n] Compilation: src/btc_gen9_native_runner.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c: In function ‘configure_surface_states_c279’:
+src/btc_gen9_native_runner.c:197:34: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 5 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+  197 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1222:5: note: in expansion of macro ‘LOG_EVENT’
+ 1222 |     LOG_EVENT(ctx, "  Expected: input.dw2=0x%08x output.dw2=0x%08x",
+      |     ^~~~~~~~~
+src/btc_gen9_native_runner.c:197:34: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 6 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+  197 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1222:5: note: in expansion of macro ‘LOG_EVENT’
+ 1222 |     LOG_EVENT(ctx, "  Expected: input.dw2=0x%08x output.dw2=0x%08x",
+      |     ^~~~~~~~~
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_execute’:
+src/btc_gen9_native_runner.c:197:34: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 6 has type ‘__u64’ {aka ‘long long unsigned int’} [-Wformat=]
+  197 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1768:9: note: in expansion of macro ‘LOG_EVENT’
+ 1768 |         LOG_EVENT(ctx, "C364_GTT_CHANGED: input 0x%016lx → 0x%016lx",
+      |         ^~~~~~~~~
+src/btc_gen9_native_runner.c:197:34: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 6 has type ‘__u64’ {aka ‘long long unsigned int’} [-Wformat=]
+  197 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1773:9: note: in expansion of macro ‘LOG_EVENT’
+ 1773 |         LOG_EVENT(ctx, "C364_GTT_CHANGED: output 0x%016lx → 0x%016lx",
+      |         ^~~~~~~~~
+[C255v8n] Compilation: src/btc_i915_drm_forensic_tracker.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_i915_drm_forensic_tracker.c -o build/btc_i915_drm_forensic_tracker.o
+[C198] Linkage: bin/test_btc_mining_native
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm tests/test_btc_mining_native.c build/btc_gen9_native_runner.o build/btc_i915_drm_forensic_tracker.o -ldrm -lpthread -lm -lssl -lcrypto -o bin/test_btc_mining_native
+[C198] ✅ Binaire créé: bin/test_btc_mining_native
+
+═══════════════════════════════════════════════════════════
+  TEST BITCOIN MINING SHA256 — Kernel 42KB
+  Test Stabilité : 20 Dispatches Consécutifs
+═══════════════════════════════════════════════════════════
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 10000000 nonces
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=0 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=10000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=20000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=30000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=40000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=50000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=60000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=70000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=80000000 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x614c7119b490 block_header=0x7ffdb43b4c80 start_nonce=90000000 count=10000000
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+[C320] Block header configuré: version=0x20000000 difficulty=0x1d00ffff
+[C320] Test 1/10: start_nonce=0 count=10M
+[C320] Résultat 1: best_nonce=0 leading_zeros=0
+[C320] Test 2/10: start_nonce=10000000 count=10M
+[C320] Résultat 2: best_nonce=0 leading_zeros=0
+[C320] Test 3/10: start_nonce=20000000 count=10M
+[C320] Résultat 3: best_nonce=0 leading_zeros=0
+[C320] Test 4/10: start_nonce=30000000 count=10M
+[C320] Résultat 4: best_nonce=0 leading_zeros=0
+[C320] Test 5/10: start_nonce=40000000 count=10M
+[C320] Résultat 5: best_nonce=0 leading_zeros=0
+[C320] Test 6/10: start_nonce=50000000 count=10M
+[C320] Résultat 6: best_nonce=0 leading_zeros=0
+[C320] Test 7/10: start_nonce=60000000 count=10M
+[C320] Résultat 7: best_nonce=0 leading_zeros=0
+[C320] Test 8/10: start_nonce=70000000 count=10M
+[C320] Résultat 8: best_nonce=0 leading_zeros=0
+[C320] Test 9/10: start_nonce=80000000 count=10M
+[C320] Résultat 9: best_nonce=0 leading_zeros=0
+[C320] Test 10/10: start_nonce=90000000 count=10M
+[C320] Résultat 10: best_nonce=0 leading_zeros=0
+
+╔════════════════════════════════════════════════════════════╗
+║  C320 FIX ROOT CAUSE - RÉSULTATS MINAGE BITCOIN RÉEL      ║
+╚════════════════════════════════════════════════════════════╝
+SUCCESS: 10/10 dispatches completed
+Best nonce trouvé: 0
+Max leading zeros: 0
+Total leading zeros: 0
+GPU fonctionne: ❌ NON

@@ -1,0 +1,16 @@
+[DEBUG] PASS 1 Configuration:
+[DEBUG]   buffer_count = 3
+[DEBUG]   batch_len = 16 bytes
+[DEBUG]   context_id = 1
+[DEBUG]   Ordre création: output(1) → heap(2) → batch(3)
+[DEBUG] GTT Addresses PASS 1:
+[DEBUG]   output_gtt = 0x0000000000000000
+[DEBUG]   heap_gtt = 0x0000000000001000
+[DEBUG]   batch_gtt = 0x0000000000005000
+[DEBUG] PASS 2 Configuration:
+[DEBUG]   batch_gtt = 0x0000000000005000 (PINNED) ✅
+[DEBUG]   heap_gtt = 0x0000000000001000 (PINNED) ✅
+[DEBUG]   output: NON-PINNED (relocation auto) ✅
+[DEBUG]   flags = I915_EXEC_RENDER ✅
+[DEBUG]   batch_len = 232 bytes (aligné 8) ✅
+[DEBUG]   Validation: (0 | 232) & 0x7 = 0x0

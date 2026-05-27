@@ -1,0 +1,25 @@
+# LumVorax C407 — FORENSIC BIT-LEVEL EXECUTION LOG
+# Timestamp: 48033740406287 ns
+# Kernel: btc_sha256_native_c406.bin
+# SEND descriptor: 0x04025E00
+# Threads: 256
+
+[48033740599568] DRM opened: fd=9, elapsed=147381 ns
+[48033740634033] GPU context created: ctx_id=1, elapsed=30174 ns
+[48033741028904] Kernel file opened: size=176 bytes
+[48033741133147] GEM_CREATE+MMAP KERNEL: handle=1, size=176, elapsed=100563 ns
+[48033741160712] Kernel loaded into BO, elapsed=524257 ns
+[48033741368576] GEM_CREATE+MMAP OUTPUT: handle=2, size=1024, elapsed=64162 ns
+[48033741444671] GEM_CREATE+MMAP SSH: handle=3, size=4096, elapsed=64911 ns
+[48033741510963] GEM_CREATE+MMAP BATCH: handle=4, size=4096, elapsed=55503 ns
+[48033741520331] GTT addresses:
+  Kernel: 0x0000000000100000
+  Output: 0x0000000000200000
+  SSH:    0x0000000000300000
+  Batch:  0x0000000000400000
+[48033741528052] Surface State configured (BTI=0)
+[48033741529144] Interface Descriptor: KSP=0x0000000000100000
+[48033741530769] Batch buffer built: 41 dwords
+
+[48033741648598] === EXECBUFFER2 START ===
+[48033741689201] ERROR: EXECBUFFER2 failed: Invalid argument

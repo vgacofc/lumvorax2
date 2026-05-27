@@ -1,0 +1,141 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MAKEFILE C176 - Compilation et tests GPU comparatifs
+# ═══════════════════════════════════════════════════════════════════════════
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -pthread
+LDFLAGS = -lOpenCL -lm -lpthread
+
+# Répertoires
+SRC_DIR = src
+TEST_DIR = tests
+LOG_DIR = logs
+BIN_DIR = bin
+
+# Fichiers sources
+EXISTING_SRCS = $(SRC_DIR)/btc_opencl_runner.c \
+                $(SRC_DIR)/btc_gpu_async_logger.c
+
+NATIVE_SRCS = $(SRC_DIR)/btc_lumvorax_gpu_native.c
+
+TEST_SRC = $(TEST_DIR)/test_gpu_comparison_c176.c
+
+# Binaires
+TEST_BIN = $(BIN_DIR)/test_gpu_comparison_c176
+
+# ═══════════════════════════════════════════════════════════════════════════
+# RÈGLES
+# ═══════════════════════════════════════════════════════════════════════════
+
+.PHONY: all clean test run logs
+
+all: $(TEST_BIN)
+
+# Créer répertoires
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(LOG_DIR):
+	mkdir -p $(LOG_DIR)
+
+# Compiler test comparatif
+$(TEST_BIN): $(TEST_SRC) $(EXISTING_SRCS) $(NATIVE_SRCS) | $(BIN_DIR)
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "COMPILATION TEST COMPARATIF C176"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "[C176-COMPILE] Compilation version EXISTANTE..."
+	@echo "  Sources: $(EXISTING_SRCS)"
+	@echo ""
+	@echo "[C176-COMPILE] Compilation version NATIVE..."
+	@echo "  Sources: $(NATIVE_SRCS)"
+	@echo ""
+	@echo "[C176-COMPILE] Compilation test comparatif..."
+	@echo "  Source: $(TEST_SRC)"
+	@echo ""
+	$(CC) $(CFLAGS) -I$(SRC_DIR) \
+		$(TEST_SRC) \
+		$(EXISTING_SRCS) \
+		$(NATIVE_SRCS) \
+		$(LDFLAGS) \
+		-o $(TEST_BIN)
+	@echo ""
+	@echo "[C176-COMPILE] ✅ Compilation réussie: $(TEST_BIN)"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+
+# Lancer tests (30 sec par version)
+test: $(TEST_BIN) | $(LOG_DIR)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "LANCEMENT TESTS COMPARATIFS C176"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "[C176-TEST] Durée: 30 sec par version (60 sec total)"
+	@echo "[C176-TEST] Batch size: 262144 nonces"
+	@echo ""
+	$(TEST_BIN) 30 262144 2>&1 | tee $(LOG_DIR)/test_comparison_c176.log
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "TESTS TERMINÉS"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Logs disponibles:"
+	@echo "  - $(LOG_DIR)/test_comparison_c176.log (sortie complète)"
+	@echo "  - $(LOG_DIR)/lum_gpu_native_c176.log (logs bit-level natif)"
+	@echo "  - $(LOG_DIR)/gpu_state_c176.txt (état GPU final)"
+	@echo ""
+
+# Lancer tests longs (90 sec par version)
+test-long: $(TEST_BIN) | $(LOG_DIR)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "LANCEMENT TESTS LONGS C176"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "[C176-TEST] Durée: 90 sec par version (180 sec total)"
+	@echo "[C176-TEST] Batch size: 262144 nonces"
+	@echo ""
+	$(TEST_BIN) 90 262144 2>&1 | tee $(LOG_DIR)/test_comparison_c176_long.log
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "TESTS LONGS TERMINÉS"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+
+# Afficher logs
+logs:
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "LOGS DISPONIBLES"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@ls -lh $(LOG_DIR)/*.log $(LOG_DIR)/*.txt 2>/dev/null || echo "Aucun log trouvé"
+	@echo ""
+
+# Nettoyer
+clean:
+	@echo "[C176-CLEAN] Nettoyage..."
+	rm -f $(TEST_BIN)
+	rm -f $(LOG_DIR)/test_comparison_c176*.log
+	rm -f $(LOG_DIR)/lum_gpu_native_c176.log
+	rm -f $(LOG_DIR)/gpu_state_c176.txt
+	@echo "[C176-CLEAN] ✅ Nettoyage terminé"
+
+# Aide
+help:
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo "MAKEFILE C176 - Tests comparatifs GPU"
+	@echo "═══════════════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  make all        - Compiler le test comparatif"
+	@echo "  make test       - Lancer tests (30 sec par version)"
+	@echo "  make test-long  - Lancer tests longs (90 sec par version)"
+	@echo "  make logs       - Afficher logs disponibles"
+	@echo "  make clean      - Nettoyer binaires et logs"
+	@echo "  make help       - Afficher cette aide"
+	@echo ""
+	@echo "Exemples:"
+	@echo "  make all && make test"
+	@echo "  make test-long"
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════════════════"

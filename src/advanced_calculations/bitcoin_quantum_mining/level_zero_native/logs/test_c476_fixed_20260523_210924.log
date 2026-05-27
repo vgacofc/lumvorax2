@@ -1,0 +1,36 @@
+[27620.565743526] 🚀 TEST C476 - KERNEL EXECUTION RÉEL
+[27620.565753331] 📊 État: 10% - Démarrage
+[27620.565806371] ✅ DRM ouvert: fd=5
+[27620.565808115] 📊 État: 15%
+[27620.565813039] ✅ Contexte GPU créé: id=1
+[27620.565839524] ✅ Buffers créés: batch=1 kernel=2 output=3 idrt=4 relocs=[5,6,7,8]
+[27620.565841282] 📊 État: 25%
+[27620.565882792] ✅ Kernel bytecode écrit: 64 bytes
+[27620.565884210] 📊 État: 35%
+[27620.565906052] ✅ Interface Descriptor configuré
+[27620.565907549] 📊 État: 50%
+[27620.565963446] ✅ Batch null_state copié: 3840 bytes (960 DWORDs)
+[27620.565971327] ✅ Batch complet: 1006 DWORDs (4024 bytes)
+[27620.565972520]    - Null state: 960 DWORDs
+[27620.565973167]    - GPGPU: 46 DWORDs
+[27620.565973823] 📊 État: 65%
+[27620.565974651] ✅ Relocations préparées: 6 total
+[27620.565975370] 📊 État: 75%
+[27620.565976160] ⚡ Soumission batch (null_state + GPGPU + kernel)...
+[27620.565976772] 📊 État: 80%
+[27620.566346230] ✅ EXECBUFFER2 réussi! (0.369 ms)
+[27620.566356676] ⏳ Attente GPU idle...
+[27620.566657693] ✅ GPU idle confirmé (0.300 ms)
+[27620.566661477] 📊 État: 90%
+[27620.566681081] 
+[27620.566682503] 📊 RÉSULTATS OUTPUT:
+[27620.566683309] output[0] = 0x00000000 (attendu: 0xDEADBEEF)
+[27620.566687580] output[1] = 0x00000000 (attendu: 0xCAFEBABE)
+[27620.566688372] output[2] = 0x00000000 (attendu: 0x12345678)
+[27620.566689034] output[3] = 0x00000000 (attendu: 0xABCDEF00)
+[27620.566694446] 📊 État: 100%
+[27620.566695455] 
+[27620.566696197] ⚠️  TEST C476 PARTIEL
+[27620.566696955] ✅ Batch stable
+[27620.566697750] ❌ Kernel non exécuté (output = 0x00000000)
+[27620.566698748] 💡 Debugging requis: ISA kernel ou relocations

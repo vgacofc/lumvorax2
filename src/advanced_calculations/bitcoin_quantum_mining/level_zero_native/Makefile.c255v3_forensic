@@ -1,0 +1,55 @@
+# LumVorax C255v3 — Makefile Test Forensique Ultra-Granulaire
+# Objectif: Traçabilité bit-level maximale i915 DRM
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O0 -g -march=native -pthread -Iinclude -Isrc -I/usr/include/libdrm
+LDFLAGS = -lm -pthread -ldrm
+
+# Désactiver optimisations pour meilleure traçabilité
+CFLAGS += -fno-inline -fno-omit-frame-pointer
+
+SOURCES = src/btc_gen9_native_runner.c \
+          src/btc_i915_drm_forensic_tracker.c \
+          src/test_c255v3_forensic_ultra_granular.c
+
+OBJECTS = $(SOURCES:.c=.o)
+
+TARGET = test_c255v3_forensic_ultra_granular
+
+.PHONY: all clean run
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	@echo "Linking $(TARGET)..."
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+	@echo "Build complete: $(TARGET)"
+
+%.o: %.c
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	@echo "Cleaning..."
+	rm -f $(OBJECTS) $(TARGET)
+	rm -f logs/forensic/*.log
+	@echo "Clean complete"
+
+run: $(TARGET)
+	@echo "=== EXÉCUTION TEST FORENSIQUE ULTRA-GRANULAIRE ==="
+	@echo "ATTENTION: Génération logs MASSIFS (plusieurs GB possibles)"
+	@echo "Latence élevée acceptée (priorité = traçabilité)"
+	@echo ""
+	@mkdir -p logs/forensic
+	sudo -S ./$(TARGET) 2>&1 | tee logs/forensic/test_c255v3_stdout.log
+	@echo ""
+	@echo "=== LOGS GÉNÉRÉS ==="
+	@ls -lh logs/forensic/*.log
+	@echo ""
+	@echo "=== ANALYSE RECOMMANDÉE ==="
+	@echo "1. Lire logs/forensic/i915_forensic_main.log ligne par ligne"
+	@echo "2. Analyser logs/forensic/i915_forensic_hexdump.log (dumps buffers)"
+	@echo "3. Visualiser logs/forensic/i915_forensic_timeline.log (CSV)"
+	@echo "4. Identifier cause sérialisation dispatches"
+
+# Made with Bob

@@ -1,0 +1,255 @@
+-voici tout ce que tu doit creer pour regler le probleme- ============================================================ -- SETUP TABLES C50 — LumVorax Quantum Research -- Conforme STANDARD_NAMES.md v3.4 -- À exécuter dans : Supabase → SQL Editor -- Auteur : Agent Replit — 2026-04-08 -- ============================================================
+
+-- ── 1. ALTER TABLE module_results_rcs — colonnes C50 ───────────────────────── ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_qubits_c50 BIGINT DEFAULT 6160; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_phys_qubits_c50 BIGINT DEFAULT 12320; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS lx_c50 INTEGER DEFAULT 56; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS ly_c50 INTEGER DEFAULT 110; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS f_xeb_mean_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_std_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_rel_var_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_converged_c50 BOOLEAN DEFAULT FALSE; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS willow_ratio_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS willow_ratio_real_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS beats_willow_c50 BOOLEAN DEFAULT FALSE; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS d_eff_log_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS op_init_inv_sqrt_n_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS p_meas_global_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_circuits_c50 BIGINT DEFAULT 30000; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_grid_applied BOOLEAN DEFAULT TRUE; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_conv_applied BOOLEAN DEFAULT TRUE; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_anom01_applied BOOLEAN DEFAULT TRUE; ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS cycle TEXT DEFAULT 'C50';
+
+-- ── 2. ALTER TABLE run_scores — colonnes C50 ───────────────────────────────── ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS cycle TEXT DEFAULT 'C50'; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS n_qubits_rcs BIGINT DEFAULT 6160; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS d_eff_log DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS willow_ratio_real DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS beats_willow BOOLEAN DEFAULT FALSE; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS xeb_mean_final DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS xeb_converged_c50 BOOLEAN DEFAULT FALSE;
+
+-- ── 3. ALTER TABLE simulation_runs_extended — colonnes C50 ─────────────────── ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS willow_ratio_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS d_eff_log_c50 DOUBLE PRECISION DEFAULT 0.0; ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS n_qubits_rcs_c50 BIGINT DEFAULT 6160; ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS c50_fixes_applied TEXT DEFAULT 'GRID,CONV,ANOM01'; ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS run_interrupted BOOLEAN DEFAULT FALSE; ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS reconnect_count INTEGER DEFAULT 0;
+
+-- ── 4. CREATE TABLE standard_names_registry ─────────────────────────────────── CREATE TABLE IF NOT EXISTS standard_names_registry ( id BIGSERIAL PRIMARY KEY, section TEXT NOT NULL, key_name TEXT NOT NULL, value_desc TEXT NOT NULL, file_origin TEXT, version TEXT DEFAULT '3.4', cycle TEXT DEFAULT 'C50', is_canonical BOOLEAN DEFAULT TRUE, created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW(), UNIQUE(section, key_name) ); CREATE INDEX IF NOT EXISTS idx_snr_section ON standard_names_registry(section); CREATE INDEX IF NOT EXISTS idx_snr_key ON standard_names_registry(key_name);
+
+-- ── 5. CREATE TABLE vercel_log_events ───────────────────────────────────────── CREATE TABLE IF NOT EXISTS vercel_log_events ( id BIGSERIAL PRIMARY KEY, run_id TEXT NOT NULL, cycle TEXT DEFAULT 'C50', timestamp_ns BIGINT NOT NULL, module TEXT NOT NULL, metric TEXT NOT NULL, value DOUBLE PRECISION, value_text TEXT, event_type TEXT DEFAULT 'METRIC', uploaded_at TIMESTAMPTZ DEFAULT NOW() ); CREATE INDEX IF NOT EXISTS idx_vle_run ON vercel_log_events(run_id); CREATE INDEX IF NOT EXISTS idx_vle_module_metric ON vercel_log_events(module, metric);
+
+-- ── 6. INSERT données de référence STANDARD_NAMES ──────────────────────────── INSERT INTO standard_names_registry (section, key_name, value_desc, file_origin, cycle) VALUES ('MACROS', 'FORENSIC_LOG_MODULE_METRIC', 'Log principal CSV Lumvorax', 'src/debug/ultra_forensic_logger.h', 'C50'), ('MACROS', 'FORENSIC_LOG_ALGO', 'Log métrique algorithme', 'src/debug/ultra_forensic_logger.h', 'C50'), ('METRICS_RCS', 'rcs:F_xeb_mean', 'Fidélité XEB moyenne (cible: +1/3)', 'random_circuit_sampling.c', 'C50'), ('METRICS_RCS', 'rcs:n_qubits', 'Nombre de qubits grille (C50: 6160)', 'random_circuit_sampling.c', 'C50'), ('METRICS_RCS', 'rcs:converged', 'Convergence XEB (C50-FIX-CONV: seuil 5%)', 'random_circuit_sampling.c', 'C50'), ('METRICS_RCS', 'rcs:beats_willow', 'LumVorax > Google Willow (1.0=vrai)', 'random_circuit_sampling.c', 'C50'), ('METRICS_RCS', 'rcs:D_eff_log', 'log2 dimension Hilbert effective', 'random_circuit_sampling.c', 'C50'), ('CORRECTIONS', 'C50-FIX-GRID', 'lx=56, ly=110 (6160 qubits)', 'config/problems_cycle06.csv', 'C50'), ('CORRECTIONS', 'C50-FIX-CONV', 'XEB_CONVERGENCE_TOL=0.05', 'random_circuit_sampling.c', 'C50'), ('CORRECTIONS', 'C50-FIX-ANOM-01', 'inv_sqrt_n = 1/sqrt(n_qubits)', 'random_circuit_sampling.c', 'C50'), ('TABLES', 'module_results_rcs', 'Résultats RCS par run', 'SUPABASE/setup_tables_c38.py', 'C50'), ('TABLES', 'benchmark_rt_results', 'Benchmarks QMC/DMRG runtime', 'SUPABASE/setup_tables_c38.py', 'C50'), ('TABLES', 'standard_names_registry', 'Registre centralisé des noms canoniques', 'SUPABASE/setup_tables_c50.sql', 'C50'), ('TABLES', 'vercel_log_events', 'Bridge Vercel → Supabase pour événements CSV', 'SUPABASE/setup_tables_c50.sql', 'C50') ON CONFLICT (section, key_name) DO UPDATE SET value_desc = EXCLUDED.value_desc, cycle = EXCLUDED.cycle, updated_at = NOW();
+
+-- ── 7. VÉRIFICATION FINALE ──────────────────────────────────────────────────── SELECT 'standard_names_registry' AS table_name, COUNT() AS n_rows FROM standard_names_registry UNION ALL SELECT 'vercel_log_events', COUNT() FROM vercel_log_events;
+
+Je vais exécuter ton script SQL directement dans Supabase (SQL Editor) pour créer/ajouter les colonnes et tables demandées.
+Setup C50 Tables
+Write
+
+-- ── 1. ALTER TABLE module_results_rcs — colonnes C50 ─────────────────────────
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_qubits_c50          BIGINT DEFAULT 6160;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_phys_qubits_c50     BIGINT DEFAULT 12320;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS lx_c50                INTEGER DEFAULT 56;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS ly_c50                INTEGER DEFAULT 110;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS f_xeb_mean_c50        DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_std_c50           DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_rel_var_c50       DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS xeb_converged_c50     BOOLEAN DEFAULT FALSE;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS willow_ratio_c50      DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS willow_ratio_real_c50 DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS beats_willow_c50      BOOLEAN DEFAULT FALSE;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS d_eff_log_c50         DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS op_init_inv_sqrt_n_c50 DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS p_meas_global_c50     DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS n_circuits_c50        BIGINT DEFAULT 30000;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_grid_applied      BOOLEAN DEFAULT TRUE;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_conv_applied      BOOLEAN DEFAULT TRUE;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS fix_anom01_applied    BOOLEAN DEFAULT TRUE;
+ALTER TABLE module_results_rcs ADD COLUMN IF NOT EXISTS cycle                 TEXT DEFAULT 'C50';
+
+-- ── 2. ALTER TABLE run_scores — colonnes C50 ─────────────────────────────────
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS cycle             TEXT DEFAULT 'C50';
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS n_qubits_rcs      BIGINT DEFAULT 6160;
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS d_eff_log         DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS willow_ratio_real DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS beats_willow      BOOLEAN DEFAULT FALSE;
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS xeb_mean_final    DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE run_scores ADD COLUMN IF NOT EXISTS xeb_converged_c50 BOOLEAN DEFAULT FALSE;
+
+-- ── 3. ALTER TABLE simulation_runs_extended — colonnes C50 ───────────────────
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS willow_ratio_c50   DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS d_eff_log_c50      DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS n_qubits_rcs_c50   BIGINT DEFAULT 6160;
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS c50_fixes_applied  TEXT DEFAULT 'GRID,CONV,ANOM01';
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS run_interrupted     BOOLEAN DEFAULT FALSE;
+ALTER TABLE simulation_runs_extended ADD COLUMN IF NOT EXISTS reconnect_count     INTEGER DEFAULT 0;
+
+-- ── 4. CREATE TABLE standard_names_registry ───────────────────────────────────
+CREATE TABLE IF NOT EXISTS standard_names_registry (
+    id           BIGSERIAL PRIMARY KEY,
+    section      TEXT NOT NULL,
+    key_name     TEXT NOT NULL,
+    value_desc   TEXT NOT NULL,
+    file_origin  TEXT,
+    version      TEXT DEFAULT '3.4',
+    cycle        TEXT DEFAULT 'C50',
+    is_canonical BOOLEAN DEFAULT TRUE,
+    created_at   TIMESTAMPTZ DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(section, key_name)
+);
+CREATE INDEX IF NOT EXISTS idx_snr_section ON standard_names_registry(section);
+CREATE INDEX IF NOT EXISTS idx_snr_key     ON standard_names_registry(key_name);
+
+-- ── 5. CREATE TABLE vercel_log_events ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS vercel_log_events (
+    id           BIGSERIAL PRIMARY KEY,
+    run_id       TEXT NOT NULL,
+    cycle        TEXT DEFAULT 'C50',
+    timestamp_ns BIGINT NOT NULL,
+    module       TEXT NOT NULL,
+    metric       TEXT NOT NULL,
+    value        DOUBLE PRECISION,
+    value_text   TEXT,
+    event_type   TEXT DEFAULT 'METRIC',
+    uploaded_at  TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_vle_run           ON vercel_log_events(run_id);
+CREATE INDEX IF NOT EXISTS idx_vle_module_metric ON vercel_log_events(module, metric);
+
+-- ── 6. INSERT données de référence STANDARD_NAMES ────────────────────────────
+INSERT INTO standard_names_registry (section, key_name, value_desc, file_origin, cycle)
+VALUES
+    ('MACROS',       'FORENSIC_LOG_MODULE_METRIC', 'Log principal CSV Lumvorax',                    'src/debug/ultra_forensic_logger.h', 'C50'),
+    ('MACROS',       'FORENSIC_LOG_ALGO',          'Log métrique algorithme',                       'src/debug/ultra_forensic_logger.h', 'C50'),
+    ('METRICS_RCS',  'rcs:F_xeb_mean',             'Fidélité XEB moyenne (cible: +1/3)',            'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:n_qubits',               'Nombre de qubits grille (C50: 6160)',           'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:converged',              'Convergence XEB (C50-FIX-CONV: seuil 5%)',     'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:beats_willow',           'LumVorax > Google Willow (1.0=vrai)',           'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:D_eff_log',              'log2 dimension Hilbert effective',               'random_circuit_sampling.c', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-GRID',              'lx=56, ly=110 (6160 qubits)',                   'config/problems_cycle06.csv', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-CONV',              'XEB_CONVERGENCE_TOL=0.05',                       'random_circuit_sampling.c', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-ANOM-01',           'inv_sqrt_n = 1/sqrt(n_qubits)',                 'random_circuit_sampling.c', 'C50'),
+    ('TABLES',       'module_results_rcs',         'Résultats RCS par run',                         'SUPABASE/setup_tables_c38.py', 'C50'),
+    ('TABLES',       'benchmark_rt_results',       'Benchmarks QMC/DMRG runtime',                   'SUPABASE/setup_tables_c38.py', 'C50'),
+    ('TABLES',       'standard_names_registry',    'Registre centralisé des noms canoniques',       'SUPABASE/setup_tables_c50.sql', 'C50'),
+    ('TABLES',       'vercel_log_events',          'Bridge Vercel → Supabase pour événements CSV', 'SUPABASE/setup_tables_c50.sql', 'C50')
+ON CONFLICT (section, key_name) DO UPDATE
+    SET value_desc = EXCLUDED.value_desc,
+        cycle = EXCLUDED.cycle,
+        updated_at = NOW();
+
+-- ── 7. VÉRIFICATION FINALE ────────────────────────────────────────────────────
+SELECT
+    'standard_names_registry' AS table_name,
+    COUNT(*) AS n_rows
+FROM standard_names_registry
+UNION ALL
+SELECT
+    'vercel_log_events',
+    COUNT(*)
+FROM vercel_log_events;
+
+ERROR: Failed to run sql query: ERROR: 42P01: relation "module_results_rcs" does not exist
+
+Je vais d’abord vérifier les tables existantes dans public pour adapter le script aux noms réels (la table module_results_rcs n’existe pas).
+
+Je vais adapter le script : module_results_rcs et simulation_runs_extended n’existent pas, donc je les crée avec les colonnes C50, et j’applique ensuite les ALTER TABLE sur run_scores (qui existe).
+Setup C50 (create missing tables)
+Write
+
+-- Create missing tables for C50 columns
+CREATE TABLE IF NOT EXISTS public.module_results_rcs (
+  id BIGSERIAL PRIMARY KEY,
+  cycle TEXT DEFAULT 'C50',
+  n_qubits_c50 BIGINT DEFAULT 6160,
+  n_phys_qubits_c50 BIGINT DEFAULT 12320,
+  lx_c50 INTEGER DEFAULT 56,
+  ly_c50 INTEGER DEFAULT 110,
+  f_xeb_mean_c50 DOUBLE PRECISION DEFAULT 0.0,
+  xeb_std_c50 DOUBLE PRECISION DEFAULT 0.0,
+  xeb_rel_var_c50 DOUBLE PRECISION DEFAULT 0.0,
+  xeb_converged_c50 BOOLEAN DEFAULT FALSE,
+  willow_ratio_c50 DOUBLE PRECISION DEFAULT 0.0,
+  willow_ratio_real_c50 DOUBLE PRECISION DEFAULT 0.0,
+  beats_willow_c50 BOOLEAN DEFAULT FALSE,
+  d_eff_log_c50 DOUBLE PRECISION DEFAULT 0.0,
+  op_init_inv_sqrt_n_c50 DOUBLE PRECISION DEFAULT 0.0,
+  p_meas_global_c50 DOUBLE PRECISION DEFAULT 0.0,
+  n_circuits_c50 BIGINT DEFAULT 30000,
+  fix_grid_applied BOOLEAN DEFAULT TRUE,
+  fix_conv_applied BOOLEAN DEFAULT TRUE,
+  fix_anom01_applied BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.simulation_runs_extended (
+  id BIGSERIAL PRIMARY KEY,
+  willow_ratio_c50 DOUBLE PRECISION DEFAULT 0.0,
+  d_eff_log_c50 DOUBLE PRECISION DEFAULT 0.0,
+  n_qubits_rcs_c50 BIGINT DEFAULT 6160,
+  c50_fixes_applied TEXT DEFAULT 'GRID,CONV,ANOM01',
+  run_interrupted BOOLEAN DEFAULT FALSE,
+  reconnect_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Apply C50 columns to existing run_scores
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS cycle TEXT DEFAULT 'C50';
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS n_qubits_rcs BIGINT DEFAULT 6160;
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS d_eff_log DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS willow_ratio_real DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS beats_willow BOOLEAN DEFAULT FALSE;
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS xeb_mean_final DOUBLE PRECISION DEFAULT 0.0;
+ALTER TABLE public.run_scores ADD COLUMN IF NOT EXISTS xeb_converged_c50 BOOLEAN DEFAULT FALSE;
+
+-- standard_names_registry
+CREATE TABLE IF NOT EXISTS public.standard_names_registry (
+    id BIGSERIAL PRIMARY KEY,
+    section TEXT NOT NULL,
+    key_name TEXT NOT NULL,
+    value_desc TEXT NOT NULL,
+    file_origin TEXT,
+    version TEXT DEFAULT '3.4',
+    cycle TEXT DEFAULT 'C50',
+    is_canonical BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(section, key_name)
+);
+CREATE INDEX IF NOT EXISTS idx_snr_section ON public.standard_names_registry(section);
+CREATE INDEX IF NOT EXISTS idx_snr_key ON public.standard_names_registry(key_name);
+
+-- vercel_log_events
+CREATE TABLE IF NOT EXISTS public.vercel_log_events (
+    id BIGSERIAL PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    cycle TEXT DEFAULT 'C50',
+    timestamp_ns BIGINT NOT NULL,
+    module TEXT NOT NULL,
+    metric TEXT NOT NULL,
+    value DOUBLE PRECISION,
+    value_text TEXT,
+    event_type TEXT DEFAULT 'METRIC',
+    uploaded_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_vle_run ON public.vercel_log_events(run_id);
+CREATE INDEX IF NOT EXISTS idx_vle_module_metric ON public.vercel_log_events(module, metric);
+
+-- Insert reference data
+INSERT INTO public.standard_names_registry (section, key_name, value_desc, file_origin, cycle)
+VALUES
+    ('MACROS',       'FORENSIC_LOG_MODULE_METRIC', 'Log principal CSV Lumvorax', 'src/debug/ultra_forensic_logger.h', 'C50'),
+    ('MACROS',       'FORENSIC_LOG_ALGO',          'Log métrique algorithme', 'src/debug/ultra_forensic_logger.h', 'C50'),
+    ('METRICS_RCS',  'rcs:F_xeb_mean',             'Fidélité XEB moyenne (cible: +1/3)', 'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:n_qubits',               'Nombre de qubits grille (C50: 6160)', 'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:converged',              'Convergence XEB (C50-FIX-CONV: seuil 5%)', 'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:beats_willow',           'LumVorax > Google Willow (1.0=vrai)', 'random_circuit_sampling.c', 'C50'),
+    ('METRICS_RCS',  'rcs:D_eff_log',              'log2 dimension Hilbert effective', 'random_circuit_sampling.c', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-GRID',              'lx=56, ly=110 (6160 qubits)', 'config/problems_cycle06.csv', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-CONV',              'XEB_CONVERGENCE_TOL=0.05', 'random_circuit_sampling.c', 'C50'),
+    ('CORRECTIONS',  'C50-FIX-ANOM-01',           'inv_sqrt_n = 1/sqrt(n_qubits)', 'random_circuit_sampling.c', 'C50'),
+    ('TABLES',       'module_results_rcs',         'Résultats RCS par run', 'SUPABASE/setup_tables_c38.py', 'C50'),
+    ('TABLES',       'benchmark_rt_results',       'Benchmarks QMC/DMRG runtime', 'SUPABASE/setup_tables_c38.py', 'C50'),
+    ('TABLES',       'standard_names_registry',    'Registre centralisé des noms canoniques', 'SUPABASE/setup_tables_c50.sql', 'C50'),
+    ('TABLES',       'vercel_log_events',          'Bridge Vercel → Supabase pour événements CSV', 'SUPABASE/setup_tables_c50.sql', 'C50')
+ON CONFLICT (section, key_name) DO UPDATE
+    SET value_desc = EXCLUDED.value_desc,
+        cycle = EXCLUDED.cycle,
+        updated_at = NOW();
+
+-- final verification
+SELECT 'module_results_rcs' AS table_name, COUNT(*) AS n_rows FROM public.module_results_rcs
+UNION ALL
+SELECT 'simulation_runs_extended', COUNT(*) FROM public.simulation_runs_extended
+UNION ALL
+SELECT 'run_scores', COUNT(*) FROM public.run_scores
+UNION ALL
+SELECT 'standard_names_registry', COUNT(*) FROM public.standard_names_registry
+UNION ALL
+SELECT 'vercel_log_events', COUNT(*) FROM public.vercel_log_events;
+
+✅ C50 setup applied
+
+J’ai corrigé ton script : dans ton projet, module_results_rcs et simulation_runs_extended n’existaient pas, donc je les ai créées avec les colonnes C50 demandées, puis j’ai appliqué les ALTER TABLE sur run_scores (qui existe).
+Résultats (vérification finale)
+
+    module_results_rcs : créé ✅ (0 lignes)
+    simulation_runs_extended : créé ✅ (0 lignes)
+    run_scores : colonnes C50 ajoutées ✅
+    standard_names_registry : table créée/initialisée ✅ (14 lignes insérées)
+    vercel_log_events : table créée ✅ (0 lignes)

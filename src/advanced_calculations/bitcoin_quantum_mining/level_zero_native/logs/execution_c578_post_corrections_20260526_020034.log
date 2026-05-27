@@ -1,0 +1,88 @@
+[2344.106715691] [INFO] ╔════════════════════════════════════════════════════════════╗
+[2344.106773525] [INFO] ║  TEST C578 - EXECBUFFER2 FORENSIC COMPLET                 ║
+[2344.106783872] [INFO] ╚════════════════════════════════════════════════════════════╝
+[2344.106895954] [INFO] Opened DRM device: fd=6
+[2344.106908278] [INFO] 
+=== TEST 1: EXECBUFFER2 Minimal ===
+[2344.106932235] [INFO] Created buffer: handle=1, size=4096
+[2344.106982550] [INFO] Wrote minimal batch (MI_BATCH_BUFFER_END)
+[2344.106993443] [INFO] === EXECBUFFER2 SUBMIT START ===
+[2344.106999091] [INFO] Params: buffers=1, batch_offset=0, batch_len=4
+[2344.107023227] [INFO] Ring: BCS (Blitter), Context: 0x0
+[2344.107031588] [DEBUG] Object[0]: handle=1, name=batch_buffer, offset=0x0, flags=NONE
+[2344.107058159] [INFO] Seqno before: 0
+[2344.107080235] [ERROR] EXECBUFFER2 failed: Invalid argument (errno=22)
+[2344.107087798] [INFO] Latency ioctl: 1.879 µs
+[2344.107097724] [INFO] === EXECBUFFER2 SUBMIT END (0.104 ms) ===
+
+╔════════════════════════════════════════════════════════════╗
+║         EXECBUFFER2 FORENSIC ANALYSIS                      ║
+╚════════════════════════════════════════════════════════════╝
+
+Status: ❌ FAILED
+Ring: BCS (Blitter)
+Buffers: 1 submitted, 0 allocated GTT
+Relocations: 0 total, 0 applied
+Latency ioctl: 1.879 µs
+
+[2344.107110171] [ERROR] EXECBUFFER2 failed: EXECBUFFER2 failed: Invalid argument (errno=22)
+[2344.107116952] [INFO] 
+=== TEST 2: EXECBUFFER2 avec Relocations ===
+[2344.107131785] [INFO] Created buffer: handle=2, size=1024
+[2344.107144821] [INFO] Created buffer: handle=3, size=1024
+[2344.107157802] [INFO] Created buffer: handle=4, size=4096
+[2344.107211630] [INFO] Wrote batch with Surface States:
+[2344.107225796] [INFO]   - STATE_BASE_ADDRESS at offset 0
+[2344.107231713] [INFO]   - Input Surface State at offset 40
+[2344.107237095] [INFO]   - Output Surface State at offset 104
+[2344.107242452] [INFO]   - Binding Table at offset 168
+[2344.107248628] [INFO] === EXECBUFFER2 SUBMIT START ===
+[2344.107253723] [INFO] Params: buffers=3, batch_offset=0, batch_len=200
+[2344.107259630] [INFO] Ring: BCS (Blitter), Context: 0x0
+[2344.107267123] [DEBUG] Object[0]: handle=2, name=input_buffer_0, offset=0x0, flags=NEEDS_GTT
+[2344.107274696] [DEBUG] Object[1]: handle=3, name=output_buffer, offset=0x0, flags=WRITE
+[2344.107280883] [DEBUG] Object[2]: handle=4, name=batch_buffer, offset=0x0, flags=NONE
+[2344.107288647] [DEBUG] Reloc[0]: target_handle=2, offset=0x2c, delta=0x0, read=RENDER, write=NONE
+[2344.107295462] [DEBUG] Reloc[1]: target_handle=3, offset=0x6c, delta=0x0, read=RENDER, write=RENDER
+[2344.107318317] [INFO] Seqno before: 0
+[2344.107464721] [ERROR] EXECBUFFER2 failed: Invalid argument (errno=22)
+[2344.107475018] [INFO] Latency ioctl: 133.739 µs
+[2344.107485293] [INFO] === EXECBUFFER2 SUBMIT END (0.237 ms) ===
+
+╔════════════════════════════════════════════════════════════╗
+║         EXECBUFFER2 FORENSIC ANALYSIS                      ║
+╚════════════════════════════════════════════════════════════╝
+
+Status: ❌ FAILED
+Ring: BCS (Blitter)
+Buffers: 3 submitted, 0 allocated GTT
+Relocations: 2 total, 0 applied
+Latency ioctl: 133.739 µs
+
+[2344.107710286] [INFO] Saved Wireshark format to logs/forensic/test_c578_execbuffer2_wireshark.txt
+[2344.107733361] [ERROR] EXECBUFFER2 failed: EXECBUFFER2 failed: Invalid argument (errno=22)
+[2344.107743092] [INFO] 
+=== TEST 3: Timeline CPU/GPU Corrélée ===
+[2344.107761018] [INFO] Created buffer: handle=5, size=4096
+[2344.107804722] [INFO] Wrote minimal batch (MI_BATCH_BUFFER_END)
+[2344.107814697] [INFO] === EXECBUFFER2 SUBMIT START ===
+[2344.107824652] [INFO] Params: buffers=1, batch_offset=0, batch_len=4
+[2344.107830539] [INFO] Ring: BCS (Blitter), Context: 0x0
+[2344.107838572] [DEBUG] Object[0]: handle=5, name=batch_buffer, offset=0x0, flags=NONE
+[2344.107860939] [INFO] Seqno before: 0
+[2344.107873014] [ERROR] EXECBUFFER2 failed: Invalid argument (errno=22)
+[2344.107879736] [INFO] Latency ioctl: 1.710 µs
+[2344.107887661] [INFO] === EXECBUFFER2 SUBMIT END (0.073 ms) ===
+[2344.107894934] [INFO] Timeline correlation:
+[2344.107900691] [INFO]   CPU submit → ioctl start: 54.663 µs
+[2344.107908387] [INFO]   ioctl end → CPU complete: 24.213 µs
+[2344.107914831] [INFO] ✅ TEST 3 PASSED:
+[2344.107920479] [INFO]   - CPU submit → ioctl: 54.663 µs
+[2344.107927288] [INFO]   - ioctl duration: 1.710 µs
+[2344.107933447] [INFO]   - ioctl → CPU complete: 24.213 µs
+[2344.107945276] [INFO] 
+╔════════════════════════════════════════════════════════════╗
+[2344.107963928] [INFO] ║  RÉSUMÉ TESTS C578                                         ║
+[2344.107970461] [INFO] ╚════════════════════════════════════════════════════════════╝
+[2344.107976222] [INFO] Tests réussis: 1/3 (33.3%)
+[2344.108012576] [ERROR] ❌ 2 TEST(S) ÉCHOUÉ(S)

@@ -1,0 +1,272 @@
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260507T162044Z_31237
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 16
+[BTC_QM] duration  = 600 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[C171-GPU-ASYNC] Initialisation logger GPU asynchrone (buffer 262k)...
+[C171-GPU-ASYNC] Logger GPU asynchrone actif
+[NX48-LUM] Chargé : update=3307 best=38 bits exploration=0.826 delta=43.92 [header-bound]
+[NX48-BTC-C170] ✅ NX49 neurone biologique activé (pyramidal)
+[NX48-BTC-C170]    └─ Soma: 20.0µm | Dendrites: 100 | Axon: 1000µm
+[NX48-BTC-C170]    └─ V_rest: -70.0mV | V_threshold: -55.0mV | Synapses: 125
+[NX48-HW] CPU:8 threads AVX:1 (AVX2) SHA-NI:0 | GPU-OpenCL:DRI-GPU (clinfo non installé) DRI:1 | RAM:1114MB
+[NX48-HW] Binaire compilé AVEC : AVX2+SSE +FMA | gcc auto-vectorise SHA-256 dès maintenant
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.83 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=3307 best_leading=38
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=16 | T_hot=1.0 | T_cold=1.0 | GPU=DRI-GPU (clinfo non installé)
+[BTC_QM] NX48 exploration_bias=0.826 | delta_nonce=43.92 | AVX=1
+[SMAPS-KERNEL] RSS=101180 KB (25295 pages 4KiB)
+[SMAPS-KERNEL] AnonHugePages (THP 2MB)=0 KB (0 hugepages)
+[SMAPS-KERNEL] Private_Dirty=97424 KB | Shared_Dirty=0 KB
+[SMAPS-KERNEL] Referenced=101180 KB | VM_Total=0 KB
+[SMAPS-KERNEL] Granularité réelle : PAGE 4KiB standard (selon AnonHugePages)
+[C118-Q5] ASIC optimizer balayage 4 tailles batch (BTC_TUNE_FULL=1 pour sweep complet)...
+
+╔══════════════════════════════════════════════════════════╗
+║     ASIC BTC OPTIMIZER — Rapport C115                  ║
+╠══════════════════════════════════════════════════════════╣
+║ CONFIGURATION                                           ║
+║   Pipeline depth    : 64 stages SHA-256              
+║   Moteurs parallèles: 96                              
+║   Fréquence         : 0.000 GHz                        
+║   Stratégie nonce   : SEQUENTIAL                             
+║   Batch size        : 2097152 nonces                      
+║   Durée simulation  : 5 s                         
+╠══════════════════════════════════════════════════════════╣
+║ RÉSULTATS HASHRATE                                      ║
+║   Peak              : 0.001 MH/s                      
+║   Moyen             : 0.001 MH/s                      
+║   Final             : 0.001 MH/s                      
+║   Déclin thermique  : 0.00 %                        
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES EFFICACITÉ                                    ║
+║   W/GH              : 71525.5737                           
+║   J/hash            : 7.15e-05                           
+║   Total hashes      : 2.097e+06                           
+║   Batches traités   : 1                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES QUALITÉ NONCE                                 ║
+║   Best leading bits : 15                              
+║   Best nonce        : 0x00000117                        
+║   Near-miss / MH    : 0.0000                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES NX48                                          ║
+║   Delta final       : 6.000                           
+║   Resets C62        : 0                              
+╠══════════════════════════════════════════════════════════╣
+║ SCORE OPTIMISATION  : 4.7 / 100                     
+╚══════════════════════════════════════════════════════════╝
+
+[C118-Q5] BEST batch=2097152 (idx=3) | score=4.7 | hashrate_avg=0.00 MH/s
+[C118-Q5] nx48_ctrl_batch_size ← 2097152 (boucle feedback fermée)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260507T162044Z_31237                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mxn6ngkHt7XcC14QENvG2SaJLzF4fm2YSr        ║
+║ Adresse Bech32  : tb1qh4th0jp35nj6qd7yhzlrnp34easesf9d5e246l║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 15d4f534...(masquée)                     ║
+║ WIF compressé   : cNK94zsKWC6YuzvPjJPvFVvtjvxsCCPeMLPvPPALJNdePZ18z14L║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : bd5777c831a4e5a037c4b8be398635cf619824ad  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260507T162044Z_31237.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0001.csv (partie 1, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0002.csv (partie 2, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=1.000000 src=src/nx48_btc_controller.c:1145
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1122MB
+[C100-ALLTIME] seed best_lz_alltime=38 nonce=4278190080 upd_count=16 (historique préservé)
+[C208-GPU-DELAYED] 🕐 GPU OpenCL détecté mais INACTIF : DRI-GPU (clinfo non installé)
+[C208-GPU-DELAYED] ⏱️  Activation automatique après 90 secondes
+[C174-2] GPU non actif (gpu_opencl_active=0) — mode CPU pur
+[BTC_QM] elapsed=15.6s hashes=172032 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=62.80
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0003.csv (partie 3, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0004.csv (partie 4, cap 20 MB atteint)
+[BTC_QM] elapsed=27.9s hashes=311296 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=67.35
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0005.csv (partie 5, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0006.csv (partie 6, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0007.csv (partie 7, cap 20 MB atteint)
+[BTC_QM] elapsed=46.0s hashes=507904 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=64.50
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0008.csv (partie 8, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0009.csv (partie 9, cap 20 MB atteint)
+[BTC_QM] elapsed=59.1s hashes=659456 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=65.32
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0010.csv (partie 10, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0011.csv (partie 11, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=2.000000 src=src/nx48_btc_controller.c:1145
+[BTC_QM] elapsed=73.1s hashes=815104 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=73.99
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0012.csv (partie 12, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0013.csv (partie 13, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0014.csv (partie 14, cap 20 MB atteint)
+[BTC_QM] elapsed=89.6s hashes=978944 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=77.19
+
+═══════════════════════════════════════════════════════════
+[C208-GPU-DELAYED-ACTIVATION] 🚀 ACTIVATION GPU À t=90.0s
+[C208-GPU-DELAYED-ACTIVATION] GPU: DRI-GPU (clinfo non installé)
+[C208-GPU-DELAYED-ACTIVATION] Baseline CPU [0-90s] terminé
+[C208-GPU-DELAYED-ACTIVATION] Phase CPU+GPU [90s-fin] démarrée
+═══════════════════════════════════════════════════════════
+
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_gpu_delayed_activation_c208 val=90.010131 src=src/btc_mining_engine.c:668
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0015.csv (partie 15, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0016.csv (partie 16, cap 20 MB atteint)
+[BTC_QM] elapsed=104.3s hashes=1134592 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=76.77
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0017.csv (partie 17, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0018.csv (partie 18, cap 20 MB atteint)
+[BTC_QM] elapsed=118.7s hashes=1286144 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=84.75
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0019.csv (partie 19, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0020.csv (partie 20, cap 20 MB atteint)
+[BTC_QM] elapsed=131.0s hashes=1417216 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=89.50
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=3.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0021.csv (partie 21, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0022.csv (partie 22, cap 20 MB atteint)
+[BTC_QM] elapsed=146.3s hashes=1581056 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=103.57
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0023.csv (partie 23, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0024.csv (partie 24, cap 20 MB atteint)
+[BTC_QM] elapsed=160.2s hashes=1736704 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=109.67
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0025.csv (partie 25, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0026.csv (partie 26, cap 20 MB atteint)
+[BTC_QM] elapsed=171.2s hashes=1847296 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=117.13
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0027.csv (partie 27, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=4.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0028.csv (partie 28, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0029.csv (partie 29, cap 20 MB atteint)
+[BTC_QM] elapsed=188.9s hashes=2052096 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=140.72
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0030.csv (partie 30, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0031.csv (partie 31, cap 20 MB atteint)
+[BTC_QM] elapsed=201.8s hashes=2187264 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=163.71
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0032.csv (partie 32, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0033.csv (partie 33, cap 20 MB atteint)
+[BTC_QM] elapsed=216.4s hashes=2330624 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=154.60
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0034.csv (partie 34, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0035.csv (partie 35, cap 20 MB atteint)
+[BTC_QM] elapsed=232.6s hashes=2510848 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=160.56
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0036.csv (partie 36, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0037.csv (partie 37, cap 20 MB atteint)
+[BTC_QM] elapsed=246.1s hashes=2658304 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=180.49
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0038.csv (partie 38, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=5.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0039.csv (partie 39, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0040.csv (partie 40, cap 20 MB atteint)
+[BTC_QM] elapsed=262.4s hashes=2834432 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=200.00
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0041.csv (partie 41, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0042.csv (partie 42, cap 20 MB atteint)
+[BTC_QM] elapsed=277.2s hashes=2985984 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=183.04
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0043.csv (partie 43, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_200 val=200.000000 src=src/nx48_btc_controller.c:1089
+[BTC_QM] elapsed=287.3s hashes=3100672 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=200.00
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0044.csv (partie 44, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0045.csv (partie 45, cap 20 MB atteint)
+[BTC_QM] elapsed=298.9s hashes=3203072 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=194.27
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0046.csv (partie 46, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=6.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0047.csv (partie 47, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_200 val=200.000000 src=src/nx48_btc_controller.c:1089
+[BTC_QM] elapsed=314.7s hashes=3371008 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=200.00
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0048.csv (partie 48, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_200 val=200.000000 src=src/nx48_btc_controller.c:1089
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0049.csv (partie 49, cap 20 MB atteint)
+[BTC_QM] elapsed=328.3s hashes=3481600 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=200.00
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0050.csv (partie 50, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_200 val=200.000000 src=src/nx48_btc_controller.c:1089
+[BTC_QM] elapsed=339.8s hashes=3600384 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=200.00
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0051.csv (partie 51, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0052.csv (partie 52, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=4.546232 src=src/nx48_btc_controller.c:1255
+[NX48-C62] Reset delta_nonce 200.0->4.546 (stall_long=60 cap200_plateau)
+[BTC_QM] elapsed=352.9s hashes=3735552 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=4.55
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0053.csv (partie 53, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0054.csv (partie 54, cap 20 MB atteint)
+[BTC_QM] elapsed=364.0s hashes=3846144 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.39
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0055.csv (partie 55, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=7.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0056.csv (partie 56, cap 20 MB atteint)
+[BTC_QM] elapsed=376.1s hashes=3977216 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.73
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0057.csv (partie 57, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0058.csv (partie 58, cap 20 MB atteint)
+[BTC_QM] elapsed=388.5s hashes=4112384 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.24
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0059.csv (partie 59, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0060.csv (partie 60, cap 20 MB atteint)
+[BTC_QM] elapsed=403.3s hashes=4280320 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.50
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0061.csv (partie 61, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0062.csv (partie 62, cap 20 MB atteint)
+[BTC_QM] elapsed=418.1s hashes=4427776 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=6.26
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0063.csv (partie 63, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0064.csv (partie 64, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0065.csv (partie 65, cap 20 MB atteint)
+[BTC_QM] elapsed=438.9s hashes=4669440 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.76
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0066.csv (partie 66, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=8.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0067.csv (partie 67, cap 20 MB atteint)
+[BTC_QM] elapsed=451.7s hashes=4780032 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=6.82
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0068.csv (partie 68, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0069.csv (partie 69, cap 20 MB atteint)
+[BTC_QM] elapsed=467.5s hashes=4952064 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=6.38
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0070.csv (partie 70, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0071.csv (partie 71, cap 20 MB atteint)
+[BTC_QM] elapsed=481.6s hashes=5107712 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=5.99
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0072.csv (partie 72, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0073.csv (partie 73, cap 20 MB atteint)
+[BTC_QM] elapsed=492.4s hashes=5214208 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=6.25
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0074.csv (partie 74, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=9.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0075.csv (partie 75, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0076.csv (partie 76, cap 20 MB atteint)
+[BTC_QM] elapsed=509.6s hashes=5410816 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=7.49
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0077.csv (partie 77, cap 20 MB atteint)
+[BTC_QM] elapsed=519.9s hashes=5517312 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=8.36
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0078.csv (partie 78, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0079.csv (partie 79, cap 20 MB atteint)
+[BTC_QM] elapsed=532.4s hashes=5640192 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=8.25
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0080.csv (partie 80, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0081.csv (partie 81, cap 20 MB atteint)
+[BTC_QM] elapsed=546.8s hashes=5799936 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=8.67
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0082.csv (partie 82, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0083.csv (partie 83, cap 20 MB atteint)
+[BTC_QM] elapsed=561.3s hashes=5963776 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=9.92
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0084.csv (partie 84, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=10.000000 src=src/nx48_btc_controller.c:1145
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0085.csv (partie 85, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0086.csv (partie 86, cap 20 MB atteint)
+[BTC_QM] elapsed=575.3s hashes=6111232 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=11.23
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0087.csv (partie 87, cap 20 MB atteint)
+[BTC_QM] elapsed=585.7s hashes=6213632 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=10.88
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0088.csv (partie 88, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T162044Z_31237.log_part_0089.csv (partie 89, cap 20 MB atteint)
+[BTC_QM] elapsed=600.1s hashes=6369280 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=11.55
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 6418432
+[BTC_QM] Durée        : 602.71 s
+[BTC_QM] Hashrate     : 0.01 MH/s
+[BTC_QM] Best leading : 38 bits
+[BTC_QM] Best nonce   : 4278190080
+[BTC_QM] Bloc valide  : non
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_5498221387217.csv
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 1053MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+[C171-GPU-ASYNC] Arrêt logger GPU asynchrone (pending: 0 entries)...
+[C171-GPU-ASYNC] Logger GPU asynchrone arrêté proprement
+[NX48-BTC-C170] Libération neurone NX49 (spikes=10)
+Rapport résumé généré: logs/forensic/sessions/summary_5498226743575.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement

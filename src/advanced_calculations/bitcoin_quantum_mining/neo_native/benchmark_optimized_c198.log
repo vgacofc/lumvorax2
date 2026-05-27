@@ -1,0 +1,101 @@
+[NEO_WRAPPER] Initializing Intel NEO OpenCL wrapper...
+[NEO_WRAPPER] Found 1 OpenCL platform(s)
+[NEO_WRAPPER] Platform 0: Intel(R) OpenCL Graphics
+[NEO_WRAPPER] Selected Intel platform
+[NEO_WRAPPER] Found 1 GPU device(s)
+[NEO_WRAPPER] Selected device: Intel(R) UHD Graphics 620
+[NEO_WRAPPER] Context created successfully
+[NEO_WRAPPER] Command queue created with profiling enabled
+[NEO_WRAPPER] Initialization complete
+[NEO_WRAPPER] Loading kernel 'vector_add'...
+[NEO_WRAPPER] Program compiled successfully
+[NEO_WRAPPER] Kernel 'vector_add' created successfully
+[NEO_WRAPPER] Création buffer persistant #0 (4194304 bytes)
+[NEO_WRAPPER] Création buffer persistant #1 (4194304 bytes)
+[NEO_WRAPPER] Création buffer persistant #2 (4194304 bytes)
+[NEO_WRAPPER] Libération buffer persistant #0 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #0 (67108864 bytes)
+[NEO_WRAPPER] Libération buffer persistant #1 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #1 (67108864 bytes)
+[NEO_WRAPPER] Libération buffer persistant #2 (trop petit: 4194304 < 67108864)
+[NEO_WRAPPER] Création buffer persistant #2 (67108864 bytes)
+═══════════════════════════════════════════════════════════
+  BENCHMARK MASSIF — NEO Wrapper OpenCL
+  Objectif : Saturer GPU et mesurer performance réelle
+  Device : Intel UHD Graphics 620 (Gen9)
+═══════════════════════════════════════════════════════════
+
+[INIT] Initialisation NEO Wrapper...
+✅ Wrapper initialisé
+
+[COMPILE] Compilation kernel...
+✅ Kernel compilé
+
+═══════════════════════════════════════════════════════════
+  BENCHMARK : 1M éléments (saturation EU) (1048576 éléments = 12.00 MB)
+═══════════════════════════════════════════════════════════
+
+[1/7] Initialisation données host...
+      Temps init : 4.319 ms (vectorisé)
+[2/7] Création buffers GPU...
+      Temps alloc : 1.023 ms (persistants)
+[3/7] Transfert Host → Device...
+      Temps H2D : 3.385 ms (2.31 GB/s)
+[4/7] Configuration kernel...
+      Arguments configurés
+[5/7] Dispatch kernel...
+      Temps dispatch : 5.378 ms
+      Temps GPU : 1.103 ms (0.95 GFLOPS)
+[6/7] Transfert Device → Host...
+      Temps D2H : 2.443 ms (1.60 GB/s)
+[7/7] Vérification résultats...
+      ✅ Tous les résultats corrects (1000 échantillons vérifiés)
+
+───────────────────────────────────────────────────────────
+  RÉSUMÉ 1M éléments (saturation EU)
+───────────────────────────────────────────────────────────
+  Init données    :    4.319 ms ( 26.1%)
+  Alloc GPU       :    1.023 ms (  6.2%)
+  Transfert H2D   :    3.385 ms ( 20.5%) — 2.31 GB/s
+  Dispatch kernel :    5.378 ms ( 32.5%)
+  Temps GPU       :    1.103 ms — 0.95 GFLOPS
+  Transfert D2H   :    2.443 ms ( 14.8%) — 1.60 GB/s
+  ─────────────────────────────────────────────────────────
+  TOTAL           :   16.548 ms
+  Ratio GPU/Total :      6.7%
+═══════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════
+  BENCHMARK : 16M éléments (pression L3) (16777216 éléments = 192.00 MB)
+═══════════════════════════════════════════════════════════
+
+[1/7] Initialisation données host...
+      Temps init : 73.585 ms (vectorisé)
+[2/7] Création buffers GPU...
+      Temps alloc : 52.622 ms (persistants)
+[3/7] Transfert Host → Device...
+      Temps H2D : 30.772 ms (4.06 GB/s)
+[4/7] Configuration kernel...
+      Arguments configurés
+[5/7] Dispatch kernel...
+      Temps dispatch : 18.400 ms
+      Temps GPU : 16.352 ms (1.03 GFLOPS)
+[6/7] Transfert Device → Host...
+      Temps D2H : 40.303 ms (1.55 GB/s)
+[7/7] Vérification résultats...
+      ✅ Tous les résultats corrects (1000 échantillons vérifiés)
+
+───────────────────────────────────────────────────────────
+  RÉSUMÉ 16M éléments (pression L3)
+──────────────────────────────────────────────────────────[NEO_WRAPPER] Libération buffer persistant #0 (trop petit: 67108864 < 268435456)
+[NEO_WRAPPER] Création buffer persistant #0 (268435456 bytes)
+[NEO_WRAPPER] Libération buffer persistant #1 (trop petit: 67108864 < 268435456)
+[NEO_WRAPPER] Création buffer persistant #1 (268435456 bytes)
+[NEO_WRAPPER] Libération buffer persistant #2 (trop petit: 67108864 < 268435456)
+[NEO_WRAPPER] Création buffer persistant #2 (268435456 bytes)
+[NEO_WRAPPER] Libération buffer persistant #0 (trop petit: 268435456 < 1073741824)
+[NEO_WRAPPER] Création buffer persistant #0 (1073741824 bytes)
+[NEO_WRAPPER] Libération buffer persistant #1 (trop petit: 268435456 < 1073741824)
+[NEO_WRAPPER] Création buffer persistant #1 (1073741824 bytes)
+[NEO_WRAPPER] Libération buffer persistant #2 (trop petit: 268435456 < 1073741824)
+[NEO_WRAPPER] Création buffer persistant #2 (1073741824 bytes)

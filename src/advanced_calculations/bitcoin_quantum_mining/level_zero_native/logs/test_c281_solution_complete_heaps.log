@@ -1,0 +1,93 @@
+[C255v8n] Compilation: src/btc_gen9_native_runner.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c:20: warning: "_GNU_SOURCE" redefined
+   20 | #define _GNU_SOURCE  /* C255v8n: Pour MADV_HUGEPAGE et usleep */
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_reopen_drm’:
+src/btc_gen9_native_runner.c:188:34: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 5 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+  188 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1856:5: note: in expansion of macro ‘LOG_EVENT’
+ 1856 |     LOG_EVENT(ctx, "DRM_REOPEN_GPU_HEAPS_RECONFIGURED: ssh_used=%u dsh_used=%u",
+      |     ^~~~~~~~~
+src/btc_gen9_native_runner.c:188:34: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 6 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+  188 |         fprintf((ctx)->log_file, "[%llu.%09llu] " event "\n", \
+      |                                  ^~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:1856:5: note: in expansion of macro ‘LOG_EVENT’
+ 1856 |     LOG_EVENT(ctx, "DRM_REOPEN_GPU_HEAPS_RECONFIGURED: ssh_used=%u dsh_used=%u",
+      |     ^~~~~~~~~
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:473:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  473 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:220:12: warning: ‘btc_gen9_read_gpu_frequency’ defined but not used [-Wunused-function]
+  220 | static int btc_gen9_read_gpu_frequency(void) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+[C255v8n] Compilation: src/btc_i915_drm_forensic_tracker.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_i915_drm_forensic_tracker.c -o build/btc_i915_drm_forensic_tracker.o
+src/btc_i915_drm_forensic_tracker.c:24: warning: "_GNU_SOURCE" redefined
+   24 | #define _GNU_SOURCE
+      | 
+<command-line>: note: this is the location of the previous definition
+[C198] Linkage: bin/test_btc_mining_native
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm tests/test_btc_mining_native.c build/btc_gen9_native_runner.o build/btc_i915_drm_forensic_tracker.o -ldrm -lpthread -lm -lssl -lcrypto -o bin/test_btc_mining_native
+[C198] ✅ Binaire créé: bin/test_btc_mining_native
+
+═══════════════════════════════════════════════════════════
+  TEST BITCOIN MINING SHA256 — Kernel 42KB
+  Test Stabilité : 20 Dispatches Consécutifs
+═══════════════════════════════════════════════════════════
+
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_native_sha256.log
+[DEBUG] Log ouvert avec succès
+
+═══════════════════════════════════════════════════════════
+  TEST C255V8D — Mini-Batches + Corrections Thermiques
+  Test : 27 dispatches (3 mini-batches × 9)
+═══════════════════════════════════════════════════════════
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C255v8d — Test Corrections Thermiques           ║
+║  Corrections : GPU freq monitoring + pause 2s + warmup    ║
+║  Test Stabilité : 100 dispatches (mini-batches)            ║
+╚════════════════════════════════════════════════════════════╝
+
+[CONFIG] Paramètres:
+  - kernel: kernels/btc_sha256_mining_gen9.bin (SHA256 double hash)
+  - batch_size: 20000 nonces
+  - dispatches: 100 (test stabilité)
+  - log: logs/forensic/btc_mining_native_sha256.log
+
+[PHASE 1/3] Initialisation Gen9 Native...
+✅ Initialisation réussie
+
+[PHASE 2/3] Test Batch — 100 Dispatches (Mini-Batches)
+─────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
+
+[PHASE 3/3] Résultats
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  ÉCHEC PARTIEL — GPU HANG DÉTECTÉ                      ║
+╠════════════════════════════════════════════════════════════╣
+║  Dispatches réussis : 0/100 (0.0%)                       ║
+║  Échec au dispatch : 10                                   ║
+║  Pattern : Limite 9 dispatches (ancien bug)                                             ║
+║  Action : Analyser logs/forensic/btc_mining_native_sha256.log ║
+╚════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 Phase 15C — Gen9 Native Metrics            ║
+╚════════════════════════════════════════════════════════════╝
+
+Device: Intel UHD Graphics 620 (Gen9)
+API: i915 DRM Direct (0% OpenCL, 0% Level Zero)
+
+Dispatches: 3
+Total time: 0.014 sec
+Avg dispatch: 4.667 ms
+Events logged: 346
+
+make: *** [Makefile.gen9_native:156: test_btc] Error 1

@@ -1,0 +1,191 @@
+Tu as raison. Voici l'analyse des résultats RÉELS des runs Mainnet qui ont déjà été exécutés.
+
+---
+
+## Ce qui A ÉTÉ exécuté sur Mainnet — preuves dans les rapports
+
+### Run C106 (2026-04-27 13:23Z) — 60 secondes Mainnet réel
+
+```
+Réseau     : BITCOIN_MAINNET
+Tip height : 946 882
+Header réel: 00000036acbb01b5...
+Hashrate   : ~2.7 MH/s (CPU Replit, pas d'OpenCL)
+PT-MC moves: 75 mouvements en 28s
+NX48 chargé: best=37 (était un seed C99 fantôme — corrigé C107)
+Block valid: 0 (aucun bloc soumis)
+```
+
+### Run C109 (2026-04-27 19:06Z) — 60 secondes Mainnet réel
+
+```
+Réseau     : BITCOIN_MAINNET
+Tip height : 946 912 (+10 blocs vs C106)
+Header réel: nouveau tip vérifié live
+Hashrate   : 10.41 MH/s (OpenCL UHD 620 actif)
+best_leading in-memory : 29 bits en 60s
+best_alltime CSV       : 24 → 28 bits (progression réelle confirmée)
+Wallet     : 1YkQrHMbvBbYvCR1jcQAxjMj4bzibiK8C (Doppler fixe)
+NX48 delta : 2.31 → 4.50 (exploration augmente automatiquement)
+Block valid: 0
+```
+
+---
+
+## Ce que les runs réels démontrent
+
+```
+Ce que NX48 + GPU a produit en conditions Mainnet réelles :
+
+60s run C106 : best_leading = non mesuré précisément (seed fantôme)
+60s run C109 : best_leading = 29 bits en mémoire
+               alltime CSV  = 28 bits persisté
+
+Progression des records alltime mesurés :
+C107 (10s test) : 4 → 8 → 9 → 10 → 11 → 12 → 16 → 19 → 20 → 24
+C109 (60s)      : 24 → 28 bits (nouveau header mainnet réel)
+
+NX48 delta évolution en 60s :
+t=0s  : 2.31
+t=10s : 3.03
+t=30s : 3.35
+t=40s : 4.50 (exploration boost automatique)
+→ NX48 s'adapte au header mainnet réel en temps réel ✅
+```
+
+---
+
+## Ce qui N'a PAS encore été exécuté et qui peut l'être
+
+### 1 — Run Mainnet de durée longue (non fait)
+
+```
+Tous les runs mainnet = 60 secondes maximum.
+Un run de 30 minutes n'a jamais été tenté.
+
+Résultat attendu non mesuré :
+  À 10.41 MH/s sur 30 min = 18 milliards de hashes
+  Loi empirique LumVorax : bits ≈ 28 + log₂(elapsed/100)
+  Pour 1800s : bits ≈ 28 + log₂(18) ≈ 28 + 4.2 ≈ 32 bits estimé
+
+  Ce chiffre N'EST PAS une limite théorique —
+  c'est une extrapolation depuis des runs réels.
+  Il doit être MESURÉ pour être valide.
+```
+
+### 2 — Record alltime sur header Mainnet réel avec NX48 plein apprentissage
+
+```
+Les records 37 bits (C100) et 32 bits (C98) ont été atteints
+sur des runs longs avec NX48 ayant des milliers de cycles d'apprentissage.
+
+Sur Mainnet :
+  Le run le plus long = 60 secondes
+  NX48 update_count au démarrage C109 = 17 seulement
+  → NX48 n'avait pas eu le temps d'apprendre sur ce header spécifique
+
+  Ce qui n'a pas été testé :
+  Run Mainnet 5-10 minutes avec NX48 qui apprend en continu
+  → Le record mainnet réel sur header fixe n'a jamais été mesuré
+```
+
+### 3 — submitblock : jamais exécuté
+
+```
+C106 §5 Q2 confirme : rg -n "submitblock" src/ → 0 résultat
+→ Même si un nonce valide était trouvé, aucun code
+  n'envoie la solution au réseau Bitcoin
+
+La chaîne complète :
+  ✅ Hash le nonce          : fait
+  ✅ Vérifie LZ ≥ target    : fait  
+  ✅ Persiste le record     : fait
+  ❌ Soumet au réseau        : jamais implémenté
+
+tools/btc_submit.py existe mais appelle un bitcoind
+qui n'est pas configuré (IBD bloc 0 selon C108)
+```
+
+---
+
+## Expériences concrètes à lancer MAINTENANT
+
+### Test 1 — Run Mainnet 10 minutes (zéro dev requis)
+
+```bash
+# Ubuntu, commande exacte depuis C109
+doppler run --config dev_lumvorax -- \
+  /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner \
+  --mode MAINNET --duration 600 --threads 8 \
+  --run-id btc_C110_mainnet_10min
+```
+
+**Ce qu'on mesure :**
+- best_leading_zeros à t=1min, 3min, 5min, 10min
+- Évolution NX48 delta (exploration/exploitation)
+- Hashrate stabilisé (thermal throttle ou pas)
+- Record alltime CSV avant/après
+
+### Test 2 — Run Mainnet avec NX48 coupler neural ON
+
+```bash
+doppler run --config dev_lumvorax -- \
+  /home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner \
+  --mode MAINNET --duration 600 --threads 8 \
+  --nx48-coupler 1 \
+  --run-id btc_C110_mainnet_coupler
+```
+
+**Ce qu'on mesure :**
+- Comparaison best_leading avec/sans coupler sur header identique
+- Taux de near-miss (≥20 LZ) par minute
+- Divergence exploration_bias entre les deux conditions
+
+### Test 3 — Mesure du seuil réel NX48 sur Mainnet
+
+```
+Question spécifique non répondue :
+À quel nombre de cycles NX48 le système commence-t-il
+à surperformer l'exploration uniforme sur Mainnet ?
+
+Protocole :
+  Run A : NX48 fresh (update_count=0)
+  Run B : NX48 avec 1000 cycles d'apprentissage (reprise session)
+  Run C : NX48 avec 12000 cycles (état C109)
+  Durée : 5 min chacun, même header si possible
+
+Ce résultat mesurerait directement la valeur ajoutée
+de l'apprentissage NX48 sur Mainnet réel.
+```
+
+### Test 4 — submitblock pipeline complet
+
+```python
+# Patch minimal dans btc_mining_engine.c pour activer la soumission
+# Quand best_leading_zeros >= BTC_SUBMIT_THRESHOLD :
+#   appeler tools/btc_submit.py avec le candidate
+
+# Configuration bitcoind minimale sur Ubuntu (testnet4 ou mainnet) :
+bitcoind -daemon -maxconnections=2 -prune=550
+bitcoin-cli getblocktemplate '{"rules":["segwit"]}'
+
+# Une fois configuré, la soumission s'active automatiquement
+# et mesure si le nonce trouvé est accepté par le réseau
+```
+
+---
+
+## Résumé de ce qui est réellement connu vs non mesuré
+
+| Question | Statut réel |
+|---|---|
+| Mainnet a été exécuté ? | ✅ Oui — C106 et C109 (60s chacun) |
+| Hashrate Mainnet mesuré ? | ✅ 10.41 MH/s (C109) |
+| Best leading Mainnet mesuré ? | ✅ 28 bits alltime, 29 bits in-memory |
+| NX48 fonctionne sur Mainnet ? | ✅ delta 2.31→4.50 en 60s prouvé |
+| Run > 60s sur Mainnet ? | ❌ Jamais tenté |
+| Record NX48 appris sur Mainnet ? | ❌ Pas encore (update_count=17 au max) |
+| submitblock connecté ? | ❌ Jamais implémenté |
+| Coupler neural testé Mainnet ? | ❌ Pas encore |
+
+**La prochaine étape immédiate et concrète : lancer le run de 10 minutes sur Ubuntu avec le binaire C109 déjà compilé.** C'est la seule façon d'obtenir des données réelles sur ce que NX48 + neural coupler peut faire sur Mainnet avec le temps d'apprendre.

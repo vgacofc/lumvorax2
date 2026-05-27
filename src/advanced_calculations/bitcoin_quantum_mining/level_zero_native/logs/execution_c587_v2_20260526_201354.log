@@ -1,0 +1,71 @@
+🚀 TEST C587 - AJOUT MEDIA_PIPELINE_SELECT (ROOT CAUSE #132)
+═══════════════════════════════════════════════════════════════════════
+PRIORITÉ ABSOLUE #1: Activer pipeline GPGPU avant MEDIA_VFE_STATE
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened (fd=5, 70.028 µs)
+
+[ 10%] Creating heap buffer (64KB)...
+✅ Heap buffer created (handle=1, size=65536, 12.227 µs)
+
+[ 15%] Creating batch buffer (4KB)...
+✅ Batch buffer created (handle=2, size=4096, 2.522 µs)
+
+[ 20%] Mapping heap buffer...
+✅ Heap mapped at 0x741c7753e000 (66.059 µs)
+
+[ 25%] Mapping batch buffer...
+✅ Batch mapped at 0x741c775e8000 (13.904 µs)
+
+[ 30%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.008 µs)
+
+[ 40%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (relocation target)
+    [25] MEDIA_PIPELINE_SELECT (GPGPU) ← ROOT CAUSE #132 FIX!
+    [26] MEDIA_VFE_STATE
+    [35] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [39] GPGPU_WALKER
+    [54] PIPE_CONTROL (flush final)
+    [60] MI_BATCH_BUFFER_END
+✅ Batch built: 61 DWords (244 bytes, 1.741 µs)
+
+[ 50%] Creating relocation entry...
+  Relocation entry:
+    target_handle: 1 (heap)
+    delta: 0x0
+    offset: 0x1c (batch DWord 7)
+    read_domains: 0x00000002 (RENDER)
+    write_domain: 0x00000002 (RENDER)
+✅ Relocation entry created (1.469 µs)
+
+[ 60%] Setting up exec_objects...
+  exec_objects[0] (heap):
+    handle: 1
+    relocation_count: 0
+  exec_objects[1] (batch):
+    handle: 2
+    relocation_count: 1
+    relocs_ptr: 0x7ffe9dc27f30
+✅ exec_objects setup complete (0.844 µs)
+
+[ 70%] Executing batch buffer...
+  EXECBUFFER2 parameters:
+    buffer_count: 2
+    batch_len: 244 bytes (61 DWords)
+    flags: 0x1 (RENDER)
+
+  Submitting to GPU...
+❌ EXECBUFFER2 failed: Invalid argument (errno=22)
+   This indicates batch was rejected by i915 driver
+

@@ -1,0 +1,34 @@
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~
+src/batch_generator_auto.c: In function ‘generate_state_base_address’:
+src/batch_generator_auto.c:357:47: error: ‘BUFFER_GENERAL_STATE’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_GENERAL_STATE’?
+  357 |     batch[(*idx)++] = (uint32_t)(gen->buffers[BUFFER_GENERAL_STATE].gtt_offset >> 32);
+      |                                               ^~~~~~~~~~~~~~~~~~~~
+      |                                               BUFFER_TYPE_GENERAL_STATE
+src/batch_generator_auto.c:357:47: note: each undeclared identifier is reported only once for each function it appears in
+src/batch_generator_auto.c:360:41: error: ‘BUFFER_SURFACE_STATE’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_SURFACE_STATE’?
+  360 |     uint64_t surface_gtt = gen->buffers[BUFFER_SURFACE_STATE].gtt_offset;
+      |                                         ^~~~~~~~~~~~~~~~~~~~
+      |                                         BUFFER_TYPE_SURFACE_STATE
+src/batch_generator_auto.c:365:41: error: ‘BUFFER_DYNAMIC_STATE’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_DYNAMIC_STATE’?
+  365 |     uint64_t dynamic_gtt = gen->buffers[BUFFER_DYNAMIC_STATE].gtt_offset;
+      |                                         ^~~~~~~~~~~~~~~~~~~~
+      |                                         BUFFER_TYPE_DYNAMIC_STATE
+src/batch_generator_auto.c:373:42: error: ‘BUFFER_INDIRECT’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_INDIRECT’?
+  373 |     uint64_t indirect_gtt = gen->buffers[BUFFER_INDIRECT].gtt_offset;
+      |                                          ^~~~~~~~~~~~~~~
+      |                                          BUFFER_TYPE_INDIRECT
+src/batch_generator_auto.c:383:40: error: ‘BUFFER_KERNEL’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_KERNEL’?
+  383 |     uint64_t kernel_gtt = gen->buffers[BUFFER_KERNEL].gtt_offset;
+      |                                        ^~~~~~~~~~~~~
+      |                                        BUFFER_TYPE_KERNEL
+src/batch_generator_auto.c: In function ‘generate_media_vfe_state’:
+src/batch_generator_auto.c:412:41: error: ‘BUFFER_SCRATCH’ undeclared (first use in this function); did you mean ‘BUFFER_TYPE_SCRATCH’?
+  412 |     uint64_t scratch_gtt = gen->buffers[BUFFER_SCRATCH].gtt_offset;
+      |                                         ^~~~~~~~~~~~~~
+      |                                         BUFFER_TYPE_SCRATCH

@@ -1,0 +1,75 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C519 - REPRODUCTION BATCH OPENCL AVEC OFFSETS i915     ║
+╚════════════════════════════════════════════════════════════════╝
+
+ROOT CAUSES #22-#26 CORRIGÉES!
+Stratégie: Laisser i915 assigner VA, puis patcher batch OpenCL
+
+[1/15] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/15] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/15] Allocation buffers (hiérarchie OpenCL)...
+  ✓ 6 buffers alloués (VA GPU = 0, i915 choisira)
+
+[4/15] Initialisation buffers...
+  ✓ Output et kernel initialisés
+
+[5/15] PASS 1: Soumission pour résolution VA GPU par i915...
+  🔧 PASS 1 - Soumission batch minimal pour VA resolution
+  ✅ PASS 1 RÉUSSI - i915 a assigné les VA GPU!
+
+[6/15] Lecture offsets i915 assignés...
+  ✓ OFFSETS i915 RÉELS:
+    surface_state: 0x0000000000000000
+    dynamic_state: 0x0000000000001000
+    idrt:          0x0000000000002000
+    kernel:        0x0000000000003000
+    output:        0x0000000000004000
+    batch:         0x0000000000005000
+
+[7/15] Construction IDRT (offset-based)...
+  ✓ IDRT configuré: kernel @ 0x0000000000003000
+
+[8/15] Construction Binding Table + Surface State...
+  ✓ Binding Table + Surface State: output @ 0x0000000000004000
+
+[9/15] Construction Dynamic State...
+  ✓ Dynamic State initialisé
+
+[10/15] Copie et patch du batch OpenCL avec offsets réels...
+  ✓ Batch OpenCL patché avec offsets i915 réels
+    Surface State Base: 0x0000000000000000
+    Dynamic State Base: 0x0000000000001000
+    IDRT offset:        0x0000000000001000
+
+[11/15] Construction exec_objects final (10 buffers)...
+  ✓ 10 exec_objects configurés avec PINNED + offsets réels
+
+[12/15] PASS 2: Soumission batch OpenCL avec NO_RELOC...
+  🔧 PASS 2 - Reproduction EXACTE OpenCL:
+     buffer_count: 10
+     batch_len:    320 bytes
+     flags:        0x800 (NO_RELOC)
+     context_id:   1
+
+  ✅✅✅ PASS 2 RÉUSSI! BATCH OPENCL REPRODUIT! ✅✅✅
+
+[13/15] Attente GPU...
+  ✓ GPU terminé
+
+[14/15] VÉRIFICATION RÉSULTAT GPU NATIF...
+═══════════════════════════════════════════════════════════════
+output[0] = 0xFFFFFFFF (attendu: 0x12345678)
+output[1] = 0xFFFFFFFF
+output[2] = 0xFFFFFFFF
+output[3] = 0xFFFFFFFF
+
+⚠️  Valeur incorrecte - analyse nécessaire
+    Possible: Surface State, IDRT, ou offset incorrect
+
+[15/15] Cleanup...
+  ✓ Cleanup terminé

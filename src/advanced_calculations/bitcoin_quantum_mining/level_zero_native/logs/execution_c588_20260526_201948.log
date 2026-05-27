@@ -1,0 +1,68 @@
+🚀 TEST C588 - CONTEXT + MEDIA_PIPELINE_SELECT (BASE C584)
+═══════════════════════════════════════════════════════════════════════
+BASE: C584 fonctionnel (Context + Relocations)
+AJOUT: MEDIA_PIPELINE_SELECT avant MEDIA_VFE_STATE
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (87.805 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (7.372 µs)
+
+[ 20%] Creating heap buffer (64KB)...
+✅ Heap buffer created: handle=1, size=65536 (12.707 µs)
+
+[ 25%] Creating batch buffer (4KB)...
+✅ Batch buffer created: handle=2, size=4096 (3.403 µs)
+
+[ 30%] Mapping heap buffer...
+✅ Heap buffer mapped: 0x7d7c2ae12000 (104.357 µs)
+
+[ 35%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x7d7c2aebc000 (16.452 µs)
+
+[ 40%] Setting up heap layout...
+  ✅ Kernel ISA copied to offset 0x0000 (128 bytes)
+  ✅ Surface State setup at offset 0x1000 (output @ 0x2000)
+  ✅ Binding Table setup at offset 0x1100 (BTI[0] = 0x1000)
+  ✅ IDRT setup at offset 0x1200
+      Kernel Start: 0x0000
+      Binding Table: 0x1100
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xdeadbeef)
+✅ Heap layout complete (2.563 µs)
+
+[ 50%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS (relocation target)
+    [25] MEDIA_PIPELINE_SELECT (GPGPU)
+    [26] MEDIA_VFE_STATE
+    [35] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [39] GPGPU_WALKER
+    [54] PIPE_CONTROL (flush final)
+    [60] MI_BATCH_BUFFER_END
+✅ Batch built: 61 DWords (244 bytes, 2.118 µs)
+
+[ 60%] Creating relocation entries...
+✅ Relocations created (0.033 µs)
+  [0] STATE_BASE_ADDRESS:
+      Target: heap, Delta: 0x0, Offset: 0x1c (DWord 7)
+  [1] MEDIA_INTERFACE_DESCRIPTOR_LOAD:
+      Target: heap, Delta: 0x1200, Offset: 0x94 (DWord 37)
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Buffer count: 2 (heap + batch)
+    Batch length: 244 bytes
+    Relocations: 2 (STATE_BASE_ADDRESS + MIDL → heap)
+
+[ 80%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22)
+   Duration: 4.873 µs
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C584 ÉCHOUÉ                                      ║
+╚════════════════════════════════════════════════════════════╝

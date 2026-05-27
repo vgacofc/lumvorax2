@@ -1,0 +1,509 @@
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║  TEST C600 - VALIDATION GPU HARDWARE RÉELLE               ║
+║  Mini Compute Runtime i915 DRM Natif                      ║
+║                                                            ║
+║  Objectif: Premier résultat valide GPU natif i915!        ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST 1 - CONFIGURATION COMPLÈTE GPU                      ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ DRM ouvert: /dev/dri/card1
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+✓ Générateur initialisé (12 buffers)
+✓ Kernel ISA OpenCL copié (320 bytes)
+
+[C600] ========================================
+[C600] CONFIGURATION IDRT
+[C600] ========================================
+
+[C600] ✓ IDRT configuré (32 bytes):
+[C600]   Kernel GTT:        0x0000000000700000
+[C600]   Binding Table:     offset 0x00000010 DWords (64 bytes depuis Surface State Base)
+[C600]   Num Threads:       1
+[C600]   Binding Entries:   1
+[C600] 
+[C600] IDRT Dump (8 DWords):
+[C600]   DW0: 0x00700000
+[C600]   DW1: 0x00000000
+[C600]   DW2: 0x00000040
+[C600]   DW3: 0x00000000
+[C600]   DW4: 0x00000200
+[C600]   DW5: 0x00010000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600] ========================================
+
+✓ IDRT configuré
+
+[C600] ========================================
+[C600] CONFIGURATION SURFACE STATE #0
+[C600] ========================================
+
+[C600] ✓ Surface State #0 configuré (64 bytes):
+[C600]   Type:              BUFFER
+[C600]   Format:            RAW
+[C600]   Base Address:      0x0000000000100000
+[C600]   Size:              4096 bytes
+[C600] 
+[C600] Surface State Dump (16 DWords):
+[C600]   DW0: 0x87fc0000
+[C600]   DW1: 0x00100000
+[C600]   DW2: 0x00000000
+[C600]   DW3: 0x00000fff
+[C600]   DW4: 0x00000000
+[C600]   DW5: 0x00000000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600]   DW8: 0x00000000
+[C600]   DW9: 0x00000000
+[C600]   DW10: 0x00000000
+[C600]   DW11: 0x00000000
+[C600]   DW12: 0x00000000
+[C600]   DW13: 0x00000000
+[C600]   DW14: 0x00000000
+[C600]   DW15: 0x00000000
+[C600] ========================================
+
+✓ Surface State configuré
+
+[C600] ========================================
+[C600] CONFIGURATION BINDING TABLE
+[C600] ========================================
+
+[C600] ✓ Binding Table configurée:
+[C600]   Entry 0: offset 0x00000000 DWords (Surface State #0)
+[C600]   Placée à offset 64 bytes dans buffer Surface State
+[C600]   (Respecte contrainte: < 8KB depuis Surface State Base)
+[C600] ========================================
+
+✓ Binding Table configuré
+✓ IDRT kernel pointer cohérent: 0x0000000000700000
+✓ Surface State base address cohérent: 0x0000000000100000
+✓ Binding Table entry 0: 0x00000000
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+✅ TEST 1 RÉUSSI - Configuration complète validée
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST 2 - GÉNÉRATION BATCH AVEC KERNEL                    ║
+╚════════════════════════════════════════════════════════════╝
+
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION IDRT
+[C600] ========================================
+
+[C600] ✓ IDRT configuré (32 bytes):
+[C600]   Kernel GTT:        0x0000000000700000
+[C600]   Binding Table:     offset 0x00000010 DWords (64 bytes depuis Surface State Base)
+[C600]   Num Threads:       1
+[C600]   Binding Entries:   1
+[C600] 
+[C600] IDRT Dump (8 DWords):
+[C600]   DW0: 0x00700000
+[C600]   DW1: 0x00000000
+[C600]   DW2: 0x00000040
+[C600]   DW3: 0x00000000
+[C600]   DW4: 0x00000200
+[C600]   DW5: 0x00010000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION SURFACE STATE #0
+[C600] ========================================
+
+[C600] ✓ Surface State #0 configuré (64 bytes):
+[C600]   Type:              BUFFER
+[C600]   Format:            RAW
+[C600]   Base Address:      0x0000000000100000
+[C600]   Size:              4096 bytes
+[C600] 
+[C600] Surface State Dump (16 DWords):
+[C600]   DW0: 0x87fc0000
+[C600]   DW1: 0x00100000
+[C600]   DW2: 0x00000000
+[C600]   DW3: 0x00000fff
+[C600]   DW4: 0x00000000
+[C600]   DW5: 0x00000000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600]   DW8: 0x00000000
+[C600]   DW9: 0x00000000
+[C600]   DW10: 0x00000000
+[C600]   DW11: 0x00000000
+[C600]   DW12: 0x00000000
+[C600]   DW13: 0x00000000
+[C600]   DW14: 0x00000000
+[C600]   DW15: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION BINDING TABLE
+[C600] ========================================
+
+[C600] ✓ Binding Table configurée:
+[C600]   Entry 0: offset 0x00000000 DWords (Surface State #0)
+[C600]   Placée à offset 64 bytes dans buffer Surface State
+[C600]   (Respecte contrainte: < 8KB depuis Surface State Base)
+[C600] ========================================
+
+
+[AUTO] ========================================
+[AUTO] GÉNÉRATION BATCH AUTOMATIQUE C599
+[AUTO] ========================================
+
+[AUTO] [1/6] Génération PIPELINE_SELECT GPGPU...
+[AUTO]   ✓ PIPELINE_SELECT: 1 DWord @ offset 0
+[AUTO] [2/6] Génération STATE_BASE_ADDRESS...
+[AUTO]   ✓ STATE_BASE_ADDRESS: 19 DWords @ offset 1
+[AUTO] [3/6] Génération MEDIA_VFE_STATE...
+[AUTO]   ✓ MEDIA_VFE_STATE: 9 DWords @ offset 20
+[AUTO] [4/6] Génération MEDIA_INTERFACE_DESCRIPTOR_LOAD...
+[AUTO]   ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 3 DWords @ offset 29
+[AUTO] [5/6] Génération GPGPU_WALKER...
+[AUTO]   ✓ GPGPU_WALKER: 15 DWords @ offset 32
+[AUTO] [6/6] Ajout MI_BATCH_BUFFER_END...
+[AUTO]   ✓ MI_BATCH_BUFFER_END: 1 DWord @ offset 47
+
+[AUTO] ========================================
+[AUTO] BATCH GÉNÉRÉ AVEC SUCCÈS
+[AUTO] ========================================
+[AUTO] Total: 48 DWords (192 bytes)
+[AUTO] 
+[AUTO] Détail commandes:
+[AUTO]   1. PIPELINE_SELECT:     1 DWord
+[AUTO]   2. STATE_BASE_ADDRESS: 19 DWords
+[AUTO]   3. MEDIA_VFE_STATE:     9 DWords
+[AUTO]   4. MEDIA_IDL:           3 DWords
+[AUTO]   5. GPGPU_WALKER:       15 DWords
+[AUTO]   6. MI_BATCH_END:        1 DWord
+[AUTO]   --------------------------------
+[AUTO]   TOTAL:                 48 DWords
+[AUTO] ========================================
+
+[AUTO] Batch buffer (48 DWords = 192 bytes):
+[AUTO]   [  0] 0x69041312 0x61010011 0x00000001 0x00000000 
+[AUTO]   [  4] 0x00000000 0x00200000 0x00000000 0x00800000 
+[AUTO]   [  8] 0x00000000 0x00000001 0x00a00000 0x00000041 
+[AUTO]   [ 12] 0x00008001 0x00700000 0x00000000 0xfffff001 
+[AUTO]   [ 16] 0xfffff001 0x00a00000 0x00000000 0x003bf000 
+[AUTO]   [ 20] 0x70000007 0x00600000 0x00000000 0x00a70100 
+[AUTO]   [ 24] 0x00000000 0x07820000 0x00000000 0x00000000 
+[AUTO]   [ 28] 0x00000000 0x61020001 0x00400000 0x00000000 
+[AUTO]   [ 32] 0x18800101 0x00400000 0x00000000 0x00000000 
+[AUTO]   [ 36] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 40] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 44] 0x00000000 0x00000000 0x00000000 0x05000000 
+✓ Batch généré: 48 DWords (192 bytes)
+✓ PIPELINE_SELECT: 0x69041312
+✓ STATE_BASE_ADDRESS: 0x61010011
+✓ MEDIA_VFE_STATE: 0x70000007
+✓ MEDIA_IDL: 0x61020001
+✓ GPGPU_WALKER: 0x18800101
+✓ MI_BATCH_BUFFER_END: 0x05000000
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+✅ TEST 2 RÉUSSI - Batch généré correctement
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST 3 - EXÉCUTION GPU RÉELLE                            ║
+║  🎯 OBJECTIF: PREMIER RÉSULTAT GPU NATIF i915!            ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ DRM ouvert: /dev/dri/card1
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+✓ Générateur initialisé
+✓ Output buffer initialisé (pattern 0xDEADBEEF)
+✓ Kernel ISA OpenCL copié (320 bytes)
+
+[CONFIGURATION GPU]
+
+[C600] ========================================
+[C600] CONFIGURATION IDRT
+[C600] ========================================
+
+[C600] ✓ IDRT configuré (32 bytes):
+[C600]   Kernel GTT:        0x0000000000700000
+[C600]   Binding Table:     offset 0x00000010 DWords (64 bytes depuis Surface State Base)
+[C600]   Num Threads:       1
+[C600]   Binding Entries:   1
+[C600] 
+[C600] IDRT Dump (8 DWords):
+[C600]   DW0: 0x00700000
+[C600]   DW1: 0x00000000
+[C600]   DW2: 0x00000040
+[C600]   DW3: 0x00000000
+[C600]   DW4: 0x00000200
+[C600]   DW5: 0x00010000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION SURFACE STATE #0
+[C600] ========================================
+
+[C600] ✓ Surface State #0 configuré (64 bytes):
+[C600]   Type:              BUFFER
+[C600]   Format:            RAW
+[C600]   Base Address:      0x0000000000100000
+[C600]   Size:              4096 bytes
+[C600] 
+[C600] Surface State Dump (16 DWords):
+[C600]   DW0: 0x87fc0000
+[C600]   DW1: 0x00100000
+[C600]   DW2: 0x00000000
+[C600]   DW3: 0x00000fff
+[C600]   DW4: 0x00000000
+[C600]   DW5: 0x00000000
+[C600]   DW6: 0x00000000
+[C600]   DW7: 0x00000000
+[C600]   DW8: 0x00000000
+[C600]   DW9: 0x00000000
+[C600]   DW10: 0x00000000
+[C600]   DW11: 0x00000000
+[C600]   DW12: 0x00000000
+[C600]   DW13: 0x00000000
+[C600]   DW14: 0x00000000
+[C600]   DW15: 0x00000000
+[C600] ========================================
+
+
+[C600] ========================================
+[C600] CONFIGURATION BINDING TABLE
+[C600] ========================================
+
+[C600] ✓ Binding Table configurée:
+[C600]   Entry 0: offset 0x00000000 DWords (Surface State #0)
+[C600]   Placée à offset 64 bytes dans buffer Surface State
+[C600]   (Respecte contrainte: < 8KB depuis Surface State Base)
+[C600] ========================================
+
+
+[GÉNÉRATION BATCH]
+
+[AUTO] ========================================
+[AUTO] GÉNÉRATION BATCH AUTOMATIQUE C599
+[AUTO] ========================================
+
+[AUTO] [1/6] Génération PIPELINE_SELECT GPGPU...
+[AUTO]   ✓ PIPELINE_SELECT: 1 DWord @ offset 0
+[AUTO] [2/6] Génération STATE_BASE_ADDRESS...
+[AUTO]   ✓ STATE_BASE_ADDRESS: 19 DWords @ offset 1
+[AUTO] [3/6] Génération MEDIA_VFE_STATE...
+[AUTO]   ✓ MEDIA_VFE_STATE: 9 DWords @ offset 20
+[AUTO] [4/6] Génération MEDIA_INTERFACE_DESCRIPTOR_LOAD...
+[AUTO]   ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 3 DWords @ offset 29
+[AUTO] [5/6] Génération GPGPU_WALKER...
+[AUTO]   ✓ GPGPU_WALKER: 15 DWords @ offset 32
+[AUTO] [6/6] Ajout MI_BATCH_BUFFER_END...
+[AUTO]   ✓ MI_BATCH_BUFFER_END: 1 DWord @ offset 47
+
+[AUTO] ========================================
+[AUTO] BATCH GÉNÉRÉ AVEC SUCCÈS
+[AUTO] ========================================
+[AUTO] Total: 48 DWords (192 bytes)
+[AUTO] 
+[AUTO] Détail commandes:
+[AUTO]   1. PIPELINE_SELECT:     1 DWord
+[AUTO]   2. STATE_BASE_ADDRESS: 19 DWords
+[AUTO]   3. MEDIA_VFE_STATE:     9 DWords
+[AUTO]   4. MEDIA_IDL:           3 DWords
+[AUTO]   5. GPGPU_WALKER:       15 DWords
+[AUTO]   6. MI_BATCH_END:        1 DWord
+[AUTO]   --------------------------------
+[AUTO]   TOTAL:                 48 DWords
+[AUTO] ========================================
+
+[AUTO] Batch buffer (48 DWords = 192 bytes):
+[AUTO]   [  0] 0x69041312 0x61010011 0x00000001 0x00000000 
+[AUTO]   [  4] 0x00000000 0x00200000 0x00000000 0x00800000 
+[AUTO]   [  8] 0x00000000 0x00000001 0x00a00000 0x00000041 
+[AUTO]   [ 12] 0x00008001 0x00700000 0x00000000 0xfffff001 
+[AUTO]   [ 16] 0xfffff001 0x00a00000 0x00000000 0x003bf000 
+[AUTO]   [ 20] 0x70000007 0x00600000 0x00000000 0x00a70100 
+[AUTO]   [ 24] 0x00000000 0x07820000 0x00000000 0x00000000 
+[AUTO]   [ 28] 0x00000000 0x61020001 0x00400000 0x00000000 
+[AUTO]   [ 32] 0x18800101 0x00400000 0x00000000 0x00000000 
+[AUTO]   [ 36] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 40] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 44] 0x00000000 0x00000000 0x00000000 0x05000000 
+
+[SOUMISSION GPU]
+
+[AUTO] ========================================
+[AUTO] SOUMISSION BATCH AU GPU
+[AUTO] ========================================
+
+[AUTO] ✓ Batch copié dans buffer BATCH (192 bytes)
+
+[AUTO] ========================================
+[AUTO] CONFIGURATION EXECBUFFER2 AUTOMATIQUE
+[AUTO] ========================================
+[AUTO] buffer_count: 12 (comme OpenCL)
+[AUTO] batch_len: 192 bytes (comme OpenCL: 320)
+[AUTO] flags: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO] context: 1
+[AUTO] 
+[AUTO] Buffers (12 avec soft-pinning):
+[AUTO]   [ 0] BATCH           handle=1 offset=0x0000000000040000 flags=0x18
+[AUTO]   [ 1] HEAP            handle=2 offset=0x0000000000080000 flags=0x18
+[AUTO]   [ 2] OUTPUT          handle=3 offset=0x0000000000100000 flags=0x18
+[AUTO]   [ 3] SURFACE_STATE   handle=4 offset=0x0000000000200000 flags=0x18
+[AUTO]   [ 4] BINDING_TABLE   handle=5 offset=0x0000000000300000 flags=0x18
+[AUTO]   [ 5] IDRT            handle=6 offset=0x0000000000400000 flags=0x18
+[AUTO]   [ 6] CURBE           handle=7 offset=0x0000000000500000 flags=0x18
+[AUTO]   [ 7] SCRATCH         handle=8 offset=0x0000000000600000 flags=0x18
+[AUTO]   [ 8] KERNEL          handle=9 offset=0x0000000000700000 flags=0x18
+[AUTO]   [ 9] DYNAMIC_STATE   handle=10 offset=0x0000000000800000 flags=0x18
+[AUTO]   [10] GENERAL_STATE   handle=11 offset=0x0000000000900000 flags=0x18
+[AUTO]   [11] INDIRECT        handle=12 offset=0x0000000000a00000 flags=0x18
+[AUTO] ========================================
+
+[AUTO] Soumission EXECBUFFER2 au GPU...
+[AUTO] ✓ EXECBUFFER2 accepté par le GPU!
+[AUTO] ========================================
+
+
+[ATTENTE GPU]
+[AUTO] Attente fin exécution GPU...
+[AUTO] ✓ GPU terminé
+
+[LECTURE RÉSULTATS]
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTATS GPU                                             ║
+╚════════════════════════════════════════════════════════════╝
+
+Output buffer (16 premiers DWords):
+  output[ 0] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 1] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 2] = 0xdeadbeef ⚠️  Inchangé (patte
+⚠️  TEST 3 PARTIEL (résultat inattendu)
+rn initial)
+  output[ 3] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 4] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 5] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 6] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 7] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 8] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[ 9] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[10] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[11] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[12] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[13] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[14] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+  output[15] = 0xdeadbeef ⚠️  Inchangé (pattern initial)
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  RÉSULTAT INATTENDU                                   ║
+║                                                            ║
+║  Valeur attendue: 0x12345678                              ║
+║  Valeur obtenue:  0xdeadbeef                              ║
+║                                                            ║
+║  Le GPU a exécuté mais résultat différent                 ║
+╚════════════════════════════════════════════════════════════╝
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+✅ TEST 3 TERMINÉ - Exécution GPU complète
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSUMÉ TESTS C600                                         ║
+╚════════════════════════════════════════════════════════════╝
+⚠️  TESTS PARTIELS (GPU exécuté, résultat différent)
+

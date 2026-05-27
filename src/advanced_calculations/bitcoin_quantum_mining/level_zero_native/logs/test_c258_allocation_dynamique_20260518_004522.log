@@ -1,0 +1,448 @@
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c255v11_nx48.log
+[DEBUG] Log ouvert avec succès
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C258 — Allocation Dynamique 3GB (RAM Système)   ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+║  Formule OpenCL: 75% RAM système, max 4GB                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[C258] Configuration Allocation Dynamique:
+  - Détection RAM: sysinfo() + formule OpenCL (75% RAM, max 4GB)
+  - Batch size initial: 256K (progression automatique)
+  - Contextes GPU: 2 (adaptatif 1/2/3)
+  - Mémoire GPU: Monitoring temps réel
+  - THP: Activé pour buffers >2MB
+  - Kernel: kernels/btc_sha256_gen9.bin
+  - Log: logs/forensic/test_c255v11_nx48.log
+
+[C258] 📊 RAM système détectée: 7622 MB (7.44 GB)
+[C258] 🎯 Limite GPU calculée: 4096 MB (4.00 GB) [formule: 75% RAM, max 4GB]
+[C258] ✅ Mémoire GPU disponible: 4.00 GB
+
+[C258] Initialisation Gen9 Native avec allocation dynamique...
+✅ Initialisation réussie
+
+[C258] Démarrage progression adaptative (allocation dynamique 3GB)...
+═══════════════════════════════════════════════════════════════
+
+[Batch 1/100] batch_size=262144 (0.26 M nonces)
+  ✅ Succès: 0.671 sec, 0.39 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 262144 → 524288 (0.0% vers max, mem_limit=107374182)
+
+[Batch 2/100] batch_size=524288 (0.52 M nonces)
+  ✅ Succès: 0.704 sec, 0.75 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 524288 → 1048576 (0.1% vers max, mem_limit=107374182)
+
+[Batch 3/100] batch_size=1048576 (1.05 M nonces)
+  ✅ Succès: 0.708 sec, 1.48 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 1048576 → 2097152 (0.2% vers max, mem_limit=107374182)
+
+[Batch 4/100] batch_size=2097152 (2.10 M nonces)
+  ✅ Succès: 0.701 sec, 2.99 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 2097152 → 4194304 (0.4% vers max, mem_limit=107374182)
+
+[Batch 5/100] batch_size=4194304 (4.19 M nonces)
+  ✅ Succès: 0.704 sec, 5.96 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 4194304 → 8388608 (0.8% vers max, mem_limit=107374182)
+
+[Batch 6/100] batch_size=8388608 (8.39 M nonces)
+  ✅ Succès: 0.704 sec, 11.92 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 8388608 → 16777216 (1.6% vers max, mem_limit=107374182)
+
+[Batch 7/100] batch_size=16777216 (16.78 M nonces)
+  ✅ Succès: 0.703 sec, 23.87 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 16777216 → 33554432 (3.2% vers max, mem_limit=107374182)
+
+[Batch 8/100] batch_size=33554432 (33.55 M nonces)
+  ✅ Succès: 0.706 sec, 47.52 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 33554432 → 67108864 (6.4% vers max, mem_limit=107374182)
+
+[Batch 9/100] batch_size=67108864 (67.11 M nonces)
+  ✅ Succès: 0.825 sec, 81.31 MH/s
+[NX48-C255V11] ✅ Succès → Doublement batch_size: 67108864 → 107374182 (10.2% vers max, mem_limit=107374182)
+
+[Batch 10/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.964 sec, 111.38 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 11/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.708 sec, 151.61 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 12/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.701 sec, 153.10 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 13/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.706 sec, 152.05 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 14/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.701 sec, 153.23 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 15/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.702 sec, 152.87 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 16/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.705 sec, 152.37 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 17/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.705 sec, 152.38 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 18/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.705 sec, 152.38 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 19/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.703 sec, 152.68 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 20/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.703 sec, 152.65 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 21/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.705 sec, 152.22 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 22/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.705 sec, 152.39 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 23/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.703 sec, 152.82 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 24/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.704 sec, 152.52 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 25/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.706 sec, 152.04 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 26/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.702 sec, 152.95 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 27/100] batch_size=107374182 (107.37 M nonces)
+  ✅ Succès: 0.704 sec, 152.55 MH/s
+[NX48-C255V11] 🏁 Vitesse de croisière atteinte: batch_size=107374182
+
+[Batch 28/100] batch_size=107374182 (107.37 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 107374182 → 53687091
+
+[Batch 29/100] batch_size=53687091 (53.69 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 53687091 → 26843545
+
+[Batch 30/100] batch_size=26843545 (26.84 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 26843545 → 13421772
+
+[Batch 31/100] batch_size=13421772 (13.42 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 13421772 → 6710886
+
+[Batch 32/100] batch_size=6710886 (6.71 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 6710886 → 3355443
+
+[Batch 33/100] batch_size=3355443 (3.36 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 3355443 → 1677721
+
+[Batch 34/100] batch_size=1677721 (1.68 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 1677721 → 838860
+
+[Batch 35/100] batch_size=838860 (0.84 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 838860 → 419430
+
+[Batch 36/100] batch_size=419430 (0.42 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 419430 → 262144
+
+[Batch 37/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 38/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 39/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 40/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 41/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 42/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 43/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 44/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 45/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 46/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 47/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 48/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 49/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 50/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 51/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 52/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 53/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 54/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 55/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 56/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 57/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 58/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 59/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 60/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 61/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 62/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 63/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 64/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 65/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 66/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 67/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 68/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 69/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 70/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 71/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 72/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 73/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 74/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 75/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 76/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 77/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 78/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 79/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 80/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 81/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 82/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 83/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 84/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 85/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 86/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 87/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 88/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 89/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 90/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 91/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 92/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 93/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 94/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 95/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 96/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 97/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 98/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 99/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+[Batch 100/100] batch_size=262144 (0.26 M nonces)
+  ❌ Crash: errno=5
+[NX48-C255V11] ⚠️  Crash détecté → Recul batch_size: 262144 → 262144
+
+═══════════════════════════════════════════════════════════════
+║  MÉTRIQUES FINALES C258 — ALLOCATION DYNAMIQUE 3GB          ║
+═══════════════════════════════════════════════════════════════
+
+Résultats:
+  - Dispatches réussis: 27/100 (27.0%)
+  - Crashes: 73
+  - Batch size final: 262144 (0.26 M nonces)
+  - Contextes GPU: 2
+
+Performance:
+  - Total nonces: 2066690860 (2066.69 M)
+  - Temps total: 19.358 sec
+  - Hashrate moyen: 106.76 MH/s
+  - Temps moyen/dispatch: 0.717 sec
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  TEST PARTIEL — Allocation dynamique trouve limite     ║
+║  27 succès, 73 crashes — Batch optimal trouvé             ║
+╚════════════════════════════════════════════════════════════╝

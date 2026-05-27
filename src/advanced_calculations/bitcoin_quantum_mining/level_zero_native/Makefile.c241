@@ -1,0 +1,115 @@
+# LumVorax C241 — Makefile Validation Forensique
+# 0% OpenCL, 100% Native i915 DRM
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11
+LDFLAGS = -lm -lpthread -lssl -lcrypto -ldrm
+
+# Directories
+SRC_DIR = src
+INC_DIR = include
+TEST_DIR = tests
+BUILD_DIR = build
+LOG_DIR = logs/forensic
+
+# Include paths
+INCLUDES = -I$(INC_DIR) -I/usr/include/libdrm -I/usr/include/drm
+
+# Source files
+THERMAL_SRC = $(SRC_DIR)/lum_thermal_monitor_c241.c
+SHA256_SRC = $(SRC_DIR)/lum_sha256_validator_c241.c
+RUNNER_SRC = $(SRC_DIR)/btc_gen9_native_runner.c
+
+# Object files
+THERMAL_OBJ = $(BUILD_DIR)/lum_thermal_monitor_c241.o
+SHA256_OBJ = $(BUILD_DIR)/lum_sha256_validator_c241.o
+RUNNER_OBJ = $(BUILD_DIR)/btc_gen9_native_runner.o
+
+# Test executable
+TEST_C241 = $(BUILD_DIR)/test_btc_mining_c241_validation_forensique
+
+# Targets
+.PHONY: all clean test_c241 dirs
+
+all: dirs $(TEST_C241)
+
+dirs:
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(LOG_DIR)
+
+# Compile thermal monitor
+$(THERMAL_OBJ): $(THERMAL_SRC) $(INC_DIR)/lum_thermal_monitor_c241.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile SHA256 validator
+$(SHA256_OBJ): $(SHA256_SRC) $(INC_DIR)/lum_sha256_validator_c241.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile runner (if not already compiled)
+$(RUNNER_OBJ): $(RUNNER_SRC) $(INC_DIR)/btc_gen9_native_runner.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Link test C241
+$(TEST_C241): $(TEST_DIR)/test_btc_mining_c241_validation_forensique.c $(THERMAL_OBJ) $(SHA256_OBJ) $(RUNNER_OBJ)
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@ $(LDFLAGS)
+	@echo ""
+	@echo "✅ Test C241 compiled successfully"
+	@echo "   Binary: $(TEST_C241)"
+	@echo ""
+
+# Run test C241 with Strategy C (GEM Persistent - PRIORITÉ #1)
+test_c241: $(TEST_C241)
+	@echo "=========================================="
+	@echo "  Running C241 Validation Forensique"
+	@echo "  Strategy: C (GEM Persistent)"
+	@echo "  Dispatches: 100"
+	@echo "=========================================="
+	@echo ""
+	$(TEST_C241) strategy_c 100
+
+# Run test C241 with Strategy A (Reopen Complete - Baseline)
+test_c241_strategy_a: $(TEST_C241)
+	@echo "=========================================="
+	@echo "  Running C241 Validation Forensique"
+	@echo "  Strategy: A (Reopen Complete)"
+	@echo "  Dispatches: 100"
+	@echo "=========================================="
+	@echo ""
+	$(TEST_C241) strategy_a 100
+
+# Run test C241 with 1000 dispatches
+test_c241_1000: $(TEST_C241)
+	@echo "=========================================="
+	@echo "  Running C241 Validation Forensique"
+	@echo "  Strategy: C (GEM Persistent)"
+	@echo "  Dispatches: 1000"
+	@echo "=========================================="
+	@echo ""
+	$(TEST_C241) strategy_c 1000
+
+# Clean
+clean:
+	rm -rf $(BUILD_DIR)
+	rm -f $(LOG_DIR)/c241_*.log
+	rm -f $(LOG_DIR)/c241_*.csv
+
+# Help
+help:
+	@echo "LumVorax C241 — Makefile Validation Forensique"
+	@echo ""
+	@echo "Targets:"
+	@echo "  all                  - Compile all modules and test"
+	@echo "  test_c241            - Run test with Strategy C (100 dispatches)"
+	@echo "  test_c241_strategy_a - Run test with Strategy A (100 dispatches)"
+	@echo "  test_c241_1000       - Run test with Strategy C (1000 dispatches)"
+	@echo "  clean                - Remove build artifacts and logs"
+	@echo "  help                 - Show this help"
+	@echo ""
+	@echo "Modules:"
+	@echo "  - lum_thermal_monitor_c241 (790 lignes)"
+	@echo "  - lum_sha256_validator_c241 (590 lignes)"
+	@echo "  - btc_gen9_native_runner (existing)"
+	@echo ""
+	@echo "Test:"
+	@echo "  - test_btc_mining_c241_validation_forensique (380 lignes)"
+	@echo ""

@@ -1,0 +1,22 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C600 - GPU HARDWARE RÉEL                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[COMPILATION]
+Compilation test_c600_gpu_execution.c...
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~
+src/batch_generator_auto.c: In function ‘configure_idrt’:
+src/batch_generator_auto.c:800:99: error: ‘bt_offset_bytes’ undeclared (first use in this function); did you mean ‘bt_offset_dwords’?
+  800 |     printf("[C600]   Binding Table:     offset 0x%08x DWords (0x%08x bytes)\n", bt_offset_dwords, bt_offset_bytes);
+      |                                                                                                   ^~~~~~~~~~~~~~~
+      |                                                                                                   bt_offset_dwords
+src/batch_generator_auto.c:800:99: note: each undeclared identifier is reported only once for each function it appears in
+src/batch_generator_auto.c:760:14: warning: unused variable ‘binding_table_gtt’ [-Wunused-variable]
+  760 |     uint64_t binding_table_gtt = gen->buffers[BUFFER_TYPE_BINDING_TABLE].offset;
+      |              ^~~~~~~~~~~~~~~~~

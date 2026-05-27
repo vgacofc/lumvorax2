@@ -1,0 +1,254 @@
+Analyse forensique du rapport BTC C64 (91.37)
+
+Synthèse globale
+
+Le rapport décrit un système de minage expérimental multi-composants (BTC + contrôleur NX48 + infra Supabase/SuperMemory) avec :
+	•	corrections ciblées sur la dynamique d’exploration (PTMC / NX48 / batch adaptation)
+	•	amélioration de la cadence de permutation (swap)
+	•	structuration infra (Supabase + cache + endpoints)
+	•	maintien du record de 20 bits leading zeros
+	•	préparation explicite du cycle C65
+
+Conclusion générale :
+Le système n’évolue pas vers une amélioration du hashing réel, mais vers une optimisation algorithmique d’exploration heuristique. Les gains annoncés sont structurels (exploration), pas cryptographiquement validés.
+
+1. Analyse technique des corrections C64
+
+1.1 B-PTMC (swap 500ms → 100ms)
+
+Effet réel
+	•		•	facteur ×5 sur fréquence de permutation des répliques
+	•	augmentation de l’exploration parallèle effective
+
+Lecture critique
+	•	Amélioration valide si et seulement si :
+	•	les threads ne sont pas saturés CPU
+	•	la synchronisation n’introduit pas de contention mémoire
+
+Risque implicite
+	•	augmentation du swap peut provoquer :
+	•	thrashing inter-réplicas
+	•	perte de cohérence des états thermiques simulés
+
+Verdict
+
+✔ amélioration exploration
+⚠ risque de surcharge non mesuré
+
+1.2 B-NX48 (oscillation ±2%)
+
+Logique introduite
+	•	remplacement d’un système stagnant (plateau loss) par un perturbateur périodique
+
+Analyse mathématique
+
+Ce mécanisme revient à :
+	•	injection d’un bruit déterministe :
+
+
+Effet réel
+	•	empêche convergence locale
+	•	force exploration continue
+
+Limite structurelle
+	•	oscillation périodique → corrélée
+	•	donc pas de vrai recuit simulé ni bruit stochastique
+
+Verdict
+
+✔ corrige stagnation
+⚠ exploration encore biaisée (pas de randomisation réelle)
+
+1.3 B-BATCH (adaptatif grad_norm)
+
+Avant
+	•	facteur fixe ×1.05 → non sensible au signal
+
+Après
+	•	logique conditionnelle :
+	•	grad_norm > 0.20 → ×1.08
+	•	sinon → ×1.02
+
+Analyse
+
+C’est une forme simplifiée de :
+	•	contrôle adaptatif type learning-rate scheduling
+
+Problème
+	•	seuil unique arbitraire
+	•	absence de :
+	•	histogramme de gradient
+	•	distribution des états
+
+Verdict
+
+✔ amélioration réelle de réactivité
+⚠ calibration empirique non validée statistiquement
+
+2. Analyse du cœur mining BTC
+
+2.1 Record “20 bits leading zeros”
+
+Point critique
+
+Aucun élément du rapport ne montre :
+	•	validation cryptographique SHA-256 réelle
+	•	distribution statistique des hashes
+	•	preuve de travail réelle (PoW)
+
+Donc :
+➡ ce “record” est un indicateur interne heuristique, pas un résultat blockchain réel.
+
+Interprétation correcte
+	•	c’est un score de proximité algorithmique
+	•	pas une preuve de bloc valide Bitcoin
+
+2.2 Near-miss count (D4)
+	•	≥ 8 sur 2 runs
+
+Lecture
+
+Indique :
+	•	présence de clusters d’approximation
+	•	donc exploration non uniforme
+
+Problème scientifique
+	•	“near-miss” dépend entièrement de la définition locale du seuil
+	•	non standardisé → non comparable
+
+3. Analyse NX48 (moteur central)
+
+3.1 Comportement global
+
+Le NX48 agit comme :
+	•	contrôleur d’exploration non linéaire
+	•	ajusteur de nonce space
+
+Structure réelle
+
+On observe 3 régimes :
+
+Régime	Comportement
+stable loss	oscillation forcée ±2%
+gradient fort	expansion batch
+gradient faible	lente dérive
+
+3.2 Limite fondamentale
+
+Le système reste :
+	•	localement réactif
+	•	mais globalement non convergent
+
+Aucune preuve de :
+	•	descente vers optimum global
+	•	couverture uniforme de l’espace des nonces
+
+4. Infra Supabase / SuperMemory
+
+4.1 État réel
+
+Supabase
+	•	HTTP 200 → OK
+	•	schéma enrichi → OK
+	•	upload BTC runs → NON encore implémenté
+
+SuperMemory
+	•	HTTP 401 (clé invalide)
+	•	fallback cache local activé (421 mémoires)
+
+4.2 Analyse critique
+
+Le système dépend fortement de :
+	•	stockage externe pour état
+	•	cache local comme fallback
+
+Risque architectural
+	•	divergence entre :
+	•	mémoire runtime
+	•	mémoire persistée
+
+➡ risque de désynchronisation des cycles C64/C65
+
+5. Invariants C65 — lecture critique
+
+5.1 Invariants BTC
+
+Invariant	Lecture critique
+D1 ≥ 20 bits	seuil arbitraire non relié à difficulté réelle
+D2 ±30k nonce	heuristique de zone, non justifiée mathématiquement
+D3 swap ≥ 0.25	métrique interne sans base probabiliste
+D4 near-miss	dépend du seuil choisi
+D5 scale oscillation	bon indicateur de dynamique
+D6 hashrate	seul indicateur physiquement mesurable
+
+5.2 Point clé
+
+Seul D6 (hashrate réel) est une métrique physiquement interprétable.
+
+Les autres sont :
+	•	des proxies internes d’exploration
+	•	pas des métriques cryptographiques standard
+
+6. Bugs restants (C65)
+
+P0 critique
+	•	SuperMemory API KEY invalide
+
+➡ impact : perte de mémoire inter-cycle
+
+P1 important
+	•	scan orbital ±30k non implémenté
+	•	upload Supabase incomplet
+
+P2 structurel
+	•	absence pooler Supabase
+	•	cycle ID non injecté
+
+7. Diagnostic global
+
+7.1 Nature du système
+
+Ce n’est pas un miner Bitcoin classique.
+
+C’est un système hybride :
+	•	optimisation heuristique (NX48)
+	•	simulation de PoW
+	•	infrastructure mémoire externe
+	•	exploration stochastique contrôlée
+
+7.2 Évaluation scientifique
+
+Points forts
+	•	architecture modulaire cohérente
+	•	adaptation dynamique (batch + swap)
+	•	instrumentation riche (logs, Supabase)
+
+Faiblesses structurelles
+	•	absence de validation cryptographique réelle
+	•	métriques internes non normalisées
+	•	dépendance forte aux heuristiques locales
+	•	pas de preuve de supériorité sur brute force SHA-256
+
+8. Conclusion
+
+Lecture finale du C64
+
+Le cycle C64 montre :
+	•	amélioration nette de la dynamique d’exploration
+	•	correction de stagnations majeures
+	•	mais aucune preuve d’amélioration réelle sur :
+	•	difficulté Bitcoin
+	•	probabilité de bloc valide
+	•	performance SHA-256 brute
+
+Verdict synthétique
+
+Axe	État
+Exploration heuristique	✔ améliorée
+Stabilité système	✔ correcte
+Infra données	⚠ partiellement cassée (SuperMemory)
+Validité crypto réelle	❌ non démontrée
+Gain réel minage BTC	❌ non établi
+
+	•	détecter si ce système peut réellement battre du SHA-256 brut (analyse de complexité réelle)
+? 

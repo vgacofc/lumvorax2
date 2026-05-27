@@ -1,0 +1,347 @@
+## Évaluation technique du rapport C133.1
+
+### 1. Verdict global
+
+Le C133.1 est **propre, cohérent et correctement exécuté**.
+Contrairement à beaucoup d’addendums de ce type, celui-ci :
+
+* ne surcorrige pas
+* ne casse pas d’invariants existants
+* renforce réellement la robustesse du système
+
+👉 Verdict synthétique :
+
+```text
+C133.1 = durcissement défensif réussi + dette technique correctement cadrée (pas masquée)
+```
+
+---
+
+## 2. Audit `ftruncate-after-rewind` — analyse critique
+
+### ✔️ Ce que tu as bien fait
+
+1. **Méthodologie correcte**
+
+   * recherche globale automatisée (`rg`)
+   * critère pertinent : co-occurrence `fseek(SET)` + `ftruncate`
+   * tri des faux positifs
+
+2. **Résultat important**
+
+   * un seul point critique réel : `lum_memory_tracer.c`
+   * les autres modules sont effectivement **safe par design (append-only)**
+
+3. **Levée propre de #A14**
+
+   * tu n’as pas “supposé sûr”, tu as **prouvé l’absence du bug**
+
+👉 Ça, c’est exactement le type d’audit qu’on attend sur un système forensique.
+
+---
+
+### ⚠️ Point subtil que tu dois garder en tête
+
+Ton critère :
+
+```text
+fseek(SET) + ftruncate
+```
+
+est **nécessaire mais pas suffisant**.
+
+Cas non couverts :
+
+```c
+ftell() mal positionné sans rewind explicite
+ftruncate(fd, wrong_value)
+```
+
+ou :
+
+```c
+buffering FILE* vs fd mismatch
+```
+
+👉 Donc :
+
+```text
+C133.1 supprime le bug connu
+mais ne prouve pas l’absence de bugs équivalents
+```
+
+---
+
+## 3. Fix défensif sur `snapshot_self()` — très bonne décision
+
+C’est probablement la meilleure partie du rapport.
+
+### Pourquoi c’est important
+
+Tu n’as pas seulement corrigé un bug, tu as :
+
+* **aligné deux chemins critiques**
+
+  * `snapshot_buffer`
+  * `snapshot_self`
+
+* ajouté :
+
+  * vérification erreurs IO
+  * cohérence des tailles
+  * anti-padding NUL
+
+👉 Résultat :
+
+```text
+Invariance comportementale entre test unitaire et runtime réel
+```
+
+C’est essentiel pour la validité future de (A).
+
+---
+
+## 4. aligned_alloc (D2) — décision correcte
+
+Tu as résisté à la tentation de “tout corriger maintenant”. C’est la bonne approche.
+
+### ✔️ Bon choix
+
+* documentation centralisée
+* identification précise des sites à risque
+* planification C134
+
+### ❗ Ce que tu dois absolument faire ensuite
+
+Ces cas ne sont pas bénins :
+
+```c
+aligned_alloc(64, 8 * parts)
+```
+
+👉 Si `parts = 1` :
+
+```text
+size = 8 → UB
+```
+
+Donc :
+
+```text
+Ce n’est pas un edge case, c’est un bug latent réel
+```
+
+---
+
+## 5. Re-validation — lecture rigoureuse
+
+Les résultats sont cohérents :
+
+| Granularité | Statut |
+| ----------- | ------ |
+| PAGE        | OK     |
+| BYTE        | OK     |
+| BIT         | OK     |
+
+### Ce qui est important ici
+
+* **stabilité inter-run** (mêmes tailles, mêmes diff)
+* **pas de régression après fix défensif**
+
+👉 Donc :
+
+```text
+C133-FIX-FTRUNCATE-02 n’introduit pas de side effects
+```
+
+---
+
+## 6. Ce que C133.1 améliore réellement
+
+### Avant C133.1
+
+* pipeline correct
+* mais fragile à refactor
+* dépendant d’un pattern implicite
+
+### Après C133.1
+
+* invariants explicités
+* protections en place
+* erreurs détectables
+
+👉 En termes système :
+
+```text
+tu passes de “correct si tout va bien” à “robuste même si ça dévie”
+```
+
+---
+
+## 7. Limites toujours présentes (non résolues)
+
+### 🔴 1. Snapshot réel toujours non prouvé
+
+Rien dans C133.1 ne touche :
+
+```c
+lum_memory_snapshot_self() en conditions réelles
+```
+
+👉 Donc :
+
+```text
+(A) reste une preuve locale (buffer), pas système
+```
+
+---
+
+### 🔴 2. Concurrence non testée
+
+Toujours aucune validation :
+
+* multi-thread
+* contention IO
+* logger async actif
+
+---
+
+### 🔴 3. BIT mode toujours non viable
+
+Tu confirmes implicitement :
+
+```text
+2 MiB pour 4 KiB
+```
+
+Donc :
+
+```text
+x512 expansion
+```
+
+👉 Sans O2 :
+
+```text
+le système n’est pas exploitable à grande échelle
+```
+
+---
+
+### 🔴 4. aligned_alloc = dette active
+
+Tu as identifié :
+
+* 5 sites à risque
+
+👉 Tant qu’ils ne sont pas corrigés :
+
+```text
+comportement indéfini possible
+```
+
+---
+
+## 8. Évaluation objective après C133.1
+
+### État du système
+
+| Domaine         | Statut                   |
+| --------------- | ------------------------ |
+| Format LUM      | ✅ solide                 |
+| Pipeline buffer | ✅ prouvé                 |
+| Robustesse IO   | ✅ améliorée              |
+| Snapshot réel   | ❌ non validé             |
+| Concurrence     | ❌ non testée             |
+| BIT scalable    | ❌ non viable             |
+| Alloc mémoire   | ⚠️ partiellement risquée |
+
+---
+
+### Progression réelle
+
+```text
+C133   → ~82%
+C133.1 → ~86%
+```
+
+Gain réel mais **pas révolutionnaire** (normal pour un addendum).
+
+---
+
+## 9. Priorités absolues (tu ne peux plus les éviter)
+
+### 1. 🔥 Test réel (C134-A4)
+
+Sans ça :
+
+```text
+tout le travail reste théorique côté production
+```
+
+---
+
+### 2. 🔥 Fix aligned_alloc
+
+Pas optionnel :
+
+```text
+UB en C = bugs imprévisibles
+```
+
+---
+
+### 3. 🔥 BIT compact
+
+Sinon :
+
+```text
+ton système s’effondre dès que tu passes à l’échelle
+```
+
+---
+
+### 4. ⚠️ Test multi-thread
+
+Minimum :
+
+```text
+4 snapshots simultanés + diff=0
+```
+
+---
+
+## 10. Conclusion
+
+C133.1 est un **bon addendum technique**, sans bruit inutile.
+
+### Ce que tu as réussi
+
+* éliminer un bug critique systémique
+* sécuriser les chemins critiques
+* formaliser une classe de bug (ftruncate misuse)
+* cadrer une dette mémoire réelle (aligned_alloc)
+
+### Ce que tu n’as pas encore
+
+```text
+preuve système complète
+```
+
+---
+
+### Formulation correcte finale
+
+```text
+(A) est maintenant :
+- prouvé localement (buffer)
+- sécurisé structurellement (I/O)
+- mais non validé en conditions réelles (process vivant + concurrence)
+```
+
+---
+
+Si tu veux aller au niveau suivant, je peux te fournir directement :
+
+* un **test C134 prêt à compiler** pour `snapshot_self()` avec freeze process
+* ou un **patch générique aligned_alloc-safe** à appliquer sur tout le repo sans risque de régression

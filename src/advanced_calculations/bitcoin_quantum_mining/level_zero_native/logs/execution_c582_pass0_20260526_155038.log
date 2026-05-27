@@ -1,0 +1,54 @@
+🚀 TEST C582 PASS 0 - RÉFÉRENCE SANS KERNEL (VALIDATION ARCHITECTURE)
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (210.084 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (13.360 µs)
+
+[ 20%] Creating batch buffer...
+✅ Batch buffer created: handle=1, size=4096 (28.506 µs)
+
+[ 30%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x7ce2d0751000 (108.460 µs)
+
+[ 40%] Building compute batch (C579 architecture)...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS
+    [25] MEDIA_VFE_STATE
+    [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [38] INTERFACE_DESCRIPTOR_DATA
+    [54] GPGPU_WALKER
+    [69] PIPE_CONTROL (flush final)
+    [75] MI_BATCH_BUFFER_END
+✅ Batch built: 76 DWords (304 bytes, 33.813 µs)
+
+[ 60%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Batch length: 304 bytes
+    Relocations: 0 (AUCUNE - architecture C579)
+
+[ 80%] Submitting to GPU...
+✅ EXECBUFFER2 SUCCESS! (432.136 µs)
+  GTT offset: 0x0000000000000000
+
+[ 90%] Waiting for GPU completion...
+✅ GPU execution completed (661.908 ms)
+
+[100%] Cleanup...
+✅ Context destroyed
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ TEST C582 PASS 0 RÉUSSI                               ║
+║  Architecture C579 validée (SANS relocations)             ║
+║  GTT address: 0x0000000000000000                        ║
+║  Total time: 662.973 ms                                      ║
+╚════════════════════════════════════════════════════════════╝
+
+📝 PROCHAINE ÉTAPE: test_c582_pass1_kernel.c
+   → Utiliser GTT address pour construire batch avec kernel ISA
+   → Valider output[0] = 0x12345678

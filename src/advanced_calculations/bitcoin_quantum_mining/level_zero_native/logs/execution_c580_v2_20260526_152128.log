@@ -1,0 +1,27 @@
+🚀 TEST C580 - PREMIER WRITE GPU NATIF i915
+═══════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1
+
+[ 15%] Creating buffers...
+  ✅ Heap BO: handle=1, size=8192
+  ✅ Output BO: handle=2, size=4096
+  ✅ Batch BO: handle=3, size=4096
+
+[ 20%] Mapping buffers...
+  ✅ Heap mapped: 0x7ef71f400000
+  ✅ Output mapped: 0x7ef71f49c000
+  ✅ Batch mapped: 0x7ef71f3ff000
+
+[ 30%] Setting up heap structures...
+  ✅ Kernel ISA copied: 128 bytes at offset 0x0
+  ✅ Surface State at offset 0x100
+  ✅ Binding Table at offset 0x200
+  ✅ IDRT at offset 0x300
+
+[ 40%] PASS 0: Forcing GTT allocation...
+❌ PASS 0 FAILED: Invalid argument (errno=22)

@@ -1,0 +1,28 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C600 - GPU HARDWARE RÉEL                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[COMPILATION]
+Compilation test_c600_gpu_execution.c...
+tests/test_c600_gpu_execution.c: In function ‘test_1_configuration_complete’:
+tests/test_c600_gpu_execution.c:54:34: error: ‘kernel_c601_opencl_isa’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa_pure’?
+   54 |     memcpy(kernel_buf->cpu_addr, kernel_c601_opencl_isa, kernel_c601_opencl_isa_size);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~
+      |                                  kernel_c601_opencl_isa_pure
+tests/test_c600_gpu_execution.c:54:34: note: each undeclared identifier is reported only once for each function it appears in
+tests/test_c600_gpu_execution.c:54:58: error: ‘kernel_c601_opencl_isa_size’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa_pure’?
+   54 |     memcpy(kernel_buf->cpu_addr, kernel_c601_opencl_isa, kernel_c601_opencl_isa_size);
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                          kernel_c601_opencl_isa_pure
+tests/test_c600_gpu_execution.c: In function ‘test_3_execution_gpu_reelle’:
+tests/test_c600_gpu_execution.c:231:55: error: ‘kernel_c601_opencl_isa_size’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa_pure’?
+  231 |     printf("✓ Kernel ISA OpenCL copié (%zu bytes)\n", kernel_c601_opencl_isa_size);
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                       kernel_c601_opencl_isa_pure
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~

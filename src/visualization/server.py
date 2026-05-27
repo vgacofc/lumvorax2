@@ -1,0 +1,1234 @@
+"""
+Module de visualisation LumVorax — Hubbard HTS
+Serveur Flask exposant les données réelles de simulation.
+Noms conformes au STANDARD_NAMES.md v3.0 (C68-REALTIME-BENCH).
+C54 : WebSocket bidirectionnel pour agent Ubuntu (Flask-SocketIO).
+"""
+
+import os
+import csv
+import json
+import re
+import glob
+from pathlib import Path
+from flask import Flask, jsonify, send_from_directory
+from flask_socketio import SocketIO, emit, disconnect
+
+app = Flask(__name__, static_folder="static")
+
+# ── SocketIO — WebSocket bidirectionnel agent Ubuntu (C57) ────────────────────
+# async_mode threading + simple-websocket = WebSocket réel via gunicorn gthread
+# Compatibilité NixOS sans dépendance eventlet/gevent (libstdc++ issues)
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    async_mode="threading",
+    path="/ws/socket.io",
+    logger=False,
+    engineio_logger=False,
+    ping_timeout=60,
+    ping_interval=25,
+)
+
+BASE_DIR = Path(__file__).resolve().parent.parent / "advanced_calculations" / "quantum_problem_hubbard_hts"
+RESULTS_DIR   = BASE_DIR / "results"
+BENCHMARKS_DIR = BASE_DIR / "benchmarks"
+CONFIG_DIR    = BASE_DIR / "config"
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+def _latest_run_dir():
+    """Retourne le dernier répertoire de run (tri lexicographique descendant)."""
+    runs = sorted(RESULTS_DIR.glob("research_*"), reverse=True)
+    return runs[0] if runs else None
+
+
+def _read_csv_as_dicts(path: Path):
+    if not path.exists():
+        return []
+    with open(path, newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def _parse_execution_log(log_path: Path):
+    """
+    Parse le research_execution.log.
+    Format : NNNNNN | TYPE key=val key=val ...
+    Types reconnus : BASE_RESULT, BENCH_QMC_RT, BENCH_EXT_RT
+    """
+    entries = []
+    if not log_path.exists():
+        return entries
+    with open(log_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            m = re.match(r"(\d+)\s*\|\s*(\w+)\s+(.*)", line)
+            if not m:
+                continue
+            seq, typ, rest = m.group(1), m.group(2), m.group(3)
+            kv = {}
+            for kv_m in re.finditer(r"([\w]+)=([^\s]+)", rest):
+                kv[kv_m.group(1)] = kv_m.group(2)
+            kv["_seq"]  = int(seq)
+            kv["_type"] = typ
+            entries.append(kv)
+    return entries
+
+# ── ROUTE : données brutes de référence ─────────────────────────────────────
+
+@app.route("/api/benchmark_ref")
+def api_benchmark_ref():
+    """Tableau de référence QMC/DMRG (qmc_dmrg_reference_runtime.csv)."""
+    rows = _read_csv_as_dicts(BENCHMARKS_DIR / "qmc_dmrg_reference_runtime.csv")
+    return jsonify(rows)
+
+
+@app.route("/api/benchmark_ext")
+def api_benchmark_ext():
+    """Benchmark modules externes (external_module_benchmarks_runtime.csv)."""
+    rows = _read_csv_as_dicts(BENCHMARKS_DIR / "external_module_benchmarks_runtime.csv")
+    return jsonify(rows)
+
+
+@app.route("/api/problems")
+def api_problems():
+    """Paramètres des problèmes (problems_cycle06.csv)."""
+    rows = _read_csv_as_dicts(CONFIG_DIR / "problems_cycle06.csv")
+    return jsonify(rows)
+
+# ── ROUTE : résultats du dernier run ────────────────────────────────────────
+
+@app.route("/api/run/latest")
+def api_run_latest():
+    """run_id + BASE_RESULT du dernier run depuis research_execution.log."""
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify({"run_id": None, "base_results": []})
+
+    # Cherche le log dans results/<run>/logs/ ou results/<run>/
+    log_candidates = [
+        run_dir / "logs" / "research_execution.log",
+        run_dir / "research_execution.log",
+    ]
+    log_path = next((p for p in log_candidates if p.exists()), None)
+
+    entries = _parse_execution_log(log_path) if log_path else []
+    base_results = [e for e in entries if e["_type"] == "BASE_RESULT"]
+    bench_qmc    = [e for e in entries if e["_type"] in ("BENCH_QMC_RT", "BENCH_QMC_END")]
+    start_entry  = next((e for e in entries if e["_type"] == "START"), {})
+
+    return jsonify({
+        "run_id":       run_dir.name,
+        "started_at":   start_entry.get("utc", ""),
+        "base_results": base_results,
+        "bench_qmc_rt": bench_qmc,
+    })
+
+
+@app.route("/api/run/lumvorax_csv")
+def api_lumvorax_csv():
+    """
+    Extrait un échantillon du CSV Lumvorax fullscale
+    (lumvorax_hubbard_hts_fullscale_*.csv) — préfixe simulate_fs:
+    Retourne max 2000 lignes pour ne pas saturer la RAM du navigateur.
+    """
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify([])
+
+    lv_files = sorted((run_dir / "logs").glob("lumvorax_hubbard_hts_fullscale_*.csv"), reverse=True)
+    if not lv_files:
+        return jsonify([])
+
+    rows = []
+    MAX = 2000
+    with open(lv_files[0], newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        for i, row in enumerate(reader):
+            if i >= MAX:
+                break
+            rows.append(row)
+    return jsonify(rows)
+
+
+@app.route("/api/run/normalized_trace")
+def api_normalized_trace():
+    """normalized_observables_trace.csv du dernier run."""
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify([])
+    path = run_dir / "logs" / "normalized_observables_trace.csv"
+    return jsonify(_read_csv_as_dicts(path))
+
+
+@app.route("/api/run/numerical_stability")
+def api_numerical_stability():
+    """numerical_stability_suite.csv du dernier run (familles de tests)."""
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify([])
+    path = run_dir / "tests" / "numerical_stability_suite.csv"
+    return jsonify(_read_csv_as_dicts(path))
+
+
+@app.route("/api/run/unit_conversion")
+def api_unit_conversion():
+    """unit_conversion_fullscale.csv du dernier run."""
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify([])
+    path = run_dir / "tests" / "unit_conversion_fullscale.csv"
+    return jsonify(_read_csv_as_dicts(path))
+
+
+@app.route("/api/run/module_metadata")
+def api_module_metadata():
+    """module_physics_metadata.csv du dernier run."""
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify([])
+    path = run_dir / "tests" / "module_physics_metadata.csv"
+    return jsonify(_read_csv_as_dicts(path))
+
+# ── ROUTE : données composites pour la visualisation ────────────────────────
+
+@app.route("/api/viz/scalar_field")
+def api_viz_scalar_field():
+    """
+    Mode 1 — Champs scalaires → volume heatmap 3D.
+    Axes : (t_K, u_eV, module_index).
+    Valeurs : energy_eV, pairing depuis BASE_RESULT + référence QMC/DMRG.
+    """
+    run_dir = _latest_run_dir()
+    log_path = None
+    if run_dir:
+        for p in [run_dir / "logs" / "research_execution.log", run_dir / "research_execution.log"]:
+            if p.exists():
+                log_path = p
+                break
+
+    entries      = _parse_execution_log(log_path) if log_path else []
+    base_results = [e for e in entries if e["_type"] == "BASE_RESULT"]
+    problems     = _read_csv_as_dicts(CONFIG_DIR / "problems_cycle06.csv")
+    ref_bench    = _read_csv_as_dicts(BENCHMARKS_DIR / "qmc_dmrg_reference_runtime.csv")
+
+    prob_map = {p["name"]: p for p in problems}
+    ref_map  = {r["module"]: r for r in ref_bench}
+
+    points = []
+    for i, br in enumerate(base_results):
+        mod = br.get("problem", "")
+        p   = prob_map.get(mod, {})
+        ref = ref_map.get(mod, {})
+        points.append({
+            "module_index": i,
+            "module":       mod,
+            "t_K":          float(p.get("temp_K", 0)),
+            "u_eV":         float(p.get("u_eV", 0)),
+            "t_hop_eV":     float(p.get("t_eV", 1)),
+            "lx":           int(p.get("lx", 0)),
+            "ly":           int(p.get("ly", 0)),
+            "energy_eV":    float(br.get("energy", 0)),
+            "pairing":      float(br.get("pairing", 0)),
+            "sign":         float(br.get("sign", 0)),
+            "cpu_peak":     float(br.get("cpu_peak", 0)),
+            "mem_peak":     float(br.get("mem_peak", 0)),
+            "elapsed_ns":   float(br.get("elapsed_ns", 0)),
+            "ref_energy":   float(ref.get("reference_value", 0)) if ref else None,
+            "ref_error_bar":float(ref.get("error_bar", 0))       if ref else None,
+        })
+
+    return jsonify({"run_id": run_dir.name if run_dir else None, "points": points})
+
+
+@app.route("/api/viz/trajectories")
+def api_viz_trajectories():
+    """
+    Mode 2 — Trajectoires → curves.
+    Lignes Lumvorax avec préfixe simulate_fs: contenant step_energy_norm_step0
+    et step_pairing_norm_step0 (observables pas-à-pas C25).
+    """
+    run_dir = _latest_run_dir()
+    if run_dir is None:
+        return jsonify({"trajectories": []})
+
+    lv_files = sorted((run_dir / "logs").glob("lumvorax_hubbard_hts_fullscale_*.csv"), reverse=True)
+    if not lv_files:
+        return jsonify({"trajectories": [], "note": "Fichier CSV Lumvorax introuvable"})
+
+    trajectories = {}  # module → list of {step, energy_norm, pairing_norm}
+    MAX_LINES = 50000
+    with open(lv_files[0], newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        for i, row in enumerate(reader):
+            if i >= MAX_LINES:
+                break
+            # Format CSV Lumvorax : TYPE, timestamp_utc, timestamp_ns, pid, PRÉFIXE:métrique, valeur
+            if len(row) < 6:
+                continue
+            if row[0] != "METRIC":
+                continue
+            prefix_metric = row[4]
+            # Filtrer simulate_fs: step_energy_norm_step0 et step_pairing_norm_step0
+            if not prefix_metric.startswith("simulate_fs:"):
+                continue
+            metric = prefix_metric[len("simulate_fs:"):]
+            if metric not in ("step_energy_norm_step0", "step_pairing_norm_step0",
+                              "step_sign_ratio", "step_elapsed_ns"):
+                continue
+            # Extraire le module depuis la colonne 4 ou depuis les colonnes précédentes
+            # Le module est dans le champ "module" — col 3 du format ultra_forensic_logger
+            # Format réel : METRIC, utc, ns, pid, module, simulate_fs:métrique, valeur
+            # On adapte selon le fichier réel
+            try:
+                val = float(row[-1])
+            except (ValueError, IndexError):
+                continue
+            # Heuristique : le module est avant la colonne préfixe
+            mod = row[3] if len(row) >= 6 else "unknown"
+            if mod not in trajectories:
+                trajectories[mod] = []
+            trajectories[mod].append({"metric": metric, "value": val, "ns": row[2]})
+
+    # Convertir en liste de trajectoires par module
+    result = []
+    for mod, pts in list(trajectories.items())[:15]:
+        result.append({"module": mod, "points": pts[:500]})
+    return jsonify({"trajectories": result})
+
+
+@app.route("/api/viz/lattice")
+def api_viz_lattice():
+    """
+    Mode 3 — Particules → instancing.
+    Réseau Hubbard de chaque module (lx × ly sites).
+    Chaque site reçoit : position (x, y), pairing local, spin (mock physique).
+    """
+    problems = _read_csv_as_dicts(CONFIG_DIR / "problems_cycle06.csv")
+
+    run_dir = _latest_run_dir()
+    log_path = None
+    if run_dir:
+        for p in [run_dir / "logs" / "research_execution.log", run_dir / "research_execution.log"]:
+            if p.exists():
+                log_path = p
+                break
+    entries      = _parse_execution_log(log_path) if log_path else []
+    base_results = {e.get("problem", ""): e for e in entries if e["_type"] == "BASE_RESULT"}
+
+    lattices = []
+    for pb in problems:
+        mod = pb["name"]
+        lx, ly = int(pb.get("lx", 4)), int(pb.get("ly", 4))
+        br = base_results.get(mod, {})
+        pairing_global = float(br.get("pairing", 0.5))
+        sign_global    = float(br.get("sign", 0.0))
+        energy_global  = float(br.get("energy", 1.5))
+        u_over_t = float(pb.get("u_eV", 8)) / max(float(pb.get("t_eV", 1)), 1e-9)
+
+        sites = []
+        import math
+        for ix in range(lx):
+            for iy in range(ly):
+                # Pairing local : modulation physique selon la distance au centre
+                dx = ix - lx / 2.0
+                dy = iy - ly / 2.0
+                r  = math.sqrt(dx*dx + dy*dy)
+                # Pairing d-wave : cos(2θ) * e^{-r/ξ} avec ξ = lx/4
+                theta = math.atan2(dy, dx)
+                xi    = lx / 4.0
+                pair_local = pairing_global * math.cos(2 * theta) * math.exp(-r / max(xi, 1))
+                # Spin moyen : modulé par le signe fermionique
+                spin = sign_global * math.sin(math.pi * ix / lx) * math.sin(math.pi * iy / ly)
+                sites.append({
+                    "ix": ix, "iy": iy,
+                    "x": float(ix) - lx / 2.0,
+                    "y": float(iy) - ly / 2.0,
+                    "pairing_local": round(pair_local, 6),
+                    "spin": round(spin, 6),
+                    "u_over_t": round(u_over_t, 3),
+                })
+
+        lattices.append({
+            "module": mod,
+            "lx": lx, "ly": ly,
+            "t_eV": float(pb.get("t_eV", 1)),
+            "u_eV": float(pb.get("u_eV", 8)),
+            "temp_K": float(pb.get("temp_K", 95)),
+            "energy_eV": energy_global,
+            "pairing": pairing_global,
+            "sign": sign_global,
+            "sites": sites,
+        })
+
+    return jsonify({"lattices": lattices})
+
+
+@app.route("/api/viz/graph")
+def api_viz_graph():
+    """
+    Mode 4 — Graphes d'interaction → nodes + edges.
+    Nœuds = modules de simulation.
+    Arêtes = correspondances benchmark QMC/DMRG + modules externes.
+    Poids = abs_error ou within_error_bar.
+    """
+    problems  = _read_csv_as_dicts(CONFIG_DIR / "problems_cycle06.csv")
+    ref_bench = _read_csv_as_dicts(BENCHMARKS_DIR / "qmc_dmrg_reference_runtime.csv")
+    ext_bench = _read_csv_as_dicts(BENCHMARKS_DIR / "external_module_benchmarks_runtime.csv")
+
+    run_dir = _latest_run_dir()
+    log_path = None
+    if run_dir:
+        for p in [run_dir / "logs" / "research_execution.log", run_dir / "research_execution.log"]:
+            if p.exists():
+                log_path = p
+                break
+    entries      = _parse_execution_log(log_path) if log_path else []
+    base_results = {e.get("problem", ""): e for e in entries if e["_type"] == "BASE_RESULT"}
+
+    nodes = []
+    node_ids = {}
+    for i, pb in enumerate(problems):
+        mod = pb["name"]
+        br  = base_results.get(mod, {})
+        node_ids[mod] = i
+        nodes.append({
+            "id": i, "label": mod,
+            "type": "simulate_fs",
+            "energy_eV": float(br.get("energy", 0)),
+            "pairing":   float(br.get("pairing", 0)),
+            "sign":      float(br.get("sign", 0)),
+            "lx": int(pb.get("lx", 4)), "ly": int(pb.get("ly", 4)),
+            "u_eV": float(pb.get("u_eV", 8)),
+            "t_K":  float(pb.get("temp_K", 95)),
+        })
+
+    # Nœuds sources de référence (QMC/DMRG)
+    source_ids = {}
+    for row in ref_bench:
+        src = row.get("source", "")
+        if src not in source_ids:
+            nid = len(nodes)
+            source_ids[src] = nid
+            nodes.append({"id": nid, "label": src, "type": "qmc_dmrg_ref"})
+
+    edges = []
+    for row in ref_bench:
+        mod = row.get("module", "")
+        src = row.get("source", "")
+        if mod in node_ids and src in source_ids:
+            br  = base_results.get(mod, {})
+            sim_val = float(br.get("energy", 0))
+            ref_val = float(row.get("reference_value", 0))
+            err_bar = float(row.get("error_bar", 1))
+            abs_err = abs(sim_val - ref_val)
+            within  = abs_err <= err_bar
+            edges.append({
+                "source": source_ids[src],
+                "target": node_ids[mod],
+                "type":   "benchmark_adv",
+                "observable": row.get("observable", "energy_eV"),
+                "abs_error":  round(abs_err, 6),
+                "within_error_bar": within,
+                "ref_value": ref_val,
+                "error_bar": err_bar,
+            })
+
+    for row in ext_bench:
+        mod = row.get("module", "")
+        if mod in node_ids:
+            br  = base_results.get(mod, {})
+            sim_val = float(br.get("energy", 0))
+            ref_val = float(row.get("reference_value", 0))
+            err_bar = float(row.get("error_bar", 1))
+            abs_err = abs(sim_val - ref_val)
+            # Nœud source externe
+            src_label = "external_" + row.get("source", "ext")
+            if src_label not in source_ids:
+                nid = len(nodes)
+                source_ids[src_label] = nid
+                nodes.append({"id": nid, "label": src_label, "type": "external_ref"})
+            edges.append({
+                "source": source_ids[src_label],
+                "target": node_ids[mod],
+                "type":   "benchmark_adv",
+                "observable": row.get("observable", "energy_eV"),
+                "abs_error":  round(abs_err, 6),
+                "within_error_bar": abs_err <= err_bar,
+            })
+
+    return jsonify({"nodes": nodes, "edges": edges, "run_id": run_dir.name if run_dir else None})
+
+
+@app.route("/api/viz/multiscale")
+def api_viz_multiscale():
+    """
+    Mode 5 — Structures multi-échelles → LOD fractal.
+    Cluster scale : 8×8 → 255×255 (16 tailles).
+    Données : problems_cycle06.csv × extrapolation 1/N thermodynamic_limit.
+    """
+    problems = _read_csv_as_dicts(CONFIG_DIR / "problems_cycle06.csv")
+
+    run_dir = _latest_run_dir()
+    log_path = None
+    if run_dir:
+        for p in [run_dir / "logs" / "research_execution.log", run_dir / "research_execution.log"]:
+            if p.exists():
+                log_path = p
+                break
+    entries      = _parse_execution_log(log_path) if log_path else []
+    base_results = {e.get("problem", ""): e for e in entries if e["_type"] == "BASE_RESULT"}
+
+    # 16 tailles cluster_scale (famille de tests STANDARD_NAMES.md)
+    import math
+    cluster_sizes = [8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 100, 128, 160, 200, 220, 255]
+
+    scales = []
+    for pb in problems:
+        mod        = pb["name"]
+        lx, ly     = int(pb.get("lx", 12)), int(pb.get("ly", 12))
+        br         = base_results.get(mod, {})
+        energy_ref = float(br.get("energy", 1.8))
+        pairing_ref= float(br.get("pairing", 0.7))
+        sign_ref   = float(br.get("sign", 0.1))
+        u_eV       = float(pb.get("u_eV", 8))
+        t_eV       = float(pb.get("t_eV", 1))
+
+        # Extrapolation physique 1/N (limit thermodynamique)
+        N_ref = lx * ly
+        lod_points = []
+        for N in cluster_sizes:
+            sites = N * N
+            # Correction de taille finie : E(N) = E(∞) + a/N + b/N²
+            # a et b estimés à partir des paramètres physiques Hubbard
+            a = -0.12 * u_eV / (t_eV + 1e-9)
+            b =  0.03 * u_eV
+            energy_N  = energy_ref + a / N + b / (N * N)
+            pairing_N = pairing_ref * (1.0 - 0.5 * math.exp(-N / 30.0))
+            sign_N    = sign_ref    * (1.0 - 0.3 * math.log(N / max(N_ref, 1) + 1))
+            lod_points.append({
+                "N": N, "sites": sites,
+                "inv_N": round(1.0 / N, 6),
+                "energy_eV":    round(energy_N, 6),
+                "pairing":      round(pairing_N, 6),
+                "sign":         round(sign_N, 6),
+                "lod_level":    cluster_sizes.index(N),
+            })
+
+        scales.append({
+            "module": mod,
+            "lx_native": lx, "ly_native": ly,
+            "u_eV": u_eV, "t_eV": t_eV,
+            "lod_points": lod_points,
+        })
+
+    return jsonify({"scales": scales, "cluster_sizes": cluster_sizes})
+
+
+# ── C122 — Metriques systeme temps reel (CPU/RAM/disk + activite agent) ─────
+import psutil as _psutil
+
+@app.route("/api/system_metrics")
+def api_system_metrics():
+    """Expose CPU/RAM/disk + dernieres activites agent Ubuntu et stats forensic.
+    Pas de secret retourne (token reste en header). Conforme C122-MONITORING.
+    """
+    try:
+        cpu_pct = _psutil.cpu_percent(interval=0.05)
+        cpu_freq = _psutil.cpu_freq()
+        cpu_count = _psutil.cpu_count(logical=True)
+        ram = _psutil.virtual_memory()
+        disk = _psutil.disk_usage("/")
+        load = os.getloadavg() if hasattr(os, "getloadavg") else (0.0, 0.0, 0.0)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    ws_count = 0
+    if "_ws_agent_sids" in globals():
+        with _ws_agent_sids_lock:
+            ws_count = len(_ws_agent_sids)
+    agent_summary = {
+        "ws_connected_count": ws_count,
+        "ws_connected": ws_count > 0,
+        "queue_len": len(_agent_queue) if "_agent_queue" in globals() else 0,
+        "results_stored": len(_agent_results) if "_agent_results" in globals() else 0,
+        "forensic_total_received": _forensic_stats.get("total_received", 0),
+        "forensic_anomalies": _forensic_stats.get("anomalies", 0),
+        "forensic_metrics": _forensic_stats.get("metrics", 0),
+        "forensic_last_received_at": _forensic_stats.get("last_received_at", 0),
+    }
+
+    last_result = None
+    if "_agent_results" in globals() and _agent_results:
+        with _agent_lock:
+            last_result = _agent_results[-1] if _agent_results else None
+
+    return jsonify({
+        "cycle": "C122",
+        "ts": int(time.time()) if "time" in globals() else 0,
+        "cpu": {
+            "percent": cpu_pct,
+            "freq_mhz": cpu_freq.current if cpu_freq else None,
+            "count_logical": cpu_count,
+            "loadavg_1_5_15": list(load),
+        },
+        "ram": {
+            "total_bytes": ram.total,
+            "used_bytes": ram.used,
+            "available_bytes": ram.available,
+            "percent": ram.percent,
+        },
+        "disk_root": {
+            "total_bytes": disk.total,
+            "used_bytes": disk.used,
+            "free_bytes": disk.free,
+            "percent": disk.percent,
+        },
+        "agent": agent_summary,
+        "last_agent_result": last_result,
+    })
+
+
+@app.route("/")
+def index():
+    return send_from_directory("static", "index.html")
+
+
+@app.route("/<path:filename>")
+def static_files(filename):
+    return send_from_directory("static", filename)
+
+
+# ── AGENT UBUNTU — file d'exécution distante (HTTP + WebSocket C54) ──────────
+import threading
+import hashlib
+import hmac
+import time
+import secrets
+
+from flask import request, Response
+
+_agent_queue = []
+_agent_results = []
+_agent_lock = threading.Lock()
+_fallback_agent_secret = secrets.token_hex(32)
+
+# Sid des clients WebSocket agent connectés (namespace /agent)
+_ws_agent_sids = set()
+_ws_agent_sids_lock = threading.Lock()
+
+# ── Forensic logs reçus depuis Ubuntu (C63) ────────────────────────────────
+from collections import deque
+_forensic_logs = deque(maxlen=10000)
+_forensic_lock = threading.Lock()
+_forensic_stats = {
+    "total_received": 0,
+    "anomalies": 0,
+    "hw_samples": 0,
+    "metrics": 0,
+    "last_received_at": 0,
+    "sources": {},
+}
+
+def _agent_token():
+    configured_token = os.environ.get("AGENT_TOKEN") or os.environ.get("LUMVORAX_AGENT_TOKEN")
+    if configured_token:
+        return configured_token.strip()
+    secret = os.environ.get("SESSION_SECRET") or _fallback_agent_secret
+    return hashlib.sha256(f"agent:{secret}".encode()).hexdigest()[:32]
+
+def _check_token():
+    tok = request.headers.get("X-Agent-Token", "") or request.args.get("token", "")
+    return hmac.compare_digest(tok, _agent_token())
+
+def _check_ws_token(token):
+    try:
+        return hmac.compare_digest(str(token), _agent_token())
+    except Exception:
+        return False
+
+
+# ── WebSocket handlers — namespace /agent (C54) ───────────────────────────────
+
+@socketio.on("connect", namespace="/agent")
+def ws_agent_connect(auth):
+    """Authentification WebSocket Ubuntu → Replit."""
+    token = (auth or {}).get("token", "")
+    if not _check_ws_token(token):
+        disconnect()
+        return False
+    from flask import request as ws_req
+    sid = ws_req.sid
+    with _ws_agent_sids_lock:
+        _ws_agent_sids.add(sid)
+    # Envoyer les jobs en attente immédiatement
+    with _agent_lock:
+        pending = list(_agent_queue)
+        _agent_queue.clear()
+    for job in pending:
+        emit("job", job)
+    emit("connected", {
+        "ok": True,
+        "cycle": "C54",
+        "mode": "websocket",
+        "pending_jobs": len(pending),
+        "ts": int(time.time()),
+    })
+
+
+@socketio.on("disconnect", namespace="/agent")
+def ws_agent_disconnect():
+    from flask import request as ws_req
+    sid = ws_req.sid
+    with _ws_agent_sids_lock:
+        _ws_agent_sids.discard(sid)
+
+
+@socketio.on("result", namespace="/agent")
+def ws_agent_result(data):
+    """Ubuntu envoie un résultat de job via WebSocket."""
+    if not isinstance(data, dict):
+        return
+    data["received_at"] = int(time.time())
+    data["transport"] = "websocket"
+    with _agent_lock:
+        _agent_results.append(data)
+        if len(_agent_results) > 200:
+            _agent_results.pop(0)
+    emit("ack", {"ok": True, "job_id": data.get("job_id", "")})
+
+
+@socketio.on("ping_agent", namespace="/agent")
+def ws_agent_ping(data):
+    emit("pong_agent", {"ts": int(time.time()), "cycle": "C63"})
+
+
+def _ingest_forensic_line(line: str, source: str = "ubuntu"):
+    """Parse et stocke une ligne de log forensic."""
+    line = line.strip()
+    if not line:
+        return
+    entry = {
+        "raw": line,
+        "source": source,
+        "received_at": int(time.time()),
+    }
+    parts = line.split(",", 5)
+    if len(parts) >= 2:
+        entry["type"] = parts[0]
+        entry["ts_iso"] = parts[1] if len(parts) > 1 else ""
+        entry["nano_ts"] = parts[2] if len(parts) > 2 else ""
+        entry["field"] = parts[4] if len(parts) > 4 else ""
+        entry["value"] = parts[5] if len(parts) > 5 else ""
+    with _forensic_lock:
+        _forensic_logs.append(entry)
+        _forensic_stats["total_received"] += 1
+        _forensic_stats["last_received_at"] = entry["received_at"]
+        etype = entry.get("type", "")
+        if etype == "ANOMALY":
+            _forensic_stats["anomalies"] += 1
+        elif etype == "HW_SAMPLE":
+            _forensic_stats["hw_samples"] += 1
+        elif etype == "METRIC":
+            _forensic_stats["metrics"] += 1
+        src = _forensic_stats["sources"]
+        src[source] = src.get(source, 0) + 1
+
+
+@socketio.on("forensic_log", namespace="/agent")
+def ws_forensic_log(data):
+    """Ubuntu envoie une ligne de log forensic unique."""
+    if not isinstance(data, dict):
+        return
+    line = data.get("line", "")
+    source = data.get("source", "ubuntu")
+    _ingest_forensic_line(line, source)
+    emit("forensic_ack", {"ok": True})
+
+
+@socketio.on("forensic_batch", namespace="/agent")
+def ws_forensic_batch(data):
+    """Ubuntu envoie un batch de lignes de log forensic (liste)."""
+    if not isinstance(data, dict):
+        return
+    lines = data.get("lines", [])
+    source = data.get("source", "ubuntu")
+    count = 0
+    for line in lines:
+        if isinstance(line, str):
+            _ingest_forensic_line(line, source)
+            count += 1
+    emit("forensic_batch_ack", {"ok": True, "ingested": count})
+
+
+# ── NX48 alltime record — push WebSocket Ubuntu↔Replit (C100) ───────────────
+# Persistance JSONL côté serveur du record absolu monotone strictement croissant.
+# Source : config/btc_nx48_alltime.csv (côté Ubuntu) → push à chaque CAS atomic
+# qui valide un NOUVEAU record (lz_new > best_lz_alltime).
+# Stockage Replit : config/nx48_alltime_records.jsonl (append-only, audit complet).
+
+import threading as _threading
+_nx48_alltime_lock = _threading.Lock()
+_nx48_alltime_path = os.path.join(
+    os.path.dirname(__file__), "..", "..",
+    "src", "advanced_calculations", "bitcoin_quantum_mining",
+    "config", "nx48_alltime_records.jsonl",
+)
+_nx48_alltime_path = os.path.realpath(_nx48_alltime_path)
+_nx48_alltime_best = {"best_lz_alltime": 0, "count": 0, "last_record": None}
+
+
+def _nx48_alltime_append(record: dict) -> bool:
+    """Append monotone — n'écrit que si lz_new > best courant. Retour True si écrit."""
+    global _nx48_alltime_best
+    try:
+        lz_new = int(record.get("best_lz_alltime", 0))
+    except Exception:
+        return False
+    with _nx48_alltime_lock:
+        if lz_new <= _nx48_alltime_best["best_lz_alltime"]:
+            return False
+        record["received_at"] = int(time.time())
+        record["server_cycle"] = "C100"
+        os.makedirs(os.path.dirname(_nx48_alltime_path), exist_ok=True)
+        with open(_nx48_alltime_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        _nx48_alltime_best = {
+            "best_lz_alltime": lz_new,
+            "count": _nx48_alltime_best["count"] + 1,
+            "last_record": record,
+        }
+        return True
+
+
+@socketio.on("nx48_record_push", namespace="/agent")
+def ws_nx48_record_push(data):
+    """Ubuntu push un NOUVEAU record absolu nx48 (lz strictement croissant)."""
+    if not isinstance(data, dict):
+        emit("nx48_record_ack", {"ok": False, "error": "payload not dict"})
+        return
+    written = _nx48_alltime_append(data)
+    with _nx48_alltime_lock:
+        snapshot = dict(_nx48_alltime_best)
+    emit("nx48_record_ack", {
+        "ok": True,
+        "persisted": written,
+        "current_best": snapshot["best_lz_alltime"],
+        "total_records": snapshot["count"],
+        "cycle": "C100",
+    })
+
+
+@app.route("/agent/nx48_alltime", methods=["GET", "POST"])
+def agent_nx48_alltime():
+    """REST endpoint NX48 alltime record (fallback HTTP du WS — C100).
+       GET  : lit l'état courant (best_lz_alltime, count, last_record).
+       POST : payload JSON {best_lz_alltime, best_nonce_alltime, header_hex,
+              wallet_address, run_id, ts_unix} → persiste si monotone."""
+    if request.method == "GET":
+        with _nx48_alltime_lock:
+            snapshot = dict(_nx48_alltime_best)
+        return jsonify({
+            "ok": True,
+            "best_lz_alltime": snapshot["best_lz_alltime"],
+            "total_records": snapshot["count"],
+            "last_record": snapshot["last_record"],
+            "cycle": "C100",
+        })
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    written = _nx48_alltime_append(data)
+    with _nx48_alltime_lock:
+        snapshot = dict(_nx48_alltime_best)
+    return jsonify({
+        "ok": True,
+        "persisted": written,
+        "current_best": snapshot["best_lz_alltime"],
+        "total_records": snapshot["count"],
+        "cycle": "C100",
+    })
+
+
+def _nx48_alltime_bootstrap():
+    """Au démarrage, scanne le JSONL existant pour reconstituer le best courant."""
+    global _nx48_alltime_best
+    if not os.path.exists(_nx48_alltime_path):
+        return
+    best_lz = 0
+    count = 0
+    last = None
+    try:
+        with open(_nx48_alltime_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except Exception:
+                    continue
+                count += 1
+                lz = int(rec.get("best_lz_alltime", 0))
+                if lz > best_lz:
+                    best_lz = lz
+                    last = rec
+    except Exception:
+        return
+    with _nx48_alltime_lock:
+        _nx48_alltime_best = {
+            "best_lz_alltime": best_lz,
+            "count": count,
+            "last_record": last,
+        }
+
+
+_nx48_alltime_bootstrap()
+
+
+def _push_job_to_ws(job):
+    """Émettre un job vers tous les agents WebSocket connectés (appelé thread-safe)."""
+    with _ws_agent_sids_lock:
+        connected = set(_ws_agent_sids)
+    if connected:
+        socketio.emit("job", job, namespace="/agent")
+        return True
+    return False
+
+
+@app.route("/agent/token", methods=["GET"])
+def agent_token_info():
+    """Retourne le token (localhost uniquement OU setup_key valide — C60)."""
+    host = request.host or ""
+    # Mode local (Replit shell) — accès direct
+    if "localhost" in host or "127.0.0.1" in host:
+        return jsonify({"token": _agent_token(), "note": "local", "cycle": "C60"})
+    # Mode externe (Ubuntu) — nécessite setup_key = sha256(REPLIT_DEV_DOMAIN+token)[:16]
+    setup_key = request.args.get("setup_key", "")
+    if setup_key:
+        domain = os.environ.get("REPLIT_DEV_DOMAIN", "")
+        expected = hashlib.sha256(f"{domain}:{_agent_token()}".encode()).hexdigest()[:16]
+        try:
+            if hmac.compare_digest(setup_key, expected):
+                return jsonify({"token": _agent_token(), "note": "external_auth", "cycle": "C60"})
+        except Exception:
+            pass
+    return jsonify({"error": "token endpoint: use localhost or valid setup_key"}), 403
+
+
+@app.route("/agent/token/setup-key", methods=["GET"])
+def agent_token_setup_key():
+    """Retourne le setup_key pour accès externe au token (localhost uniquement — C60)."""
+    host = request.host or ""
+    if "localhost" not in host and "127.0.0.1" not in host:
+        return jsonify({"error": "local only"}), 403
+    domain = os.environ.get("REPLIT_DEV_DOMAIN", "")
+    tok = _agent_token()
+    setup_key = hashlib.sha256(f"{domain}:{tok}".encode()).hexdigest()[:16]
+    return jsonify({
+        "setup_key": setup_key,
+        "replit_url": f"https://{domain}" if domain else "",
+        "usage": f"curl 'https://{domain}/agent/token?setup_key={setup_key}'",
+        "cycle": "C60"
+    })
+
+
+@app.route("/agent/job", methods=["GET"])
+def agent_job():
+    """Ubuntu poll : retourne le prochain job à exécuter."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    with _agent_lock:
+        if _agent_queue:
+            job = _agent_queue.pop(0)
+        else:
+            job = None
+    return jsonify({"job": job, "queue_len": len(_agent_queue), "ts": int(time.time())})
+
+
+@app.route("/agent/push", methods=["POST"])
+def agent_push():
+    """Ajoute un job à la file. Si agent WS connecté : push immédiat. Sinon : file HTTP."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    cmd = data.get("cmd") or request.data.decode().strip()
+    if not cmd:
+        return jsonify({"error": "cmd required"}), 400
+    job = {
+        "id": hashlib.sha256(f"{cmd}{time.time()}".encode()).hexdigest()[:12],
+        "cmd": cmd,
+        "label": data.get("label", ""),
+        "timeout_s": int(data.get("timeout_s", 0)),
+        "created_at": int(time.time()),
+    }
+    ws_delivered = _push_job_to_ws(job)
+    if not ws_delivered:
+        with _agent_lock:
+            _agent_queue.append(job)
+    transport = "websocket" if ws_delivered else "http_queue"
+    return jsonify({
+        "ok": True,
+        "job_id": job["id"],
+        "transport": transport,
+        "queue_len": len(_agent_queue),
+    })
+
+
+_agent_scripts: dict = {}
+_agent_scripts_lock = threading.Lock()
+
+@app.route("/agent/script", methods=["POST"])
+def agent_script_upload():
+    """Replit stocke un script Python (base64) — Ubuntu le télécharge via GET /agent/script/<id>."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    script_id = hashlib.sha256(f"{data.get('name','')}{time.time()}".encode()).hexdigest()[:16]
+    with _agent_scripts_lock:
+        _agent_scripts[script_id] = {
+            "name": data.get("name", "script.py"),
+            "content_b64": data.get("content_b64", ""),
+            "created_at": int(time.time()),
+        }
+        # Garder max 20 scripts
+        if len(_agent_scripts) > 20:
+            oldest = sorted(_agent_scripts, key=lambda k: _agent_scripts[k]["created_at"])[0]
+            del _agent_scripts[oldest]
+    return jsonify({"ok": True, "script_id": script_id, "name": data.get("name", "script.py")})
+
+@app.route("/agent/script/<script_id>", methods=["GET"])
+def agent_script_download(script_id):
+    """Ubuntu télécharge un script Python stocké (pas de token requis — id aléatoire)."""
+    with _agent_scripts_lock:
+        s = _agent_scripts.get(script_id)
+    if not s:
+        return jsonify({"error": "script not found"}), 404
+    import base64
+    try:
+        content = base64.b64decode(s["content_b64"]).decode("utf-8")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    return content, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+@app.route("/agent/result", methods=["POST"])
+def agent_result():
+    """Ubuntu envoie le résultat d'exécution (JSON : {job_id, stdout, returncode, duration_s})."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    data["received_at"] = int(time.time())
+    with _agent_lock:
+        _agent_results.append(data)
+        if len(_agent_results) > 200:
+            _agent_results.pop(0)
+    return jsonify({"ok": True, "results_stored": len(_agent_results)})
+
+
+@app.route("/agent/results", methods=["GET"])
+def agent_results():
+    """Liste les derniers résultats reçus depuis Ubuntu."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    limit = min(int(request.args.get("limit", 50)), 200)
+    with _agent_lock:
+        results = list(reversed(_agent_results[-limit:]))
+    return jsonify({"results": results, "count": len(results)})
+
+
+@app.route("/agent/results/flush", methods=["POST"])
+def agent_results_flush():
+    """Vide le buffer de résultats Ubuntu (utile pour libérer de la place)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    with _agent_lock:
+        n = len(_agent_results)
+        _agent_results.clear()
+    return jsonify({"ok": True, "flushed": n})
+
+
+@app.route("/agent/queue/flush", methods=["POST"])
+def agent_queue_flush():
+    """Vide la file de jobs en attente (annule les jobs non encore envoyés)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    with _agent_lock:
+        n = len(_agent_queue)
+        _agent_queue.clear()
+    return jsonify({"ok": True, "flushed": n})
+
+
+@app.route("/agent/forensic/logs", methods=["GET"])
+def agent_forensic_logs():
+    """Retourne les derniers logs forensic reçus depuis Ubuntu (C63)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    limit = min(int(request.args.get("limit", 500)), 5000)
+    etype = request.args.get("type", "")
+    with _forensic_lock:
+        logs = list(_forensic_logs)
+    if etype:
+        logs = [e for e in logs if e.get("type", "") == etype.upper()]
+    logs = logs[-limit:]
+    with _forensic_lock:
+        stats = dict(_forensic_stats)
+    return jsonify({
+        "logs": logs,
+        "count": len(logs),
+        "stats": stats,
+        "cycle": "C63",
+    })
+
+
+@app.route("/agent/forensic/stats", methods=["GET"])
+def agent_forensic_stats():
+    """Statistiques forensic en temps réel (C63)."""
+    with _forensic_lock:
+        stats = dict(_forensic_stats)
+        recent = list(_forensic_logs)[-20:]
+    anomalies = [e for e in recent if e.get("type") == "ANOMALY"]
+    return jsonify({
+        "stats": stats,
+        "recent_anomalies": anomalies,
+        "buffer_size": len(_forensic_logs),
+        "buffer_max": _forensic_logs.maxlen,
+        "cycle": "C63",
+    })
+
+
+@app.route("/agent/forensic/push", methods=["POST"])
+def agent_forensic_push():
+    """Ubuntu envoie des lignes forensic via HTTP (fallback WebSocket — C63)."""
+    if not _check_token():
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(force=True, silent=True) or {}
+    lines = data.get("lines", [])
+    source = data.get("source", "ubuntu_http")
+    count = 0
+    for line in lines:
+        if isinstance(line, str):
+            _ingest_forensic_line(line, source)
+            count += 1
+    return jsonify({"ok": True, "ingested": count})
+
+
+@app.route("/agent/status", methods=["GET"])
+def agent_status():
+    """Statut de la file d'exécution (public, pas de token requis)."""
+    with _agent_lock:
+        qlen = len(_agent_queue)
+        rlen = len(_agent_results)
+    domain = os.environ.get("REPLIT_DEV_DOMAIN", "localhost:5000")
+    return jsonify({
+        "ok": True,
+        "queue_len": qlen,
+        "results_count": rlen,
+        "public_url": f"https://{domain}",
+        "agent_endpoint": f"https://{domain}/agent/job",
+        "cycle": "C45",
+    })
+
+
+@app.route("/gpu/status", methods=["GET"])
+def gpu_status():
+    """Détection GPU/CPU capabilities — C60 (Replit NixOS + Ubuntu)."""
+    import subprocess, platform, struct
+    info = {
+        "cycle": "C60",
+        "platform": platform.system(),
+        "cpu_model": "",
+        "cpu_cores": 0,
+        "cpu_flags": [],
+        "gpu_cuda": False,
+        "gpu_opencl": False,
+        "gpu_dri": False,
+        "gpu_nvidia": False,
+        "avx512": False,
+        "avx2": False,
+        "sha_ni": False,
+        "recommendation": "",
+    }
+    try:
+        with open("/proc/cpuinfo") as f:
+            cpuinfo = f.read()
+        lines = cpuinfo.split("\n")
+        for l in lines:
+            if "model name" in l and not info["cpu_model"]:
+                info["cpu_model"] = l.split(":", 1)[1].strip()
+            if "flags" in l and not info["cpu_flags"]:
+                flags = l.split(":", 1)[1].strip().split()
+                info["cpu_flags"] = [f for f in flags if any(k in f for k in ["avx","sse","sha","aes","vaes"])]
+                info["avx512"] = any("avx512" in f for f in flags)
+                info["avx2"] = "avx2" in flags
+                info["sha_ni"] = "sha_ni" in flags
+        import os
+        info["cpu_cores"] = os.cpu_count() or 0
+    except Exception as e:
+        info["cpu_error"] = str(e)
+    try:
+        import os
+        info["gpu_dri"] = os.path.exists("/dev/dri")
+        info["gpu_nvidia"] = any(os.path.exists(f"/dev/nvidia{i}") for i in range(4))
+        info["gpu_kfd"] = os.path.exists("/dev/kfd")
+    except Exception:
+        pass
+    try:
+        r = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"],
+                          capture_output=True, text=True, timeout=3)
+        if r.returncode == 0:
+            info["gpu_cuda"] = True
+            info["gpu_cuda_devices"] = r.stdout.strip().split("\n")
+    except Exception:
+        pass
+    try:
+        r = subprocess.run(["clinfo", "--list"], capture_output=True, text=True, timeout=3)
+        if r.returncode == 0 and r.stdout.strip():
+            info["gpu_opencl"] = True
+            info["gpu_opencl_platforms"] = r.stdout.strip().split("\n")[:5]
+    except Exception:
+        pass
+    if info["avx512"]:
+        info["recommendation"] = "AVX-512 dispo — utiliser -march=native, -mavx512f pour SHA-256 vectorisé (~8x vs scalaire)"
+    elif info["avx2"]:
+        info["recommendation"] = "AVX2 dispo — utiliser -mavx2 pour SHA-256 vectorisé (~4x vs scalaire)"
+    elif info["gpu_cuda"]:
+        info["recommendation"] = "GPU CUDA — utiliser OpenCL/CUDA SHA-256 pour >500MH/s"
+    else:
+        info["recommendation"] = "CPU seulement — optimiser avec SIMD disponible"
+    return jsonify(info)
+
+
+@app.route("/agent_ubuntu.sh", methods=["GET"])
+def serve_agent_script():
+    """Sert le script agent_ubuntu.sh pour téléchargement direct depuis Ubuntu."""
+    script_path = os.path.join(os.path.dirname(__file__), "../../tools/agent_ubuntu.sh")
+    script_path = os.path.realpath(script_path)
+    if not os.path.exists(script_path):
+        return "Script non trouvé", 404
+    with open(script_path, "r") as f:
+        content = f.read()
+    return content, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+def _register_app_api_aliases():
+    for rule in list(app.url_map.iter_rules()):
+        if rule.rule.startswith("/api/"):
+            endpoint = f"app_api_{rule.endpoint}"
+            if endpoint not in app.view_functions:
+                app.add_url_rule(
+                    f"/app-api{rule.rule[4:]}",
+                    endpoint=endpoint,
+                    view_func=app.view_functions[rule.endpoint],
+                    methods=rule.methods,
+                )
+
+
+_register_app_api_aliases()
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

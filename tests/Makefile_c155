@@ -1,0 +1,72 @@
+# Makefile pour tests C155 - Fonctionnalités Solana
+# Compilation avec optimisations maximales
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -pthread -fopenmp
+LDFLAGS = -lssl -lcrypto -lm -lpthread -fopenmp
+
+SRC_DIR = ../src
+TEST_DIR = .
+
+# Sources des modules
+POH_SRC = $(SRC_DIR)/consensus/lum_poh.c
+TOWER_SRC = $(SRC_DIR)/consensus/lum_tower_bft.c
+TURBINE_SRC = $(SRC_DIR)/network/lum_turbine.c
+GULF_STREAM_SRC = $(SRC_DIR)/mempool/lum_gulf_stream.c
+SEALEVEL_SRC = $(SRC_DIR)/vm/lum_sealevel.c
+CLOUDBREAK_SRC = $(SRC_DIR)/storage/lum_cloudbreak.c
+PIPELINE_SRC = $(SRC_DIR)/pipeline/lum_pipeline.c
+
+ALL_SRC = $(POH_SRC) $(TOWER_SRC) $(TURBINE_SRC) $(GULF_STREAM_SRC) \
+          $(SEALEVEL_SRC) $(CLOUDBREAK_SRC) $(PIPELINE_SRC)
+
+# Tests
+TEST_SRC = test_c155_solana_features.c
+BENCH_SRC = bench_c155_performance.c
+
+# Exécutables
+TEST_BIN = test_c155_solana_features
+BENCH_BIN = bench_c155_performance
+
+.PHONY: all clean test benchmark
+
+all: $(TEST_BIN) $(BENCH_BIN)
+
+$(TEST_BIN): $(TEST_SRC) $(ALL_SRC)
+	@echo "Compilation tests C155..."
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo "✓ Tests compilés: $(TEST_BIN)"
+
+$(BENCH_BIN): $(BENCH_SRC) $(ALL_SRC)
+	@echo "Compilation benchmark C155..."
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo "✓ Benchmark compilé: $(BENCH_BIN)"
+
+test: $(TEST_BIN)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  EXÉCUTION TESTS C155 - FONCTIONNALITÉS SOLANA"
+	@echo "═══════════════════════════════════════════════════════════"
+	@./$(TEST_BIN)
+
+benchmark: $(BENCH_BIN)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  EXÉCUTION BENCHMARK C155 - PERFORMANCE"
+	@echo "═══════════════════════════════════════════════════════════"
+	@./$(BENCH_BIN)
+
+clean:
+	@rm -f $(TEST_BIN) $(BENCH_BIN)
+	@rm -rf /tmp/cloudbreak_test
+	@echo "✓ Nettoyage effectué"
+
+help:
+	@echo "Makefile C155 - Fonctionnalités Solana"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  all        - Compiler tests et benchmarks"
+	@echo "  test       - Compiler et exécuter tests"
+	@echo "  benchmark  - Compiler et exécuter benchmarks"
+	@echo "  clean      - Nettoyer fichiers compilés"
+	@echo "  help       - Afficher cette aide"

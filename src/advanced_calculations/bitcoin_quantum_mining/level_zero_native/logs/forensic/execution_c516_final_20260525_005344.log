@@ -1,0 +1,51 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C516 - IOCTL DIRECT + SOFT-PINNING COMPLET             ║
+╚════════════════════════════════════════════════════════════════╝
+
+ROOT CAUSES #16-#20 TOUTES CORRIGÉES!
+Solution FINALE: ioctl direct avec EXEC_OBJECT_PINNED
+
+[1/10] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/10] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/10] Allocation buffers + génération adresses GTT...
+  ✓ Adresses GTT GÉNÉRÉES:
+    batch_bo:         0x0000000100000000
+    output_bo:        0x0000000100004000
+    kernel_bo:        0x0000000100005000
+    idrt_bo:          0x0000000100006000
+    surface_state_bo: 0x0000000100007000
+    dynamic_state_bo: 0x0000000100008000
+    instruction_bo:   0x0000000100009000
+
+[4/10] Mapping et initialisation buffers...
+  ✓ Buffers initialisés
+
+[5/10] Configuration IDRT...
+  ✓ IDRT configuré: kernel=0x0000000100005000
+
+[6/10] Configuration Binding Table...
+  ✓ BTI configuré: output @ 0x0000000100004000
+
+[7/10] Construction batch buffer...
+  ✓ Batch construit: 348 bytes
+
+[8/10] Unmap buffers avant soumission...
+  ✓ Buffers unmappés
+
+[9/10] Construction exec_object2 array avec EXEC_OBJECT_PINNED...
+  ✓ exec_object2 array construit (10 buffers)
+  ✓ Flags: PINNED (0x10) + 48B_ADDRESS (0x08) = 0x18
+
+[10/10] Soumission IOCTL DIRECT avec SOFT-PINNING...
+  🔧 IOCTL DRM_IOCTL_I915_GEM_EXECBUFFER2:
+     buffer_count: 10
+     batch_len:    348 bytes
+     flags:        0x801 (RENDER | NO_RELOC)
+     context_id:   1
+
+  ❌ IOCTL failed (ret=-1, errno=22: Invalid argument)

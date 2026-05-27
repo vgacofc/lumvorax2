@@ -1,0 +1,278 @@
+# RAPPORT D’ANALYSE — V140 / V144 / V61.2 / V7.4 / Transfer Learning / Vision IR
+
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-u434j2
+Date: 2026-02-18 (mise à jour post-captures Kaggle)
+=======
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-d0lzu9
+Date: 2026-02-18 (mise à jour post-captures Kaggle)
+=======
+Date: 2026-02-18
+>>>>>>> main
+>>>>>>> main
+
+## Expertises mobilisées (notification explicite)
+- **ML Engineering (segmentation 3D, calibration, pipeline Kaggle)**
+- **Computer Vision scientifique (TIFF multipage, densité de masques, contraste structurel)**
+- **MLOps/Kaggle Ops (format de soumission, robustesse offline, packaging reproductible)**
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-u434j2
+- **Forensic debugging (corrélation logs ↔ code ↔ artefacts ↔ statut Kaggle)**
+- **Stratégie R&D (transfer learning multi-modèles, plan d’expériences, gestion de risque de dérive)**
+=======
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-d0lzu9
+- **Forensic debugging (corrélation logs ↔ code ↔ artefacts ↔ statut Kaggle)**
+- **Stratégie R&D (transfer learning multi-modèles, plan d’expériences, gestion de risque de dérive)**
+=======
+- **Forensic debugging (corrélation logs ↔ code ↔ artefacts)**
+- **Stratégie R&D (transfer learning multi-modèles, plan d’expériences, risques de dérive)**
+>>>>>>> main
+>>>>>>> main
+
+---
+
+## 1) Résultats récupérés et constats factuels
+
+### 1.1 V140
+- `results.zip` contient bien un `submission.zip`.
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-u434j2
+=======
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-d0lzu9
+>>>>>>> main
+- Le TIFF de soumission observé dans cet artefact historique est **2D** `(320, 320)` en `uint8` avec valeurs `0/1`.
+- Conclusion: cause cohérente d’un échec de soumission/score (attendu: volume multipage 3D).
+
+### 1.2 V144
+- `results.zip` historique ne contient **pas** de `submission.zip`.
+- Le log montre un arrêt précoce sur dépendance offline:
+  - `RuntimeError: Offline dependency directory not found for imagecodecs`.
+- Conclusion: run interrompu avant packaging.
+
+### 1.3 V61.2 — **mise à jour score**
+- Confirmation fournie via capture Kaggle (session utilisateur):
+  - `NX47-VESU-KERNEL NEW V61.2 - Version 2` avec **Public Score = 0.387**.
+- Donc, au stade actuel, V61.2 est **au même niveau public** que v61.1 (pas de gain chiffré net public visible pour l’instant).
+
+### 1.4 V7.3 / v7.4
+- Les artefacts locaux confirment un format de sortie 3D multipage correct pour les pipelines récents.
+- **Problème d’état produit (notification):** vous avez indiqué que la finalisation V7.3 est encore en cours côté campagne; le score final de référence à retenir doit donc être validé à la clôture de ce run.
+
+---
+
+## 2) Corrections techniques déjà implémentées (V140/V144)
+
+### 2.1 Correction V140 (soumission)
+- Conversion explicite du masque en volume multipage avant écriture TIFF de soumission.
+- Compression du ZIP en `ZIP_DEFLATED`.
+- Objectif: garantir compatibilité du package avec le scorer Kaggle.
+
+### 2.2 Correction V144 (réintégration + robustesse)
+- Réintégration de la base V140 pour éviter les pertes de blocs source.
+- Durcissement de la résolution des dépendances offline (détection package présent + recherche multi-chemins de wheels).
+- Remplacement du hard-stop imagecodecs par journalisation + stratégie de repli quand possible.
+
+---
+
+## 3) Analyse Transfer Learning — 9 modèles Kaggle du concurrent
+
+## 3.1 Inventaire (d’après capture fournie)
+Les 9 variantes visibles sont:
+1. V1 `default`
+2. V1 `segformer.mit.b2`
+3. V1 `transunetseresnext`
+4. V1 `segformer.mit.b4`
+5. V2 `default`
+6. V2 `segformer.mit.b2`
+7. V2 `transunetseresnext`
+8. V2 `transunet`
+9. V3 `transunet`
+
+## 3.2 Est-ce que l’apprentissage simultané peut améliorer?
+Oui, **potentiellement**, mais seulement avec une architecture de transfert contrôlée. Entraîner “tout d’un coup” sans protocole conduit souvent à:
+- conflits de normalisation,
+- transfert négatif,
+- sur-ajustement local sans gain leaderboard.
+
+## 3.3 Stratégie recommandée (implémentable sans faux-semblants)
+
+### Phase A — Extraction de priors (teachers figés)
+- Charger les 9 modèles en mode inference-only.
+- Produire pour chaque patch 3D:
+  - logits moyens,
+  - incertitude (variance inter-modèles),
+  - cartes de désaccord.
+
+### Phase B — Distillation vers un student unique
+- Student léger (UNet 2.5D/3D hybride) entraîné sur:
+  - vérité terrain (quand disponible),
+  - pseudo-cibles pondérées par confiance d’ensemble.
+
+### Phase C — Fine-tuning progressif
+- Débloquer couches par blocs (head → decoder → encoder).
+- Early stopping sur métrique interne robuste (FBeta + stabilité volume).
+
+### Phase D — Calibration de décision
+- Seuils calibrés par volume (pas un seuil global unique).
+- Post-traitement piloté par incertitude (filtrer zones à fort désaccord).
+
+### Phase E — Ablations obligatoires
+- Retirer 1 teacher à la fois (9 runs) pour mesurer contribution réelle.
+- Conserver uniquement les teachers qui apportent un gain mesurable stable.
+
+---
+
+## 4) Plan concret d’implémentation future pour les versions actives
+
+## 4.1 Pour NX47 (branche v61.x / V140-V144)
+1. Ajouter module `teacher_ensemble_infer` (chargement + logits + variance).
+2. Ajouter dataset de distillation intermédiaire (patches + soft targets).
+3. Ajouter boucle `train_student_distilled` avec weighting par confiance.
+4. Ajouter calibration finale par volume et export d’audit.
+
+## 4.2 Pour NX46 (v7.x)
+1. Réutiliser l’ensemble enseignant comme bloc externe de scoring.
+2. Fusionner score NX46 + student distillé via pondération validée.
+3. Verrouiller format sortie Kaggle (3D multipage + zip stable) avant soumission.
+
+---
+
+## 5) Analyse “vision infrarouge ultra-puissante type James Webb”
+
+### 5.1 Position scientifique
+- “IR ultra-puissant” doit être traduit en **features pseudo-spectrales exploitables**:
+  - réponses fréquentielles locales,
+  - gradients multi-échelles,
+  - contrastes inter-couches Z,
+  - signatures de texture anisotropes.
+
+### 5.2 Ce qui est réaliste et utile
+- Ajouter un bloc d’encodeur multi-échelles avec attention spatiale+profondeur.
+- Apprendre une carte d’incertitude pour guider le seuillage final.
+- Contraindre la continuité inter-slices pour éviter le bruit isolé.
+
+### 5.3 Ce qu’il faut éviter
+- Modules “science-fiction” non reliés à un signal mesuré.
+- Complexification sans protocole d’ablation et validation Kaggle.
+
+---
+
+## 6) Problèmes rencontrés et notifiés dans cette mise à jour
+1. Les artefacts locaux seuls ne suffisent pas toujours à reconstruire l’état leaderboard exact de toutes les runs.
+2. V144 historique est interrompue avant packaging (dépendances offline).
+3. Le score V7.3 final doit être confirmé à la fin de votre campagne en cours.
+
+---
+
+## 7) Décision opérationnelle proposée
+1. **Geler** V61.2 à score public constaté `0.387` comme point de référence court terme.
+2. **Finaliser** la campagne V7.3 et archiver son score final certifié.
+3. Lancer une **campagne TL en 3 paliers**:
+   - P1: distillation 9→1 sans fine-tuning profond,
+   - P2: distillation + fine-tuning partiel,
+   - P3: distillation + fine-tuning complet + calibration dynamique.
+4. Ne promouvoir que les variantes démontrant un gain stable (pas un gain ponctuel).
+<<<<<<< codex/analyze-and-fix-v140-and-v144-issues-u434j2
+=======
+=======
+- Le TIFF de soumission est **2D** `(320, 320)` en `uint8` avec valeurs `0/1`.
+- Cela confirme la cause principale du blocage de score/soumission déjà observée historiquement: format 2D au lieu de volume multipage.
+
+### 1.2 V144
+- `results.zip` ne contient **pas** de `submission.zip`.
+- Le log `nx47-vesu-kernel-new-v144.log` montre un échec précoce:
+  - `RuntimeError: Offline dependency directory not found for imagecodecs`.
+- Donc V144 échoue avant packaging, d’où absence de soumission.
+
+### 1.3 V61.2
+- `results.zip` contient `submission.zip`.
+- TIFF de soumission en **3D** `(320, 320, 320)` `uint8` `0/1`.
+
+### 1.4 V7.4 (dans logs V61.3)
+- Le `results.zip` du dossier `v7.4-outlput-logs...` contient une soumission `submission_masks/1407735.tif`.
+- TIFF en **3D** `(320, 320, 320)` `uint8` `0/1`.
+
+### 1.5 Scores demandés (V61.2 et V7.4)
+- **Problème rencontré (notification obligatoire):** aucun score Kaggle *post-submission* explicite (Public/Private LB) n’est présent dans les artefacts locaux inspectés.
+- Conséquence: impossible de fournir des “nouveaux scores” certifiés sans exécution/consultation LB Kaggle.
+
+---
+
+## 2) Corrections implémentées dans le code
+
+## 2.1 Correction V140 (soumission)
+- Conversion explicite du masque 2D en volume 3D multipage avant écriture TIFF:
+  - `mask2d -> uint8 0/255`
+  - réplication sur l’axe Z (`vol.shape[0]`) pour sortir un TIFF `(Z,H,W)`.
+- Compression ZIP passée en `ZIP_DEFLATED` (alignement pratique avec pipelines scorés).
+
+## 2.2 Correction V144 (réintégration + robustesse)
+- Réintégration complète du code source base V140 dans V144 (suppression de l’état cassé).
+- Suppression implicite de l’injection invalide qui avait introduit des lignes non-Python.
+- Durcissement du chargement offline des dépendances:
+  - vérification de présence des packages avant installation,
+  - exploration de plusieurs chemins de wheels Kaggle,
+  - échec explicite conservé si vraiment introuvable.
+- Assouplissement du blocage imagecodecs:
+  - warning forensique + fallback (au lieu d’arrêt immédiat).
+- Alignement de la sortie de soumission sur le format 3D multipage également dans V144.
+
+---
+
+## 3) Analyse de ton observation Transfer Learning (9 modèles Kaggle)
+
+Réponse courte: **oui, c’est une piste sérieuse**, à condition de structurer l’apprentissage multi-source proprement.
+
+### 3.1 Pourquoi ça peut améliorer
+- Les 9 modèles peuvent apprendre des **priors complémentaires** (textures fines, bruit, relief local, patterns d’encre).
+- Le fine-tuning final sur votre distribution peut augmenter la robustesse au domaine Vesuvius.
+
+### 3.2 Risques techniques
+- **Negative transfer** si certains modèles sont hors-domaine.
+- **Divergence de normalisation** (préprocessing incompatible entre modèles).
+- **Overfit compétition** si calibration mal verrouillée.
+
+### 3.3 Recommandation d’implémentation future (V61.2 + V7.4)
+1. Phase A: pré-entraînement “feature bank” multi-modèles (frozen backbone, têtes séparées).
+2. Phase B: distillation vers un modèle cible unique (teacher ensemble -> student).
+3. Phase C: fine-tuning progressif (unfreeze par blocs) + early stopping strict.
+4. Phase D: calibration de seuil par volume (pas seuil global unique).
+5. Phase E: ablations obligatoires (retirer 1 modèle à la fois pour mesurer contribution réelle).
+
+---
+
+## 4) Analyse “vision infrarouge type James Webb”
+
+### 4.1 Position scientifique réaliste
+- Le “James Webb” est une métaphore utile: il faut viser **plus de sensibilité spectrale et structurelle**, pas juste “plus de puissance”.
+- Sur Vesuvius, l’équivalent pratique est:
+  - fusion multi-échelles,
+  - attention 3D anisotrope,
+  - canaux dérivés “pseudo-spectraux” (gradients, Laplacien, réponses de fréquence locale),
+  - supervision par cohérence volumique.
+
+### 4.2 Ce qui est prometteur
+- Encoders 3D hybrides CNN+Transformer légers.
+- Heads de segmentation avec contrainte de continuité inter-slices.
+- Post-traitement morphologique piloté par incertitude (au lieu d’un seuil fixe).
+
+### 4.3 Ce qui est à éviter
+- Ajouter des modules “atomiques/microscopiques” non reliés à un signal mesurable.
+- Complexifier sans protocole d’ablation et validation stable.
+
+---
+
+## 5) Problèmes rencontrés pendant cette session (notification)
+1. **Absence de scores Kaggle nouveaux V61.2/V7.4** dans les artefacts disponibles localement.
+2. **V144 cassée à l’exécution** (dépendance offline `imagecodecs` introuvable dans le run fourni).
+3. **Désalignement format soumission V140** (2D au lieu de 3D multipage).
+
+---
+
+## 6) Prochaines actions recommandées
+1. Exécuter V140 corrigée puis V144 corrigée sur Kaggle (offline + soumission).
+2. Capturer et archiver pour chaque run:
+   - hash `submission.zip`,
+   - forme TIFF `(Z,H,W)`, dtype et plage de valeurs,
+   - score Public/Private LB.
+3. Lancer un mini-campaign Transfer Learning (3 configurations) avec protocole d’ablation strict.
+
+>>>>>>> main
+>>>>>>> main

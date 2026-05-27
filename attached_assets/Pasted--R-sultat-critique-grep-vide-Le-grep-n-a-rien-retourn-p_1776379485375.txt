@@ -1,0 +1,319 @@
+## Résultat critique — grep vide
+
+Le `grep` n'a rien retourné pour `near_miss`, `malloc`, `buf[`, `MAX_` dans `btc_mining_engine.c`. Ça veut dire que le crash n'est **pas** dans ce fichier directement — il est dans ce que `BTC_FORENSIC_BLOCK_FOUND` appelle.
+
+La ligne 703 correspond exactement à `BTC_FORENSIC_BLOCK_FOUND(nonce, res.leading_zeros, 0)` dans le sed output. C'est une **macro forensique** qui pointe vers le vrai coupable.
+
+Commandes pour identifier la source exacte :
+
+```bash
+# 1. Trouver où BTC_FORENSIC_BLOCK_FOUND est défini
+grep -rn "BTC_FORENSIC_BLOCK_FOUND\|ring\|MAX_LOG\|MAX_ENTRIES\|forensic_buf" \
+  src/advanced_calculations/bitcoin_quantum_mining/
+
+# 2. Voir le logger forensique complet
+wc -l src/advanced_calculations/bitcoin_quantum_mining/src/btc_mining_engine.c
+cat src/advanced_calculations/bitcoin_quantum_mining/src/btc_forensic_logger.c 2>/dev/null || \
+grep -rn "forensic" src/advanced_calculations/bitcoin_quantum_mining/src/ --include="*.h" | head -20
+
+# 3. Vérifier NX48 pour un tableau indexé par update_count
+grep -n "update_count\|\[.*\]\|MAX_" \
+  src/advanced_calculations/bitcoin_quantum_mining/src/nx48_btc_controller.c | head -30
+```
+
+Mon hypothèse actuelle : le logger forensique a un **ring buffer de taille fixe** en RAM (ex: `entries[MAX_LOG_ENTRIES]`), et après ~618M hashes + X records NX48, il déborde. Le `update_count` qui passe de 1818→2040 entre les runs confirme que quelque chose s'accumule.
+
+* keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 31888
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> grep -n "near_miss\|MAX_\|malloc\|candidates\|buf\[" \
+                                                src/advanced_calculations/bitcoin_quantum_mining/src/btc_mining_engine.c \
+                                                | head -50
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> sed -n '690,720p' \
+                                                src/advanced_calculations/bitcoin_quantum_mining/src/btc_mining_engine.c
+            if (res.leading_zeros > rep->best_leading) {
+                rep->best_leading = res.leading_zeros;
+                rep->best_nonce   = nonce;
+            }
+            pthread_mutex_unlock(&rep->mutex);
+
+            /* Mise à jour record global */
+            if (res.leading_zeros > eng->best_leading_global) {
+                pthread_mutex_lock(&eng->global_mutex);
+                if (res.leading_zeros > eng->best_leading_global) {
+                    eng->best_leading_global    = res.leading_zeros;
+                    eng->best_nonce_global      = nonce;
+                    eng->ts_last_improvement_ns = eng_ts_ns();
+                    BTC_FORENSIC_BLOCK_FOUND(nonce, res.leading_zeros, 0);
+                    FORENSIC_LOG_MODULE_METRIC(BTC_MODULE_NAME,
+                        "btc_best_leading_zeros", (double)res.leading_zeros);
+                    if (eng->nx48)
+                        eng->nx48->best_nonce = nonce;
+                    /* C40-CSV-RECORD : Sauvegarde immédiate du CSV NX48 à chaque
+                     * nouveau record de leading zeros — évite la perte de record
+                     * si le run est interrompu avant la fin.
+                     * AVANT C40 : sauvegarde CSV UNIQUEMENT en fin de run → record
+                     *             perdu si restart (ex: 25 bits perdu → run 233845Z).
+                     * APRÈS C40 : sauvegarde atomique immédiate à chaque amélioration.
+                     * Ref : rapport forensique C40 §BUG-P0-CSV — 2026-04-13 */
+                    if (eng->nx48 && cfg->nx48_csv[0])
+                        nx48_btc_save_csv(eng->nx48, cfg->nx48_csv);
+                }
+                pthread_mutex_unlock(&eng->global_mutex);
+            }
+
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd src/advanced_calculations/bitcoin_quantum_mining
+                                          make clean
+                                          CFLAGS="-O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer" make
+                                          ./btc_mining_runner --threads 1 --duration 300
+*rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+cc -O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -I../../ -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c -lm -lpthread -lgomp -lssl -lcrypto 
+src/nx48_btc_controller.c: In function ‘nx48_btc_load_csv’:
+src/nx48_btc_controller.c:497:24: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  497 |     char header[1024]; fgets(header, sizeof(header), f); /* skip header */
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 283K Apr 17 00:26 btc_mining_runner
+==36374==ASan runtime does not come first in initial library list; you should either link runtime to your application or manually preload it with LD_PRELOAD.
+lvx@lvx-Vostro-5481 ~/L/l/s/a/bitcoin_quantum_mining (main) [1]> # Option 1 — preload explicite (le plus simple)
+                                                                 LD_PRELOAD=$(gcc -print-file-name=libasan.so) \
+                                                                       ./btc_mining_runner --threads 1 --duration 300
+
+                                                                 # Option 2 — si option 1 échoue, forcer le link statique
+                                                                 make clean
+                                                                 CFLAGS="-O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer -static-libasan" make
+                                                                 ./btc_mining_runner --threads 1 --duration 300
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260416T222740Z_36575.log ACTIF v3.0 (FD_PERSISTANT=ON)
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260416T222740Z_36575
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 1
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[BTC_QM] NX48_BTC initialisé — update_count=2320 best_leading=28
+[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260416T222740Z_36575                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mmuLRjpz67Gs1jcCE2aThyGhVZksiyHbRG        ║
+║ Adresse Bech32  : tb1qgcxxry4lesgzc9qssngz6694rd6wqg2xhj8ea7║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 5404f8b4...(masquée)                     ║
+║ WIF compressé   : cQQ2NP3CPrW2DNUAMoHRhsWcq4p99FJoPm2Q4DnJX3rtAz4r5K1t║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 460c6192bfcc102c141084d02d68b51b74e02146  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260416T222740Z_36575.json
+[BTC_QM] Lancement du moteur PT-MC…
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1398MB
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=10.0s hashes=2224128 hashrate=0.22MH/s best_leading=20 best_nonce=3042753728 nx48_delta=50.00
+[BTC_QM] elapsed=20.0s hashes=4354048 hashrate=0.22MH/s best_leading=20 best_nonce=3042753728 nx48_delta=50.00
+[BTC_QM] elapsed=30.0s hashes=6490112 hashrate=0.22MH/s best_leading=20 best_nonce=3042753728 nx48_delta=47.45
+[BTC_QM] elapsed=40.0s hashes=8742912 hashrate=0.22MH/s best_leading=20 best_nonce=3042753728 nx48_delta=47.56
+[BTC_QM] elapsed=50.0s hashes=10846208 hashrate=0.22MH/s best_leading=20 best_nonce=3042753728 nx48_delta=47.47
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 12908544
+[BTC_QM] Durée        : 60.01 s
+[BTC_QM] Hashrate     : 0.22 MH/s
+[BTC_QM] Best leading : 20 bits
+[BTC_QM] Best nonce   : 3042753728
+[BTC_QM] Bloc valide  : non
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 1313MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_6382757708266.csv
+Rapport résumé généré: logs/forensic/sessions/summary_6382765467612.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+cc -O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer -static-libasan -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -I../../ -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c -lm -lpthread -lgomp -lssl -lcrypto 
+src/nx48_btc_controller.c: In function ‘nx48_btc_load_csv’:
+src/nx48_btc_controller.c:497:24: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  497 |     char header[1024]; fgets(header, sizeof(header), f); /* skip header */
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 1.9M Apr 17 00:28 btc_mining_runner
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260416T222850Z_37600.log ACTIF v3.0 (FD_PERSISTANT=ON)
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260416T222850Z_37600
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 1
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[BTC_QM] NX48_BTC initialisé — update_count=2349 best_leading=28
+[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260416T222850Z_37600                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mt2MV7h3QjQ8SA5E7RBuVRhiYhRYkWfMtp        ║
+║ Adresse Bech32  : tb1q3ycwu539vesz9235gpsz08g693vjahh8z3epm3║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7c595070...(masquée)                     ║
+║ WIF compressé   : cRkRHrkzGDbL7tfZePctYYcdiYCagvQ1tyNLCbeFqSvFwBLSUiqm║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 8930ee5225666022aa344060279d1a2c592edee7  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260416T222850Z_37600.json
+[BTC_QM] Lancement du moteur PT-MC…
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1453MB
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=10.0s hashes=2232320 hashrate=0.22MH/s best_leading=20 best_nonce=2893807692 nx48_delta=47.90
+[BTC_QM] elapsed=20.0s hashes=4573184 hashrate=0.23MH/s best_leading=20 best_nonce=2893807692 nx48_delta=48.57
+[BTC_QM] elapsed=30.0s hashes=6793216 hashrate=0.23MH/s best_leading=20 best_nonce=2893807692 nx48_delta=50.00
+[BTC_QM] elapsed=40.0s hashes=9179136 hashrate=0.23MH/s best_leading=20 best_nonce=2893807692 nx48_delta=50.00
+[BTC_QM] elapsed=50.0s hashes=11538432 hashrate=0.23MH/s best_leading=20 best_nonce=2893807692 nx48_delta=50.00
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 13799424
+[BTC_QM] Durée        : 60.00 s
+[BTC_QM] Hashrate     : 0.23 MH/s
+[BTC_QM] Best leading : 20 bits
+[BTC_QM] Best nonce   : 2893807692
+[BTC_QM] Bloc valide  : non
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 1524MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_6453021539178.csv
+Rapport résumé généré: logs/forensic/sessions/summary_6453030485887.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement
+lvx@lvx-Vostro-5481 ~/L/l/s/a/bitcoin_quantum_mining (main)> # Option 1 — preload explicite (le plus simple)
+                                                             LD_PRELOAD=$(gcc -print-file-name=libasan.so) \
+                                                                   ./btc_mining_runner --threads 1 --duration 300
+
+                                                             # Option 2 — si option 1 échoue, forcer le link statique
+                                                             make clean
+                                                             CFLAGS="-O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer -static-libasan" make
+                                                             ./btc_mining_runner --threads 1 --duration 300
+==38382==Your application is linked against incompatible ASan runtimes.
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+cc -O2 -mavx2 -fsanitize=address -fno-omit-frame-pointer -static-libasan -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -I../../ -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c -lm -lpthread -lgomp -lssl -lcrypto 
+src/nx48_btc_controller.c: In function ‘nx48_btc_load_csv’:
+src/nx48_btc_controller.c:497:24: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  497 |     char header[1024]; fgets(header, sizeof(header), f); /* skip header */
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 1.9M Apr 17 00:33 btc_mining_runner
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260416T223358Z_38646.log ACTIF v3.0 (FD_PERSISTANT=ON)
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260416T223358Z_38646
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 1
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[BTC_QM] NX48_BTC initialisé — update_count=2378 best_leading=28
+[BTC_QM] NX48 neurones actifs = 2 (producteur apprend, applicateur décide)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260416T223358Z_38646                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mvpiAFdZAR17qQa7f2RzRTuCXiDbFZdcYg        ║
+║ Adresse Bech32  : tb1q5ljex0ej2nx8sluysycd5acydws5f57j5jwzf8║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): a0827f12...(masquée)                     ║
+║ WIF compressé   : cSxiE9nrM6jF8z3aJG7dRPwfuufibRPPJXy5uXUnhy3DEG598cqj║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : a7e5933f3254cc787f848130da77046ba144d3d2  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260416T223358Z_38646.json
+[BTC_QM] Lancement du moteur PT-MC…
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1417MB
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:703
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=10.0s hashes=2273280 hashrate=0.23MH/s best_leading=20 best_nonce=2167045946 nx48_delta=50.00
+[BTC_QM] elapsed=20.0s hashes=4511744 hashrate=0.23MH/s best_leading=20 best_nonce=2167045946 nx48_delta=48.48
+[BTC_QM] elapsed=30.0s hashes=6658048 hashrate=0.22MH/s best_leading=20 best_nonce=2167045946 nx48_delta=50.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=24.000000 src=src/btc_mining_engine.c:703
+[BTC_QM] elapsed=40.0s hashes=8882176 hashrate=0.22MH/s best_leading=24 best_nonce=3760201235 nx48_delta=47.99
+[BTC_QM] elapsed=50.0s hashes=10962944 hashrate=0.22MH/s best_leading=24 best_nonce=3760201235 nx48_delta=50.00
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 12677120
+[BTC_QM] Durée        : 60.00 s
+[BTC_QM] Hashrate     : 0.21 MH/s
+[BTC_QM] Best leading : 24 bits
+[BTC_QM] Best nonce   : 3760201235
+[BTC_QM] Bloc valide  : non
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 1293MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_6761024326276.csv
+Rapport résumé généré: logs/forensic/sessions/summary_6761045566006.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement
+lvx@lvx-Vostro-5481 ~/L/l/s/a/bitcoin_quantum_mining (main)> 
+

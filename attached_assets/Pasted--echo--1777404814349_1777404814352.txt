@@ -1,0 +1,289 @@
+
+                                          echo "=========================================="
+
+
+
+
+
+
+                                          # ============================================================================
+                                          # Sequence complete C117-C119 sur Ubuntu lvx@lvx-Vostro-5481
+                                          # Estimation totale : 90 minutes (15 build + 60 attracteur Q1 + 15 overhead Q6)
+                                          # ============================================================================
+
+                                          cd ~/lumvorax2
+                                          git pull origin main
+                                          echo "[1/8] Pull termine"
+
+                                          # ── ETAPE 1 : Build clean ──────────────────────────────────────────────────
+                                          make clean
+                                          make 2>&1 | tee logs/build_c117_c119_(date +%Y%m%dT%H%M%S).log
+                                          test $status -eq 0; or begin
+                                                  echo "[FAIL] Build a echoue, voir logs/build_c117_c119_*.log"
+                                                  exit 1
+                                          end
+                                          echo "[2/8] Build OK"
+
+                                          # ── ETAPE 2 : Verifier que le warning OpenCL a disparu (C119-P2.3) ──────
+                                          rg "CL_TARGET_OPENCL_VERSION is not defined" logs/build_c117_c119_*.log
+                                          test $status -ne 0; and echo "[3/8] OpenCL warning supprime - C119-P2.3 OK"
+                                          test $status -eq 0; and echo "[3/8] WARN: warning OpenCL toujours present"
+
+                                          # ── ETAPE 3 : Validation alignement C117-P1 ────────────────────────────
+                                          mkdir -p logs/c120_validate
+                                          ./bin/btc_mining_engine --duration 30 --threads 4 \
+                                                  --enable-mem-trace --trace-granularity page \
+                                                  --output-dir logs/c120_validate/
+
+                                          set -l align_ok 1
+                                          for f in logs/c120_validate/*.lum
+                                                  set sz (stat -c %s $f)
+                                                  set rem (math $sz % 64)
+                                                  if test $rem -ne 0
+                                                          echo "[FAIL ALIGN] $f : taille $sz octets, reste mod 64 = $rem"
+                                                          set align_ok 0
+                                                      end
+                                          end
+                                          test $align_ok -eq 1; and echo "[4/8] Alignement 64 octets OK pour tous les .lum - C117-P1 valide"
+
+                                          # ── ETAPE 4 : Verifier version_major=2 dans header ─────────────────────
+                                          for f in logs/c120_validate/*.lum
+                                                  set hex_ver (xxd -s 32 -l 4 -p $f)
+                                                  if test "$hex_ver" = "02000000"
+                                                          echo "  $f : version_major=2 OK"
+                                                      else
+                                                          echo "  $f : version_major INATTENDUE = $hex_ver (attendu 02000000)"
+                                                      end
+                                          end
+                                          echo "[5/8] Validation version_major terminee - C117-P1 metadata OK"
+
+                                          # ── ETAPE 5 : Test C118-Q6 - overhead LUM A/B (15 min : 2 x 6 min) ─────
+                                          echo "[6/8] DEBUT test overhead LUM A/B (15 min)..."
+
+                                          set -x LUM_LOGGING 0
+                                          ./bin/btc_mining_engine --duration 360 --threads 16 \
+                                                  --output-dir logs/c120_overhead_A_LUM_OFF/ \
+                                                  2>&1 | tee logs/c120_overhead_A_LUM_OFF/console.log
+
+                                          set -x LUM_LOGGING 1
+                                          ./bin/btc_mining_engine --duration 360 --threads 16 \
+                                                  --output-dir logs/c120_overhead_B_LUM_ON/ \
+                                                  2>&1 | tee logs/c120_overhead_B_LUM_ON/console.log
+
+                                          set rate_A (rg -oP 'Hashrate moyen.*?\K[\d.]+' logs/c120_overhead_A_LUM_OFF/console.log | tail -1)
+                                          set rate_B (rg -oP 'Hashrate moyen.*?\K[\d.]+' logs/c120_overhead_B_LUM_ON/console.log | tail -1)
+                                          echo ""
+                                          echo "=========================================="
+                                          echo "OVERHEAD LUM REEL (premiere mesure propre):"
+                                          echo "  Run A LUM_LOGGING=0 : $rate_A MH/s"
+                                          echo "  Run B LUM_LOGGING=1 : $rate_B MH/s"
+                                          echo "  Overhead reel       : "(math "($rate_A - $rate_B) / $rate_A * 100")"%"
+                                          echo "=========================================="
+
+                                          # ── ETAPE 6 : Test C118-Q2 - QDPR descente ─────────────────────────────
+                                          echo "[7/8] Verification traces QDPR descendant..."
+                                          rg "C118-Q2-QDPR" logs/c120_overhead_*/console.log | head -10
+                                          echo "(attendu : voir des lignes avec ↑ et/ou ↓ selon success_rate observe)"
+
+                                          # ── ETAPE 7 : Test C118-Q5 - boucle optimizer fermee ───────────────────
+                                          echo "[8/8] Verification boucle optimizer..."
+                                          rg "C118-Q5.*BEST batch" logs/c120_overhead_*/console.log
+                                          rg "nx48_ctrl_batch_size" logs/c120_overhead_*/console.log | head -5
+                                          echo "(attendu : 1 ligne BEST batch=NNNNNN + 1 ligne nx48_ctrl_batch_size <- NNNNNN par run)"
+
+                                          set -e LUM_LOGGING
+
+                                          echo ""
+                                          echo "=========================================="
+                                          echo "VALIDATION C117-C119 TERMINEE"
+                                          echo "Voir logs/c120_validate/ et logs/c120_overhead_*/ pour details"
+                                          echo "=========================================="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cd: The directory '/home/lvx/lumvorax2' does not exist
+From github.com:vgacofc/lumvorax2
+ * branch              main       -> FETCH_HEAD
+Already up to date.
+[1/8] Pull termine
+rm -f src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o
+rm -f bin/lum_vorax_complete bin/test_forensic_complete_system bin/test_integration_complete_39_modules bin/test_quantum
+rm -rf bin
+find . -name "*.o" -type f -delete
+mkdir -p bin logs/forensic logs/execution logs/tests logs/console
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/lum/lum_core.c -o src/lum/lum_core.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/vorax/vorax_operations.c -o src/vorax/vorax_operations.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/binary/binary_lum_converter.c -o src/binary/binary_lum_converter.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/parser/vorax_parser.c -o src/parser/vorax_parser.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/logger/lum_logger.c -o src/logger/lum_logger.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/logger/log_manager.c -o src/logger/log_manager.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/debug/memory_tracker.c -o src/debug/memory_tracker.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/debug/forensic_logger.c -o src/debug/forensic_logger.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/debug/ultra_forensic_logger.c -o src/debug/ultra_forensic_logger.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/debug/enhanced_logging.c -o src/debug/enhanced_logging.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/debug/logging_system.c -o src/debug/logging_system.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/crypto/crypto_validator.c -o src/crypto/crypto_validator.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/persistence/data_persistence.c -o src/persistence/data_persistence.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/persistence/transaction_wal_extension.c -o src/persistence/transaction_wal_extension.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/persistence/recovery_manager_extension.c -o src/persistence/recovery_manager_extension.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/optimization/memory_optimizer.c -o src/optimization/memory_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/optimization/pareto_optimizer.c -o src/optimization/pareto_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/optimization/pareto_inverse_optimizer.c -o src/optimization/pareto_inverse_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/optimization/simd_optimizer.c -o src/optimization/simd_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/optimization/zero_copy_allocator.c -o src/optimization/zero_copy_allocator.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/parallel/parallel_processor.c -o src/parallel/parallel_processor.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/metrics/performance_metrics.c -o src/metrics/performance_metrics.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/audio_processor.c -o src/advanced_calculations/audio_processor.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/image_processor.c -o src/advanced_calculations/image_processor.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/golden_score_optimizer.c -o src/advanced_calculations/golden_score_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/tsp_optimizer.c -o src/advanced_calculations/tsp_optimizer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/neural_advanced_optimizers.c -o src/advanced_calculations/neural_advanced_optimizers.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/neural_ultra_precision_architecture.c -o src/advanced_calculations/neural_ultra_precision_architecture.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/matrix_calculator.c -o src/advanced_calculations/matrix_calculator.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/neural_network_processor.c -o src/advanced_calculations/neural_network_processor.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/complex_modules/realtime_analytics.c -o src/complex_modules/realtime_analytics.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/complex_modules/distributed_computing.c -o src/complex_modules/distributed_computing.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/complex_modules/ai_optimization.c -o src/complex_modules/ai_optimization.o
+src/complex_modules/ai_optimization.c: In function ‘ai_agent_load_reasoning_state’:
+src/complex_modules/ai_optimization.c:213:13: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  213 |             fread(&agent->knowledge_base->lums[i], sizeof(lum_t), 1, file);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/complex_modules/ai_dynamic_config_manager.c -o src/complex_modules/ai_dynamic_config_manager.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/file_formats/lum_secure_serialization.c -o src/file_formats/lum_secure_serialization.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/file_formats/lum_native_file_handler.c -o src/file_formats/lum_native_file_handler.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/file_formats/lum_native_universal_format.c -o src/file_formats/lum_native_universal_format.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/spatial/lum_instant_displacement.c -o src/spatial/lum_instant_displacement.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/network/hostinger_resource_limiter.c -o src/network/hostinger_resource_limiter.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/advanced_calculations/quantum_simulator.c -o src/advanced_calculations/quantum_simulator.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/physics/kerr_metric.c -o src/physics/kerr_metric.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/logging/log_writer.c -o src/logging/log_writer.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -c src/common/time_ns.c -o src/common/time_ns.o
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 src/main.c src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o -o bin/lum_vorax_complete -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+src/main.c: In function ‘main’:
+src/main.c:25:52: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+   25 |         log_writer_entry("PHYSICS", "GEODESIC_R", *(uint64_t*)&photon.r);
+      |                                                    ^~~~~~~~~~~~~~~~~~~~
+src/main.c:26:56: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+   26 |         log_writer_entry("PHYSICS", "GEODESIC_THETA", *(uint64_t*)&photon.theta);
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 src/tests/test_forensic_complete_system.c src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o -o bin/test_forensic_complete_system -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 src/tests/test_integration_complete_39_modules.c src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o -o bin/test_integration_complete_39_modules -lm -lpthread -lrt -Wl,-z,stack-size=16777216 -lmvec -lm
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 src/tests/test_quantum_simulator_complete.c src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o -o bin/test_quantum -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+gcc -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216 -DDEBUG_MODE -g3 -shared src/lum/lum_core.o src/vorax/vorax_operations.o src/binary/binary_lum_converter.o src/parser/vorax_parser.o src/logger/lum_logger.o src/logger/log_manager.o src/debug/memory_tracker.o src/debug/forensic_logger.o src/debug/ultra_forensic_logger.o src/debug/enhanced_logging.o src/debug/logging_system.o src/crypto/crypto_validator.o src/persistence/data_persistence.o src/persistence/transaction_wal_extension.o src/persistence/recovery_manager_extension.o src/optimization/memory_optimizer.o src/optimization/pareto_optimizer.o src/optimization/pareto_inverse_optimizer.o src/optimization/simd_optimizer.o src/optimization/zero_copy_allocator.o src/parallel/parallel_processor.o src/metrics/performance_metrics.o src/advanced_calculations/audio_processor.o src/advanced_calculations/image_processor.o src/advanced_calculations/golden_score_optimizer.o src/advanced_calculations/tsp_optimizer.o src/advanced_calculations/neural_advanced_optimizers.o src/advanced_calculations/neural_ultra_precision_architecture.o src/advanced_calculations/matrix_calculator.o src/advanced_calculations/neural_network_processor.o src/complex_modules/realtime_analytics.o src/complex_modules/distributed_computing.o src/complex_modules/ai_optimization.o src/complex_modules/ai_dynamic_config_manager.o src/file_formats/lum_secure_serialization.o src/file_formats/lum_native_file_handler.o src/file_formats/lum_native_universal_format.o src/spatial/lum_instant_displacement.o src/network/hostinger_resource_limiter.o src/advanced_calculations/quantum_simulator.o src/physics/kerr_metric.o src/logging/log_writer.o src/common/time_ns.o -o liblumvorax.so -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+[2/8] Build OK
+Command 'rg' not found, but can be installed with:
+sudo snap install ripgrep  # version 12.1.0, or
+sudo apt  install ripgrep  # version 14.0.3-1
+See 'snap info ripgrep' for additional versions.
+fish: 
+rg "CL_TARGET_OPENCL_VERSION is not defined" logs/build_c117_c119_*.log
+^^
+[3/8] OpenCL warning supprime - C119-P2.3 OK
+[3/8] WARN: warning OpenCL toujours present
+./bin/btc_mining_engine: command not found
+fish: 
+./bin/btc_mining_engine --duration 30 --threads 4 \
+^~~~~~~~~~~~~~~~~~~~~~^
+[4/8] Alignement 64 octets OK pour tous les .lum - C117-P1 valide
+[5/8] Validation version_major terminee - C117-P1 metadata OK
+[6/8] DEBUT test overhead LUM A/B (15 min)...
+./bin/btc_mining_engine: command not found
+fish: 
+./bin/btc_mining_engine --duration 360 --threads 16 \
+^~~~~~~~~~~~~~~~~~~~~~^
+./bin/btc_mining_engine: command not found
+fish: 
+./bin/btc_mining_engine --duration 360 --threads 16 \
+^~~~~~~~~~~~~~~~~~~~~~^
+Command 'rg' not found, but can be installed with:
+sudo snap install ripgrep  # version 12.1.0, or
+sudo apt  install ripgrep  # version 14.0.3-1
+See 'snap info ripgrep' for additional versions.
+in command substitution
+fish: Unknown command
+set rate_A (rg -oP 'Hashrate moyen.*?\K[\d.]+' logs/c120_overhead_A_LUM_OFF/console.log | tail -1)
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+Command 'rg' not found, but can be installed with:
+sudo snap install ripgrep  # version 12.1.0, or
+sudo apt  install ripgrep  # version 14.0.3-1
+See 'snap info ripgrep' for additional versions.
+in command substitution
+fish: Unknown command
+set rate_B (rg -oP 'Hashrate moyen.*?\K[\d.]+' logs/c120_overhead_B_LUM_ON/console.log | tail -1)
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+
+==========================================
+OVERHEAD LUM REEL (premiere mesure propre):
+  Run A LUM_LOGGING=0 :  MH/s
+  Run B LUM_LOGGING=1 :  MH/s
+math: Error: Unexpected token
+'( - ) /  * 100'
+     ^
+
+==========================================
+[7/8] Verification traces QDPR descendant...
+fish: No matches for wildcard 'logs/c120_overhead_*/console.log'. See `help wildcards-globbing`.
+rg "C118-Q2-QDPR" logs/c120_overhead_*/console.log | head -10
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+(attendu : voir des lignes avec ↑ et/ou ↓ selon success_rate observe)
+[8/8] Verification boucle optimizer...
+fish: No matches for wildcard 'logs/c120_overhead_*/console.log'. See `help wildcards-globbing`.
+rg "C118-Q5.*BEST batch" logs/c120_overhead_*/console.log
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+fish: No matches for wildcard 'logs/c120_overhead_*/console.log'. See `help wildcards-globbing`.
+rg "nx48_ctrl_batch_size" logs/c120_overhead_*/console.log | head -5
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+(attendu : 1 ligne BEST batch=NNNNNN + 1 ligne nx48_ctrl_batch_size <- NNNNNN par run)
+
+==========================================
+VALIDATION C117-C119 TERMINEE
+Voir logs/c120_validate/ et logs/c120_overhead_*/ pour details
+==========================================
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 
+

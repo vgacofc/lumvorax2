@@ -1,0 +1,41 @@
+[DEBUG] Tentative ouverture log: logs/forensic/test_gen9_native.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 Phase 15C — Test Gen9 Native Runner        ║
+║  0% OpenCL, 0% Level Zero, 100% i915 DRM Direct          ║
+╚════════════════════════════════════════════════════════════╝
+
+[TEST] Configuration:
+  - batch_size: 262144
+  - work_group_size: 256
+  - kernel_path: kernels/test_add_gen9.bin
+  - log_path: logs/forensic/test_gen9_native.log
+
+[TEST 1/3] Initialisation Gen9 Native...
+✅ Initialisation réussie
+
+[TEST 2/3] Exécution batch buffer GPU...
+✅ Exécution réussie
+
+[TEST 3/3] Métriques...
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C198 Phase 15C — Gen9 Native Metrics            ║
+╚════════════════════════════════════════════════════════════╝
+
+Device: Intel UHD Graphics 620 (Gen9)
+API: i915 DRM Direct (0% OpenCL, 0% Level Zero)
+
+Dispatches: 1
+Total time: 0.002 sec
+Avg dispatch: 2.487 ms
+Events logged: 232
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ TOUS LES TESTS RÉUSSIS                                 ║
+║  Solution Gen9 Native 100% Fonctionnelle                  ║
+║  0% OpenCL, 0% Level Zero                                 ║
+╚════════════════════════════════════════════════════════════╝
+

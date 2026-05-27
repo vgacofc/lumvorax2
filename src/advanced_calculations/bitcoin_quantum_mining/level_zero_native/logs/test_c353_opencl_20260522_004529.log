@@ -1,0 +1,20 @@
+❌ clCreateKernel: error -46
+╔═══════════════════════════════════════════════════╗
+║  Test C353 - Validation SHA-256 CPU vs GPU       ║
+╚═══════════════════════════════════════════════════╝
+
+═══ TEST CPU (OpenSSL) ═══
+  nonce=0 → 1 leading zeros
+    hash: 6afe9b465e17364b4148fa0ecd30e8ccd1c0bb69a79c98852f08f99f36b4060c
+  nonce=1 → 0 leading zeros
+  nonce=2 → 0 leading zeros
+  nonce=3 → 0 leading zeros
+  nonce=4 → 6 leading zeros
+    hash: 0205a2da3eca4c8328dd14d355143be9718d4a64bf8412944f0975437161c1fb
+  nonce=5 → 2 leading zeros
+    hash: 2803f31a18f2bdf7db42c09ec81e88859c336f27ba2a99d771cfed87854dc5f2
+
+═══ SETUP GPU (OpenCL) ═══
+✅ Device: Intel(R) UHD Graphics 620
+✅ Kernel loaded: 7720 bytes
+✅ Kernel compiled

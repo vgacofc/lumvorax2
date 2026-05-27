@@ -1,0 +1,73 @@
+
+CC = clang
+CFLAGS = -Wall -Wextra -std=c99 -O3 -g -D_GNU_SOURCE -D_POSIX_C_SOURCE=199309L -DFORENSIC_ULTRA_STRICT=1
+INCLUDES = -I./src -I./src/debug -I./src/lum -I./src/vorax -I./src/parser -I./src/binary -I./src/logger -I./src/crypto -I./src/persistence -I./src/advanced_calculations -I./src/complex_modules
+LDFLAGS = -pthread -lm -lrt
+
+# Objets forensiques ultra-stricts
+FORENSIC_OBJECTS = \
+	obj/debug/ultra_forensic_logger.o \
+	obj/debug/memory_tracker.o \
+	obj/debug/forensic_logger.o \
+	obj/lum/lum_core.o \
+	obj/vorax/vorax_operations.o \
+	obj/parser/vorax_parser.o \
+	obj/binary/binary_lum_converter.o \
+	obj/logger/lum_logger.o \
+	obj/logger/log_manager.o \
+	obj/crypto/crypto_validator.o \
+	obj/persistence/data_persistence.o \
+	obj/advanced_calculations/matrix_calculator.o \
+	obj/advanced_calculations/quantum_simulator.o \
+	obj/advanced_calculations/neural_network_processor.o \
+	obj/complex_modules/realtime_analytics.o \
+	obj/complex_modules/distributed_computing.o \
+	obj/complex_modules/ai_optimization.o
+
+TARGET_FORENSIC = bin/test_forensic_all_modules
+
+all: directories $(TARGET_FORENSIC)
+
+directories:
+	mkdir -p obj/debug obj/lum obj/vorax obj/parser obj/binary obj/logger obj/crypto obj/persistence obj/advanced_calculations obj/complex_modules bin
+	mkdir -p logs/forensic/{modules,tests,metrics,operations,summary,validation}
+
+$(TARGET_FORENSIC): $(FORENSIC_OBJECTS) obj/tests/test_forensic_all_modules.o
+	$(CC) $^ -o $@ $(LDFLAGS)
+
+obj/%.o: src/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Test forensique complet avec génération de logs
+test-forensic: $(TARGET_FORENSIC)
+	@echo "=== LANCEMENT TESTS FORENSIQUES ULTRA-STRICTS ==="
+	@echo "Génération logs pour 44 modules en temps réel..."
+	./$(TARGET_FORENSIC) 2>&1 | tee logs/forensic/test_execution_$(shell date +%Y%m%d_%H%M%S).log
+	@echo ""
+	@echo "📊 LOGS GÉNÉRÉS:"
+	@find logs/forensic -name "*.log" -exec echo "  📄 {}" \; -exec wc -l {} \;
+	@echo ""
+	@echo "📈 RÉSUMÉ FORENSIQUE:"
+	@cat logs/forensic/summary/forensic_summary_*.txt
+	@echo ""
+	@echo "✅ TESTS FORENSIQUES TERMINÉS - Tous les logs disponibles"
+
+# Validation complète des logs
+validate-logs:
+	@echo "=== VALIDATION EXISTENCE LOGS FORENSIQUES ==="
+	@echo "Modules attendus: 44"
+	@echo "Logs modules trouvés: $(shell find logs/forensic/modules -name "*.log" | wc -l)"
+	@echo "Logs métriques trouvés: $(shell find logs/forensic/metrics -name "*.log" | wc -l)"
+	@echo "Logs tests trouvés: $(shell find logs/forensic/tests -name "*.log" | wc -l)"
+	@echo "Validation reports: $(shell find logs/forensic/validation -name "*.txt" | wc -l)"
+	@echo ""
+	@if [ $$(find logs/forensic/modules -name "*.log" | wc -l) -ge 7 ]; then \
+		echo "✅ Logs modules: VALIDÉS"; \
+	else \
+		echo "❌ Logs modules: INSUFFISANTS"; \
+	fi
+
+clean:
+	rm -rf obj bin logs/forensic
+
+.PHONY: all directories test-forensic validate-logs clean

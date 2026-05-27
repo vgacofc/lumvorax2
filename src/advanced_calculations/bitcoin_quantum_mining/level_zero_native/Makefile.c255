@@ -1,0 +1,149 @@
+# LumVorax — Module 17 — Bitcoin Quantum Mining Engine
+# Makefile.c255 — Compilation CYCLE C255 Multi-Dispatch Optimisé
+#
+# OBJECTIF : Compiler et tester architecture multi-dispatch
+# BASELINE : C251 = 423.80 MH/s
+# OBJECTIF : 410 GH/s (gain ×968)
+#
+# USAGE :
+#   make -f Makefile.c255 all      # Compiler test C255
+#   make -f Makefile.c255 test     # Exécuter test (10 batches)
+#   make -f Makefile.c255 test100  # Exécuter test (100 batches)
+#   make -f Makefile.c255 clean    # Nettoyer
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -pthread
+CFLAGS += -I./include
+CFLAGS += -I/usr/include/libdrm
+LDFLAGS = -ldrm -lpthread -lm
+
+# Répertoires
+SRC_DIR = src
+BUILD_DIR = build
+LOG_DIR = logs/forensic
+KERNEL_DIR = kernels
+
+# Fichiers sources
+SRCS = $(SRC_DIR)/btc_gen9_native_runner.c \
+       $(SRC_DIR)/btc_i915_drm_forensic_tracker.c \
+       $(SRC_DIR)/btc_gen9_multi_dispatch_c255.c \
+       $(SRC_DIR)/btc_gen9_mining_adapter.c \
+       $(SRC_DIR)/test_c255_multi_dispatch.c
+
+# Fichiers objets
+OBJS = $(BUILD_DIR)/btc_gen9_native_runner.o \
+       $(BUILD_DIR)/btc_i915_drm_forensic_tracker.o \
+       $(BUILD_DIR)/btc_gen9_multi_dispatch_c255.o \
+       $(BUILD_DIR)/btc_gen9_mining_adapter.o \
+       $(BUILD_DIR)/test_c255_multi_dispatch.o
+
+# Exécutable
+TARGET = $(BUILD_DIR)/test_c255_multi_dispatch
+
+# Règle par défaut
+all: $(TARGET)
+
+# Créer répertoires
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
+
+$(LOG_DIR):
+	@mkdir -p $(LOG_DIR)
+
+# Compiler objets
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Linker exécutable
+$(TARGET): $(OBJS) | $(LOG_DIR)
+	@echo "Linking $@..."
+	$(CC) $(OBJS) $(LDFLAGS) -o $@
+	@echo "✓ Build complete: $@"
+
+# Exécuter test (10 batches = 90 dispatches)
+test: $(TARGET)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Running C255 Test (10 batches)"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TARGET) 10
+	@echo ""
+	@echo "Log file: $(LOG_DIR)/test_c255_multi_dispatch.log"
+	@echo ""
+
+# Exécuter test long (100 batches = 900 dispatches)
+test100: $(TARGET)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Running C255 Long Test (100 batches)"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TARGET) 100
+	@echo ""
+	@echo "Log file: $(LOG_DIR)/test_c255_multi_dispatch.log"
+	@echo ""
+
+# Exécuter test court (1 batch = 9 dispatches)
+test1: $(TARGET)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Running C255 Quick Test (1 batch)"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo ""
+	@$(TARGET) 1
+	@echo ""
+	@echo "Log file: $(LOG_DIR)/test_c255_multi_dispatch.log"
+	@echo ""
+
+# Analyser logs
+analyze: test
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  Analyzing C255 Logs"
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Cache misses:"
+	@grep "cache_misses=" $(LOG_DIR)/test_c255_multi_dispatch.log | tail -1
+	@echo ""
+	@echo "Hashrate:"
+	@grep "Hashrate:" $(LOG_DIR)/test_c255_multi_dispatch.log | tail -1
+	@echo ""
+	@echo "Improvement vs C251:"
+	@grep "Improvement vs C251" $(LOG_DIR)/test_c255_multi_dispatch.log | tail -1
+	@echo ""
+
+# Nettoyer
+clean:
+	@echo "Cleaning build artifacts..."
+	@rm -rf $(BUILD_DIR)
+	@echo "✓ Clean complete"
+
+# Nettoyer tout (y compris logs)
+cleanall: clean
+	@echo "Cleaning logs..."
+	@rm -f $(LOG_DIR)/test_c255_multi_dispatch.log
+	@echo "✓ Clean all complete"
+
+# Afficher aide
+help:
+	@echo "LumVorax C255 Multi-Dispatch Makefile"
+	@echo ""
+	@echo "Targets:"
+	@echo "  all       - Compile test C255"
+	@echo "  test      - Run test (10 batches = 90 dispatches)"
+	@echo "  test1     - Run quick test (1 batch = 9 dispatches)"
+	@echo "  test100   - Run long test (100 batches = 900 dispatches)"
+	@echo "  analyze   - Run test and analyze logs"
+	@echo "  clean     - Clean build artifacts"
+	@echo "  cleanall  - Clean build + logs"
+	@echo "  help      - Show this help"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make -f Makefile.c255 all"
+	@echo "  make -f Makefile.c255 test"
+	@echo "  make -f Makefile.c255 test100"
+	@echo ""
+
+.PHONY: all test test1 test100 analyze clean cleanall help

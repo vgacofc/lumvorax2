@@ -1,0 +1,369 @@
+=== PUSH AZURE CREDENTIALS TO DOPPLER ===
+Phase 15Y-F28 : Projet C - Azure FPGA
+
+Projet Doppler : lumvorax
+Config : dev
+
+✓ Doppler vv3.76.0 installé
+
+Activation environnement emmaus...
+Calling 1 registered hooks on import of module 'urllib3._request_methods'
+Calling 2 registered hooks on import of module 'urllib3.connectionpool'
+Calling 1 registered hooks on import of module 'urllib.request'
+Starting span: <Span(id=14924317729155460006,trace_id=140908374438149632701909962147775124261,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=14924317729155460006,trace_id=140908374438149632701909962147775124261,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=0 matched_trace_sampling_rule=None agent_sampled=None rules=[] sampler_id=130413176956224
+<Span(id=14924317729155460006,trace_id=140908374438149632701909962147775124261,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374438149632701909962147775124261, span_id=14924317729155460006, _meta={'_dd.p.dm': '-0'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+Updated DatadogSampler with 5 service based sampling rates (provided by the agent)
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374438149632701909962147775124261) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -0) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=14924317729155460006, parent_id=None, trace_id=140908374438149632701909962147775124261, service='requests', resource='HEAD /cli', type='http', start=1778513725162756077, end=1778513725897535008, duration=734778931, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', 'http.method': 'HEAD', 'http.url': 'https://azcliprod.blob.core.windows.net/cli', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '404', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-0', '_dd.p.tid': '6a01f73d00000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 84946, '_dd.measured': 1, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374438149632701909962147775124261, span_id=14924317729155460006, _meta={'_dd.p.dm': '-0', '_dd.p.tid': '6a01f73d00000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Starting span: <Span(id=15514790766366647350,trace_id=140908374438149632691200007967057439144,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=15514790766366647350,trace_id=140908374438149632691200007967057439144,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+<Span(id=15514790766366647350,trace_id=140908374438149632691200007967057439144,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374438149632691200007967057439144, span_id=15514790766366647350, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374438149632691200007967057439144) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=15514790766366647350, parent_id=None, trace_id=140908374438149632691200007967057439144, service='requests', resource='GET /cli/azure-cli-core/setup.py', type='http', start=1778513725899477305, end=1778513726567217720, duration=667740415, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', '_dd.p.ksr': '1', 'http.method': 'GET', 'http.url': 'https://azcliprod.blob.core.windows.net/cli/azure-cli-core/setup.py', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '200', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-1', '_dd.p.tid': '6a01f73d00000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 84946, '_dd.measured': 1, '_dd.agent_psr': 1.0, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374438149632691200007967057439144, span_id=15514790766366647350, _meta={'_dd.p.dm': '-1', '_dd.p.tid': '6a01f73d00000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Starting span: <Span(id=2271865422471426335,trace_id=140908374517377795216633888244767999748,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=2271865422471426335,trace_id=140908374517377795216633888244767999748,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+<Span(id=2271865422471426335,trace_id=140908374517377795216633888244767999748,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374517377795216633888244767999748, span_id=2271865422471426335, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+Updated DatadogSampler with 1 service based sampling rates (provided by the agent)
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374517377795216633888244767999748) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=2271865422471426335, parent_id=None, trace_id=140908374517377795216633888244767999748, service='requests', resource='GET /cli/azure-cli-telemetry/setup.py', type='http', start=1778513726576639485, end=1778513727270056955, duration=693417470, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', '_dd.p.ksr': '1', 'http.method': 'GET', 'http.url': 'https://azcliprod.blob.core.windows.net/cli/azure-cli-telemetry/setup.py', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '200', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-1', '_dd.p.tid': '6a01f73e00000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 84946, '_dd.measured': 1, '_dd.agent_psr': 1.0, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374517377795216633888244767999748, span_id=2271865422471426335, _meta={'_dd.p.dm': '-1', '_dd.p.tid': '6a01f73e00000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Calling 1 registered hooks on import of module 'html'
+Starting span: <Span(id=17520436527066049163,trace_id=140908374596605957724397865341459764717,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=17520436527066049163,trace_id=140908374596605957724397865341459764717,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957724397865341459764717) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=17520436527066049163, parent_id=None, trace_id=140908374596605957724397865341459764717, service='None', resource='/usr/sbin/ip', type='system', start=1778513727549469197, end=1778513727550416113, duration=946916, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957724397865341459764717, span_id=17520436527066049163, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=2398969167711342582,trace_id=140908374596605957719465725974681570739,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=2398969167711342582,trace_id=140908374596605957719465725974681570739,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957719465725974681570739) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=2398969167711342582, parent_id=None, trace_id=140908374596605957719465725974681570739, service='None', resource='/usr/sbin/ip', type='system', start=1778513727561248636, end=1778513727561453594, duration=204958, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', 'cmd.exec': "['/usr/sbin/ip', 'link']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957719465725974681570739, span_id=2398969167711342582, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=6751248782531382354,trace_id=140908374596605957717718518897504759653,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=6751248782531382354,trace_id=140908374596605957717718518897504759653,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957717718518897504759653) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=6751248782531382354, parent_id=None, trace_id=140908374596605957717718518897504759653, service='None', resource='lsb_release', type='system', start=1778513727565282496, end=1778513727566144344, duration=861848, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957717718518897504759653, span_id=6751248782531382354, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=1152762275441506714,trace_id=140908374596605957721457459251122592016,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=1152762275441506714,trace_id=140908374596605957721457459251122592016,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957721457459251122592016) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=1152762275441506714, parent_id=None, trace_id=140908374596605957721457459251122592016, service='None', resource='lsb_release', type='system', start=1778513727614131444, end=1778513727614365006, duration=233562, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', 'cmd.exec': "['lsb_release', '-a']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957721457459251122592016, span_id=1152762275441506714, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=9813414944837886773,trace_id=140908374596605957725326039426236240338,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=9813414944837886773,trace_id=140908374596605957725326039426236240338,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957725326039426236240338) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=9813414944837886773, parent_id=None, trace_id=140908374596605957725326039426236240338, service='None', resource='lsb_release', type='system', start=1778513727614739158, end=1778513727614845333, duration=106175, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', 'cmd.exec': "['lsb_release', '-a']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957725326039426236240338, span_id=9813414944837886773, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=5331085417484868579,trace_id=140908374596605957734070322518622867942,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=5331085417484868579,trace_id=140908374596605957734070322518622867942,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957734070322518622867942) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=5331085417484868579, parent_id=None, trace_id=140908374596605957734070322518622867942, service='None', resource='uname', type='system', start=1778513727617772934, end=1778513727618571983, duration=799049, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957734070322518622867942, span_id=5331085417484868579, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=11471157255245111577,trace_id=140908374596605957718913743863339444618,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=11471157255245111577,trace_id=140908374596605957718913743863339444618,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957718913743863339444618) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=11471157255245111577, parent_id=None, trace_id=140908374596605957718913743863339444618, service='None', resource='uname', type='system', start=1778513727626193754, end=1778513727626636477, duration=442723, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', 'cmd.exec': "['uname', '-rs']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957718913743863339444618, span_id=11471157255245111577, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=17849092406356312167,trace_id=140908374596605957721459038496655429444,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=17849092406356312167,trace_id=140908374596605957721459038496655429444,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957721459038496655429444) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=17849092406356312167, parent_id=None, trace_id=140908374596605957721459038496655429444, service='None', resource='uname', type='system', start=1778513727627307007, end=1778513727627506398, duration=199391, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', 'cmd.exec': "['uname', '-rs']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957721459038496655429444, span_id=17849092406356312167, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=8839281725621733508,trace_id=140908374596605957717084982632998022935,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=8839281725621733508,trace_id=140908374596605957717084982632998022935,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=130413176956224
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374596605957717084982632998022935) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=8839281725621733508, parent_id=None, trace_id=140908374596605957717084982632998022935, service='None', resource='/home/lvx/LVX/lumvorax2/emmaus/bin/python3', type='system', start=1778513727666054060, end=1778513727666779661, duration=725601, error=0, tags={'runtime-id': 'ed3496b99500426d96903ef7751935b6', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f73f00000000'}, metrics={'process_id': 84946, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374596605957717084982632998022935, span_id=8839281725621733508, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Skipping stop on exit for product 'tracer'
+Stopped product 'symbol-database' on exit
+Stopped product 'appsec' on exit
+[84946][P: 84945] Unregistered product APM_TRACING
+[84946][P: 84945] Disabled product APM_TRACING
+Stopped product 'apm-tracing-rc' on exit
+[84946][P: 84946] Remote Config Poller. Stopping subscriber
+[84946][P: 84945] Stopped global subscriber
+[84946][P: 84946] Remote Config Poller. Stopping subscriber
+Stopped product 'remote-configuration' on exit
+Stopped product 'iast' on exit
+Waiting 5 seconds for tracer to finish. Hit ctrl-c to quit.
+Updated DatadogSampler with 1 service based sampling rates (provided by the agent)
+✓ Azure CLI v installé
+
+=== PUSH AZURE CONFIGURATION ===
+1. Azure CLI version...
+Calling 1 registered hooks on import of module 'urllib3._request_methods'
+Calling 2 registered hooks on import of module 'urllib3.connectionpool'
+Calling 1 registered hooks on import of module 'urllib.request'
+Starting span: <Span(id=10187898900789881776,trace_id=140908374834290445276268294692964388477,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=10187898900789881776,trace_id=140908374834290445276268294692964388477,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=0 matched_trace_sampling_rule=None agent_sampled=None rules=[] sampler_id=140222633149824
+<Span(id=10187898900789881776,trace_id=140908374834290445276268294692964388477,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374834290445276268294692964388477, span_id=10187898900789881776, _meta={'_dd.p.dm': '-0'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+[85110][P: 85109] Load new configuration: datadog/1000835594/APM_TRACING/732b0f028a64c53b1d2e5a4889cbd871ec96a30ffcbd465776f275eccab12474/37d0037665c4ceb6e1acb08d011c10e5716b7b7b3f431cff0ac8ff0eb169a9f5. content: {'id': '732b0f028a64c53b1d2e5a4889cbd871ec96a30ffcbd465776f275eccab12474', 'revision': 1777484094696, 'schema_version': 'v1.0.0', 'action': 'enable', 'lib_config': {'library_language': '', 'library_version': '', 'service_name': '*', 'env': '*', 'exception_replay_enabled': True}, 'service_target': {'service': '*', 'env': '*'}}
+[85110][P: 85109] Publishing 1 payloads to global connector
+[85110][P: 85109] Write message of length 845
+[85110][P: 85109] Datadog Remote Config Poller sent request to unix:///var/run/datadog/apm.socket in 1.11509s
+Updated DatadogSampler with 1 service based sampling rates (provided by the agent)
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374834290445276268294692964388477) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -0) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=10187898900789881776, parent_id=None, trace_id=140908374834290445276268294692964388477, service='requests', resource='HEAD /cli', type='http', start=1778513730532921884, end=1778513731206982423, duration=674060539, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', 'http.method': 'HEAD', 'http.url': 'https://azcliprod.blob.core.windows.net/cli', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '404', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-0', '_dd.p.tid': '6a01f74200000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 85110, '_dd.measured': 1, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374834290445276268294692964388477, span_id=10187898900789881776, _meta={'_dd.p.dm': '-0', '_dd.p.tid': '6a01f74200000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Starting span: <Span(id=6940877349145881846,trace_id=140908374913518607787126743384510291665,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=6940877349145881846,trace_id=140908374913518607787126743384510291665,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=0 matched_trace_sampling_rule=None agent_sampled=None rules=[] sampler_id=140222633149824
+<Span(id=6940877349145881846,trace_id=140908374913518607787126743384510291665,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374913518607787126743384510291665, span_id=6940877349145881846, _meta={'_dd.p.dm': '-0'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374913518607787126743384510291665) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -0) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=6940877349145881846, parent_id=None, trace_id=140908374913518607787126743384510291665, service='requests', resource='GET /cli/azure-cli-core/setup.py', type='http', start=1778513731215654915, end=1778513731916097308, duration=700442393, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', 'http.method': 'GET', 'http.url': 'https://azcliprod.blob.core.windows.net/cli/azure-cli-core/setup.py', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '200', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-0', '_dd.p.tid': '6a01f74300000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 85110, '_dd.measured': 1, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374913518607787126743384510291665, span_id=6940877349145881846, _meta={'_dd.p.dm': '-0', '_dd.p.tid': '6a01f74300000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Starting span: <Span(id=651494408978184684,trace_id=140908374913518607783065737322127166929,parent_id=None,name=requests.request)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=651494408978184684,trace_id=140908374913518607783065737322127166929,parent_id=None,name=requests.request)>: sampled=True sample_rate=1.0 sampling_mechanism=0 matched_trace_sampling_rule=None agent_sampled=None rules=[] sampler_id=140222633149824
+<Span(id=651494408978184684,trace_id=140908374913518607783065737322127166929,parent_id=None,name=requests.request)> sampled before propagating trace: span_context=Context(trace_id=140908374913518607783065737322127166929, span_id=651494408978184684, _meta={'_dd.p.dm': '-0'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False)
+Updated DatadogSampler with 7 service based sampling rates (provided by the agent)
+[85110][P: 85109] Dispatching 1 payloads to product APM_TRACING
+Received APM tracing config payload: Payload(metadata=ConfigMetadata(id='732b0f028a64c53b1d2e5a4889cbd871ec96a30ffcbd465776f275eccab12474', product_name='APM_TRACING', sha256_hash='5c3b2f9a378788e3377fbee7e0a39a24107f118d5fae89a2e4a1ce2c6bbefa2e', length=304, tuf_version=1, apply_state=2, apply_error=None), path='datadog/1000835594/APM_TRACING/732b0f028a64c53b1d2e5a4889cbd871ec96a30ffcbd465776f275eccab12474/37d0037665c4ceb6e1acb08d011c10e5716b7b7b3f431cff0ac8ff0eb169a9f5', content={'id': '732b0f028a64c53b1d2e5a4889cbd871ec96a30ffcbd465776f275eccab12474', 'revision': 1777484094696, 'schema_version': 'v1.0.0', 'action': 'enable', 'lib_config': {'library_language': '', 'library_version': '', 'service_name': '*', 'env': '*', 'exception_replay_enabled': True}, 'service_target': {'service': '*', 'env': '*'}})
+Statsd buffering is disabled
+Statsd periodic buffer flush is disabled
+Enabling SpanExceptionHandler
+Signal uploader initialized (url: unix:///var/run/datadog/apm.socket, endpoints: {<SignalTrack.LOGS: 'logs'>: '/debugger/v2/input?ddtags=debugger_version%3A4.8.0rc4%2C_dd.injection.mode%3Ahost', <SignalTrack.SNAPSHOT: 'snapshot'>: '/debugger/v2/input?ddtags=debugger_version%3A4.8.0rc4%2C_dd.injection.mode%3Ahost'}, interval: 1.000000)
+APM Tracing Received: {'library_language': '', 'library_version': '', 'service_name': '*', 'env': '*', 'exception_replay_enabled': True} from the Agent
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374913518607783065737322127166929) (top level span: name=requests.request) (sampling_priority: 1) (sampling_mechanism: -0) (partial flush triggered: False)
+finishing span - Span(name='requests.request', span_id=651494408978184684, parent_id=None, trace_id=140908374913518607783065737322127166929, service='requests', resource='GET /cli/azure-cli-telemetry/setup.py', type='http', start=1778513731922567573, end=1778513732555010787, duration=632443214, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.svc_src': 'requests', 'component': 'requests', 'span.kind': 'client', 'http.method': 'GET', 'http.url': 'https://azcliprod.blob.core.windows.net/cli/azure-cli-telemetry/setup.py', 'out.host': 'azcliprod.blob.core.windows.net', 'http.status_code': '200', 'http.useragent': 'python-requests/2.33.1', '_dd.base_service': '', '_dd.p.dm': '-0', '_dd.p.tid': '6a01f74300000000', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli'}, metrics={'process_id': 85110, '_dd.measured': 1, '_dd.top_level': 1, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374913518607783065737322127166929, span_id=651494408978184684, _meta={'_dd.p.dm': '-0', '_dd.p.tid': '6a01f74300000000'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=requests.request), metastruct={} (enabled:True)
+Calling 1 registered hooks on import of module 'html'
+Starting span: <Span(id=11701757922905556755,trace_id=140908374992746770304621929969918487529,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=11701757922905556755,trace_id=140908374992746770304621929969918487529,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770304621929969918487529) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=11701757922905556755, parent_id=None, trace_id=140908374992746770304621929969918487529, service='None', resource='/usr/sbin/ip', type='system', start=1778513732812633713, end=1778513732813961663, duration=1327950, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770304621929969918487529, span_id=11701757922905556755, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=16751299975059871471,trace_id=140908374992746770297422438677757903887,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=16751299975059871471,trace_id=140908374992746770297422438677757903887,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770297422438677757903887) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=16751299975059871471, parent_id=None, trace_id=140908374992746770297422438677757903887, service='None', resource='/usr/sbin/ip', type='system', start=1778513732820961175, end=1778513732821167919, duration=206744, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', 'cmd.exec': "['/usr/sbin/ip', 'link']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770297422438677757903887, span_id=16751299975059871471, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=12192567427041958119,trace_id=140908374992746770303574601971901694587,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=12192567427041958119,trace_id=140908374992746770303574601971901694587,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770303574601971901694587) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=12192567427041958119, parent_id=None, trace_id=140908374992746770303574601971901694587, service='None', resource='lsb_release', type='system', start=1778513732824339645, end=1778513732825133000, duration=793355, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770303574601971901694587, span_id=12192567427041958119, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=10337743495075865269,trace_id=140908374992746770299415422111330339867,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=10337743495075865269,trace_id=140908374992746770299415422111330339867,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770299415422111330339867) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=10337743495075865269, parent_id=None, trace_id=140908374992746770299415422111330339867, service='None', resource='lsb_release', type='system', start=1778513732869844303, end=1778513732870047412, duration=203109, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', 'cmd.exec': "['lsb_release', '-a']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770299415422111330339867, span_id=10337743495075865269, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=17216104523470927254,trace_id=140908374992746770296899338766882929504,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=17216104523470927254,trace_id=140908374992746770296899338766882929504,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770296899338766882929504) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=17216104523470927254, parent_id=None, trace_id=140908374992746770296899338766882929504, service='None', resource='lsb_release', type='system', start=1778513732870461431, end=1778513732870557771, duration=96340, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', 'cmd.exec': "['lsb_release', '-a']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770296899338766882929504, span_id=17216104523470927254, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=18394251108439625093,trace_id=140908374992746770299740484916036369802,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=18394251108439625093,trace_id=140908374992746770299740484916036369802,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770299740484916036369802) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=18394251108439625093, parent_id=None, trace_id=140908374992746770299740484916036369802, service='None', resource='uname', type='system', start=1778513732872635147, end=1778513732873413216, duration=778069, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770299740484916036369802, span_id=18394251108439625093, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=5223264273285149880,trace_id=140908374992746770290093868476530415972,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=5223264273285149880,trace_id=140908374992746770290093868476530415972,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770290093868476530415972) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=5223264273285149880, parent_id=None, trace_id=140908374992746770290093868476530415972, service='None', resource='uname', type='system', start=1778513732880321534, end=1778513732880595067, duration=273533, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', 'cmd.exec': "['uname', '-rs']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770290093868476530415972, span_id=5223264273285149880, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=10985959503257829362,trace_id=140908374992746770297118393948105512727,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=10985959503257829362,trace_id=140908374992746770297118393948105512727,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770297118393948105512727) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=10985959503257829362, parent_id=None, trace_id=140908374992746770297118393948105512727, service='None', resource='uname', type='system', start=1778513732881047981, end=1778513732881194899, duration=146918, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', 'cmd.exec': "['uname', '-rs']", 'component': 'subprocess', 'cmd.exit_code': '0', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770297118393948105512727, span_id=10985959503257829362, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Starting span: <Span(id=17472499790606218852,trace_id=140908374992746770288681142226345199189,parent_id=None,name=command_execution)>, trace has 1 spans in the span aggregator
+Sampling decision applied to <Span(id=17472499790606218852,trace_id=140908374992746770288681142226345199189,parent_id=None,name=command_execution)>: sampled=True sample_rate=1.0 sampling_mechanism=1 matched_trace_sampling_rule=None agent_sampled=RateSampler(sample_rate=1.0) rules=[] sampler_id=140222633149824
+Encoding 1 spans. Spans processed: 1. Spans dropped by trace processors: 0. Unfinished spans remaining in the span aggregator: 0. (trace_id: 140908374992746770288681142226345199189) (top level span: name=command_execution) (sampling_priority: 1) (sampling_mechanism: -1) (partial flush triggered: False)
+finishing span - Span(name='command_execution', span_id=17472499790606218852, parent_id=None, trace_id=140908374992746770288681142226345199189, service='None', resource='/home/lvx/LVX/lumvorax2/emmaus/bin/python3', type='system', start=1778513732915606474, end=1778513732916296539, duration=690065, error=0, tags={'runtime-id': '60c6bb1cbb7c4fd8b3219776f07340cd', '_dd.injection.mode': 'host', '_dd.p.ksr': '1', '_dd.p.dm': '-1', 'language': 'python', '_dd.tags.process': 'entrypoint.basedir:lumvorax2,entrypoint.name:azure.cli,entrypoint.type:module,entrypoint.workdir:lumvorax2,svc.auto:azure.cli', '_dd.p.tid': '6a01f74400000000'}, metrics={'process_id': 85110, '_dd.top_level': 1, '_dd.agent_psr': 1.0, '_sampling_priority_v1': 1, '_dd.tracer_kr': 1.0}, links=[], events=[], context=Context(trace_id=140908374992746770288681142226345199189, span_id=17472499790606218852, _meta={'_dd.p.dm': '-1'}, _metrics={'_sampling_priority_v1': 1}, _span_links=[], _baggage={}, _is_remote=False), service_entry_span_name=command_execution), metastruct={} (enabled:True)
+Skipping stop on exit for product 'tracer'
+Stopped product 'symbol-database' on exit
+Stopped product 'appsec' on exit
+[85110][P: 85109] Unregistered product APM_TRACING
+[85110][P: 85109] Disabled product APM_TRACING
+Stopped product 'apm-tracing-rc' on exit
+[85110][P: 85110] Remote Config Poller. Stopping subscriber
+[85110][P: 85109] Stopped global subscriber
+[85110][P: 85110] Remote Config Poller. Stopping subscriber
+Stopped product 'remote-configuration' on exit
+Stopped product 'iast' on exit
+Waiting 5 seconds for tracer to finish. Hit ctrl-c to quit.
+Updated DatadogSampler with 7 service based sampling rates (provided by the agent)
+┌───────────────────┬───────┬──────┐
+│ NAME              │ VALUE │ NOTE │
+├───────────────────┼───────┼──────┤
+│ AZURE_CLI_VERSION │       │      │
+└───────────────────┴───────┴──────┘
+2. Python location...
+┌───────────────────┬───────────────────────────────┬──────┐
+│ NAME              │ VALUE                         │ NOTE │
+├───────────────────┼───────────────────────────────┼──────┤
+│ AZURE_PYTHON_PATH │ /home/lvx/LVX/lumvorax2/emmau │      │
+│                   │ s/bin/python3                 │      │
+└───────────────────┴───────────────────────────────┴──────┘
+3. Azure config directory...
+┌──────────────────┬──────────────────┬──────┐
+│ NAME             │ VALUE            │ NOTE │
+├──────────────────┼──────────────────┼──────┤
+│ AZURE_CONFIG_DIR │ /home/lvx/.azure │      │
+└──────────────────┴──────────────────┴──────┘
+4. Azure extensions directory...
+┌──────────────────────┬────────────────────────────┬──────┐
+│ NAME                 │ VALUE                      │ NOTE │
+├──────────────────────┼────────────────────────────┼──────┤
+│ AZURE_EXTENSIONS_DIR │ /home/lvx/.azure/cliextens │      │
+│                      │ ions                       │      │
+└──────────────────────┴────────────────────────────┴──────┘
+5. Environnement emmaus path...
+┌─────────────────┬────────────────────────────────┬──────┐
+│ NAME            │ VALUE                          │ NOTE │
+├─────────────────┼────────────────────────────────┼──────┤
+│ AZURE_VENV_PATH │ /home/lvx/LVX/lumvorax2/emmaus │      │
+└─────────────────┴────────────────────────────────┴──────┘
+6. Activation script...
+┌────────────────────┬──────────────────────────────┬──────┐
+│ NAME               │ VALUE                        │ NOTE │
+├────────────────────┼──────────────────────────────┼──────┤
+│ AZURE_ACTIVATE_CMD │ source /home/lvx/LVX/lumvora │      │
+│                    │ x2/emmaus/bin/activate       │      │
+└────────────────────┴──────────────────────────────┴──────┘
+7. Guide connexion path...
+┌──────────────────┬────────────────────────────────┬──────┐
+│ NAME             │ VALUE                          │ NOTE │
+├──────────────────┼────────────────────────────────┼──────┤
+│ AZURE_GUIDE_PATH │ /home/lvx/LVX/lumvorax2/src/ad │      │
+│                  │ vanced_calculations/bitcoin_qu │      │
+│                  │ antum_mining/azure_fpga/GUIDE_ │      │
+│                  │ CONNEXION_AZURE.md             │      │
+└──────────────────┴────────────────────────────────┴──────┘
+8. Projet FPGA path...
+┌─────────────────────────┬─────────────────────────┬──────┐
+│ NAME                    │ VALUE                   │ NOTE │
+├─────────────────────────┼─────────────────────────┼──────┤
+│ AZURE_FPGA_PROJECT_PATH │ /home/lvx/LVX/lumvorax2 │      │
+│                         │ /src/advanced_calculati │      │
+│                         │ ons/bitcoin_quantum_min │      │
+│                         │ ing/azure_fpga          │      │
+└─────────────────────────┴─────────────────────────┴──────┘
+9. Status installation...
+┌─────────────────────┬───────┬──────┐
+│ NAME                │ VALUE │ NOTE │
+├─────────────────────┼───────┼──────┤
+│ AZURE_CLI_INSTALLED │ true  │      │
+└─────────────────────┴───────┴──────┘
+10. Date installation...
+┌────────────────────────┬──────────────────────┬──────┐
+│ NAME                   │ VALUE                │ NOTE │
+├────────────────────────┼──────────────────────┼──────┤
+│ AZURE_CLI_INSTALL_DATE │ 2026-05-11T15:35:38Z │      │
+└────────────────────────┴──────────────────────┴──────┘
+
+=== PUSH AZURE FPGA PROJECT INFO ===
+11. Projet C status...
+┌─────────────────────────┬─────────────────────────┬──────┐
+│ NAME                    │ VALUE                   │ NOTE │
+├─────────────────────────┼─────────────────────────┼──────┤
+│ AZURE_FPGA_PROJECT_STAT │ azure_cli_installed_awa │      │
+│ US                      │ iting_login             │      │
+└─────────────────────────┴─────────────────────────┴──────┘
+12. Phase actuelle...
+┌─────────────────────────┬───────────┬──────┐
+│ NAME                    │ VALUE     │ NOTE │
+├─────────────────────────┼───────────┼──────┤
+│ AZURE_FPGA_CURRENT_PHAS │ 15Y-F28-1 │      │
+│ E                       │           │      │
+└─────────────────────────┴───────────┴──────┘
+13. Progression...
+┌─────────────────────┬───────┬──────┐
+│ NAME                │ VALUE │ NOTE │
+├─────────────────────┼───────┼──────┤
+│ AZURE_FPGA_PROGRESS │ 15    │      │
+└─────────────────────┴───────┴──────┘
+14. FPGA type recommandé...
+┌─────────────────────────┬────────────────┬──────┐
+│ NAME                    │ VALUE          │ NOTE │
+├─────────────────────────┼────────────────┼──────┤
+│ AZURE_FPGA_RECOMMENDED_ │ Standard_NP10s │      │
+│ TYPE                    │                │      │
+└─────────────────────────┴────────────────┴──────┘
+15. Location recommandée...
+┌─────────────────────────┬────────┬──────┐
+│ NAME                    │ VALUE  │ NOTE │
+├─────────────────────────┼────────┼──────┤
+│ AZURE_FPGA_RECOMMENDED_ │ eastus │      │
+│ LOCATION                │        │      │
+└─────────────────────────┴────────┴──────┘
+
+=== PUSH AZURE LOGIN COMMANDS ===
+16. Commande login...
+┌─────────────────┬──────────┬──────┐
+│ NAME            │ VALUE    │ NOTE │
+├─────────────────┼──────────┼──────┤
+│ AZURE_LOGIN_CMD │ az login │      │
+└─────────────────┴──────────┴──────┘
+17. Commande get subscription ID...
+┌─────────────────────────┬─────────────────────────┬──────┐
+│ NAME                    │ VALUE                   │ NOTE │
+├─────────────────────────┼─────────────────────────┼──────┤
+│ AZURE_GET_SUBSCRIPTION_ │ az account show --query │      │
+│ CMD                     │  id -o tsv              │      │
+└─────────────────────────┴─────────────────────────┴──────┘
+18. Commande get tenant ID...
+┌──────────────────────┬────────────────────────────┬──────┐
+│ NAME                 │ VALUE                      │ NOTE │
+├──────────────────────┼────────────────────────────┼──────┤
+│ AZURE_GET_TENANT_CMD │ az account show --query te │      │
+│                      │ nantId -o tsv              │      │
+└──────────────────────┴────────────────────────────┴──────┘
+19. Commande list FPGA...
+┌─────────────────────┬─────────────────────────────┬──────┐
+│ NAME                │ VALUE                       │ NOTE │
+├─────────────────────┼─────────────────────────────┼──────┤
+│ AZURE_LIST_FPGA_CMD │ az vm list-sizes --location │      │
+│                     │  eastus --output table | gr │      │
+│                     │ ep NP                       │      │
+└─────────────────────┴─────────────────────────────┴──────┘
+20. Commande create resource group...
+┌─────────────────────┬─────────────────────────────┬──────┐
+│ NAME                │ VALUE                       │ NOTE │
+├─────────────────────┼─────────────────────────────┼──────┤
+│ AZURE_CREATE_RG_CMD │ az group create --name lumv │      │
+│                     │ orax-fpga-rg --location eas │      │
+│                     │ tus                         │      │
+└─────────────────────┴─────────────────────────────┴──────┘
+
+=== VÉRIFICATION ===
+Secrets Azure dans Doppler :
+Error: requires at least 1 arg(s), only received 0
+Usage:
+  doppler secrets get [secrets] [flags]
+
+Flags:
+  -c, --config string               config (e.g. dev)
+      --copy                        copy the value(s) to your clipboard
+  -h, --help                        help for get
+      --no-exit-on-missing-secret   do not exit if unable to find a requested secret
+      --plain                       print values without formatting
+  -p, --project string              project (e.g. backend)
+      --raw                         print the raw secret value without processing variables
+      --type                        include secret type in table output
+      --visibility                  include secret visibility in table output
+
+Global Flags:
+      --api-host string                 The host address for the Doppler API (default "https://api.doppler.com")
+      --attempts int                    number of http request attempts made before failing (default 5)
+      --config-dir string               config directory (default "/home/lvx/.doppler")
+      --dashboard-host string           The host address for the Doppler Dashboard (default "https://dashboard.doppler.com")
+      --debug                           output additional information
+      --dns-resolver-address string     address to use for DNS resolution (default "1.1.1.1:53")
+      --dns-resolver-proto string       protocol to use for DNS resolution (default "udp")
+      --dns-resolver-timeout duration   max dns lookup duration (default 5s)
+      --enable-dns-resolver             bypass the OS's default DNS resolver
+      --json                            output json
+      --no-check-version                disable checking for Doppler CLI updates
+      --no-read-env                     do not read config from the environment
+      --no-timeout                      disable http timeout
+      --no-verify-tls                   do not verify the validity of TLS certificates on HTTP requests (not recommended)
+      --print-config                    output active configuration
+      --scope string                    the directory to scope your config to (default ".")
+      --silent                          disable output of info messages
+      --timeout duration                max http request duration (default 10s)
+  -t, --token string                    doppler token
+
+
+✅ PUSH DOPPLER COMPLÉTÉ
+
+Pour utiliser dans une autre session :
+  doppler run --project lumvorax --config dev -- bash
+
+Pour utiliser dans Replit :
+  1. Installer Doppler CLI
+  2. doppler login
+  3. doppler setup --project lumvorax --config dev
+  4. doppler run -- python script.py
+
+Variables disponibles :
+  $AZURE_CLI_VERSION
+  $AZURE_PYTHON_PATH
+  $AZURE_CONFIG_DIR
+  $AZURE_VENV_PATH
+  $AZURE_ACTIVATE_CMD
+  $AZURE_GUIDE_PATH
+  $AZURE_FPGA_PROJECT_PATH
+  $AZURE_LOGIN_CMD
+  $AZURE_GET_SUBSCRIPTION_CMD
+  $AZURE_GET_TENANT_CMD
+  Et plus...

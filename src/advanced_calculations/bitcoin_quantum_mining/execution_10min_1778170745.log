@@ -1,0 +1,131 @@
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260507T161905Z_30785
+[BTC_QM] mode      = BENCHMARK
+[BTC_QM] threads   = 16
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[C171-GPU-ASYNC] Initialisation logger GPU asynchrone (buffer 262k)...
+[C171-GPU-ASYNC] Logger GPU asynchrone actif
+[NX48-LUM] Chargé : update=3297 best=38 bits exploration=0.739 delta=57.95 [header-bound]
+[NX48-BTC-C170] ✅ NX49 neurone biologique activé (pyramidal)
+[NX48-BTC-C170]    └─ Soma: 20.0µm | Dendrites: 100 | Axon: 1000µm
+[NX48-BTC-C170]    └─ V_rest: -70.0mV | V_threshold: -55.0mV | Synapses: 125
+[NX48-HW] CPU:8 threads AVX:1 (AVX2) SHA-NI:0 | GPU-OpenCL:DRI-GPU (clinfo non installé) DRI:1 | RAM:1003MB
+[NX48-HW] Binaire compilé AVEC : AVX2+SSE +FMA | gcc auto-vectorise SHA-256 dès maintenant
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.74 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=3297 best_leading=38
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=16 | T_hot=1.0 | T_cold=1.0 | GPU=DRI-GPU (clinfo non installé)
+[BTC_QM] NX48 exploration_bias=0.739 | delta_nonce=57.95 | AVX=1
+[SMAPS-KERNEL] RSS=101184 KB (25296 pages 4KiB)
+[SMAPS-KERNEL] AnonHugePages (THP 2MB)=0 KB (0 hugepages)
+[SMAPS-KERNEL] Private_Dirty=97424 KB | Shared_Dirty=0 KB
+[SMAPS-KERNEL] Referenced=101184 KB | VM_Total=0 KB
+[SMAPS-KERNEL] Granularité réelle : PAGE 4KiB standard (selon AnonHugePages)
+[C118-Q5] ASIC optimizer balayage 4 tailles batch (BTC_TUNE_FULL=1 pour sweep complet)...
+
+╔══════════════════════════════════════════════════════════╗
+║     ASIC BTC OPTIMIZER — Rapport C115                  ║
+╠══════════════════════════════════════════════════════════╣
+║ CONFIGURATION                                           ║
+║   Pipeline depth    : 64 stages SHA-256              
+║   Moteurs parallèles: 96                              
+║   Fréquence         : 0.000 GHz                        
+║   Stratégie nonce   : SEQUENTIAL                             
+║   Batch size        : 2097152 nonces                      
+║   Durée simulation  : 5 s                         
+╠══════════════════════════════════════════════════════════╣
+║ RÉSULTATS HASHRATE                                      ║
+║   Peak              : 0.001 MH/s                      
+║   Moyen             : 0.001 MH/s                      
+║   Final             : 0.001 MH/s                      
+║   Déclin thermique  : 0.00 %                        
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES EFFICACITÉ                                    ║
+║   W/GH              : 71525.5737                           
+║   J/hash            : 7.15e-05                           
+║   Total hashes      : 2.097e+06                           
+║   Batches traités   : 1                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES QUALITÉ NONCE                                 ║
+║   Best leading bits : 9                              
+║   Best nonce        : 0x00000197                        
+║   Near-miss / MH    : 0.0000                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES NX48                                          ║
+║   Delta final       : 6.000                           
+║   Resets C62        : 0                              
+╠══════════════════════════════════════════════════════════╣
+║ SCORE OPTIMISATION  : 2.8 / 100                     
+╚══════════════════════════════════════════════════════════╝
+
+[C118-Q5] BEST batch=2097152 (idx=3) | score=2.8 | hashrate_avg=0.00 MH/s
+[C118-Q5] nx48_ctrl_batch_size ← 2097152 (boucle feedback fermée)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260507T161905Z_30785                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : myKDTHnNUgsPcCBcM6GiYh8KB23x4wNJxc        ║
+║ Adresse Bech32  : tb1qcvu763chm039hzfxrf5fz2c9su72lqtr7hapsq║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): aff116c9...(masquée)                     ║
+║ WIF compressé   : cTUi6jpnyCmrV17UuVUoLbfGboaotewa9ZAWU1i63vvzzHGP244D║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : c339ed4717dbe25b89261a68912b05873caf8163  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260507T161905Z_30785.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0001.csv (partie 1, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0002.csv (partie 2, cap 20 MB atteint)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx49_spike_detected val=1.000000 src=src/nx48_btc_controller.c:1145
+[C42-WATCHDOG] 🟡 RAM modérée: 999MB — throttle 5ms batch/2
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 999MB
+[C100-ALLTIME] seed best_lz_alltime=38 nonce=4278190080 upd_count=16 (historique préservé)
+[C208-GPU-DELAYED] 🕐 GPU OpenCL détecté mais INACTIF : DRI-GPU (clinfo non installé)
+[C208-GPU-DELAYED] ⏱️  Activation automatique après 90 secondes
+[C174-2] GPU non actif (gpu_opencl_active=0) — mode CPU pur
+[BTC_QM] elapsed=16.0s hashes=167936 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=39.24
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0003.csv (partie 3, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0004.csv (partie 4, cap 20 MB atteint)
+[BTC_QM] elapsed=26.5s hashes=278528 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=38.32
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0005.csv (partie 5, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0006.csv (partie 6, cap 20 MB atteint)
+[BTC_QM] elapsed=39.2s hashes=425984 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=35.97
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0007.csv (partie 7, cap 20 MB atteint)
+[BTC_QM] elapsed=52.0s hashes=536576 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=38.53
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0008.csv (partie 8, cap 20 MB atteint)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260507T161905Z_30785.log_part_0009.csv (partie 9, cap 20 MB atteint)
+[BTC_QM] elapsed=63.6s hashes=675840 hashrate=0.01MH/s best_leading=38 best_nonce=4278190080 nx48_delta=43.92
+[BTC_QM] === RÉSULTATS FINAUX ===
+[BTC_QM] Total hashes : 675840
+[BTC_QM] Durée        : 63.66 s
+[BTC_QM] Hashrate     : 0.01 MH/s
+[BTC_QM] Best leading : 38 bits
+[BTC_QM] Best nonce   : 4278190080
+[BTC_QM] Bloc valide  : non
+[LUMVORAX] Nano ring flushed: 4096 entrées → logs/forensic/nano/nano_ring_4858290839959.csv
+[C42-WATCHDOG] 🏁 Run terminé — RAM finale: 1238MB
+
+[BTC_QM] Module 17 terminé — résultat=0
+[BTC_QM] Sauvegarde NX48 → config/btc_nx48_last.csv
+[C171-GPU-ASYNC] Arrêt logger GPU asynchrone (pending: 0 entries)...
+[C171-GPU-ASYNC] Logger GPU asynchrone arrêté proprement
+[NX48-BTC-C170] Libération neurone NX49 (spikes=1)
+Rapport résumé généré: logs/forensic/sessions/summary_4858293689180.txt
+[ULTRA_FORENSIC] Système de logging forensique arrêté proprement

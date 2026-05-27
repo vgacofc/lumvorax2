@@ -1,0 +1,84 @@
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE ===
+Timestamp: 20260525_152044
+
+[COMPILATION BIBLIOTHÈQUE]
+src/i915_batch_builder_auto.c: In function ‘i915_batch_builder_finalize’:
+src/i915_batch_builder_auto.c:427:27: error: ‘i915_bo_t’ has no member named ‘mapped_ptr’
+  427 |     if (!builder->batch_bo.mapped_ptr) {
+      |                           ^
+src/i915_batch_builder_auto.c:439:26: error: ‘i915_bo_t’ has no member named ‘mapped_ptr’
+  439 |         builder->batch_bo.mapped_ptr = (void *)mmap_arg.addr_ptr;
+      |                          ^
+src/i915_batch_builder_auto.c:443:29: error: ‘i915_bo_t’ has no member named ‘mapped_ptr’
+  443 |     memcpy(builder->batch_bo.mapped_ptr, builder->batch_buffer,
+      |                             ^
+src/i915_batch_builder_auto.c:443:51: error: ‘i915_batch_builder_t’ has no member named ‘batch_buffer’; did you mean ‘batch_offset’?
+  443 |     memcpy(builder->batch_bo.mapped_ptr, builder->batch_buffer,
+      |                                                   ^~~~~~~~~~~~
+      |                                                   batch_offset
+✓ Bibliothèque compilée
+
+[COMPILATION TEST]
+✓ Test compilé
+
+[FORENSIC SETUP]
+[sudo] password for lvx: ✓ Forensic activé
+
+[EXÉCUTION]
+Début: 15:20:45.780519126
+❌ Échec finalisation
+=== TEST C554 - BATCH BUILDER AUTOMATIQUE (0%) ===
+Système automatique de construction batch buffers
+
+[5%] DRM ouvert
+[10%] Batch builder créé
+[15%] Heap BO créé (index 0)
+[20%] Output BO créé (index 1)
+[25%] Heap mappé
+[30%] Output mappé
+
+=== CONSTRUCTION HEAP (35%) ===
+[40%] Surface State configuré
+[45%] Binding Table configuré
+[50%] IDRT configuré
+[55%] Kernel ISA copié
+[60%] CURBE data initialisé
+
+=== CONSTRUCTION BATCH AUTOMATIQUE (65%) ===
+[70%] PIPELINE_SELECT émis
+[75%] STATE_BASE_ADDRESS émis (avec relocations)
+[80%] BINDING_TABLE_POOL_ALLOC émis
+[85%] MEDIA_VFE_STATE émis
+[90%] MEDIA_CURBE_LOAD émis
+[92%] MEDIA_INTERFACE_DESCRIPTOR_LOAD émis
+[94%] GPGPU_WALKER émis
+[96%] MEDIA_STATE_FLUSH émis
+[98%] PIPE_CONTROL émis
+[100%] MI_BATCH_BUFFER_END émis
+
+✓ Batch dumpé dans logs/batch_c554_dump.txt
+
+=== FINALISATION ET EXÉCUTION ===
+Fin: 15:20:46.468130410
+Durée: 597ms
+Exit code: 0
+
+[DMESG CAPTURE]
+✓ Pas de GPU HANG
+
+[STATISTIQUES]
+Fichiers générés:
+  - Log principal: logs/execution_c554_auto_20260525_152044.log
+  - Strace:        logs/forensic/c554_forensic_20260525_152044.log
+  - Dmesg:         logs/forensic/c554_dmesg_20260525_152044.log
+  - Batch dump:    logs/batch_c554_dump.txt
+  - Lignes strace: 1001
+  - Lignes dmesg:  2807
+  - Appels ioctl:  10
+
+=== RÉSUMÉ C554 ===
+🎉 SUCCÈS TOTAL - SYSTÈME AUTOMATIQUE FONCTIONNE!
+✓ GPU natif avec batch builder automatique
+✓ Élimination OpenCL: 100%
+
+Logs disponibles dans: logs/

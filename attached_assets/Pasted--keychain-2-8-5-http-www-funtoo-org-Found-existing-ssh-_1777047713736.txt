@@ -1,0 +1,1429 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10012
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260424T154202Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260424T154202Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/btc_opencl_runner.c:69:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     fread(src, 1, sz, f);
+      |     ^~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 163K Apr 24 17:42 btc_mining_runner
+[C48] Binaire : 163K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00000520246e7eda66ef... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260424T154202Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260424T154202Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=537198592
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260424T154202Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=7067 best=28 bits exploration=0.830 delta=16.13
+[NX48-QDPR] Feedback C62 : success=67.6% bits=24 rt=4.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:1362MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.83 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=7067 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.830 | delta_nonce=16.13 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260424T154202Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260424T154202Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:710
+[OCL] GPU trouvé : Intel(R) UHD Graphics 620 (plateforme: Intel(R) OpenCL Graphics)
+[OCL] → Sélectionné : Intel(R) UHD Graphics 620
+[OCL] max_wg=256 max_items=256 gmem=6715 MB batch=262144
+[OCL] ✅ OpenCL initialisé — batch=262144 — cible: 50-200 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:710
+[OCL] Benchmark : 9.37 MH/s (batch=262144, t=0.028s)
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1361MB
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[C69-GPU] Thread GPU lance en parallele de 8 threads CPU
+[C69-GPU] Pour valider GPU reel : chercher log '[C69-GPU] ===== THREAD GPU ACTIF'
+[C69-GPU] ===== THREAD GPU ACTIF — btc_opencl_mine_batch() APPELEE =====
+[C69-GPU] Hashrate GPU mesure (benchmark) : 9.37 MH/s
+[C69-GPU] Target near-miss : 20 bits | Batch : 262144 nonces/dispatch
+[C69-GPU] Nouveau record GPU : 20 bits (nonce_start=524288)
+[C69-GPU] Nouveau record GPU : 23 bits (nonce_start=2621440)
+[C69-GPU] Nouveau record GPU : 24 bits (nonce_start=13107200)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=27.000000 src=src/btc_mining_engine.c:710
+[C69-GPU] batch #100 | GPU hashes: 26214400 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[C69-GPU] batch #200 | GPU hashes: 52428800 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=78467630 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #300 | GPU hashes: 78643200 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[C69-GPU] batch #400 | GPU hashes: 104857600 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[BTC_QM] elapsed=10.0s hashes=128568320 hashrate=12.85MH/s best_leading=27 best_nonce=13499493 nx48_delta=17.35
+[C69-GPU] batch #500 | GPU hashes: 131072000 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[C69-GPU] batch #600 | GPU hashes: 157286400 | near-miss GPU best: 24 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=183436967 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #700 | GPU hashes: 183500800 | near-miss GPU best: 25 bits | ~9.4 MH/s
+[C69-GPU] batch #800 | GPU hashes: 209715200 | near-miss GPU best: 25 bits | ~9.4 MH/s
+[BTC_QM] elapsed=20.0s hashes=251193344 hashrate=12.55MH/s best_leading=27 best_nonce=13499493 nx48_delta=17.75
+[C69-GPU] batch #900 | GPU hashes: 235929600 | near-miss GPU best: 25 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=261920848 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1000 | GPU hashes: 262144000 | near-miss GPU best: 26 bits | ~9.4 MH/s
+[C69-GPU] batch #1100 | GPU hashes: 288358400 | near-miss GPU best: 26 bits | ~9.4 MH/s
+[C69-GPU] batch #1200 | GPU hashes: 314572800 | near-miss GPU best: 26 bits | ~9.4 MH/s
+[BTC_QM] elapsed=30.0s hashes=360764416 hashrate=12.02MH/s best_leading=27 best_nonce=13499493 nx48_delta=17.51
+[C69-GPU] batch #1300 | GPU hashes: 340787200 | near-miss GPU best: 27 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=366897237 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1400 | GPU hashes: 367001600 | near-miss GPU best: 27 bits | ~9.4 MH/s
+[C69-GPU] batch #1500 | GPU hashes: 393216000 | near-miss GPU best: 27 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=406224906 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1600 | GPU hashes: 419430400 | near-miss GPU best: 27 bits | ~9.4 MH/s
+[C69-GPU] Nouveau record GPU : 28 bits (nonce_start=421789696)
+[BTC_QM] elapsed=40.0s hashes=465462272 hashrate=11.63MH/s best_leading=28 best_nonce=421941990 nx48_delta=21.44
+[C69-GPU] Nouveau record GPU : 29 bits (nonce_start=443809792)
+[C69-GPU] batch #1700 | GPU hashes: 445644800 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #1800 | GPU hashes: 471859200 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=497985943 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1900 | GPU hashes: 498073600 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #2000 | GPU hashes: 524288000 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[BTC_QM] elapsed=50.0s hashes=572066816 hashrate=11.44MH/s best_leading=29 best_nonce=443915980 nx48_delta=26.67
+[C69-GPU] batch #2100 | GPU hashes: 550502400 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #2200 | GPU hashes: 576716800 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=589669187 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2300 | GPU hashes: 602931200 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=615920913 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2400 | GPU hashes: 629145600 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[BTC_QM] elapsed=60.0s hashes=678365184 hashrate=11.30MH/s best_leading=29 best_nonce=443915980 nx48_delta=27.53
+[C88-GPU-FIX] Near-miss GPU nonce=655328515 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2500 | GPU hashes: 655360000 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #2600 | GPU hashes: 681574400 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=707635916 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2700 | GPU hashes: 707788800 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[BTC_QM] elapsed=70.0s hashes=783797248 hashrate=11.19MH/s best_leading=29 best_nonce=443915980 nx48_delta=37.73
+[C88-GPU-FIX] Near-miss GPU nonce=733765023 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2800 | GPU hashes: 734003200 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=760157970 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2900 | GPU hashes: 760217600 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #3000 | GPU hashes: 786432000 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #3100 | GPU hashes: 812646400 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[BTC_QM] elapsed=80.0s hashes=891414528 hashrate=11.14MH/s best_leading=29 best_nonce=443915980 nx48_delta=38.22
+[C69-GPU] batch #3200 | GPU hashes: 838860800 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=864970297 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3300 | GPU hashes: 865075200 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #3400 | GPU hashes: 891289600 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=917314986 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3500 | GPU hashes: 917504000 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[BTC_QM] elapsed=90.0s hashes=999887360 hashrate=11.11MH/s best_leading=29 best_nonce=443915980 nx48_delta=47.81
+[C88-GPU-FIX] Near-miss GPU nonce=943669744 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3600 | GPU hashes: 943718400 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #3700 | GPU hashes: 969932800 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] batch #3800 | GPU hashes: 996147200 | near-miss GPU best: 29 bits | ~9.4 MH/s
+[C69-GPU] Nouveau record GPU : 31 bits (nonce_start=1008730112)
+[C69-GPU] batch #3900 | GPU hashes: 1022361600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=100.0s hashes=1107032064 hashrate=11.07MH/s best_leading=31 best_nonce=1008746620 nx48_delta=61.05
+[C69-GPU] batch #4000 | GPU hashes: 1048576000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1061592590 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1074603680 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4100 | GPU hashes: 1074790400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #4200 | GPU hashes: 1101004800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #4300 | GPU hashes: 1127219200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=110.0s hashes=1215207424 hashrate=11.04MH/s best_leading=31 best_nonce=1008746620 nx48_delta=73.97
+[C88-GPU-FIX] Near-miss GPU nonce=1140262668 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4400 | GPU hashes: 1153433600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1179586920 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4500 | GPU hashes: 1179648000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1192545270 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4600 | GPU hashes: 1205862400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1231914584 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4700 | GPU hashes: 1232076800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=120.1s hashes=1320905728 hashrate=11.00MH/s best_leading=31 best_nonce=1008746620 nx48_delta=74.78
+[C69-GPU] batch #4800 | GPU hashes: 1258291200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1271348891 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4900 | GPU hashes: 1284505600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #5000 | GPU hashes: 1310720000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1336731668 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5100 | GPU hashes: 1336934400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=130.1s hashes=1427451904 hashrate=10.97MH/s best_leading=31 best_nonce=1008746620 nx48_delta=78.30
+[C69-GPU] batch #5200 | GPU hashes: 1363148800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1376082957 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5300 | GPU hashes: 1389363200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #5400 | GPU hashes: 1415577600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1428463043 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1441668598 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5500 | GPU hashes: 1441792000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=140.1s hashes=1536188416 hashrate=10.97MH/s best_leading=31 best_nonce=1008746620 nx48_delta=81.66
+[C69-GPU] batch #5600 | GPU hashes: 1468006400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #5700 | GPU hashes: 1494220800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1507127420 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5800 | GPU hashes: 1520435200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=150.1s hashes=1643914240 hashrate=10.95MH/s best_leading=31 best_nonce=1008746620 nx48_delta=90.41
+[C69-GPU] batch #5900 | GPU hashes: 1546649600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #6000 | GPU hashes: 1572864000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #6100 | GPU hashes: 1599078400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1611970009 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6200 | GPU hashes: 1625292800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=160.1s hashes=1752147456 hashrate=10.95MH/s best_leading=31 best_nonce=1008746620 nx48_delta=123.55
+[C69-GPU] batch #6300 | GPU hashes: 1651507200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #6400 | GPU hashes: 1677721600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #6500 | GPU hashes: 1703936000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1716888858 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1729977684 best=24 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6600 | GPU hashes: 1730150400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=170.1s hashes=1855420928 hashrate=10.91MH/s best_leading=31 best_nonce=1008746620 nx48_delta=143.52
+[C88-GPU-FIX] Near-miss GPU nonce=1756140714 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6700 | GPU hashes: 1756364800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #6800 | GPU hashes: 1782579200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1808585501 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6900 | GPU hashes: 1808793600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #7000 | GPU hashes: 1835008000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=180.1s hashes=1959876608 hashrate=10.88MH/s best_leading=31 best_nonce=1008746620 nx48_delta=152.97
+[C88-GPU-FIX] Near-miss GPU nonce=1861177225 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7100 | GPU hashes: 1861222400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1874318646 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1887231146 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7200 | GPU hashes: 1887436800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #7300 | GPU hashes: 1913651200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=190.1s hashes=2061032960 hashrate=10.84MH/s best_leading=31 best_nonce=1008746620 nx48_delta=209.55
+[C88-GPU-FIX] Near-miss GPU nonce=1939686387 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7400 | GPU hashes: 1939865600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1952955713 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7500 | GPU hashes: 1966080000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1992074955 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7600 | GPU hashes: 1992294400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2005144298 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7700 | GPU hashes: 2018508800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=200.1s hashes=2161320448 hashrate=10.80MH/s best_leading=31 best_nonce=1008746620 nx48_delta=250.07
+[C69-GPU] batch #7800 | GPU hashes: 2044723200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #7900 | GPU hashes: 2070937600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8000 | GPU hashes: 2097152000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8100 | GPU hashes: 2123366400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=210.1s hashes=2259670528 hashrate=10.76MH/s best_leading=31 best_nonce=1008746620 nx48_delta=277.43
+[C69-GPU] batch #8200 | GPU hashes: 2149580800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8300 | GPU hashes: 2175795200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8400 | GPU hashes: 2202009600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=220.1s hashes=2359086080 hashrate=10.72MH/s best_leading=31 best_nonce=1008746620 nx48_delta=289.68
+[C69-GPU] batch #8500 | GPU hashes: 2228224000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8600 | GPU hashes: 2254438400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #8700 | GPU hashes: 2280652800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2293584426 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #8800 | GPU hashes: 2306867200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=230.1s hashes=2460502016 hashrate=10.69MH/s best_leading=31 best_nonce=1008746620 nx48_delta=408.72
+[C69-GPU] batch #8900 | GPU hashes: 2333081600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #9000 | GPU hashes: 2359296000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2385381323 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9100 | GPU hashes: 2385510400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=240.1s hashes=2560556544 hashrate=10.66MH/s best_leading=31 best_nonce=2393076356 nx48_delta=488.54
+[C69-GPU] batch #9200 | GPU hashes: 2411724800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=3.644920 src=src/nx48_btc_controller.c:878
+[NX48-C62] Reset delta_nonce 500.0->3.645 (stall_long=120 cap500_plateau)
+[C69-GPU] batch #9300 | GPU hashes: 2437939200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #9400 | GPU hashes: 2464153600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2477144003 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9500 | GPU hashes: 2490368000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=250.1s hashes=2660815872 hashrate=10.64MH/s best_leading=31 best_nonce=2393076356 nx48_delta=4.48
+[C88-GPU-FIX] Near-miss GPU nonce=2503459875 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9600 | GPU hashes: 2516582400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #9700 | GPU hashes: 2542796800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2568931419 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9800 | GPU hashes: 2569011200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #9900 | GPU hashes: 2595225600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=260.1s hashes=2760271872 hashrate=10.61MH/s best_leading=31 best_nonce=2393076356 nx48_delta=4.71
+[C88-GPU-FIX] Near-miss GPU nonce=2621295728 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10000 | GPU hashes: 2621440000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2647481725 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10100 | GPU hashes: 2647654400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #10200 | GPU hashes: 2673868800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=270.1s hashes=2853151744 hashrate=10.56MH/s best_leading=31 best_nonce=2393076356 nx48_delta=5.32
+[C88-GPU-FIX] Near-miss GPU nonce=2700081973 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10300 | GPU hashes: 2700083200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #10400 | GPU hashes: 2726297600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #10500 | GPU hashes: 2752512000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=280.1s hashes=2946860032 hashrate=10.52MH/s best_leading=31 best_nonce=2393076356 nx48_delta=5.39
+[C69-GPU] batch #10600 | GPU hashes: 2778726400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #10700 | GPU hashes: 2804940800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #10800 | GPU hashes: 2831155200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2857193703 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10900 | GPU hashes: 2857369600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=290.1s hashes=3039735808 hashrate=10.48MH/s best_leading=31 best_nonce=2393076356 nx48_delta=6.25
+[C88-GPU-FIX] Near-miss GPU nonce=2870351173 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11000 | GPU hashes: 2883584000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #11100 | GPU hashes: 2909798400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #11200 | GPU hashes: 2936012800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=300.1s hashes=3132112384 hashrate=10.44MH/s best_leading=31 best_nonce=2393076356 nx48_delta=7.06
+[C69-GPU] batch #11300 | GPU hashes: 2962227200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2988398407 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11400 | GPU hashes: 2988441600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #11500 | GPU hashes: 3014656000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=310.2s hashes=3224260608 hashrate=10.40MH/s best_leading=31 best_nonce=2393076356 nx48_delta=9.67
+[C69-GPU] batch #11600 | GPU hashes: 3040870400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #11700 | GPU hashes: 3067084800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #11800 | GPU hashes: 3093299200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=320.2s hashes=3314463232 hashrate=10.35MH/s best_leading=31 best_nonce=2393076356 nx48_delta=11.30
+[C88-GPU-FIX] Near-miss GPU nonce=3119454281 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11900 | GPU hashes: 3119513600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3132510592 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12000 | GPU hashes: 3145728000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3171816399 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12100 | GPU hashes: 3171942400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #12200 | GPU hashes: 3198156800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=330.2s hashes=3405604864 hashrate=10.31MH/s best_leading=31 best_nonce=2393076356 nx48_delta=14.45
+[C69-GPU] batch #12300 | GPU hashes: 3224371200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3237378425 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12400 | GPU hashes: 3250585600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3276775835 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12500 | GPU hashes: 3276800000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=340.2s hashes=3496457216 hashrate=10.28MH/s best_leading=31 best_nonce=2393076356 nx48_delta=16.81
+[C69-GPU] batch #12600 | GPU hashes: 3303014400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #12700 | GPU hashes: 3329228800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #12800 | GPU hashes: 3355443200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=350.2s hashes=3593041408 hashrate=10.26MH/s best_leading=31 best_nonce=2393076356 nx48_delta=19.55
+[C69-GPU] batch #12900 | GPU hashes: 3381657600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #13000 | GPU hashes: 3407872000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #13100 | GPU hashes: 3434086400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3460233933 best=27 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13200 | GPU hashes: 3460300800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=360.2s hashes=3690499072 hashrate=10.25MH/s best_leading=31 best_nonce=2393076356 nx48_delta=18.91
+[C69-GPU] batch #13300 | GPU hashes: 3486515200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #13400 | GPU hashes: 3512729600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #13500 | GPU hashes: 3538944000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3564988063 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13600 | GPU hashes: 3565158400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=370.2s hashes=3789044224 hashrate=10.24MH/s best_leading=31 best_nonce=2393076356 nx48_delta=22.55
+[C69-GPU] batch #13700 | GPU hashes: 3591372800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #13800 | GPU hashes: 3617587200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3643783190 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13900 | GPU hashes: 3643801600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3656729311 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=380.2s hashes=3885319680 hashrate=10.22MH/s best_leading=31 best_nonce=2393076356 nx48_delta=26.28
+[C69-GPU] batch #14000 | GPU hashes: 3670016000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #14100 | GPU hashes: 3696230400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #14200 | GPU hashes: 3722444800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3735514684 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3748447047 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14300 | GPU hashes: 3748659200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=390.2s hashes=3982211072 hashrate=10.21MH/s best_leading=31 best_nonce=2393076356 nx48_delta=26.48
+[C69-GPU] batch #14400 | GPU hashes: 3774873600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3800938289 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14500 | GPU hashes: 3801088000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3827133784 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14600 | GPU hashes: 3827302400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=400.2s hashes=4078599680 hashrate=10.19MH/s best_leading=31 best_nonce=2393076356 nx48_delta=27.71
+[C69-GPU] batch #14700 | GPU hashes: 3853516800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #14800 | GPU hashes: 3879731200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #14900 | GPU hashes: 3905945600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=410.2s hashes=4174914560 hashrate=10.18MH/s best_leading=31 best_nonce=2393076356 nx48_delta=38.27
+[C69-GPU] batch #15000 | GPU hashes: 3932160000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3958303161 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15100 | GPU hashes: 3958374400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3971260500 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15200 | GPU hashes: 3984588800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #15300 | GPU hashes: 4010803200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=420.2s hashes=4271269376 hashrate=10.16MH/s best_leading=31 best_nonce=2393076356 nx48_delta=49.83
+[C88-GPU-FIX] Near-miss GPU nonce=4023685820 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4036795293 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15400 | GPU hashes: 4037017600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #15500 | GPU hashes: 4063232000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4089394732 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15600 | GPU hashes: 4089446400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=430.2s hashes=4367336448 hashrate=10.15MH/s best_leading=31 best_nonce=2393076356 nx48_delta=55.13
+[C69-GPU] batch #15700 | GPU hashes: 4115660800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4128539446 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15800 | GPU hashes: 4141875200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4167878562 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15900 | GPU hashes: 4168089600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #16000 | GPU hashes: 4194304000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=440.2s hashes=4463885312 hashrate=10.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=61.82
+[C88-GPU-FIX] Near-miss GPU nonce=4207300433 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16100 | GPU hashes: 4220518400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4246504976 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16200 | GPU hashes: 4246732800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #16300 | GPU hashes: 4272947200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=450.3s hashes=4560219648 hashrate=10.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=78.46
+[C69-GPU] batch #16400 | GPU hashes: 4299161600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2177928927 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16500 | GPU hashes: 4325376000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2204161839 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16600 | GPU hashes: 4351590400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #16700 | GPU hashes: 4377804800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=460.3s hashes=4656782336 hashrate=10.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=99.91
+[C88-GPU-FIX] Near-miss GPU nonce=2256537169 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16800 | GPU hashes: 4404019200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2269546074 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16900 | GPU hashes: 4430233600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #17000 | GPU hashes: 4456448000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=470.3s hashes=4752807936 hashrate=10.11MH/s best_leading=31 best_nonce=2393076356 nx48_delta=97.87
+[C69-GPU] batch #17100 | GPU hashes: 4482662400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #17200 | GPU hashes: 4508876800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2374395406 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #17300 | GPU hashes: 4535091200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2400681306 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #17400 | GPU hashes: 4561305600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=480.3s hashes=4847659520 hashrate=10.09MH/s best_leading=31 best_nonce=2393076356 nx48_delta=104.42
+[C69-GPU] batch #17500 | GPU hashes: 4587520000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #17600 | GPU hashes: 4613734400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #17700 | GPU hashes: 4639948800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2505499798 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=490.3s hashes=4943141376 hashrate=10.08MH/s best_leading=31 best_nonce=2393076356 nx48_delta=107.48
+[C88-GPU-FIX] Near-miss GPU nonce=2518680082 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #17800 | GPU hashes: 4666163200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #17900 | GPU hashes: 4692377600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #18000 | GPU hashes: 4718592000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #18100 | GPU hashes: 4744806400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=500.3s hashes=5038598144 hashrate=10.07MH/s best_leading=31 best_nonce=2393076356 nx48_delta=144.85
+[C69-GPU] batch #18200 | GPU hashes: 4771020800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #18300 | GPU hashes: 4797235200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #18400 | GPU hashes: 4823449600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=510.3s hashes=5133458432 hashrate=10.06MH/s best_leading=31 best_nonce=2393076356 nx48_delta=180.73
+[C69-GPU] batch #18500 | GPU hashes: 4849664000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2728413737 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #18600 | GPU hashes: 4875878400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #18700 | GPU hashes: 4902092800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=520.3s hashes=5229200896 hashrate=10.05MH/s best_leading=31 best_nonce=2393076356 nx48_delta=193.73
+[C69-GPU] batch #18800 | GPU hashes: 4928307200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2807123765 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #18900 | GPU hashes: 4954521600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #19000 | GPU hashes: 4980736000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #19100 | GPU hashes: 5006950400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=530.3s hashes=5325502464 hashrate=10.04MH/s best_leading=31 best_nonce=2393076356 nx48_delta=255.50
+[C69-GPU] batch #19200 | GPU hashes: 5033164800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #19300 | GPU hashes: 5059379200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2924916779 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=2938066911 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19400 | GPU hashes: 5085593600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=540.3s hashes=5420987392 hashrate=10.03MH/s best_leading=31 best_nonce=2393076356 nx48_delta=237.16
+[C69-GPU] batch #19500 | GPU hashes: 5111808000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #19600 | GPU hashes: 5138022400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3016708629 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19700 | GPU hashes: 5164236800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3042820944 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19800 | GPU hashes: 5190451200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=550.3s hashes=5516746752 hashrate=10.02MH/s best_leading=31 best_nonce=2393076356 nx48_delta=251.86
+[C69-GPU] batch #19900 | GPU hashes: 5216665600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3095302874 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20000 | GPU hashes: 5242880000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3121589146 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20100 | GPU hashes: 5269094400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=560.3s hashes=5611936768 hashrate=10.02MH/s best_leading=31 best_nonce=2393076356 nx48_delta=268.30
+[C88-GPU-FIX] Near-miss GPU nonce=3147854599 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20200 | GPU hashes: 5295308800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #20300 | GPU hashes: 5321523200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #20400 | GPU hashes: 5347737600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #20500 | GPU hashes: 5373952000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=570.3s hashes=5707629056 hashrate=10.01MH/s best_leading=31 best_nonce=2393076356 nx48_delta=261.35
+[C69-GPU] batch #20600 | GPU hashes: 5400166400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #20700 | GPU hashes: 5426380800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3305161328 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20800 | GPU hashes: 5452595200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=580.3s hashes=5803868672 hashrate=10.00MH/s best_leading=31 best_nonce=2393076356 nx48_delta=263.58
+[C69-GPU] batch #20900 | GPU hashes: 5478809600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21000 | GPU hashes: 5505024000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21100 | GPU hashes: 5531238400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21200 | GPU hashes: 5557452800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=590.3s hashes=5898816512 hashrate=9.99MH/s best_leading=31 best_nonce=2393076356 nx48_delta=252.18
+[C69-GPU] batch #21300 | GPU hashes: 5583667200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21400 | GPU hashes: 5609881600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21500 | GPU hashes: 5636096000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=600.3s hashes=5994352640 hashrate=9.98MH/s best_leading=31 best_nonce=2393076356 nx48_delta=242.95
+[C69-GPU] batch #21600 | GPU hashes: 5662310400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3541003079 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #21700 | GPU hashes: 5688524800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #21800 | GPU hashes: 5714739200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=610.3s hashes=6089829376 hashrate=9.98MH/s best_leading=31 best_nonce=2393076356 nx48_delta=314.84
+[C69-GPU] batch #21900 | GPU hashes: 5740953600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3606490819 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22000 | GPU hashes: 5767168000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3645783226 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22100 | GPU hashes: 5793382400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #22200 | GPU hashes: 5819596800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=620.4s hashes=6185575936 hashrate=9.97MH/s best_leading=31 best_nonce=2393076356 nx48_delta=387.78
+[C69-GPU] batch #22300 | GPU hashes: 5845811200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3711390076 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22400 | GPU hashes: 5872025600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #22500 | GPU hashes: 5898240000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=630.4s hashes=6280775680 hashrate=9.96MH/s best_leading=31 best_nonce=2393076356 nx48_delta=403.52
+[C69-GPU] batch #22600 | GPU hashes: 5924454400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #22700 | GPU hashes: 5950668800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3816178050 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22800 | GPU hashes: 5976883200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3855494787 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22900 | GPU hashes: 6003097600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=640.4s hashes=6374370304 hashrate=9.95MH/s best_leading=31 best_nonce=2393076356 nx48_delta=397.94
+[C88-GPU-FIX] Near-miss GPU nonce=3868795998 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23000 | GPU hashes: 6029312000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #23100 | GPU hashes: 6055526400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3921227506 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23200 | GPU hashes: 6081740800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=650.4s hashes=6470132736 hashrate=9.95MH/s best_leading=31 best_nonce=2393076356 nx48_delta=479.94
+[C88-GPU-FIX] Near-miss GPU nonce=3960347340 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23300 | GPU hashes: 6107955200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #23400 | GPU hashes: 6134169600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #23500 | GPU hashes: 6160384000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[C69-GPU] batch #23600 | GPU hashes: 6186598400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=660.4s hashes=6565309440 hashrate=9.94MH/s best_leading=31 best_nonce=2393076356 nx48_delta=500.00
+[C88-GPU-FIX] Near-miss GPU nonce=4052203359 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=8.452491 src=src/nx48_btc_controller.c:878
+[NX48-C62] Reset delta_nonce 500.0->8.452 (stall_long=330 cap500_plateau)
+[C69-GPU] batch #23700 | GPU hashes: 6212812800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4091591361 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23800 | GPU hashes: 6239027200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #23900 | GPU hashes: 6265241600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=670.4s hashes=6661339136 hashrate=9.94MH/s best_leading=31 best_nonce=2393076356 nx48_delta=7.87
+[C69-GPU] batch #24000 | GPU hashes: 6291456000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24100 | GPU hashes: 6317670400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24200 | GPU hashes: 6343884800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24300 | GPU hashes: 6370099200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=680.4s hashes=6757654528 hashrate=9.93MH/s best_leading=31 best_nonce=2393076356 nx48_delta=7.68
+[C69-GPU] batch #24400 | GPU hashes: 6396313600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24500 | GPU hashes: 6422528000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24600 | GPU hashes: 6448742400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=690.4s hashes=6852556288 hashrate=9.93MH/s best_leading=31 best_nonce=2393076356 nx48_delta=8.05
+[C88-GPU-FIX] Near-miss GPU nonce=3240694662 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3253827777 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #24700 | GPU hashes: 6474956800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24800 | GPU hashes: 6501171200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #24900 | GPU hashes: 6527385600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=700.4s hashes=6949164544 hashrate=9.92MH/s best_leading=31 best_nonce=2393076356 nx48_delta=9.04
+[C88-GPU-FIX] Near-miss GPU nonce=3332270929 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25000 | GPU hashes: 6553600000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3358592690 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25100 | GPU hashes: 6579814400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #25200 | GPU hashes: 6606028800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3410991483 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25300 | GPU hashes: 6632243200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=710.4s hashes=7044972032 hashrate=9.92MH/s best_leading=31 best_nonce=2393076356 nx48_delta=10.17
+[C69-GPU] batch #25400 | GPU hashes: 6658457600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #25500 | GPU hashes: 6684672000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3476573893 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3489610063 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25600 | GPU hashes: 6710886400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=720.4s hashes=7140478464 hashrate=9.91MH/s best_leading=31 best_nonce=2393076356 nx48_delta=10.90
+[C69-GPU] batch #25700 | GPU hashes: 6737100800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #25800 | GPU hashes: 6763315200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #25900 | GPU hashes: 6789529600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3594588009 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26000 | GPU hashes: 6815744000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=730.4s hashes=7235695104 hashrate=9.91MH/s best_leading=31 best_nonce=2393076356 nx48_delta=12.39
+[C69-GPU] batch #26100 | GPU hashes: 6841958400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #26200 | GPU hashes: 6868172800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3660044168 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3673034828 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26300 | GPU hashes: 6894387200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=740.4s hashes=7313752064 hashrate=9.88MH/s best_leading=31 best_nonce=2393076356 nx48_delta=16.46
+[C88-GPU-FIX] Near-miss GPU nonce=3699361181 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26400 | GPU hashes: 6920601600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #26500 | GPU hashes: 6946816000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3738760691 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=750.4s hashes=7394029578 hashrate=9.85MH/s best_leading=31 best_nonce=2393076356 nx48_delta=17.64
+[C88-GPU-FIX] Near-miss GPU nonce=3751666890 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26600 | GPU hashes: 6973030400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #26700 | GPU hashes: 6999244800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #26800 | GPU hashes: 7025459200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3817348088 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=760.4s hashes=7474354698 hashrate=9.83MH/s best_leading=31 best_nonce=2393076356 nx48_delta=20.98
+[C88-GPU-FIX] Near-miss GPU nonce=3830516051 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26900 | GPU hashes: 7051673600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3843614526 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27000 | GPU hashes: 7077888000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3869808062 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27100 | GPU hashes: 7104102400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=770.4s hashes=7554051082 hashrate=9.80MH/s best_leading=31 best_nonce=2393076356 nx48_delta=25.21
+[C88-GPU-FIX] Near-miss GPU nonce=3909147453 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27200 | GPU hashes: 7130316800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #27300 | GPU hashes: 7156531200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #27400 | GPU hashes: 7182745600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=780.5s hashes=7633046542 hashrate=9.78MH/s best_leading=31 best_nonce=2393076356 nx48_delta=25.97
+[C88-GPU-FIX] Near-miss GPU nonce=3987611143 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27500 | GPU hashes: 7208960000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #27600 | GPU hashes: 7235174400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #27700 | GPU hashes: 7261388800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=790.5s hashes=7713022478 hashrate=9.76MH/s best_leading=31 best_nonce=2393076356 nx48_delta=26.89
+[C69-GPU] batch #27800 | GPU hashes: 7287603200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #27900 | GPU hashes: 7313817600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4105676788 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4118900428 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28000 | GPU hashes: 7340032000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=800.5s hashes=7794087438 hashrate=9.74MH/s best_leading=31 best_nonce=2393076356 nx48_delta=37.53
+[C88-GPU-FIX] Near-miss GPU nonce=4145047785 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28100 | GPU hashes: 7366246400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4171194723 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28200 | GPU hashes: 7392460800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4184382973 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28300 | GPU hashes: 7418675200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=810.5s hashes=7870941198 hashrate=9.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=43.97
+[C69-GPU] batch #28400 | GPU hashes: 7444889600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4236708438 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28500 | GPU hashes: 7471104000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4276180981 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28600 | GPU hashes: 7497318400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=820.5s hashes=7952702990 hashrate=9.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=50.07
+[C69-GPU] batch #28700 | GPU hashes: 7523532800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #28800 | GPU hashes: 7549747200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #28900 | GPU hashes: 7575961600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=830.5s hashes=8039585806 hashrate=9.68MH/s best_leading=31 best_nonce=2393076356 nx48_delta=54.06
+[C88-GPU-FIX] Near-miss GPU nonce=3830828437 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #29000 | GPU hashes: 7602176000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3870247365 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #29100 | GPU hashes: 7628390400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #29200 | GPU hashes: 7654604800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=840.5s hashes=8124871694 hashrate=9.67MH/s best_leading=31 best_nonce=2393076356 nx48_delta=69.00
+[C69-GPU] batch #29300 | GPU hashes: 7680819200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #29400 | GPU hashes: 7707033600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #29500 | GPU hashes: 7733248000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=850.5s hashes=8214561806 hashrate=9.66MH/s best_leading=31 best_nonce=2393076356 nx48_delta=72.34
+[C88-GPU-FIX] Near-miss GPU nonce=4001228217 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #29600 | GPU hashes: 7759462400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4014502493 best=24 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4027578420 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #29700 | GPU hashes: 7785676800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4040609239 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #29800 | GPU hashes: 7811891200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=860.6s hashes=8304143886 hashrate=9.65MH/s best_leading=31 best_nonce=2393076356 nx48_delta=84.99
+[C69-GPU] batch #29900 | GPU hashes: 7838105600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #30000 | GPU hashes: 7864320000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #30100 | GPU hashes: 7890534400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=870.6s hashes=8391264782 hashrate=9.64MH/s best_leading=31 best_nonce=2393076356 nx48_delta=103.32
+[C69-GPU] batch #30200 | GPU hashes: 7916748800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #30300 | GPU hashes: 7942963200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #30400 | GPU hashes: 7969177600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4237294817 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #30500 | GPU hashes: 7995392000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=880.6s hashes=8482112014 hashrate=9.63MH/s best_leading=31 best_nonce=2393076356 nx48_delta=99.82
+[C88-GPU-FIX] Near-miss GPU nonce=4250433083 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4263417230 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #30600 | GPU hashes: 8021606400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4289606542 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #30700 | GPU hashes: 8047820800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4047388407 best=27 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #30800 | GPU hashes: 8074035200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=890.6s hashes=8573590542 hashrate=9.63MH/s best_leading=31 best_nonce=2393076356 nx48_delta=107.01
+[C69-GPU] batch #30900 | GPU hashes: 8100249600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4099913449 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #31000 | GPU hashes: 8126464000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4126074787 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #31100 | GPU hashes: 8152678400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=900.6s hashes=8660045838 hashrate=9.62MH/s best_leading=31 best_nonce=2393076356 nx48_delta=113.82
+[C69-GPU] batch #31200 | GPU hashes: 8178892800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #31300 | GPU hashes: 8205107200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4204702909 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #31400 | GPU hashes: 8231321600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=910.6s hashes=8748383758 hashrate=9.61MH/s best_leading=31 best_nonce=2393076356 nx48_delta=137.58
+[C69-GPU] batch #31500 | GPU hashes: 8257536000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #31600 | GPU hashes: 8283750400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4270394128 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #31700 | GPU hashes: 8309964800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #31800 | GPU hashes: 8336179200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=920.6s hashes=8839799310 hashrate=9.60MH/s best_leading=31 best_nonce=2393076356 nx48_delta=189.34
+[C88-GPU-FIX] Near-miss GPU nonce=4188468073 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #31900 | GPU hashes: 8362393600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32000 | GPU hashes: 8388608000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32100 | GPU hashes: 8414822400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=930.6s hashes=8930855438 hashrate=9.60MH/s best_leading=31 best_nonce=2393076356 nx48_delta=208.36
+[C69-GPU] batch #32200 | GPU hashes: 8441036800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32300 | GPU hashes: 8467251200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32400 | GPU hashes: 8493465600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=940.6s hashes=9011038222 hashrate=9.58MH/s best_leading=31 best_nonce=2393076356 nx48_delta=299.03
+[C88-GPU-FIX] Near-miss GPU nonce=4291670366 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #32500 | GPU hashes: 8519680000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32600 | GPU hashes: 8545894400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32700 | GPU hashes: 8572108800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=950.6s hashes=9089032206 hashrate=9.56MH/s best_leading=31 best_nonce=2393076356 nx48_delta=348.04
+[C88-GPU-FIX] Near-miss GPU nonce=4294380894 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #32800 | GPU hashes: 8598323200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #32900 | GPU hashes: 8624537600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=960.6s hashes=9167076366 hashrate=9.54MH/s best_leading=31 best_nonce=2393076356 nx48_delta=421.03
+[C88-GPU-FIX] Near-miss GPU nonce=60605828 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #33000 | GPU hashes: 8650752000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=86777251 best=24 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #33100 | GPU hashes: 8676966400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #33200 | GPU hashes: 8703180800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=970.6s hashes=9243077134 hashrate=9.52MH/s best_leading=31 best_nonce=2393076356 nx48_delta=424.94
+[C88-GPU-FIX] Near-miss GPU nonce=139195216 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #33300 | GPU hashes: 8729395200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #33400 | GPU hashes: 8755609600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=191709648 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #33500 | GPU hashes: 8781824000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=980.6s hashes=9321913358 hashrate=9.51MH/s best_leading=31 best_nonce=2393076356 nx48_delta=478.18
+[C69-GPU] batch #33600 | GPU hashes: 8808038400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=1.946366 src=src/nx48_btc_controller.c:878
+[NX48-C62] Reset delta_nonce 500.0->1.946 (stall_long=490 cap500_plateau)
+[C69-GPU] batch #33700 | GPU hashes: 8834252800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=257000434 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[LUMVORAX] Rotation CSV → logs/forensic/modules/btc_qm_engine_forensic_btc_20260424T154202Z_c48_ubuntu_lvx.log_part_0001.csv (partie 1, cap 20 MB atteint)
+[C69-GPU] batch #33800 | GPU hashes: 8860467200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=990.7s hashes=9401069582 hashrate=9.49MH/s best_leading=31 best_nonce=2393076356 nx48_delta=2.06
+[C69-GPU] batch #33900 | GPU hashes: 8886681600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #34000 | GPU hashes: 8912896000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=335701176 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=348783479 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #34100 | GPU hashes: 8939110400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1000.7s hashes=9479472142 hashrate=9.47MH/s best_leading=31 best_nonce=2393076356 nx48_delta=2.36
+[C69-GPU] batch #34200 | GPU hashes: 8965324800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #34300 | GPU hashes: 8991539200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=414323192 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=1010.7s hashes=9555707918 hashrate=9.45MH/s best_leading=31 best_nonce=2393076356 nx48_delta=2.37
+[C69-GPU] batch #34400 | GPU hashes: 9017753600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #34500 | GPU hashes: 9043968000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #34600 | GPU hashes: 9070182400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1020.7s hashes=9638931470 hashrate=9.44MH/s best_leading=31 best_nonce=2393076356 nx48_delta=2.57
+[C88-GPU-FIX] Near-miss GPU nonce=506216027 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #34700 | GPU hashes: 9096396800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=519267288 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #34800 | GPU hashes: 9122611200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #34900 | GPU hashes: 9148825600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #35000 | GPU hashes: 9175040000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1030.7s hashes=9728208398 hashrate=9.44MH/s best_leading=31 best_nonce=2393076356 nx48_delta=2.98
+[C69-GPU] batch #35100 | GPU hashes: 9201254400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=637108360 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #35200 | GPU hashes: 9227468800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=663579801 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #35300 | GPU hashes: 9253683200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1040.7s hashes=9817831950 hashrate=9.43MH/s best_leading=31 best_nonce=2393076356 nx48_delta=3.78
+[C69-GPU] batch #35400 | GPU hashes: 9279897600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=702666296 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #35500 | GPU hashes: 9306112000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=728958538 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=742001574 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #35600 | GPU hashes: 9332326400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=755107392 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=1050.7s hashes=9907489294 hashrate=9.43MH/s best_leading=31 best_nonce=2393076356 nx48_delta=3.69
+[C69-GPU] batch #35700 | GPU hashes: 9358540800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=781334846 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #35800 | GPU hashes: 9384755200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #35900 | GPU hashes: 9410969600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1060.7s hashes=9999148046 hashrate=9.43MH/s best_leading=31 best_nonce=2393076356 nx48_delta=3.76
+[C88-GPU-FIX] Near-miss GPU nonce=846842702 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #36000 | GPU hashes: 9437184000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #36100 | GPU hashes: 9463398400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #36200 | GPU hashes: 9489612800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #36300 | GPU hashes: 9515827200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1070.7s hashes=10091074062 hashrate=9.42MH/s best_leading=31 best_nonce=2393076356 nx48_delta=4.49
+[C69-GPU] batch #36400 | GPU hashes: 9542041600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #36500 | GPU hashes: 9568256000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=991069793 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #36600 | GPU hashes: 9594470400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1080.7s hashes=10184577038 hashrate=9.42MH/s best_leading=31 best_nonce=1008746620 nx48_delta=6.11
+[C69-GPU] batch #36700 | GPU hashes: 9620684800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1043454893 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1056731291 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #36800 | GPU hashes: 9646899200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1082942848 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #36900 | GPU hashes: 9673113600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1090.7s hashes=10276537358 hashrate=9.42MH/s best_leading=31 best_nonce=1008746620 nx48_delta=6.37
+[C69-GPU] batch #37000 | GPU hashes: 9699328000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #37100 | GPU hashes: 9725542400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #37200 | GPU hashes: 9751756800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #37300 | GPU hashes: 9777971200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1100.7s hashes=10367635982 hashrate=9.42MH/s best_leading=31 best_nonce=1008746620 nx48_delta=6.99
+[C69-GPU] batch #37400 | GPU hashes: 9804185600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1240281130 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #37500 | GPU hashes: 9830400000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1266256307 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #37600 | GPU hashes: 9856614400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1110.8s hashes=10458124814 hashrate=9.42MH/s best_leading=31 best_nonce=1008746620 nx48_delta=7.55
+[C69-GPU] batch #37700 | GPU hashes: 9882828800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #37800 | GPU hashes: 9909043200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #37900 | GPU hashes: 9935257600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1358032115 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=1120.8s hashes=10550861326 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=8.44
+[C88-GPU-FIX] Near-miss GPU nonce=1371184664 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38000 | GPU hashes: 9961472000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1397519021 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38100 | GPU hashes: 9987686400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1410497079 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38200 | GPU hashes: 10013900800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1449956608 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38300 | GPU hashes: 10040115200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1130.8s hashes=10644924942 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=7.26
+[C69-GPU] batch #38400 | GPU hashes: 10066329600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #38500 | GPU hashes: 10092544000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #38600 | GPU hashes: 10118758400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1140.8s hashes=10738230286 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=8.58
+[C69-GPU] batch #38700 | GPU hashes: 10144972800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1567723831 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38800 | GPU hashes: 10171187200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1607065887 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #38900 | GPU hashes: 10197401600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1620223125 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=1150.8s hashes=10832026126 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=8.68
+[C69-GPU] batch #39000 | GPU hashes: 10223616000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #39100 | GPU hashes: 10249830400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #39200 | GPU hashes: 10276044800 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1698895710 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #39300 | GPU hashes: 10302259200 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[BTC_QM] elapsed=1160.8s hashes=10924260878 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=9.08
+[C88-GPU-FIX] Near-miss GPU nonce=1725246466 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #39400 | GPU hashes: 10328473600 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C69-GPU] batch #39500 | GPU hashes: 10354688000 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1777484193 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1790622192 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #39600 | GPU hashes: 10380902400 | near-miss GPU best: 31 bits | ~9.4 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1803693936 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=1170.8s hashes=11017191950 hashrate=9.41MH/s best_leading=31 best_nonce=1008746620 nx48_delta=10.25
+tools/btc_run_ubuntu.sh: line 115: 22971 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     22972 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260424T160544Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260424T160544Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/btc_opencl_runner.c:69:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     fread(src, 1, sz, f);
+      |     ^~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 163K Apr 24 18:05 btc_mining_runner
+[C48] Binaire : 163K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00000520246e7eda66ef... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260424T160544Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260424T160544Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=537198592
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260424T160544Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=7635 best=31 bits exploration=0.712 delta=8.58
+[NX48-QDPR] Feedback C62 : success=67.6% bits=24 rt=4.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:1499MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.71 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=7635 best_leading=31
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.712 | delta_nonce=8.58 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260424T160544Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260424T160544Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=1.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=3.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:710
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:710
+[OCL] GPU trouvé : Intel(R) UHD Graphics 620 (plateforme: Intel(R) OpenCL Graphics)
+[OCL] → Sélectionné : Intel(R) UHD Graphics 620
+[OCL] max_wg=256 max_items=256 gmem=6715 MB batch=262144
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=16.000000 src=src/btc_mining_engine.c:710
+[OCL] ✅ OpenCL initialisé — batch=262144 — cible: 50-200 MH/s
+[OCL] Benchmark : 7.04 MH/s (batch=262144, t=0.037s)
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1507MB
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[C69-GPU] Thread GPU lance en parallele de 8 threads CPU
+[C69-GPU] Pour valider GPU reel : chercher log '[C69-GPU] ===== THREAD GPU ACTIF'
+[C69-GPU] ===== THREAD GPU ACTIF — btc_opencl_mine_batch() APPELEE =====
+[C69-GPU] Hashrate GPU mesure (benchmark) : 7.04 MH/s
+[C69-GPU] Target near-miss : 20 bits | Batch : 262144 nonces/dispatch
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=24.000000 src=src/btc_mining_engine.c:710
+[C69-GPU] batch #100 | GPU hashes: 26214400 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[C69-GPU] batch #200 | GPU hashes: 52428800 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=78467630 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #300 | GPU hashes: 78643200 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[BTC_QM] elapsed=10.0s hashes=93509120 hashrate=9.34MH/s best_leading=24 best_nonce=86777251 nx48_delta=9.59
+[C69-GPU] batch #400 | GPU hashes: 104857600 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[C69-GPU] batch #500 | GPU hashes: 131072000 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[C69-GPU] batch #600 | GPU hashes: 157286400 | near-miss GPU best: 24 bits | ~7.0 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:710
+[BTC_QM] elapsed=20.0s hashes=185117184 hashrate=9.25MH/s best_leading=25 best_nonce=174591763 nx48_delta=11.54
+[C88-GPU-FIX] Near-miss GPU nonce=183436967 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #700 | GPU hashes: 183500800 | near-miss GPU best: 25 bits | ~7.0 MH/s
+[C69-GPU] batch #800 | GPU hashes: 209715200 | near-miss GPU best: 25 bits | ~7.0 MH/s
+[C69-GPU] batch #900 | GPU hashes: 235929600 | near-miss GPU best: 25 bits | ~7.0 MH/s
+[C69-GPU] Nouveau record GPU : 26 bits (nonce_start=240123904)
+[BTC_QM] elapsed=30.0s hashes=276360192 hashrate=9.20MH/s best_leading=26 best_nonce=240302850 nx48_delta=11.74
+[C88-GPU-FIX] Near-miss GPU nonce=261920848 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1000 | GPU hashes: 262144000 | near-miss GPU best: 26 bits | ~7.0 MH/s
+[C69-GPU] batch #1100 | GPU hashes: 288358400 | near-miss GPU best: 26 bits | ~7.0 MH/s
+[C69-GPU] batch #1200 | GPU hashes: 314572800 | near-miss GPU best: 26 bits | ~7.0 MH/s
+[C69-GPU] Nouveau record GPU : 27 bits (nonce_start=338165760)
+[C69-GPU] batch #1300 | GPU hashes: 340787200 | near-miss GPU best: 27 bits | ~7.0 MH/s
+[BTC_QM] elapsed=40.0s hashes=366120448 hashrate=9.15MH/s best_leading=27 best_nonce=338330718 nx48_delta=14.32
+[C88-GPU-FIX] Near-miss GPU nonce=366897237 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1400 | GPU hashes: 367001600 | near-miss GPU best: 27 bits | ~7.0 MH/s
+[C69-GPU] batch #1500 | GPU hashes: 393216000 | near-miss GPU best: 27 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=406224906 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1600 | GPU hashes: 419430400 | near-miss GPU best: 27 bits | ~7.0 MH/s
+[C69-GPU] Nouveau record GPU : 28 bits (nonce_start=421789696)
+[BTC_QM] elapsed=50.0s hashes=458621952 hashrate=9.17MH/s best_leading=28 best_nonce=421941990 nx48_delta=17.04
+[C69-GPU] Nouveau record GPU : 29 bits (nonce_start=443809792)
+[C69-GPU] batch #1700 | GPU hashes: 445644800 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #1800 | GPU hashes: 471859200 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=497985943 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #1900 | GPU hashes: 498073600 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=60.0s hashes=549139456 hashrate=9.15MH/s best_leading=29 best_nonce=443915980 nx48_delta=23.28
+[C69-GPU] batch #2000 | GPU hashes: 524288000 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #2100 | GPU hashes: 550502400 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #2200 | GPU hashes: 576716800 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=589669187 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2300 | GPU hashes: 602931200 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=70.0s hashes=641039360 hashrate=9.15MH/s best_leading=29 best_nonce=443915980 nx48_delta=28.54
+[C88-GPU-FIX] Near-miss GPU nonce=615920913 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2400 | GPU hashes: 629145600 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=655328515 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2500 | GPU hashes: 655360000 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #2600 | GPU hashes: 681574400 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=80.0s hashes=731762688 hashrate=9.14MH/s best_leading=29 best_nonce=443915980 nx48_delta=28.76
+[C88-GPU-FIX] Near-miss GPU nonce=707635916 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2700 | GPU hashes: 707788800 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=733765023 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2800 | GPU hashes: 734003200 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=760157970 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #2900 | GPU hashes: 760217600 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=90.1s hashes=820449280 hashrate=9.11MH/s best_leading=29 best_nonce=443915980 nx48_delta=33.36
+[C69-GPU] batch #3000 | GPU hashes: 786432000 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #3100 | GPU hashes: 812646400 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #3200 | GPU hashes: 838860800 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=100.1s hashes=910573568 hashrate=9.10MH/s best_leading=29 best_nonce=443915980 nx48_delta=31.86
+[C88-GPU-FIX] Near-miss GPU nonce=864970297 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3300 | GPU hashes: 865075200 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #3400 | GPU hashes: 891289600 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=917314986 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3500 | GPU hashes: 917504000 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=943669744 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #3600 | GPU hashes: 943718400 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[BTC_QM] elapsed=110.1s hashes=1000804352 hashrate=9.09MH/s best_leading=29 best_nonce=443915980 nx48_delta=38.65
+[C69-GPU] batch #3700 | GPU hashes: 969932800 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] batch #3800 | GPU hashes: 996147200 | near-miss GPU best: 29 bits | ~7.0 MH/s
+[C69-GPU] Nouveau record GPU : 31 bits (nonce_start=1008730112)
+[C69-GPU] batch #3900 | GPU hashes: 1022361600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=120.1s hashes=1091035648 hashrate=9.09MH/s best_leading=31 best_nonce=1008746620 nx48_delta=33.59
+[C69-GPU] batch #4000 | GPU hashes: 1048576000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1061592590 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1074603680 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4100 | GPU hashes: 1074790400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #4200 | GPU hashes: 1101004800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=130.1s hashes=1179155968 hashrate=9.06MH/s best_leading=31 best_nonce=1008746620 nx48_delta=42.32
+[C69-GPU] batch #4300 | GPU hashes: 1127219200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1140262668 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4400 | GPU hashes: 1153433600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1179586920 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4500 | GPU hashes: 1179648000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1192545270 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=140.1s hashes=1271294976 hashrate=9.07MH/s best_leading=31 best_nonce=1008746620 nx48_delta=38.90
+[C69-GPU] batch #4600 | GPU hashes: 1205862400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1231914584 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4700 | GPU hashes: 1232076800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #4800 | GPU hashes: 1258291200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1271348891 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #4900 | GPU hashes: 1284505600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=150.1s hashes=1364559360 hashrate=9.09MH/s best_leading=31 best_nonce=1008746620 nx48_delta=43.52
+[C69-GPU] batch #5000 | GPU hashes: 1310720000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1336731668 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5100 | GPU hashes: 1336934400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #5200 | GPU hashes: 1363148800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1376082957 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=160.1s hashes=1458261504 hashrate=9.11MH/s best_leading=31 best_nonce=1008746620 nx48_delta=43.11
+[C69-GPU] batch #5300 | GPU hashes: 1389363200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #5400 | GPU hashes: 1415577600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1428463043 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1441668598 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5500 | GPU hashes: 1441792000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=170.1s hashes=1551846912 hashrate=9.12MH/s best_leading=31 best_nonce=1008746620 nx48_delta=64.05
+[C69-GPU] batch #5600 | GPU hashes: 1468006400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #5700 | GPU hashes: 1494220800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1507127420 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #5800 | GPU hashes: 1520435200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #5900 | GPU hashes: 1546649600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=180.1s hashes=1646487040 hashrate=9.14MH/s best_leading=31 best_nonce=1008746620 nx48_delta=58.02
+[C69-GPU] batch #6000 | GPU hashes: 1572864000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #6100 | GPU hashes: 1599078400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1611970009 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6200 | GPU hashes: 1625292800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=190.1s hashes=1740328960 hashrate=9.15MH/s best_leading=31 best_nonce=1008746620 nx48_delta=65.40
+[C69-GPU] batch #6300 | GPU hashes: 1651507200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #6400 | GPU hashes: 1677721600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #6500 | GPU hashes: 1703936000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1716888858 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1729977684 best=24 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6600 | GPU hashes: 1730150400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=200.1s hashes=1835282947 hashrate=9.17MH/s best_leading=31 best_nonce=1008746620 nx48_delta=89.57
+[C88-GPU-FIX] Near-miss GPU nonce=1756140714 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6700 | GPU hashes: 1756364800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #6800 | GPU hashes: 1782579200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1808585501 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #6900 | GPU hashes: 1808793600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=210.1s hashes=1929669635 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=108.81
+[C69-GPU] batch #7000 | GPU hashes: 1835008000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1861177225 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7100 | GPU hashes: 1861222400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1874318646 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=1887231146 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7200 | GPU hashes: 1887436800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=220.1s hashes=2021470723 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=122.11
+[C69-GPU] batch #7300 | GPU hashes: 1913651200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1939686387 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7400 | GPU hashes: 1939865600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1952955713 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7500 | GPU hashes: 1966080000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=1992074955 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7600 | GPU hashes: 1992294400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=230.2s hashes=2112883203 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=152.68
+[C88-GPU-FIX] Near-miss GPU nonce=2005144298 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #7700 | GPU hashes: 2018508800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #7800 | GPU hashes: 2044723200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #7900 | GPU hashes: 2070937600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=240.2s hashes=2205222915 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=152.75
+[C69-GPU] batch #8000 | GPU hashes: 2097152000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8100 | GPU hashes: 2123366400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8200 | GPU hashes: 2149580800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=250.2s hashes=2295546371 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=169.42
+[C69-GPU] batch #8300 | GPU hashes: 2175795200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8400 | GPU hashes: 2202009600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8500 | GPU hashes: 2228224000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8600 | GPU hashes: 2254438400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=260.2s hashes=2388309507 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=200.08
+[C69-GPU] batch #8700 | GPU hashes: 2280652800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2293584426 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #8800 | GPU hashes: 2306867200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #8900 | GPU hashes: 2333081600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=270.2s hashes=2478919683 hashrate=9.18MH/s best_leading=31 best_nonce=1008746620 nx48_delta=206.00
+[C69-GPU] batch #9000 | GPU hashes: 2359296000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2385381323 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9100 | GPU hashes: 2385510400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #9200 | GPU hashes: 2411724800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=280.2s hashes=2569887747 hashrate=9.17MH/s best_leading=31 best_nonce=2393076356 nx48_delta=257.90
+[C69-GPU] batch #9300 | GPU hashes: 2437939200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #9400 | GPU hashes: 2464153600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2477144003 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9500 | GPU hashes: 2490368000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2503459875 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=290.2s hashes=2656455683 hashrate=9.15MH/s best_leading=31 best_nonce=2393076356 nx48_delta=266.02
+[C69-GPU] batch #9600 | GPU hashes: 2516582400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #9700 | GPU hashes: 2542796800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2568931419 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #9800 | GPU hashes: 2569011200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=300.2s hashes=2744173059 hashrate=9.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=334.01
+[C69-GPU] batch #9900 | GPU hashes: 2595225600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2621295728 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10000 | GPU hashes: 2621440000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2647481725 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10100 | GPU hashes: 2647654400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=310.2s hashes=2827637763 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=426.08
+[C69-GPU] batch #10200 | GPU hashes: 2673868800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2700081973 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10300 | GPU hashes: 2700083200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[C69-GPU] batch #10400 | GPU hashes: 2726297600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[C69-GPU] batch #10500 | GPU hashes: 2752512000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=320.2s hashes=2918498819 hashrate=9.11MH/s best_leading=31 best_nonce=2393076356 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=7.382974 src=src/nx48_btc_controller.c:878
+[NX48-C62] Reset delta_nonce 500.0->7.383 (stall_long=160 cap500_plateau)
+[C69-GPU] batch #10600 | GPU hashes: 2778726400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #10700 | GPU hashes: 2804940800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #10800 | GPU hashes: 2831155200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=330.2s hashes=3010014723 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=6.96
+[C88-GPU-FIX] Near-miss GPU nonce=2857193703 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #10900 | GPU hashes: 2857369600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2870351173 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11000 | GPU hashes: 2883584000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #11100 | GPU hashes: 2909798400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=340.2s hashes=3101650947 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=7.34
+[C69-GPU] batch #11200 | GPU hashes: 2936012800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #11300 | GPU hashes: 2962227200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2988398407 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11400 | GPU hashes: 2988441600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #11500 | GPU hashes: 3014656000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=350.2s hashes=3194457603 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=8.38
+[C69-GPU] batch #11600 | GPU hashes: 3040870400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #11700 | GPU hashes: 3067084800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #11800 | GPU hashes: 3093299200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=360.2s hashes=3286879747 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=10.30
+[C88-GPU-FIX] Near-miss GPU nonce=3119454281 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #11900 | GPU hashes: 3119513600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3132510592 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12000 | GPU hashes: 3145728000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3171816399 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12100 | GPU hashes: 3171942400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=370.2s hashes=3379063811 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=9.53
+[C69-GPU] batch #12200 | GPU hashes: 3198156800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #12300 | GPU hashes: 3224371200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3237378425 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12400 | GPU hashes: 3250585600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3276775835 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #12500 | GPU hashes: 3276800000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=380.2s hashes=3471718403 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=8.36
+[C69-GPU] batch #12600 | GPU hashes: 3303014400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #12700 | GPU hashes: 3329228800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #12800 | GPU hashes: 3355443200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=390.2s hashes=3564953096 hashrate=9.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=11.09
+[C69-GPU] batch #12900 | GPU hashes: 3381657600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13000 | GPU hashes: 3407872000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13100 | GPU hashes: 3434086400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=400.2s hashes=3658253832 hashrate=9.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=17.36
+[C88-GPU-FIX] Near-miss GPU nonce=3460233933 best=27 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13200 | GPU hashes: 3460300800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13300 | GPU hashes: 3486515200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13400 | GPU hashes: 3512729600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13500 | GPU hashes: 3538944000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=410.2s hashes=3750491656 hashrate=9.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=20.65
+[C88-GPU-FIX] Near-miss GPU nonce=3564988063 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13600 | GPU hashes: 3565158400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13700 | GPU hashes: 3591372800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #13800 | GPU hashes: 3617587200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=420.3s hashes=3839141896 hashrate=9.14MH/s best_leading=31 best_nonce=2393076356 nx48_delta=25.84
+[C88-GPU-FIX] Near-miss GPU nonce=3643783190 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #13900 | GPU hashes: 3643801600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3656729311 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14000 | GPU hashes: 3670016000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #14100 | GPU hashes: 3696230400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=430.3s hashes=3928961544 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=26.01
+[C69-GPU] batch #14200 | GPU hashes: 3722444800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3735514684 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3748447047 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14300 | GPU hashes: 3748659200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #14400 | GPU hashes: 3774873600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=440.3s hashes=4020056584 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=30.43
+[C88-GPU-FIX] Near-miss GPU nonce=3800938289 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14500 | GPU hashes: 3801088000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3827133784 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #14600 | GPU hashes: 3827302400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #14700 | GPU hashes: 3853516800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #14800 | GPU hashes: 3879731200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=450.3s hashes=4112665096 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=28.99
+[C69-GPU] batch #14900 | GPU hashes: 3905945600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #15000 | GPU hashes: 3932160000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3958303161 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15100 | GPU hashes: 3958374400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=460.3s hashes=4204254216 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=30.98
+[C88-GPU-FIX] Near-miss GPU nonce=3971260500 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15200 | GPU hashes: 3984588800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #15300 | GPU hashes: 4010803200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4023685820 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4036795293 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15400 | GPU hashes: 4037017600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=470.3s hashes=4296039432 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=34.13
+[C69-GPU] batch #15500 | GPU hashes: 4063232000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4089394732 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15600 | GPU hashes: 4089446400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #15700 | GPU hashes: 4115660800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4128539446 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=480.3s hashes=4383197192 hashrate=9.13MH/s best_leading=31 best_nonce=2393076356 nx48_delta=34.07
+[C69-GPU] batch #15800 | GPU hashes: 4141875200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4167878562 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #15900 | GPU hashes: 4168089600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #16000 | GPU hashes: 4194304000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4207300433 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16100 | GPU hashes: 4220518400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=490.3s hashes=4468227080 hashrate=9.11MH/s best_leading=31 best_nonce=2393076356 nx48_delta=42.00
+[C88-GPU-FIX] Near-miss GPU nonce=4246504976 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16200 | GPU hashes: 4246732800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #16300 | GPU hashes: 4272947200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #16400 | GPU hashes: 4299161600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=500.3s hashes=4559044104 hashrate=9.11MH/s best_leading=31 best_nonce=2393076356 nx48_delta=41.61
+[C88-GPU-FIX] Near-miss GPU nonce=2177928927 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16500 | GPU hashes: 4325376000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2204161839 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16600 | GPU hashes: 4351590400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #16700 | GPU hashes: 4377804800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=510.3s hashes=4652096008 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=42.05
+[C88-GPU-FIX] Near-miss GPU nonce=2256537169 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16800 | GPU hashes: 4404019200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2269546074 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #16900 | GPU hashes: 4430233600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #17000 | GPU hashes: 4456448000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=520.3s hashes=4743976968 hashrate=9.12MH/s best_leading=31 best_nonce=2393076356 nx48_delta=41.60
+[C69-GPU] batch #17100 | GPU hashes: 4482662400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #17200 | GPU hashes: 4508876800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2374395406 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #17300 | GPU hashes: 4535091200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2400681306 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=530.3s hashes=4821882888 hashrate=9.09MH/s best_leading=31 best_nonce=2393076356 nx48_delta=48.49
+[C69-GPU] batch #17400 | GPU hashes: 4561305600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #17500 | GPU hashes: 4587520000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #17600 | GPU hashes: 4613734400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=540.3s hashes=4888400904 hashrate=9.05MH/s best_leading=31 best_nonce=2393076356 nx48_delta=50.73
+[C69-GPU] batch #17700 | GPU hashes: 4639948800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=2505499798 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=2518680082 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #17800 | GPU hashes: 4666163200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=550.3s hashes=4953679880 hashrate=9.00MH/s best_leading=31 best_nonce=2393076356 nx48_delta=61.85
+[C69-GPU] batch #17900 | GPU hashes: 4692377600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18000 | GPU hashes: 4718592000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=560.4s hashes=5021449224 hashrate=8.96MH/s best_leading=31 best_nonce=2393076356 nx48_delta=72.49
+[C69-GPU] batch #18100 | GPU hashes: 4744806400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18200 | GPU hashes: 4771020800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18300 | GPU hashes: 4797235200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=570.4s hashes=5089068552 hashrate=8.92MH/s best_leading=31 best_nonce=2393076356 nx48_delta=81.57
+[C69-GPU] batch #18400 | GPU hashes: 4823449600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18500 | GPU hashes: 4849664000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=580.4s hashes=5160772104 hashrate=8.89MH/s best_leading=31 best_nonce=2393076356 nx48_delta=97.69
+[C88-GPU-FIX] Near-miss GPU nonce=2728413737 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #18600 | GPU hashes: 4875878400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18700 | GPU hashes: 4902092800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #18800 | GPU hashes: 4928307200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=590.4s hashes=5234851848 hashrate=8.87MH/s best_leading=31 best_nonce=2393076356 nx48_delta=113.44
+[C88-GPU-FIX] Near-miss GPU nonce=2807123765 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #18900 | GPU hashes: 4954521600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #19000 | GPU hashes: 4980736000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=600.4s hashes=5302041096 hashrate=8.83MH/s best_leading=31 best_nonce=2393076356 nx48_delta=135.03
+[C69-GPU] batch #19100 | GPU hashes: 5006950400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #19200 | GPU hashes: 5033164800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #19300 | GPU hashes: 5059379200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=610.4s hashes=5372340744 hashrate=8.80MH/s best_leading=31 best_nonce=2393076356 nx48_delta=162.51
+[C88-GPU-FIX] Near-miss GPU nonce=2924916779 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=2938066911 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19400 | GPU hashes: 5085593600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #19500 | GPU hashes: 5111808000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=620.4s hashes=5443997704 hashrate=8.77MH/s best_leading=31 best_nonce=2393076356 nx48_delta=174.91
+[C69-GPU] batch #19600 | GPU hashes: 5138022400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3016708629 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19700 | GPU hashes: 5164236800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3042820944 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #19800 | GPU hashes: 5190451200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=630.4s hashes=5528055816 hashrate=8.77MH/s best_leading=31 best_nonce=2393076356 nx48_delta=204.38
+[C69-GPU] batch #19900 | GPU hashes: 5216665600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3095302874 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20000 | GPU hashes: 5242880000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3121589146 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20100 | GPU hashes: 5269094400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=640.4s hashes=5615803912 hashrate=8.77MH/s best_leading=31 best_nonce=2393076356 nx48_delta=235.21
+[C88-GPU-FIX] Near-miss GPU nonce=3147854599 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20200 | GPU hashes: 5295308800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #20300 | GPU hashes: 5321523200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #20400 | GPU hashes: 5347737600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #20500 | GPU hashes: 5373952000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=650.4s hashes=5704234504 hashrate=8.77MH/s best_leading=31 best_nonce=2393076356 nx48_delta=270.80
+[C69-GPU] batch #20600 | GPU hashes: 5400166400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #20700 | GPU hashes: 5426380800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3305161328 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #20800 | GPU hashes: 5452595200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=660.4s hashes=5790478344 hashrate=8.77MH/s best_leading=31 best_nonce=2393076356 nx48_delta=331.28
+[C69-GPU] batch #20900 | GPU hashes: 5478809600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21000 | GPU hashes: 5505024000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21100 | GPU hashes: 5531238400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=670.4s hashes=5868827144 hashrate=8.75MH/s best_leading=31 best_nonce=2393076356 nx48_delta=331.00
+[C69-GPU] batch #21200 | GPU hashes: 5557452800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21300 | GPU hashes: 5583667200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21400 | GPU hashes: 5609881600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=680.4s hashes=5948959752 hashrate=8.74MH/s best_leading=31 best_nonce=2393076356 nx48_delta=401.18
+[C69-GPU] batch #21500 | GPU hashes: 5636096000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21600 | GPU hashes: 5662310400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=690.4s hashes=6029374472 hashrate=8.73MH/s best_leading=31 best_nonce=2393076356 nx48_delta=488.99
+[C88-GPU-FIX] Near-miss GPU nonce=3541003079 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #21700 | GPU hashes: 5688524800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21800 | GPU hashes: 5714739200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #21900 | GPU hashes: 5740953600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3606490819 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=700.5s hashes=6113129992 hashrate=8.73MH/s best_leading=31 best_nonce=2393076356 nx48_delta=500.00
+[C69-GPU] batch #22000 | GPU hashes: 5767168000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=4.998453 src=src/nx48_btc_controller.c:878
+[NX48-C62] Reset delta_nonce 500.0->4.998 (stall_long=350 cap500_plateau)
+[C88-GPU-FIX] Near-miss GPU nonce=3645783226 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22100 | GPU hashes: 5793382400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #22200 | GPU hashes: 5819596800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=710.5s hashes=6193867272 hashrate=8.72MH/s best_leading=31 best_nonce=2393076356 nx48_delta=5.06
+[C69-GPU] batch #22300 | GPU hashes: 5845811200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3711390076 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22400 | GPU hashes: 5872025600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #22500 | GPU hashes: 5898240000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=720.5s hashes=6276187144 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=5.06
+[C69-GPU] batch #22600 | GPU hashes: 5924454400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #22700 | GPU hashes: 5950668800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3816178050 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22800 | GPU hashes: 5976883200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=730.5s hashes=6358770184 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=6.06
+[C88-GPU-FIX] Near-miss GPU nonce=3855494787 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #22900 | GPU hashes: 6003097600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3868795998 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23000 | GPU hashes: 6029312000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[NX48-QDPR] Feedback C62 : success=67.6% bits=24 rt=4.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:1157MB
+[C69-GPU] batch #23100 | GPU hashes: 6055526400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3921227506 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=740.5s hashes=6441020910 hashrate=8.70MH/s best_leading=31 best_nonce=2393076356 nx48_delta=7.02
+[C69-GPU] batch #23200 | GPU hashes: 6081740800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3960347340 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23300 | GPU hashes: 6107955200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #23400 | GPU hashes: 6134169600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=750.5s hashes=6523213806 hashrate=8.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=10.09
+[C69-GPU] batch #23500 | GPU hashes: 6160384000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #23600 | GPU hashes: 6186598400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4052203359 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23700 | GPU hashes: 6212812800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=760.5s hashes=6605628398 hashrate=8.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=13.06
+[C88-GPU-FIX] Near-miss GPU nonce=4091591361 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #23800 | GPU hashes: 6239027200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #23900 | GPU hashes: 6265241600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24000 | GPU hashes: 6291456000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=770.5s hashes=6687416302 hashrate=8.68MH/s best_leading=31 best_nonce=2393076356 nx48_delta=12.92
+[C69-GPU] batch #24100 | GPU hashes: 6317670400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24200 | GPU hashes: 6343884800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24300 | GPU hashes: 6370099200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=780.5s hashes=6773513710 hashrate=8.68MH/s best_leading=31 best_nonce=2393076356 nx48_delta=15.26
+[C69-GPU] batch #24400 | GPU hashes: 6396313600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24500 | GPU hashes: 6422528000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24600 | GPU hashes: 6448742400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3240694662 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=790.5s hashes=6864592366 hashrate=8.68MH/s best_leading=31 best_nonce=2393076356 nx48_delta=15.54
+[C88-GPU-FIX] Near-miss GPU nonce=3253827777 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #24700 | GPU hashes: 6474956800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24800 | GPU hashes: 6501171200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #24900 | GPU hashes: 6527385600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3332270929 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25000 | GPU hashes: 6553600000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=800.5s hashes=6954370542 hashrate=8.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=22.91
+[C88-GPU-FIX] Near-miss GPU nonce=3358592690 best=25 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25100 | GPU hashes: 6579814400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #25200 | GPU hashes: 6606028800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3410991483 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25300 | GPU hashes: 6632243200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=810.5s hashes=7043560430 hashrate=8.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=24.85
+[C69-GPU] batch #25400 | GPU hashes: 6658457600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #25500 | GPU hashes: 6684672000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3476573893 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3489610063 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #25600 | GPU hashes: 6710886400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=820.5s hashes=7130801134 hashrate=8.69MH/s best_leading=31 best_nonce=2393076356 nx48_delta=22.31
+[C69-GPU] batch #25700 | GPU hashes: 6737100800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #25800 | GPU hashes: 6763315200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #25900 | GPU hashes: 6789529600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=830.5s hashes=7222233070 hashrate=8.70MH/s best_leading=31 best_nonce=2393076356 nx48_delta=30.07
+[C88-GPU-FIX] Near-miss GPU nonce=3594588009 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26000 | GPU hashes: 6815744000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #26100 | GPU hashes: 6841958400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #26200 | GPU hashes: 6868172800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3660044168 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3673034828 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26300 | GPU hashes: 6894387200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=840.5s hashes=7315501550 hashrate=8.70MH/s best_leading=31 best_nonce=2393076356 nx48_delta=39.35
+[C88-GPU-FIX] Near-miss GPU nonce=3699361181 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26400 | GPU hashes: 6920601600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #26500 | GPU hashes: 6946816000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3738760691 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3751666890 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26600 | GPU hashes: 6973030400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=850.5s hashes=7406844398 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=47.69
+[C69-GPU] batch #26700 | GPU hashes: 6999244800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #26800 | GPU hashes: 7025459200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3817348088 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=3830516051 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #26900 | GPU hashes: 7051673600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3843614526 best=22 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=860.5s hashes=7491717614 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=46.82
+[C69-GPU] batch #27000 | GPU hashes: 7077888000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3869808062 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27100 | GPU hashes: 7104102400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3909147453 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27200 | GPU hashes: 7130316800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=870.5s hashes=7578265592 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=54.10
+[C69-GPU] batch #27300 | GPU hashes: 7156531200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #27400 | GPU hashes: 7182745600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=3987611143 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #27500 | GPU hashes: 7208960000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=880.5s hashes=7668246008 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=48.70
+[C69-GPU] batch #27600 | GPU hashes: 7235174400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #27700 | GPU hashes: 7261388800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #27800 | GPU hashes: 7287603200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #27900 | GPU hashes: 7313817600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=890.5s hashes=7759144952 hashrate=8.71MH/s best_leading=31 best_nonce=2393076356 nx48_delta=55.13
+[C88-GPU-FIX] Near-miss GPU nonce=4105676788 best=23 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C88-GPU-FIX] Near-miss GPU nonce=4118900428 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28000 | GPU hashes: 7340032000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4145047785 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28100 | GPU hashes: 7366246400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4171194723 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28200 | GPU hashes: 7392460800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4184382973 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[BTC_QM] elapsed=900.6s hashes=7851658232 hashrate=8.72MH/s best_leading=31 best_nonce=2393076356 nx48_delta=61.14
+[C69-GPU] batch #28300 | GPU hashes: 7418675200 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #28400 | GPU hashes: 7444889600 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C88-GPU-FIX] Near-miss GPU nonce=4236708438 best=20 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28500 | GPU hashes: 7471104000 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[BTC_QM] elapsed=910.6s hashes=7944679928 hashrate=8.73MH/s best_leading=31 best_nonce=2393076356 nx48_delta=58.32
+[C88-GPU-FIX] Near-miss GPU nonce=4276180981 best=21 bits (target_bits=20) — minage continue (PAS un bloc valide)
+[C69-GPU] batch #28600 | GPU hashes: 7497318400 | near-miss GPU best: 31 bits | ~7.0 MH/s
+[C69-GPU] batch #28700 | GPU hashes: 7523532800 | near-miss GPU best: 31 bits | ~7.0 MH/s
+^C⏎                                                                                                                                                                                    lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGINT]> 

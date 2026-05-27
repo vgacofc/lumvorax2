@@ -1,0 +1,14 @@
+[25221.412342013] 🚀 TEST C471 - I915_EXEC_BLT AU LIEU DE I915_EXEC_RENDER
+[25221.412350021] 🎯 Découverte C467-C470: I915_EXEC_RENDER cause GPU HANG systématique
+[25221.412350950] 🔍 Hypothèse: Blitter engine ne nécessite pas pipeline 3D
+[25221.412407477] ✅ DRM ouvert: fd=5
+[25221.412412676] ✅ Contexte GPU créé: id=1
+[25221.412422078] ✅ Batch buffer créé: handle=1
+[25221.412446709] ✅ Batch buffer mappé: 0x73af63dad000
+[25221.412458270] 📝 [00-03] MI_NOOP padding
+[25221.412459086] 📝 [04] MI_BATCH_BUFFER_END
+[25221.412460066] ✅ Batch: 6 DWORDs (24 bytes, aligné 8-byte)
+[25221.412460750] 📊 Batch identique à C470 MAIS avec I915_EXEC_BLT
+[25221.412461325] ⚡ Soumission batch (I915_EXEC_BLT)...
+[25221.412461831] 🔍 DIFFÉRENCE CRITIQUE: flags = I915_EXEC_BLT (blitter engine)
+[25221.412858912] ❌ EXECBUFFER2 failed: Invalid argument (errno=22)

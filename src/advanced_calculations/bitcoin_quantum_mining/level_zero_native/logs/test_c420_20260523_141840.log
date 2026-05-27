@@ -1,0 +1,28 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  C420 TEST - FIX SURFACE STATE (SURFTYPE + FORMAT + MOCS) ║
+║  Correction: 0x7F → 0x00 (BUFFER) + R32_UINT + LLC        ║
+╚════════════════════════════════════════════════════════════╝
+
+[2976308883784 ns] C420 START - Surface State Fix Test
+[2976308937426 ns] DRM opened: fd=5
+[2976308941751 ns] GPU context created: ctx_id=1
+[2976309255980 ns] Kernel loaded: 80 bytes
+[2976309286251 ns] Kernel buffer: handle=1
+[2976309299191 ns] Output buffer: handle=2 (filled 0xCC)
+[2976309312974 ns] SSH configured - SURFTYPE=0x00 FORMAT=R32_UINT MOCS=LLC
+[2976309322396 ns] DSH configured - Interface Descriptor ready
+[2976309332516 ns] Batch buffer: 52 dwords
+[2976309332933 ns] Executing C420 with fixed Surface State...
+[2976309600416 ns] ✓ EXECBUFFER2 success: 267171 ns
+[2976994587128 ns] ✓ GPU execution complete: 684985976 ns
+
+📊 RÉSULTATS C420:
+═══════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════
+  Valid (0xDEADBEEF): 0 / 16
+  Unchanged (0xCC):   16 / 16
+═══════════════════════════════════════════════════════════
+
+⚠️  Still no results - trying C421 (cache flush)...
+[2976994591051 ns] C420 FAILED - 0 valid results, proceeding to C421

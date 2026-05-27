@@ -1,0 +1,42 @@
+╔════════════════════════════════════════════════════════════╗
+║  Compilation C255V11 NX48 avec Buffer Dynamique           ║
+╚════════════════════════════════════════════════════════════╝
+[1/2] Compilation...
+tests/test_c255v11_nx48_dynamic.c: In function ‘main’:
+tests/test_c255v11_nx48_dynamic.c:227:9: warning: excess elements in array initializer
+  227 |         0x00, 0x00, 0x00, 0x00
+      |         ^~~~
+tests/test_c255v11_nx48_dynamic.c:227:9: note: (near initialization for ‘block_header’)
+tests/test_c255v11_nx48_dynamic.c:227:15: warning: excess elements in array initializer
+  227 |         0x00, 0x00, 0x00, 0x00
+      |               ^~~~
+tests/test_c255v11_nx48_dynamic.c:227:15: note: (near initialization for ‘block_header’)
+tests/test_c255v11_nx48_dynamic.c:227:21: warning: excess elements in array initializer
+  227 |         0x00, 0x00, 0x00, 0x00
+      |                     ^~~~
+tests/test_c255v11_nx48_dynamic.c:227:21: note: (near initialization for ‘block_header’)
+tests/test_c255v11_nx48_dynamic.c:227:27: warning: excess elements in array initializer
+  227 |         0x00, 0x00, 0x00, 0x00
+      |                           ^~~~
+tests/test_c255v11_nx48_dynamic.c:227:27: note: (near initialization for ‘block_header’)
+src/btc_gen9_native_runner.c: In function ‘calculate_optimal_batch_size’:
+src/btc_gen9_native_runner.c:348:55: warning: unused parameter ‘timeout_ms’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                              ~~~~~~~~~^~~~~~~~~~
+src/btc_gen9_native_runner.c:348:76: warning: unused parameter ‘hashrate’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                                                   ~~~~~~~~~^~~~~~~~
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_init’:
+src/btc_gen9_native_runner.c:1002:60: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 4 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+ 1002 |     fprintf(stderr, "[C293] Output buffer: %zu bytes pour %u nonces\n",
+      |                                                           ~^
+      |                                                            |
+      |                                                            unsigned int
+      |                                                           %lu
+ 1003 |             ctx->output_size, ctx->batch_size);
+      |                               ~~~~~~~~~~~~~~~               
+      |                                  |
+      |                                  size_t {aka long unsigned int}
+/usr/bin/ld: cannot open output file bin/test_c255v11_nx48_dynamic_fixed: No such file or directory
+collect2: error: ld returned 1 exit status
+❌ Erreur compilation

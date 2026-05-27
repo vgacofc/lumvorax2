@@ -1,0 +1,60 @@
+🚀 TEST C580 - PREMIER WRITE GPU NATIF i915 - VERSION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device /dev/dri/card1...
+✅ DRM device opened: fd=5 (108.171 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (7.715 µs)
+
+[ 15%] Creating buffers...
+  ✅ Heap BO: handle=1, size=8192 (19.835 µs)
+  ✅ Output BO: handle=2, size=4096 (4.074 µs)
+  ✅ Batch BO: handle=3, size=4096 (4.050 µs)
+
+[ 20%] Mapping buffers...
+  ✅ Heap mapped: 0x7c29ddfd4000 (55.191 µs)
+  ✅ Output mapped: 0x7c29de070000 (37.804 µs)
+  ✅ Batch mapped: 0x7c29ddfd3000 (26.584 µs)
+
+[ 30%] Setting up heap structures...
+  ✅ Kernel ISA copied: 128 bytes at offset 0x0
+  ✅ Surface State at offset 0x100 (64 bytes)
+  ✅ Binding Table at offset 0x200 (4 bytes)
+  ✅ IDRT at offset 0x300 (32 bytes)
+  ⏱️  Heap setup: 26.322 µs
+
+[ 40%] Building batch compute Gen9...
+  ✅ Batch built: 68 DWords (272 bytes, 6.230 µs)
+
+[ 50%] Preparing execution (3 buffers)...
+  Context ID: 1
+  Ring: RCS (Render)
+  Batch length: 272 bytes
+  Buffer count: 3 (heap + output + batch)
+
+[ 60%] Submitting to GPU...
+✅ EXECBUFFER2 SUCCESS! (313.998 µs)
+  Heap GTT:   0x0000000000000000
+  Output GTT: 0x0000000000002000
+  Batch GTT:  0x0000000000003000
+
+[ 70%] Waiting for GPU completion...
+✅ GPU execution completed (684.995 ms)
+
+[ 80%] Reading output buffer...
+  Output[0] = 0x00000000 (10.911 µs)
+
+[ 90%] Validating result...
+
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  RÉSULTAT INATTENDU                                   ║
+║  Expected: 0x12345678                                     ║
+║  Got:      0x00000000                                     ║
+║  ⏱️  Temps total: 685.682 ms                                ║
+╚════════════════════════════════════════════════════════════╝
+
+[100%] Cleanup...
+  ✅ Context destroyed
+
+✅ TEST C580 TERMINÉ

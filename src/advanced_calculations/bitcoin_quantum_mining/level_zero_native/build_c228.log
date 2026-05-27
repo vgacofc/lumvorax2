@@ -1,0 +1,27 @@
+🔨 Compilation test basique Gen9...
+gcc -Wall -Wextra -O3 -march=native -std=c11 -D_GNU_SOURCE -I./include -I/usr/include/libdrm -o bin/test_gen9_native src/btc_gen9_native_runner.c tests/test_gen9_native.c -ldrm -lm -lpthread
+src/btc_gen9_native_runner.c:19: warning: "_GNU_SOURCE" redefined
+   19 | #define _GNU_SOURCE
+      | 
+<command-line>: note: this is the location of the previous definition
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_execute’:
+src/btc_gen9_native_runner.c:677:19: warning: implicit declaration of function ‘btc_gen9_reopen_drm’ [-Wimplicit-function-declaration]
+  677 |         int ret = btc_gen9_reopen_drm(ctx);
+      |                   ^~~~~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c: At top level:
+src/btc_gen9_native_runner.c:692:12: error: static declaration of ‘btc_gen9_reopen_drm’ follows non-static declaration
+  692 | static int btc_gen9_reopen_drm(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:677:19: note: previous implicit declaration of ‘btc_gen9_reopen_drm’ with type ‘int()’
+  677 |         int ret = btc_gen9_reopen_drm(ctx);
+      |                   ^~~~~~~~~~~~~~~~~~~
+src/btc_gen9_native_runner.c:692:12: warning: ‘btc_gen9_reopen_drm’ defined but not used [-Wunused-function]
+  692 | static int btc_gen9_reopen_drm(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~
+make: *** [Makefile.btc_native:37: bin/test_gen9_native] Error 1
+🔨 Compilation test basique Gen9...
+gcc -Wall -Wextra -O3 -march=native -std=c11 -D_GNU_SOURCE -I./include -I/usr/include/libdrm -o bin/test_gen9_native src/btc_gen9_native_runner.c tests/test_gen9_native.c -ldrm -lm -lpthread
+✅ Binaire créé: bin/test_gen9_native
+🔨 Compilation test mining Bitcoin natif...
+gcc -Wall -Wextra -O3 -march=native -std=c11 -D_GNU_SOURCE -I./include -I/usr/include/libdrm -o bin/test_btc_mining_native src/btc_gen9_native_runner.c tests/test_btc_mining_native.c -ldrm -lm -lpthread
+✅ Binaire créé: bin/test_btc_mining_native

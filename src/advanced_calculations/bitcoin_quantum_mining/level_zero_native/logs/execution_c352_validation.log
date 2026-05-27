@@ -1,0 +1,40 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c352_validation.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 6 nonces
+[GEN9-EXECUTE] Début: ctx=0x653578c053d0 block_header=0x65356b6bc020 start_nonce=0 count=6
+╔════════════════════════════════════════════════════════════╗
+║  C352 - VALIDATION SHA-256 BIT-LEVEL CPU vs GPU           ║
+╚════════════════════════════════════════════════════════════╝
+
+[ÉTAPE 1] Calcul hashes CPU (OpenSSL référence)
+─────────────────────────────────────────────────────────────
+CPU nonce=0: 02ef6aa0404d897a...
+CPU nonce=1: de3d4c5da036ccac...
+CPU nonce=2: 099ddc7d68c7fd82...
+CPU nonce=3: a6d7249b452ba1a1...
+CPU nonce=4: 8be28c64db67e21b...
+CPU nonce=5: c79cbfc1a8318367...
+
+[ÉTAPE 2] Calcul hashes GPU (kernel Gen9)
+─────────────────────────────────────────────────────────────
+GPU exécuté: best_nonce=0 leading_zeros=0
+
+[ÉTAPE 3] Analyse des résultats
+─────────────────────────────────────────────────────────────
+CPU nonce=0: 6 leading zeros
+CPU nonce=1: 0 leading zeros
+CPU nonce=2: 4 leading zeros
+CPU nonce=3: 0 leading zeros
+CPU nonce=4: 0 leading zeros
+CPU nonce=5: 0 leading zeros
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTATS COMPARAISON CPU vs GPU                         ║
+╚════════════════════════════════════════════════════════════╝
+CPU best: nonce=0 zeros=6
+GPU best: nonce=0 zeros=0
+
+❌ ÉCHEC: GPU et CPU divergent!
+   → Soit SHA-256 GPU incorrect
+   → Soit détection leading zeros GPU incorrecte
+   → Soit nonce injection GPU incorrecte

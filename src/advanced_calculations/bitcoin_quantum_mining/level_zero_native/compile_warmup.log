@@ -1,0 +1,16 @@
+[C198] Nettoyage...
+[C198] ✅ Nettoyage terminé
+[C255v8n] Compilation: src/btc_gen9_native_runner.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_gen9_native_runner.c -o build/btc_gen9_native_runner.o
+src/btc_gen9_native_runner.c:345:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  345 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+[C255v8n] Compilation: src/btc_i915_drm_forensic_tracker.c
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm -c src/btc_i915_drm_forensic_tracker.c -o build/btc_i915_drm_forensic_tracker.o
+src/btc_i915_drm_forensic_tracker.c:24: warning: "_GNU_SOURCE" redefined
+   24 | #define _GNU_SOURCE
+      | 
+<command-line>: note: this is the location of the previous definition
+[C198] Linkage: bin/test_gen9_native
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -Iinclude -I../include -I/usr/include/libdrm tests/test_gen9_native.c build/btc_gen9_native_runner.o build/btc_i915_drm_forensic_tracker.o -ldrm -lpthread -lm -lssl -lcrypto -o bin/test_gen9_native
+[C198] ✅ Binaire créé: bin/test_gen9_native

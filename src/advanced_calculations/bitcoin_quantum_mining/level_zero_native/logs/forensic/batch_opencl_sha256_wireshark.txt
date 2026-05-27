@@ -1,0 +1,127 @@
+
+═══════════════════════════════════════════════════════════════════════════════
+  LUMVORAX BATCH DECODER - Wireshark GPU Mode
+═══════════════════════════════════════════════════════════════════════════════
+
+Batch Size: 208 bytes (52 DWords)
+Commands: 8 total
+  - MI Commands: 0
+  - Pipeline Commands: 2
+  - Media Commands: 4
+  - Compute Commands: 1
+
+Statistics:
+  - Memory Accesses: 1
+  - State Changes: 5
+  - Sync Points: 2
+  - Errors: 1
+  - Warnings: 0
+
+Validation: ❌ INVALID
+End Marker: ✅ Present
+
+───────────────────────────────────────────────────────────────────────────────
+
+Frame 0: PIPELINE_SELECT
+  Offset: 0x0000 (0 bytes)
+  Length: 1 DWords (4 bytes)
+  Opcode: 0x69040002
+    ├─ Pipeline Selection: 0x2 (2)
+    │  Bits [0:1] - GPGPU
+    └─ ⚙️ Modifies GPU state
+
+Frame 1: STATE_BASE_ADDRESS
+  Offset: 0x0004 (4 bytes)
+  Length: 16 DWords (64 bytes)
+  Opcode: 0x61010010
+    ├─ DWord Length: 0x10 (16)
+    │  Bits [0:7] - Length = 14 (16 DWords total)
+    │  ⚠️ INVALID
+    ├─ General State Base Address: 0x00000000 (GTT address)
+    │  Bits [12:63] - Base address for general state data
+    ├─ General State Buffer Size: 0x0 (0)
+    │  Bits [0:31] - Size in pages (4KB)
+    ├─ Surface State Base Address: 0x00001001 (GTT address)
+    │  Bits [12:63] - Base address for surface states (CRITICAL)
+    ├─ Dynamic State Base Address: 0x00001001 (GTT address)
+    │  Bits [12:63] - Base address for dynamic state
+    ├─ Indirect Object Base Address: 0x00001001 (GTT address)
+    │  Bits [12:63] - Base address for indirect objects
+    ├─ Instruction Base Address: 0x00001001 (GTT address)
+    │  Bits [12:63] - Base address for kernel instructions (CRITICAL)
+    └─ 🔗 Requires relocation
+    └─ ⚙️ Modifies GPU state
+
+Frame 2: MEDIA_VFE_STATE
+  Offset: 0x0044 (68 bytes)
+  Length: 9 DWords (36 bytes)
+  Opcode: 0x70000007
+    ├─ Scratch Space Base Pointer: 0x00000000 (GTT address)
+    │  Bits [10:31] - Base address for scratch space
+    ├─ Maximum Number of Threads: 0x0 (0)
+    │  Bits [0:15] - Max concurrent threads
+    ├─ Number of URB Entries: 0xFF (255)
+    │  Bits [16:23] - URB entry count
+    ├─ URB Entry Allocation Size: 0x0 (0)
+    │  Bits [16:31] - Size per URB entry
+    └─ ⚙️ Modifies GPU state
+
+Frame 3: MEDIA_CURBE_LOAD
+  Offset: 0x0068 (104 bytes)
+  Length: 4 DWords (16 bytes)
+  Opcode: 0x71000002
+    ├─ CURBE Total Data Length: 0x80 (128)
+    │  Bits [0:16] - Total length of CURBE data in bytes
+    ├─ CURBE Data Start Address: 0x00000000 (GTT address)
+    │  Bits [0:31] - Offset to CURBE data (relative to Dynamic State Base)
+    └─ 🔗 Requires relocation
+    └─ ⚙️ Modifies GPU state
+
+Frame 4: MEDIA_INTERFACE_DESCRIPTOR_LOAD
+  Offset: 0x0078 (120 bytes)
+  Length: 4 DWords (16 bytes)
+  Opcode: 0x72000002
+    ├─ Interface Descriptor Total Length: 0x20 (32)
+    │  Bits [0:16] - Total length of IDRT in bytes
+    ├─ Interface Descriptor Data Start Address: 0x00000000 (GTT address)
+    │  Bits [0:31] - Offset to IDRT (relative to Dynamic State Base)
+    └─ 🔗 Requires relocation
+    └─ ⚙️ Modifies GPU state
+
+Frame 5: GPGPU_WALKER
+  Offset: 0x0088 (136 bytes)
+  Length: 15 DWords (60 bytes)
+  Opcode: 0x7A05000D
+    ├─ Interface Descriptor Offset: 0x0 (0)
+    │  Bits [0:5] - Offset into IDRT
+    ├─ Indirect Data Length: 0x0 (0)
+    │  Bits [0:16] - Length of indirect data
+    ├─ Indirect Data Start Address: 0x00000000 (GTT address)
+    │  Bits [0:31] - Address of indirect data (CURBE)
+    ├─ Thread Group ID X Dimension: 0x100 (256)
+    │  Bits [0:31] - Number of thread groups in X
+    ├─ Thread Group ID Y Dimension: 0x1 (1)
+    │  Bits [0:31] - Number of thread groups in Y
+    ├─ Thread Group ID Z Dimension: 0x1 (1)
+    │  Bits [0:31] - Number of thread groups in Z
+    └─ 🔗 Requires relocation
+    └─ 💾 Accesses memory
+
+Frame 6: MEDIA_STATE_FLUSH
+  Offset: 0x00C4 (196 bytes)
+  Length: 2 DWords (8 bytes)
+  Opcode: 0x70040000
+    ├─ Flush to GO: 0x0 (0)
+    │  Bits [0:0] - Flush media pipeline
+    └─ 🔄 Synchronization point
+
+Frame 7: MI_BATCH_BUFFER_END
+  Offset: 0x00CC (204 bytes)
+  Length: 1 DWords (4 bytes)
+  Opcode: 0x05000000
+    ├─ MI Command Opcode: 0xA (10)
+    │  Bits [23:28] - MI_BATCH_BUFFER_END (0x0A)
+    └─ 🔄 Synchronization point
+
+═══════════════════════════════════════════════════════════════════════════════
+

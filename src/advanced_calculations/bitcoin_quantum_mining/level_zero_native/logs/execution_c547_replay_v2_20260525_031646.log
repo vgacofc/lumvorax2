@@ -1,0 +1,30 @@
+=== TEST C547 - REPLAY BATCH OPENCL EXACT ===
+ROOT CAUSE #58: Modèle heap-relative vs modèle hybride OpenCL
+
+✓ DRM ouvert
+✓ Buffer output créé (handle=1)
+✓ Batch OpenCL chargé: 320 bytes
+
+Batch content (premiers 80 bytes):
+0000: 69041312 7a000004 00100000 00000000 00000000 00000000 00000000 11000001 
+0020: 0000e404 00000100 11000001 00007034 60000321 61040001 f1800000 00007c7d 
+0040: 7a000004 00101021 00000000 00000000 
+✓ Heap buffer créé (handle=3)
+✓ Heap configuré (Surface State, Binding Table, IDRT, Kernel)
+
+=== EXÉCUTION GPU (BATCH OPENCL BRUT) ===
+⚠️  ATTENTION: Le batch contient des adresses GTT OpenCL
+    Ceci va probablement échouer, mais c'est un test
+
+✓ GPU exécuté (surprenant!)
+
+=== VÉRIFICATION RÉSULTAT ===
+output[0] = 0xffffffff
+output[1] = 0xffffffff
+
+❌ output[0] != 0x12345678
+
+=== CONCLUSION ===
+Ce test montre que le batch OpenCL brut ne peut PAS être rejoué
+directement car il contient des adresses GTT spécifiques à OpenCL.
+La prochaine étape (C548) sera de PATCHER le batch avec nos adresses.

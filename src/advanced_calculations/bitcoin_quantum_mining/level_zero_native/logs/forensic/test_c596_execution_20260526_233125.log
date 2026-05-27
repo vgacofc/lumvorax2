@@ -1,0 +1,117 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST C596 - GÉNÉRATEUR AUTOMATIQUE i915 BATCH BUFFERS    ║
+║  Validation Infrastructure Automatique                     ║
+╚════════════════════════════════════════════════════════════╝
+
+[TEST] Phase 1: Ouverture device DRM...
+[TEST] ✓ DRM device ouvert: fd=5
+
+[TEST] Phase 2: Initialisation générateur automatique...
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+[TEST] ✓ Générateur automatique initialisé
+
+[TEST] Phase 3: Validation configuration automatique...
+[TEST] ✓ 12 buffers créés (comme OpenCL)
+[TEST] ✓ Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[TEST] ✓ Flags Object: 0x18 (PINNED + 48B)
+[TEST] ✓ Context i915: 1
+[TEST] Validation soft-pinning des buffers:
+[TEST]   ✓ Buffer  0: BATCH           offset=0x0000000000040000 flags=0x18 mapped=0x7ced60719000
+[TEST]   ✓ Buffer  1: HEAP            offset=0x0000000000080000 flags=0x18 mapped=0x7ced6066f000
+[TEST]   ✓ Buffer  2: OUTPUT          offset=0x0000000000100000 flags=0x18 mapped=0x7ced6066e000
+[TEST]   ✓ Buffer  3: SURFACE_STATE   offset=0x0000000000200000 flags=0x18 mapped=0x7ced6066d000
+[TEST]   ✓ Buffer  4: BINDING_TABLE   offset=0x0000000000300000 flags=0x18 mapped=0x7ced6066c000
+[TEST]   ✓ Buffer  5: IDRT            offset=0x0000000000400000 flags=0x18 mapped=0x7ced6066b000
+[TEST]   ✓ Buffer  6: CURBE           offset=0x0000000000500000 flags=0x18 mapped=0x7ced6066a000
+[TEST]   ✓ Buffer  7: SCRATCH         offset=0x0000000000600000 flags=0x18 mapped=0x7ced60669000
+[TEST]   ✓ Buffer  8: KERNEL          offset=0x0000000000700000 flags=0x18 mapped=0x7ced60668000
+[TEST]   ✓ Buffer  9: DYNAMIC_STATE   offset=0x0000000000800000 flags=0x18 mapped=0x7ced60664000
+[TEST]   ✓ Buffer 10: GENERAL_STATE   offset=0x0000000000900000 flags=0x18 mapped=0x7ced60663000
+[TEST]   ✓ Buffer 11: INDIRECT        offset=0x0000000000a00000 flags=0x18 mapped=0x7ced60662000
+
+[TEST] ✓ Tous les buffers validés
+
+[TEST] Phase 4: Configuration kernel test...
+[AUTO] Configuration kernel:
+[AUTO]   - Taille ISA: 16 bytes
+[AUTO]   - Global work size: 256
+[AUTO]   - Local work size: 16
+[AUTO]   - Threads EU: 16
+[AUTO] ✓ Kernel ISA copié dans buffer KERNEL
+[TEST] ✓ Kernel configuré
+
+[TEST] Phase 5: Dump configuration finale...
+
+[AUTO] ========================================
+[AUTO] CONFIGURATION EXECBUFFER2 AUTOMATIQUE
+[AUTO] ========================================
+[AUTO] buffer_count: 12 (comme OpenCL)
+[AUTO] batch_len: 0 bytes (comme OpenCL: 320)
+[AUTO] flags: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO] context: 1
+[AUTO] 
+[AUTO] Buffers (12 avec soft-pinning):
+[AUTO]   [ 0] BATCH           handle=1 offset=0x0000000000040000 flags=0x18
+[AUTO]   [ 1] HEAP            handle=2 offset=0x0000000000080000 flags=0x18
+[AUTO]   [ 2] OUTPUT          handle=3 offset=0x0000000000100000 flags=0x18
+[AUTO]   [ 3] SURFACE_STATE   handle=4 offset=0x0000000000200000 flags=0x18
+[AUTO]   [ 4] BINDING_TABLE   handle=5 offset=0x0000000000300000 flags=0x18
+[AUTO]   [ 5] IDRT            handle=6 offset=0x0000000000400000 flags=0x18
+[AUTO]   [ 6] CURBE           handle=7 offset=0x0000000000500000 flags=0x18
+[AUTO]   [ 7] SCRATCH         handle=8 offset=0x0000000000600000 flags=0x18
+[AUTO]   [ 8] KERNEL          handle=9 offset=0x0000000000700000 flags=0x18
+[AUTO]   [ 9] DYNAMIC_STATE   handle=10 offset=0x0000000000800000 flags=0x18
+[AUTO]   [10] GENERAL_STATE   handle=11 offset=0x0000000000900000 flags=0x18
+[AUTO]   [11] INDIRECT        handle=12 offset=0x0000000000a00000 flags=0x18
+[AUTO] ========================================
+
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSULTAT TEST C596                                        ║
+╠════════════════════════════════════════════════════════════╣
+║  ✓ Infrastructure générateur automatique: OK               ║
+║  ✓ 12 buffers avec soft-pinning: OK                       ║
+║  ✓ Flags automatiques (0x800, 0x18): OK                   ║
+║  ✓ Context i915 automatique: OK                           ║
+║                                                            ║
+║  Prochaines étapes (C597-C600):                           ║
+║  - Implémenter génération STATE_BASE_ADDRESS              ║
+║  - Implémenter génération MEDIA_VFE_STATE                 ║
+║  - Implémenter génération MEDIA_INTERFACE_DESCRIPTOR_LOAD ║
+║  - Implémenter génération GPGPU_WALKER                    ║
+║  - Implémenter génération PIPE_CONTROL                    ║
+║  - Implémenter batch_generator_generate() complet         ║
+║  - Implémenter batch_generator_submit()                   ║
+║  - Tests validation GPU                                   ║
+╚════════════════════════════════════════════════════════════╝
+
+[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé

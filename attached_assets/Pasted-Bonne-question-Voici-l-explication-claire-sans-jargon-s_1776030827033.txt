@@ -1,0 +1,31 @@
+Bonne question. Voici l'explication claire, sans jargon superflu.
+
+---
+
+## Ce que dit le rapport brut
+
+Sur 2 runs indépendants, la progression des "near-miss" vers 20 bits est :
+
+**Run 38350778 :** 1 → 2 → 3 → 4 → **12** → **16** → **18** → **20** bits *(8 étapes)*
+
+**Run 1907 :** 3 → 4 → 9 → 11 → 12 → 17 → 19 → **20** bits *(8 étapes)*
+
+## Ce que ça veut dire concrètement
+
+Un "near-miss" c'est quoi ? Le moteur BTC calcule SHA256 en masse sur des nonces (des nombres qu'on essaie). Quand le résultat du hash commence par N bits à zéro, c'est un near-miss de N bits. Plus N est grand, plus c'est rare et proche d'un vrai bloc Bitcoin valide.
+
+Le pattern observé : dans les deux runs, il faut exactement 8 paliers successifs de near-miss pour atteindre 20 bits. La forme de la progression est différente (les runs ne passent pas par les mêmes bits intermédiaires) mais le nombre d'étapes est le même.
+
+## Pourquoi c'est intéressant — et pourquoi j'ai utilisé le mot "structure"
+
+SHA256 est censé se comporter comme un oracle aléatoire parfait — chaque nonce devrait donner un hash indépendant des autres, sans mémoire, sans structure. Si c'est vraiment le cas, la progression vers 20 bits devrait être différente à chaque run : parfois 3 étapes, parfois 15, ça varie aléatoirement.
+
+Mais on voit 8 étapes deux fois de suite. Ça peut vouloir dire deux choses très différentes :
+
+**Hypothèse 1 (la plus probable) : c'est de la chance, pas une structure.** Avec seulement 2 runs, on n'a pas assez de données pour affirmer quoi que ce soit. Deux lancers de dés peuvent tous les deux faire 6 sans que les dés soient pipés. Le rapport note ça comme une "découverte" mais c'est surtout une observation à vérifier sur 20 ou 30 runs.
+
+**Hypothèse 2 (ce que le rapport sous-entend) : le header TESTNET3 utilisé est fixe.** Et c'est là que c'est pertinent. Le moteur BTC teste des nonces sur un header Bitcoin figé (réseau de test TESTNET3 avec un bloc fixe). Ce header contient un merkle root, un timestamp, des bits de difficulté — tous fixes entre les runs. Donc la "structure" ne serait pas dans SHA256 lui-même, mais dans le fait que le moteur mine toujours le même bloc avec le même header. Dans ce cas, la zone du nonce qui donne 20 bits (autour de 3 649 356 111) serait toujours au même endroit dans l'espace des nonces, et le NX48 y converge en 8 étapes parce qu'il part de conditions initiales similaires.
+
+## En résumé simple
+
+Le moteur repart du même header Bitcoin à chaque run → la "bonne zone" de nonces est toujours la même → le NX48 y arrive en environ 8 sauts dans les deux cas. Ce n'est pas une propriété magique de SHA256, c'est juste que le problème est identique à chaque run. Ce serait beaucoup plus impressionnant si les 8 étapes se confirmaient avec des headers différents (différents blocs, différents timestamps) — là ce serait une vraie régularité statistique à creuser.

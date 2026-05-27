@@ -1,0 +1,25 @@
+=== TEST C440: DUMP SSH OpenCL ===
+
+✅ OpenCL initialisé
+✅ Kernel compilé
+✅ Buffer créé: 1028 bytes
+✅ Argument kernel configuré
+
+🔍 OpenCL a maintenant généré le SSH interne!
+
+⚠️  OpenCL ne fournit pas d'API pour dumper le SSH directement
+⚠️  Nous devons analyser le binaire compilé pour extraire le SSH
+
+✅ Binaire extrait: 3512 bytes
+✅ Binaire sauvegardé: tests/test_c440_opencl_binary.bin
+
+🔍 Recherche du SSH dans le binaire...
+
+✅ Kernel exécuté
+✅ Résultat: output[0] = 0x12345678 (attendu: 0x12345678)
+✅ OpenCL fonctionne correctement!
+
+=== CONCLUSION ===
+Le SSH OpenCL est dans le binaire compilé.
+Analysez tests/test_c440_opencl_binary.bin pour extraire le SSH exact.
+Comparez-le byte-par-byte avec notre SSH natif.

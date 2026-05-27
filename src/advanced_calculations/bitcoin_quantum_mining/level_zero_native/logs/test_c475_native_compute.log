@@ -1,0 +1,20 @@
+[26532.140661013] 🚀 TEST C475 - COMPUTE NATIF i915
+[26532.140670367] 📚 Stratégie: Batch null_state + GPGPU commands
+[26532.140749715] ✅ DRM ouvert: fd=5
+[26532.140760245] ✅ Contexte créé: id=1
+[26532.140796473] ✅ Buffers créés: batch=1, output=6, kernel=7
+[26532.140885832] ✅ Output buffer initialisé à 0
+[26532.141627031] ✅ Kernel chargé: 3296 bytes
+[26532.141641228] ✅ Batch null_state copié: 960 DWORDs
+[26532.141642599] ✅ PIPELINE_SELECT GPGPU ajouté
+[26532.141643435] ✅ Batch total: 962 DWORDs (3848 bytes)
+[26532.141644849] ⚡ Soumission batch (null_state + GPGPU)...
+[26532.142064039] ✅ EXECBUFFER2 réussi
+[26532.142406718] ✅ GPU idle confirmé
+[26532.142414421] 📊 RÉSULTATS:
+[26532.142415327]   output[0] = 0x00000000 (attendu: 0xDEADBEEF)
+[26532.142416581]   output[1] = 0x00000000 (attendu: 0xCAFEBABE)
+[26532.142417268]   output[2] = 0x00000000 (attendu: 0x12345678)
+[26532.142417952]   output[3] = 0x00000000 (attendu: 0xABCDEF00)
+[26532.142418794] ⚠️  Valeurs incorrectes - Kernel non exécuté ou problème écriture
+[26532.142420089] 📌 NOTE: Batch stable (pas de GPU HANG) mais compute path incomplet

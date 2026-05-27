@@ -1,0 +1,62 @@
+/**
+ * LumVorax C255v2 — Header btc_gen9_native_runner
+ */
+
+#ifndef BTC_GEN9_NATIVE_RUNNER_H
+#define BTC_GEN9_NATIVE_RUNNER_H
+
+#include <stdint.h>
+#include <stdio.h>
+
+/* Forward declaration du contexte (type opaque) */
+typedef struct btc_gen9_context btc_gen9_context_t;
+
+/* Configuration */
+typedef struct {
+    uint32_t batch_size;
+    uint32_t work_group_size;
+    const char* kernel_path;
+    const char* log_path;
+    int enable_profiling;
+} btc_gen9_config_t;
+
+/* Initialisation/Cleanup */
+int btc_gen9_init(btc_gen9_context_t** ctx_out, const btc_gen9_config_t* config);
+btc_gen9_context_t* btc_gen9_init_simple(uint32_t batch_size, uint32_t work_group_size);
+void btc_gen9_cleanup(btc_gen9_context_t* ctx);
+
+/* Exécution */
+int btc_gen9_execute(btc_gen9_context_t* ctx);
+int btc_gen9_reopen_drm(btc_gen9_context_t* ctx);
+
+/* Construction batch buffer (exposée pour async_submit) */
+int btc_gen9_build_batch_buffer(btc_gen9_context_t* ctx);
+
+/* Fonctions d'accès contexte */
+int btc_gen9_get_drm_fd(const btc_gen9_context_t* ctx);
+uint32_t btc_gen9_get_batch_bo(const btc_gen9_context_t* ctx);
+uint32_t btc_gen9_get_input_bo(const btc_gen9_context_t* ctx);
+uint32_t btc_gen9_get_output_bo(const btc_gen9_context_t* ctx);
+uint32_t btc_gen9_get_kernel_bo(const btc_gen9_context_t* ctx);
+uint32_t btc_gen9_get_ctx_id(const btc_gen9_context_t* ctx);
+FILE* btc_gen9_get_log_file(const btc_gen9_context_t* ctx);
+void* btc_gen9_get_batch_map(const btc_gen9_context_t* ctx);
+size_t btc_gen9_get_batch_size(const btc_gen9_context_t* ctx);
+void* btc_gen9_get_output_map(const btc_gen9_context_t* ctx);
+size_t btc_gen9_get_output_size(const btc_gen9_context_t* ctx);
+size_t btc_gen9_get_input_size(const btc_gen9_context_t* ctx);
+
+/* C255v2: Fonctions pool contextes */
+uint32_t btc_gen9_get_ctx_pool_id(const btc_gen9_context_t* ctx, int index);
+void btc_gen9_set_ctx_id(btc_gen9_context_t* ctx, uint32_t ctx_id);
+
+/* C255v2: Fonction nonce_start (à ajouter dans .c) */
+void btc_gen9_set_nonce_start(btc_gen9_context_t* ctx, uint64_t nonce_start);
+
+/* Utilitaires timestamp */
+uint64_t get_timestamp_ns(void);
+double ns_to_sec(uint64_t ns);
+
+#endif /* BTC_GEN9_NATIVE_RUNNER_H */
+
+// Made with Bob

@@ -1,0 +1,85 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10126
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2 && git pull origin main && doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
+remote: Enumerating objects: 156, done.
+remote: Counting objects: 100% (156/156), done.
+remote: Compressing objects: 100% (37/37), done.
+remote: Total 128 (delta 82), reused 125 (delta 79), pack-reused 0 (from 0)
+Receiving objects: 100% (128/128), 5.85 MiB | 1.09 MiB/s, done.
+Resolving deltas: 100% (82/82), completed with 20 local objects.
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+   2f5867b..fa0095f  main       -> origin/main
+Updating 2f5867b..fa0095f
+error: Your local changes to the following files would be overwritten by merge:
+	src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
+	src/advanced_calculations/bitcoin_quantum_mining/config/btc_nx48_last.csv
+	src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/anomalies/btc_qm_engine_anomalies.log
+	src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/btc_qm_engine_metrics.log
+Please commit your changes or stash them before you merge.
+Aborting
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [1]> git reset --hard
+                                              git pull origin main
+HEAD is now at 2f5867b chat91.5.4
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Updating 2f5867b..fa0095f
+Fast-forward
+ .replit                                            |     17 +-
+ STANDARD_NAMES.md                                  |     10 +
+ a/aa.txt                                           |      2 +-
+ github_ssh_key.txt                                 |      1 -
+ pyproject.toml                                     |      2 +
+ .../CHAT/analysechatgpt91.53.md                    |    216 +
+ .../CHAT/analysechatgpt91.54.md                    |    234 +
+ .../bitcoin_quantum_mining/btc_mining_runner       |    Bin 1916160 -> 120120 bytes
+ .../config/btc_nx48_last.csv                       |      2 +-
+ .../forensic/anomalies/btc_qm_engine_anomalies.log |     27 +
+ .../logs/forensic/hw_samples/btc_qm_engine_hw.log  |    516 +
+ .../forensic/metrics/btc_qm_engine_metrics.log     | 381614 +-----------------
+ .../btc_qm_engine_forensic_30243759629627.log      | 146286 +++++++
+ .../btc_qm_engine_forensic_49476481433202.log      | 128528 ++++++
+ ...ne_forensic_btc_replit_c52_20260417T105851Z.log | 147405 +++++++
+ ...ne_forensic_btc_replit_c52_20260417T115416Z.log | 129498 ++++++
+ .../wallet_btc_replit_c52_20260417T105851Z.json    |     13 +
+ .../wallet_btc_replit_c52_20260417T115416Z.json    |     13 +
+ .../__pycache__/server.cpython-313.pyc             |    Bin 33768 -> 37973 bytes
+ src/visualization/server.py                        |    108 +-
+ tools/agent_ubuntu_ws.py                           |    226 +
+ tools/agent_ubuntu_ws.sh                           |     68 +
+ uv.lock                                            |     79 +
+ 23 files changed, 553243 insertions(+), 381622 deletions(-)
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.53.md
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/CHAT/analysechatgpt91.54.md
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/btc_qm_engine_forensic_30243759629627.log
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/btc_qm_engine_forensic_49476481433202.log
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/btc_qm_engine_forensic_btc_replit_c52_20260417T105851Z.log
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/btc_qm_engine_forensic_btc_replit_c52_20260417T115416Z.log
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/wallet_btc_replit_c52_20260417T105851Z.json
+ create mode 100644 src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/wallet_btc_replit_c52_20260417T115416Z.json
+ create mode 100644 tools/agent_ubuntu_ws.py
+ create mode 100644 tools/agent_ubuntu_ws.sh
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> git fetch origin
+                                          git reset --hard origin/main
+HEAD is now at fa0095f chat91.54.
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && git pull origin main && doppler run --config dev_lumvorax -- bash tools/agent_ubuntu.sh
+From github.com:vgacofc/lumvorax2
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+2026-04-17T14:49:43Z [LumVorax Agent C49] Démarrage
+2026-04-17T14:49:43Z   Environnement : ubuntu_lvx
+2026-04-17T14:49:43Z   REPO_ROOT     : /home/lvx/LVX/lumvorax2
+2026-04-17T14:49:43Z   Replit URL    : https://6c9f7a5a-b76e-43ca-884d-268195c88fd5-00-3ucw08503kjzp.kirk.replit.dev
+2026-04-17T14:49:43Z   Poll interval : 5s
+2026-04-17T14:49:43Z   Job timeout   : désactivé par défaut
+2026-04-17T14:49:43Z   Log           : /home/lvx/lumvorax_agent.log
+2026-04-17T14:49:43Z   Token (8ch)   : 0d679c8c...
+2026-04-17T14:49:44Z [CONNECT] Replit accessible — statut OK
+2026-04-17T14:49:44Z [AGENT] Boucle poll démarrée — C49 (CTRL+C pour arrêter)
+
+

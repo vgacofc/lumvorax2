@@ -1,0 +1,81 @@
+# Makefile VORAX SHA-256 — C266
+# Compilation et tests VORAX SHA-256 vs classique
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -mavx2 -g
+LDFLAGS = -lm -lpthread -lrt
+
+# Includes
+INCLUDES = -I../lum -I../logger -I../debug -I../common
+
+# Sources
+SRCS = vorax_sha256.c vorax_operations.c test_vorax_sha256.c
+OBJS = $(SRCS:.c=.o)
+
+# Stubs pour compilation standalone
+STUBS = ../lum/lum_core_stub.c ../logger/lum_logger_stub.c ../debug/memory_tracker_stub.c
+
+# Target principal
+TARGET = test_vorax_sha256
+
+all: $(TARGET)
+
+$(TARGET): vorax_sha256.o vorax_operations.o test_vorax_sha256.o stubs
+	$(CC) $(CFLAGS) -o $@ vorax_sha256.o vorax_operations.o test_vorax_sha256.o \
+		lum_core_stub.o lum_logger_stub.o memory_tracker_stub.o $(LDFLAGS)
+	@echo "✅ Compilation réussie: $(TARGET)"
+
+vorax_sha256.o: vorax_sha256.c vorax_sha256.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c vorax_sha256.c
+
+vorax_operations.o: vorax_operations.c vorax_operations.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c vorax_operations.c
+
+test_vorax_sha256.o: test_vorax_sha256.c vorax_sha256.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c test_vorax_sha256.c
+
+stubs:
+	@echo "Création stubs pour compilation standalone..."
+	@echo '#include "../lum/lum_core.h"' > lum_core_stub.c
+	@echo '#include <stdlib.h>' >> lum_core_stub.c
+	@echo '#include <string.h>' >> lum_core_stub.c
+	@echo 'lum_group_t* lum_group_create(size_t count) {' >> lum_core_stub.c
+	@echo '  lum_group_t* g = malloc(sizeof(lum_group_t));' >> lum_core_stub.c
+	@echo '  if (!g) return NULL;' >> lum_core_stub.c
+	@echo '  g->lums = calloc(count, 64);' >> lum_core_stub.c
+	@echo '  g->count = count;' >> lum_core_stub.c
+	@echo '  return g;' >> lum_core_stub.c
+	@echo '}' >> lum_core_stub.c
+	@echo 'void lum_group_destroy(lum_group_t* g) {' >> lum_core_stub.c
+	@echo '  if (g) { free(g->lums); free(g); }' >> lum_core_stub.c
+	@echo '}' >> lum_core_stub.c
+	@$(CC) $(CFLAGS) $(INCLUDES) -c lum_core_stub.c
+	
+	@echo '#include <stdio.h>' > lum_logger_stub.c
+	@echo 'void lum_log(const char* msg) { fprintf(stderr, "%s\n", msg); }' >> lum_logger_stub.c
+	@$(CC) $(CFLAGS) -c lum_logger_stub.c
+	
+	@echo '#include <stdlib.h>' > memory_tracker_stub.c
+	@echo '#define TRACKED_MALLOC malloc' >> memory_tracker_stub.c
+	@echo '#define TRACKED_FREE free' >> memory_tracker_stub.c
+	@$(CC) $(CFLAGS) -c memory_tracker_stub.c
+
+test: $(TARGET)
+	@echo "═══════════════════════════════════════════════════════════════"
+	@echo "  LANCEMENT TESTS VORAX SHA-256 — C266"
+	@echo "═══════════════════════════════════════════════════════════════"
+	./$(TARGET) 10000 cpu 2>&1 | tee /tmp/vorax_sha256_test_10k.log
+	@echo ""
+	@echo "✅ Tests terminés"
+	@echo "📄 Logs: /tmp/vorax_sha256_test_10k.log"
+	@echo "📄 Dump: /tmp/vorax_sha256_dump_10000.txt"
+
+test-large: $(TARGET)
+	@echo "Test large (100K hashes)..."
+	./$(TARGET) 100000 cpu 2>&1 | tee /tmp/vorax_sha256_test_100k.log
+
+clean:
+	rm -f $(OBJS) $(TARGET) *.o *_stub.c
+	rm -f /tmp/vorax_sha256_*.log /tmp/vorax_sha256_dump_*.txt
+
+.PHONY: all test test-large clean stubs

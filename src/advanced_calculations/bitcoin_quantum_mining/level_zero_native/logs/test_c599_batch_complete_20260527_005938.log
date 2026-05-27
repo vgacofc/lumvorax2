@@ -1,0 +1,330 @@
+
+╔════════════════════════════════════════════════════════════╗
+║  TEST C599 - VALIDATION BATCH COMPLET AUTOMATIQUE         ║
+║  Mini Compute Runtime i915 DRM Natif                      ║
+║  Date: 2026-05-26                                         ║
+╚════════════════════════════════════════════════════════════╝
+
+[INIT] Ouverture device DRM /dev/dri/card1...
+[0;32m✓ Device DRM ouvert (fd=5)
+[0m
+[0;34m========================================
+TEST 1: GÉNÉRATION BATCH COMPLET
+========================================
+[0m
+[TEST] Initialisation générateur automatique...
+
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+[0;32m✓ Générateur initialisé
+[0m
+[TEST] Génération batch complet...
+
+[AUTO] ========================================
+[AUTO] GÉNÉRATION BATCH AUTOMATIQUE C599
+[AUTO] ========================================
+
+[AUTO] [1/6] Génération PIPELINE_SELECT GPGPU...
+[AUTO]   ✓ PIPELINE_SELECT: 1 DWord @ offset 0
+[AUTO] [2/6] Génération STATE_BASE_ADDRESS...
+[AUTO]   ✓ STATE_BASE_ADDRESS: 19 DWords @ offset 1
+[AUTO] [3/6] Génération MEDIA_VFE_STATE...
+[AUTO]   ✓ MEDIA_VFE_STATE: 9 DWords @ offset 20
+[AUTO] [4/6] Génération MEDIA_INTERFACE_DESCRIPTOR_LOAD...
+[AUTO]   ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 3 DWords @ offset 29
+[AUTO] [5/6] Génération GPGPU_WALKER...
+[AUTO]   ✓ GPGPU_WALKER: 15 DWords @ offset 32
+[AUTO] [6/6] Ajout MI_BATCH_BUFFER_END...
+[AUTO]   ✓ MI_BATCH_BUFFER_END: 1 DWord @ offset 47
+
+[AUTO] ========================================
+[AUTO] BATCH GÉNÉRÉ AVEC SUCCÈS
+[AUTO] ========================================
+[AUTO] Total: 48 DWords (192 bytes)
+[AUTO] 
+[AUTO] Détail commandes:
+[AUTO]   1. PIPELINE_SELECT:     1 DWord
+[AUTO]   2. STATE_BASE_ADDRESS: 19 DWords
+[AUTO]   3. MEDIA_VFE_STATE:     9 DWords
+[AUTO]   4. MEDIA_IDL:           3 DWords
+[AUTO]   5. GPGPU_WALKER:       15 DWords
+[AUTO]   6. MI_BATCH_END:        1 DWord
+[AUTO]   --------------------------------
+[AUTO]   TOTAL:                 48 DWords
+[AUTO] ========================================
+
+[AUTO] Batch buffer (48 DWords = 192 bytes):
+[AUTO]   [  0] 0x69041312 0x61010011 0x00000001 0x00000000 
+[AUTO]   [  4] 0x00000000 0x00200000 0x00000000 0x00800000 
+[AUTO]   [  8] 0x00000000 0x00000001 0x00a00000 0x00000041 
+[AUTO]   [ 12] 0x00008001 0x00700000 0x00000000 0xfffff001 
+[AUTO]   [ 16] 0xfffff001 0x00a00000 0x00000000 0x003bf000 
+[AUTO]   [ 20] 0x70000007 0x00600000 0x00000000 0x00a70100 
+[AUTO]   [ 24] 0x00000000 0x07820000 0x00000000 0x00000000 
+[AUTO]   [ 28] 0x00000000 0x61020001 0x00400000 0x00000000 
+[AUTO]   [ 32] 0x18800101 0x00400000 0x00000000 0x00000000 
+[AUTO]   [ 36] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 40] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 44] 0x00000000 0x00000000 0x00000000 0x05000000 
+[0;32m✓ Batch généré
+[0m
+[TEST] Vérification structure batch...
+[0;32m✓ Nombre DWords correct: 48
+[0m
+[TEST] Vérification opcodes commandes...
+[0;32m✓ PIPELINE_SELECT: 0x69041312
+[0m[0;32m✓ STATE_BASE_ADDRESS: 0x61010011 (19 DWords)
+[0m[0;32m✓ MEDIA_VFE_STATE: 0x70000007 (9 DWords)
+[0m[0;32m✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 0x61020001 (3 DWords)
+[0m[0;32m✓ GPGPU_WALKER: 0x18800101 (15 DWords)
+[0m[0;32m✓ MI_BATCH_BUFFER_END: 0x05000000
+[0m
+[TEST] Vérification adresses GTT...
+[0;32m✓ Surface State Base: 0x0000000000200000
+[0m[0;32m✓ Dynamic State Base: 0x0000000000800000
+[0m[0;32m✓ Instruction Base: 0x0000000000700000
+[0m
+[TEST] Vérification cohérence IDRT...
+[0;32m✓ IDRT MEDIA_IDL: 0x00400000
+[0m[0;32m✓ IDRT GPGPU_WALKER: 0x0000000000400000
+[0m[0;32m✓ Cohérence IDRT validée
+[0m[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+[0;32m========================================
+✓ TEST 1 RÉUSSI: BATCH COMPLET GÉNÉRÉ
+========================================
+[0m
+[0;34m========================================
+TEST 2: CONFIGURATION EXECBUFFER2
+========================================
+[0m
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+
+[AUTO] ========================================
+[AUTO] GÉNÉRATION BATCH AUTOMATIQUE C599
+[AUTO] ========================================
+
+[AUTO] [1/6] Génération PIPELINE_SELECT GPGPU...
+[AUTO]   ✓ PIPELINE_SELECT: 1 DWord @ offset 0
+[AUTO] [2/6] Génération STATE_BASE_ADDRESS...
+[AUTO]   ✓ STATE_BASE_ADDRESS: 19 DWords @ offset 1
+[AUTO] [3/6] Génération MEDIA_VFE_STATE...
+[AUTO]   ✓ MEDIA_VFE_STATE: 9 DWords @ offset 20
+[AUTO] [4/6] Génération MEDIA_INTERFACE_DESCRIPTOR_LOAD...
+[AUTO]   ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 3 DWords @ offset 29
+[AUTO] [5/6] Génération GPGPU_WALKER...
+[AUTO]   ✓ GPGPU_WALKER: 15 DWords @ offset 32
+[AUTO] [6/6] Ajout MI_BATCH_BUFFER_END...
+[AUTO]   ✓ MI_BATCH_BUFFER_END: 1 DWord @ offset 47
+
+[AUTO] ========================================
+[AUTO] BATCH GÉNÉRÉ AVEC SUCCÈS
+[AUTO] ========================================
+[AUTO] Total: 48 DWords (192 bytes)
+[AUTO] 
+[AUTO] Détail commandes:
+[AUTO]   1. PIPELINE_SELECT:     1 DWord
+[AUTO]   2. STATE_BASE_ADDRESS: 19 DWords
+[AUTO]   3. MEDIA_VFE_STATE:     9 DWords
+[AUTO]   4. MEDIA_IDL:           3 DWords
+[AUTO]   5. GPGPU_WALKER:       15 DWords
+[AUTO]   6. MI_BATCH_END:        1 DWord
+[AUTO]   --------------------------------
+[AUTO]   TOTAL:                 48 DWords
+[AUTO] ========================================
+
+[AUTO] Batch buffer (48 DWords = 192 bytes):
+[AUTO]   [  0] 0x69041312 0x61010011 0x00000001 0x00000000 
+[AUTO]   [  4] 0x00000000 0x00200000 0x00000000 0x00800000 
+[AUTO]   [  8] 0x00000000 0x00000001 0x00a00000 0x00000041 
+[AUTO]   [ 12] 0x00008001 0x00700000 0x00000000 0xfffff001 
+[AUTO]   [ 16] 0xfffff001 0x00a00000 0x00000000 0x003bf000 
+[AUTO]   [ 20] 0x70000007 0x00600000 0x00000000 0x00a70100 
+[AUTO]   [ 24] 0x00000000 0x07820000 0x00000000 0x00000000 
+[AUTO]   [ 28] 0x00000000 0x61020001 0x00400000 0x00000000 
+[AUTO]   [ 32] 0x18800101 0x00400000 0x00000000 0x00000000 
+[AUTO]   [ 36] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 40] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 44] 0x00000000 0x00000000 0x00000000 0x05000000 
+
+[TEST] Vérification configuration...
+[0;32m✓ Nombre buffers: 12
+[0m[0;32m✓ Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[0m[0;32m✓ Flags Object: 0x18 (PINNED + 48B)
+[0m[0;32m✓ Context i915: 1
+[0m
+[TEST] Vérification soft-pinning...
+[0;32m✓ Tous les buffers soft-pinnés avec flags 0x18
+[0m[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+[0;32m========================================
+✓ TEST 2 RÉUSSI: CONFIGURATION VALIDÉE
+========================================
+[0m
+[0;34m========================================
+TEST 3: COMPARAISON AVEC OPENCL C545
+========================================
+[0m
+[AUTO] ========================================
+[AUTO] INITIALISATION GÉNÉRATEUR AUTOMATIQUE
+[AUTO] ========================================
+
+[AUTO] ✓ Context i915 créé: ctx_id=1
+[AUTO] Allocation automatique des 12 buffers avec soft-pinning...
+[AUTO]   Buffer  0: BATCH           handle=1 offset=0x0000000000040000 size=4096 flags=0x18
+[AUTO]   Buffer  1: HEAP            handle=2 offset=0x0000000000080000 size=65536 flags=0x18
+[AUTO]   Buffer  2: OUTPUT          handle=3 offset=0x0000000000100000 size=4096 flags=0x18
+[AUTO]   Buffer  3: SURFACE_STATE   handle=4 offset=0x0000000000200000 size=4096 flags=0x18
+[AUTO]   Buffer  4: BINDING_TABLE   handle=5 offset=0x0000000000300000 size=4096 flags=0x18
+[AUTO]   Buffer  5: IDRT            handle=6 offset=0x0000000000400000 size=4096 flags=0x18
+[AUTO]   Buffer  6: CURBE           handle=7 offset=0x0000000000500000 size=4096 flags=0x18
+[AUTO]   Buffer  7: SCRATCH         handle=8 offset=0x0000000000600000 size=4096 flags=0x18
+[AUTO]   Buffer  8: KERNEL          handle=9 offset=0x0000000000700000 size=4096 flags=0x18
+[AUTO]   Buffer  9: DYNAMIC_STATE   handle=10 offset=0x0000000000800000 size=4096 flags=0x18
+[AUTO]   Buffer 10: GENERAL_STATE   handle=11 offset=0x0000000000900000 size=4096 flags=0x18
+[AUTO]   Buffer 11: INDIRECT        handle=12 offset=0x0000000000a00000 size=4096 flags=0x18
+[AUTO] ✓ 12 buffers alloués avec succès
+
+[AUTO] ✓ Générateur automatique initialisé
+[AUTO]   - 12 buffers avec soft-pinning
+[AUTO]   - Context i915: 1
+[AUTO]   - Flags EXEC: 0x800 (I915_EXEC_NO_RELOC)
+[AUTO]   - Flags Object: 0x18 (PINNED + 48B)
+[AUTO] ========================================
+
+
+[AUTO] ========================================
+[AUTO] GÉNÉRATION BATCH AUTOMATIQUE C599
+[AUTO] ========================================
+
+[AUTO] [1/6] Génération PIPELINE_SELECT GPGPU...
+[AUTO]   ✓ PIPELINE_SELECT: 1 DWord @ offset 0
+[AUTO] [2/6] Génération STATE_BASE_ADDRESS...
+[AUTO]   ✓ STATE_BASE_ADDRESS: 19 DWords @ offset 1
+[AUTO] [3/6] Génération MEDIA_VFE_STATE...
+[AUTO]   ✓ MEDIA_VFE_STATE: 9 DWords @ offset 20
+[AUTO] [4/6] Génération MEDIA_INTERFACE_DESCRIPTOR_LOAD...
+[AUTO]   ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD: 3 DWords @ offset 29
+[AUTO] [5/6] Génération GPGPU_WALKER...
+[AUTO]   ✓ GPGPU_WALKER: 15 DWords @ offset 32
+[AUTO] [6/6] Ajout MI_BATCH_BUFFER_END...
+[AUTO]   ✓ MI_BATCH_BUFFER_END: 1 DWord @ offset 47
+
+[AUTO] ========================================
+[AUTO] BATCH GÉNÉRÉ AVEC SUCCÈS
+[AUTO] ========================================
+[AUTO] Total: 48 DWords (192 bytes)
+[AUTO] 
+[AUTO] Détail commandes:
+[AUTO]   1. PIPELINE_SELECT:     1 DWord
+[AUTO]   2. STATE_BASE_ADDRESS: 19 DWords
+[AUTO]   3. MEDIA_VFE_STATE:     9 DWords
+[AUTO]   4. MEDIA_IDL:           3 DWords
+[AUTO]   5. GPGPU_WALKER:       15 DWords
+[AUTO]   6. MI_BATCH_END:        1 DWord
+[AUTO]   --------------------------------
+[AUTO]   TOTAL:                 48 DWords
+[AUTO] ========================================
+
+[AUTO] Batch buffer (48 DWords = 192 bytes):
+[AUTO]   [  0] 0x69041312 0x61010011 0x00000001 0x00000000 
+[AUTO]   [  4] 0x00000000 0x00200000 0x00000000 0x00800000 
+[AUTO]   [  8] 0x00000000 0x00000001 0x00a00000 0x00000041 
+[AUTO]   [ 12] 0x00008001 0x00700000 0x00000000 0xfffff001 
+[AUTO]   [ 16] 0xfffff001 0x00a00000 0x00000000 0x003bf000 
+[AUTO]   [ 20] 0x70000007 0x00600000 0x00000000 0x00a70100 
+[AUTO]   [ 24] 0x00000000 0x07820000 0x00000000 0x00000000 
+[AUTO]   [ 28] 0x00000000 0x61020001 0x00400000 0x00000000 
+[AUTO]   [ 32] 0x18800101 0x00400000 0x00000000 0x00000000 
+[AUTO]   [ 36] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 40] 0x00000000 0x00000000 0x00000000 0x00000000 
+[AUTO]   [ 44] 0x00000000 0x00000000 0x00000000 0x05000000 
+
+[TEST] Comparaison structure batch...
+
+Batch OpenCL C545:
+  - Taille: 320 bytes (80 DWords)
+  - Commandes: 13 (6x STATE_BASE_ADDRESS + 3x BINDING_TABLE_POOL + autres)
+
+Batch C599 (simplifié):
+  - Taille: 192 bytes (48 DWords)
+  - Commandes: 6 (version simplifiée avec commandes validées)
+
+[0;33mNote: Batch C599 est une version simplifiée du batch OpenCL.
+Les commandes critiques sont identiques:
+  - STATE_BASE_ADDRESS: Structure 19 DWords validée
+  - MEDIA_VFE_STATE: Configuration 167 threads validée
+  - MEDIA_IDL: Structure 3 DWords validée
+  - GPGPU_WALKER: Structure 15 DWords validée
+[0m[AUTO] Nettoyage générateur automatique...
+[AUTO] ✓ Nettoyage terminé
+
+[0;32m========================================
+✓ TEST 3 RÉUSSI: COMPARAISON VALIDÉE
+========================================
+[0m
+╔════════════════════════════════════════════════════════════╗
+║  [0;32m✓ TOUS LES TESTS RÉUSSIS (3/3)[0m                          ║
+║                                                            ║
+║  Batch complet généré avec succès:                        ║
+║  - 48 DWords (192 bytes)                                  ║
+║  - 6 commandes validées                                   ║
+║  - Configuration EXECBUFFER2 identique OpenCL             ║
+║  - Soft-pinning automatique 12 buffers                    ║
+║                                                            ║
+║  Prochaine étape: C600 - Submit + Validation GPU         ║
+╚════════════════════════════════════════════════════════════╝
+

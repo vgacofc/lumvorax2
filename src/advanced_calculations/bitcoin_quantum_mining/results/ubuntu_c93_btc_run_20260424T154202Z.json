@@ -1,0 +1,146 @@
+{
+  "cycle": "C93",
+  "subcycle": "ubuntu_btc_run_analysis",
+  "stamp_utc": "2026-04-24T15:42:02Z",
+  "stamp_analysis_utc": "2026-04-24T19:30:00Z",
+  "host": "lvx-Vostro-5481",
+  "user": "lvx",
+  "run_id": "btc_20260424T154202Z_c48_ubuntu_lvx",
+  "binary": {
+    "name": "btc_mining_runner",
+    "size_bytes": 166912,
+    "size_human": "163K",
+    "compile_warnings": [
+      "src/btc_opencl_runner.c:69:5 fread return value ignored (-Wunused-result)"
+    ]
+  },
+  "hardware": {
+    "cpu_threads": 8,
+    "avx_level": 0,
+    "sha_ni": 0,
+    "gpu": "Intel(R) UHD Graphics 620",
+    "gpu_platform": "Intel(R) OpenCL Graphics",
+    "gpu_max_workgroup": 256,
+    "gpu_max_items": 256,
+    "gpu_global_memory_mb": 6715,
+    "gpu_batch_size": 262144,
+    "ram_mb": 1362,
+    "dri": 1
+  },
+  "btc_target": {
+    "bits_hex": "0x17021369",
+    "version": 537198592,
+    "target_full": "0000000000000000000000000000000000000000021369000000000000000000",
+    "header_first_bytes_hex": "00000520246e7eda66ef",
+    "header_source": "Blockstream API fallback"
+  },
+  "wallet": {
+    "network": "TESTNET3",
+    "p2pkh": "mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj",
+    "bech32": "tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf",
+    "hash160": "060121f61c233cf47d19e23f4d4e0b842e129714"
+  },
+  "nx48_state_initial": {
+    "update_count": 7067,
+    "best_leading_loaded": 28,
+    "exploration_bias": 0.830,
+    "delta_nonce": 16.13,
+    "qdpr_success_pct": 67.6,
+    "qdpr_bits": 24,
+    "qdpr_rt_s": 4.0,
+    "subneurons_total": 16,
+    "neurons": 2,
+    "subneurons_per_neuron": 8
+  },
+  "performance": {
+    "gpu_benchmark_mhs": 9.37,
+    "hashrate_sustained_mhs": 8.95,
+    "hashrate_min_mhs": 8.90,
+    "hashrate_max_mhs": 12.85,
+    "hashrate_final_mhs": 8.90,
+    "samples_count": 695,
+    "sample_period_s": 10,
+    "hashes_total_at_1040s": 9265112840,
+    "approximate_runtime_s": 6940
+  },
+  "mining_records": {
+    "best_leading_zeros_initial": 27,
+    "best_leading_zeros_final": 34,
+    "best_leading_zeros_progression": [
+      {"bits": 20, "nonce_start": 524288,    "elapsed_s_approx": 1.1},
+      {"bits": 23, "nonce_start": 2621440,   "elapsed_s_approx": 5.6},
+      {"bits": 24, "nonce_start": 13107200,  "elapsed_s_approx": 28.0},
+      {"bits": 27, "nonce_start": 13499493,  "elapsed_s_approx": 29.0},
+      {"bits": 28, "nonce_start": 421789696, "elapsed_s_approx": 38.6},
+      {"bits": 29, "nonce_start": 443809792, "elapsed_s_approx": 40.6},
+      {"bits": 30, "nonce_start": 1199570944,"elapsed_s_approx": 130.3},
+      {"bits": 31, "nonce_start": 1243086848,"elapsed_s_approx": 135.0},
+      {"bits": 34, "nonce_start": 2875195392,"elapsed_s_approx": 339.5}
+    ],
+    "best_nonce_final": 2875321277,
+    "comparison_to_history": {
+      "C48_baseline_bits": 24,
+      "C48_baseline_mhs": 1.64,
+      "C61_ubuntu_mhs": 2.00,
+      "C86_replit_bits": 28,
+      "C93_ubuntu_bits": 34,
+      "improvement_bits_vs_C48": 10,
+      "improvement_bits_vs_C86": 6,
+      "improvement_mhs_vs_C48": 5.46,
+      "improvement_mhs_vs_C61": 4.48,
+      "interpretation": "+10 bits = espace 1024x plus rare; hashrate x5.5 vs C48 grace a GPU OpenCL + 8 threads CPU paralleles"
+    }
+  },
+  "nx48_dynamics": {
+    "delta_cap_500_hits": 4,
+    "stall_long_resets_c62": 3,
+    "delta_min_observed": 3.29,
+    "delta_max_observed": 500.00,
+    "exploration_bias_initial": 0.830,
+    "behavior": "delta cresce jusqu'au cap 500, plateau, reset C62 stall_long->5-8, exploration relancee. Cycle stable observe."
+  },
+  "anomalies_observed": [
+    {"desc": "btc_near_miss_or_valid", "values_seen": [1, 2, 3, 4, 8, 10, 12, 17, 19, 27],
+     "explanation": "Compteur near-miss progressif - normal en debut de run"},
+    {"desc": "btc_nx48_delta_cap_500", "count": 4,
+     "explanation": "NX48 delta_nonce a sature au cap superieur 500.0 - declenche reset C62"},
+    {"desc": "btc_nx48_delta_reset_stall_c62", "count": 3,
+     "values_seen": [8.349869, 5.350023, 3.577567],
+     "explanation": "Reset auto C62 lorsque stall_long >= 40 ET delta_nonce>=cap_500 - mecanisme de relance fonctionne correctement"}
+  ],
+  "physics_correlation_with_ibm_c91": {
+    "note": "Les resultats IBM C91/C92 (HVA-16 S(pi)=+0.3558) confirmant la phase AFM sont mainenant propages dans include/ibm_quantum_constants.h",
+    "hva16_s_pi": 0.3558,
+    "hva16_s_pi_std": 0.0049,
+    "ghz16_fidelity": 1.0008,
+    "backend": "ibm_kingston",
+    "qpu_qubits": 156,
+    "interpretation": "Le pre-train Aer C93 + ADAPT-VQE doit converger vers S(pi)>=0.30 pour valider la coherence avec les mesures QPU reelles"
+  },
+  "concurrent_run_observed": {
+    "type": "hubbard_hts_research_cycle_advanced_parallel",
+    "run_id": "research_20260424T155420Z_26490",
+    "pid": 26490,
+    "started_utc": "2026-04-24T15:54:20Z",
+    "csv_parts_observed": 694,
+    "csv_size_per_part_mb": 20,
+    "approximate_csv_total_gb": 13.88,
+    "active_function": "pt_mc_run() (Parallel Tempering Monte-Carlo)",
+    "memory_tracker_active": true,
+    "comment": "Run scientifique advanced_parallel concurrent au mining BTC - aucune interference observee (hashrate stable 8.9-9.0 MH/s)"
+  },
+  "files_referenced": [
+    "/home/lvx/btc_ubuntu_20260424T154202Z.log",
+    "logs/forensic/wallet_btc_20260424T154202Z_c48_ubuntu_lvx.json",
+    "config/btc_nx48_last.csv",
+    "logs/forensic/modules/btc_qm_engine_forensic_btc_20260424T154202Z_c48_ubuntu_lvx.log"
+  ],
+  "verdict": {
+    "best_leading_zeros": 34,
+    "expected_for_block_validation_mainnet": 76,
+    "remaining_bits_to_block": 42,
+    "block_found": false,
+    "interpretation_progress": "Excellent record forensique : +6 bits vs C86 Replit. La cible mainnet (~76 bits) reste hors de portee CPU/GPU consumer mais le pipeline est robuste, NX48 stable, GPU OpenCL+CPU paralleles validees.",
+    "code_health": "OK - aucun crash, memory_tracker propre, NX48 reset C62 fonctionne, wallet TESTNET3 charge correctement"
+  }
+}

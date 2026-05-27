@@ -1,0 +1,61 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_parallel_c252_opt2.log
+[DEBUG] Log ouvert avec succès
+
+═══════════════════════════════════════════════════════════
+  TEST C250 Phase 3 — Parallélisme GPU Natif
+  Test : 168 work-items parallèles, 100 dispatches
+═══════════════════════════════════════════════════════════
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C250 Phase 3 — Parallélisme GPU 168 work-items  ║
+║  Architecture : 24 EUs × 7 threads = 168 threads GPU      ║
+║  Gain attendu : 168x throughput (699 ms → 4.16 ms)        ║
+╚════════════════════════════════════════════════════════════╝
+
+[CONFIG] Paramètres C252 Optimisation #2:
+  - kernel: kernels/btc_sha256_mining_gen9.bin (SHA256 double hash)
+  - batch_size: 268435456 nonces (268M = 2^28)
+  - dispatches: 100 (test overhead optimisé)
+  - work-items: 168 (24 EUs × 7 threads)
+  - total_nonces: 26.84 milliards
+  - optimisation: Overhead DRM 710ms → <1ms
+  - log: logs/forensic/btc_mining_parallel_c252_opt2.log
+
+[PHASE 1/3] Initialisation Gen9 Native...
+✅ Initialisation réussie
+
+[PHASE 2/3] C252 Opt #2 — Overhead DRM Optimisé — 100 Dispatches (168 work-items)
+─────────────────────────────────────────────────────────────
+OBJECTIF : Réduire overhead DRM 710ms → <1ms (+50.4%)
+─────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
+
+[PHASE 3/3] Résultats
+
+╔════════════════════════════════════════════════════════════╗
+║  ✅ SUCCÈS C251 OPT #1 — BATCH 268M NONCES VALIDÉ         ║
+╠════════════════════════════════════════════════════════════╣
+║  Dispatches réussis : 100/100 (100%)                        ║
+║  Batch size : 268M nonces (2^28)                          ║
+║  Total nonces : 26.84 milliards                            ║
+║  Temps total : 68.989 sec                                   ║
+║  Temps moyen par dispatch : 0.690 sec                      ║
+║  Hashrate : 389.10 MH/s                                     ║
+╚════════════════════════════════════════════════════════════╝
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C251 Opt #1 — Métriques Batch 268M Nonces       ║
+╚════════════════════════════════════════════════════════════╝
+
+Device: Intel UHD Graphics 620 (Gen9)
+API: i915 DRM Direct (0% OpenCL, 0% Level Zero)
+Architecture: 24 EUs × 7 threads = 168 threads GPU
+
+Dispatches: 100
+Batch size: 268M nonces (2^28)
+Total nonces: 26.84 milliards
+Total time: 68.989 sec
+Avg dispatch: 0.690 sec
+Hashrate: 389.10 MH/s
+Gain vs C250 (482 H/s): 807157x
+

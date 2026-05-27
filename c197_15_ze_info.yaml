@@ -1,0 +1,43 @@
+---
+version:         '1.34'
+kernels:
+  - name:            test_write
+    execution_env:
+      grf_count:       128
+      simd_size:       32
+      subgroup_independent_forward_progress: true
+      eu_thread_count: 7
+    payload_arguments:
+      - arg_type:        global_id_offset
+        offset:          0
+        size:            12
+      - arg_type:        local_size
+        offset:          12
+        size:            12
+      - arg_type:        arg_bypointer
+        offset:          0
+        size:            0
+        arg_index:       0
+        addrmode:        stateful
+        addrspace:       global
+        access_type:     readwrite
+      - arg_type:        arg_bypointer
+        offset:          32
+        size:            8
+        arg_index:       0
+        addrmode:        stateless
+        addrspace:       global
+        access_type:     readwrite
+    binding_table_indices:
+      - bti_value:       0
+        arg_index:       0
+kernels_misc_info:
+  - name:            test_write
+    args_info:
+      - index:           0
+        name:            output
+        address_qualifier: __global
+        access_qualifier: NONE
+        type_name:       'uint*;8'
+        type_qualifiers: NONE
+...

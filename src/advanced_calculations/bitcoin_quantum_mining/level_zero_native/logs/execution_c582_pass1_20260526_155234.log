@@ -1,0 +1,48 @@
+🚀 TEST C582 PASS 1 - PREMIER WRITE GPU NATIF i915
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (126.768 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (9.347 µs)
+
+[ 20%] Creating unified buffer (16KB)...
+✅ Unified buffer created: handle=1, size=16384 (19.794 µs)
+
+[ 30%] Mapping unified buffer...
+✅ Unified buffer mapped: 0x707ff32ab000 (48.096 µs)
+
+[ 40%] Setting up unified buffer layout...
+  ✅ Kernel ISA copied to offset 0x1000 (128 bytes)
+  ✅ Surface State setup at offset 0x1100
+  ✅ Binding Table setup at offset 0x1200
+  ✅ IDRT setup at offset 0x1300
+  ✅ Output buffer initialized at offset 0x2000 (sentinel: 0xDEADBEEF)
+✅ Layout setup complete (2.622 µs)
+
+[ 50%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] STATE_BASE_ADDRESS
+    [25] MEDIA_VFE_STATE
+    [34] MEDIA_INTERFACE_DESCRIPTOR_LOAD
+    [38] GPGPU_WALKER
+    [53] PIPE_CONTROL (flush final)
+    [59] MI_BATCH_BUFFER_END
+✅ Batch built: 60 DWords (240 bytes, 3.505 µs)
+
+[ 70%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Batch offset: 0x0000
+    Batch length: 240 bytes
+    Relocations: 0 (AUCUNE - architecture C579)
+
+[ 80%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22, 44.110 µs)
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C582 PASS 1 ÉCHOUÉ                               ║
+╚════════════════════════════════════════════════════════════╝

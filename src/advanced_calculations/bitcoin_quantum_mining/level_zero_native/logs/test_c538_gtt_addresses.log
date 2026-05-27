@@ -1,0 +1,66 @@
+EXECBUFFER2 PASS 2: Invalid argument
+=== TEST C538 - 2-PASS AVEC ADRESSES GTT CORRECTES ===
+
+✓ DRM ouvert: fd=5
+✓ Buffers créés:
+  output:  handle=1
+  surface: handle=2
+  idrt:    handle=3
+  kernel:  handle=4
+  batch:   handle=5
+✓ Buffers mappés (adresses CPU):
+  output:  0x7663e8b68000
+  surface: 0x7663e8acd000
+  idrt:    0x7663e8acc000
+  kernel:  0x7663e8acb000
+  batch:   0x7663e8aca000
+✓ Output initialisé: 0xFFFFFFFF
+✓ Kernel ISA copié: 64 bytes
+
+Kernel ISA (64 bytes):
+  0000: 01 00 60 00 0c 02 40 20 00 00 20 00 00 00 00 00 
+  0010: 06 80 00 00 04 00 00 30 00 10 00 16 c0 04 c0 04 
+  0020: 01 00 00 00 0c 43 80 20 60 00 00 00 00 00 00 00 
+  0030: 01 00 00 00 2c 0e c0 20 00 00 00 00 78 56 34 12 
+
+=== PASS 1 - OBTENTION ADRESSES GTT (OPTION A: SUGGÉRER ADRESSES) ===
+✓ PASS 1 réussi - Adresses GTT assignées:
+  output_gtt:  0x0000000000100000
+  surface_gtt: 0x0000000000101000
+  idrt_gtt:    0x0000000000102000
+  kernel_gtt:  0x0000000000103000
+  batch_gtt:   0x0000000000104000
+
+=== PATCHING AVEC ADRESSES GTT ===
+✓ IDRT patché avec kernel_gtt=0x0000000000103000
+
+IDRT (32 bytes):
+  0000: 00 30 10 00 00 00 00 00 00 00 00 00 00 00 1a 00 
+  0010: 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 
+✓ Surface State patché avec output_gtt=0x0000000000100000
+✓ Binding Table à offset 0x1A0
+
+Surface State (64 bytes):
+  0000: 04 00 00 00 00 00 10 00 00 00 00 00 ff 0f 00 00 
+  0010: 00 00 00 00 00 10 00 00 00 00 00 00 00 00 00 00 
+  0020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+  0030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+Binding Table (16 bytes):
+  0000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+✓ Batch: MEDIA_INTERFACE_DESCRIPTOR_LOAD @ offset 0x54
+  → idrt_gtt = 0x0000000000102000
+✓ Batch construit: 212 bytes
+
+Batch (212 bytes):
+  0000: 00 00 04 69 00 00 00 00 09 00 01 61 01 00 00 00 
+  0010: 00 00 00 00 01 00 00 00 00 00 00 00 01 00 00 00 
+  0020: 00 00 00 00 01 00 00 00 00 00 00 00 01 00 00 00 
+  0030: 00 00 00 00 06 00 00 70 00 00 00 00 00 00 00 00 
+  0040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+  0050: 00 00 00 00 02 00 02 70 00 00 00 00 20 00 00 00 
+  0060: 00 20 10 00 00 00 00 00 11 00 00 71 00 00 00 00 
+  0070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+=== PASS 2 - EXÉCUTION AVEC ADRESSES GTT FIXÉES ===
+❌ PASS 2 échoué

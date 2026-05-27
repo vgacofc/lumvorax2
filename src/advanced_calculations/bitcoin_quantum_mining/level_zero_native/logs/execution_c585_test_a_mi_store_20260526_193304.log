@@ -1,0 +1,55 @@
+🚀 TEST C585-A - MI_STORE_DATA_IMM (WRITE GPU MINIMAL)
+═══════════════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device...
+✅ DRM device opened: fd=5 (64.417 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (4.549 µs)
+
+[ 20%] Creating output buffer (4KB)...
+✅ Output buffer created: handle=1, size=4096 (8.915 µs)
+
+[ 30%] Creating batch buffer (4KB)...
+✅ Batch buffer created: handle=2, size=4096 (2.275 µs)
+
+[ 40%] Mapping output buffer...
+✅ Output buffer mapped: 0x7de188b08000 (47.740 µs)
+
+[ 50%] Mapping batch buffer...
+✅ Batch buffer mapped: 0x7de188a6d000 (13.713 µs)
+
+[ 60%] Initializing output buffer...
+✅ Output initialized: 0xdeadbeef (2.073 µs)
+
+[ 70%] Building batch commands...
+  Building batch commands:
+    [ 0] PIPE_CONTROL (flush initial)
+    [ 6] MI_STORE_DATA_IMM (relocation target)
+    [10] PIPE_CONTROL (flush final)
+    [16] MI_BATCH_BUFFER_END
+✅ Batch built: 17 DWords (68 bytes, 1.226 µs)
+
+[ 80%] Creating relocation entry...
+✅ Relocation created (0.034 µs)
+  Target handle: 1 (output)
+  Delta: 0 (output base)
+  Offset: 0x1c (batch DWord 7)
+  Read domains: 0x00000002 (RENDER)
+  Write domain: 0x00000002 (RENDER)
+
+[ 90%] Preparing EXECBUFFER2...
+  Configuration:
+    Context ID: 1
+    Ring: RCS (Render)
+    Buffer count: 2 (output + batch)
+    Batch length: 68 bytes
+    Relocations: 1 (MI_STORE_DATA_IMM → output)
+
+[100%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22)
+   Duration: 1.126 µs
+
+╔════════════════════════════════════════════════════════════╗
+║  ❌ TEST C585-A ÉCHOUÉ                                    ║
+╚════════════════════════════════════════════════════════════╝

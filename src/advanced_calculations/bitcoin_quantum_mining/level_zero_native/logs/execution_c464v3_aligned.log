@@ -1,0 +1,22 @@
+[sudo] password for lvx: [23528.560472157] 🚀 TEST C464v3 - BATCH MINIMAL AVEC ALIGNEMENT 8-BYTE
+[23528.560679540] ✅ DRM ouvert: fd=5
+[23528.561563865] ✅ Contexte GPU créé: id=1
+[23528.563454358] ✅ Batch buffer créé: handle=1 size=4096
+[23528.563513939] ✅ Batch buffer mappé: 0x78a0dd95d000
+[23528.563535345] 📝 [04] PIPELINE_SELECT = 0x69040001
+[23528.563537428] 📝 [05] STATE_BASE_ADDRESS (19 DWORDs)
+[23528.563538392] 📝 [24] MEDIA_VFE_STATE (8 DWORDs)
+[23528.563539388] 📝 [32] MI_BATCH_BUFFER_END
+[23528.563540092] 📝 [33] MI_NOOP (padding alignement)
+[23528.563540797] ✅ Batch buffer construit: 34 DWORDs (136 bytes)
+[23528.563541690] ✅ Alignement vérifié: batch_len % 8 = 0
+[23528.563542647] ⚡ Soumission batch buffer...
+[23528.563543315]    buffer_count = 1
+[23528.563544097]    batch_start_offset = 0
+[23528.563545649]    batch_len = 136 bytes (aligné 8-byte)
+[23528.563546655]    flags = 0x00000001
+[23528.563547662]    ctx_id = 1
+[23528.563771555] ✅ EXECBUFFER2 réussi!
+[23528.563774481] ⏳ Attente GPU idle...
+[23529.249636368] ✅ GPU idle confirmé
+[23529.249648721] 🎉 TEST C464v3 RÉUSSI - Batch minimal fonctionne avec alignement 8-byte!

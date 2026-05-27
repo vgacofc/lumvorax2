@@ -1,0 +1,33 @@
+[sudo] password for lvx: [DEBUG] Tentative ouverture log: logs/forensic/test_c345_validation.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 256 nonces
+
+╔════════════════════════════════════════════════════════════╗
+║  LumVorax C345 — Test Validation Relocations              ║
+║  Kernel: write_magic (écrit 0xC345BEEF)                   ║
+╚════════════════════════════════════════════════════════════╝
+
+[TEST] Configuration:
+  - kernel: kernels/test_write_magic_gen9.bin
+  - batch_size: 256
+
+[1/3] Initialisation...
+✅ Initialisation OK
+
+[2/3] Exécution GPU...
+✅ Exécution OK
+
+[3/3] Validation résultats...
+  output[0] = 0x00000000 (attendu: 0xC345BEEF)
+  output[1] = 0x00000000 (attendu: 0x12345678)
+  output[2] = 0x00000000 (attendu: 0x00000000)
+
+❌ ÉCHEC: output[0] incorrect
+   Cause probable: Relocations ne fonctionnent pas
+   GPU n'écrit pas à la bonne adresse
+❌ ÉCHEC: output[1] incorrect
+╔════════════════════════════════════════════════════════════╗
+║  ❌ ÉCHEC                                                   ║
+║  Relocations ne fonctionnent pas correctement              ║
+╚════════════════════════════════════════════════════════════╝
+

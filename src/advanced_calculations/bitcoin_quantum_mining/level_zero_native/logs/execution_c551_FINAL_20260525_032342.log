@@ -1,0 +1,25 @@
+=== TEST C551 - PATCH IDRT AVEC ADRESSES GTT (2-PASS) ===
+ROOT CAUSE #59 SOLUTION: Patcher IDRT après pinning
+
+✓ Buffers créés et mappés
+✓ Heap construit
+✓ Batch construit: 168 bytes
+✓ 4 relocations
+
+=== PASS 1: PINNING (obtenir adresses GTT) ===
+✓ PASS 1 exécuté
+Adresses GTT obtenues:
+  heap:   0x0000000000000000
+  output: 0x0000000000002000
+  batch:  0x0000000000003000
+
+=== PASS 2: PATCH IDRT avec adresses GTT absolues ===
+✓ IDRT DW0 patché: 0x00000070 (kernel @ GTT 0x70)
+✓ IDRT DW3 patché: 0x00000040 (BTI @ GTT 0x40)
+✓ PASS 2 exécuté avec IDRT patché
+
+=== VÉRIFICATION RÉSULTAT ===
+output[0] = 0xffffffff
+output[1] = 0xffffffff
+
+❌ output[0] != 0x12345678

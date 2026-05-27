@@ -1,0 +1,292 @@
+=== VALIDATION HARDWARE GPU INTEL GEN9.5 ===
+
+### 1. ARCHITECTURE GPU EXACTE ###
+
+--- lspci GPU ---
+00:02.0 VGA compatible controller [0300]: Intel Corporation WhiskeyLake-U GT2 [UHD Graphics 620] [8086:3ea0] (rev 02) (prog-if 00 [VGA controller])
+	DeviceName: Onboard - Video
+	Subsystem: Dell WhiskeyLake-U GT2 [UHD Graphics 620] [1028:08a7]
+	Flags: bus master, fast devsel, latency 0, IRQ 164, IOMMU group 0
+	Memory at a0000000 (64-bit, non-prefetchable) [size=16M]
+	Memory at 90000000 (64-bit, prefetchable) [size=256M]
+	I/O ports at 4000 [size=64]
+	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+	Capabilities: <access denied>
+	Kernel driver in use: i915
+	Kernel modules: i915
+
+00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 0c)
+	DeviceName: Onboard - Other
+	Subsystem: Dell Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [1028:08a7]
+	Flags: fast devsel, IRQ 16, IOMMU group 2
+	Memory at a1310000 (64-bit, non-prefetchable) [size=32K]
+	Capabilities: <access denied>
+	Kernel driver in use: proc_thermal
+	Kernel modules: processor_thermal_device_pci_legacy
+
+
+--- GPU Device ID ---
+00:02.0 0300: 8086:3ea0 (rev 02)
+
+### 2. I915 CAPABILITIES ###
+
+❌ /sys/kernel/debug/dri/0/i915_capabilities not accessible
+
+### 3. ENGINE INFO ###
+
+❌ /sys/kernel/debug/dri/0/i915_engine_info not accessible
+
+### 4. PPGTT INFO ###
+
+❌ /sys/kernel/debug/dri/0/i915_gem_gtt not accessible
+
+### 5. GT FREQUENCY ###
+
+--- Current frequency ---
+Not available
+
+--- Max frequency ---
+Not available
+
+--- Min frequency ---
+Not available
+
+--- Boost frequency ---
+Not available
+
+### 6. RC6 POWER STATES ###
+
+--- RC6 residency ---
+Not available
+
+--- RC6p residency ---
+Not available
+
+--- RC6pp residency ---
+Not available
+
+### 7. I915 PARAMETERS ###
+
+--- i915 module parameters ---
+total 0
+drwxr-xr-x 2 root root    0 May 26 20:00 .
+drwxr-xr-x 7 root root    0 May 26 20:00 ..
+-r-------- 1 root root 4096 May 26 20:00 disable_display
+-r-------- 1 root root 4096 May 26 20:00 disable_power_well
+-r-------- 1 root root 4096 May 26 20:00 dmc_firmware_path
+-r-------- 1 root root 4096 May 26 20:00 edp_vswing
+-r-------- 1 root root 4096 May 26 20:00 enable_dc
+-r-------- 1 root root 4096 May 26 20:00 enable_dmc_wl
+-r-------- 1 root root 4096 May 26 20:00 enable_dpcd_backlight
+-r-------- 1 root root 4096 May 26 20:00 enable_dp_mst
+-r-------- 1 root root 4096 May 26 20:00 enable_dpt
+-r-------- 1 root root 4096 May 26 20:00 enable_dsb
+-r-------- 1 root root 4096 May 26 20:00 enable_fbc
+-r-------- 1 root root 4096 May 26 20:00 enable_flipq
+-r-------- 1 root root 4096 May 26 20:00 enable_guc
+-r-------- 1 root root 4096 May 26 20:00 enable_gvt
+-r-------- 1 root root 4096 May 26 20:00 enable_hangcheck
+-r-------- 1 root root 4096 May 26 20:00 enable_ips
+-r-------- 1 root root 4096 May 26 20:00 enable_psr
+-r-------- 1 root root 4096 May 26 20:00 enable_psr2_sel_fetch
+-r-------- 1 root root 4096 May 26 20:00 enable_sagv
+-r-------- 1 root root 4096 May 26 20:00 error_capture
+-r-------- 1 root root 4096 May 26 20:00 force_probe
+-r-------- 1 root root 4096 May 26 20:00 force_reset_modeset_test
+-r-------- 1 root root 4096 May 26 20:00 gsc_firmware_path
+-r-------- 1 root root 4096 May 26 20:00 guc_firmware_path
+-r-------- 1 root root 4096 May 26 20:00 guc_log_level
+-r-------- 1 root root 4096 May 26 20:00 huc_firmware_path
+-r-------- 1 root root 4096 May 26 20:00 invert_brightness
+-r-------- 1 root root 4096 May 26 20:00 lmem_bar_size
+-r-------- 1 root root 4096 May 26 20:00 lmem_size
+-r-------- 1 root root 4096 May 26 20:00 load_detect_test
+-r-------- 1 root root 4096 May 26 20:00 lvds_channel_mode
+-r-------- 1 root root 4096 May 26 20:00 memtest
+-rw------- 1 root root 4096 May 26 20:00 mitigations
+-r-------- 1 root root 4096 May 26 20:00 mmio_debug
+-r-------- 1 root root 4096 May 26 20:00 modeset
+-r-------- 1 root root 4096 May 26 20:00 nuclear_pageflip
+-r-------- 1 root root 4096 May 26 20:00 panel_use_ssc
+-r-------- 1 root root 4096 May 26 20:00 psr_safest_params
+-rw------- 1 root root 4096 May 26 20:00 request_timeout_ms
+-r-------- 1 root root 4096 May 26 20:00 reset
+-r-------- 1 root root 4096 May 26 20:00 vbt_firmware
+-r-------- 1 root root 4096 May 26 20:00 vbt_sdvo_panel_type
+-r-------- 1 root root 4096 May 26 20:00 verbose_state_checks
+
+--- enable_guc ---
+Not available
+
+--- enable_ppgtt ---
+Not available
+
+--- enable_execlists ---
+Not available
+
+--- enable_hangcheck ---
+Not available
+
+### 8. GEM OBJECTS (SNAPSHOT) ###
+
+❌ /sys/kernel/debug/dri/0/i915_gem_objects not accessible
+
+### 9. KERNEL BOOT PARAMETERS ###
+
+--- i915 in cmdline ---
+i915.enable_guc=2
+
+### 10. DRM INFO ###
+
+--- DRM devices ---
+total 0
+drwxr-xr-x   3 root root        100 May 26 19:55 .
+drwxr-xr-x  21 root root       5740 May 26 19:55 ..
+drwxr-xr-x   2 root root         80 May 26 19:55 by-path
+crw-rw----+  1 root video  226,   1 May 26 19:55 card1
+crw-rw----+  1 root render 226, 128 May 26 19:55 renderD128
+
+--- DRM card0 ---
+ls: cannot access '/sys/class/drm/card0/': No such file or directory
+
+### 11. GPU MEMORY INFO ###
+
+### 12. FIRMWARE INFO ###
+
+--- GuC firmware ---
+-rw-r--r-- 1 root root 124762 Apr 15 16:30 /lib/firmware/i915/adlp_guc_62.0.3.bin.zst
+-rw-r--r-- 1 root root 137607 Apr 15 16:30 /lib/firmware/i915/adlp_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root 108552 Apr 15 16:30 /lib/firmware/i915/adlp_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root 128601 Apr 15 16:30 /lib/firmware/i915/adlp_guc_70.bin.zst
+-rw-r--r-- 1 root root  77374 Apr 15 16:30 /lib/firmware/i915/bxt_guc_32.0.3.bin.zst
+-rw-r--r-- 1 root root  79263 Apr 15 16:30 /lib/firmware/i915/bxt_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root  81218 Apr 15 16:30 /lib/firmware/i915/bxt_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root  85820 Apr 15 16:30 /lib/firmware/i915/bxt_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root  95729 Apr 15 16:30 /lib/firmware/i915/bxt_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  87924 Apr 15 16:30 /lib/firmware/i915/bxt_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root  63904 Apr 15 16:30 /lib/firmware/i915/bxt_guc_ver8_7.bin.zst
+-rw-r--r-- 1 root root  66288 Apr 15 16:30 /lib/firmware/i915/bxt_guc_ver9_29.bin.zst
+-rw-r--r-- 1 root root  79522 Apr 15 16:30 /lib/firmware/i915/cml_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root  81439 Apr 15 16:30 /lib/firmware/i915/cml_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root  86017 Apr 15 16:30 /lib/firmware/i915/cml_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root  95940 Apr 15 16:30 /lib/firmware/i915/cml_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  87842 Apr 15 16:30 /lib/firmware/i915/cml_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root 109903 Apr 15 16:30 /lib/firmware/i915/dg1_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root 113053 Apr 15 16:30 /lib/firmware/i915/dg1_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root 121901 Apr 15 16:30 /lib/firmware/i915/dg1_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  96421 Apr 15 16:30 /lib/firmware/i915/dg1_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root 116291 Apr 15 16:30 /lib/firmware/i915/dg1_guc_70.bin.zst
+-rw-r--r-- 1 root root 144916 Apr 15 16:30 /lib/firmware/i915/dg2_guc_70.1.2.bin.zst
+-rw-r--r-- 1 root root 150308 Apr 15 16:30 /lib/firmware/i915/dg2_guc_70.4.1.bin.zst
+-rw-r--r-- 1 root root 168108 Apr 15 16:30 /lib/firmware/i915/dg2_guc_70.bin.zst
+-rw-r--r-- 1 root root 112990 Apr 15 16:30 /lib/firmware/i915/ehl_guc_33.0.4.bin.zst
+-rw-r--r-- 1 root root 115017 Apr 15 16:30 /lib/firmware/i915/ehl_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root 119349 Apr 15 16:30 /lib/firmware/i915/ehl_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root 131004 Apr 15 16:30 /lib/firmware/i915/ehl_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root 100759 Apr 15 16:30 /lib/firmware/i915/ehl_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root  77557 Apr 15 16:30 /lib/firmware/i915/glk_guc_32.0.3.bin.zst
+-rw-r--r-- 1 root root  79435 Apr 15 16:30 /lib/firmware/i915/glk_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root  81373 Apr 15 16:30 /lib/firmware/i915/glk_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root  85979 Apr 15 16:30 /lib/firmware/i915/glk_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root  95888 Apr 15 16:30 /lib/firmware/i915/glk_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  88053 Apr 15 16:30 /lib/firmware/i915/glk_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root 107871 Apr 15 16:30 /lib/firmware/i915/icl_guc_32.0.3.bin.zst
+-rw-r--r-- 1 root root 109082 Apr 15 16:30 /lib/firmware/i915/icl_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root 115017 Apr 15 16:30 /lib/firmware/i915/icl_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root 119348 Apr 15 16:30 /lib/firmware/i915/icl_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root 131017 Apr 15 16:30 /lib/firmware/i915/icl_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root 100753 Apr 15 16:30 /lib/firmware/i915/icl_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root  77328 Apr 15 16:30 /lib/firmware/i915/kbl_guc_32.0.3.bin.zst
+-rw-r--r-- 1 root root  79517 Apr 15 16:30 /lib/firmware/i915/kbl_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root  81433 Apr 15 16:30 /lib/firmware/i915/kbl_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root  86016 Apr 15 16:30 /lib/firmware/i915/kbl_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root  95942 Apr 15 16:30 /lib/firmware/i915/kbl_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  87841 Apr 15 16:30 /lib/firmware/i915/kbl_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root  64830 Apr 15 16:30 /lib/firmware/i915/kbl_guc_ver9_14.bin.zst
+-rw-r--r-- 1 root root  66793 Apr 15 16:30 /lib/firmware/i915/kbl_guc_ver9_39.bin.zst
+-rw-r--r-- 1 root root 176550 Apr 15 16:30 /lib/firmware/i915/mtl_guc_70.bin.zst
+-rw-r--r-- 1 root root  76920 Apr 15 16:30 /lib/firmware/i915/skl_guc_32.0.3.bin.zst
+-rw-r--r-- 1 root root  79176 Apr 15 16:30 /lib/firmware/i915/skl_guc_33.0.0.bin.zst
+-rw-r--r-- 1 root root  81062 Apr 15 16:30 /lib/firmware/i915/skl_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root  85644 Apr 15 16:30 /lib/firmware/i915/skl_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root  95532 Apr 15 16:30 /lib/firmware/i915/skl_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root  87684 Apr 15 16:30 /lib/firmware/i915/skl_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root  38745 Apr 15 16:30 /lib/firmware/i915/skl_guc_ver1.bin.zst
+-rw-r--r-- 1 root root  57468 Apr 15 16:30 /lib/firmware/i915/skl_guc_ver4.bin.zst
+-rw-r--r-- 1 root root  59287 Apr 15 16:30 /lib/firmware/i915/skl_guc_ver6_1.bin.zst
+lrwxrwxrwx 1 root root     22 Apr 15 16:30 /lib/firmware/i915/skl_guc_ver6.bin.zst -> skl_guc_ver6_1.bin.zst
+-rw-r--r-- 1 root root  66708 Apr 15 16:30 /lib/firmware/i915/skl_guc_ver9_33.bin.zst
+-rw-r--r-- 1 root root 123386 Apr 15 16:30 /lib/firmware/i915/tgl_guc_35.2.0.bin.zst
+-rw-r--r-- 1 root root 114348 Apr 15 16:30 /lib/firmware/i915/tgl_guc_49.0.1.bin.zst
+-rw-r--r-- 1 root root 117671 Apr 15 16:30 /lib/firmware/i915/tgl_guc_62.0.0.bin.zst
+-rw-r--r-- 1 root root 130588 Apr 15 16:30 /lib/firmware/i915/tgl_guc_69.0.3.bin.zst
+-rw-r--r-- 1 root root 102838 Apr 15 16:30 /lib/firmware/i915/tgl_guc_70.1.1.bin.zst
+-rw-r--r-- 1 root root 122749 Apr 15 16:30 /lib/firmware/i915/tgl_guc_70.bin.zst
+
+--- HuC firmware ---
+-rw-r--r-- 1 root root  58782 Apr 15 16:30 /lib/firmware/i915/bxt_huc_2.0.0.bin.zst
+-rw-r--r-- 1 root root  60505 Apr 15 16:30 /lib/firmware/i915/bxt_huc_ver01_07_1398.bin.zst
+-rw-r--r-- 1 root root  57799 Apr 15 16:30 /lib/firmware/i915/bxt_huc_ver01_8_2893.bin.zst
+-rw-r--r-- 1 root root  71864 Apr 15 16:30 /lib/firmware/i915/cml_huc_4.0.0.bin.zst
+-rw-r--r-- 1 root root 147751 Apr 15 16:30 /lib/firmware/i915/dg1_huc_7.7.1.bin.zst
+lrwxrwxrwx 1 root root     15 Apr 15 16:30 /lib/firmware/i915/dg1_huc_7.9.3.bin.zst -> dg1_huc.bin.zst
+-rw-r--r-- 1 root root 154384 Apr 15 16:30 /lib/firmware/i915/dg1_huc.bin.zst
+-rw-r--r-- 1 root root 177205 Apr 15 16:30 /lib/firmware/i915/dg2_huc_gsc.bin.zst
+-rw-r--r-- 1 root root 118569 Apr 15 16:30 /lib/firmware/i915/ehl_huc_9.0.0.bin.zst
+-rw-r--r-- 1 root root  71886 Apr 15 16:30 /lib/firmware/i915/glk_huc_4.0.0.bin.zst
+-rw-r--r-- 1 root root  70310 Apr 15 16:30 /lib/firmware/i915/glk_huc_ver03_01_2893.bin.zst
+-rw-r--r-- 1 root root 118569 Apr 15 16:30 /lib/firmware/i915/icl_huc_9.0.0.bin.zst
+-rw-r--r-- 1 root root 113989 Apr 15 16:30 /lib/firmware/i915/icl_huc_ver8_4_3238.bin.zst
+-rw-r--r-- 1 root root  71864 Apr 15 16:30 /lib/firmware/i915/kbl_huc_4.0.0.bin.zst
+-rw-r--r-- 1 root root  68507 Apr 15 16:30 /lib/firmware/i915/kbl_huc_ver02_00_1810.bin.zst
+-rw-r--r-- 1 root root 143249 Apr 15 16:30 /lib/firmware/i915/mtl_huc_gsc.bin.zst
+-rw-r--r-- 1 root root  54709 Apr 15 16:30 /lib/firmware/i915/skl_huc_2.0.0.bin.zst
+-rw-r--r-- 1 root root  56528 Apr 15 16:30 /lib/firmware/i915/skl_huc_ver01_07_1398.bin.zst
+-rw-r--r-- 1 root root 123809 Apr 15 16:30 /lib/firmware/i915/tgl_huc_7.0.12.bin.zst
+-rw-r--r-- 1 root root 124331 Apr 15 16:30 /lib/firmware/i915/tgl_huc_7.0.3.bin.zst
+-rw-r--r-- 1 root root 149913 Apr 15 16:30 /lib/firmware/i915/tgl_huc_7.5.0.bin.zst
+lrwxrwxrwx 1 root root     15 Apr 15 16:30 /lib/firmware/i915/tgl_huc_7.9.3.bin.zst -> tgl_huc.bin.zst
+-rw-r--r-- 1 root root 154388 Apr 15 16:30 /lib/firmware/i915/tgl_huc.bin.zst
+
+--- DMC firmware ---
+-rw-r--r-- 1 root root 14309 Apr 15 16:30 /lib/firmware/i915/adlp_dmc.bin.zst
+-rw-r--r-- 1 root root 11097 Apr 15 16:30 /lib/firmware/i915/adlp_dmc_ver2_09.bin.zst
+-rw-r--r-- 1 root root 11067 Apr 15 16:30 /lib/firmware/i915/adlp_dmc_ver2_10.bin.zst
+-rw-r--r-- 1 root root 13170 Apr 15 16:30 /lib/firmware/i915/adlp_dmc_ver2_12.bin.zst
+-rw-r--r-- 1 root root 13586 Apr 15 16:30 /lib/firmware/i915/adlp_dmc_ver2_14.bin.zst
+-rw-r--r-- 1 root root 13588 Apr 15 16:30 /lib/firmware/i915/adlp_dmc_ver2_16.bin.zst
+-rw-r--r-- 1 root root  4858 Apr 15 16:30 /lib/firmware/i915/adls_dmc_ver2_01.bin.zst
+-rw-r--r-- 1 root root 10518 Apr 15 16:30 /lib/firmware/i915/bmg_dmc.bin.zst
+-rw-r--r-- 1 root root  1908 Apr 15 16:30 /lib/firmware/i915/bxt_dmc_ver1_07.bin.zst
+lrwxrwxrwx 1 root root    23 Apr 15 16:30 /lib/firmware/i915/bxt_dmc_ver1.bin.zst -> bxt_dmc_ver1_07.bin.zst
+-rw-r--r-- 1 root root  3177 Apr 15 16:30 /lib/firmware/i915/cnl_dmc_ver1_06.bin.zst
+-rw-r--r-- 1 root root  3194 Apr 15 16:30 /lib/firmware/i915/cnl_dmc_ver1_07.bin.zst
+-rw-r--r-- 1 root root  4166 Apr 15 16:30 /lib/firmware/i915/dg1_dmc_ver2_02.bin.zst
+-rw-r--r-- 1 root root  4909 Apr 15 16:30 /lib/firmware/i915/dg2_dmc_ver2_06.bin.zst
+-rw-r--r-- 1 root root  4930 Apr 15 16:30 /lib/firmware/i915/dg2_dmc_ver2_07.bin.zst
+-rw-r--r-- 1 root root  4907 Apr 15 16:30 /lib/firmware/i915/dg2_dmc_ver2_08.bin.zst
+-rw-r--r-- 1 root root  2533 Apr 15 16:30 /lib/firmware/i915/glk_dmc_ver1_04.bin.zst
+-rw-r--r-- 1 root root  4175 Apr 15 16:30 /lib/firmware/i915/icl_dmc_ver1_07.bin.zst
+-rw-r--r-- 1 root root  5370 Apr 15 16:30 /lib/firmware/i915/icl_dmc_ver1_09.bin.zst
+-rw-r--r-- 1 root root  2501 Apr 15 16:30 /lib/firmware/i915/kbl_dmc_ver1_01.bin.zst
+-rw-r--r-- 1 root root  2608 Apr 15 16:30 /lib/firmware/i915/kbl_dmc_ver1_04.bin.zst
+lrwxrwxrwx 1 root root    23 Apr 15 16:30 /lib/firmware/i915/kbl_dmc_ver1.bin.zst -> kbl_dmc_ver1_01.bin.zst
+-rw-r--r-- 1 root root 12124 Apr 15 16:30 /lib/firmware/i915/mtl_dmc.bin.zst
+-rw-r--r-- 1 root root 11220 Apr 15 16:30 /lib/firmware/i915/mtl_dmc_ver2_10.bin.zst
+-rw-r--r-- 1 root root  4716 Apr 15 16:30 /lib/firmware/i915/rkl_dmc_ver2_02.bin.zst
+-rw-r--r-- 1 root root  4719 Apr 15 16:30 /lib/firmware/i915/rkl_dmc_ver2_03.bin.zst
+-rw-r--r-- 1 root root  2559 Apr 15 16:30 /lib/firmware/i915/skl_dmc_ver1_23.bin.zst
+-rw-r--r-- 1 root root  2594 Apr 15 16:30 /lib/firmware/i915/skl_dmc_ver1_26.bin.zst
+-rw-r--r-- 1 root root  2604 Apr 15 16:30 /lib/firmware/i915/skl_dmc_ver1_27.bin.zst
+lrwxrwxrwx 1 root root    23 Apr 15 16:30 /lib/firmware/i915/skl_dmc_ver1.bin.zst -> skl_dmc_ver1_26.bin.zst
+-rw-r--r-- 1 root root  4776 Apr 15 16:30 /lib/firmware/i915/tgl_dmc_ver2_04.bin.zst
+-rw-r--r-- 1 root root  4869 Apr 15 16:30 /lib/firmware/i915/tgl_dmc_ver2_06.bin.zst
+-rw-r--r-- 1 root root  4936 Apr 15 16:30 /lib/firmware/i915/tgl_dmc_ver2_08.bin.zst
+-rw-r--r-- 1 root root  5201 Apr 15 16:30 /lib/firmware/i915/tgl_dmc_ver2_12.bin.zst
+-rw-r--r-- 1 root root 13830 Apr 15 16:30 /lib/firmware/i915/xe2lpd_dmc.bin.zst
+-rw-r--r-- 1 root root 12058 Apr 15 16:30 /lib/firmware/i915/xe3lpd_3002_dmc.bin.zst
+-rw-r--r-- 1 root root  9108 Apr 15 16:30 /lib/firmware/i915/xe3lpd_dmc.bin.zst
+
+
+=== VALIDATION COMPLÉTÉE ===
+

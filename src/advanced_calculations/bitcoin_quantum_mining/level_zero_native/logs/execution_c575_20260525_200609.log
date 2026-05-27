@@ -1,0 +1,36 @@
+[sudo] password for lvx: [C575-FORENSIC][22130.895159887] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895191024] TEST C575 - MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22130.895193706] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895195326] Hypothèse: Instruction WRITE + flag WRITE force GTT
+[C575-FORENSIC][22130.895196928] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895198768] Ouverture /dev/dri/renderD128
+[C575-FORENSIC][22130.895365417] DRM fd=5 ouvert
+[C575-FORENSIC][22130.895379188] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895381193] PASS 0: MI_STORE_DATA_IMM + EXEC_OBJECT_WRITE
+[C575-FORENSIC][22130.895382621] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895409102] Buffer GEM créé: handle=1 size=4096
+[C575-FORENSIC][22130.895418421] Buffer GEM créé: handle=2 size=4096
+[C575-FORENSIC][22130.895436560] Output initialisé à 0
+[C575-FORENSIC][22130.895438803] Batch PASS 0 construit:
+[C575-FORENSIC][22130.895440494]   - MI_STORE_DATA_IMM (ÉCRITURE dans output)
+[C575-FORENSIC][22130.895442475]   - Valeur PASS 0: 0xdeadbeef
+[C575-FORENSIC][22130.895444750]   - Taille: 5 DWords
+[C575-FORENSIC][22130.895453063] Relocations configurées:
+[C575-FORENSIC][22130.895454875]   - target_handle: 1 (output)
+[C575-FORENSIC][22130.895456723]   - write_domain: RENDER (ÉCRITURE)
+[C575-FORENSIC][22130.895458361]   - Nombre: 2 (low + high)
+[C575-FORENSIC][22130.895459952] Output flags: PINNED | WRITE | 48B_ADDRESS
+[C575-FORENSIC][22130.895461904] Soumission PASS 0 (MI_STORE + WRITE flag)
+[C575-ERROR][22130.895465604] Échec EXECBUFFER2 PASS 0: Invalid argument
+[C575-FORENSIC][22130.895666916] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.895672287] CAPTURE ERROR STATE: PASS0_EXECBUFFER2_FAILED
+[C575-FORENSIC][22130.895674102] ═══════════════════════════════════════════════════════
+sh: 1: cannot create src/advanced_calculations/bitcoin_quantum_mining/level_zero_native/logs/error_state_c575_1779732369.txt: Directory nonexistent
+Error state not available
+[C575-FORENSIC][22130.915665822] ✅ Error state capturé
+[C575-FORENSIC][22130.915681658] Nettoyage ressources
+[C575-FORENSIC][22130.915758720] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.915762198] TEST C575 TERMINÉ
+[C575-FORENSIC][22130.915763762] ═══════════════════════════════════════════════════════
+[C575-FORENSIC][22130.915765184] Durée totale: 20.000559 ms
+[C575-FORENSIC][22130.915767374] Code retour: -1

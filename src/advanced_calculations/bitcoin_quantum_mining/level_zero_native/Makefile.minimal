@@ -1,0 +1,61 @@
+# Makefile pour test minimaliste zeKernelCreate
+# Objectif: Isoler crash Gen9 backend compute
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O0 -g -std=gnu11 -D_GNU_SOURCE
+LDFLAGS = -ldl -lze_loader -lm
+
+LEVEL_ZERO_INCLUDE = /usr/include/level_zero
+INCLUDES = -I$(LEVEL_ZERO_INCLUDE)
+
+# Binaires
+BIN_DIR = bin
+TEST_MINIMAL = $(BIN_DIR)/test_minimal_kernel_create
+
+# Logs
+LOG_DIR = logs
+LOG_MINIMAL = $(LOG_DIR)/test_minimal_kernel_create.log
+
+.PHONY: all clean test
+
+all: $(TEST_MINIMAL)
+
+$(BIN_DIR):
+	@mkdir -p $(BIN_DIR)
+
+$(LOG_DIR):
+	@mkdir -p $(LOG_DIR)
+
+# Compilation test minimaliste
+$(TEST_MINIMAL): tests/test_minimal_kernel_create.c | $(BIN_DIR)
+	@echo "[C198] Compilation test minimaliste..."
+	$(CC) $(CFLAGS) $(INCLUDES) $< $(LDFLAGS) -o $@
+	@echo "✅ Binaire créé: $@"
+
+# Test avec timeout et capture logs
+test: $(TEST_MINIMAL) | $(LOG_DIR)
+	@echo ""
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo "  EXÉCUTION TEST MINIMALISTE zeKernelCreate"
+	@echo "═══════════════════════════════════════════════════════════"
+	@echo ""
+	@timeout 10s $(TEST_MINIMAL) 2>&1 | tee $(LOG_MINIMAL) || \
+		(echo "❌ Test échoué ou timeout" && exit 1)
+	@echo ""
+	@echo "✅ Log sauvegardé: $(LOG_MINIMAL)"
+
+# Test avec gdb pour capturer segfault
+test-gdb: $(TEST_MINIMAL)
+	@echo "[C198] Test avec gdb..."
+	@gdb -batch -ex "run" -ex "bt" -ex "quit" $(TEST_MINIMAL) 2>&1 | tee $(LOG_DIR)/test_minimal_gdb.log
+
+# Test avec valgrind pour détecter memory issues
+test-valgrind: $(TEST_MINIMAL)
+	@echo "[C198] Test avec valgrind..."
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		$(TEST_MINIMAL) 2>&1 | tee $(LOG_DIR)/test_minimal_valgrind.log
+
+clean:
+	@rm -f $(TEST_MINIMAL)
+	@rm -f /tmp/test_kernel.cl /tmp/test_empty.spv
+	@echo "✅ Nettoyage terminé"

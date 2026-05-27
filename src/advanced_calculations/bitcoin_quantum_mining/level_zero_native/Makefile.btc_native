@@ -1,0 +1,91 @@
+# LumVorax — Module 17 — Bitcoin Quantum Mining Engine
+# Makefile.btc_native — Build System Mining Bitcoin 100% Natif
+# CYCLE C198 Phase 15F — 0% OpenCL, 0% Level Zero, 100% i915 DRM
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=c11 -D_GNU_SOURCE
+INCLUDES = -I./include -I/usr/include/libdrm
+LIBS = -ldrm -lm -lpthread
+
+# Répertoires
+SRC_DIR = src
+TEST_DIR = tests
+BUILD_DIR = build
+BIN_DIR = bin
+LOG_DIR = logs/forensic
+
+# Fichiers sources
+RUNNER_SRC = $(SRC_DIR)/btc_gen9_native_runner.c
+FORENSIC_SRC = $(SRC_DIR)/btc_i915_drm_forensic_tracker.c
+TEST_BASIC_SRC = $(TEST_DIR)/test_gen9_native.c
+TEST_MINING_SRC = $(TEST_DIR)/test_btc_mining_native.c
+
+# Binaires
+TEST_BASIC_BIN = $(BIN_DIR)/test_gen9_native
+TEST_MINING_BIN = $(BIN_DIR)/test_btc_mining_native
+
+# Cibles
+.PHONY: all clean test test_mining dirs
+
+all: dirs $(TEST_BASIC_BIN) $(TEST_MINING_BIN)
+
+dirs:
+	@mkdir -p $(BUILD_DIR) $(BIN_DIR) $(LOG_DIR)
+
+# Test basique (test_add_gen9.bin)
+$(TEST_BASIC_BIN): $(RUNNER_SRC) $(FORENSIC_SRC) $(TEST_BASIC_SRC)
+	@echo "🔨 Compilation test basique Gen9..."
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)
+	@echo "✅ Binaire créé: $@"
+
+# Test mining Bitcoin (btc_sha256_mining_gen9.bin)
+$(TEST_MINING_BIN): $(RUNNER_SRC) $(FORENSIC_SRC) $(TEST_MINING_SRC)
+	@echo "🔨 Compilation test mining Bitcoin natif..."
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)
+	@echo "✅ Binaire créé: $@"
+
+# Exécuter test basique
+test: $(TEST_BASIC_BIN)
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════╗"
+	@echo "║  Test Basique Gen9 Native (test_add_gen9.bin)             ║"
+	@echo "╚════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@cd .. && ./level_zero_native/$(TEST_BASIC_BIN)
+	@echo ""
+	@echo "📊 Log forensique: $(LOG_DIR)/test_gen9_native.log"
+
+# Exécuter test mining Bitcoin 60s
+test_mining: $(TEST_MINING_BIN)
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════╗"
+	@echo "║  Test Mining Bitcoin 100% Natif (60 secondes)             ║"
+	@echo "║  0% OpenCL, 0% Level Zero, 100% i915 DRM                  ║"
+	@echo "╚════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@cd .. && ./level_zero_native/$(TEST_MINING_BIN)
+	@echo ""
+	@echo "📊 Log forensique: $(LOG_DIR)/btc_mining_native.log"
+
+# Nettoyage
+clean:
+	@echo "🧹 Nettoyage..."
+	rm -rf $(BUILD_DIR) $(BIN_DIR)
+	rm -f $(LOG_DIR)/*.log
+	@echo "✅ Nettoyage terminé"
+
+# Aide
+help:
+	@echo "LumVorax C198 — Bitcoin Mining 100% Natif"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  make all          - Compiler tous les tests"
+	@echo "  make test         - Exécuter test basique Gen9"
+	@echo "  make test_mining  - Exécuter mining Bitcoin 60s"
+	@echo "  make clean        - Nettoyer binaires et logs"
+	@echo "  make help         - Afficher cette aide"
+	@echo ""
+	@echo "Prérequis:"
+	@echo "  - libdrm-dev installé"
+	@echo "  - Intel UHD Graphics 620 (Gen9)"
+	@echo "  - Kernel i915 chargé"

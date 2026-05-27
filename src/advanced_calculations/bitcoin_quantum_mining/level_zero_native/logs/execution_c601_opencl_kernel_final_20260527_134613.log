@@ -1,0 +1,21 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C600 - GPU HARDWARE RÉEL                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[COMPILATION]
+Compilation test_c600_gpu_execution.c...
+tests/test_c600_gpu_execution.c: In function ‘test_3_execution_gpu_reelle’:
+tests/test_c600_gpu_execution.c:339:27: error: ‘KERNEL_C600_EXPECTED_VALUE’ undeclared (first use in this function)
+  339 |     return (results[0] == KERNEL_C600_EXPECTED_VALUE) ? 0 : 1;
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_c600_gpu_execution.c:339:27: note: each undeclared identifier is reported only once for each function it appears in
+tests/test_c600_gpu_execution.c:340:1: warning: control reaches end of non-void function [-Wreturn-type]
+  340 | }
+      | ^
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~

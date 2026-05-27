@@ -1,0 +1,11 @@
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+cc -O3 -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE -DLUMVORAX_ENABLED=1 -march=native -ftree-vectorize -fopenmp -mavx2 -DBTC_HAVE_AVX2=1 -Wno-deprecated-declarations -DBTC_OPENCL_ENABLED=1 -I../../ -I../../lum -I../../optimization -I../../advanced_calculations/quantum_problem_hubbard_hts/include -Iinclude -Isrc -Wl,-Bdynamic,--as-needed \
+-o btc_mining_runner src/sha256_lumvorax.c src/nx48_btc_controller.c src/btc_mining_engine.c src/btc_wallet.c src/btc_block_validator.c src/main_btc_mining.c src/nx48_alltime_record.c src/nx48_coupler_bridge.c src/btc_testnet3_runtime.c src/btc_gpu_async_logger.c src/btc_opencl_runner.c src/btc_lumvorax_gpu_native.c ../../debug/ultra_forensic_logger.c ../../debug/memory_tracker.c ../../common/lvx_log_rotate.c ../../neural_network/nx48_neuro_coupler.c ../../neural_network/izhikevich_spiking.c ../../neural_network/stdp_plasticity.c ../../neural_network/nx49_biological_neuron.c ../../optimization/reasoning_path_tracker.c ../../optimization/formal_kernel_v40.c ../../optimization/thermal_regulator.c ../../optimization/async_logging/async_logger.c ../../lum/lum_memory_tracer.c ../../lum/lum_log_encoder.c ../../asic_simulation/asic_btc_optimizer.c -lm -lpthread -lgomp -lssl -lcrypto  -lOpenCL 
+In file included from /usr/include/CL/cl.h:20,
+                 from src/btc_lumvorax_gpu_native.h:27,
+                 from src/btc_lumvorax_gpu_native.c:23:
+/usr/include/CL/cl_version.h:22:9: note: ‘#pragma message: cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)’
+   22 | #pragma message("cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)")
+      |         ^~~~~~~
+[MODULE 17] Compilation OK -> btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 273K May  6 17:26 btc_mining_runner

@@ -1,0 +1,38 @@
+🚀 TEST C581 - ARCHITECTURE UNIFIÉE (SOLUTION ROOT CAUSE #111)
+═══════════════════════════════════════════════════════════════
+
+[  5%] Opening DRM device /dev/dri/card1...
+✅ DRM device opened: fd=5 (88.173 µs)
+
+[ 10%] Creating GEM Context...
+✅ GEM Context created: ctx_id=1 (5.663 µs)
+
+[ 15%] Creating unified buffer (16KB)...
+✅ Unified BO: handle=1, size=16384 (14.777 µs)
+
+[ 20%] Mapping unified buffer...
+✅ Unified buffer mapped: 0x75fdafd13000 (25.424 µs)
+
+[ 30%] Setting up unified buffer layout...
+  ✅ Kernel ISA at offset 0x1000 (128 bytes)
+  ✅ Surface State at offset 0x1100 (64 bytes)
+  ✅ Binding Table at offset 0x1200 (4 bytes)
+  ✅ IDRT at offset 0x1300 (32 bytes)
+  ✅ Output buffer at offset 0x2000 (4KB, cleared)
+  ⏱️  Layout setup: 32.435 µs
+
+[ 40%] Building batch compute Gen9 at offset 0x0000...
+  ✅ Batch built: 61 DWords (244 bytes, 1.392 µs)
+
+[ 50%] Setting up relocations (4 entries → unified buffer)...
+  ✅ All relocations point to unified buffer (handle=1)
+
+[ 55%] Preparing execution (1 unified buffer)...
+  Context ID: 1
+  Ring: RCS (Render)
+  Batch offset: 0x0000 (MUST be 0)
+  Batch length: 244 bytes
+  Buffer count: 1 (UNIFIED)
+
+[ 65%] Submitting to GPU...
+❌ EXECBUFFER2 FAILED: Invalid argument (errno=22)

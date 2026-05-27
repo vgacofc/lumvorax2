@@ -1,0 +1,56 @@
+Les normes de chiffrement mondiales restent solides — pour l'instant . Mais l'informatique quantique progresse, et nous devons savoir : sommes-nous proches de casser la cryptographie à courbe elliptique (ECC) ?
+
+Il s'agit d'une compétition ouverte de cryptanalyse quantique. L'objectif : casser la plus grande clé ECC possible à l'aide de l'algorithme de Shor sur un ordinateur quantique . Aucun raccourci classique. Aucune technique hybride. Uniquement la puissance quantique.
+
+
+Comment puis-je participer ?
+Vous pouvez vous inscrire individuellement ou en équipe. Aucune affiliation institutionnelle n'est requise.
+Ensuite, vous devrez déterminer comment exécuter l'algorithme de Shor sur le matériel quantique actuel. Votre méthode doit être aussi générale et robuste que possible. Elle ne doit pas nécessiter une puissance de calcul classique excessive pour gérer des clés de 256 bits. (Par exemple, nous ne sommes pas intéressés par les approches utilisant des techniques de compilation non évolutives.)
+Nous avons préparé un ensemble de clés ECC pour des niveaux de sécurité de 1 à 25 bits. Quelle que soit la longueur de clé visée, vous devrez démontrer votre solution à l'aide de l'une de ces clés. Par exemple, si votre méthode peut casser des clés de 4 bits, vous devrez le confirmer à l'aide d'une clé de 4 bits fournie par nos soins.
+Soumettez votre candidature : elle comprendra le code au niveau des portes logiques ou les instructions du programme quantique que vous avez développé, ainsi qu'une description de votre approche globale, des techniques utilisées et des spécifications de l'ordinateur quantique employé. Ce dernier n'a pas besoin d'être accessible au public.
+Dans un souci de transparence, nous publierons les candidatures.
+
+Éléments à prendre en considération
+Clés courtes : inutile de casser une clé Bitcoin. Une clé de 3 bits serait une véritable révolution.
+Accès aux ordinateurs quantiques - Plusieurs plateformes en ligne offrent cet accès, par exemple AWS et IBM.
+Qubits sujets aux erreurs - Les qubits actuels ont une fidélité de 99 % à 99,9 % - est-ce suffisant ?
+Algorithme de Shor + courbes elliptiques - Vous devrez exécuter l'algorithme de Shor pour l'ECDLP.
+Rubrique
+Si vous souhaitez savoir comment le concours sera noté et quels sont les critères pertinents, veuillez consulter la grille d'évaluation .
+
+Si vous avez des questions, des commentaires ou des préoccupations, n'hésitez pas à nous contacter .
+
+Vous souhaitez participer ? Inscrivez-vous dès maintenant.
+Ou bien,  indécis ?
+
+Les progrès en informatique quantique doivent être ouverts
+L'informatique quantique progresse rapidement et son impact sur la cryptographie est inévitable. Plutôt que d'attendre des avancées majeures en secret, nous croyons qu'il faut relever ce défi de front, avec transparence et rigueur.
+
+Le prix QDay vise à tester les capacités réelles de l'informatique quantique, à explorer les frontières de la cryptanalyse et à garantir que le monde soit prêt pour l'avenir. L'avenir de la cryptographie en dépend.
+
+Le prix QDay - Pourquoi ?
+Transparence – Promouvoir des démonstrations ouvertes et vérifiables des capacités quantiques.
+Tests de résistance - Accélérer la découverte des progrès de l'algorithme de Shor.
+Constat : la cybersécurité est omniprésente. Sommes-nous vraiment proches de la rendre inopérante ?
+Référence claire – Établir un test rigoureux des performances quantiques en cryptanalyse.
+Prêt ? Inscrivez-vous maintenant
+Ou bien,  indécis ?
+
+Pourquoi la cryptographie à courbes elliptiques ?
+Qu'est-ce que l'ECC ?
+La cryptographie à courbe elliptique (ECC) est une forme de cryptographie à clé publique largement utilisée pour sécuriser les portefeuilles Bitcoin et le chiffrement TLS sur le web. L'ECC est privilégiée car elle offre le même niveau de sécurité que les systèmes traditionnels (comme RSA) mais avec des clés beaucoup plus courtes, ce qui la rend plus efficace. Une clé ECC de 256 bits offre le même niveau de sécurité qu'une clé RSA de 3 072 bits , soit un gain d'efficacité considérable.
+
+Pourquoi se concentrer sur le décryptage des codes ECC ?
+Les ordinateurs classiques peinent à déchiffrer les codes ECC : ils sont conçus pour être impossibles à casser par factorisation traditionnelle ou par force brute. Mais les ordinateurs quantiques changent la donne.
+
+L'algorithme de Shor (1994) prouve qu'un ordinateur quantique suffisamment puissant peut casser l'ECC en temps polynomial, ce qui est impossible pour les ordinateurs classiques.
+Les meilleures attaques classiques actuelles — telles que les méthodes de Pollard rho et de calcul d'indice — sont exponentiellement plus lentes et irréalisables pour les grandes tailles de clés.
+L’Institut national des normes et de la technologie (NIST) et les communautés cryptographiques reconnaissent que l’ECC est vulnérable aux futures attaques quantiques et sont en pleine transition vers la cryptographie post-quantique (PQC) .
+Pourquoi ce critère de référence ?
+À ce jour, aucune clé ECC utilisée en cryptographie réelle n'a été déchiffrée , ni par des méthodes classiques, ni par des méthodes quantiques.
+
+Cependant, la recherche quantique a progressé :
+
+De petits exemples de courbes ECC (par exemple, de minuscules problèmes jouets ) ont été factorisés sur du matériel quantique simulé.
+Google, QuEra et d'autres acteurs réalisent des progrès constants en matière de nombre de qubits, de qualité et de correction d'erreurs. De véritables attaques deviendront possibles à mesure que ces progrès se poursuivront.
+Les estimations actuelles suggèrent qu'environ 2 000 qubits logiques (corrigés des erreurs) suffiraient à casser une clé ECC de 256 bits — une étape qui pourrait être franchie d'ici la fin de la décennie.

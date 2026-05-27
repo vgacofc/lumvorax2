@@ -1,0 +1,43 @@
+tests/test_c576_batch_decoder_validation.c: In function ‘log_event’:
+tests/test_c576_batch_decoder_validation.c:58:49: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘long long unsigned int’ [-Wformat=]
+   58 |     snprintf(timestamp, sizeof(timestamp), "[+%lu.%09lu]",
+      |                                               ~~^
+      |                                                 |
+      |                                                 long unsigned int
+      |                                               %llu
+   59 |              elapsed_ns / 1000000000ULL, elapsed_ns % 1000000000ULL);
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~          
+      |                         |
+      |                         long long unsigned int
+tests/test_c576_batch_decoder_validation.c:58:55: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 5 has type ‘long long unsigned int’ [-Wformat=]
+   58 |     snprintf(timestamp, sizeof(timestamp), "[+%lu.%09lu]",
+      |                                                   ~~~~^
+      |                                                       |
+      |                                                       long unsigned int
+      |                                                   %09llu
+   59 |              elapsed_ns / 1000000000ULL, elapsed_ns % 1000000000ULL);
+      |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                     |
+      |                                                     long long unsigned int
+tests/test_c576_batch_decoder_validation.c: In function ‘main’:
+tests/test_c576_batch_decoder_validation.c:444:14: warning: unused parameter ‘argc’ [-Wunused-parameter]
+  444 | int main(int argc, char **argv) {
+      |          ~~~~^~~~
+tests/test_c576_batch_decoder_validation.c:444:27: warning: unused parameter ‘argv’ [-Wunused-parameter]
+  444 | int main(int argc, char **argv) {
+      |                    ~~~~~~~^~~~
+forensic/batch_decoder_gen9.c: In function ‘batch_decoder_analyze_causality’:
+forensic/batch_decoder_gen9.c:905:55: warning: unused parameter ‘batch’ [-Wunused-parameter]
+  905 | void batch_decoder_analyze_causality(decoded_batch_t *batch) {
+      |                                      ~~~~~~~~~~~~~~~~~^~~~~
+forensic/batch_decoder_gen9.c: In function ‘batch_decoder_generate_dependency_graph’:
+forensic/batch_decoder_gen9.c:949:28: warning: unused parameter ‘batch’ [-Wunused-parameter]
+  949 |     const decoded_batch_t *batch,
+      |     ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+forensic/batch_decoder_gen9.c:950:17: warning: unused parameter ‘output_path’ [-Wunused-parameter]
+  950 |     const char *output_path
+      |     ~~~~~~~~~~~~^~~~~~~~~~~
+forensic/batch_decoder_gen9.c: In function ‘batch_decoder_print_json’:
+forensic/batch_decoder_gen9.c:955:54: warning: unused parameter ‘batch’ [-Wunused-parameter]
+  955 | void batch_decoder_print_json(const decoded_batch_t *batch) {
+      |                               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~

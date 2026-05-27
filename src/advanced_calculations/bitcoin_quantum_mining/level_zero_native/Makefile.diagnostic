@@ -1,0 +1,110 @@
+# Makefile pour test diagnostic GPU hang - Phase 15J
+# Compilation: make -f Makefile.diagnostic
+# Exécution: ./bin/test_diagnostic_gpu_hang
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -std=c11 -g
+INCLUDES = -I./include -I/usr/include/libdrm
+LIBS = -ldrm -lm -lpthread
+
+SRC_DIR = tests
+BIN_DIR = bin
+LOG_DIR = logs/forensic
+
+TARGET = $(BIN_DIR)/test_diagnostic_gpu_hang
+SOURCE = $(SRC_DIR)/test_diagnostic_gpu_hang.c
+
+.PHONY: all clean test_simple test_sha256 test_pipe_control run_all
+
+all: $(TARGET)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(LOG_DIR):
+	mkdir -p $(LOG_DIR)
+
+$(TARGET): $(SOURCE) | $(BIN_DIR) $(LOG_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $< $(LIBS)
+	@echo "✅ Compilation réussie: $@"
+
+clean:
+	rm -f $(TARGET)
+	rm -f $(LOG_DIR)/diagnostic_*.log
+	@echo "🧹 Nettoyage effectué"
+
+# Test 1: Kernel simple (test_add) sans PIPE_CONTROL
+test_simple: $(TARGET)
+	@echo "=== TEST 1: Kernel simple (test_add) sans PIPE_CONTROL ==="
+	$(TARGET) kernels/test_add_gen9.bin 0 10
+
+# Test 2: Kernel SHA256 sans PIPE_CONTROL (baseline)
+test_sha256: $(TARGET)
+	@echo "=== TEST 2: Kernel SHA256 sans PIPE_CONTROL ==="
+	$(TARGET) kernels/btc_sha256_mining_gen9.bin 0 10
+
+# Test 3: Kernel SHA256 avec PIPE_CONTROL
+test_pipe_control: $(TARGET)
+	@echo "=== TEST 3: Kernel SHA256 avec PIPE_CONTROL ==="
+	$(TARGET) kernels/btc_sha256_mining_gen9.bin 1 10
+
+# Test 4: Kernel simple avec PIPE_CONTROL
+test_simple_pipe: $(TARGET)
+	@echo "=== TEST 4: Kernel simple avec PIPE_CONTROL ==="
+	$(TARGET) kernels/test_add_gen9.bin 1 10
+
+# Exécuter tous les tests séquentiellement
+run_all: test_simple test_sha256 test_pipe_control test_simple_pipe
+	@echo ""
+	@echo "=== RÉSUMÉ DES LOGS ==="
+	@ls -lh $(LOG_DIR)/diagnostic_*.log
+	@echo ""
+	@echo "=== ANALYSE RAPIDE ==="
+	@for log in $(LOG_DIR)/diagnostic_*.log; do \
+		echo ""; \
+		echo "📄 $$log:"; \
+		grep -E "(EXEC_SUCCESS|EXEC_FAILED)" $$log | wc -l | xargs echo "  Dispatches:"; \
+		grep "EXEC_FAILED" $$log | head -1 | sed 's/^/  Premier échec: /' || echo "  ✅ Aucun échec"; \
+	done
+
+# Afficher les logs en temps réel
+watch_logs:
+	@echo "👁️  Surveillance logs en temps réel (Ctrl+C pour arrêter)..."
+	tail -f $(LOG_DIR)/diagnostic_*.log
+
+# Vérifier dmesg pour GPU hang (nécessite sudo)
+check_dmesg:
+	@echo "🔍 Vérification dmesg pour GPU hang..."
+	@sudo dmesg | grep -i "gpu hang\|i915\|drm" | tail -20 || echo "Aucun GPU hang détecté dans dmesg"
+
+# Capturer intel_gpu_top pendant test (nécessite sudo)
+capture_gpu_top:
+	@echo "📊 Capture intel_gpu_top pendant 30 secondes..."
+	@sudo intel_gpu_top -o $(LOG_DIR)/gpu_top_capture.log -s 30 &
+	@sleep 2
+	@$(MAKE) test_sha256
+	@echo "✅ Capture terminée: $(LOG_DIR)/gpu_top_capture.log"
+
+help:
+	@echo "Makefile diagnostic GPU hang - Phase 15J"
+	@echo ""
+	@echo "Targets disponibles:"
+	@echo "  make -f Makefile.diagnostic              # Compiler le test"
+	@echo "  make -f Makefile.diagnostic test_simple  # Test kernel simple"
+	@echo "  make -f Makefile.diagnostic test_sha256  # Test kernel SHA256"
+	@echo "  make -f Makefile.diagnostic test_pipe_control  # Test avec PIPE_CONTROL"
+	@echo "  make -f Makefile.diagnostic run_all      # Tous les tests"
+	@echo "  make -f Makefile.diagnostic watch_logs   # Surveiller logs temps réel"
+	@echo "  make -f Makefile.diagnostic check_dmesg  # Vérifier dmesg (sudo)"
+	@echo "  make -f Makefile.diagnostic capture_gpu_top  # Capturer GPU top (sudo)"
+	@echo "  make -f Makefile.diagnostic clean        # Nettoyer"
+	@echo ""
+	@echo "Exemples:"
+	@echo "  # Test rapide kernel simple"
+	@echo "  make -f Makefile.diagnostic test_simple"
+	@echo ""
+	@echo "  # Test complet avec tous les kernels"
+	@echo "  make -f Makefile.diagnostic run_all"
+	@echo ""
+	@echo "  # Diagnostic complet avec GPU monitoring"
+	@echo "  make -f Makefile.diagnostic capture_gpu_top"

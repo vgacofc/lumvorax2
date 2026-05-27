@@ -1,0 +1,92 @@
+=== TEST C555 - DEBUG EXECBUFFER2 ===
+
+=== DUMP STRUCTURE EXECBUFFER2 ===
+
+Batch BO créé: handle=1
+Heap BO créé: handle=2
+
+=== RELOCATIONS ===
+Reloc[0]:
+  target_handle    = 0x00000002 (2)
+  offset           = 0x0000000000000014
+  delta            = 0x00000000
+  presumed_offset  = 0x0000000000000000
+  read_domains     = 0x00000002
+  write_domain     = 0x00000000
+
+Reloc[1]:
+  target_handle    = 0x00000002 (2)
+  offset           = 0x000000000000001c
+  delta            = 0x00000000
+  presumed_offset  = 0x0000000000000000
+  read_domains     = 0x00000002
+  write_domain     = 0x00000000
+
+Reloc[2]:
+  target_handle    = 0x00000002 (2)
+  offset           = 0x000000000000002c
+  delta            = 0x00000000
+  presumed_offset  = 0x0000000000000000
+  read_domains     = 0x00000010
+  write_domain     = 0x00000000
+
+Reloc[3]:
+  target_handle    = 0x00000002 (2)
+  offset           = 0x0000000000000058
+  delta            = 0x00000000
+  presumed_offset  = 0x0000000000000000
+  read_domains     = 0x00000002
+  write_domain     = 0x00000000
+
+Reloc[4]:
+  target_handle    = 0x00000002 (2)
+  offset           = 0x0000000000000090
+  delta            = 0x000000f0
+  presumed_offset  = 0x0000000000000000
+  read_domains     = 0x00000002
+  write_domain     = 0x00000000
+
+=== EXEC OBJECTS ===
+Object[0]:
+  handle           = 0x00000002 (2)
+  relocation_count = 0
+  relocs_ptr       = 0x0000000000000000
+  alignment        = 0x0000000000000000
+  offset           = 0x0000000000000000
+  flags            = 0x0000000000000008
+  rsvd1            = 0x0000000000000000
+  rsvd2            = 0x0000000000000000
+
+Object[1]:
+  handle           = 0x00000001 (1)
+  relocation_count = 5
+  relocs_ptr       = 0x00007ffc1ed70980
+  alignment        = 0x0000000000000000
+  offset           = 0x0000000000000000
+  flags            = 0x0000000000000008
+  rsvd1            = 0x0000000000000000
+  rsvd2            = 0x0000000000000000
+
+=== EXECBUFFER2 ===
+buffers_ptr        = 0x00007ffc1ed70910
+buffer_count       = 2
+batch_start_offset = 0
+batch_len          = 260
+DR1                = 0x00000000
+DR4                = 0x00000000
+num_cliprects      = 0
+cliprects_ptr      = 0x0000000000000000
+flags              = 0x0000000000000001 (I915_EXEC_RENDER=1)
+rsvd1              = 0x0000000000000000
+rsvd2              = 0x0000000000000000
+
+=== APPEL IOCTL ===
+Appel: ioctl(5, DRM_IOCTL_I915_GEM_EXECBUFFER2, 0x7ffc1ed708d0)
+❌ ÉCHEC: ret=-1 errno=22 (Invalid argument)
+
+EINVAL - Arguments invalides. Causes possibles:
+  - batch_len invalide
+  - flags invalides
+  - relocations mal formées
+  - buffer_count = 0
+  - batch BO non mappable

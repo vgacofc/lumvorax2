@@ -1,0 +1,39 @@
+[C278] Répertoires créés
+[C278] Compilation Solution 1: Batch Size Réduit (32K)
+gcc -Wall -Wextra -O3 -march=native -std=gnu11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -pthread -I/usr/include/drm -I/usr/include/libdrm \
+	tests/test_c278_solution1.c \
+	-ldrm -lm -lz -lpthread -ldl -o bin/test_c278_solution1
+In file included from tests/test_c278_solution1.c:16:
+tests/../src/btc_gen9_native_runner.c:20: warning: "_GNU_SOURCE" redefined
+   20 | #define _GNU_SOURCE  /* C255v8n: Pour MADV_HUGEPAGE et usleep */
+      | 
+<command-line>: note: this is the location of the previous definition
+tests/../src/btc_gen9_native_runner.c:21: warning: "_POSIX_C_SOURCE" redefined
+   21 | #define _POSIX_C_SOURCE 199309L
+      | 
+In file included from /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:33,
+                 from /usr/include/stdio.h:28,
+                 from tests/test_c278_solution1.c:7:
+/usr/include/features.h:292: note: this is the location of the previous definition
+  292 | # define _POSIX_C_SOURCE        200809L
+      | 
+tests/test_c278_solution1.c: In function ‘main’:
+tests/test_c278_solution1.c:47:13: warning: implicit declaration of function ‘btc_gen9_dispatch’; did you mean ‘btc_gen9_init’? [-Wimplicit-function-declaration]
+   47 |         if (btc_gen9_dispatch(ctx) < 0) {
+      |             ^~~~~~~~~~~~~~~~~
+      |             btc_gen9_init
+tests/../src/btc_gen9_native_runner.c: At top level:
+tests/../src/btc_gen9_native_runner.c:472:12: warning: ‘check_gpu_memory_usage’ defined but not used [-Wunused-function]
+  472 | static int check_gpu_memory_usage(btc_gen9_context_t* ctx) {
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+/usr/bin/ld: /tmp/cckSRF2w.o: in function `create_gpu_context_with_vm':
+test_c278_solution1.c:(.text+0x1ee): undefined reference to `i915_forensic_ioctl_impl'
+/usr/bin/ld: test_c278_solution1.c:(.text+0x29a): undefined reference to `i915_forensic_ioctl_impl'
+/usr/bin/ld: test_c278_solution1.c:(.text+0x357): undefined reference to `i915_forensic_ioctl_impl'
+/usr/bin/ld: test_c278_solution1.c:(.text+0x405): undefined reference to `i915_forensic_ioctl_impl'
+/usr/bin/ld: test_c278_solution1.c:(.text+0x4a5): undefined reference to `i915_forensic_ioctl_impl'
+/usr/bin/ld: /tmp/cckSRF2w.o:test_c278_solution1.c:(.text+0x881): more undefined references to `i915_forensic_ioctl_impl' follow
+/usr/bin/ld: /tmp/cckSRF2w.o: in function `main':
+test_c278_solution1.c:(.text.startup+0xed): undefined reference to `btc_gen9_dispatch'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile.c278:42: test_solution1] Error 1

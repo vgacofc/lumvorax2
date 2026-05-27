@@ -1,0 +1,38 @@
+=== TEST C550 - IDRT AVEC ADRESSES GTT ABSOLUES ===
+ROOT CAUSE #59: Implémenter modèle OpenCL exact
+
+✓ DRM ouvert
+✓ Buffers créés: heap=1, output=2, batch=3
+✓ Buffers mappés
+
+=== CONSTRUCTION HEAP (MODÈLE OPENCL) ===
+✓ Surface State @ 0x0000
+✓ Binding Table @ 0x0040
+✓ IDRT @ 0x0050 (sera patché avec adresses GTT)
+✓ Kernel ISA @ 0x0070
+✓ CURBE @ 0x00B0 (32 bytes)
+
+=== CONSTRUCTION BATCH ===
+✓ STATE_BASE_ADDRESS @ 0xfffffffc (19 DWords)
+✓ MEDIA_VFE_STATE @ 0x0048
+✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD @ 0x006c
+✓ GPGPU_WALKER @ 0x0078
+✓ Batch: 168 bytes
+
+=== CONFIGURATION RELOCATIONS ===
+✓ 4 relocations configurées
+
+=== EXÉCUTION GPU (MODÈLE OPENCL) ===
+✓ GPU exécuté
+
+=== ADRESSES GTT APRÈS PINNING ===
+heap   GTT: 0x0000000000000000
+output GTT: 0x0000000000002000
+batch  GTT: 0x0000000000003000
+
+=== VÉRIFICATION RÉSULTAT ===
+output[0] = 0xffffffff
+output[1] = 0xffffffff
+
+❌ output[0] != 0x12345678
+NOTE: Adresses GTT disponibles pour C551

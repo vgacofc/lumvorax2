@@ -1,0 +1,28 @@
+✅ AUDIT MODULES — réponse définitive depuis le Makefile officiel :
+
+Le binaire principal bin/lum_vorax_complete linke EXACTEMENT 42 fichiers .c :
+Dossier src/	Fichiers utilisés (compilés et linkés au binaire)	Statut
+lum/	lum_core.c (1/3)	✅ utilisé
+vorax/	vorax_operations.c (1/4)	✅ utilisé
+binary/	binary_lum_converter.c	✅ utilisé
+parser/	vorax_parser.c (1/2)	✅ utilisé
+logger/	lum_logger.c, log_manager.c (2/4)	✅ utilisé
+debug/	memory_tracker, forensic_logger, ultra_forensic_logger, enhanced_logging, logging_system (5/12)	✅ utilisé
+crypto/	crypto_validator.c (1/14)	✅ utilisé
+persistence/	data_persistence, transaction_wal_extension, recovery_manager_extension (3/10)	✅ utilisé
+optimization/	memory_optimizer, pareto_optimizer, pareto_inverse_optimizer, simd_optimizer, zero_copy_allocator (5/28)	✅ utilisé
+parallel/	parallel_processor.c (1/2)	✅ utilisé
+metrics/	performance_metrics.c (1/2)	✅ utilisé
+advanced_calculations/ (racine)	audio_processor, image_processor, golden_score_optimizer, tsp_optimizer, neural_advanced_optimizers, neural_ultra_precision_architecture, matrix_calculator, neural_network_processor, quantum_simulator (9 fichiers)	✅ utilisé
+complex_modules/	realtime_analytics, distributed_computing, ai_optimization, ai_dynamic_config_manager (4/8)	✅ utilisé
+file_formats/	lum_secure_serialization, lum_native_file_handler, lum_native_universal_format (3/6)	✅ utilisé
+spatial/	lum_instant_displacement.c (1/2)	✅ utilisé
+network/	hostinger_resource_limiter.c	✅ utilisé
+physics/	kerr_metric.c (1/2)	✅ utilisé
+logging/	log_writer.c (1/2)	✅ utilisé
+common/	time_ns.c	✅ utilisé
+distributed/	aucun	❌ ORPHELIN
+src/advanced_calculations/bitcoin_quantum_mining/	AUCUN .c linké au binaire principal	❌ runners Python séparés (1493 fichiers)
+src/qdayprize/, src/quantum/, src/projetx_NQubit NX/, src/sch/, src/nx_versions/, src/proofs/, src/cicd/, src/kaggle_*, src/monitoring/, src/core/	aucun dans Makefile principal	❌ non linkés (compilés via autres targets)
+
+Le module BTC mining (btc_mining_runner 155K Ubuntu) est un BINAIRE SÉPARÉ compilé depuis src/btc_opencl_runner.c + dépendances nx48_btc_controller.c, btc_mining_engine.c — il a son propre tools/btc_run_ubuntu.sh. Il ne fait PAS partie du lum_vorax_complete.

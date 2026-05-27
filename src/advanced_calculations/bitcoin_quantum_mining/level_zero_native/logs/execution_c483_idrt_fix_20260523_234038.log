@@ -1,0 +1,55 @@
+=== CYCLE C481: BATCH GPGPU COMPLET BEIGNET ===
+
+[1/10] Ouverture /dev/dri/renderD128...
+  ✓ fd = 5
+
+[2/10] Initialisation drm_intel_bufmgr...
+  ✓ bufmgr initialisé
+
+[3/10] Allocation buffers...
+  ✓ batch_bo: 65536 bytes
+  ✓ output_bo: 4096 bytes
+  ✓ aux_buf_bo: 65536 bytes
+  ✓ kernel_bo: 4096 bytes
+
+[4/10] Initialisation output buffer...
+  ✓ Output rempli avec 0xFFFFFFFF
+
+[5/10] Copie kernel ISA Gen9...
+  ✓ Kernel ISA copié: 320 bytes
+
+[6/10] Configuration Binding Table (Beignet)...
+  ✓ Binding Table configurée
+  ✓ Surface State Gen7 configurée
+  ✓ Relocation enregistrée
+
+[7/10] Configuration Interface Descriptor...
+  ✓ Interface Descriptor configuré
+  ✓ Relocation kernel enregistrée
+
+[8/10] Construction batch GPGPU COMPLET...
+  ✓ Batch construit: 240 bytes
+  ✓ PIPE_CONTROL
+  ✓ PIPELINE_SELECT GPGPU
+  ✓ STATE_BASE_ADDRESS + relocations
+  ✓ MEDIA_VFE_STATE
+  ✓ MEDIA_INTERFACE_DESCRIPTOR_LOAD
+  ✓ GPGPU_WALKER
+  ✓ MI_BATCH_BUFFER_END
+
+[9/10] Soumission EXECBUFFER2...
+  ✓ Context créé
+  ✓✓✓ EXECBUFFER2 SUCCÈS! ✓✓✓
+
+[10/10] Vérification résultat...
+  Output[0] = 0xffffffff
+  Output[1] = 0xffffffff
+  Output[2] = 0xffffffff
+  Output[3] = 0xffffffff
+
+=== RÉSUMÉ C481 ===
+Durée totale: 661.393 ms
+EXECBUFFER2: ✓ SUCCÈS
+Batch: GPGPU COMPLET (Beignet)
+Relocations: Automatiques (STATE_BASE_ADDRESS + IDRT + BTI)
+Statut: ⚠ Pas de modification

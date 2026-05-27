@@ -1,0 +1,51 @@
+╔════════════════════════════════════════════════════════════╗
+║  TEST C370 - Memory Synchronization Validation            ║
+║  ROOT CAUSE: GPU→CPU memory coherence                     ║
+╚════════════════════════════════════════════════════════════╝
+
+✓ DRM opened: fd=5
+✓ GPU context created: ctx_id=1
+
+
+=== TEST 5: GEM_WAIT Explicite ===
+✓ Buffer créé: handle=1 size=4096
+✓ Buffer mappé: addr=0x7d713af92000
+✓ CPU write: 0xDEADBEEF
+✓ GPU write simulé: 0xCAFEBABE
+⏳ GEM_WAIT...
+✓ GEM_WAIT completed
+✓ CPU read: 0xCAFEBABE
+✅ TEST 5 PASSED: GEM_WAIT synchronise correctement
+
+=== TEST 6: Memory Barrier + Cache Invalidation ===
+✓ CPU write: 0x11111111
+✓ GPU write simulé: 0x22222222
+⏳ Cache invalidation x86_64...
+✓ CLFLUSH + MFENCE completed
+✓ CPU read: 0x22222222
+✅ TEST 6 PASSED: Cache invalidation fonctionne
+
+=== TEST 7: Domain i915 Verification ===
+⏳ SET_DOMAIN CPU (read)...
+✓ Domain set to CPU
+✓ CPU read (CPU domain): 0x22222222
+⏳ SET_DOMAIN RENDER (write)...
+❌ TEST 7 FAILED: SET_DOMAIN RENDER error=22
+
+=== TEST 8: Target Bits Minimal (1 bit) ===
+⚠️ Test nécessite kernel Bitcoin compilé
+✓ TEST 8 SKIPPED: Implémentation dans runner production
+
+╔════════════════════════════════════════════════════════════╗
+║  RÉSUMÉ TESTS C370                                         ║
+╠════════════════════════════════════════════════════════════╣
+║  TEST 5 (GEM_WAIT):          ✅ PASSED                        ║
+║  TEST 6 (Memory Barrier):    ✅ PASSED                        ║
+║  TEST 7 (Domain i915):       ❌ FAILED                        ║
+║  TEST 8 (Target 1 bit):      ⏭️  SKIPPED                   ║
+╚════════════════════════════════════════════════════════════╝
+
+🎯 Score: 2/3 tests passed
+
+❌ CONCLUSION: Problème synchronisation mémoire détecté
+   → Implémenter corrections dans runner production

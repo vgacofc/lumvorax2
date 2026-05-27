@@ -1,0 +1,45 @@
+
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10379
+ * Known ssh key: /home/lvx/.ssh/id_ed25519
+
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+lvx@lvx-Vostro-5481 ~> cd ~/LVX/lumvorax2
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> 
+                                          ssh -T git@github.com
+                                          git remote set-url origin git@github.com:vgacofc/lumvorax2.git
+                                          git fetch origin
+                                          git reset --hard origin/main
+Hi vgacofc! You've successfully authenticated, but GitHub does not provide shell access.
+remote: Enumerating objects: 23, done.
+remote: Counting objects: 100% (23/23), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 14 (delta 10), reused 12 (delta 8), pack-reused 0 (from 0)
+Unpacking objects: 100% (14/14), 19.22 KiB | 378.00 KiB/s, done.
+From github.com:vgacofc/lumvorax2
+   2e5a116..56ee220  main       -> origin/main
+HEAD is now at 56ee220 IBMC67
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main)> cd ~/LVX/lumvorax2 && doppler run --config dev_lumvorax -- bash tools/agent_ubuntu_ws.sh
+[C57-WS] ============================================
+[C57-WS] LumVorax Agent WebSocket — Cycle C57
+[C57-WS] REPO_ROOT : /home/lvx/LVX/lumvorax2
+[C57-WS] URL       : https://c46e1611-17c1-4293-a7ae-9ea1ce3059d6-00-37tgassp0l78h.janeway.replit.dev
+[C57-WS] Token     : 8370b456...
+[C57-WS] Venv      : /home/lvx/.lumvorax_ws_venv
+[C57-WS] Transport : WebSocket + polling fallback
+[C57-WS] ============================================
+2026-04-21T17:10:06Z INFO [C57-WS] LumVorax Agent WebSocket — Cycle C57
+2026-04-21T17:10:06Z INFO [C57-WS] Env          : ubuntu_lvx
+2026-04-21T17:10:06Z INFO [C57-WS] REPO_ROOT    : /home/lvx/LVX/lumvorax2
+2026-04-21T17:10:06Z INFO [C57-WS] Replit URL   : https://c46e1611-17c1-4293-a7ae-9ea1ce3059d6-00-37tgassp0l78h.janeway.replit.dev
+2026-04-21T17:10:06Z INFO [C57-WS] Token (8ch)  : 8370b456...
+2026-04-21T17:10:06Z INFO [C57-WS] Log          : /home/lvx/lumvorax_agent_ws.log
+2026-04-21T17:10:06Z INFO [C57-WS] Job timeout  : illimité
+2026-04-21T17:10:06Z INFO [C63-FOR] Thread forensic démarré — intervalle=30s dir=/home/lvx/LVX/lumvorax2/src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules
+2026-04-21T17:10:06Z INFO [C63-FOR] Thread forensic démarré (intervalle=30s)
+2026-04-21T17:10:06Z INFO [C57-WS] Connexion WebSocket → https://c46e1611-17c1-4293-a7ae-9ea1ce3059d6-00-37tgassp0l78h.janeway.replit.dev/ws/socket.io ...
+2026-04-21T17:10:07Z INFO [C57-WS] 🟢 Agent authentifié — jobs en attente : 0
+2026-04-21T17:10:07Z INFO [C57-WS] ✅ Connecté au serveur Replit (/agent namespace)
+2026-04-21T17:10:07Z INFO [C57-WS] Connexion établie — boucle d'attente active
+

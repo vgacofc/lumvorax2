@@ -1,0 +1,299 @@
+La notion de **champ moyen (Mean Field)** n’est pas un modèle unique, mais une **famille entière d’approximations** utilisées dans de nombreux domaines (physique statistique, quantique, QFT, etc.).
+Voici une cartographie claire et exhaustive des principaux **types de champs moyens existants**.
+
+---
+
+# 1) Champ moyen classique (statique)
+
+## ➤ Principe
+
+Chaque particule ressent une **moyenne des autres**, au lieu des interactions exactes.
+
+## Exemples
+
+* Modèle d’Ising (approximation de Weiss)
+* Théorie de Weiss
+
+## Forme typique
+
+```id="l2g9df"
+H ≈ Σ_i h_eff · s_i
+```
+
+## Limite
+
+* ignore les corrélations locales
+* surestime les transitions de phase
+
+---
+
+# 2) Hartree / Hartree–Fock (quantique)
+
+## ➤ Principe
+
+Approximation du système quantique multi-corps par un produit d’états individuels.
+
+## Références
+
+* Méthode de Hartree
+* Méthode de Hartree–Fock
+
+## Idée clé
+
+```id="l1c8az"
+Ψ_total ≈ ∏ ψ_i   (Hartree)
+Ψ_total ≈ Slater determinant (Fock)
+```
+
+## Limite
+
+* corrélations électroniques fortement sous-estimées
+
+---
+
+# 3) Champ moyen dépendant du temps
+
+## ➤ TDHF / TDDFT
+
+* Time-dependent Hartree–Fock
+* Time-dependent Density Functional Theory
+
+## Utilisation
+
+* dynamique hors équilibre
+* collisions, excitations
+
+---
+
+# 4) DFT (Density Functional Theory)
+
+## ➤ Principe
+
+Tout est exprimé via la densité électronique ρ(x)
+
+## Référence
+
+* Théorie de la fonctionnelle de la densité
+
+## Équation
+
+```id="5z9xnv"
+E[ρ] = T[ρ] + V_ext[ρ] + V_int[ρ]
+```
+
+## Important
+
+👉 C’est un **champ moyen amélioré**, avec corrections empiriques
+
+---
+
+# 5) Bogoliubov / BCS (supraconductivité)
+
+## ➤ Principe
+
+Introduction d’un champ moyen de **paires**
+
+## Référence
+
+* Théorie BCS
+
+## Structure
+
+```id="u4p7ka"
+Δ = ⟨c↓ c↑⟩
+```
+
+## Résultat
+
+* brisure de symétrie
+* gap supraconducteur
+
+---
+
+# 6) Dynamical Mean Field Theory (DMFT)
+
+## ➤ Très important dans ton contexte
+
+## Référence
+
+* Dynamical Mean Field Theory
+
+## Principe
+
+* champ moyen **local mais dynamique**
+* mapping → impurité quantique
+
+## Avantage
+
+* capture les effets de corrélation forte (Mott)
+
+## Limite
+
+* ignore corrélations spatiales longues portées
+
+---
+
+# 7) Cluster DMFT / extensions
+
+## Variantes
+
+* CDMFT
+* DCA (Dynamical Cluster Approximation)
+
+## But
+
+👉 ajouter des corrélations spatiales locales
+
+---
+
+# 8) Mean Field stochastique
+
+## ➤ utilisé en simulation (comme ton cas)
+
+## Idée
+
+* champ moyen + bruit aléatoire
+* couplé à Monte Carlo
+
+## Exemples
+
+* Langevin
+* stochastic Gross–Pitaevskii
+
+---
+
+# 9) Mean Field variationnel
+
+## ➤ utilisé en optimisation
+
+## Principe
+
+Minimiser une énergie dans une classe d’états simples
+
+## Exemples
+
+* états produits
+* réseaux tensoriels simplifiés
+
+---
+
+# 10) Mean Field en théorie quantique des champs (QFT)
+
+## ➤ Principe
+
+Remplacer opérateur par sa valeur moyenne
+
+## Exemple
+
+```id="f6pq2k"
+φ(x) = ⟨φ⟩ + δφ
+```
+
+## Applications
+
+* Higgs
+* inflation cosmologique
+
+---
+
+# 11) Mean Field effectif (émergent)
+
+👉 Très proche de ce que tu observes
+
+## Caractéristiques
+
+* plateau dynamique
+* invariants artificiels (ex: ton F_XEB = 1/3)
+* perte d’information fine
+
+---
+
+# 12) Mean Field non-linéaire / auto-cohérent
+
+## ➤ le plus général
+
+## Principe
+
+```id="k1v8zp"
+champ = fonction(état global)
+```
+
+Boucle :
+
+1. calcul champ
+2. résoudre système
+3. recalculer champ
+4. itérer
+
+---
+
+# 13) Mean Field multi-échelle
+
+## ➤ avancé
+
+* champs différents selon l’échelle ℓ
+* utilisé en turbulence, systèmes complexes
+
+---
+
+# 14) Mean Field hors équilibre
+
+## ➤ ton simulateur est ici partiellement
+
+* systèmes loin de l’équilibre
+* transport, dissipation
+
+---
+
+# 15) Mean Field avec contraintes (important)
+
+## ➤ ex :
+
+* contrainte de remplissage
+* contrainte topologique
+
+👉 crée des états artificiellement stables
+
+---
+
+# Synthèse globale
+
+| Type           | Corrélations    | Dynamique | Réalisme   |
+| -------------- | --------------- | --------- | ---------- |
+| Classique      | ❌               | ❌         | faible     |
+| Hartree-Fock   | partiel         | ❌         | moyen      |
+| DFT            | partiel         | ❌         | bon        |
+| BCS            | pairées         | ❌         | ciblé      |
+| DMFT           | local fort      | ✅         | élevé      |
+| Cluster DMFT   | local + spatial | ✅         | très élevé |
+| Stochastique   | approx          | ✅         | variable   |
+| Ton simulateur | MF global       | partiel   | ⚠️ limité  |
+
+---
+
+# Conclusion critique
+
+👉 Ton simulateur correspond à :
+
+## ➤ un **Mean Field global + stochastique + hors équilibre**
+
+Donc :
+
+* très scalable ✅
+* mais **structurellement aveugle à certains états** ❌
+
+---
+
+# Point stratégique
+
+Si tu veux dépasser les concurrents (très important) :
+
+👉 il faut évoluer vers :
+
+## ➤ **DMFT + corrections locales + non-linéarité conditionnelle**
+
+C’est exactement là que se situe la frontière actuelle de la recherche.
+
+---
+
+Si tu veux, je peux te faire une **architecture concrète pour transformer LumVorax** en simulateur post-Mean-Field (niveau au-dessus de tout ce qui existe actuellement).

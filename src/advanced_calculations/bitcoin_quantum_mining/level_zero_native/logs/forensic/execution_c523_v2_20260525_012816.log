@@ -1,0 +1,81 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C523 - IDRT STRUCTURE COMPLÈTE + CURBE DATA           ║
+╚════════════════════════════════════════════════════════════════╝
+
+ROOT CAUSE #33: IDRT structure incomplète (flags manquants)
+Solution: IDRT exact d'OpenCL buffer[8] avec tous les flags
+
+[1/16] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/16] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/16] Allocation buffers...
+  ✓ 6 buffers alloués
+
+[4/16] Initialisation output + kernel...
+  ✓ Output et kernel initialisés
+
+[5/16] PASS 1: Résolution offsets i915...
+  ✅ PASS 1 RÉUSSI
+
+[6/16] Lecture offsets i915...
+  ✓ OFFSETS i915:
+    surface_state: 0x0000000000000000
+    dynamic_state: 0x0000000000001000
+    idrt:          0x0000000000002000
+    kernel:        0x0000000000003000
+    output:        0x0000000000004000
+    batch:         0x0000000000005000
+
+[7/16] Construction Surface State Gen9 EXACT...
+  ✓ Surface State Gen9: output @ 0x0000000000004000
+  ✓ Binding Table @ offset 0x1A0 (OpenCL format)
+  ✓ Binding Table[0] = offset 0x40
+
+[8/16] Construction IDRT COMPLET (format OpenCL buffer[8])...
+  ✓ IDRT: kernel @ 0x0000000000003000
+  ✓ IDRT DW3: BTI pointer = 0x0E20A00D (avec flags OpenCL)
+  ✓ IDRT DW4: Entry Count + Thread Config = 0x00190020
+  ✓ IDRT DW5: CURBE Length=7 + Thread Size + Barrier = 0xFFFDD007
+
+[9/16] Construction Dynamic State + CURBE Data...
+  ✓ Dynamic State initialisé
+  ✓ CURBE Data: output @ 0x0000000000004000
+  ✓ CURBE Data: global_size = (256, 1, 1)
+
+[10/16] Patch batch OpenCL avec offsets réels...
+  ✓ Batch patché
+
+[11/16] Construction exec_objects final...
+  ✓ 10 exec_objects configurés
+
+[12/16] PASS 2: Soumission batch OpenCL...
+  🔧 PASS 2 - IDRT COMPLET + CURBE:
+     IDRT DW3: BTI pointer avec flags OpenCL
+     IDRT DW4: Entry Count + Thread Config
+     IDRT DW5: CURBE Length=7 + Barrier
+     CURBE Data: Arguments kernel chargés
+     Surface State: Format Gen9 exact
+
+  ✅✅✅ PASS 2 RÉUSSI! ✅✅✅
+
+[13/16] Attente GPU...
+  ✓ GPU terminé
+
+[14/16] VÉRIFICATION RÉSULTAT GPU NATIF...
+═══════════════════════════════════════════════════════════════
+output[0] = 0xFFFFFFFF (attendu: 0x12345678)
+output[1] = 0xFFFFFFFF
+output[2] = 0xFFFFFFFF
+output[3] = 0xFFFFFFFF
+
+⚠️  Valeur incorrecte - analyse supplémentaire nécessaire
+
+[15/16] Cleanup...
+  ✓ Cleanup terminé
+
+[16/16] RÉSULTAT FINAL:
+  ⚠️  Debug supplémentaire requis

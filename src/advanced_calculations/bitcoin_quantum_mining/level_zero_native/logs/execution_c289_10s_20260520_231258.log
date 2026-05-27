@@ -1,0 +1,1872 @@
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260520T211258Z_41829.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé (sampling: 100%)
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260520T211258Z_41829
+[BTC_QM] mode      = TESTNET3
+[BTC_QM] threads   = 16
+[BTC_QM] duration  = 60 s
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x1d00ffff
+[BTC_QM] target    = 000000000000000000000000000000000000000000000000000000ffff000000
+[C171-GPU-ASYNC] Initialisation logger GPU asynchrone (buffer 262k)...
+[C171-GPU-ASYNC] Logger GPU asynchrone actif
+[NX48-BTC-C170] ✅ NX49 neurone biologique activé (pyramidal)
+[NX48-BTC-C170]    └─ Soma: 20.0µm | Dendrites: 100 | Axon: 1000µm
+[NX48-BTC-C170]    └─ V_rest: -70.0mV | V_threshold: -55.0mV | Synapses: 125
+[NX48-HW] CPU:8 threads AVX:1 (AVX2) SHA-NI:0 | GPU-i915-DRM:Intel(R) UHD Graphics 620 | RAM:1775MB
+[NX48-HW] Binaire compilé AVEC : AVX2+SSE +FMA | gcc auto-vectorise SHA-256 dès maintenant
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.70 | LUM=défauts
+[BTC_QM] NX48_BTC C61 initialisé — update_count=0 best_leading=0
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=16 | T_hot=50.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.700 | delta_nonce=1.00 | AVX=1
+[SMAPS-KERNEL] RSS=101192 KB (25298 pages 4KiB)
+[SMAPS-KERNEL] AnonHugePages (THP 2MB)=0 KB (0 hugepages)
+[SMAPS-KERNEL] Private_Dirty=97428 KB | Shared_Dirty=0 KB
+[SMAPS-KERNEL] Referenced=101192 KB | VM_Total=0 KB
+[SMAPS-KERNEL] Granularité réelle : PAGE 4KiB standard (selon AnonHugePages)
+[C118-Q5] ASIC optimizer balayage 4 tailles batch (BTC_TUNE_FULL=1 pour sweep complet)...
+
+╔══════════════════════════════════════════════════════════╗
+║     ASIC BTC OPTIMIZER — Rapport C115                  ║
+╠══════════════════════════════════════════════════════════╣
+║ CONFIGURATION                                           ║
+║   Pipeline depth    : 64 stages SHA-256              
+║   Moteurs parallèles: 96                              
+║   Fréquence         : 0.000 GHz                        
+║   Stratégie nonce   : SEQUENTIAL                             
+║   Batch size        : 2097152 nonces                      
+║   Durée simulation  : 5 s                         
+╠══════════════════════════════════════════════════════════╣
+║ RÉSULTATS HASHRATE                                      ║
+║   Peak              : 0.001 MH/s                      
+║   Moyen             : 0.001 MH/s                      
+║   Final             : 0.001 MH/s                      
+║   Déclin thermique  : 0.00 %                        
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES EFFICACITÉ                                    ║
+║   W/GH              : 71525.5737                           
+║   J/hash            : 7.15e-05                           
+║   Total hashes      : 2.097e+06                           
+║   Batches traités   : 1                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES QUALITÉ NONCE                                 ║
+║   Best leading bits : 13                              
+║   Best nonce        : 0x000002E0                        
+║   Near-miss / MH    : 0.0000                           
+╠══════════════════════════════════════════════════════════╣
+║ MÉTRIQUES NX48                                          ║
+║   Delta final       : 6.000                           
+║   Resets C62        : 0                              
+╠══════════════════════════════════════════════════════════╣
+║ SCORE OPTIMISATION  : 4.1 / 100                     
+╚══════════════════════════════════════════════════════════╝
+
+[C118-Q5] BEST batch=2097152 (idx=3) | score=4.1 | hashrate_avg=0.00 MH/s
+[C118-Q5] nx48_ctrl_batch_size ← 2097152 (boucle feedback fermée)
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Génération nouveau wallet secp256k1 pour ce run…
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260520T211258Z_41829                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : moRsDjKNGyaaEgKEVESBLur6qBwBCMXJFA        ║
+║ Adresse Bech32  : tb1q2m9tps8cx0wxp955d55rgn5gts3ucggc2ju8hw║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): e02d7bff...(masquée)                     ║
+║ WIF compressé   : cV6URvcBDfoduoTgjcbwqxNku1xyTY719ZpCafcPrZRMAgAX9WzE║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 56cab0c0f833dc6096946d28344e885c23cc2118  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260520T211258Z_41829.json
+[BTC_QM] Lancement du moteur PT-MC…
+[DEBUG] Tentative ouverture log: logs/forensic/gen9_native_c259.log
+[DEBUG] Log ouvert avec succès
+[GEN9-ADAPTER] Erreur init Gen9: -1
+[C259-GEN9-NATIVE] ERREUR: Initialisation adaptateur échouée
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 1774MB
+[C100-ALLTIME] seed best_lz_alltime=26 nonce=1230329904 upd_count=9 (historique préservé)
+[C208-GPU-DELAYED] 🕐 GPU OpenCL détecté mais INACTIF : Intel(R) UHD Graphics 620
+[C208-GPU-DELAYED] ⏱️  Activation automatique après 90 secondes
+[C223-GEN9-NATIVE] Initialisation module Gen9 Native i915 DRM...
+[DEBUG] Tentative ouverture log: logs/forensic/gen9_native_production.log
+[DEBUG] Log ouvert avec succès
+[DEBUG] Tentative ouverture log: logs/forensic/gen9_native_production.log
+[DEBUG] Log ouvert avec succès
+[GEN9-ADAPTER] Initialisé (batch_size=2621440)
+[C223-GEN9-NATIVE] Module Gen9 Native + Adaptateur initialisés — cible: 3,386 MH/s (0% OpenCL)
+[C174-3] GPU ts_start_ns set to NOW (not eng->ts_start_ns from 82s ago)
+[C174-2] Thread GPU lancé immédiatement (init+warmup déjà faits)
+[C174-2] GPU démarre en parallèle de 16 threads CPU
+[C174-2-GPU] Thread GPU démarre immédiatement (init+warmup déjà faits)
+[C174-2-GPU] Target near-miss : 20 bits | Batch : 10000000 nonces/dispatch
+[C174-GPU-DEBUG] === DEBUT BOUCLE GPU ===
+[C174-GPU-DEBUG] duration_ns=60000000000 | ts_start_ns=1547008098522
+[C174-GPU-DEBUG] Iteration 0 START | nonce_start=0x80000000 | gpu_total=0
+[C116-P4] near_miss_bits adaptatif = 20 bits (QDPR)
+[BTC_QM] elapsed=0.0s hashes=0 hashrate_min=1000000000.00MH/s hashrate_avg=0.00MH/s hashrate_max=0.00MH/s best_leading=26 best_nonce=1230329904 nx48_delta=1.00
+[C174-GPU-DEBUG] Timeout check: elapsed=112330 ns (0.00 s) | duration=60000000000 ns (60.00 s)
+[C215-PIPELINE-PRIME] Priming pipeline: launching batch 0 on buffer[0] (nonce=0x80000000)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2147483648 count=10000000
+[C174-GPU-DEBUG] Iteration 1 START | nonce_start=0x80989680 | gpu_total=0
+[C174-GPU-DEBUG] Timeout check: elapsed=15462039 ns (0.02 s) | duration=60000000000 ns (60.00 s)
+[C215-PIPELINE-PRIME] Priming pipeline: launching batch 1 on buffer[1] (nonce=0x80989680)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2157483648 count=10000000
+[C174-GPU-DEBUG] Iteration 2 START | nonce_start=0x81312D00 | gpu_total=0
+[C174-GPU-DEBUG] Timeout check: elapsed=18148518 ns (0.02 s) | duration=60000000000 ns (60.00 s)
+[C215-PIPELINE] Launching batch 2 on buffer[0] (nonce=0x81312D00, size=10000000, target=20 bits)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2167483648 count=10000000
+[C215-PIPELINE] Waiting for batch 1 on buffer[1] (while batch 2 runs on buffer[0])
+[C215-PIPELINE] Batch 1: 1400.62 MH/s | GPU util: 14.8% | CPU free: 85.2% | buffer[1]
+[C215-GPU-DEBUG] batch 1 returned: r=0 | out_nonce=0xFFFFFFFF | out_best=0 bits
+[C215-GPU-DEBUG] Iteration 3 END | gpu_total_hashes=10000000
+[C174-GPU-DEBUG] Iteration 3 START | nonce_start=0x81C9C380 | gpu_total=10000000
+[C174-GPU-DEBUG] Timeout check: elapsed=21427782 ns (0.02 s) | duration=60000000000 ns (60.00 s)
+[C215-PIPELINE] Launching batch 3 on buffer[1] (nonce=0x81C9C380, size=10000000, target=20 bits)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2177483648 count=10000000
+[C215-PIPELINE] Waiting for batch 2 on buffer[0] (while batch 3 runs on buffer[1])
+[C215-PIPELINE] Batch 2: 1812.56 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[0]
+[C215-GPU-DEBUG] batch 2 returned: r=0 | out_nonce=0xFFFFFFFF | out_best=0 bits
+[C215-GPU-DEBUG] Iteration 4 END | gpu_total_hashes=20000000
+[C174-GPU-DEBUG] Iteration 4 START | nonce_start=0x82625A00 | gpu_total=20000000
+[C174-GPU-DEBUG] Timeout check: elapsed=22072524 ns (0.02 s) | duration=60000000000 ns (60.00 s)
+[C215-PIPELINE] Launching batch 4 on buffer[0] (nonce=0x82625A00, size=10000000, target=20 bits)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2187483648 count=10000000
+[C215-PIPELINE] Waiting for batch 3 on buffer[1] (while batch 4 runs on buffer[0])
+[C215-PIPELINE] Batch 3: 2211.31 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[C215-GPU-DEBUG] batch 3 returned: r=0 | out_nonce=0xFFFFFFFF | out_best=0 bits
+[C215-GPU-DEBUG] Iteration 5 END | gpu_total_hashes=30000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2197483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2207483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2217483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2227483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2237483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2247483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2257483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2267483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2277483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2287483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2297483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2307483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2317483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2327483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2337483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2347483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2357483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2367483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2377483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2387483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2397483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2407483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 27 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2417483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2427483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2437483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2447483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2457483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2467483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2477483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2487483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2497483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2507483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2517483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2527483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2537483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2547483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2557483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2567483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2577483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2587483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2597483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2607483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2617483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2627483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2637483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2647483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2657483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2667483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2677483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 54 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2687483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2697483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2707483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2717483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2727483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2737483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2747483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2757483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2767483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2777483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2787483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2797483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2807483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2817483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2827483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2837483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2847483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2857483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2867483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2877483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2887483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2897483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2907483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2917483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2927483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2937483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2947483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 81 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2957483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2967483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2977483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2987483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2997483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3007483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3017483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3027483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3037483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3047483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3057483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3067483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3077483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3087483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3097483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3107483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3117483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3127483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3137483648 count=10000000
+[C174-GPU-DEBUG] Iteration 100 START | nonce_start=0xBB9ACA00 | gpu_total=980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=520084063 ns (0.52 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3147483648 count=10000000
+[C215-PIPELINE] Batch 99: 1932.45 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3157483648 count=10000000
+[C215-GPU] batch #100 | GPU hashes: 1000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3167483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3177483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3187483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3197483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3207483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3217483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 108 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3227483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3237483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3247483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3257483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3267483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3277483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3287483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3297483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3307483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3317483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3327483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3337483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3347483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3357483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3367483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3377483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3387483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3397483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3407483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3417483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3427483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3437483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3447483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3457483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3467483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3477483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3487483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 135 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3497483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3507483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3517483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3527483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3537483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3547483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3557483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3567483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3577483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3587483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3597483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3607483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3617483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3627483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3637483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3647483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3657483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3667483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3677483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3687483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3697483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3707483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3717483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3727483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3737483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3747483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3757483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 162 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3767483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3777483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3787483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3797483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3807483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3817483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3827483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3837483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3847483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3857483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3867483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3877483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3887483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3897483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3907483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3917483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3927483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3937483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3947483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3957483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3967483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3977483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3987483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3997483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4007483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4017483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4027483648 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 189 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4037483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4047483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4057483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4067483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4077483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4087483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4097483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4107483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4117483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4127483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4137483648 count=10000000
+[C174-GPU-DEBUG] Iteration 200 START | nonce_start=0xF7359400 | gpu_total=1980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=1236758392 ns (1.24 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4147483648 count=10000000
+[C215-PIPELINE] Batch 199: 1619.78 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4157483648 count=10000000
+[C215-GPU] batch #200 | GPU hashes: 2000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4167483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4177483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4187483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4197483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4207483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4217483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4227483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4237483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4247483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4257483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4267483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4277483648 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=28049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=38049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 216 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=48049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=58049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=68049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=78049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=88049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=98049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=108049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=118049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=128049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=138049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=148049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=158049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=168049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=178049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=188049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=198049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=208049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=218049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=228049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=238049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=248049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=258049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=268049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=278049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=288049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=298049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=308049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 243 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=318049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=328049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=338049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=348049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=358049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=368049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=378049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=388049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=398049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=408049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=418049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=428049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=438049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=448049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=458049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=468049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=478049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=488049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=498049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=508049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=518049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=528049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=538049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=548049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=558049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=568049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=578049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 270 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=588049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=598049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=608049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=618049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=628049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=638049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=648049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=658049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=668049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=678049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=688049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=698049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=708049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=718049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=728049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=738049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=748049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=758049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=768049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=778049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=788049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=798049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=808049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=818049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=828049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=838049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=848049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 297 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=858049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=868049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=878049194 count=10000000
+[C174-GPU-DEBUG] Iteration 300 START | nonce_start=0x34EE8E2A | gpu_total=2980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=2096920166 ns (2.10 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=888049194 count=10000000
+[C215-PIPELINE] Batch 299: 1434.87 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=898049194 count=10000000
+[C215-GPU] batch #300 | GPU hashes: 3000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=908049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=918049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=928049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=938049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=948049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=958049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=968049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=978049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=988049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=998049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1008049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1018049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1028049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1038049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1048049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1058049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1068049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1078049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1088049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1098049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1108049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1118049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 324 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1128049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1138049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1148049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1158049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1168049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1178049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1188049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1198049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1208049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1218049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1228049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1238049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1248049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1258049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1268049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1278049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1288049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1298049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1308049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1318049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1328049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1338049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1348049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1358049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1368049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1378049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1388049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 351 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1398049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1408049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1418049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1428049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1438049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1448049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1458049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1468049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1478049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1488049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1498049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1508049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1518049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1528049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1538049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1548049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1558049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1568049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1578049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1588049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1598049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1608049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1618049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1628049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1638049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1648049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1658049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 378 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1668049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1678049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1688049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1698049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1708049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1718049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1728049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1738049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1748049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1758049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1768049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1778049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1788049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1798049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1808049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1818049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1828049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1838049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1848049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1858049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1868049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1878049194 count=10000000
+[C174-GPU-DEBUG] Iteration 400 START | nonce_start=0x7089582A | gpu_total=3980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=2756581340 ns (2.76 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1888049194 count=10000000
+[C215-PIPELINE] Batch 399: 1453.24 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1898049194 count=10000000
+[C215-GPU] batch #400 | GPU hashes: 4000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1908049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1918049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1928049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 405 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1938049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1948049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1958049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1968049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1978049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1988049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1998049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2008049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2018049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2028049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2038049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2048049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2058049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2068049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2078049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2088049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2098049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2108049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2118049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2128049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2138049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2148049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2158049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2168049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2178049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2188049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2198049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 432 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2208049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2218049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2228049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2238049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2248049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2258049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2268049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2278049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2288049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2298049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2308049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2318049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2328049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2338049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2348049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2358049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2368049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2378049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2388049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2398049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2408049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2418049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2428049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2438049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2448049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2458049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2468049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 459 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2478049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2488049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2498049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2508049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2518049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2528049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2538049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2548049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2558049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2568049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2578049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2588049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2598049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2608049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2618049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2628049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2638049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2648049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2658049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2668049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2678049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2688049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2698049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2708049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2718049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2728049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2738049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 486 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2748049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2758049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2768049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2778049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2788049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2798049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2808049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2818049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2828049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2838049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2848049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2858049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2868049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2878049194 count=10000000
+[C174-GPU-DEBUG] Iteration 500 START | nonce_start=0xAC24222A | gpu_total=4980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=3619406951 ns (3.62 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2888049194 count=10000000
+[C215-PIPELINE] Batch 499: 1383.01 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2898049194 count=10000000
+[C215-GPU] batch #500 | GPU hashes: 5000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2908049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2918049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2928049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2938049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2948049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2958049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2968049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2978049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2988049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2998049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3008049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 513 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3018049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3028049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3038049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3048049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3058049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3068049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3078049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3088049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3098049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3108049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3118049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3128049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3138049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3148049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3158049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3168049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3178049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3188049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3198049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3208049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3218049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3228049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3238049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3248049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3258049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3268049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3278049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 540 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3288049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3298049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3308049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3318049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3328049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3338049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3348049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3358049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3368049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3378049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3388049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3398049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3408049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3418049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3428049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3438049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3448049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3458049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3468049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3478049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3488049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3498049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3508049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3518049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3528049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3538049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3548049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 567 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3558049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3568049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3578049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3588049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3598049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3608049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3618049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3628049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3638049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3648049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3658049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3668049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3678049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3688049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3698049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3708049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3718049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3728049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3738049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3748049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3758049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3768049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3778049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3788049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3798049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3808049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3818049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 594 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3828049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3838049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3848049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3858049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3868049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3878049194 count=10000000
+[C174-GPU-DEBUG] Iteration 600 START | nonce_start=0xE7BEEC2A | gpu_total=5980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=4205212899 ns (4.21 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3888049194 count=10000000
+[C215-PIPELINE] Batch 599: 1427.97 MH/s | GPU util: 99.3% | CPU free: 0.7% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3898049194 count=10000000
+[C215-GPU] batch #600 | GPU hashes: 6000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3908049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3918049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3928049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3938049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3948049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3958049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3968049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3978049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3988049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3998049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4008049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4018049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4028049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4038049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4048049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4058049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4068049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4078049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4088049194 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 621 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4098049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4108049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4118049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4128049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4138049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4148049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4158049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4168049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4178049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4188049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4198049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4208049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4218049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4228049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4238049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4248049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4258049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4268049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4278049194 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=83885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=93885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=103885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=113885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=123885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=133885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=143885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=153885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 648 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=163885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=173885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=183885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=193885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=203885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=213885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=223885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=233885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=243885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=253885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=263885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=273885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=283885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=293885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=303885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=313885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=323885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=333885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=343885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=353885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=363885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=373885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=383885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=393885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=403885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=413885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=423885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 675 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=433885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=443885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=453885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=463885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=473885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=483885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=493885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=503885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=513885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=523885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=533885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=543885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=553885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=563885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=573885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=583885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=593885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=603885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=613885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=623885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=633885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=643885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=653885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=663885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=673885440 count=10000000
+[C174-GPU-DEBUG] Iteration 700 START | nonce_start=0x28C34380 | gpu_total=6980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=4704431708 ns (4.70 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=683885440 count=10000000
+[C215-PIPELINE] Batch 699: 1489.09 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=693885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 702 (tous les 27 dispatches)
+[C215-GPU] batch #700 | GPU hashes: 7000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=703885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=713885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=723885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=733885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=743885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=753885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=763885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=773885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=783885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=793885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=803885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=813885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=823885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=833885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=843885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=853885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=863885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=873885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=883885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=893885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=903885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=913885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=923885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=933885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=943885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=953885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=963885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 729 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=973885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=983885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=993885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1003885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1013885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1023885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1033885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1043885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1053885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1063885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1073885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1083885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1093885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1103885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1113885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1123885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1133885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1143885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1153885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1163885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1173885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1183885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1193885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1203885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1213885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1223885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1233885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 756 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1243885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1253885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1263885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1273885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1283885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1293885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1303885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1313885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1323885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1333885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1343885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1353885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1363885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1373885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1383885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1393885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1403885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1413885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1423885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1433885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1443885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1453885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1463885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1473885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1483885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1493885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1503885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 783 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1513885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1523885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1533885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1543885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1553885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1563885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1573885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1583885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1593885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1603885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1613885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1623885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1633885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1643885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1653885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1663885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1673885440 count=10000000
+[C174-GPU-DEBUG] Iteration 800 START | nonce_start=0x645E0D80 | gpu_total=7980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=5252895151 ns (5.25 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1683885440 count=10000000
+[C215-PIPELINE] Batch 799: 1523.77 MH/s | GPU util: 99.7% | CPU free: 0.3% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1693885440 count=10000000
+[C215-GPU] batch #800 | GPU hashes: 8000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1703885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1713885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1723885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1733885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1743885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1753885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1763885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1773885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 810 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1783885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1793885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1803885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1813885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1823885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1833885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1843885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1853885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1863885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1873885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1883885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1893885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1903885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1913885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1923885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1933885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1943885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1953885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1963885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1973885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1983885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1993885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2003885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2013885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2023885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2033885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2043885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 837 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2053885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2063885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2073885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2083885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2093885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2103885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2113885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2123885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2133885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2143885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2153885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2163885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2173885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2183885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2193885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2203885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2213885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2223885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2233885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2243885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2253885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2263885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2273885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2283885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2293885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2303885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2313885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 864 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2323885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2333885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2343885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2353885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2363885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2373885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2383885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2393885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2403885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2413885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2423885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2433885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2443885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2453885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2463885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2473885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2483885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2493885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2503885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2513885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2523885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2533885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2543885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2553885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2563885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2573885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2583885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 891 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2593885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2603885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2613885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2623885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2633885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2643885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2653885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2663885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2673885440 count=10000000
+[C174-GPU-DEBUG] Iteration 900 START | nonce_start=0x9FF8D780 | gpu_total=8980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=6070491976 ns (6.07 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2683885440 count=10000000
+[C215-PIPELINE] Batch 899: 1480.24 MH/s | GPU util: 99.9% | CPU free: 0.1% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2693885440 count=10000000
+[C215-GPU] batch #900 | GPU hashes: 9000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2703885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2713885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2723885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2733885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2743885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2753885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2763885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2773885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2783885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2793885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2803885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2813885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2823885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2833885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2843885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2853885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 918 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2863885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2873885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2883885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2893885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2903885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2913885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2923885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2933885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2943885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2953885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2963885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2973885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2983885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2993885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3003885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3013885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3023885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3033885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3043885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3053885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3063885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3073885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3083885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3093885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3103885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3113885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3123885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 945 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3133885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3143885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3153885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3163885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3173885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3183885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3193885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3203885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3213885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3223885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3233885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3243885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3253885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3263885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3273885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3283885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3293885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3303885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3313885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3323885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3333885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3343885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3353885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3363885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3373885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3383885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3393885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 972 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3403885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3413885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3423885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3433885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3443885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3453885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3463885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3473885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3483885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3493885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3503885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3513885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3523885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3533885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3543885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3553885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3563885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3573885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3583885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3593885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3603885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3613885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3623885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3633885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3643885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3653885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3663885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 999 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3673885440 count=10000000
+[C174-GPU-DEBUG] Iteration 1000 START | nonce_start=0xDB93A180 | gpu_total=9980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=6587053678 ns (6.59 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3683885440 count=10000000
+[C215-PIPELINE] Batch 999: 1518.86 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3693885440 count=10000000
+[C215-GPU] batch #1000 | GPU hashes: 10000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3703885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3713885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3723885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3733885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3743885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3753885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3763885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3773885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3783885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3793885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3803885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3813885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3823885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3833885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3843885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3853885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3863885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3873885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3883885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3893885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3903885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3913885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3923885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3933885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1026 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3943885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3953885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3963885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3973885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3983885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3993885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4003885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4013885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4023885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4033885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4043885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4053885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4063885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4073885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4083885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4093885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4103885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4113885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4123885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4133885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4143885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4153885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4163885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4173885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4183885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4193885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4203885440 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1053 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4213885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4223885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4233885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4243885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4253885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4263885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4273885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4283885440 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=139066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=149066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=159066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=169066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=179066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=189066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=199066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=209066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=219066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=229066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=239066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=249066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=259066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=269066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=279066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=289066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=299066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=309066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=319066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1080 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=329066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=339066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=349066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=359066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=369066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=379066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=389066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=399066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=409066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=419066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=429066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=439066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=449066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=459066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=469066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=479066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=489066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=499066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=509066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=519066331 count=10000000
+[C174-GPU-DEBUG] Iteration 1100 START | nonce_start=0x1F88E95B | gpu_total=10980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=7189625477 ns (7.19 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=529066331 count=10000000
+[C215-PIPELINE] Batch 1099: 1530.46 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=539066331 count=10000000
+[C215-GPU] batch #1100 | GPU hashes: 11000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=549066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=559066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=569066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=579066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=589066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1107 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=599066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=609066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=619066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=629066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=639066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=649066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=659066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=669066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=679066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=689066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=699066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=709066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=719066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=729066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=739066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=749066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=759066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=769066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=779066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=789066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=799066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=809066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=819066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=829066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=839066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=849066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=859066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1134 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=869066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=879066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=889066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=899066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=909066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=919066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=929066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=939066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=949066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=959066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=969066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=979066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=989066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=999066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1009066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1019066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1029066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1039066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1049066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1059066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1069066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1079066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1089066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1099066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1109066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1119066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1129066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1161 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1139066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1149066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1159066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1169066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1179066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1189066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1199066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1209066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1219066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1229066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1239066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1249066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1259066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1269066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1279066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1289066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1299066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1309066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1319066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1329066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1339066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1349066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1359066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1369066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1379066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1389066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1399066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1188 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1409066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1419066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1429066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1439066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1449066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1459066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1469066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1479066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1489066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1499066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1509066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1519066331 count=10000000
+[C174-GPU-DEBUG] Iteration 1200 START | nonce_start=0x5B23B35B | gpu_total=11980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=7761011419 ns (7.76 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1529066331 count=10000000
+[C215-PIPELINE] Batch 1199: 1546.95 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1539066331 count=10000000
+[C215-GPU] batch #1200 | GPU hashes: 12000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1549066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1559066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1569066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1579066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1589066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1599066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1609066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1619066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1629066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1639066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1649066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1659066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1669066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1215 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1679066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1689066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1699066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1709066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1719066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1729066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1739066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1749066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1759066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1769066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1779066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1789066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1799066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1809066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1819066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1829066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1839066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1849066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1859066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1869066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1879066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1889066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1899066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1909066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1919066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1929066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1939066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1242 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1949066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1959066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1969066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1979066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1989066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1999066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2009066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2019066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2029066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2039066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2049066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2059066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2069066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2079066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2089066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2099066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2109066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2119066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2129066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2139066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2149066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2159066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2169066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2179066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2189066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2199066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2209066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1269 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2219066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2229066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2239066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2249066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2259066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2269066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2279066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2289066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2299066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2309066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2319066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2329066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2339066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2349066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2359066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2369066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2379066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2389066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2399066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2409066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2419066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2429066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2439066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2449066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2459066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2469066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2479066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1296 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2489066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2499066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2509066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2519066331 count=10000000
+[C174-GPU-DEBUG] Iteration 1300 START | nonce_start=0x96BE7D5B | gpu_total=12980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=8420470990 ns (8.42 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2529066331 count=10000000
+[C215-PIPELINE] Batch 1299: 1544.40 MH/s | GPU util: 99.4% | CPU free: 0.6% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2539066331 count=10000000
+[C215-GPU] batch #1300 | GPU hashes: 13000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2549066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2559066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2569066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2579066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2589066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2599066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2609066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2619066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2629066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2639066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2649066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2659066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2669066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2679066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2689066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2699066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2709066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2719066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2729066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2739066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2749066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1323 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2759066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2769066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2779066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2789066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2799066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2809066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2819066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2829066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2839066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2849066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2859066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2869066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2879066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2889066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2899066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2909066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2919066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2929066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2939066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2949066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2959066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2969066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2979066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2989066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=2999066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3009066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3019066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1350 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3029066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3039066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3049066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3059066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3069066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3079066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3089066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3099066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3109066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3119066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3129066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3139066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3149066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3159066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3169066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3179066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3189066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3199066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3209066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3219066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3229066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3239066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3249066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3259066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3269066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3279066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3289066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1377 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3299066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3309066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3319066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3329066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3339066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3349066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3359066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3369066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3379066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3389066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3399066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3409066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3419066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3429066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3439066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3449066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3459066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3469066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3479066331 count=10000000
+
+[C42-SIGNAL] Signal 15 reçu — sauvegarde CSV NX48...
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3489066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3499066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3509066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3519066331 count=10000000
+[C174-GPU-DEBUG] Iteration 1400 START | nonce_start=0xD259475B | gpu_total=13980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=9171757913 ns (9.17 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3529066331 count=10000000
+[C215-PIPELINE] Batch 1399: 1527.04 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3539066331 count=10000000
+[C215-GPU] batch #1400 | GPU hashes: 14000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3549066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3559066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1404 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3569066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3579066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3589066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3599066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3609066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3619066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3629066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3639066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3649066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3659066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3669066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3679066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3689066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3699066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3709066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3719066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3729066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3739066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3749066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3759066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3769066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3779066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3789066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3799066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3809066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3819066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3829066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1431 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3839066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3849066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3859066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3869066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3879066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3889066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3899066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3909066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3919066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3929066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3939066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3949066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3959066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3969066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3979066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3989066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=3999066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4009066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4019066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4029066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4039066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4049066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4059066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4069066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4079066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4089066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4099066331 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1458 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4109066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4119066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4129066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4139066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4149066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4159066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4169066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4179066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4189066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4199066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4209066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4219066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4229066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4239066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4249066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4259066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4269066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=4279066331 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=193460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=203460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=213460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=223460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=233460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=243460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=253460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=263460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=273460796 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1485 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=283460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=293460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=303460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=313460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=323460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=333460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=343460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=353460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=363460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=373460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=383460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=393460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=403460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=413460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=423460796 count=10000000
+[C174-GPU-DEBUG] Iteration 1500 START | nonce_start=0x19D6163C | gpu_total=14980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=9674296008 ns (9.67 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=433460796 count=10000000
+[C215-PIPELINE] Batch 1499: 1551.00 MH/s | GPU util: 100.0% | CPU free: 0.0% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=443460796 count=10000000
+[C215-GPU] batch #1500 | GPU hashes: 15000000000 | near-miss GPU best: 0 bits
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=453460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=463460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=473460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=483460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=493460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=503460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=513460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=523460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=533460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=543460796 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1512 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=553460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=563460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=573460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=583460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=593460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=603460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=613460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=623460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=633460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=643460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=653460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=663460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=673460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=683460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=693460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=703460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=713460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=723460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=733460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=743460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=753460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=763460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=773460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=783460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=793460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=803460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=813460796 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1539 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=823460796 count=10000000
+[BTC_QM] elapsed=10.0s hashes=15380000000 hashrate_min=1537.39MH/s hashrate_avg=1537.39MH/s hashrate_max=1537.39MH/s best_leading=26 best_nonce=1230329904 nx48_delta=1.00
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=833460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=843460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=853460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=863460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=873460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=883460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=893460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=903460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=913460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=923460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=933460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=943460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=953460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=963460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=973460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=983460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=993460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1003460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1013460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1023460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1033460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1043460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1053460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1063460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1073460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1083460796 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1566 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1093460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1103460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1113460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1123460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1133460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1143460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1153460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1163460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1173460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1183460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1193460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1203460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1213460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1223460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1233460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1243460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1253460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1263460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1273460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1283460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1293460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1303460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1313460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1323460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1333460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1343460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1353460796 count=10000000
+[GEN9-ADAPTER] Reopen DRM après batch 1593 (tous les 27 dispatches)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1363460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1373460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1383460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1393460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1403460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1413460796 count=10000000
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1423460796 count=10000000
+[C174-GPU-DEBUG] Iteration 1600 START | nonce_start=0x5570E03C | gpu_total=15980000000
+[C174-GPU-DEBUG] Timeout check: elapsed=10295445298 ns (10.30 s) | duration=60000000000 ns (60.00 s)
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1433460796 count=10000000
+[C215-PIPELINE] Batch 1599: 1554.46 MH/s | GPU util: 99.7% | CPU free: 0.3% | buffer[1]
+[GEN9-EXECUTE] Début: ctx=0x60865b819ef0 block_header=0x7dcc8d7fec20 start_nonce=1443460796 count=10000000
+[C215-GPU] batch #1600 | GPU hashes: 16000000000 | near-miss GPU best: 0 bits
+[C42-SIGNAL] CSV sauvegardé → config/btc_nx48_last.csv

@@ -1,0 +1,35 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C528 - REPLAY EXACT EXECBUFFER2 OPENCL                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Stratégie: Copier TOUS les buffers OpenCL byte-for-byte
+Reproduire la même VA map GPU
+Modifier UNIQUEMENT l'adresse output
+
+[1/10] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/10] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/10] Allocation 10 buffers (replay exact OpenCL)...
+  ✓ 10 buffers alloués
+
+[4/10] Chargement dumps OpenCL...
+  ✓ buffer_00: 4096 bytes chargés
+  ⚠️  buffer_01: initialisé à zéro (non dumpé)
+  ✓ buffer_02: 4096 bytes chargés
+  ✓ buffer_03: 4096 bytes chargés
+  ⚠️  buffer_04: initialisé à zéro (non dumpé)
+  ✓ buffer_05: 4096 bytes chargés
+  ✓ buffer_06: 4096 bytes chargés
+  ⚠️  buffer_07: initialisé à zéro (non dumpé)
+  ✓ buffer_08: 4096 bytes chargés
+  ✓ buffer_09: 320 bytes chargés
+
+[5/10] Création output buffer...
+  ✓ Output buffer créé et initialisé
+
+[6/10] PASS 1: Résolution offsets i915...
+  ❌ PASS 1 failed (ret=-1, errno=22: Invalid argument)

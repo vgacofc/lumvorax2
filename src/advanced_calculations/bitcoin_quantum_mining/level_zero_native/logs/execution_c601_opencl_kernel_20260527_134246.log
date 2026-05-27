@@ -1,0 +1,38 @@
+╔════════════════════════════════════════════════════════════╗
+║  COMPILATION TEST C600 - GPU HARDWARE RÉEL                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[COMPILATION]
+Compilation test_c600_gpu_execution.c...
+tests/test_c600_gpu_execution.c: In function ‘test_2_generation_batch_kernel’:
+tests/test_c600_gpu_execution.c:143:34: error: ‘kernel_c600_simple_isa’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa’?
+  143 |     memcpy(kernel_buf->cpu_addr, kernel_c600_simple_isa, kernel_c600_simple_isa_size);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~
+      |                                  kernel_c601_opencl_isa
+tests/test_c600_gpu_execution.c:143:34: note: each undeclared identifier is reported only once for each function it appears in
+tests/test_c600_gpu_execution.c:143:58: error: ‘kernel_c600_simple_isa_size’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa_size’?
+  143 |     memcpy(kernel_buf->cpu_addr, kernel_c600_simple_isa, kernel_c600_simple_isa_size);
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                          kernel_c601_opencl_isa_size
+tests/test_c600_gpu_execution.c: In function ‘test_3_execution_gpu_reelle’:
+tests/test_c600_gpu_execution.c:230:34: error: ‘kernel_c600_simple_isa’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa’?
+  230 |     memcpy(kernel_buf->cpu_addr, kernel_c600_simple_isa, kernel_c600_simple_isa_size);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~
+      |                                  kernel_c601_opencl_isa
+tests/test_c600_gpu_execution.c:230:58: error: ‘kernel_c600_simple_isa_size’ undeclared (first use in this function); did you mean ‘kernel_c601_opencl_isa_size’?
+  230 |     memcpy(kernel_buf->cpu_addr, kernel_c600_simple_isa, kernel_c600_simple_isa_size);
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                          kernel_c601_opencl_isa_size
+tests/test_c600_gpu_execution.c:301:27: error: ‘KERNEL_C600_EXPECTED_VALUE’ undeclared (first use in this function)
+  301 |         if (results[i] == KERNEL_C600_EXPECTED_VALUE) {
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/test_c600_gpu_execution.c:340:1: warning: control reaches end of non-void function [-Wreturn-type]
+  340 | }
+      | ^
+src/batch_generator_auto.c: In function ‘calculate_gtt_offset_auto’:
+src/batch_generator_auto.c:85:55: warning: unused parameter ‘gen’ [-Wunused-parameter]
+   85 | uint64_t calculate_gtt_offset_auto(batch_generator_t *gen,
+      |                                    ~~~~~~~~~~~~~~~~~~~^~~
+src/batch_generator_auto.c:87:46: warning: unused parameter ‘size’ [-Wunused-parameter]
+   87 |                                     uint64_t size) {
+      |                                     ~~~~~~~~~^~~~

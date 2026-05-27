@@ -1,0 +1,63 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  TEST C508 - BATCH BUFFER OPENCL EXACT                        ║
+╚════════════════════════════════════════════════════════════════╝
+
+STRATÉGIE: Reproduire EXACTEMENT batch OpenCL capturé
+Source: logs/forensic/batch_intercept_c506_47561.log
+Taille: 320 bytes
+
+[1/10] Ouverture /dev/dri/renderD128...
+  ✓ DRM ouvert (fd=5)
+
+[2/10] Initialisation libdrm_intel...
+  ✓ Buffer manager initialisé
+
+[3/10] Allocation buffers GPU...
+  ✓ batch_bo:  16384 bytes (GTT 0x0000000000000000)
+  ✓ output_bo: 4096 bytes (GTT 0x0000000000000000)
+  ✓ kernel_bo: 4096 bytes (GTT 0x0000000000000000)
+  ✓ idrt_bo:   4096 bytes (GTT 0x0000000000000000)
+
+[4/10] Initialisation output buffer...
+  ✓ Output initialisé à 0xFFFFFFFF
+
+[5/10] Copie kernel ISA OpenCL Gen9...
+  ✓ Kernel ISA copié: 3192 bytes
+
+[6/10] Configuration Interface Descriptor...
+  ✓ Interface Descriptor configuré
+  ✓ Binding Table configurée
+
+[7/10] Construction batch OpenCL EXACT...
+  Construction batch OpenCL EXACT (320 bytes)...
+    [0x0000] PIPELINE_SELECT (20 DWORDs)
+    [0x0058] MEDIA_VFE_STATE (9 DWORDs)
+    [0x0088] PIPE_CONTROL (6 DWORDs)
+    [0x00a0] STATE_BASE_ADDRESS (19 DWORDs)
+    [0x00f8] PIPE_CONTROL (6 DWORDs)
+    [0x0110] MEDIA_INTERFACE_DESCRIPTOR_LOAD (3 DWORDs)
+  ✓ Batch OpenCL EXACT construit: 324 bytes
+  ✓ Batch total: 328 bytes
+
+[8/10] Soumission EXECBUFFER2...
+  ✓ Context créé
+  ✓✓✓ EXECBUFFER2 SUCCÈS! ✓✓✓
+
+[9/10] Synchronisation GPU→CPU...
+    ✓ GEM_WAIT succès
+    ✓ GEM_SET_DOMAIN succès
+
+[10/10] Vérification résultat...
+
+=== RÉSULTATS GPU NATIF (BATCH OPENCL EXACT) ===
+Output[0] = 0xffffffff ❌ INCHANGÉ
+
+=== RÉSUMÉ C508 ===
+Durée totale: 2.255 ms
+EXECBUFFER2: ✓ SUCCÈS
+Batch: OpenCL EXACT (320 bytes)
+Kernel: ISA Gen9 OpenCL
+
+❌ Pas de modification - GPU HANG probable
+→ Vérifier dmesg pour erreurs GPU

@@ -1,0 +1,185 @@
+Je vais te corriger ça proprement parce que ton Replit mélange **3 choses incompatibles** avec ta version actuelle de Bitcoin Core.
+
+---
+
+# ❌ PROBLÈMES DANS LE GUIDE REPLIT
+
+## 1. ❌ `testnet4` (FAUX)
+
+Tu l’as déjà vu :
+
+* Bitcoin Core 27.0 → **NE SUPPORTE PAS testnet4**
+* donc tout ce qui contient :
+
+```ini
+chain=testnet4
+```
+
+👉 est faux et cassera ton node
+
+---
+
+## 2. ❌ Mauvaise méthode RPC
+
+Replit utilise :
+
+```bash
+-rpcport
+-rpcuser
+-rpcpassword
+```
+
+👉 MAIS toi tu as déjà un `bitcoin.conf` → donc inutile de tout répéter dans la CLI
+
+---
+
+## 3. ❌ PPA Ubuntu (FAUX aussi)
+
+Ce bloc :
+
+```bash
+sudo add-apt-repository ppa:bitcoin/bitcoin
+```
+
+👉 est cassé / non maintenu (tu l’as déjà vu avec 404)
+
+---
+
+## 4. ❌ Architecture “ngrok SSH agent”
+
+Pas nécessaire pour faire fonctionner Bitcoin Core RPC localement.
+
+👉 Complexité inutile pour ton setup actuel.
+
+---
+
+# ✅ VERSION CORRIGÉE (PROPRE + FONCTIONNELLE)
+
+## 🧱 Étape 1 — Installation (tu l’as déjà faite)
+
+👉 IGNORE PPA
+
+Tu as déjà :
+✔️ Bitcoin Core installé
+✔️ `bitcoind` fonctionnel
+
+---
+
+## ⚙️ Étape 2 — CONFIG CORRECTE (IMPORTANT)
+
+Remplace TOUT ton `bitcoin.conf` par ça :
+
+```ini
+server=1
+daemon=1
+
+[test]
+rpcuser=lumvorax
+rpcpassword=LumVorax2026BTC!
+rpcallowip=127.0.0.1
+rpcport=18332
+txindex=1
+zmqpubrawblock=tcp://127.0.0.1:28332
+zmqpubrawtx=tcp://127.0.0.1:28333
+```
+
+👉 Points corrigés :
+
+* ❌ plus de `chain=testnet4`
+* ✅ `[test]` correct
+* ✅ port standard `18332`
+
+---
+
+## 🚀 Étape 3 — Lancer correctement le node
+
+```bash
+bitcoind -testnet -daemon
+```
+
+---
+
+## 🧪 Étape 4 — Vérification RPC
+
+```bash
+bitcoin-cli -testnet getblockchaininfo
+```
+
+---
+
+## 🔗 RPC correct pour Replit
+
+```bash
+http://lumvorax:LumVorax2026BTC!@127.0.0.1:18332
+```
+
+---
+
+## ❌ CE QUI DOIT ÊTRE SUPPRIMÉ DU GUIDE REPLIT
+
+### À enlever totalement :
+
+* `chain=testnet4`
+* `bitcoind -chain=testnet4`
+* `-rpcport=48332`
+* toute référence testnet4
+* toute dépendance PPA Ubuntu
+* SSH/ngrok obligatoire (inutile pour RPC local)
+
+---
+
+## ⚡ VERSION SIMPLIFIÉE DE TON ARCHITECTURE
+
+```
+[Replit Flask]
+   ↓ HTTP
+[Ubuntu agent]
+   ↓ RPC local
+Bitcoin Core (testnet)
+```
+
+👉 PAS besoin de :
+
+* ngrok
+* SSH complexe
+* ports exposés
+
+---
+
+# 🔥 IMPORTANT (erreur principale de ton système)
+
+Ton plus gros bug actuel =
+
+👉 tu as mélangé :
+
+* testnet4 ❌ (inexistant)
+* testnet ✔️ (correct)
+* RPC manuel + conf ✔️ mais doublon inutile
+
+---
+
+# 🧠 RÈGLE SIMPLE
+
+Pour Bitcoin Core v27 :
+
+| Mode    | Commande   |
+| ------- | ---------- |
+| testnet | `-testnet` |
+| regtest | `-regtest` |
+| mainnet | default    |
+
+---
+
+# 🚀 SI TU VEUX ALLER PLUS LOIN
+
+Je peux t’aider à transformer ton système Replit en :
+
+* vrai worker RPC stable
+* pipeline mining simulation
+* ou API propre (Flask → Bitcoin Core → JSON)
+
+Mais d’abord il faut **stabiliser ton node sans testnet4**.
+
+---
+
+Si tu veux, envoie-moi ton `agent_ubuntu.sh` et je te le corrige aussi 👍

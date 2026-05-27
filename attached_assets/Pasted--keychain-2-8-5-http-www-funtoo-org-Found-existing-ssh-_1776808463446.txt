@@ -1,0 +1,594 @@
+ * keychain 2.8.5 ~ http://www.funtoo.org
+ * Found existing ssh-agent: 10483
+ * Known ssh key: /home/lvx/.ssh/id_ed2551# 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                          # 2. Libérer le cache kernel (optionnel, root requis)
+                                          sudo sync && sudo sysctl -w vm.drop_caches=6
+
+                                          # 3. Vérifier la RAM disponible
+                                          free -h  # doit afficher >6 GB libres
+
+                                          # 4. Lancer le mining
+                                          doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[sudo] password for lvx: 
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       4.7Gi       1.0Gi       418Mi       2.4Gi       2.8Gi
+Swap:          4.0Gi          0B       4.0Gi
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260421T210502Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260421T210502Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/btc_opencl_runner.c:69:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     fread(src, 1, sz, f);
+      |     ^~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 155K Apr 21 23:05 btc_mining_runner
+[C48] Binaire : 155K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 002031265cd00fe57fca... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260421T210502Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260421T210502Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=640753664
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260421T210502Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=6440 best=26 bits exploration=0.767 delta=48.42
+[NX48-QDPR] Feedback C62 : success=0.0% bits=0 rt=0.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2784MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.77 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=6440 best_leading=26
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.767 | delta_nonce=48.42 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260421T210502Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260421T210502Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=2.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=24.000000 src=src/btc_mining_engine.c:705
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 2782MB
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[BTC_QM] elapsed=10.0s hashes=8813568 hashrate=0.88MH/s best_leading=24 best_nonce=2581151909 nx48_delta=43.28
+[BTC_QM] elapsed=20.0s hashes=16867328 hashrate=0.84MH/s best_leading=24 best_nonce=2581151909 nx48_delta=52.25
+[BTC_QM] elapsed=30.0s hashes=24775680 hashrate=0.83MH/s best_leading=24 best_nonce=2581151909 nx48_delta=69.83
+[BTC_QM] elapsed=40.0s hashes=32412672 hashrate=0.81MH/s best_leading=24 best_nonce=2581151909 nx48_delta=79.97
+[BTC_QM] elapsed=50.0s hashes=40044032 hashrate=0.80MH/s best_leading=24 best_nonce=2581151909 nx48_delta=89.70
+[BTC_QM] elapsed=60.0s hashes=48083971 hashrate=0.80MH/s best_leading=24 best_nonce=2581151909 nx48_delta=86.39
+[BTC_QM] elapsed=70.0s hashes=56144387 hashrate=0.80MH/s best_leading=24 best_nonce=2581151909 nx48_delta=103.73
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=25.000000 src=src/btc_mining_engine.c:705
+[BTC_QM] elapsed=80.0s hashes=64199171 hashrate=0.80MH/s best_leading=25 best_nonce=3076292914 nx48_delta=94.70
+[BTC_QM] elapsed=90.0s hashes=72006147 hashrate=0.80MH/s best_leading=25 best_nonce=3076292914 nx48_delta=96.61
+[BTC_QM] elapsed=100.0s hashes=79627779 hashrate=0.80MH/s best_leading=25 best_nonce=3076292914 nx48_delta=115.28
+[BTC_QM] elapsed=110.0s hashes=87280131 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=156.57
+[BTC_QM] elapsed=120.1s hashes=95035395 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=150.09
+[BTC_QM] elapsed=130.1s hashes=103001091 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=195.24
+[BTC_QM] elapsed=140.1s hashes=110920707 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=217.39
+[BTC_QM] elapsed=150.1s hashes=118559235 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=241.54
+[BTC_QM] elapsed=160.1s hashes=126294019 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=289.23
+[BTC_QM] elapsed=170.1s hashes=134110211 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=366.72
+[BTC_QM] elapsed=180.1s hashes=141873155 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=471.03
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=2.542375 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->2.542 (stall_long=90 cap500_plateau)
+[BTC_QM] elapsed=190.1s hashes=149705731 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=2.77
+[BTC_QM] elapsed=200.1s hashes=157263363 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=3.39
+[BTC_QM] elapsed=210.1s hashes=165123587 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=3.85
+[BTC_QM] elapsed=220.1s hashes=173146627 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=4.80
+[BTC_QM] elapsed=230.1s hashes=180980739 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=5.30
+[BTC_QM] elapsed=240.1s hashes=188907011 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=5.74
+[BTC_QM] elapsed=250.1s hashes=196850691 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=6.90
+[BTC_QM] elapsed=260.1s hashes=204903427 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=6.75
+[BTC_QM] elapsed=270.1s hashes=212941827 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=6.48
+[BTC_QM] elapsed=280.1s hashes=221004803 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=7.82
+[BTC_QM] elapsed=290.1s hashes=228852739 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=9.34
+[BTC_QM] elapsed=300.1s hashes=236682243 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=10.63
+[BTC_QM] elapsed=310.1s hashes=244615171 hashrate=0.79MH/s best_leading=25 best_nonce=3076292914 nx48_delta=13.08
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:705
+[BTC_QM] elapsed=320.1s hashes=252435972 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=14.44
+[BTC_QM] elapsed=330.1s hashes=260404743 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=17.34
+[BTC_QM] elapsed=340.1s hashes=268356615 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=22.27
+[BTC_QM] elapsed=350.1s hashes=275995655 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=28.07
+[BTC_QM] elapsed=360.2s hashes=283905031 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=31.92
+[BTC_QM] elapsed=370.2s hashes=291854855 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=39.87
+[BTC_QM] elapsed=380.2s hashes=299817479 hashrate=0.79MH/s best_leading=26 best_nonce=2402249910 nx48_delta=33.77
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=27.000000 src=src/btc_mining_engine.c:705
+[BTC_QM] elapsed=390.2s hashes=307689479 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=36.41
+[BTC_QM] elapsed=400.2s hashes=315649031 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=31.70
+[BTC_QM] elapsed=410.2s hashes=323578375 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=37.81
+[BTC_QM] elapsed=420.2s hashes=331476999 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=39.55
+[BTC_QM] elapsed=430.2s hashes=339372551 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=49.43
+[BTC_QM] elapsed=440.2s hashes=347140615 hashrate=0.79MH/s best_leading=27 best_nonce=1132647782 nx48_delta=49.95
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=28.000000 src=src/btc_mining_engine.c:705
+[BTC_QM] elapsed=450.2s hashes=355000327 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=66.66
+[BTC_QM] elapsed=460.2s hashes=362899463 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=81.95
+[BTC_QM] elapsed=470.2s hashes=370700295 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=88.64
+[BTC_QM] elapsed=480.2s hashes=378560007 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=81.63
+[BTC_QM] elapsed=490.2s hashes=386438151 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=89.13
+[BTC_QM] elapsed=500.2s hashes=394318343 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=99.36
+[BTC_QM] elapsed=510.2s hashes=402271239 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=100.12
+[BTC_QM] elapsed=520.2s hashes=410240519 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=123.48
+[BTC_QM] elapsed=530.2s hashes=418204679 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=161.23
+[BTC_QM] elapsed=540.2s hashes=426105351 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=139.04
+[BTC_QM] elapsed=550.2s hashes=434082823 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=155.53
+[BTC_QM] elapsed=560.2s hashes=442054151 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=181.64
+[BTC_QM] elapsed=570.2s hashes=450004999 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=191.66
+[BTC_QM] elapsed=580.2s hashes=457963015 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=229.90
+[BTC_QM] elapsed=590.3s hashes=465896967 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=306.99
+[BTC_QM] elapsed=600.3s hashes=473815047 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=349.32
+[BTC_QM] elapsed=610.3s hashes=481787911 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=374.74
+[BTC_QM] elapsed=620.3s hashes=489764359 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=479.60
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=630.3s hashes=497666055 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=640.3s hashes=505598983 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=6.931557 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->6.932 (stall_long=320 cap500_plateau)
+[BTC_QM] elapsed=650.3s hashes=513590280 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=7.11
+[BTC_QM] elapsed=660.3s hashes=521543176 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=7.48
+[BTC_QM] elapsed=670.3s hashes=529506312 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=9.26
+[BTC_QM] elapsed=680.3s hashes=537469448 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=9.62
+[BTC_QM] elapsed=690.3s hashes=545431560 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=9.88
+[BTC_QM] elapsed=700.3s hashes=553343496 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=13.09
+[BTC_QM] elapsed=710.3s hashes=561289736 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=15.52
+[BTC_QM] elapsed=720.3s hashes=569216520 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=20.55
+[BTC_QM] elapsed=730.3s hashes=577137672 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=24.27
+[BTC_QM] elapsed=740.3s hashes=585140744 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=26.35
+[BTC_QM] elapsed=750.3s hashes=593077256 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=29.05
+[BTC_QM] elapsed=760.3s hashes=600816136 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=27.32
+[BTC_QM] elapsed=770.3s hashes=608678408 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=31.77
+[BTC_QM] elapsed=780.3s hashes=616577544 hashrate=0.79MH/s best_leading=28 best_nonce=2863529173 nx48_delta=37.20
+tools/btc_run_ubuntu.sh: line 115: 17550 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     17551 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> # 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                                    # 2. Libérer le cache kernel (optionnel, root requis)
+                                                    sudo sync && sudo sysctl -w vm.drop_caches=6
+
+                                                    # 3. Vérifier la RAM disponible
+                                                    free -h  # doit afficher >6 GB libres
+
+                                                    # 4. Lancer le mining
+                                                    doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       4.9Gi       578Mi       466Mi       2.7Gi       2.5Gi
+Swap:          4.0Gi          0B       4.0Gi
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260421T211946Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260421T211946Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/btc_opencl_runner.c:69:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     fread(src, 1, sz, f);
+      |     ^~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 155K Apr 21 23:19 btc_mining_runner
+[C48] Binaire : 155K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 002031265cd00fe57fca... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260421T211946Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260421T211946Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=640753664
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260421T211946Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=6829 best=28 bits exploration=0.768 delta=37.20
+[NX48-QDPR] Feedback C62 : success=0.0% bits=0 rt=0.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2483MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.77 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=6829 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.768 | delta_nonce=37.20 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260421T211946Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260421T211946Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=10.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=11.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=19.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=28.000000 src=src/btc_mining_engine.c:705
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 2481MB
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[BTC_QM] elapsed=10.0s hashes=7707648 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=51.26
+[BTC_QM] elapsed=20.0s hashes=15480832 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=53.81
+[BTC_QM] elapsed=30.0s hashes=23256064 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=74.52
+[BTC_QM] elapsed=40.0s hashes=31011328 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=78.81
+[BTC_QM] elapsed=50.0s hashes=38749187 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=87.00
+[BTC_QM] elapsed=60.0s hashes=46434819 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=92.96
+[BTC_QM] elapsed=70.0s hashes=54130691 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=100.96
+[BTC_QM] elapsed=80.0s hashes=61649411 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=114.62
+[BTC_QM] elapsed=90.0s hashes=69161987 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=143.20
+[BTC_QM] elapsed=100.0s hashes=76720643 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=183.74
+[BTC_QM] elapsed=110.0s hashes=84443651 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=239.54
+[BTC_QM] elapsed=120.0s hashes=92126723 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=240.78
+[BTC_QM] elapsed=130.1s hashes=99752451 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=310.17
+[BTC_QM] elapsed=140.1s hashes=107422211 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=332.74
+[BTC_QM] elapsed=150.1s hashes=115192835 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=323.72
+[BTC_QM] elapsed=160.1s hashes=122938371 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=332.27
+[BTC_QM] elapsed=170.1s hashes=130448899 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=332.86
+[BTC_QM] elapsed=180.1s hashes=137982467 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=394.60
+[BTC_QM] elapsed=190.1s hashes=145671683 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=373.16
+[BTC_QM] elapsed=200.1s hashes=153259011 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=416.32
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.649263 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=210.1s hashes=160863235 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=499.167641 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=220.1s hashes=168438275 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=451.68
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=15.348901 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 494.4->15.349 (stall_long=110 cap500_plateau)
+[BTC_QM] elapsed=230.1s hashes=175916549 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=17.49
+[BTC_QM] elapsed=240.1s hashes=183527941 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=20.02
+[BTC_QM] elapsed=250.1s hashes=191206917 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=21.81
+[BTC_QM] elapsed=260.1s hashes=198998533 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=20.20
+[BTC_QM] elapsed=270.1s hashes=206333445 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=21.26
+[BTC_QM] elapsed=280.1s hashes=213762053 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=21.17
+[BTC_QM] elapsed=290.1s hashes=221362181 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=20.67
+[BTC_QM] elapsed=300.1s hashes=228661765 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=23.42
+[BTC_QM] elapsed=310.1s hashes=236373509 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=25.19
+[BTC_QM] elapsed=320.1s hashes=244062725 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=30.06
+[BTC_QM] elapsed=330.1s hashes=251677189 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=38.69
+[BTC_QM] elapsed=340.1s hashes=259421190 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=39.82
+[NX48-QDPR] Feedback C62 : success=0.0% bits=0 rt=0.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2582MB
+[BTC_QM] elapsed=350.1s hashes=267126871 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=50.94
+[BTC_QM] elapsed=360.1s hashes=274835031 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=46.24
+[BTC_QM] elapsed=370.1s hashes=282319959 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=49.82
+[BTC_QM] elapsed=380.1s hashes=289796183 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=55.26
+[BTC_QM] elapsed=390.2s hashes=297341015 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=78.38
+[BTC_QM] elapsed=400.2s hashes=305095767 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=99.12
+[BTC_QM] elapsed=410.2s hashes=312621655 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=108.47
+[BTC_QM] elapsed=420.2s hashes=320147031 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=110.88
+[BTC_QM] elapsed=430.2s hashes=327701079 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=120.69
+[BTC_QM] elapsed=440.2s hashes=335189079 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=143.97
+[BTC_QM] elapsed=450.2s hashes=342625879 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=166.53
+[BTC_QM] elapsed=460.2s hashes=349992023 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=184.01
+[BTC_QM] elapsed=470.2s hashes=357636695 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=233.02
+[BTC_QM] elapsed=480.2s hashes=365259351 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=261.23
+[BTC_QM] elapsed=490.2s hashes=372822615 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=313.85
+[BTC_QM] elapsed=500.2s hashes=380230231 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=327.83
+[BTC_QM] elapsed=510.2s hashes=387968087 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=370.94
+[BTC_QM] elapsed=520.2s hashes=395694167 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=339.32
+[BTC_QM] elapsed=530.2s hashes=403425367 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=391.21
+[BTC_QM] elapsed=540.2s hashes=411177559 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=356.33
+[BTC_QM] elapsed=550.2s hashes=418936407 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=425.74
+[BTC_QM] elapsed=560.2s hashes=426636887 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=461.10
+[BTC_QM] elapsed=570.2s hashes=434335319 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=495.73
+[BTC_QM] elapsed=580.2s hashes=442014807 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=405.00
+[BTC_QM] elapsed=590.3s hashes=449491543 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=371.15
+[BTC_QM] elapsed=600.3s hashes=457067607 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=387.51
+[BTC_QM] elapsed=610.3s hashes=464701015 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=462.85
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=620.3s hashes=472479831 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=450.01
+[BTC_QM] elapsed=630.3s hashes=480305239 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=473.36
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=640.3s hashes=488122967 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=446.97
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=650.3s hashes=495899223 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=660.3s hashes=503715927 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=470.54
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=14.127066 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->14.127 (stall_long=330 cap500_plateau)
+[BTC_QM] elapsed=670.3s hashes=511518807 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=16.75
+[BTC_QM] elapsed=680.3s hashes=519331927 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=21.89
+[BTC_QM] elapsed=690.3s hashes=527157847 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=32.94
+[BTC_QM] elapsed=700.3s hashes=534963799 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=35.58
+[BTC_QM] elapsed=710.3s hashes=542787159 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=44.63
+[BTC_QM] elapsed=720.3s hashes=550621271 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=52.18
+[BTC_QM] elapsed=730.3s hashes=558407767 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=60.45
+[BTC_QM] elapsed=740.3s hashes=566239319 hashrate=0.76MH/s best_leading=28 best_nonce=888136990 nx48_delta=79.56
+[BTC_QM] elapsed=750.3s hashes=574062167 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=98.70
+[BTC_QM] elapsed=760.3s hashes=581879895 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=101.06
+[BTC_QM] elapsed=770.3s hashes=589466711 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=132.40
+[BTC_QM] elapsed=780.3s hashes=597033559 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=147.55
+[BTC_QM] elapsed=790.3s hashes=604811863 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=147.61
+[BTC_QM] elapsed=800.3s hashes=612598871 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=155.81
+[BTC_QM] elapsed=810.3s hashes=620411479 hashrate=0.77MH/s best_leading=28 best_nonce=888136990 nx48_delta=196.12
+tools/btc_run_ubuntu.sh: line 115: 20135 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     20136 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> # 1. Fermer Chrome/Firefox (libère VSZ + RSS)
+                                                    # 2. Libérer le cache kernel (optionnel, root requis)
+                                                    sudo sync && sudo sysctl -w vm.drop_caches=6
+
+                                                    # 3. Vérifier la RAM disponible
+                                                    free -h  # doit afficher >6 GB libres
+
+                                                    # 4. Lancer le mining
+                                                    doppler run --config dev_lumvorax -- bash tools/btc_run_ubuntu.sh
+[sudo] password for lvx: 
+sysctl: setting key "vm.drop_caches": Invalid argument
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       4.9Gi       540Mi       442Mi       2.7Gi       2.5Gi
+Swap:          4.0Gi          0B       4.0Gi
+[C48] ============================================
+[C48] LumVorax BTC Mining Runner
+[C48] Environnement : ubuntu_lvx
+[C48] REPO_ROOT     : /home/lvx/LVX/lumvorax2
+[C48] CPUs dispo    : 8
+[C48] Durée mining  : illimitée
+[C48] Run ID        : btc_20260421T213528Z_c48_ubuntu_lvx
+[C48] Log           : /home/lvx/btc_ubuntu_20260421T213528Z.log
+[C48] ============================================
+[C48] Étape 1/3 — Compilation binaire BTC...
+[C48] Sync git (git pull origin main)...
+	src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/btc_qm_engine_metrics.log
+Please commit your changes or stash them before you merge.
+Aborting
+[WARN] git pull échoué — compilation avec état local
+[OCL] OpenCL detecte -> GPU SHA-256 active cible 50-200 MHs
+rm -f btc_mining_runner
+[MODULE 17] Nettoyage OK
+src/btc_opencl_runner.c:69:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     fread(src, 1, sz, f);
+      |     ^~~~~~~~~~~~~~~~~~~~
+[MODULE 17] Compilation OK → btc_mining_runner
+-rwxrwxr-x 1 lvx lvx 155K Apr 21 23:35 btc_mining_runner
+[C48] Binaire : 155K btc_mining_runner
+[C48] Étape 2/3 — Récupération header Bitcoin réel...
+[C48]   Fallback → Blockstream API...
+[C48]   Header : 00e0ff3f356ccb70af06... (160 chars)
+[C48] Étape 3/3 — Mining illimité (CTRL+C pour arrêter)...
+[C48] Log complet : /home/lvx/btc_ubuntu_20260421T213528Z.log
+[C48] ============================================
+[LUMVORAX] init_lum: log_run=logs/forensic/modules/btc_qm_engine_forensic_btc_20260421T213528Z_c48_ubuntu_lvx.log ACTIF v3.0 (FD_PERSISTANT=ON)
+[BTC_QM] Vrai header Bitcoin chargé — bits=0x17021369 version=1073733632
+[ULTRA_FORENSIC] Système de logging forensique v3.0 initialisé
+
+╔══════════════════════════════════════════════════════════╗
+║  LumVorax — Module 17 — Bitcoin Quantum Mining Engine   ║
+║  Version : 1.0.0-C43 | Standard : STANDARD_NAMES v4.2  ║
+║  C43 : NX48 dual-neuron, POW candidate export           ║
+║  C43 : module bridge advisory + chain validator         ║
+╚══════════════════════════════════════════════════════════╝
+[BTC_QM] run_id    = btc_20260421T213528Z_c48_ubuntu_lvx
+[BTC_QM] mode      = UBUNTU_UNLIMITED
+[BTC_QM] threads   = 8
+[BTC_QM] duration  = INFINI (run jusqu'a 256 bits ou arret manuel)
+[BTC_QM] nx48 csv  = config/btc_nx48_last.csv
+[BTC_QM] log dir   = logs/forensic
+[BTC_QM] bits      = 0x17021369
+[BTC_QM] target    = 0000000000000000000000000000000000000000021369000000000000000000
+[NX48-LUM] Chargé : update=7218 best=28 bits exploration=0.577 delta=147.55
+[NX48-QDPR] Feedback C62 : success=0.0% bits=0 rt=0.0s
+[NX48-HW] CPU:8 threads AVX:0 SHA-NI:0 | GPU-OpenCL:Intel(R) UHD Graphics 620 DRI:1 | RAM:2482MB
+[NX48-INIT] C61 — 8 sous-neurones × 2 | exploration_bias=0.58 | LUM=chargé
+[BTC_QM] NX48_BTC C61 initialisé — update_count=7218 best_leading=28
+[BTC_QM] NX48 architecture C61 : 2 neurones × 8 sous-neurones = 16 total
+[BTC_QM] NX48 contrôle : threads=8 | T_hot=1.0 | T_cold=1.0 | GPU=Intel(R) UHD Graphics 620
+[BTC_QM] NX48 exploration_bias=0.577 | delta_nonce=147.55 | AVX=0
+[BTC_QM] Test intégrité SHA-256 (NIST)… OK ✓
+[BTC_QM] Wallet FIXE chargé depuis secrets (BTC_WALLET_PRIV_HEX) ✓
+
+╔═══════════════════════════════════════════════════════════╗
+║        LumVorax — Wallet Bitcoin RÉEL                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ Réseau      : TESTNET3                                      ║
+║ run_id      : btc_20260421T213528Z_c48_ubuntu_lvx           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Adresse P2PKH   : mg4hhuNLQwcrL2g2jJamzswgb4ChbZ5tcj        ║
+║ Adresse Bech32  : tb1qqcqjrasuyv70glgeugl56nstsshp99c5pldztf║
+╠═══════════════════════════════════════════════════════════╣
+║ Clé privée (hex): 7ac9fe93...(masquée)                     ║
+║ WIF compressé   : cRhPRmfVmyxAhn1zx2LiWwoSKewQAV5t29rCyKEvMbPpiasfL29W║
+╠═══════════════════════════════════════════════════════════╣
+║ HASH160 (hex)   : 060121f61c233cf47d19e23f4d4e0b842e129714  ║
+╚═══════════════════════════════════════════════════════════╝
+[BTC_QM] Wallet sauvegardé → logs/forensic/wallet_btc_20260421T213528Z_c48_ubuntu_lvx.json
+[BTC_QM] Lancement du moteur PT-MC…
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=4.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=8.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=9.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=12.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=17.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=18.000000 src=src/btc_mining_engine.c:705
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=20.000000 src=src/btc_mining_engine.c:705
+[C42-WATCHDOG] 🟢 RAM disponible au démarrage: 2483MB
+[C65-GPU-EARLY] ✅ GPU OpenCL activé AVANT moteur PT-MC : Intel(R) UHD Graphics 620
+[BTC_QM] elapsed=10.0s hashes=9105408 hashrate=0.91MH/s best_leading=20 best_nonce=501827176 nx48_delta=162.65
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_near_miss_or_valid val=26.000000 src=src/btc_mining_engine.c:705
+[BTC_QM] elapsed=20.0s hashes=17387520 hashrate=0.87MH/s best_leading=26 best_nonce=3724693716 nx48_delta=150.88
+[BTC_QM] elapsed=30.0s hashes=25119232 hashrate=0.84MH/s best_leading=26 best_nonce=3724693716 nx48_delta=157.63
+[BTC_QM] elapsed=40.0s hashes=32729088 hashrate=0.82MH/s best_leading=26 best_nonce=3724693716 nx48_delta=195.29
+[BTC_QM] elapsed=50.0s hashes=40300032 hashrate=0.81MH/s best_leading=26 best_nonce=3724693716 nx48_delta=259.96
+[BTC_QM] elapsed=60.0s hashes=47915520 hashrate=0.80MH/s best_leading=26 best_nonce=3724693716 nx48_delta=289.38
+[BTC_QM] elapsed=70.0s hashes=55595520 hashrate=0.79MH/s best_leading=26 best_nonce=3724693716 nx48_delta=325.02
+[BTC_QM] elapsed=80.0s hashes=63398400 hashrate=0.79MH/s best_leading=26 best_nonce=3724693716 nx48_delta=384.98
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=90.0s hashes=70883840 hashrate=0.79MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[BTC_QM] elapsed=100.1s hashes=78217216 hashrate=0.78MH/s best_leading=26 best_nonce=3724693716 nx48_delta=422.19
+[BTC_QM] elapsed=110.1s hashes=85854720 hashrate=0.78MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=120.1s hashes=93426176 hashrate=0.78MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=7.300085 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->7.300 (stall_long=60 cap500_plateau)
+[BTC_QM] elapsed=130.1s hashes=100968960 hashrate=0.78MH/s best_leading=26 best_nonce=3724693716 nx48_delta=7.48
+[BTC_QM] elapsed=140.1s hashes=108475392 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=6.84
+[BTC_QM] elapsed=150.1s hashes=115839490 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=8.71
+[BTC_QM] elapsed=160.1s hashes=123505666 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=9.27
+[BTC_QM] elapsed=170.1s hashes=130992642 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=11.38
+[BTC_QM] elapsed=180.1s hashes=138562562 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=9.39
+[BTC_QM] elapsed=190.1s hashes=146315266 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=9.76
+[BTC_QM] elapsed=200.1s hashes=154085378 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=9.90
+[BTC_QM] elapsed=210.1s hashes=161736706 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=11.71
+[BTC_QM] elapsed=220.1s hashes=169535490 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=12.38
+[BTC_QM] elapsed=230.1s hashes=177345538 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=13.55
+[BTC_QM] elapsed=240.1s hashes=185151490 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=12.89
+[BTC_QM] elapsed=250.1s hashes=192974338 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=13.98
+[BTC_QM] elapsed=260.1s hashes=200796162 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=13.48
+[BTC_QM] elapsed=270.1s hashes=208324610 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=11.90
+[BTC_QM] elapsed=280.1s hashes=215962114 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=16.14
+[BTC_QM] elapsed=290.1s hashes=223608322 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=19.86
+[BTC_QM] elapsed=300.1s hashes=231210498 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=20.32
+[BTC_QM] elapsed=310.1s hashes=238680066 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=31.61
+[BTC_QM] elapsed=320.1s hashes=246303746 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=33.44
+[BTC_QM] elapsed=330.1s hashes=253726210 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=44.82
+[BTC_QM] elapsed=340.1s hashes=261243394 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=57.95
+[BTC_QM] elapsed=350.1s hashes=268781570 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=72.18
+[BTC_QM] elapsed=360.1s hashes=276341250 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=87.78
+[BTC_QM] elapsed=370.1s hashes=283872258 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=113.35
+[BTC_QM] elapsed=380.2s hashes=291604482 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=134.45
+[BTC_QM] elapsed=390.2s hashes=299164674 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=160.08
+[BTC_QM] elapsed=400.2s hashes=306696194 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=170.85
+[BTC_QM] elapsed=410.2s hashes=314368002 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=174.59
+[BTC_QM] elapsed=420.2s hashes=322064386 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=196.17
+[BTC_QM] elapsed=430.2s hashes=329367042 hashrate=0.77MH/s best_leading=26 best_nonce=3724693716 nx48_delta=204.61
+[BTC_QM] elapsed=440.2s hashes=336067074 hashrate=0.76MH/s best_leading=26 best_nonce=3724693716 nx48_delta=224.65
+[BTC_QM] elapsed=450.2s hashes=342749698 hashrate=0.76MH/s best_leading=26 best_nonce=3724693716 nx48_delta=251.17
+[BTC_QM] elapsed=460.2s hashes=349435394 hashrate=0.76MH/s best_leading=26 best_nonce=3724693716 nx48_delta=274.81
+[BTC_QM] elapsed=470.2s hashes=356125186 hashrate=0.76MH/s best_leading=26 best_nonce=3724693716 nx48_delta=363.75
+[BTC_QM] elapsed=480.2s hashes=362820098 hashrate=0.76MH/s best_leading=26 best_nonce=3724693716 nx48_delta=392.62
+[BTC_QM] elapsed=490.2s hashes=369513986 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=429.27
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=500.2s hashes=376205826 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=12.122948 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->12.123 (stall_long=250 cap500_plateau)
+[BTC_QM] elapsed=510.2s hashes=382910466 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=12.39
+[BTC_QM] elapsed=520.2s hashes=389589506 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=15.55
+[BTC_QM] elapsed=530.2s hashes=396279298 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=17.37
+[BTC_QM] elapsed=540.2s hashes=402985986 hashrate=0.75MH/s best_leading=26 best_nonce=3724693716 nx48_delta=20.83
+[BTC_QM] elapsed=550.2s hashes=409672194 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=24.55
+[BTC_QM] elapsed=560.2s hashes=416355842 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=25.80
+[BTC_QM] elapsed=570.2s hashes=423039490 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=34.51
+[BTC_QM] elapsed=580.2s hashes=429733378 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=38.35
+[BTC_QM] elapsed=590.2s hashes=436414978 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=42.12
+[BTC_QM] elapsed=600.2s hashes=443106306 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=49.32
+[BTC_QM] elapsed=610.3s hashes=449795074 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=55.28
+[BTC_QM] elapsed=620.3s hashes=456470530 hashrate=0.74MH/s best_leading=26 best_nonce=3724693716 nx48_delta=50.00
+[BTC_QM] elapsed=630.3s hashes=463166466 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=65.98
+[BTC_QM] elapsed=640.3s hashes=469868546 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=72.43
+[BTC_QM] elapsed=650.3s hashes=476569602 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=71.69
+[BTC_QM] elapsed=660.3s hashes=483246594 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=74.75
+[BTC_QM] elapsed=670.3s hashes=489912322 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=93.73
+[BTC_QM] elapsed=680.3s hashes=496606210 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=93.25
+[BTC_QM] elapsed=690.3s hashes=503301634 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=107.39
+[BTC_QM] elapsed=700.3s hashes=509932546 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=116.34
+[BTC_QM] elapsed=710.3s hashes=516272642 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=153.95
+[BTC_QM] elapsed=720.3s hashes=522808834 hashrate=0.73MH/s best_leading=26 best_nonce=3724693716 nx48_delta=179.48
+[BTC_QM] elapsed=730.3s hashes=529214978 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=238.25
+[BTC_QM] elapsed=740.3s hashes=535746562 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=273.11
+[BTC_QM] elapsed=750.3s hashes=542298114 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=316.28
+[BTC_QM] elapsed=760.3s hashes=548861954 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=380.67
+[BTC_QM] elapsed=770.3s hashes=555286530 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=394.61
+[BTC_QM] elapsed=780.3s hashes=561635842 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=384.30
+[BTC_QM] elapsed=790.3s hashes=568231426 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=430.92
+[BTC_QM] elapsed=800.3s hashes=574841858 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=467.92
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=810.3s hashes=581303298 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_cap_500 val=500.000000 src=src/nx48_btc_controller.c:834
+[BTC_QM] elapsed=820.3s hashes=587618306 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=500.00
+[LUMVORAX:ANOMALY] module=btc_qm_engine desc=btc_nx48_delta_reset_stall_c62 val=2.327818 src=src/nx48_btc_controller.c:867
+[NX48-C62] Reset delta_nonce 500.0->2.328 (stall_long=410 cap500_plateau)
+[BTC_QM] elapsed=830.3s hashes=593921538 hashrate=0.72MH/s best_leading=26 best_nonce=3724693716 nx48_delta=2.31
+[BTC_QM] elapsed=840.4s hashes=600415746 hashrate=0.71MH/s best_leading=26 best_nonce=3724693716 nx48_delta=2.61
+[BTC_QM] elapsed=850.4s hashes=606961666 hashrate=0.71MH/s best_leading=26 best_nonce=3724693716 nx48_delta=2.62
+[BTC_QM] elapsed=860.4s hashes=613357570 hashrate=0.71MH/s best_leading=26 best_nonce=3724693716 nx48_delta=2.57
+[BTC_QM] elapsed=870.4s hashes=619712514 hashrate=0.71MH/s best_leading=26 best_nonce=3724693716 nx48_delta=2.58
+tools/btc_run_ubuntu.sh: line 115: 22081 Segmentation fault      (core dumped) ./btc_mining_runner $ARGS 2>&1
+     22082 Done                    | tee "$LOG_FILE"
+lvx@lvx-Vostro-5481 ~/L/lumvorax2 (main) [SIGSEGV]> 
+

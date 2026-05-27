@@ -1,0 +1,28 @@
+╔════════════════════════════════════════════════════════════╗
+║  Compilation C255V11 NX48 avec Buffer Dynamique           ║
+╚════════════════════════════════════════════════════════════╝
+[1/2] Compilation...
+src/btc_gen9_native_runner.c: In function ‘calculate_optimal_batch_size’:
+src/btc_gen9_native_runner.c:348:55: warning: unused parameter ‘timeout_ms’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                              ~~~~~~~~~^~~~~~~~~~
+src/btc_gen9_native_runner.c:348:76: warning: unused parameter ‘hashrate’ [-Wunused-parameter]
+  348 | static uint32_t calculate_optimal_batch_size(uint32_t timeout_ms, uint64_t hashrate) {
+      |                                                                   ~~~~~~~~~^~~~~~~~
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_init’:
+src/btc_gen9_native_runner.c:1002:60: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 4 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+ 1002 |     fprintf(stderr, "[C293] Output buffer: %zu bytes pour %u nonces\n",
+      |                                                           ~^
+      |                                                            |
+      |                                                            unsigned int
+      |                                                           %lu
+ 1003 |             ctx->output_size, ctx->batch_size);
+      |                               ~~~~~~~~~~~~~~~               
+      |                                  |
+      |                                  size_t {aka long unsigned int}
+src/btc_gen9_native_runner.c: In function ‘btc_gen9_execute’:
+src/btc_gen9_native_runner.c:1331:30: error: ‘nonce_count’ undeclared (first use in this function)
+ 1331 |     uint32_t global_width = (nonce_count + 255) / 256;  /* Work-groups */
+      |                              ^~~~~~~~~~~
+src/btc_gen9_native_runner.c:1331:30: note: each undeclared identifier is reported only once for each function it appears in
+❌ Erreur compilation
