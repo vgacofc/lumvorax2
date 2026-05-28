@@ -28,11 +28,11 @@ export const config = {
   },
 
   github: {
-    appId: process.env.GITHUB_APP_ID || '',
-    clientId: process.env.GITHUB_APP_CLIENT_ID || '',
-    clientSecret: process.env.GITHUB_APP_CLIENT_SECRET || '',
-    privateKey: (process.env.GITHUB_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
-    webhookSecret: process.env.GITHUB_WEBHOOK_SECRET || '',
+    appId: process.env.GITHUB_APP_ID || process.env.MDBAI_APP_ID || '',
+    clientId: process.env.GITHUB_APP_CLIENT_ID || process.env.MDBAI_CLIENT_ID || '',
+    clientSecret: process.env.GITHUB_APP_CLIENT_SECRET || process.env.MDBAI_CLIENT_SECRET || '',
+    privateKey: (process.env.GITHUB_PRIVATE_KEY || process.env.MDBAI_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+    webhookSecret: process.env.GITHUB_WEBHOOK_SECRET || process.env.MDBAI_WEBHOOK_SECRET || '',
     callbackUrl: process.env.GITHUB_CALLBACK_URL ||
       `https://${process.env.REPLIT_DEV_DOMAIN || 'localhost:3001'}/auth/github/callback`,
     oauthScopes: ['repo', 'read:user'],
@@ -51,7 +51,7 @@ export const config = {
 
   forensic: {
     libPath: process.env.MDBAI_FORENSIC_LIB_PATH ||
-      new URL('../../forensic/libmdbai_forensic.so', import.meta.url).pathname,
+      new URL('../forensic/libmdbai_forensic.so', import.meta.url).pathname,
     logRotationMb: 20,
     granularity: 'page',
   },
