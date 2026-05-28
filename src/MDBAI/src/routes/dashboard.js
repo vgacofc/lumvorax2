@@ -338,7 +338,7 @@ async function fetchMetrics() {
 
 async function fetchHealth() {
   try {
-    const r = await fetch('/health');
+    const r = await fetch('/dashboard/api/health');
     return await r.json();
   } catch(e) {
     return null;
@@ -475,6 +475,26 @@ dashboardRouter.get('/api/metrics', async (req, res) => {
   } catch (e) {
     logger.error('[DASHBOARD] Erreur métriques', { error: e.message });
     return res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+/**
+ * GET /dashboard/api/health — Health check MDBAI (proxy-safe, sous /dashboard/*)
+ */
+dashboardRouter.get('/api/health', async (req, res) => {
+  try {
+    const redisOk = await pingRedis().catch(() => false);
+    const status  = redisOk ? 'healthy' : 'degraded';
+    return res.status(redisOk ? 200 : 503).json({
+      status,
+      version: '0.1.0',
+      service: 'mdbai',
+      redis:   redisOk ? 'connected' : 'disconnected',
+      worker:  true,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (e) {
+    return res.status(503).json({ status: 'error', error: e.message });
   }
 });
 

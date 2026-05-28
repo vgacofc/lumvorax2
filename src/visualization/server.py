@@ -594,6 +594,33 @@ def index():
     return send_from_directory("static", "index.html")
 
 
+# ── MDBAI Dashboard Proxy — redirige /dashboard/* vers port 3001 ──────────────
+import urllib.request as _urllib_req
+import urllib.error  as _urllib_err
+from flask import request as _flask_req, Response as _FlaskResponse
+
+@app.route("/dashboard", defaults={"subpath": ""})
+@app.route("/dashboard/<path:subpath>")
+def mdbai_dashboard_proxy(subpath):
+    target = "http://localhost:3001/dashboard"
+    if subpath:
+        target += "/" + subpath
+    if _flask_req.query_string:
+        target += "?" + _flask_req.query_string.decode("utf-8")
+    try:
+        req = _urllib_req.Request(target, method=_flask_req.method)
+        req.add_header("Accept", _flask_req.headers.get("Accept", "*/*"))
+        with _urllib_req.urlopen(req, timeout=10) as resp:
+            content_type = resp.headers.get("Content-Type", "text/html; charset=utf-8")
+            body = resp.read()
+            return _FlaskResponse(body, status=resp.status, content_type=content_type)
+    except _urllib_err.HTTPError as e:
+        return _FlaskResponse(e.read(), status=e.code,
+                              content_type="application/json")
+    except Exception as exc:
+        return jsonify({"error": "MDBAI server unavailable", "detail": str(exc)}), 503
+
+
 @app.route("/<path:filename>")
 def static_files(filename):
     return send_from_directory("static", filename)
