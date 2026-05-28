@@ -591,7 +591,8 @@ def api_system_metrics():
 
 @app.route("/")
 def index():
-    return send_from_directory("static", "index.html")
+    from flask import redirect
+    return redirect("/dashboard")
 
 
 # ── MDBAI Dashboard Proxy — redirige /dashboard/* vers port 3001 ──────────────
