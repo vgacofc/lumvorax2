@@ -26,7 +26,7 @@ Imaginez MDBAI comme **un laboratoire forensic automatique** pour le code :
 
 ```
 🤖  MDBAI — Master Debug AI                    🟢 ONLINE  v0.1.0  18:35:44
-     Plateforme d'analyse forensique automatisée · LumVorax C111 bit-level
+     Plateforme d'analyse forensique automatisée · by LumVorax
 ```
 
 | Élément | Ce que c'est | Ce que ça signifie |
