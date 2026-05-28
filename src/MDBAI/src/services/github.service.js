@@ -5,13 +5,37 @@
  */
 
 import { Octokit } from '@octokit/rest';
+import { createAppAuth } from '@octokit/auth-app';
 import { execFileSync, execSync } from 'child_process';
 import { mkdirSync, rmSync, existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { createSign } from 'crypto';
 import logger from '../utils/logger.js';
 import { config } from '../config.js';
 import { parseGitHubUrl } from '../utils/validator.js';
 import { MdbaiError, ERR_GITHUB_AUTH, ERR_REPO_CLONE, ERR_PR_CREATE } from '../utils/errors.js';
+
+/**
+ * Génère un JWT signé RS256 pour GitHub App
+ * Valide 10 minutes max (GitHub impose ≤10 min)
+ * @param {string|number} appId
+ * @param {string} privateKey - PEM RSA 2048
+ * @returns {string} JWT signé
+ */
+function createAppJwt(appId, privateKey) {
+  const now = Math.floor(Date.now() / 1000);
+  const header  = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(JSON.stringify({
+    iat: now - 60,        // 60s de tolérance horloge
+    exp: now + 600,       // 10 min max autorisé par GitHub
+    iss: String(appId),
+  })).toString('base64url');
+  const signingInput = `${header}.${payload}`;
+  const signer = createSign('RSA-SHA256');
+  signer.update(signingInput);
+  const sig = signer.sign(privateKey, 'base64url');
+  return `${signingInput}.${sig}`;
+}
 
 export class GitHubService {
   constructor(accessToken = null) {
@@ -227,6 +251,58 @@ export class GitHubService {
       owner, repo, issue_number: prNumber, labels,
     });
     logger.info(`[GITHUB] Labels appliqués ✅`);
+  }
+
+  /**
+   * Obtient un token d'installation GitHub App pour un dépôt donné
+   * Utilisé quand l'utilisateur n'a pas fourni de token OAuth
+   * Nécessite GITHUB_APP_ID + GITHUB_PRIVATE_KEY dans l'env
+   *
+   * Flow :
+   *  1. Génère JWT App RS256 (valide 10 min)
+   *  2. GET /repos/{owner}/{repo}/installation → installation_id
+   *  3. POST /app/installations/{id}/access_tokens → token (valide 1h)
+   *
+   * @param {string} owner
+   * @param {string} repo
+   * @returns {Promise<string>} Token d'installation (valide 1h)
+   */
+  async getInstallationToken(owner, repo) {
+    const appId     = config.github.appId;
+    const privateKey = config.github.privateKey;
+
+    if (!appId || !privateKey) {
+      throw new MdbaiError(ERR_GITHUB_AUTH,
+        'GITHUB_APP_ID et GITHUB_PRIVATE_KEY requis pour getInstallationToken');
+    }
+
+    logger.info(`[GITHUB] Obtention installation token pour ${owner}/${repo}`);
+
+    const appJwt = createAppJwt(appId, privateKey);
+    const appOctokit = new Octokit({ auth: appJwt });
+
+    const { data: installation } = await appOctokit.apps.getRepoInstallation({ owner, repo });
+    logger.info(`[GITHUB] Installation ID: ${installation.id} pour ${owner}/${repo}`);
+
+    const { data: tokenData } = await appOctokit.apps.createInstallationAccessToken({
+      installation_id: installation.id,
+    });
+
+    logger.info(`[GITHUB] Token d'installation obtenu ✅ — expire: ${tokenData.expires_at}`);
+    return tokenData.token;
+  }
+
+  /**
+   * Vérifie si la GitHub App est installée sur un dépôt donné
+   * @returns {Promise<boolean>}
+   */
+  async isAppInstalledOn(owner, repo) {
+    try {
+      await this.getInstallationToken(owner, repo);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**

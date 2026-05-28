@@ -66,18 +66,37 @@ async function processAnalysisJob(bullJob) {
     }
   };
 
+  // Token GitHub : OAuth utilisateur en priorité, sinon Installation Token GitHub App
+  let effectiveToken = jobData.github_token || '';
+
   try {
-    await progress(5, '🔍 Vérification dépôt...');
+    await progress(5, '🔍 Vérification dépôt + token GitHub App...');
+
+    // Auto-obtention Installation Token si pas de token OAuth
+    if (!effectiveToken && parsed) {
+      try {
+        const tempGithub = new GitHubService(null);
+        effectiveToken = await tempGithub.getInstallationToken(parsed.owner, parsed.repo);
+        log.info('[WORKER] Installation token obtenu via GitHub App ✅', {
+          owner: parsed.owner, repo: parsed.repo,
+        });
+      } catch (tokenErr) {
+        log.warn('[WORKER] Installation token non disponible — clone public sans token', {
+          error: tokenErr.message,
+        });
+      }
+    }
 
     await progress(10, '📥 Clonage du dépôt...');
     await github.cloneRepository(
-      jobData.repo_url, jobData.github_token || '',
+      jobData.repo_url, effectiveToken,
       repoDir, jobData.branch || 'main'
     );
 
     if (parsed) {
       try {
-        const info = await github.getRepoInfo(parsed.owner, parsed.repo);
+        const infoGithub = effectiveToken ? new GitHubService(effectiveToken) : github;
+        const info = await infoGithub.getRepoInfo(parsed.owner, parsed.repo);
         jobData.repo_info = info;
       } catch {}
     }
@@ -101,14 +120,16 @@ async function processAnalysisJob(bullJob) {
     result.report.markdown = markdown;
     reportService.saveReport(markdown, jobId);
 
-    if (jobData.github_token && parsed) {
+    // Utilise le token effectif (OAuth ou Installation) pour créer la PR
+    if (effectiveToken && parsed) {
       await progress(93, '🌿 Création branche GitHub...');
       try {
         const ts     = Date.now();
-        const branch = await github.createAnalysisBranch(parsed.owner, parsed.repo, jobData.github_token, ts);
-        const sha    = await github.commitReport(parsed.owner, parsed.repo, branch, jobData.github_token, markdown);
-        const pr     = await github.createPullRequest(parsed.owner, parsed.repo, branch, jobData.github_token, markdown, result);
-        await github.addPrLabels(parsed.owner, parsed.repo, pr.number, jobData.github_token);
+        const prGithub = new GitHubService(effectiveToken);
+        const branch = await prGithub.createAnalysisBranch(parsed.owner, parsed.repo, effectiveToken, ts);
+        const sha    = await prGithub.commitReport(parsed.owner, parsed.repo, branch, effectiveToken, markdown);
+        const pr     = await prGithub.createPullRequest(parsed.owner, parsed.repo, branch, effectiveToken, markdown, result);
+        await prGithub.addPrLabels(parsed.owner, parsed.repo, pr.number, effectiveToken);
         result.report.pr_url     = pr.url;
         result.report.pr_number  = pr.number;
         result.report.branch     = branch;

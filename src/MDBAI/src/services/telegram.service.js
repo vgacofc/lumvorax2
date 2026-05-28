@@ -31,12 +31,36 @@ export class TelegramService {
 
     try {
       this.bot = new TelegramBot(config.telegram.token, {
-        polling: config.telegram.polling,
+        polling: {
+          interval: 1000,
+          autoStart: false,       // on démarre manuellement après délai anti-409
+          params: { timeout: 10 },
+        },
       });
 
       this.onAnalyzeRequest = onAnalyzeRequest;
       this._registerCommands();
       this.initialized = true;
+
+      // Délai 3s avant polling pour éviter 409 Conflict après restart rapide
+      setTimeout(() => {
+        this.bot.startPolling().catch(e => {
+          logger.warn('[TELEGRAM] startPolling retardé échoué (409 attendu)', { error: e.message });
+        });
+      }, 3000);
+
+      // Gestion gracieuse erreurs 409 / réseau sans crash
+      this.bot.on('polling_error', (err) => {
+        if (err.code === 'ETELEGRAM' && err.message?.includes('409')) {
+          logger.warn('[TELEGRAM] 409 Conflict — autre instance active, retry dans 5s');
+          this.bot.stopPolling().then(() => {
+            setTimeout(() => this.bot.startPolling().catch(() => {}), 5000);
+          }).catch(() => {});
+        } else {
+          logger.error('[TELEGRAM] Polling error', { error: err.message });
+        }
+      });
+
       logger.info('[TELEGRAM] Bot @masterdebugai_bot initialisé ✅');
     } catch (e) {
       logger.error('[TELEGRAM] Échec initialisation', { error: e.message });

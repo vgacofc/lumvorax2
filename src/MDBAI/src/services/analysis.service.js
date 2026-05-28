@@ -16,6 +16,12 @@ import {
 } from '../models/result.model.js';
 import { MdbaiError, ERR_LANG_DETECT, ERR_DEPS_INSTALL, ERR_ANALYSIS_TIMEOUT } from '../utils/errors.js';
 
+// Langages additionnels supportés (MDBAI étend le modèle de base)
+const LANG_HASKELL = 'haskell';
+const LANG_JAVA    = 'java';
+const LANG_PHP     = 'php';
+const LANG_RUBY    = 'ruby';
+
 export class AnalysisService {
   constructor(jobId) {
     this.jobId = jobId;
@@ -56,6 +62,16 @@ export class AnalysisService {
       result.execution.exit_code = forensicData.exit_code;
       result.forensic.lum_snapshots = forensicData.lum_snapshots;
       result.forensic.memory_leaks  = forensicData.memory_leaks;
+
+      // Analyse statique C/C++ approfondie (en plus de l'exécution)
+      if (lang === LANG_C_CPP) {
+        onProgress(38, 'Analyse statique GCC + cppcheck...');
+        const staticOut = this.runCppStaticAnalysis(repoDir);
+        if (staticOut) {
+          result.execution.stdout += `\n\n${staticOut}`;
+          result.forensic.static_analysis = staticOut;
+        }
+      }
 
       onProgress(55, 'Détection erreurs et crashes...');
       result.analysis.errors = this.detectErrors(forensicData.stdout, forensicData.stderr);
@@ -103,24 +119,42 @@ export class AnalysisService {
    * @returns {Promise<string>}
    */
   async detectLanguage(dir) {
-    const files = this._listFiles(dir, 2);
+    const files = this._listFiles(dir, 3);
+    const flat  = files.map(f => f.toLowerCase());
 
-    if (files.includes('package.json'))  return LANG_NODEJS;
-    if (files.includes('requirements.txt') || files.includes('setup.py') ||
-        files.includes('pyproject.toml')) return LANG_PYTHON;
-    if (files.includes('Cargo.toml'))    return LANG_RUST;
-    if (files.includes('go.mod'))        return LANG_GO;
-    if (files.includes('Makefile') ||
-        files.some(f => f.endsWith('.c') || f.endsWith('.cpp') || f.endsWith('.cc')))
-      return LANG_C_CPP;
+    // Priorité 1 : fichiers manifeste explicites
+    if (flat.includes('package.json'))                                     return LANG_NODEJS;
+    if (flat.includes('requirements.txt') || flat.includes('setup.py') ||
+        flat.includes('pyproject.toml')   || flat.includes('setup.cfg'))   return LANG_PYTHON;
+    if (flat.includes('cargo.toml'))                                       return LANG_RUST;
+    if (flat.includes('go.mod'))                                           return LANG_GO;
+    if (flat.includes('cabal.project') || flat.some(f => f.endsWith('.cabal'))) return LANG_HASKELL;
+    if (flat.includes('pom.xml') || flat.includes('build.gradle'))         return LANG_JAVA;
+    if (flat.includes('gemfile') || flat.includes('gemfile.lock'))         return LANG_RUBY;
+    if (flat.includes('composer.json'))                                    return LANG_PHP;
 
+    // Priorité 2 : présence de fichiers sources avec Makefile ou .c/.cpp
+    if (flat.includes('makefile') ||
+        files.some(f => /\.(c|cpp|cc|cxx|h|hpp)$/i.test(f)))              return LANG_C_CPP;
+
+    // Priorité 3 : comptage d'extensions
     const ext = this._countExtensions(dir);
-    if (ext['.js'] || ext['.ts'])  return LANG_NODEJS;
-    if (ext['.py'])                return LANG_PYTHON;
-    if (ext['.rs'])                return LANG_RUST;
-    if (ext['.go'])                return LANG_GO;
-    if (ext['.c'] || ext['.cpp']) return LANG_C_CPP;
+    const sorted = Object.entries(ext).sort(([,a],[,b]) => b - a);
+    const topExt = sorted[0]?.[0] || '';
 
+    const extMap = {
+      '.js': LANG_NODEJS, '.ts': LANG_NODEJS, '.mjs': LANG_NODEJS, '.cjs': LANG_NODEJS,
+      '.py': LANG_PYTHON,
+      '.rs': LANG_RUST,
+      '.go': LANG_GO,
+      '.c': LANG_C_CPP, '.cpp': LANG_C_CPP, '.cc': LANG_C_CPP, '.h': LANG_C_CPP, '.hpp': LANG_C_CPP,
+      '.hs': LANG_HASKELL, '.lhs': LANG_HASKELL,
+      '.java': LANG_JAVA,
+      '.rb': LANG_RUBY,
+      '.php': LANG_PHP,
+    };
+
+    if (extMap[topExt]) return extMap[topExt];
     return LANG_UNKNOWN;
   }
 
@@ -130,11 +164,13 @@ export class AnalysisService {
    */
   async installDependencies(dir, lang) {
     const cmds = {
-      [LANG_NODEJS]:  ['npm', ['install', '--no-audit', '--no-fund', '--prefer-offline']],
-      [LANG_PYTHON]:  ['pip', ['install', '-r', 'requirements.txt', '-q']],
-      [LANG_RUST]:    ['cargo', ['fetch']],
-      [LANG_GO]:      ['go', ['mod', 'download']],
-      [LANG_C_CPP]:   ['make', ['--dry-run']],
+      [LANG_NODEJS]:   ['npm', ['install', '--no-audit', '--no-fund', '--prefer-offline']],
+      [LANG_PYTHON]:   ['pip', ['install', '-r', 'requirements.txt', '-q']],
+      [LANG_RUST]:     ['cargo', ['fetch']],
+      [LANG_GO]:       ['go', ['mod', 'download']],
+      [LANG_C_CPP]:    ['make', ['--dry-run', '-f', existsSync(join(dir, 'Makefile')) ? 'Makefile' : 'GNUmakefile']],
+      [LANG_HASKELL]:  ['cabal', ['update']],
+      [LANG_JAVA]:     existsSync(join(dir, 'pom.xml')) ? ['mvn', ['dependency:resolve', '-q']] : ['gradle', ['dependencies', '-q']],
     };
     const cmd = cmds[lang];
     if (!cmd) return { exit_code: 0, stdout: '', stderr: '' };
@@ -155,17 +191,73 @@ export class AnalysisService {
 
   /**
    * Retourne la commande de test selon le langage
+   * Pour C/C++ : build + analyse statique GCC + cppcheck
    */
   _getTestCommand(lang) {
     const cmds = {
-      [LANG_NODEJS]: 'npm test 2>&1 || true',
-      [LANG_PYTHON]: 'python -m pytest -v 2>&1 || python -m unittest discover 2>&1 || true',
-      [LANG_RUST]:   'cargo test 2>&1 || true',
-      [LANG_GO]:     'go test ./... 2>&1 || true',
-      [LANG_C_CPP]:  'make test 2>&1 || true',
-      [LANG_UNKNOWN]: 'ls -la 2>&1 || true',
+      [LANG_NODEJS]:  'npm test 2>&1 || npm run build 2>&1 || true',
+      // Note: utilise python3 avec single-quotes pour éviter le glob-expansion shell sur **/*.py
+      [LANG_PYTHON]:  "python -m pytest -v --tb=short 2>&1 || python -m unittest discover 2>&1 || python3 -c 'import py_compile,glob; [py_compile.compile(f,doraise=True) for f in glob.glob(\"**/*.py\",recursive=True) if \".ccls\" not in f]' 2>&1 || true",
+      [LANG_RUST]:    'cargo test 2>&1 || cargo build 2>&1 || true',
+      [LANG_GO]:      'go test ./... 2>&1 || go build ./... 2>&1 || true',
+      // C/C++ : build + analyse statique GCC (warnings = bugs) + cppcheck
+      [LANG_C_CPP]:   [
+        'make 2>&1 || make all 2>&1 ||',
+        '(gcc -Wall -Wextra -Wpedantic -fsyntax-only $(find . -maxdepth 3 -name "*.c" ! -path "*/.*") 2>&1) ||',
+        '(g++ -Wall -Wextra -Wpedantic -fsyntax-only $(find . -maxdepth 3 -name "*.cpp" ! -path "*/.*") 2>&1) ||',
+        'true',
+      ].join(' '),
+      [LANG_HASKELL]: 'cabal build 2>&1 || stack build 2>&1 || true',
+      [LANG_JAVA]:    'mvn test -q 2>&1 || gradle test 2>&1 || true',
+      [LANG_PHP]:     'php -l $(find . -maxdepth 3 -name "*.php" ! -path "*/vendor/*") 2>&1 || true',
+      [LANG_RUBY]:    'bundle exec rake test 2>&1 || ruby -e "puts \'ok\'" 2>&1 || true',
+      [LANG_UNKNOWN]: 'ls -laR 2>&1 | head -100 || true',
     };
     return cmds[lang] || cmds[LANG_UNKNOWN];
+  }
+
+  /**
+   * Analyse statique approfondie pour C/C++ (en complément de _getTestCommand)
+   * Lance gcc -Wall, cppcheck si disponible, et détecte les patterns dangereux
+   * @param {string} dir
+   * @returns {string} stdout de l'analyse statique
+   */
+  runCppStaticAnalysis(dir) {
+    const results = [];
+
+    // 1. Trouver tous les fichiers .c et .cpp
+    let cFiles = '';
+    try {
+      cFiles = execSync(
+        'find . -maxdepth 4 -name "*.c" -o -name "*.cpp" -o -name "*.cc" | grep -v "\\./\\." | head -50',
+        { cwd: dir, timeout: 10000 }
+      ).toString().trim();
+    } catch {}
+
+    if (!cFiles) return '';
+
+    // 2. GCC analyse syntaxique + warnings
+    try {
+      const gccOut = execSync(
+        `gcc -Wall -Wextra -Wformat-security -Wnull-dereference -fsyntax-only ${cFiles.split('\n').join(' ')} 2>&1 || true`,
+        { cwd: dir, timeout: 60000, maxBuffer: 5 * 1024 * 1024 }
+      ).toString();
+      if (gccOut) results.push(`=== GCC Analyse Statique ===\n${gccOut}`);
+    } catch (e) {
+      results.push(`=== GCC Analyse ===\n${e.stderr?.toString() || e.message}`);
+    }
+
+    // 3. cppcheck si disponible
+    try {
+      execSync('which cppcheck', { timeout: 3000 });
+      const cppOut = execSync(
+        'cppcheck --enable=all --error-exitcode=0 --quiet --template="{file}:{line}: [{severity}] {message}" . 2>&1 || true',
+        { cwd: dir, timeout: 60000, maxBuffer: 5 * 1024 * 1024 }
+      ).toString();
+      if (cppOut) results.push(`=== cppcheck ===\n${cppOut}`);
+    } catch {}
+
+    return results.join('\n\n');
   }
 
   /**
@@ -192,9 +284,29 @@ export class AnalysisService {
       { re: /warning\[(.+)\]:\s+(.+)/gi, severity: 'low', type: 'compiler_warning' },
     ];
 
+    // Patterns de bruit interne MDBAI à exclure (faux positifs runner)
+    const NOISE_PATTERNS = [
+      /File "<string>", line 1/,          // py_compile one-liner interne
+      /import py_compile,glob/,            // source du one-liner
+      /\[MDBAI-RUNNER\]/,                  // bannières du runner
+      /\[MDBAI-FORENSIC\]/,               // bannières forensic
+      /\[MDBAI-LEAK\]/,                    // bannières mémoire
+      /No module named pytest/,            // info normale (pas d'erreur)
+      /NO TESTS RAN/,                      // info normale unittest
+      /Ran 0 tests in/,                    // info normale unittest
+    ];
+
+    const isNoise = (line) => NOISE_PATTERNS.some(p => p.test(line));
+
+    // Filtrage ligne par ligne pour éviter les faux positifs contextuels
+    const filteredCombined = combined
+      .split('\n')
+      .filter(line => !isNoise(line))
+      .join('\n');
+
     for (const { re, severity, type } of patterns) {
       let m;
-      while ((m = re.exec(combined)) !== null) {
+      while ((m = re.exec(filteredCombined)) !== null) {
         const msg = (m[1] || m[0]).trim().slice(0, 300);
         if (msg && !errors.find(e => e.message === msg)) {
           errors.push({ type, severity, message: msg, raw: m[0].slice(0, 500) });
