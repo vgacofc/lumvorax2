@@ -89,8 +89,6 @@ npm install --save-dev jest @types/node @types/express typescript ts-node
 ✅ **Upload Doppler réussi à 100%**   
 🎯 **Prêt pour développement Sprint 1 après sécurisation**
 
-**Prochaine action immédiate**: Révoquer TOUS les tokens compromis avant de commencer le développement.
----
 
 ## MISE À JOUR — 2026-05-28
 
