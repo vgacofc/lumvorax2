@@ -302,8 +302,38 @@
 
 ---
 
+## SECTION 14 — ÉTAT RUNTIME 2026-05-28
+
+| Nom Canonique | Valeur Réelle | Vérifié |
+|---------------|--------------|---------|
+| `MDBAI_SERVER_PORT` | `3001` | ✅ Express écoute port 3001 |
+| `MDBAI_FORENSIC_LIB` | `forensic/libmdbai_forensic.so` | ✅ 17KB, Magic 0x4D444241 |
+| `MDBAI_FORENSIC_MAGIC` | `0x4D444241` | ✅ = "MDBA" ASCII |
+| `MDBAI_GITHUB_APP_ID` | `3888479` | ✅ App active GitHub |
+| `MDBAI_BOT_USERNAME` | `masterdebugai_bot` | ✅ Bot actif Telegram |
+| `MDBAI_REDIS_QUEUE` | `analysis-jobs` | ✅ BullMQ opérationnel |
+| `MDBAI_WORKER_CONCURRENCY` | `3` | ✅ 3 workers actifs |
+| `MDBAI_DASHBOARD_ROUTE` | `/dashboard` | ✅ Proxy Flask:5000 → MDBAI:3001 |
+| `MDBAI_REPORT_DIR` | `src/MDBAI/reports/` | ✅ 1 rapport existant |
+| `MDBAI_FIRST_REPORT` | `RAPPORT_MDBAI_2026-05-28T1618_mdbai-bb.md` | ✅ Score 100/100 |
+| `MDBAI_JOB_ID_FORMAT` | `mdbai-{uuid4}` | ✅ Confirmé en production |
+| `MDBAI_LUM_GRANULARITY` | `LUM_TRACE_GRANULARITY_PAGE` | ✅ 4 KiB par event |
+| `MDBAI_AVANCEMENT_GLOBAL` | `42%` | 🟡 Mis à jour 2026-05-28 |
+
+### Bugs Actifs (2026-05-28)
+
+| Bug ID | Composant | Description | Sprint Fix |
+|--------|-----------|-------------|-----------|
+| `BUG-LANG-001` | `analysis.service.js` | `detectLanguage()` retourne "unknown" | Sprint 3 |
+| `BUG-STATE-001` | `dashboard.js` | Jobs affichent "pending" même terminés | Sprint 2 |
+| `BUG-METRIC-001` | `analysis.worker.js` | CPU/RAM/IO métriques = 0 (pas d'exec réelle) | Sprint 3 |
+| `BUG-CLONE-001` | `analysis.service.js` | Clone non persisté entre étapes pipeline | Sprint 3 |
+
+---
+
 ## CHANGELOG
 
 | Version | Date | Modification |
 |---------|------|-------------|
 | 1.0.0 | 2026-05-27 | Création initiale STANDARD_NAMES_MDBAI.md |
+| 1.1.0 | 2026-05-28 | Section 14 ajoutée — état runtime réel + bugs actifs + avancement 42% |

@@ -447,35 +447,60 @@ npm test -- --coverage
 
 ## 🗺️ Roadmap
 
-### Sprint 1 (Semaine 1) - Infrastructure ✅
-- [x] Configuration Doppler
-- [x] Structure projet
-- [x] Tests 001-005
+> **Avancement global : 42%** — Mise à jour 2026-05-28
 
-### Sprint 2 (Semaine 2) - Telegram Bot
-- [ ] Implémentation bot
-- [ ] OAuth GitHub
-- [ ] Tests 006-010
+### Sprint 1 — Infrastructure ✅ 90%
+- [x] Serveur Express port 3001 (Node.js)
+- [x] Redis Cloud connecté (BullMQ "analysis-jobs", 3 workers)
+- [x] Bot Telegram @masterdebugai_bot initialisé
+- [x] GitHub App ID 3888479 configurée et active
+- [x] Doppler dev_debugai — 14 secrets chargés
+- [x] Dashboard web temps réel sur /dashboard
+- [x] Proxy Flask port 5000 → MDBAI port 3001
+- [x] libmdbai_forensic.so compilée (17KB, Magic 0x4D444241)
+- [x] Structure tests unit/integration/e2e
+- [ ] Tests 001-005 passants (protocole cumulatif)
 
-### Sprint 3 (Semaine 3) - Forensic Engine
-- [ ] Compilation libforensic.so
-- [ ] Injection LD_PRELOAD
-- [ ] Tests 011-015
+### Sprint 2 — Telegram + OAuth 🟡 60%
+- [x] Commande /analyze <url> fonctionnelle (crée job Redis)
+- [x] Routes OAuth GitHub /auth/github et /auth/github/callback
+- [x] Commandes /start, /help, /status, /report enregistrées
+- [ ] OAuth GitHub testé en production avec vrai token
+- [ ] Notification Telegram avec lien PR validée
+- [ ] Tests 006-010 passants
 
-### Sprint 4 (Semaine 4) - Analysis Engine
-- [ ] Détection erreurs
-- [ ] Détection fuites mémoire
-- [ ] Tests 016-020
+### Sprint 3 — Forensic Engine 🔴 40%
+- [x] libmdbai_forensic.so compilée et chargée
+- [x] Snapshot mémoire .lum (1 par analyse)
+- [x] Capture stdout/stderr lors de l'analyse
+- [x] Premier rapport généré (octocat/Hello-World, score 100/100)
+- [ ] Détection langage (retourne "unknown" → BUG à corriger)
+- [ ] Clone dépôt réel dans /tmp/<jobId>/
+- [ ] Injection LD_PRELOAD dans processus cible
+- [ ] Exécution dans environnement isolé (GitHub Codespace API)
+- [ ] Tests 011-015 passants
 
-### Sprint 5 (Semaine 5) - GitHub Integration
-- [ ] Création PR automatique
-- [ ] Publication rapport
-- [ ] Tests 021-025
+### Sprint 4 — Analysis Engine 🔴 30%
+- [x] Génération rapport Markdown format complet
+- [x] Score qualité 0-100 calculé
+- [ ] Détection vraies erreurs compilation/runtime
+- [ ] Détection fuites mémoire (nécessite LD_PRELOAD)
+- [ ] Scan vulnérabilités CVE (npm audit, pip-audit)
+- [ ] Métriques performance réelles (CPU, mémoire, I/O)
+- [ ] Tests 016-020 passants
 
-### Sprint 6 (Semaine 6) - Beta Testing
+### Sprint 5 — GitHub Integration 🔴 20%
+- [x] Code Octokit.js pour branch/commit/PR (implémenté)
+- [x] Labels mdbai, automated-analysis définis
+- [ ] Test PR réel sur vgacofc/test-mdbai
+- [ ] Test PR sur dépôt privé (token OAuth utilisateur)
+- [ ] Tests 021-025 passants
+
+### Sprint 6 — Beta Testing 🔴 0%
 - [ ] 10 beta testers
-- [ ] Corrections bugs
+- [ ] Corrections bugs post-beta
 - [ ] Documentation finale
+- [ ] Passage en mode production (NODE_ENV=production)
 
 ---
 

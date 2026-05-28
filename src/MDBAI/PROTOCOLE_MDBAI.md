@@ -1,10 +1,16 @@
 # PROTOCOLE MDBAI - MASTER DEBUG AI PLATFORM
 
 **Date création**: 2026-05-27  
+**Dernière mise à jour**: 2026-05-28  
 **Version**: 1.0.0  
+**Avancement global**: 🟡 **42%** — Infrastructure ✅ | Telegram 🟡 | Forensic 🟡 | Analysis 🔴 | GitHub PR 🔴 | Beta 🔴  
 **Objectif**: Plateforme d'analyse forensique automatisée de dépôts GitHub avec technologie LumVorax  
 **Principe**: MVP 100% gratuit utilisant GitHub Codespaces + forensic bit-level  
-**Architecture**: Zero-budget, maximum viable, production-ready
+**Architecture**: Zero-budget, maximum viable, production-ready  
+
+> **État 2026-05-28** : Serveur Express + Redis + BullMQ + Bot Telegram + Dashboard opérationnels.  
+> Premier rapport généré : `reports/RAPPORT_MDBAI_2026-05-28T1618_mdbai-bb.md` (octocat/Hello-World, score 100/100).  
+> Bugs actifs : détection langage retourne "unknown", métriques forensic à 0, PR GitHub non testée.
 
 ---
 
@@ -266,7 +272,7 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 const me = await bot.getMe();
 assert(me.username === 'masterdebugai_bot');
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ✅ FAIT — Bot @masterdebugai_bot actif, commandes enregistrées (2026-05-28)
 
 #### TEST_002: GitHub OAuth Flow
 **Objectif**: Authentification utilisateur GitHub  
@@ -276,7 +282,7 @@ const octokit = new Octokit({ auth: token });
 const { data } = await octokit.users.getAuthenticated();
 assert(data.login !== null);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Routes /auth/github et /auth/github/callback existent, flux non testé en production
 
 #### TEST_003: Redis Queue Connection
 **Objectif**: Connexion Redis Cloud  
@@ -287,7 +293,7 @@ await redis.set('test', 'ok');
 const value = await redis.get('test');
 assert(value === 'ok');
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ✅ FAIT — Redis Cloud connecté, BullMQ "analysis-jobs" opérationnel, 3 workers actifs (2026-05-28)
 
 #### TEST_004: Doppler Secrets Sync
 **Objectif**: Récupération secrets Doppler  
@@ -296,7 +302,7 @@ assert(value === 'ok');
 doppler secrets download --no-file --format env
 assert $GITHUB_APP_ID != ""
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ✅ FAIT — 14/14 secrets chargés via DOPPLER_MDBAI_TOKEN (dev_debugai, 2026-05-28)
 
 #### TEST_005: GitHub Codespace Creation
 **Objectif**: Créer Codespace programmatiquement  
@@ -308,7 +314,7 @@ const codespace = await octokit.codespaces.createForAuthenticatedUser({
 });
 assert(codespace.data.state === 'Available');
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ❌ À FAIRE — Codespace API non intégrée (MVP utilise exécution locale)
 
 #### TEST_006: Repository Clone
 **Objectif**: Cloner dépôt dans Codespace  
@@ -318,7 +324,7 @@ git clone https://github.com/user/repo.git
 cd repo
 assert -d .git
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Clone implémenté mais detectLanguage() retourne "unknown" (bug actif)
 
 #### TEST_007: Dependency Installation
 **Objectif**: Installer dépendances automatiquement  
@@ -329,7 +335,7 @@ if [ -f package.json ]; then npm install; fi
 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 if [ -f Cargo.toml ]; then cargo build; fi
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ❌ À FAIRE — Gestionnaire de paquets non exécuté réellement
 
 #### TEST_008: LumVorax Forensic Injection
 **Objectif**: Injecter instrumentation forensic  
@@ -340,7 +346,7 @@ memory_tracker_start();
 syscall_tracer_attach();
 assert(forensic_active() == true);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — libmdbai_forensic.so compilée 17KB (Magic 0x4D444241), LD_PRELOAD non injecté dans processus cible
 
 #### TEST_009: Execution + Log Capture
 **Objectif**: Exécuter code et capturer logs  
@@ -350,7 +356,7 @@ npm test 2>&1 | tee execution.log
 assert -f execution.log
 assert $(wc -l < execution.log) -gt 0
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Capture stdout/stderr en place, exécution réelle non effectuée (1s vs 45s attendu)
 
 #### TEST_010: Report Generation
 **Objectif**: Générer rapport markdown  
@@ -360,7 +366,7 @@ const report = await generateReport(logs, forensicData);
 assert(report.includes('# MDBAI Analysis Report'));
 assert(report.includes('## Forensic Data'));
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ✅ FAIT — Rapport généré pour octocat/Hello-World (score 100/100, format Markdown complet, 2026-05-28T16:18Z)
 
 ### Phase 2: Analysis Engine (Tests 011-020)
 
@@ -372,7 +378,7 @@ const errors = detectErrors(logs);
 assert(errors.length >= 0);
 assert(errors[0].type in ['syntax', 'runtime', 'logic']);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Regex basiques implémentées, parsing profond non réalisé
 
 #### TEST_012: Memory Leak Detection
 **Objectif**: Identifier fuites mémoire  
@@ -381,7 +387,7 @@ assert(errors[0].type in ['syntax', 'runtime', 'logic']);
 memory_leak_t* leaks = analyze_memory_leaks(forensic_data);
 assert(leaks != NULL);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ❌ À FAIRE — Nécessite LD_PRELOAD opérationnel (Sprint 3)
 
 #### TEST_013: Security Vulnerability Scan
 **Objectif**: Scanner vulnérabilités sécurité  
@@ -390,7 +396,7 @@ assert(leaks != NULL);
 const vulns = scanVulnerabilities(code);
 assert(vulns.severity in ['low', 'medium', 'high', 'critical']);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ❌ À FAIRE — npm audit / pip-audit non intégrés
 
 #### TEST_014: Performance Analysis
 **Objectif**: Analyser performance  
@@ -399,7 +405,7 @@ assert(vulns.severity in ['low', 'medium', 'high', 'critical']);
 perf_metrics_t metrics = analyze_performance(forensic_data);
 assert(metrics.cpu_usage >= 0.0 && metrics.cpu_usage <= 100.0);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Structure de métriques en place (CPU=0%, RAM=0MB car aucune exécution réelle)
 
 #### TEST_015: Code Quality Metrics
 **Objectif**: Calculer métriques qualité  
@@ -408,7 +414,7 @@ assert(metrics.cpu_usage >= 0.0 && metrics.cpu_usage <= 100.0);
 const quality = calculateQuality(code);
 assert(quality.score >= 0 && quality.score <= 100);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Score 0-100 calculé (retourne 100/100 quand aucune erreur trouvée)
 
 ### Phase 3: GitHub Integration (Tests 021-030)
 
@@ -423,7 +429,7 @@ const branch = await octokit.git.createRef({
 });
 assert(branch.data.ref.startsWith('refs/heads/mdbai-'));
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Code Octokit.js en place (src/services/github.service.js), non testé sur vrai dépôt
 
 #### TEST_022: Commit Report
 **Objectif**: Commit rapport dans branche  
@@ -438,7 +444,7 @@ const commit = await octokit.repos.createOrUpdateFileContents({
 });
 assert(commit.data.commit.sha !== null);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Code en place, non testé sur vrai dépôt
 
 #### TEST_023: Pull Request Creation
 **Objectif**: Créer PR avec rapport  
@@ -453,7 +459,7 @@ const pr = await octokit.pulls.create({
 });
 assert(pr.data.number > 0);
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Code en place, non testé sur vrai dépôt
 
 #### TEST_024: PR Labels
 **Objectif**: Ajouter labels au PR  
@@ -465,7 +471,7 @@ await octokit.issues.addLabels({
   labels: ['mdbai', 'automated-analysis', 'forensic']
 });
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Labels définis (mdbai, automated-analysis, forensic), non appliqués sur vrai PR
 
 #### TEST_025: Telegram Notification
 **Objectif**: Notifier utilisateur via Telegram  
@@ -475,7 +481,7 @@ await bot.sendMessage(chatId,
   `✅ Analysis complete!\n\nPR: ${pr.data.html_url}`
 );
 ```
-**Statut**: ⏳ À implémenter
+**Statut**: ⚠️ PARTIEL — Notification implémentée, non validée end-to-end
 
 ---
 

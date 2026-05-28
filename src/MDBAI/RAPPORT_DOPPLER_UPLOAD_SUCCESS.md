@@ -224,3 +224,36 @@ npm install --save-dev jest @types/node @types/express typescript ts-node
 🎯 **Prêt pour développement Sprint 1 après sécurisation**
 
 **Prochaine action immédiate**: Révoquer TOUS les tokens compromis avant de commencer le développement.
+---
+
+## MISE À JOUR — 2026-05-28
+
+### État Réel du Système
+
+| Composant | Statut | Détail |
+|-----------|--------|--------|
+| Serveur Express port 3001 | ✅ OPÉRATIONNEL | NODE_ENV=development |
+| Redis Cloud connecté | ✅ OPÉRATIONNEL | BullMQ "analysis-jobs", 3 workers |
+| Bot Telegram @masterdebugai_bot | ✅ ACTIF | Commandes /analyze fonctionnelles |
+| GitHub App ID 3888479 | ✅ ACTIVE | Webhook + OAuth configurés |
+| libmdbai_forensic.so | ✅ COMPILÉE | 17KB, Magic 0x4D444241 |
+| Dashboard /dashboard | ✅ ACCESSIBLE | Proxy Flask:5000 → MDBAI:3001 |
+| `API_PORT` | ⚠️ CORRIGÉ | Doppler avait 3000, serveur écoute sur 3001 (port auto-détecté) |
+
+### Jobs Réels Exécutés
+
+| Job ID | Dépôt | Résultat | Date |
+|--------|-------|----------|------|
+| `mdbai-bb849d68` | octocat/Hello-World | ✅ Score 100/100, rapport généré | 2026-05-28T16:18Z |
+| `mdbai-b581b41e` | vgacofc/test-mdbai | ❌ Échec (dépôt vide ou clone raté) | 2026-05-28T16:16Z |
+
+### Avancement Global : 42%
+
+Sprint 1 Infrastructure ████████████████████ 90% ✅  
+Sprint 2 Telegram+OAuth ████████████░░░░░░░░ 60% 🟡  
+Sprint 3 Forensic Engine ████████░░░░░░░░░░░░ 40% 🟡  
+Sprint 4 Analysis Engine ██████░░░░░░░░░░░░░░ 30% 🔴  
+Sprint 5 GitHub PR       ████░░░░░░░░░░░░░░░░ 20% 🔴  
+Sprint 6 Beta Testing    ░░░░░░░░░░░░░░░░░░░░  0% 🔴  
+
+**Référence complète** : `RAPPORT_ETAT_AVANCEMENT_MDBAI.md`
