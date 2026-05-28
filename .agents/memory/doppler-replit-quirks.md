@@ -7,22 +7,32 @@ description: Problèmes Doppler CLI en env Replit/Codespaces et comment les cont
 
 **Règle 1 — Prompt mise à jour bloquant**
 Doppler CLI v3.75 affiche un prompt interactif de mise à jour qui bloque toute commande.
-Contournements (par ordre de préférence):
-- Utiliser les flags `--no-check-version --token $DOPPLER_TOKEN` dans la commande (meilleur)
-- `printf "n\n" | doppler ...` pour répondre non au prompt via stdin
-- NE PAS utiliser `DOPPLER_UPDATE_CHECK=false` (ignoré dans cette version)
+Contournement : utiliser `--no-check-version --token $TOKEN` dans chaque commande Doppler.
+NE PAS utiliser `DOPPLER_UPDATE_CHECK=false` ni `echo "n" |` (les deux ignorés/bloquent).
 
-**Why:** L'upgrade Doppler nécessite sudo non disponible dans Replit NixOS.
+**Why:** Upgrade Doppler nécessite sudo, non disponible dans Replit NixOS.
 
 **Règle 2 — Noms GITHUB_* bloqués**
-Dans l'env Replit/Codespaces, Doppler refuse d'uploader des secrets dont le nom commence par `GITHUB_` (détection Codespaces).
-→ Utiliser les noms `MDBAI_*` à la place: MDBAI_WEBHOOK_SECRET, MDBAI_CLIENT_SECRET, MDBAI_APP_ID, MDBAI_CLIENT_ID, MDBAI_PRIVATE_KEY
-→ config.js MDBAI a déjà les fallbacks: `process.env.GITHUB_APP_CLIENT_SECRET || process.env.MDBAI_CLIENT_SECRET`
+Dans l'env Replit, Doppler refuse d'uploader des secrets dont le nom commence par GITHUB_
+(détection GitHub Codespaces). Utiliser les noms MDBAI_* à la place.
+config.js a les fallbacks : `process.env.GITHUB_APP_CLIENT_SECRET || process.env.MDBAI_CLIENT_SECRET`
 
-**Why:** Erreur Doppler: "Secret name cannot start with GITHUB_ in GitHub Codespaces"
+**Why:** Erreur Doppler : "Secret name cannot start with GITHUB_ in GitHub Codespaces"
 
-**Règle 3 — Commande workflow MDBAI correcte**
-`cd src/MDBAI && doppler run --token $DOPPLER_TOKEN --project lumvorax --config dev_lumvorax --no-check-version -- node src/server.js`
-Config Doppler utilisée: dev_lumvorax (PAS dev_debugai — dev_debugai n'existe pas vraiment)
+**Règle 3 — Deux configs Doppler séparées (architecture)**
+- `dev_lumvorax` + secret Replit `DOPPLER_TOKEN` → secrets BTC/IBM Quantum
+- `dev_debugai` + secret Replit `DOPPLER_MDBAI_TOKEN` → secrets MDBAI uniquement
 
-**How to apply:** À chaque démarrage de session, vérifier que node_modules existe (npm install) et forensic compilée (make dans forensic/). Le workflow utilise déjà les bons flags.
+Workflow MDBAI Server (command exacte) :
+`cd src/MDBAI && doppler run --token $DOPPLER_MDBAI_TOKEN --project lumvorax --config dev_debugai --no-check-version -- node src/server.js`
+
+**Règle 4 — Secrets dans dev_debugai (14 clés MDBAI)**
+TELEGRAM_BOT_TOKEN, REDIS_URL/HOST/PORT/PASSWORD/USERNAME,
+MDBAI_APP_ID=3888479, MDBAI_CLIENT_ID, MDBAI_CLIENT_SECRET, MDBAI_PRIVATE_KEY (RSA PEM),
+MDBAI_WEBHOOK_SECRET (64 chars hex), NODE_ENV, LOG_LEVEL, API_PORT=3001
+
+**Règle 5 — dev_debugai ne peut PAS être créé via service token**
+Seul un token admin Doppler (personnel) peut créer de nouvelles configs.
+Le service token (`dp.st.*`) ne peut que lire/écrire dans la config à laquelle il est scopé.
+
+**How to apply:** À chaque session, npm install + make forensic + workflow démarre automatiquement.
