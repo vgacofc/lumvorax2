@@ -95,15 +95,21 @@ export class GitHubService {
       : repoUrl;
 
     logger.info(`[GITHUB] Clone ${parsed.owner}/${parsed.repo} → ${destDir}`);
+    const gitEnv = {
+      ...process.env,
+      GIT_TERMINAL_PROMPT: '0',
+      GIT_ASKPASS: 'echo',
+      GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes',
+    };
     try {
       execFileSync('git', ['clone', '--depth=1', `--branch=${branch}`, authUrl, destDir], {
-        timeout: 120000, stdio: 'pipe',
+        timeout: 120000, stdio: 'pipe', env: gitEnv,
       });
     } catch (shallowErr) {
       logger.warn(`[GITHUB] Clone branch=${branch} échoué, tentative sans --branch`);
       try {
         execFileSync('git', ['clone', '--depth=1', authUrl, destDir], {
-          timeout: 120000, stdio: 'pipe',
+          timeout: 120000, stdio: 'pipe', env: gitEnv,
         });
       } catch (e) {
         throw new MdbaiError(ERR_REPO_CLONE, `Clone échoué: ${e.message}`);

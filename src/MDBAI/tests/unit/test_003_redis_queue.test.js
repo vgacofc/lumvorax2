@@ -26,7 +26,7 @@ describe('TEST_003 — Redis Queue et Job Model', () => {
 
   test('T003-D: createJob() génère un job valide', () => {
     const job = createJob('https://github.com/user/repo', '12345678');
-    expect(job.id).toMatch(/^mdbai:[0-9a-f-]{36}$/);
+    expect(job.id).toMatch(/^mdbai-[0-9a-f-]{36}$/);
     expect(job.status).toBe(JOB_STATUS_PENDING);
     expect(job.repo_url).toBe('https://github.com/user/repo');
     expect(job.user_id).toBe('12345678');

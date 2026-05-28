@@ -21,7 +21,7 @@ export const JOB_STATUS_FAILED    = 'failed';
  */
 export function createJob(repoUrl, userId, githubToken = '', branch = 'main') {
   return {
-    id: `mdbai:${randomUUID()}`,
+    id: `mdbai-${randomUUID()}`,
     repo_url: repoUrl,
     user_id: String(userId),
     github_token: githubToken,

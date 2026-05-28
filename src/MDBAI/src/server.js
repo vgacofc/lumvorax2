@@ -17,7 +17,7 @@ import authRouter from './routes/auth.js';
 import statusRouter from './routes/status.js';
 import dashboardRouter from './routes/dashboard.js';
 import { TelegramService } from './services/telegram.service.js';
-import { getAnalysisQueue, pingRedis, closeRedis } from './services/redis.service.js';
+import { getAnalysisQueue, pingRedis, closeRedis, getJobResult } from './services/redis.service.js';
 import { startAnalysisWorker } from './workers/analysis.worker.js';
 import { createJob } from './models/job.model.js';
 import { enqueueAnalysisJob } from './services/redis.service.js';
@@ -67,6 +67,23 @@ app.use('/api/analyze', analyzeRouter);
 app.use('/api/status', statusRouter);
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
+
+/**
+ * GET /api/report/:jobId — Rapport complet séparé de /api/status
+ * CF-010: Rapport généré — RAPPORT_MDBAI_*.md
+ */
+app.get('/api/report/:jobId', async (req, res) => {
+  const { jobId } = req.params;
+  try {
+    const result = await getJobResult(jobId);
+    if (!result) return res.status(404).json({ error: 'Rapport non trouvé', jobId,
+      hint: 'Le rapport a peut-être expiré (TTL 24h)' });
+    return res.json({ ok: true, jobId, result });
+  } catch (e) {
+    logger.error('[REPORT] Erreur récupération rapport', { jobId, error: e.message });
+    return res.status(500).json({ error: e.message });
+  }
+});
 
 /**
  * GET /health — Health check endpoint

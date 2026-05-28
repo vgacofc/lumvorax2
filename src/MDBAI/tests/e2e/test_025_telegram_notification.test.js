@@ -29,12 +29,12 @@ describe('TEST_025 — Notifications Telegram (e2e)', () => {
   });
 
   test('T025-E: sendAnalysisStarted() sans bot → ne throw pas', async () => {
-    await expect(service.sendAnalysisStarted(123456, 'mdbai:uuid', 'https://github.com/u/r'))
+    await expect(service.sendAnalysisStarted(123456, 'mdbai-uuid', 'https://github.com/u/r'))
       .resolves.not.toThrow();
   });
 
   test('T025-F: sendAnalysisError() sans bot → ne throw pas', async () => {
-    await expect(service.sendAnalysisError(123456, 'mdbai:uuid', 'Erreur test'))
+    await expect(service.sendAnalysisError(123456, 'mdbai-uuid', 'Erreur test'))
       .resolves.not.toThrow();
   });
 
