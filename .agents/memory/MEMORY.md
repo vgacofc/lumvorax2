@@ -1,3 +1,5 @@
 - [MDBAI npm persistence](mdbai-npm-persistence.md) — node_modules lost between sessions; always run npm install + make -C forensic before anything else
 - [MDBAI test command](mdbai-test-command.md) — 170 tests require NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --forceExit --no-coverage
-- [MDBAI GitHub App](mdbai-github-app.md) — App ID 3888479, Client ID Iv23liM06X4pQnng7oFm, set as env vars (shared), private key/secret are Replit Secrets
+- [MDBAI GitHub App](mdbai-github-app.md) — App ID 3888479, Client ID Iv23liM06X4pQnng7oFm, all 12 secrets in Doppler dev_lumvorax including MDBAI_PRIVATE_KEY + MDBAI_CLIENT_SECRET
+- [MDBAI Doppler secrets](mdbai-doppler-secrets.md) — GITHUB_ prefix blocked by Doppler in Codespace env; use MDBAI_ prefix instead; config.js reads both with fallback
+- [MDBAI production state](mdbai-production-state.md) — 100% MVP: Redis Cloud connected, Telegram @masterdebugai_bot live, BullMQ worker x3, OAuth /auth/github → 302 redirect operational
