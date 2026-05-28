@@ -1,0 +1,3 @@
+- [MDBAI npm persistence](mdbai-npm-persistence.md) — node_modules lost between sessions; always run npm install + make -C forensic before anything else
+- [MDBAI test command](mdbai-test-command.md) — 170 tests require NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test npx jest --forceExit --no-coverage
+- [MDBAI GitHub App](mdbai-github-app.md) — App ID 3888479, Client ID Iv23liM06X4pQnng7oFm, set as env vars (shared), private key/secret are Replit Secrets

@@ -15,6 +15,7 @@ import webhookRouter from './routes/webhook.js';
 import analyzeRouter from './routes/analyze.js';
 import authRouter from './routes/auth.js';
 import statusRouter from './routes/status.js';
+import dashboardRouter from './routes/dashboard.js';
 import { TelegramService } from './services/telegram.service.js';
 import { getAnalysisQueue, pingRedis, closeRedis } from './services/redis.service.js';
 import { startAnalysisWorker } from './workers/analysis.worker.js';
@@ -65,6 +66,7 @@ app.use('/webhook', webhookRouter);
 app.use('/api/analyze', analyzeRouter);
 app.use('/api/status', statusRouter);
 app.use('/auth', authRouter);
+app.use('/dashboard', dashboardRouter);
 
 /**
  * GET /health — Health check endpoint
@@ -85,25 +87,10 @@ app.get('/health', async (req, res) => {
 });
 
 /**
- * GET / — Dashboard info
+ * GET / — Redirige vers /dashboard
  */
 app.get('/', (req, res) => {
-  res.json({
-    service: 'MDBAI — Master Debug AI',
-    version: '0.1.0',
-    description: 'Forensic automated analysis platform for GitHub repositories',
-    bot: '@masterdebugai_bot',
-    endpoints: {
-      health:   'GET  /health',
-      analyze:  'POST /api/analyze',
-      status:   'GET  /api/status/:jobId',
-      report:   'GET  /api/report/:jobId',
-      webhook:  'POST /webhook/github',
-      auth:     'GET  /auth/github',
-    },
-    forensic_engine: 'LumVorax C111 (bit-level tracing)',
-    budget: '0€ — Tier gratuit uniquement',
-  });
+  res.redirect('/dashboard');
 });
 
 /**

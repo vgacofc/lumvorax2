@@ -15,6 +15,10 @@ author = "agent"
 task = "workflow.run"
 args = "Start application"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "MDBAI Server"
+
 [[workflows.workflow]]
 name = "git fetch "
 mode = "sequential"
@@ -36,6 +40,18 @@ outputType = "webview"
 task = "shell.exec"
 args = "python3 -m gunicorn --worker-class gthread --threads 8 --bind 0.0.0.0:5000 --timeout 300 --keep-alive 65 main:app"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "MDBAI Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd src/MDBAI && node src/server.js"
+waitForPort = 3001
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [nix]
 packages = ["arrow-cpp", "cairo", "catch2", "clang", "doppler", "fetchutils", "ffmpeg-full", "file", "fmt", "freetype", "gcc", "gdb", "ghostscript", "glib", "glibc", "glibcLocales", "gnumake", "gobject-introspection", "got", "gtk3", "iana-etc", "kaggle", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "muparserx", "nano", "nlohmann_json", "openjpeg", "openssh", "openssl", "pkg-config", "postgresql", "python313Packages.pyngrok", "qhull", "rsync", "spdlog", "tcl", "tk", "tree", "vim-full", "xsimd", "zlib"]
@@ -65,6 +81,10 @@ SUPABASE_DB_PORT2 = "6543"
 SUPABASE_DB_NAME = "postgres"
 SUPABASE_DB_USER = "postgres"
 SUPERMEMORY_API_KEY = "sm_P3dg7vfnUf9C1zsVfKKUTh_LtAic9FiYrj3nWVxH9tq1ApQG6NwyqGAyRB1vwVeCCC4L30Z3nTixFgFBSGuKm61"
+GITHUB_APP_ID = "3888479"
+GITHUB_APP_CLIENT_ID = "Iv23liM06X4pQnng7oFm"
+API_PORT = "3001"
+NODE_ENV = "development"
 
 [userenv.development]
 
@@ -73,3 +93,7 @@ SUPERMEMORY_API_KEY = "sm_P3dg7vfnUf9C1zsVfKKUTh_LtAic9FiYrj3nWVxH9tq1ApQG6NwyqG
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
