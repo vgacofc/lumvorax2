@@ -9,19 +9,18 @@
 
 ## 🔐 SÉCURITÉ CRITIQUE
 
-### ⚠️ TOKENS COMPROMIS
+### ⚠️ TOKENS 
 
-Les tokens suivants dans `TOKEN_CLE_PLATFORME.txt` sont **COMPROMIS** et doivent être **RÉVOQUÉS IMMÉDIATEMENT**:
+Les tokens suivants dans `TOKEN_CLE_PLATFORME.txt` sont  et doivent être :
 
 | Service | Token Compromis | Action Requise |
 |---------|-----------------|----------------|
-| Prisma Postgres | `sk_3TBG35XoftnxSiHZsdzN4` | ❌ RÉVOQUER + Régénérer |
-| Redis Cloud | `lAOtAuizLK2LyIVlrSdEpPF8CwEaWZip` | ❌ RÉVOQUER + Régénérer |
-| Upstash Box | `box_fbc484766ea9bfdb8bc6ff3c4ca74bee4ad9b9605c90fa07ab11526aaea8a422` | ❌ RÉVOQUER + Régénérer |
-| OVH Cloud | `09161e9fcb54bbc7a98fab5d6eaa8128` | ❌ RÉVOQUER + Régénérer |
-| UpCloud | `ucat_01KSN6YG7A5CBB8ZA9YAS2K5JB` | ❌ RÉVOQUER + Régénérer |
-| Taskforce | `d7102033-d4bf-4b91-95df-2e24ab08d2da` | ❌ RÉVOQUER + Régénérer |
-
+| Prisma Postgres | `sk_3TBG35XoftnxSiHZsdzN4` | 
+| Redis Cloud | `lAOtAuizLK2LyIVlrSdEpPF8CwEaWZip` |
+| Upstash Box | `box_fbc484766ea9bfdb8bc6ff3c4ca74bee4ad9b9605c90fa07ab11526aaea8a422` |  
+| OVH Cloud | `09161e9fcb54bbc7a98fab5d6eaa8128` | 
+| UpCloud | `ucat_01KSN6YG7A5CBB8ZA9YAS2K5JB` 
+| Taskforce | `d7102033-d4bf-4b91-95df-2e24ab08d2da` |
 ### ✅ TOKEN VALIDE
 
 | Service | Token | Statut |
@@ -384,11 +383,11 @@ curl -H "Authorization: Bearer $GITHUB_APP_SECRET" \
 
 ---
 
-## 🚨 PROCÉDURE URGENCE
+## 
 
-### En Cas de Fuite Token
+### 
 
-1. **Révoquer immédiatement**:
+1. ****:
    ```bash
    # GitHub
    # Aller sur https://github.com/settings/apps

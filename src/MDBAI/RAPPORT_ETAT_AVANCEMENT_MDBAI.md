@@ -1,8 +1,47 @@
 # RAPPORT D'ÉTAT — MDBAI Master Debug AI
-**Date** : 2026-05-28  
+**Date** : 2026-05-28 (MàJ 23:21 UTC)  
 **Version** : 0.1.0  
 **Auteur** : LumVorax Team  
-**Statut global** : 🟡 **42% complété** (Phase 1-2 opérationnelles, Phase 3-6 en cours)
+**Statut global** : 🟡 **58% complété** (Phase 1-3 opérationnelles, Phase 4-6 en cours)
+
+## CHANGELOG SESSION 2026-05-28
+
+| Correction | Détail | Statut |
+|-----------|--------|--------|
+| 🔧 MDBAI Server crash Doppler | Token `dev_debugai` expiré → switchover vers `dev_lumvorax` | ✅ FIXÉ |
+| 🔧 node_modules manquants | `express` absent → `npm install` 760 packages | ✅ FIXÉ |
+| 🔧 État jobs dashboard | `j.data?.status` (figé 'pending') → `j.getState()` async BullMQ | ✅ FIXÉ |
+| 🔧 libmdbai_forensic.so | Lib absente → compilée gcc (17KB, Magic 0x4D444241) | ✅ FIXÉ |
+| 🔐 TOKEN_CLE_PLATFORME.txt | 14 secrets pushés → Doppler dev_lumvorax + Replit env vars | ✅ SÉCURISÉ |
+| 🔐 Doppler dev_lumvorax plein | Limit 100 secrets → 14 nouveaux stockés dans Replit shared env | ✅ RÉSOLU |
+
+## PLATEFORMES VALIDÉES vs NON VALIDÉES
+
+### ✅ Validées (fonctionnelles)
+| Plateforme | Détail |
+|-----------|--------|
+| **Redis Cloud** | redis-17068.c327.europe-west1-2.gce.cloud.redislabs.com:17068 · BullMQ opérationnel |
+| **Telegram Bot** | @masterdebugai_bot (ID: 8820756284) · polling actif · /start /help /analyze /status |
+| **Express.js API** | Port 3001 · health OK · dashboard live · 8 endpoints opérationnels |
+| **BullMQ Queue** | "analysis-jobs" · 3 workers concurrents · completed=1 · Redis backend |
+| **GitHub App (config)** | App ID 3888479 · Client ID Iv23liM06X4pQnng7oFm · Webhook/OAuth configurés |
+| **libmdbai_forensic.so** | 17KB compilée gcc · Magic 0x4D444241 · LD_PRELOAD prêt |
+| **Doppler dev_lumvorax** | 100/100 secrets · tous secrets MDBAI présents |
+
+### ❌ Non validées (implémentées mais non testées ou non intégrées)
+| Plateforme | État | Priorité |
+|-----------|------|----------|
+| **GitHub OAuth end-to-end** | Code présent, callback `/auth/github/callback` — non testé prod | 🔴 Haute |
+| **GitHub PR création** | Code présent dans worker.js — jamais testé sur vrai dépôt | 🔴 Haute |
+| **GitHub Codespace exec** | Non implémenté (MVP exécute localement) | 🟡 Moyenne |
+| **Stripe** | Clés test pk_test_*/sk_test_* dans Replit env — non intégré code | 🟢 Basse |
+| **Prisma Postgres** | DATABASE_URL dans Doppler, PRISMA_API_KEY Replit — non intégré | 🟢 Basse |
+| **Upstash Box AI** | UPSTASH_BOX_API_KEY dans Replit env — non intégré | 🟢 Basse |
+| **UpCloud API** | UPCLOUD_API_TOKEN dans Replit env — expire 2026-06-26 | 🟢 Basse |
+| **OVH Cloud API** | OVH_APPLICATION_KEY/SECRET/CONSUMER_KEY dans Replit env — non intégré | 🟢 Basse |
+| **Redis Agent Memory** | store-MPPUU81D IDs dans Replit env — non intégré | 🟢 Basse |
+| **Redis LangCache** | cache-MPPUZH5P clé+ID dans Replit env — non intégré | 🟢 Basse |
+| **Taskforce BullMQ Pro** | TASKFORCE_API_TOKEN dans Replit env — non intégré | 🟢 Basse |
 
 ---
 
@@ -434,9 +473,12 @@ Telegram notification → "✅ Analyse terminée | PR: <url>"
 **Problème** : Le code de création de PR existe mais n'a jamais été testé sur un vrai dépôt  
 **Fix** : Installer l'App GitHub App sur `vgacofc/test-mdbai` et lancer `/analyze` via Telegram
 
-### Priorité 4 (Sprint 2) : Corriger l'affichage des états jobs
-**Problème** : Les jobs affichent "pending" même quand terminés  
-**Fix** : Mettre à jour `j.data.status` via `job.updateData()` dans le worker
+### ~~Priorité 4 (Sprint 2) : Corriger l'affichage des états jobs~~
+~~**Problème** : Les jobs affichent "pending" même quand terminés~~  
+**✅ FIXÉ 2026-05-28** : `j.getState()` async → états BullMQ réels ('waiting'/'active'/'completed'/'failed')
+
+### Priorité 5 (Sprint 3) : Tester GitHub OAuth + PR en conditions réelles
+**Action requise** : Installer GitHub App sur `vgacofc/test-mdbai`, connecter OAuth, lancer `/analyze https://github.com/vgacofc/test-mdbai` via Telegram, vérifier PR créée
 
 ---
 
@@ -498,4 +540,4 @@ Telegram notification → "✅ Analyse terminée | PR: <url>"
 
 ---
 
-*Rapport généré le 2026-05-28 | MDBAI v0.1.0 | LumVorax Team*
+*Rapport généré le 2026-05-28 | MàJ 23:21 UTC session 2026-05-28 | MDBAI v0.1.0 | LumVorax Team*

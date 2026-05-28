@@ -1,1 +1,3 @@
 - [Doppler CLI Replit quirks](doppler-replit-quirks.md) — CLI bloque sur prompt MAJ; utiliser --no-check-version --token $DOPPLER_TOKEN; noms GITHUB_* bloqués → MDBAI_* fallbacks
+- [MDBAI Doppler config](mdbai-doppler.md) — dev_debugai token expiré; utiliser DOPPLER_TOKEN + dev_lumvorax pour MDBAI Server
+- [MDBAI secrets location](mdbai-secrets.md) — Doppler dev_lumvorax plein (100/100); 14 nouveaux secrets dans Replit shared env vars

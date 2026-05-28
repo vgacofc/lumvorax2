@@ -50,7 +50,7 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd src/MDBAI && doppler run --token $DOPPLER_MDBAI_TOKEN --project lumvorax --config dev_debugai --no-check-version -- node src/server.js"
+args = "cd src/MDBAI && doppler run --token $DOPPLER_TOKEN --project lumvorax --config dev_lumvorax --no-check-version -- node src/server.js"
 waitForPort = 3001
 
 [nix]
@@ -85,6 +85,20 @@ GITHUB_APP_ID = "3888479"
 GITHUB_APP_CLIENT_ID = "Iv23liM06X4pQnng7oFm"
 API_PORT = "3001"
 NODE_ENV = "development"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51TYLtoH8iCu6cONUs2hpeP9n3kUnYBCtBhxIwlOgZuQgySLKoTjegbpnd58i93cR356MqyGQ5xz70J8FEQUNIMJL00lWbDt5yo"
+STRIPE_SECRET_KEY = "sk_test_51TYLtoH8iCu6cONUFNwFA1SzN6madHJU7p9UnFYGw68tMywGSanEhIFtz0NxXEEGFpQSbPhTq2q2kU4bnoqttxzy00WAHpYxDs"
+REDIS_AGENT_MEMORY_STORE_ID = "3a8f4a4afdb94adc86804c6ac8445535"
+REDIS_AGENT_MEMORY_ENDPOINT = "https://gcp-us-east4.memory.redis.io"
+REDIS_LANGCACHE_ID = "79925757e56648c5beb2826a3f3aaebc"
+REDIS_LANGCACHE_ENDPOINT = "https://gcp-europe-west1.langcache.redis.io"
+REDIS_LANGCACHE_KEY = "lc1_LLDB9rsYXL_5C_9HMl1uVkb96Dj7Krm7zDYxoVM5sMOnJ2ir9v7W3DwJolnBl1aFj5sDAcBrU-sKkUSd2HeJlAz6kWlNpP7uSPp-yxVupey784F6uhIR-Ue4HBjR8pMScCM4GjkHScGBpiBzZw=="
+TASKFORCE_API_TOKEN = "d7102033-d4bf-4b91-95df-2e24ab08d2da"
+UPSTASH_BOX_API_KEY = "box_fbc484766ea9bfdb8bc6ff3c4ca74bee4ad9b9605c90fa07ab11526aaea8a422"
+UPCLOUD_API_TOKEN = "ucat_01KSN6YG7A5CBB8ZA9YAS2K5JB"
+OVH_APPLICATION_KEY = "180e017e7ea658b4"
+OVH_APPLICATION_SECRET = "09161e9fcb54bbc7a98fab5d6eaa8128"
+OVH_CONSUMER_KEY = "f36ebdf91d2be8fbd43f151f41870615"
+PRISMA_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza18zVEJHMzVYb2Z0bnhTaUhac2R6TjQiLCJhcGlfa2V5IjoiMDFLU040NTNDUjI4Q0NONlgzVllLNTcyNzgiLCJ0ZW5hbnRfaWQiOiJiNjFjMjgyYWE1NWQyODk2NmNiZDNjZGNiNDVjYTg2NjgxNzEyYzA2M2VhYjg1NTZjZDU0NGYyMTJlZWQ4NTlhIiwiaW50ZXJuYWxfc2VjcmV0IjoiYzYxY2QxYmItZTYyMS00N2Y0LTlhMTUtMmYwM2NlNzllZWMzIn0.3gUfT2YLux83J4ti49dYwpO3QGO4fBkGUObhDcO8i_E"
 
 [userenv.development]
 
@@ -93,7 +107,3 @@ NODE_ENV = "development"
 [[ports]]
 localPort = 3001
 externalPort = 3001
-
-[[ports]]
-localPort = 5000
-externalPort = 80

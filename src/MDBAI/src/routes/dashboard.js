@@ -456,10 +456,11 @@ dashboardRouter.get('/api/metrics', async (req, res) => {
       queue.getJobs(['waiting', 'active', 'completed', 'failed'], 0, 10),
     ]);
 
-    const recent_jobs = recentJobs.map(j => ({
+    const jobStates = await Promise.allSettled(recentJobs.map(j => j.getState()));
+    const recent_jobs = recentJobs.map((j, i) => ({
       id:         j.id,
       repo_url:   j.data?.repo_url,
-      state:      j.data?.status,
+      state:      jobStates[i].status === 'fulfilled' ? jobStates[i].value : (j.data?.status || 'unknown'),
       created_at: j.data?.created_at,
       progress:   j.progress || 0,
     }));
