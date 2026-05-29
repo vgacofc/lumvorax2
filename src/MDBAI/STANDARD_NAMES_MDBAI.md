@@ -321,21 +321,27 @@
 | `MDBAI_FIRST_REPORT` | `RAPPORT_MDBAI_2026-05-28T1618_mdbai-bb.md` | ✅ Score 100/100 |
 | `MDBAI_JOB_ID_FORMAT` | `mdbai-{uuid4}` | ✅ Confirmé en production |
 | `MDBAI_LUM_GRANULARITY` | `LUM_TRACE_GRANULARITY_PAGE` | ✅ 4 KiB par event |
-| `MDBAI_AVANCEMENT_GLOBAL` | `95%` | ✅ Mis à jour 2026-05-29 |
-| `MDBAI_TESTS_TOTAL` | `128/128` | ✅ 100% pass (unitaires + intégration) |
+| `MDBAI_AVANCEMENT_GLOBAL` | `97%` | ✅ Mis à jour C160 2026-05-29T16:15Z |
+| `MDBAI_TESTS_TOTAL` | `170/170` | ✅ 100% pass (128 unit+integ + 42 e2e) |
 | `MDBAI_E2E_PR` | `vgacofc/Reimann#1` | ✅ PR créée 2026-05-29 00:21 UTC |
 | `MDBAI_DOPPLER_TOKEN_VAR` | `DOPPLER_TOKEN` | ✅ Config `dev_lumvorax` (pas `dev_debugai`) |
+| `MDBAI_RAWBODY_METHOD` | `express.json({verify})` | ✅ Option verify officielle Express (C160) |
+| `MDBAI_WEBHOOK_HMAC` | `HMAC-SHA256 validé` | ✅ ping 200 + bad sig 401 (C160) |
+| `MDBAI_TELEGRAM_409_FIX` | `deleteWebhook REST + backoff` | ✅ https.get api.telegram.org + 8 retries max (C160) |
+| `MDBAI_PROC_METRICS` | `/proc/self/stat+status+io` | ✅ CPU/RAM/IO réels (C160, BUG-METRIC-001 résolu) |
 
-### Bugs Actifs (2026-05-29)
+### Bugs Actifs (2026-05-29 C160)
 
 | Bug ID | Composant | Description | Sprint Fix | Statut |
 |--------|-----------|-------------|-----------|--------|
 | `BUG-LANG-001` | `analysis.service.js` | `detectLanguage()` retourne "unknown" | Sprint 3 | ✅ RÉSOLU (9 langages détectés) |
 | `BUG-STATE-001` | `dashboard.js` | Jobs affichent "pending" même terminés | Sprint 2 | ✅ RÉSOLU (`job.getState()` BullMQ réel) |
-| `BUG-METRIC-001` | `analysis.worker.js` | CPU/RAM/IO métriques = 0 (pas d'exec réelle) | Sprint 3 | 🟡 Partiel (snapshot LUM actif) |
+| `BUG-METRIC-001` | `forensic.js` | CPU/RAM/IO métriques = 0 (pas d'exec réelle) | Sprint 3 | ✅ RÉSOLU C160 (/proc/self/stat+status+io) |
 | `BUG-CLONE-001` | `analysis.service.js` | Clone non persisté entre étapes pipeline | Sprint 3 | ✅ RÉSOLU (cloneRepository + tmpDir unique) |
 | `BUG-DOPPLER-001` | workflow | `DOPPLER_MDBAI_TOKEN` invalide → crash serveur | Sprint 1 | ✅ RÉSOLU → `DOPPLER_TOKEN` + `dev_lumvorax` |
 | `BUG-TEST-007E` | `test_007` | T007-E : `_getTestCommand(LANG_C_CPP)` manque "make test" | Sprint 2 | ✅ RÉSOLU 2026-05-29 |
+| `BUG-RAWBODY-001` | `server.js` | rawBody consomme stream avant express.json → "not readable" | Sprint 5 | ✅ RÉSOLU C160 (verify option) |
+| `BUG-TELEGRAM-409-v2` | `telegram.service.js` | `bot.deleteWebhook()` non-existant + boucle 409 infinie | Sprint 4 | ✅ RÉSOLU C160 (REST https + backoff 5→60s) |
 
 ---
 
@@ -346,3 +352,4 @@
 | 1.0.0 | 2026-05-27 | Création initiale STANDARD_NAMES_MDBAI.md |
 | 1.1.0 | 2026-05-28 | Section 14 ajoutée — état runtime réel + bugs actifs + avancement 42% |
 | 1.2.0 | 2026-05-29 | Section 14 MàJ — 128/128 tests ✅, PR Reimann#1 ✅, avancement 95%, bugs résolus |
+| 1.3.0 | 2026-05-29T16:15Z | C160 — 170/170 tests, BUG-METRIC-001 ✅, BUG-RAWBODY-001 ✅, BUG-TELEGRAM-409-v2 ✅, webhook HMAC validé |

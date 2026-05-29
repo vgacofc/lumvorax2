@@ -392,14 +392,16 @@ export class AnalysisService {
 
   /**
    * Analyse les métriques de performance depuis les données forensic
+   * BUG-METRIC-001 FIX: lit cpu_percent, memory_bytes, io_read_mb, io_write_mb
+   * peuplés par ForensicBridge via /proc/self/stat + /proc/self/status + /proc/self/io
    */
   analyzePerformance(forensicData = {}) {
     return {
-      cpu_percent: forensicData.cpu_percent || 0,
-      memory_mb: Math.round((forensicData.memory_bytes || 0) / 1024 / 1024),
-      io_read_mb: 0,
-      io_write_mb: 0,
-      duration_ms: forensicData.duration_ms || 0,
+      cpu_percent:         forensicData.cpu_percent                              || 0,
+      memory_mb:           Math.round((forensicData.memory_bytes || 0) / 1024 / 1024),
+      io_read_mb:          forensicData.io_read_mb                               || 0,
+      io_write_mb:         forensicData.io_write_mb                              || 0,
+      duration_ms:         forensicData.duration_ms                              || 0,
       lum_snapshots_count: (forensicData.lum_snapshots || []).length,
     };
   }

@@ -33,16 +33,14 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: true, credentials: true }));
 
 /**
- * Capture rawBody pour validation signature webhook
+ * Capture rawBody pour validation signature webhook HMAC-SHA256
+ * Méthode officielle Express: option `verify` de express.json()
+ * Évite le double-consume du stream (bug "stream is not readable")
  */
-app.use((req, res, next) => {
-  let data = '';
-  req.on('data', chunk => { data += chunk; });
-  req.on('end', () => { req.rawBody = data; });
-  next();
-});
-
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, _res, buf) => { req.rawBody = buf.toString('utf8'); },
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: config.session.secret,
