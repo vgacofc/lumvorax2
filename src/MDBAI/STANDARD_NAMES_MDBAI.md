@@ -352,6 +352,50 @@
 
 ---
 
+---
+
+## SECTION 15 — BUGS FORENSIQUES FIRECRACKER C162
+
+*Rapport source : `RAPPORT_MDBAI_FIRECRACKER_C162_2026-05-29T2044Z.md`*  
+*Dépôt analysé : https://github.com/firecracker-microvm/firecracker.git — commit c1eab585 (2026-05-27)*  
+*Version : 1.16.0-dev | 117,757 LOC | 362 fichiers Rust | 209 dépendances*
+
+| Bug ID | Sévérité | Fichier:Ligne | Description | Statut |
+|--------|---------|---------------|-------------|--------|
+| `BUG-FC-001` | 🔴 CRITIQUE | `vmm/src/devices/virtio/transport/mmio.rs:26` | `VENDOR_ID=0` non conforme Virtio 1.0 §4.2.2 — TODO depuis v1.0+ | OUVERT |
+| `BUG-FC-002` | 🔴 CRITIQUE | `firecracker/src/api_server/parsed_request.rs` | 215 `.unwrap()` — panic API server sur HTTP malformé | OUVERT |
+| `BUG-FC-003` | 🟠 ÉLEVÉ | `vmm/src/devices/virtio/vsock/device.rs:86` | TODO deadlock vsock RX queue — DoS CPU hôte possible | OUVERT |
+| `BUG-FC-004` | 🟠 ÉLEVÉ | `vmm/src/devices/virtio/pmem/device.rs:141` | FIXME KVM slot non retourné — épuisement 32K slots hotplug | OUVERT |
+| `BUG-FC-005` | 🟠 ÉLEVÉ | `firecracker/src/api_server/mod.rs:78` | `panic!()` prod — abort sans cleanup si seccomp fail | OUVERT |
+| `BUG-FC-006` | 🟠 ÉLEVÉ | vmm (155 occurrences) | mutex `.lock().unwrap()` — cascade panic si poison | OUVERT |
+| `BUG-FC-007` | 🟡 MOYEN | `vmm/src/devices/virtio/queue.rs:818` | `std::mem::transmute` — UB potentiel si layout diverge | OUVERT |
+| `BUG-FC-008` | 🟡 MOYEN | `Cargo.lock` micro_http | git dep SHA `876f3fe` (non crates.io) — supply chain risk | OUVERT |
+| `BUG-FC-009` | 🔵 INFO | `deny.toml` / `audit.toml` | RUSTSEC-2024-0436 paste archivée — ignoré intentionnellement | INFO |
+| `BUG-FC-010` | 🔵 INFO | `deny.toml` / `audit.toml` | RUSTSEC-2026-0097 rand unsound — ignoré avec justification | INFO |
+| `BUG-FC-011` | 🔵 INFO | `.cargo/config.toml` | AVX512 désactivé globalement — perte perf crypto hosts AVX512 | INFO |
+| `BUG-FC-012` | 🔵 INFO | `.cargo/config.toml` | `codegen-units=1` — compilation lente mais LTO maximal | INFO |
+
+### Métriques Forensiques Firecracker C162
+
+| Métrique | Valeur | Évaluation |
+|---------|--------|-----------|
+| Fichiers Rust | 362 | — |
+| LOC totales | 117,757 | Large codebase mature |
+| Blocs `unsafe` | 473 | 🟡 Élevé mais majoritairement commentés |
+| `.unwrap()` | 3,667 | 🔴 Dette technique majeure |
+| `.expect()` | 330 | 🟠 Acceptable si messages clairs |
+| Lock poison `.unwrap()` | 155 | 🟠 Risque cascade |
+| `std::mem::transmute` | 7 | 🟡 À auditer |
+| `from_raw_parts*` | 5 | 🟡 Contrôlés |
+| `#[test]` total | 1,031 | ✅ Bonne couverture |
+| Proptest | 3 | 🟡 Peu de property-based |
+| Kani formal verification | 1 | ✅ (rate_limiter gcd) |
+| Tests Python (KVM requis) | 135 | Non exécutables Replit |
+| Dépendances Cargo.lock | 209 | Normal pour un VMM |
+| **Score MDBAI** | **62/100** | 🟡 MOYEN |
+
+---
+
 ## CHANGELOG
 
 | Version | Date | Modification |
@@ -361,3 +405,4 @@
 | 1.2.0 | 2026-05-29 | Section 14 MàJ — 128/128 tests ✅, PR Reimann#1 ✅, avancement 95%, bugs résolus |
 | 1.3.0 | 2026-05-29T16:15Z | C160 — 170/170 tests, BUG-METRIC-001 ✅, BUG-RAWBODY-001 ✅, BUG-TELEGRAM-409-v2 ✅, webhook HMAC validé |
 | 1.4.0 | 2026-05-29T20:01Z | C161 — Rate Limiting §8.2 ✅, /auth/status dashboard ✅, npm install ✅, avancement 100% |
+| 1.5.0 | 2026-05-29T20:44Z | C162 — Section 15 Bugs Forensiques Firecracker (12 bugs, score 62/100, 117,757 LOC analysés) |
