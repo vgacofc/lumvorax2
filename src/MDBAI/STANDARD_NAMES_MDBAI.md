@@ -5,7 +5,10 @@
 #
 # RÈGLE ABSOLUE: Tout nom utilisé dans le code DOIT figurer ici.
 # RÈGLE ABSOLUE: Jamais de token/secret en clair dans le code.
-# RÈGLE ABSOLUE: Traçabilité bit-level LumVorax active sur tous les runs.
+# RÈGLE ABSOLUE: Traçabilité bit-level LumVorax active sur tous les runs
+# RÈGLE ABSOLUE: Toujours creer un nouveau fichier .md pour les rapport avec les apres horodaté , job Id et nom exacte du fichier d'execution et avec lier ver la ligne du fichier d'avant ou du fichier du code source dinformation, ne jamais toucher ou ecraser ou modifier les rapport precedent pour garder une traçabiliter du developpement dans le meme dossier de rapport .
+# RÈGLE ABSOLUE: Toujours repertorier les erreur,warning, bug au format standard judiciere en verifier dabord s'il n'existe pas deja dans des rapport precedent  
+
 
 ---
 

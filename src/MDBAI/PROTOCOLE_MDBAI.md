@@ -176,20 +176,6 @@ User → Telegram Bot → GitHub OAuth → Orchestrator
 | `DATABASE_URL` | Prisma Postgres | Persistence | ⚠️ RÉVOQUÉ |
 | `DOPPLER_TOKEN` | Doppler | Secrets sync | ⚠️ À créer |
 
-### ⚠️ SÉCURITÉ CRITIQUE
-
-**TOKENS COMPROMIS DANS TOKEN_CLE_PLATFORME.txt**:
-- ❌ Prisma Postgres credentials
-- ❌ Redis password
-- ❌ OVH API keys
-- ❌ Upstash Box API key
-
-**ACTION IMMÉDIATE REQUISE**:
-1. Révoquer TOUS les tokens listés
-2. Régénérer nouveaux tokens
-3. Stocker UNIQUEMENT dans Doppler
-4. Ne JAMAIS committer tokens en clair
-5. Ajouter `.env` à `.gitignore`
 
 ---
 
