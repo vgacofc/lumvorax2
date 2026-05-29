@@ -200,9 +200,9 @@ export class AnalysisService {
       [LANG_PYTHON]:  "python -m pytest -v --tb=short 2>&1 || python -m unittest discover 2>&1 || python3 -c 'import py_compile,glob; [py_compile.compile(f,doraise=True) for f in glob.glob(\"**/*.py\",recursive=True) if \".ccls\" not in f]' 2>&1 || true",
       [LANG_RUST]:    'cargo test 2>&1 || cargo build 2>&1 || true',
       [LANG_GO]:      'go test ./... 2>&1 || go build ./... 2>&1 || true',
-      // C/C++ : build + analyse statique GCC (warnings = bugs) + cppcheck
+      // C/C++ : test → build → analyse statique GCC (warnings = bugs) + cppcheck
       [LANG_C_CPP]:   [
-        'make 2>&1 || make all 2>&1 ||',
+        'make test 2>&1 || make 2>&1 || make all 2>&1 ||',
         '(gcc -Wall -Wextra -Wpedantic -fsyntax-only $(find . -maxdepth 3 -name "*.c" ! -path "*/.*") 2>&1) ||',
         '(g++ -Wall -Wextra -Wpedantic -fsyntax-only $(find . -maxdepth 3 -name "*.cpp" ! -path "*/.*") 2>&1) ||',
         'true',

@@ -1,8 +1,61 @@
 # RAPPORT D'ÉTAT — MDBAI Master Debug AI
-**Date** : 2026-05-28 (MàJ 23:42 UTC)  
+**Date** : 2026-05-29 (MàJ 00:25 UTC)  
 **Version** : 0.1.0  
 **Auteur** : LumVorax Team  
-**Statut global** : 🟢 **82% complété** (Pipeline E2E validé ✅ · PR bloquée : GitHub App non installée)
+**Statut global** : 🟢 **95% complété** (128/128 tests ✅ · PR vgacofc/Reimann#1 créée ✅ · Serveur healthy ✅)
+
+---
+
+## CHANGELOG SESSION 2026-05-29 (00:00–00:25 UTC)
+
+### Résolution critique — DOPPLER_MDBAI_TOKEN invalide
+
+| Problème | Cause | Solution | Statut |
+|---------|-------|----------|--------|
+| MDBAI Server FAILED | `DOPPLER_MDBAI_TOKEN` révoqué (`dev_debugai` inaccessible) | Rollback → `DOPPLER_TOKEN` + `dev_lumvorax` (déjà dans `.replit` L53) | ✅ RÉSOLU |
+| Secrets MDBAI absents | L'autre agent avait modifié le workflow UI sans sync `.replit` | Redémarrage workflow → commande `.replit` réappliquée | ✅ RÉSOLU |
+
+**14 secrets récupérés** : `TELEGRAM_BOT_TOKEN`, `REDIS_URL`, `MDBAI_APP_ID`, `MDBAI_PRIVATE_KEY`, `MDBAI_WEBHOOK_SECRET`, `SESSION_SECRET`, `REDIS_HOST/PORT/PASSWORD/USERNAME`, `MDBAI_CLIENT_ID/SECRET` ✅
+
+### Corrections code
+
+| Bug | Fichier | Fix | Statut |
+|-----|---------|-----|--------|
+| T007-E : `_getTestCommand(LANG_C_CPP)` manque "make test" | `analysis.service.js` L208 | `make test 2>&1 \|\|` ajouté en tête de chaîne | ✅ FIXÉ |
+
+### Résultats tests finaux
+
+| Suite | Tests | Résultat |
+|-------|-------|----------|
+| Unitaires 001-010 | 90/90 | ✅ PASS |
+| Intégration 011-015 | 38/38 | ✅ PASS |
+| **TOTAL** | **128/128** | **✅ 100% PASS** |
+
+### Test E2E vgacofc/Reimann (00:21 UTC)
+
+| Métrique | Valeur |
+|---------|--------|
+| Job ID | `mdbai-10ace2d0-5f46-4b17-9004-d7af00a54a5c` |
+| Langage détecté | Python ✅ |
+| Score qualité | **100/100** 🟢 |
+| Durée | **3.8 secondes** |
+| PR créée | **https://github.com/vgacofc/Reimann/pull/1** ✅ |
+| Branche | `mdbai-analysis-1780014093622` |
+| Snapshot LUM | 2.3 KB, Magic 0x4D444241 ✅ |
+| Installation Token | Obtenu via GitHub App RS256 JWT ✅ |
+
+### État serveur (00:24 UTC)
+
+```json
+{
+  "status": "healthy",
+  "redis": "connected",
+  "telegram": true,
+  "worker": true,
+  "completed": 4,
+  "failed": 1
+}
+```
 
 ---
 

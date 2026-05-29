@@ -1,17 +1,15 @@
 ---
 name: MDBAI Doppler config
-description: MDBAI Server workflow Doppler config — token dev_debugai expiré, workaround via dev_lumvorax
+description: Quelle variable et config Doppler utiliser pour démarrer MDBAI Server
 ---
 
-## Règle
+**Règle :** Le workflow MDBAI Server doit utiliser `$DOPPLER_TOKEN` avec `--project lumvorax --config dev_lumvorax`.
 
-Le workflow MDBAI Server doit utiliser `DOPPLER_TOKEN` (dev_lumvorax), PAS `DOPPLER_MDBAI_TOKEN` (dev_debugai).
-
-**Why:** Le service token `dev_debugai` (`DOPPLER_MDBAI_TOKEN`) était invalide/expiré. Tous les secrets MDBAI (MDBAI_APP_ID, MDBAI_CLIENT_SECRET, MDBAI_PRIVATE_KEY, TELEGRAM_BOT_TOKEN, REDIS_URL, SESSION_SECRET, etc.) sont déjà présents dans `dev_lumvorax`.
-
-**How to apply:** Commande workflow MDBAI Server :
+**Pourquoi :** `DOPPLER_MDBAI_TOKEN` a été révoqué/expiré. `DOPPLER_TOKEN` (62ch) fonctionne avec `dev_lumvorax`. La commande correcte est déjà dans `.replit` ligne 53 :
 ```
 cd src/MDBAI && doppler run --token $DOPPLER_TOKEN --project lumvorax --config dev_lumvorax --no-check-version -- node src/server.js
 ```
 
-Si l'utilisateur fournit un nouveau `DOPPLER_MDBAI_TOKEN` valide, revenir à `--config dev_debugai --token $DOPPLER_MDBAI_TOKEN`.
+**Comment appliquer :** Si le workflow MDBAI Server tombe en FAILED avec "Invalid Auth token", vérifier que le workflow utilise `$DOPPLER_TOKEN` et `dev_lumvorax` (pas `$DOPPLER_MDBAI_TOKEN` et `dev_debugai`). Un redémarrage du workflow suffit car `.replit` a la bonne commande.
+
+**Vérification :** `doppler secrets download --token "$DOPPLER_TOKEN" --project lumvorax --config dev_lumvorax --no-file --format env | grep TELEGRAM` doit retourner `TELEGRAM_BOT_TOKEN=...`
