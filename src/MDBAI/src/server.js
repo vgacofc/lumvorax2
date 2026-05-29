@@ -9,6 +9,7 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { config, validateConfig } from './config.js';
 import logger from './utils/logger.js';
 import webhookRouter from './routes/webhook.js';
@@ -27,10 +28,40 @@ let worker = null;
 let telegramService = null;
 
 /**
+ * Rate limiters — cahier des charges §8.2
+ * Protège contre les abus et DoS sur les endpoints coûteux
+ */
+const generalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop de requêtes — réessayez dans 1 minute', code: 'RATE_LIMIT_EXCEEDED' },
+  skip: (req) => req.path === '/health' || req.path.startsWith('/dashboard'),
+});
+
+const analyzeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Limite analyses atteinte — 10 analyses par minute maximum', code: 'ANALYZE_RATE_LIMIT' },
+});
+
+const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Webhook rate limit dépassé', code: 'WEBHOOK_RATE_LIMIT' },
+});
+
+/**
  * Middlewares de sécurité
  */
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: true, credentials: true }));
+app.use(generalLimiter);
 
 /**
  * Capture rawBody pour validation signature webhook HMAC-SHA256
@@ -58,10 +89,10 @@ app.use((req, res, next) => {
 });
 
 /**
- * Routes API
+ * Routes API — rate limiters spécifiques par endpoint (§8.2)
  */
-app.use('/webhook', webhookRouter);
-app.use('/api/analyze', analyzeRouter);
+app.use('/webhook', webhookLimiter, webhookRouter);
+app.use('/api/analyze', analyzeLimiter, analyzeRouter);
 app.use('/api/status', statusRouter);
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);

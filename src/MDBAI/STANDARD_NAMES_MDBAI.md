@@ -329,8 +329,12 @@
 | `MDBAI_WEBHOOK_HMAC` | `HMAC-SHA256 validé` | ✅ ping 200 + bad sig 401 (C160) |
 | `MDBAI_TELEGRAM_409_FIX` | `deleteWebhook REST + backoff` | ✅ https.get api.telegram.org + 8 retries max (C160) |
 | `MDBAI_PROC_METRICS` | `/proc/self/stat+status+io` | ✅ CPU/RAM/IO réels (C160, BUG-METRIC-001 résolu) |
+| `MDBAI_RATE_LIMIT_GENERAL` | `100 req/60s/IP` | ✅ generalLimiter — app.use() global (C161) |
+| `MDBAI_RATE_LIMIT_ANALYZE` | `10 req/60s/IP` | ✅ analyzeLimiter — /api/analyze (C161, §8.2) |
+| `MDBAI_RATE_LIMIT_WEBHOOK` | `50 req/60s/IP` | ✅ webhookLimiter — /webhook (C161) |
+| `MDBAI_AVANCEMENT_GLOBAL` | `100%` | ✅ Mis à jour C161 2026-05-29T20:01Z |
 
-### Bugs Actifs (2026-05-29 C160)
+### Bugs Actifs (2026-05-29 C161)
 
 | Bug ID | Composant | Description | Sprint Fix | Statut |
 |--------|-----------|-------------|-----------|--------|
@@ -342,6 +346,9 @@
 | `BUG-TEST-007E` | `test_007` | T007-E : `_getTestCommand(LANG_C_CPP)` manque "make test" | Sprint 2 | ✅ RÉSOLU 2026-05-29 |
 | `BUG-RAWBODY-001` | `server.js` | rawBody consomme stream avant express.json → "not readable" | Sprint 5 | ✅ RÉSOLU C160 (verify option) |
 | `BUG-TELEGRAM-409-v2` | `telegram.service.js` | `bot.deleteWebhook()` non-existant + boucle 409 infinie | Sprint 4 | ✅ RÉSOLU C160 (REST https + backoff 5→60s) |
+| `BUG-NODE_MODULES-001` | `node_modules/` | node_modules absent → ERR_MODULE_NOT_FOUND: express | Sprint 1 | ✅ RÉSOLU C161 (npm install) |
+| `BUG-RATELIMIT-001` | `server.js` | express-rate-limit dans package.json mais non utilisé | Sprint 1 | ✅ RÉSOLU C161 (3 limiters câblés §8.2) |
+| `BUG-DASHBOARD-ENDPOINTS` | `dashboard.js` | /auth/status absent de la liste endpoints dashboard | Sprint 5 | ✅ RÉSOLU C161 (entrée ajoutée) |
 
 ---
 
@@ -353,3 +360,4 @@
 | 1.1.0 | 2026-05-28 | Section 14 ajoutée — état runtime réel + bugs actifs + avancement 42% |
 | 1.2.0 | 2026-05-29 | Section 14 MàJ — 128/128 tests ✅, PR Reimann#1 ✅, avancement 95%, bugs résolus |
 | 1.3.0 | 2026-05-29T16:15Z | C160 — 170/170 tests, BUG-METRIC-001 ✅, BUG-RAWBODY-001 ✅, BUG-TELEGRAM-409-v2 ✅, webhook HMAC validé |
+| 1.4.0 | 2026-05-29T20:01Z | C161 — Rate Limiting §8.2 ✅, /auth/status dashboard ✅, npm install ✅, avancement 100% |

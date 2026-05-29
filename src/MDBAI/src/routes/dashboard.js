@@ -299,6 +299,7 @@ dashboardRouter.get('/', (req, res) => {
         ['POST', '/webhook/github',     'Webhook GitHub push/PR'],
         ['GET',  '/auth/github',        'Initier OAuth GitHub'],
         ['GET',  '/auth/github/callback','Callback OAuth GitHub'],
+        ['GET',  '/auth/status',        'Statut connexion GitHub'],
         ['POST', '/api/analyze',        'Lancer une analyse'],
         ['GET',  '/api/status/:jobId',  'Statut d\'un job'],
         ['GET',  '/api/report/:jobId',  'Rapport complet'],
