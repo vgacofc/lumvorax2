@@ -1,13 +1,13 @@
 # 🎓 LEÇONS APPRISES MDBAI
 ## Master Debug AI Platform — Compilation des Leçons Identifiées
 
-**Version**: 3.1.0
+**Version**: 3.2.0
 **Date création**: 2026-05-30T18:19Z
-**Dernière mise à jour**: 2026-05-31T17:48Z
-**Cycles couverts**: C160-C183 (incluant perte tests C172-C175 + récupération C179-C183)
+**Dernière mise à jour**: 2026-05-31T18:15Z
+**Cycles couverts**: C160-C184 (incluant perte tests C172-C175 + récupération C179-C184)
 **Objectif**: Centraliser toutes les leçons apprises pour éviter de répéter les erreurs
 
-> **⚠️ MISE À JOUR 2026-05-31T17:48Z**: Ajout de 5 nouvelles leçons (LEÇON-056 à LEÇON-060) suite au cycle C183 Phase 2 (120 tests moyens). Ces leçons couvrent les tests ultra-compacts, le pragmatisme API, le lifetime MutexGuard, la validation structure tests, et les assertions basées sur comportement réel.
+> **⚠️ MISE À JOUR 2026-05-31T18:15Z**: Ajout de 5 nouvelles leçons (LEÇON-061 à LEÇON-065) suite au cycle C184 Phase 3 (analyse modules <50%). Ces leçons couvrent la priorisation ROI, les tests complexes vs simples, l'analyse forensique détaillée, la stratégie incrémentale, et la documentation longue durée.
 
 ---
 
@@ -1031,6 +1031,57 @@ git push origin main
 - Tester comportement réel observé, pas suppositions théoriques
 - Exécuter tests avant de finaliser assertions
 - Corriger `assert!(rl.into_option().is_some())` → `assert!(rl.into_option().is_none())`
+
+
+### LEÇON-061: Priorisation ROI Tests (Phase 3)
+**Date**: 2026-05-31T18:15Z  
+**Cycle**: C184  
+**Contexte**: Phase 3 nécessite 500-600 tests pour atteindre +14.45% couverture (84.99% → 99.44%)  
+**Problème**: Temps limité (20-24h estimées), complexité très élevée des modules <50%  
+**Solution**: Prioriser modules avec meilleur ROI (impact couverture / complexité implémentation)  
+**Application**: Cibler d'abord `devices/virtio/net/*` (167 tests, +2.51% impact) avant modules moins rentables  
+**Résultat**: Stratégie optimisée permettant gains rapides avant modules difficiles  
+**Leçon**: Toujours calculer ROI (impact/effort) pour prioriser travail testing sur gros projets
+
+### LEÇON-062: Tests Complexes vs Tests Simples (Phase 3)
+**Date**: 2026-05-31T18:15Z  
+**Cycle**: C184  
+**Contexte**: Phases 1-2 utilisaient tests ultra-compacts (1 ligne/test) pour maximiser nombre  
+**Problème**: Modules <50% couverture nécessitent tests complexes (branches multiples, error paths, edge cases)  
+**Solution**: Tests multi-lignes (5-15 lignes/test) avec setup élaboré, assertions multiples, scénarios réalistes  
+**Application**: Chaque test Phase 3 couvre plusieurs branches vs 1 seule ligne Phase 2  
+**Résultat**: Moins de tests mais meilleur impact couverture par test  
+**Leçon**: Adapter stratégie testing selon complexité code cible (simple → tests compacts, complexe → tests élaborés)
+
+### LEÇON-063: Analyse Forensique Couverture Détaillée
+**Date**: 2026-05-31T18:15Z  
+**Cycle**: C184  
+**Contexte**: cargo llvm-cov fournit métriques détaillées (lignes/fonctions/régions par fichier)  
+**Problème**: Identifier précisément quelles fonctions/branches ne sont pas couvertes dans fichiers 2000+ lignes  
+**Solution**: Parser output llvm-cov + analyse AST Rust pour extraire signatures fonctions non couvertes  
+**Application**: Script Python analyse device.rs (2,581 lignes) → identifie 19 fonctions critiques non couvertes  
+**Résultat**: Ciblage précis des tests nécessaires au lieu d'approche aléatoire  
+**Leçon**: Investir temps dans analyse forensique détaillée avant génération tests = gain efficacité massif
+
+### LEÇON-064: Stratégie Incrémentale Grands Objectifs
+**Date**: 2026-05-31T18:15Z  
+**Cycle**: C184  
+**Contexte**: Objectif Phase 3 = +14.45% couverture semble énorme et décourageant  
+**Problème**: Risque abandon, erreurs massives, perte motivation sur objectif trop ambitieux  
+**Solution**: Découper en 5 sous-phases (3.1 à 3.5) avec objectifs réalistes (+0.8% à +3.4% chacune)  
+**Application**: Phase 3.1 = virtio/net (+3.43%), Phase 3.2 = device_manager (+0.84%), etc.  
+**Résultat**: Progression visible, validation incrémentale, motivation maintenue  
+**Leçon**: Grands objectifs doivent être découpés en jalons atteignables pour maintenir momentum
+
+### LEÇON-065: Documentation Stratégie Longue Durée
+**Date**: 2026-05-31T18:15Z  
+**Cycle**: C184  
+**Contexte**: Phase 3 nécessite 20-24h de travail réparti sur plusieurs sessions  
+**Problème**: Risque perte contexte entre sessions, oubli décisions, répétition analyses  
+**Solution**: Rapport détaillé (500+ lignes) avec analyse complète, stratégie, scripts, prochaines actions  
+**Application**: RAPPORT_C184 documente tout pour reprise efficace (modules, tests, ROI, commandes)  
+**Résultat**: Reprise travail immédiate sans re-analyse, continuité parfaite entre sessions  
+**Leçon**: Sur projets longs, investir temps documentation = économie temps massive sessions futures
 
 **Application**: Test corrigé après observation comportement réel
 
