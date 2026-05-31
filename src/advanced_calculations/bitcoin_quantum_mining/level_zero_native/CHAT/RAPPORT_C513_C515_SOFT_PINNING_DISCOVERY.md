@@ -428,4 +428,4 @@ Une fois C516 complété, nous aurons **100% GPU natif** sans aucune dépendance
 ---
 
 **Fin du rapport C513-C515**  
-**Prochaine action**: Développement C516 (ioctl direct)
+**Prochaine action**: Développement C516 (ioctl direct) 

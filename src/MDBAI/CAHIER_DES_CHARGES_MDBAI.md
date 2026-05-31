@@ -703,6 +703,449 @@ curl -X POST http://localhost:3001/webhook/github \
   -d '{"zen":"test"}'
 ```
 
+
+---
+
+## 15. ARCHITECTURE TELEGRAM-FIRST (2026-05-30)
+
+### 15.1 Vision Stratégique
+
+L'architecture Telegram-first transforme MDBAI en une plateforme accessible directement via Telegram Bot (@masterdebugai_bot), éliminant la complexité d'une interface web traditionnelle tout en conservant la puissance forensique de LumVorax C111.
+
+**Avantages clés:**
+- ✅ **Accessibilité universelle** — Mobile, desktop, web sans installation
+- ✅ **Interaction naturelle** — Commandes simples et intuitives
+- ✅ **Notifications temps réel** — Push instantanés sur analyses
+- ✅ **Coûts réduits** — Infrastructure Telegram gratuite
+- ✅ **Scalabilité native** — Gestion charge par Telegram
+- ✅ **Intégration forensique** — Rapports Markdown + fichiers logs
+
+### 15.2 Architecture Technique
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 UTILISATEUR TELEGRAM                         │
+│               (@masterdebugai_bot)                           │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Commandes & Webhooks
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              BOT TELEGRAM (Node.js + Telegraf)               │
+│  • Gestion commandes (/analyze, /status, /report)           │
+│  • Authentification utilisateurs                             │
+│  • Formatage réponses Markdown                               │
+│  • Notifications temps réel                                  │
+└────────────────────────┬────────────────────────────────────┘
+                         │ API REST
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│           SERVEUR EXPRESS (Port 3001)                        │
+│  • Endpoints API (/api/analyze, /api/status)                │
+│  • GitHub App webhooks                                       │
+│  • Orchestration analyses BullMQ                             │
+│  • Cache Redis (résultats, sessions)                         │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Déclenchement
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│        MOTEUR FORENSIQUE LUMVORAX C111                       │
+│  • libmdbai_forensic.so (17KB, Magic 0x4D444241)            │
+│  • Analyse bit-level                                         │
+│  • Memory tracking                                           │
+│  • Génération rapports                                       │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Résultats
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              STOCKAGE REDIS CLOUD                            │
+│  • Cache analyses                                            │
+│  • Sessions utilisateurs                                     │
+│  • Historique commandes                                      │
+│  • Métriques temps réel                                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 15.3 Commandes Telegram Disponibles
+
+#### Commandes Principales
+
+| Commande | Description | Exemple |
+|----------|-------------|---------|
+| `/start` | Initialiser le bot | `/start` |
+| `/help` | Afficher l'aide | `/help` |
+| `/analyze <url>` | Analyser un dépôt | `/analyze https://github.com/user/repo` |
+| `/status <id>` | Statut d'une analyse | `/status 12345` |
+| `/report <id>` | Voir un rapport | `/report 12345` |
+| `/details <id>` | Détails forensiques | `/details 12345` |
+| `/fix <id>` | Générer corrections | `/fix 12345` |
+| `/list` | Lister mes analyses | `/list` |
+
+#### Commandes Avancées
+
+| Commande | Description | Exemple |
+|----------|-------------|---------|
+| `/watch <url>` | Surveiller un dépôt | `/watch https://github.com/user/repo` |
+| `/unwatch <url>` | Arrêter surveillance | `/unwatch https://github.com/user/repo` |
+| `/compare <id1> <id2>` | Comparer 2 analyses | `/compare 12345 12346` |
+| `/metrics <id>` | Métriques détaillées | `/metrics 12345` |
+| `/trace <id> <file>` | Trace bit-level | `/trace 12345 src/main.c` |
+
+### 15.4 Flux de Travail Utilisateur
+
+#### Exemple: Analyse d'un Dépôt
+
+```
+Utilisateur → Telegram:
+/analyze https://github.com/user/repo
+
+Bot → Utilisateur:
+✅ Analyse démarrée pour user/repo
+📊 ID: 12345
+⏱️ Temps estimé: 3-5 minutes
+
+[Notifications temps réel]
+📊 Progression: 25% - Clone repository...
+📊 Progression: 50% - Installation dépendances...
+📊 Progression: 75% - Analyse forensique LumVorax C111...
+
+[Analyse terminée]
+✅ Analyse terminée!
+📄 Rapport: /report_12345
+
+🔍 Résumé:
+• 15 fichiers analysés
+• 3 problèmes critiques 🔴
+• 12 avertissements ⚠️
+• Couverture: 87%
+
+Commandes:
+/report_12345 - Rapport complet
+/details_12345 - Forensique bit-level
+/fix_12345 - Générer PR corrections
+```
+
+#### Exemple: Consultation Rapport
+
+```
+Utilisateur → Telegram:
+/report_12345
+
+Bot → Utilisateur:
+📄 RAPPORT FORENSIQUE - user/repo
+
+🔴 PROBLÈMES CRITIQUES (3)
+
+1. Memory leak détecté
+   📍 src/main.c:145
+   🔬 malloc() sans free()
+   💡 Ajouter free() ligne 167
+
+2. Buffer overflow potentiel
+   📍 src/utils.c:89
+   🔬 strcpy() sans vérification
+   💡 Utiliser strncpy()
+
+3. Race condition
+   📍 src/thread.c:234
+   🔬 Accès concurrent sans mutex
+   💡 Ajouter pthread_mutex_lock()
+
+⚠️ AVERTISSEMENTS (12)
+[Voir: /warnings_12345]
+
+📊 MÉTRIQUES
+• Temps: 4m 23s
+• Lignes: 4,567
+• Fonctions: 89
+• Complexité: 4.2
+
+/fix_12345 - Générer PR
+/export_12345 - PDF
+```
+
+### 15.5 Intégration avec GitHub
+
+#### Workflow Automatique
+
+1. **Push sur GitHub**
+   ```
+   User push → GitHub webhook → Express Server
+   → Analyse auto → Notification Telegram
+   ```
+
+2. **Pull Request**
+   ```
+   User crée PR → GitHub webhook → Analyse diff
+   → Commentaires auto → Notification Telegram
+   ```
+
+3. **Issue Créée**
+   ```
+   User crée issue → GitHub webhook → Analyse contexte
+   → Suggestions → Notification Telegram
+   ```
+
+### 15.6 Notifications Temps Réel
+
+#### Types de Notifications
+
+1. **Analyse Démarrée**
+   ```
+   ✅ Analyse démarrée pour user/repo
+   📊 ID: 12345
+   ⏱️ Temps estimé: 3-5 min
+   ```
+
+2. **Progression**
+   ```
+   📊 25% - Clone repository...
+   📊 50% - Installation dépendances...
+   📊 75% - Analyse forensique...
+   ```
+
+3. **Problème Critique**
+   ```
+   🔴 ALERTE: Memory leak!
+   📍 user/repo - src/main.c:145
+   🔗 /details_12345
+   ```
+
+4. **PR Prête**
+   ```
+   ✅ PR créée avec corrections
+   🔗 github.com/user/repo/pull/42
+   🧪 Tests: 45/45 passés
+   ```
+
+### 15.7 Sécurité et Permissions
+
+#### Authentification
+
+- Authentification via Telegram User ID
+- Vérification token GitHub par utilisateur
+- Sessions sécurisées dans Redis
+- Rate limiting par utilisateur (10 analyses/jour gratuit)
+
+#### Permissions
+
+```javascript
+const permissions = {
+  free: {
+    analyses_per_day: 10,
+    max_repo_size: 100, // MB
+    concurrent_analyses: 1,
+    history_retention: 7, // jours
+  },
+  pro: {
+    analyses_per_day: 100,
+    max_repo_size: 1000, // MB
+    concurrent_analyses: 5,
+    history_retention: 90, // jours
+  }
+};
+```
+
+### 15.8 Implémentation Technique
+
+#### Stack Technologique
+
+```javascript
+// bot.js - Gestionnaire Telegram
+const { Telegraf } = require('telegraf');
+const axios = require('axios');
+
+const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
+
+// Commande /analyze
+bot.command('analyze', async (ctx) => {
+  const repoUrl = ctx.message.text.split(' ')[1];
+  
+  if (!isValidGitHubUrl(repoUrl)) {
+    return ctx.reply('❌ URL GitHub invalide');
+  }
+  
+  ctx.reply('✅ Analyse démarrée...');
+  
+  const response = await axios.post('http://localhost:3001/api/analyze', {
+    repoUrl,
+    userId: ctx.from.id,
+    chatId: ctx.chat.id
+  });
+  
+  const analysisId = response.data.id;
+  ctx.reply(`📊 ID: ${analysisId}\n⏱️ Temps estimé: 3-5 min`);
+});
+
+// Commande /report
+bot.command('report', async (ctx) => {
+  const analysisId = ctx.message.text.split('_')[1];
+  
+  const response = await axios.get(
+    `http://localhost:3001/api/report/${analysisId}`
+  );
+  
+  const report = formatReport(response.data);
+  ctx.replyWithMarkdown(report);
+});
+
+bot.launch();
+```
+
+#### Intégration Express
+
+```javascript
+// server.js - Endpoints API
+app.post('/api/analyze', async (req, res) => {
+  const { repoUrl, userId, chatId } = req.body;
+  
+  // Créer job BullMQ
+  const job = await analysisQueue.add('analyze', {
+    repoUrl,
+    userId,
+    chatId,
+    timestamp: Date.now()
+  });
+  
+  res.json({ id: job.id, status: 'queued' });
+});
+
+// Worker BullMQ avec notifications Telegram
+analysisQueue.process('analyze', async (job) => {
+  const { repoUrl, userId, chatId } = job.data;
+  
+  // Notification progression
+  await sendTelegramMessage(chatId, '📊 25% - Clone...');
+  await cloneRepository(repoUrl);
+  
+  await sendTelegramMessage(chatId, '📊 50% - Install...');
+  await installDependencies();
+  
+  await sendTelegramMessage(chatId, '📊 75% - Forensic...');
+  const forensicResults = await runLumVoraxC111();
+  
+  await sendTelegramMessage(chatId, '✅ Terminé!\n/report_' + job.id);
+  
+  return forensicResults;
+});
+```
+
+### 15.9 Roadmap Telegram-First
+
+#### Phase 1: MVP (Actuel - 2026-05-30)
+- [x] Bot Telegram basique (@masterdebugai_bot)
+- [x] Commandes /analyze, /report
+- [x] Intégration Express Server
+- [x] Notifications simples
+
+#### Phase 2: Forensique Avancé (Q3 2026)
+- [ ] Commande /trace pour bit-level
+- [ ] Envoi fichiers forensiques (.lum)
+- [ ] Graphiques inline (images)
+- [ ] Comparaison analyses (/compare)
+
+#### Phase 3: Automatisation (Q4 2026)
+- [ ] Surveillance continue (/watch)
+- [ ] Génération PR automatique (/fix)
+- [ ] Commentaires PR intelligents
+- [ ] Alertes proactives
+
+#### Phase 4: Collaboration (Q1 2027)
+- [ ] Groupes Telegram
+- [ ] Partage rapports
+- [ ] Discussions inline
+- [ ] Revue de code collaborative
+
+#### Phase 5: Intelligence (Q2 2027)
+- [ ] Suggestions IA contextuelles
+- [ ] Apprentissage patterns
+- [ ] Prédiction problèmes
+- [ ] Optimisations automatiques
+
+### 15.10 Métriques et KPIs
+
+#### Métriques Utilisateur
+
+| Métrique | Cible | Actuel |
+|----------|-------|--------|
+| Temps réponse bot | < 1s | TBD |
+| Taux succès analyses | > 95% | TBD |
+| Satisfaction utilisateur | > 4.5/5 | TBD |
+| Rétention 30 jours | > 60% | TBD |
+
+#### Métriques Techniques
+
+| Métrique | Cible | Actuel |
+|----------|-------|--------|
+| Uptime bot | > 99.9% | TBD |
+| Latence API | < 200ms | TBD |
+| Taux erreur | < 1% | TBD |
+| Throughput | 100 req/s | TBD |
+
+### 15.11 Avantages vs Interface Web
+
+| Aspect | Interface Web | Telegram-First |
+|--------|---------------|----------------|
+| **Accessibilité** | Navigateur requis | Universel (mobile/desktop) |
+| **Installation** | Aucune | Aucune |
+| **Notifications** | Email/Push custom | Push natif Telegram |
+| **Maintenance** | Frontend + Backend | Backend seulement |
+| **Coûts** | Hébergement + CDN | Hébergement seulement |
+| **Scalabilité** | Serveurs + Load balancer | Infrastructure Telegram |
+| **UX** | Courbe apprentissage | Commandes simples |
+| **Historique** | Base de données | Conversations Telegram |
+
+### 15.12 Migration Progressive
+
+#### Étape 1: Coexistence (Actuel)
+- Dashboard web `/dashboard` reste disponible
+- Bot Telegram en parallèle
+- Utilisateurs choisissent interface préférée
+
+#### Étape 2: Telegram Prioritaire (Q3 2026)
+- Nouvelles fonctionnalités d'abord sur Telegram
+- Dashboard web en maintenance
+- Migration encouragée
+
+#### Étape 3: Telegram Exclusif (Q4 2026)
+- Dashboard web en lecture seule
+- Toutes fonctionnalités sur Telegram
+- Support web arrêté
+
+### 15.13 Documentation Utilisateur
+
+#### Guide Démarrage Rapide
+
+```markdown
+# Démarrer avec MDBAI Telegram
+
+1. Ouvrir Telegram
+2. Chercher @masterdebugai_bot
+3. Envoyer /start
+4. Connecter GitHub avec /connect
+5. Analyser un repo: /analyze https://github.com/user/repo
+6. Consulter rapport: /report_12345
+```
+
+#### FAQ Telegram
+
+**Q: Comment analyser un dépôt privé?**
+A: Utilisez `/connect` pour autoriser l'accès à vos repos privés via GitHub OAuth.
+
+**Q: Combien d'analyses gratuites par jour?**
+A: 10 analyses/jour en version gratuite, illimité en version Pro.
+
+**Q: Comment recevoir les notifications?**
+A: Activez les notifications Telegram pour @masterdebugai_bot.
+
+**Q: Puis-je analyser plusieurs repos simultanément?**
+A: 1 analyse simultanée en gratuit, 5 en Pro.
+
+---
+
+**Mise à jour Architecture Telegram-First**: 2026-05-30T20:26Z  
+**Version**: 3.0.0  
+**Statut**: ✅ SPÉCIFICATIONS COMPLÈTES — Implémentation Phase 2 en cours
+
 ---
 
 ## 📞 CONTACT ET SUPPORT

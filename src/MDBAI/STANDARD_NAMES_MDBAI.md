@@ -406,3 +406,4 @@
 | 1.3.0 | 2026-05-29T16:15Z | C160 — 170/170 tests, BUG-METRIC-001 ✅, BUG-RAWBODY-001 ✅, BUG-TELEGRAM-409-v2 ✅, webhook HMAC validé |
 | 1.4.0 | 2026-05-29T20:01Z | C161 — Rate Limiting §8.2 ✅, /auth/status dashboard ✅, npm install ✅, avancement 100% |
 | 1.5.0 | 2026-05-29T20:44Z | C162 — Section 15 Bugs Forensiques Firecracker (12 bugs, score 62/100, 117,757 LOC analysés) |
+| 1.6.0 | 2026-05-30T18:38Z | C167 — Documentation continuation Firecracker, 62 tests C165 identifiés, plan intégration device.rs |

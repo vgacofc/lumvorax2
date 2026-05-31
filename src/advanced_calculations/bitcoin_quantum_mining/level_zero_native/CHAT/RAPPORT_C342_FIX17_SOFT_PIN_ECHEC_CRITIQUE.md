@@ -89,7 +89,8 @@ APRÈS:  DW01: 0x00000000  DW09: 0x00000000
 ```c
 // STATE_BASE_ADDRESS avec adresses GPU fixes
 batch[offset++] = GEN9_STATE_BASE_ADDRESS | 17;
-batch[offset++] = 0 | (CACHE_CTRL << 4) | BASE_ADDRESS_MODIFY;
+batch[offset++] = 0 | (CACHE_CTRL << 4) | BASE_ADDRESS_MODIFY;SE & 0xFFFFFFFF); // Output DW01
+ssh[27] = (uint32_t)(GPU_OUTPUT_BASE >> 32);        // Output DW09
 batch[offset++] = 0;
 batch[offset++] = 0 | (CACHE_CTRL << 16);
 batch[offset++] = (uint32_t)(GPU_SSH_BASE & 0xFFFFFFFF) | (CACHE_CTRL << 4) | BASE_ADDRESS_MODIFY;  // SSH Base

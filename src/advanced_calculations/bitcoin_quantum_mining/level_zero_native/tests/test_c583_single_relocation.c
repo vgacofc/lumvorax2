@@ -1,7 +1,9 @@
 /*
- * TEST C582 - PASS 1: PREMIER WRITE GPU NATIF i915 (output[0] = 0x12345678)
- * 
- * SOLUTION ROOT CAUSE #115: Architecture C579 (SANS relocations) + kernel ISA
+ * TEST C583 - ARCHITECTURE GEN9 MEDIA HEAP CORRECTE
+ *
+ * MODÈLE VALIDÉ (feedback expert):
+ * - 1 SEULE relocation: STATE_BASE_ADDRESS General State Base
+ * - Tous les autres pointeurs: offsets relatifs depuis heap base
  * 
  * ARCHITECTURE UNIFIÉE (16KB):
  * - 1 buffer unifié contenant TOUT
@@ -84,8 +86,9 @@ static uint64_t get_timestamp_ns(void) {
 int main(void) {
     uint64_t t_start = get_timestamp_ns();
     
-    printf("🚀 TEST C582 PASS 1 - PREMIER WRITE GPU NATIF i915\n");
-    printf("═══════════════════════════════════════════════════════════════════════\n\n");
+    printf("🚀 TEST C583 - ARCHITECTURE GEN9 MEDIA HEAP CORRECTE\n");
+    printf("═══════════════════════════════════════════════════════════════════════\n");
+    printf("Modèle: 1 relocation (STATE_BASE_ADDRESS) + offsets relatifs\n\n");
     
     // 1. Open DRM device
     printf("[  5%%] Opening DRM device...\n");
@@ -276,13 +279,32 @@ int main(void) {
     printf("✅ Batch built: %d DWords (%d bytes, %.3f µs)\n", 
            offset, offset * 4, (t1 - t0) / 1000.0);
     
-    // 7. Prepare exec object (SANS relocations - clé du succès)
+    // 7. Setup 1 SEULE relocation (STATE_BASE_ADDRESS General State Base)
+    printf("\n[ 60%%] Setting up relocation...\n");
+    
+    int state_base_addr_offset = 6;  // Offset de STATE_BASE_ADDRESS dans le batch
+    
+    struct drm_i915_gem_relocation_entry reloc = {
+        .target_handle = unified_create.handle,  // Même buffer (heap)
+        .delta = 0,  // Offset 0 dans le heap (heap base)
+        .offset = (state_base_addr_offset + 1) * 4,  // DWord 1 de STATE_BASE_ADDRESS
+        .presumed_offset = 0,
+        .read_domains = I915_GEM_DOMAIN_RENDER,
+        .write_domain = I915_GEM_DOMAIN_RENDER
+    };
+    
+    printf("  Relocation:\n");
+    printf("    target_handle: %u (heap)\n", reloc.target_handle);
+    printf("    delta: 0x%llx (heap base)\n", (unsigned long long)reloc.delta);
+    printf("    offset: 0x%llx (STATE_BASE_ADDRESS DWord 1)\n", (unsigned long long)reloc.offset);
+    
+    // 8. Prepare exec object
     printf("\n[ 70%%] Preparing EXECBUFFER2...\n");
     
     struct drm_i915_gem_exec_object2 exec_object = {
         .handle = unified_create.handle,
-        .relocation_count = 0,  // ← CLÉ: AUCUNE relocation (architecture C579)
-        .relocs_ptr = 0,
+        .relocation_count = 1,  // 1 SEULE relocation
+        .relocs_ptr = (uint64_t)&reloc,
         .alignment = 0,
         .offset = 0,
         .flags = EXEC_OBJECT_WRITE,  // Buffer modifié par GPU
@@ -290,7 +312,7 @@ int main(void) {
         .rsvd2 = 0
     };
     
-    // 8. Prepare execbuffer2
+    // 9. Prepare execbuffer2
     struct drm_i915_gem_execbuffer2 execbuf = {
         .buffers_ptr = (uint64_t)&exec_object,
         .buffer_count = 1,
@@ -320,6 +342,7 @@ int main(void) {
         printf("\n╔════════════════════════════════════════════════════════════╗\n");
         printf("║  ❌ TEST C582 PASS 1 ÉCHOUÉ                               ║\n");
         printf("╚════════════════════════════════════════════════════════════╝\n");
+        printf("\n📝 NOTE: Test avec 1 relocation (STATE_BASE_ADDRESS)\n");
         
         munmap(unified_buffer, UNIFIED_BUFFER_SIZE);
         
@@ -341,7 +364,7 @@ int main(void) {
     printf("✅ EXECBUFFER2 SUCCESS! (%.3f µs)\n", (t1 - t0) / 1000.0);
     printf("  GTT offset: 0x%016llx\n", (unsigned long long)exec_object.offset);
     
-    // 10. Wait for completion
+    // 11. Wait for completion
     printf("\n[ 90%%] Waiting for GPU completion...\n");
     t0 = get_timestamp_ns();
     
@@ -367,7 +390,7 @@ int main(void) {
     
     int success = (output[0] == 0x12345678);
     
-    // 12. Cleanup
+    // 13. Cleanup
     printf("\n[100%%] Cleanup...\n");
     
     munmap(unified_buffer, UNIFIED_BUFFER_SIZE);
@@ -390,15 +413,16 @@ int main(void) {
     
     if (success) {
         printf("\n╔════════════════════════════════════════════════════════════╗\n");
-        printf("║  ✅ TEST C582 PASS 1 RÉUSSI                               ║\n");
+        printf("║  ✅ TEST C583 RÉUSSI                                      ║\n");
         printf("║  PREMIER WRITE GPU NATIF i915 VALIDÉ!                    ║\n");
+        printf("║  Architecture Gen9 media heap correcte                   ║\n");
         printf("║  output[0] = 0x12345678 ✅                                ║\n");
         printf("║  Total time: %.3f ms                                      ║\n", total_ms);
         printf("╚════════════════════════════════════════════════════════════╝\n");
         return 0;
     } else {
         printf("\n╔════════════════════════════════════════════════════════════╗\n");
-        printf("║  ❌ TEST C582 PASS 1 ÉCHOUÉ                               ║\n");
+        printf("║  ❌ TEST C583 ÉCHOUÉ                                      ║\n");
         printf("║  output[0] = 0x%08X (attendu: 0x12345678)                ║\n", output[0]);
         printf("║  Total time: %.3f ms                                      ║\n", total_ms);
         printf("╚════════════════════════════════════════════════════════════╝\n");
@@ -406,4 +430,4 @@ int main(void) {
     }
 }
 
-// Made with Bob - Cycle C582 PASS 1
+// Made with Bob - Cycle C583 (architecture Gen9 media heap correcte)

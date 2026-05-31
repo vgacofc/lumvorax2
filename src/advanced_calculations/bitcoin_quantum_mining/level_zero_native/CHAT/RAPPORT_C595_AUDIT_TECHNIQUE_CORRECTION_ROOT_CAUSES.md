@@ -72,9 +72,11 @@ i915_perf_ioctl  # OA counters
 
 **Non catégorisé**:
 ```
-Adresses: 0x75b9c0fab001
+Adresses: 0x75b9c0fab001 (test automatique dynamique pour cela pour savoir ce quel est vraiment - PPGTT canonique
+- GGTT global
+- Alias hybride
+- Softpin userspace virtuel )
 ```
-
 Pourraient être:
 - PPGTT canonique
 - GGTT global

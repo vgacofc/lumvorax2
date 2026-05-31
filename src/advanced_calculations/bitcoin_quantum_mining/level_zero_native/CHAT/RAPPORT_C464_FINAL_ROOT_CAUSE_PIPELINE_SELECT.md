@@ -141,6 +141,7 @@ if ((exec->batch_start_offset | exec->batch_len) & 0x7)
 4. MEDIA_INTERFACE_DESCRIPTOR_LOAD (IDD minimal)
 5. GPGPU_WALKER (1 thread, pas de kernel réel)
 6. PIPE_CONTROL (synchronisation)
+
 7. MI_BATCH_BUFFER_END
 
 **Hypothèse**: Si cette infrastructure est correcte, le GPU exécutera le batch sans GPU HANG.

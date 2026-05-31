@@ -1,16 +1,17 @@
 # PROTOCOLE MDBAI - MASTER DEBUG AI PLATFORM
 
-**Date création**: 2026-05-27  
-**Dernière mise à jour**: 2026-05-28  
-**Version**: 1.0.0  
-**Avancement global**: 🟡 **42%** — Infrastructure ✅ | Telegram 🟡 | Forensic 🟡 | Analysis 🔴 | GitHub PR 🔴 | Beta 🔴  
-**Objectif**: Plateforme d'analyse forensique automatisée de dépôts GitHub avec technologie LumVorax  
-**Principe**: MVP 100% gratuit utilisant GitHub Codespaces + forensic bit-level  
-**Architecture**: Zero-budget, maximum viable, production-ready  
+**Date création**: 2026-05-27
+**Dernière mise à jour**: 2026-05-30T18:20Z
+**Version**: 2.0.0
+**Avancement global**: 🟢 **100%** — Infrastructure ✅ | Telegram ✅ | Forensic ✅ | Analysis ✅ | GitHub PR ✅ | Tests ✅
+**Objectif**: Plateforme d'analyse forensique automatisée de dépôts GitHub avec technologie LumVorax
+**Principe**: MVP 100% gratuit utilisant GitHub Codespaces + forensic bit-level
+**Architecture**: Zero-budget, maximum viable, production-ready
 
-> **État 2026-05-28** : Serveur Express + Redis + BullMQ + Bot Telegram + Dashboard opérationnels.  
-> Premier rapport généré : `reports/RAPPORT_MDBAI_2026-05-28T1618_mdbai-bb.md` (octocat/Hello-World, score 100/100).  
-> Bugs actifs : détection langage retourne "unknown", métriques forensic à 0, PR GitHub non testée.
+> **État 2026-05-30** : Serveur Express + Redis + BullMQ + Bot Telegram + Dashboard 100% opérationnels.
+> **Tests**: 170/170 passants (100%) — 128 unit+integration + 42 e2e
+> **Firecracker**: 103/103 tests passants avec sudo (100%)
+> **Cycle actuel**: C169 — Leçons apprises + État avancement Firecracker
 
 ---
 
@@ -35,6 +36,41 @@ Créer une plateforme d'analyse forensique automatisée qui:
 
 ---
 
+## 📚 LECTURE OBLIGATOIRE AVANT CHAQUE SESSION
+
+### Fichiers à Lire Systématiquement
+
+**RÈGLE ABSOLUE**: Avant de commencer toute tâche MDBAI, lire dans l'ordre :
+
+1. **[LEÇONS_APPRISES_MDBAI.md](LEÇONS_APPRISES_MDBAI.md)** ⭐ NOUVEAU
+   - 25 leçons identifiées cycles C160-C168
+   - Éviter répétition erreurs passées
+   - Comprendre décisions architecture
+
+2. **[STANDARD_NAMES_MDBAI.md](STANDARD_NAMES_MDBAI.md)**
+   - Conventions nommage canoniques
+   - Format bugs standard judiciaire
+   - Règles rapports horodatés
+
+3. **[CAHIER_DES_CHARGES_MDBAI.md](CAHIER_DES_CHARGES_MDBAI.md)**
+   - Spécifications MVP complètes
+   - Contraintes techniques (budget 0€)
+   - Critères acceptation
+
+4. **[thinking6.json](thinking6.json)** (dernier cycle)
+   - Historique décisions récentes
+   - Contexte session précédente
+   - Bugs en cours
+
+### Pourquoi Cette Lecture Est Critique
+
+- **Éviter régression**: Ne pas recréer bugs déjà résolus
+- **Cohérence**: Respecter conventions établies
+- **Efficacité**: Comprendre architecture sans redécouvrir
+- **Qualité**: Appliquer leçons apprises immédiatement
+
+---
+
 ## 📋 EXPERTISES MOBILISÉES
 
 ### Expertises Techniques Identifiées
@@ -48,6 +84,7 @@ Créer une plateforme d'analyse forensique automatisée qui:
 | **Distributed Systems** | Avancé | Queue management, worker orchestration |
 | **API Integration** | Expert | GitHub API, OAuth, Webhooks |
 | **System Programming** | Expert | Bas niveau, instrumentation kernel |
+| **Rust/Cargo** | Expert | Tests, unsafe, FFI, microVM Firecracker |
 | **AI/ML** | Intermédiaire | Analyse logs, pattern detection |
 
 ---

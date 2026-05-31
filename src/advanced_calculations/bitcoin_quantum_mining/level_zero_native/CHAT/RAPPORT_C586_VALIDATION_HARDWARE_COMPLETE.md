@@ -493,7 +493,7 @@ Lire documentation Coffee Lake spécifique pour MEDIA_VFE_STATE
 
 1. 🔴 **Cache coherency manuelle requise** (has_snoop=no)
 2. 🔴 **Gen9 refresh pas Gen9.5** (encodages différents)
-3. ⚠️ **EU power gating actif** (forcewake peut être nécessaire)
+3. ⚠️ **EU power gating actif** (forcewake peut être nécessaire)OU
 4. ✅ **Architecture hardware complètement validée**
 5. ✅ **Hypothèse utilisateur confirmée à 100%**
 
