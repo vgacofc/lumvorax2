@@ -1026,7 +1026,36 @@ for match in re.finditer(r"<td class='uncovered-line'><pre>0</pre></td>", html):
 
 ---
 
-## 📊 STATISTIQUES GLOBALES (MISE À JOUR 2026-05-31T22:52Z)
+### LEÇON-081: Statut "INCONNU" HTML ≠ Test Non Exécuté
+**Source**: C184 Phase 3.3 - Validation réelle
+**Contexte**: Utilisateur questionne statut "INCONNU" des tests C184 dans analyse HTML
+**Leçon**:
+- Statut "INCONNU" = ligne déclaration fonction (skipped) dans rapport HTML
+- Test EXÉCUTÉ = code corps fonction (covered) dans rapport HTML
+- Source de vérité = `cargo test` (exécution réelle), pas rapport HTML
+- Rapport HTML = analyse statique post-exécution
+
+**Validation réelle C184**:
+```bash
+cargo test --package vmm --lib devices::virtio::net::device::tests::test_c184
+# Résultat: 10/10 tests passent (100%)
+
+cargo test --package vmm --lib devices::virtio::net::device::tests
+# Résultat: 54/54 tests passent (100%)
+```
+
+**Clarification technique**:
+- Déclaration `fn test_...()` = ligne skipped (non exécutable)
+- Code `assert!(...)` = ligne covered (exécutable et exécuté)
+- Couverture 96.67% = preuve tests exécutés
+
+**Erreur à éviter**: Conclure "test non exécuté" basé uniquement sur statut HTML ligne déclaration
+
+**Application**: Toujours valider exécution tests avec `cargo test`, pas seulement rapport HTML
+
+---
+
+## 📊 STATISTIQUES GLOBALES (MISE À JOUR 2026-05-31T23:39Z)
 6. ⏳ Compiler et exécuter tests Phase 1
 7. ⏳ Mesurer gain couverture (+0.91%)
 8. ⏳ Git commit + backup automatique
