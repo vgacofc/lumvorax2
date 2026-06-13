@@ -1,0 +1,681 @@
+API Token is now available
+Please copy your API token now. You won't be able to view it again. You can always generate a new one if needed.
+KGAT_9002d163e9b18247583c6c6a699d1115
+API TOKEN
+
+To use this token, set the KAGGLE_API_TOKEN environment variable:
+
+export KAGGLE_API_TOKEN=KGAT_9002d163e9b18247583c6c6a699d1115
+Or save it to ~/.kaggle/access_token, where the client will read it automatically:
+
+mkdir -p ~/.kaggle && echo KGAT_9002d163e9b18247583c6c6a699d1115 > ~/.kaggle/access_token && chmod 600 ~/.kaggle/access_token
+Then you can use the client as follows:
+
+kaggle competitions list
+
+
+ARC Prize 2026 - ARC-AGI-3
+Create an AI capable of fluid intelligence
+
+
+Overview
+Build systems that learn and adapt to novel, human-solvable tasks they’ve never seen before and advance AI’s ability to learn new skills efficiently.
+
+Start
+
+3 months ago
+Close
+
+5 months to go
+Entry
+Description
+Note: there are three active competitions for ARC in 2026: this competition, ARC-AGI-2, and a paper track, where you can document your approach for either one of the prediction competitions.
+
+Real intelligence isn’t about memorizing answers - it’s knowing what to do when the problem changes. Today’s AI systems excel at what they were trained to do, but often fall short when something unfamiliar comes along. Most benchmarks reward pattern recognition, not genuine problem-solving.
+
+ARC Prize Foundation focuses on true generalization: whether a system can quickly learn new skills in unfamiliar situations. Instead of rewarding pattern recognition on known tasks, it evaluates how well systems can adapt to new problems they’ve never encountered before. The ARC-AGI-3 evaluation environment is designed so systems can't just memorize solutions. Tasks take place in hidden, interactive environments that require exploration and multi-step reasoning.
+
+In this competition, you’ll build AI systems that adapt on the fly to new tasks in the ARC environment, and develop approaches that learn quickly, generalize well, and solve problems never seen before.
+
+Your solution could help move AI closer to systems that learn the way people do: flexible, efficient, and able to handle new challenges.
+
+The real test of intelligence begins when the problem changes.
+
+Evaluation
+Scores for individual game range from 0 to 100%. A score of 100% represents an agent matching human-level performance, meaning it beat every game while matching the number of actions humans took. While an agent could theoretically exceed 100% by using fewer moves, scores are capped at 100%. The final score averages individual game scores across levels. Read more at the ARC-AGI-3 Scoring Methodology page.
+
+Submission File
+Submission files are automatically calculated. As long as the agent takes action on any of the games, a submission file for all of the games is created.
+
+Timeline
+March 25, 2026 - Start Date.
+October 26, 2026 - Entry Deadline. You must accept the competition rules before this date in order to compete.
+October 26, 2026 - Team Merger Deadline. This is the last day participants may join or merge teams.
+November 2, 2026 - Final Submission Deadline.
+December 4, 2026 - Winners announcement.
+All deadlines are at 11:59 PM UTC on the corresponding day unless otherwise noted. The competition organizers reserve the right to update the contest timeline if they deem it necessary.
+
+Prizes
+TOTAL PRIZES AVAILABLE: $850,000
+Progress Prizes: $150,000
+Bonus Prize: $700,000
+In line with the spirit of the competition, participants eligible for a prize will be removed from the competition if they do not open source their solutions.
+
+ARC-AGI-3 Progress Prizes: $150,000
+Final Leaderboard Prizes: $75,000
+These prizes are based on the leaderboard score at the end of the competition.
+
+First Prize: $40,000
+Second Prize: $15,000
+Third Prize: $10,000
+Fourth Prize: $5,000
+Fifth Prize: $5,000
+Milestone Prizes: $75,000
+These prizes are based on the leaderboard score on two specific dates throughout the competition. Notebooks must be made public under an open source license by the corresponding milestone dates to qualify for these prizes.
+
+Milestone 1: June 30th, 2026
+
+First Prize: $25,000
+Second Prize: $7,500
+Third Prize: $5,000
+Milestone 2: September 30, 2026
+
+1st Prize: $25,000
+2nd Prize: $7,500
+3rd Prize: $5,000
+Bonus Prize
+A Grand Prize of an additional $700,000 will be unlocked in the event that a team achieves a score of 100% accuracy on the competition leaderboard. At the end of the competition, the Grand Prize will be divided among the Top 5 teams that have achieved 100% accuracy as outlined below.
+
+First Prize: $350,000
+Second Prize: $175,000
+Third Prize: $70,000
+Fourth Prize: $70,000
+Fifth Prize: $35,000
+Code Requirements
+
+
+Submissions to this competition must be made through Notebooks. In order for the "Submit" button to be active after a commit, the following conditions must be met:
+
+CPU Notebook <= 9 hours run-time
+GPU Notebook <= 9 hours run-time
+Internet access disabled
+Freely & publicly available external data is allowed, including pre-trained models
+Submission file will be automatically generated.
+Please see the Code Competition FAQ for more information on how to submit. And review the code debugging doc if you are encountering submission errors.
+
+Upgraded accelerators
+We're excited to announce that we've added RTX 6000 machines to the ARC-AGI-3 hardware pool! See this page for more on these machines. Kaggle uses machine type g4-standard-48.
+
+What you need to know:
+
+ARC-AGI-3 3 Only - RTX are only available for notebooks attached to this competition, use of RTX for any other activity could result in moderation action (e.g. site suspension or account ban).
+No Internet - To help ensure these machines are reserved for competition use, all RTX sessions must have internet disabled.
+Citation
+Francois Chollet, Mike Knoop, Greg Kamradt, David Wexler, Derek Smith, Hunter Henry, Walter Reade, and María Cruz. ARC Prize 2026 - ARC-AGI-3. https://kaggle.com/competitions/arc-prize-2026-arc-agi-3, 2026. Kaggle.
+
+
+ARC Prize 2026 - ARC-AGI-3
+Create an AI capable of fluid intelligence
+
+
+Dataset Description
+ARC-AGI-3 is an Interactive Reasoning Benchmark designed to measure an AI agent's ability to generalize in novel, unseen environments. Unlike traditional static benchmarks used to evaluate LLMs and reasoning systems, ARC-AGI-3 evaluates frontier AI agent systems on exploration, memory, goal acquisition, and alignment.
+
+Full documentation: docs.arcprize.org
+
+Games (Environments)
+ARC-AGI-3 consists of hand-crafted interactive environments that test abstraction and reasoning. Each game presents a unique challenge that your agent must explore, understand, and solve.
+
+How Games Work
+Your agent receives frames — JSON objects containing the current game state and metadata.
+Each frame includes a grid (max 64×64) with integer cell values 0–15 representing different states/colors, using a (0,0) top-left coordinate system.
+Your agent responds with actions to interact with the environment.
+Each game has multiple levels of increasing difficulty.
+A game can be in one of three states: NOT_FINISHED, WIN, or GAME_OVER.
+Available Actions
+Agents interact with environments using up to 7 actions:
+
+Action	Description
+RESET	Start or restart the game
+ACTION1 – ACTION5	Simple actions (e.g., move up/down/left/right, interact)
+ACTION6	Complex action requiring (x, y) coordinates
+ACTION7	Additional simple action
+Each game defines which actions are available and what they do. The meaning of actions varies per game — your agent must figure out what each action does through exploration.
+
+Public Games
+A set of public games is available for development and practice at arcprize.org. In addition, public game files are available in the environment_files folder on this page.
+
+Note: Competition evaluation uses a separate, private set of 110 games that your agent has never seen. Half of these are used for the Public Leaderboard score, and the other half for the Private Leaderboard score.
+
+Scoring
+AI agents are scored on two criteria:
+
+Completion — How many levels did the agent complete in each game?
+Efficiency — How many actions did the agent take to complete each level, compared to a human baseline?
+Scoring Method
+For each level completed, the agent's action count is compared to a human baseline (first-time test-testers).
+Per-level score = min(human_actions / agent_actions, 1.0), then squared (a raw score of 0.5 becomes 0.25).
+Per-game score = Weighted average of level scores (weighted by level index, 1-indexed).
+Total score = Average of all individual game scores.
+Final output is a score between 0%–100%.
+ARC-AGI Toolkit
+The arc-agi Python package provides the core toolkit for interacting with ARC-AGI-3 environments.
+
+Building Agents
+The ARC-AGI-3-Agents repository provides the framework for building and running agents.
+
+Agent Architecture
+An agent plays ARC-AGI-3 by implementing two core methods:
+
+is_done(frames, latest_frame) — Decide if the agent should stop playing
+choose_action(frames, latest_frame) — Choose which action to take given the current game state
+A Swarm orchestrates multiple agent instances across all available games in parallel.
+
+Agent Lifecycle
+Get the list of available games from the API
+Open a scorecard (tracks performance)
+For each game, RESET to start, then take actions based on the agent's strategy
+Close the scorecard when all games are complete
+Files
+ARC-AGI-3-Agents/ - a local copy of the ARC-AGI-3-Agents repo.
+arc_agi_3_wheels/ - package wheels for the installing ARC-AGI-3.
+environment_files/ - location of the 25 public game files
+
+la parti suivante est un exemple de sumission reussi pour que tu vois comment il a utiliser le dataset reel de la competition pour ne pas te trompe :
+
+!pip install --no-index --find-links \
+    /kaggle/input/competitions/arc-prize-2026-arc-agi-3/arc_agi_3_wheels \
+    arc-agi python-dotenv
+Looking in links: /kaggle/input/competitions/arc-prize-2026-arc-agi-3/arc_agi_3_wheels
+Processing /kaggle/input/competitions/arc-prize-2026-arc-agi-3/arc_agi_3_wheels/arc_agi-0.9.6-py3-none-any.whl
+Requirement already satisfied: python-dotenv in /usr/local/lib/python3.12/dist-packages (1.2.1)
+Processing /kaggle/input/competitions/arc-prize-2026-arc-agi-3/arc_agi_3_wheels/arcengine-0.9.3-py3-none-any.whl (from arc-agi)
+Requirement already satisfied: flask>=3.1.0 in /usr/local/lib/python3.12/dist-packages (from arc-agi) (3.1.3)
+Requirement already satisfied: matplotlib>=3.7.0 in /usr/local/lib/python3.12/dist-packages (from arc-agi) (3.10.0)
+Requirement already satisfied: pydantic>=2.0.0 in /usr/local/lib/python3.12/dist-packages (from arc-agi) (2.12.3)
+Processing /kaggle/input/competitions/arc-prize-2026-arc-agi-3/arc_agi_3_wheels/pillow-12.1.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from arc-agi)
+Requirement already satisfied: requests>=2.31.0 in /usr/local/lib/python3.12/dist-packages (from arc-agi) (2.32.4)
+Requirement already satisfied: numpy>=1.24.0 in /usr/local/lib/python3.12/dist-packages (from arcengine>=0.9.3->arc-agi) (2.0.2)
+Requirement already satisfied: blinker>=1.9.0 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (1.9.0)
+Requirement already satisfied: click>=8.1.3 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (8.3.1)
+Requirement already satisfied: itsdangerous>=2.2.0 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (2.2.0)
+Requirement already satisfied: jinja2>=3.1.2 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (3.1.6)
+Requirement already satisfied: markupsafe>=2.1.1 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (3.0.3)
+Requirement already satisfied: werkzeug>=3.1.0 in /usr/local/lib/python3.12/dist-packages (from flask>=3.1.0->arc-agi) (3.1.6)
+Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (1.3.3)
+Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (4.61.1)
+Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (1.4.9)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (26.0)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (3.3.2)
+Requirement already satisfied: python-dateutil>=2.7 in /usr/local/lib/python3.12/dist-packages (from matplotlib>=3.7.0->arc-agi) (2.9.0.post0)
+Requirement already satisfied: annotated-types>=0.6.0 in /usr/local/lib/python3.12/dist-packages (from pydantic>=2.0.0->arc-agi) (0.7.0)
+Requirement already satisfied: pydantic-core==2.41.4 in /usr/local/lib/python3.12/dist-packages (from pydantic>=2.0.0->arc-agi) (2.41.4)
+Requirement already satisfied: typing-extensions>=4.14.1 in /usr/local/lib/python3.12/dist-packages (from pydantic>=2.0.0->arc-agi) (4.15.0)
+Requirement already satisfied: typing-inspection>=0.4.2 in /usr/local/lib/python3.12/dist-packages (from pydantic>=2.0.0->arc-agi) (0.4.2)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31.0->arc-agi) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31.0->arc-agi) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31.0->arc-agi) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests>=2.31.0->arc-agi) (2026.1.4)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.7->matplotlib>=3.7.0->arc-agi) (1.17.0)
+Installing collected packages: pillow, arcengine, arc-agi
+  Attempting uninstall: pillow
+    Found existing installation: pillow 11.3.0
+    Uninstalling pillow-11.3.0:
+      Successfully uninstalled pillow-11.3.0
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+dopamine-rl 4.1.2 requires gym<=0.25.2, but you have gym 0.26.2 which is incompatible.
+gradio 5.50.0 requires pillow<12.0,>=8.0, but you have pillow 12.1.1 which is incompatible.
+Successfully installed arc-agi-0.9.6 arcengine-0.9.3 pillow-12.1.1
+%%writefile /kaggle/working/my_agent.py
+# =====================================================================
+# StochasticGoose – CNN-based action learning agent
+# Source: https://github.com/DriesSmit/ARC3-solution
+# Authors: Dries Smit (Lead), Jack Cole (Adviser) — Tufa Labs
+#
+# Compatibility notes:
+#   - Original uses `latest_frame.score` — replaced with `levels_completed`
+#   - Original uses `latest_frame.available_actions` — gateway sends raw ints [1,2,...,6]
+# =====================================================================
+import hashlib
+import logging
+import os
+import random
+import time
+import traceback
+from collections import deque
+from datetime import datetime
+from typing import Any
+
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+
+from agents.agent import Agent
+from arcengine import FrameData, GameAction, GameState
+
+
+# --- Inlined from utils.py ---
+
+def setup_experiment_directory(base_output_dir='runs'):
+    """Create directories for outputs and logging."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_dir = os.path.join(base_output_dir, timestamp)
+    os.makedirs(base_dir, exist_ok=True)
+    log_file = os.path.join(base_dir, 'logs.log')
+    print(f"Experiment directory created: {base_dir}")
+    return base_dir, log_file
+
+
+def get_environment_directory(base_dir, game_id):
+    """Get or create environment-specific directory for a game_id."""
+    env_dir = os.path.join(base_dir, game_id)
+    os.makedirs(env_dir, exist_ok=True)
+    return env_dir
+
+
+def setup_logging_for_experiment(log_file_path):
+    """Update logging configuration to use the experiment directory's log file."""
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        if isinstance(handler, logging.FileHandler):
+            root_logger.removeHandler(handler)
+            handler.close()
+    formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
+    file_handler = logging.FileHandler(log_file_path, mode="w")
+    file_handler.setLevel(root_logger.level)
+    file_handler.setFormatter(formatter)
+    root_logger.addHandler(file_handler)
+
+
+# --- ActionModel CNN ---
+
+class ActionModel(nn.Module):
+    """CNN that predicts which actions will result in new frames with shared conv backbone."""
+
+    def __init__(self, input_channels=16, grid_size=64):
+        super().__init__()
+        self.grid_size = grid_size
+        self.num_action_types = 5  # ACTION1-ACTION5
+
+        # Shared convolutional backbone
+        self.conv1 = nn.Conv2d(input_channels, 32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.conv4 = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+
+        # Action head
+        self.action_pool = nn.MaxPool2d(4, 4)
+        action_flattened_size = 256 * 16 * 16
+        self.action_fc = nn.Linear(action_flattened_size, 512)
+        self.action_head = nn.Linear(512, self.num_action_types)
+
+        # Coordinate head (64x64 action space)
+        self.coord_conv1 = nn.Conv2d(256, 128, kernel_size=3, padding=1)
+        self.coord_conv2 = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+        self.coord_conv3 = nn.Conv2d(64, 32, kernel_size=1)
+        self.coord_conv4 = nn.Conv2d(32, 1, kernel_size=1)
+
+        self.dropout = nn.Dropout(0.2)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        conv_features = F.relu(self.conv4(x))
+
+        # Action head
+        action_features = self.action_pool(conv_features)
+        action_features = action_features.view(action_features.size(0), -1)
+        action_features = F.relu(self.action_fc(action_features))
+        action_features = self.dropout(action_features)
+        action_logits = self.action_head(action_features)
+
+        # Coordinate head
+        coord_features = F.relu(self.coord_conv1(conv_features))
+        coord_features = F.relu(self.coord_conv2(coord_features))
+        coord_features = F.relu(self.coord_conv3(coord_features))
+        coord_logits = self.coord_conv4(coord_features)
+        coord_logits = coord_logits.view(coord_logits.size(0), -1)
+
+        combined_logits = torch.cat([action_logits, coord_logits], dim=1)
+        return combined_logits
+
+
+# --- Action Agent (StochasticGoose) ---
+
+class MyAgent(Agent):
+    """CNN-based action learning agent that predicts which actions cause frame changes."""
+
+    MAX_ACTIONS = float('inf')
+    _MAX_FRAMES = 10  # PERF: Keep only the last N frames (sliding window)
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        seed = int(time.time() * 1000000) + hash(self.game_id) % 1000000
+        random.seed(seed)
+        np.random.seed(seed % (2**32 - 1))
+        torch.manual_seed(seed % (2**32 - 1))
+        self.start_time = time.time()
+
+        # Device configuration
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(f"Action agent using device: {self.device}")
+
+        # Setup experiment directory and logging
+        self.base_dir, log_file = setup_experiment_directory()
+        setup_logging_for_experiment(log_file)
+
+        env_dir = get_environment_directory(self.base_dir, self.game_id)
+        self.current_score = -1
+
+        self.logger = logging.getLogger(f"ActionAgent_{self.game_id}")
+
+        # Visualization disabled for submission
+        self.save_action_visualizations = False
+
+        # Initialize action model
+        self.grid_size = 64
+        self.num_coordinates = self.grid_size * self.grid_size
+        self.num_colours = 16
+        self.action_model = None
+        self.optimizer = None
+
+        # Experience buffer
+        self.experience_buffer = deque(maxlen=200000)
+        self.experience_hashes = set()
+        self.batch_size = 64
+        self.train_frequency = 5
+
+        # Track previous state/action
+        self.prev_frame = None
+        self.prev_action_idx = None
+
+        # Action mapping
+        self.action_list = [GameAction.ACTION1, GameAction.ACTION2, GameAction.ACTION3,
+                           GameAction.ACTION4, GameAction.ACTION5]
+
+        self.log_dir = env_dir
+        self.logger.info(f"Action agent initialized for game_id: {self.game_id}")
+
+    def append_frame(self, frame: FrameData) -> None:
+        """Override to cap frames list at _MAX_FRAMES (sliding window)."""
+        self.frames.append(frame)
+        if len(self.frames) > self._MAX_FRAMES:
+            self.frames = self.frames[-self._MAX_FRAMES:]
+        if frame.guid:
+            self.guid = frame.guid
+        if hasattr(self, "recorder") and not self.is_playback:
+            import json
+            self.recorder.record(json.loads(frame.model_dump_json()))
+
+    def _get_score(self, frame):
+        """Get score from frame, compatible with both patched and standard FrameData."""
+        return getattr(frame, 'score', None) or frame.levels_completed
+
+    def _sample_from_combined_output(self, combined_logits, available_actions=None):
+        """Sample from combined 5 + 64x64 action space with masking for invalid actions."""
+        action_logits = combined_logits[:5]
+        coord_logits = combined_logits[5:]
+
+        if available_actions is not None and len(available_actions) > 0:
+            action_mask = torch.full_like(action_logits, float('-inf'))
+            action6_available = False
+            for action in available_actions:
+                # Gateway sends raw ints [1,2,...,6], not GameAction enums
+                action_id = action.value if hasattr(action, 'value') else int(action)
+                if 1 <= action_id <= 5:
+                    action_mask[action_id - 1] = 0.0
+                elif action_id == 6:
+                    action6_available = True
+            action_logits = action_logits + action_mask
+            if not action6_available:
+                coord_logits = coord_logits + torch.full_like(coord_logits, float('-inf'))
+
+        action_probs = torch.sigmoid(action_logits)
+        coord_probs_raw = torch.sigmoid(coord_logits)
+        coord_probs_scaled = coord_probs_raw / self.num_coordinates
+
+        all_probs_sampling = torch.cat([action_probs, coord_probs_scaled])
+        all_probs_sampling = all_probs_sampling / all_probs_sampling.sum()
+        all_probs_sampling_np = all_probs_sampling.cpu().numpy()
+
+        selected_idx = np.random.choice(len(all_probs_sampling_np), p=all_probs_sampling_np)
+
+        coord_probs_viz = torch.sigmoid(coord_logits)
+        all_probs_viz = torch.cat([action_probs, coord_probs_viz])
+        all_probs_viz_np = all_probs_viz.cpu().numpy()
+
+        if selected_idx < 5:
+            return selected_idx, None, None, all_probs_viz_np
+        else:
+            coord_idx = selected_idx - 5
+            y_idx = coord_idx // self.grid_size
+            x_idx = coord_idx % self.grid_size
+            return 5, (y_idx, x_idx), coord_idx, all_probs_viz_np
+
+    def _frame_to_tensor(self, frame_data):
+        """Convert frame data to tensor format for the model."""
+        frame = np.array(frame_data.frame, dtype=np.int64)
+        frame = frame[-1]
+        assert frame.shape == (self.grid_size, self.grid_size), \
+            f"Expected frame shape ({self.grid_size}, {self.grid_size}), got {frame.shape}"
+        tensor = torch.zeros(self.num_colours, self.grid_size, self.grid_size, dtype=torch.float32)
+        tensor.scatter_(0, torch.from_numpy(frame).unsqueeze(0), 1)
+        return tensor.to(self.device)
+
+    def _compute_experience_hash(self, frame, action_idx):
+        """Compute hash for frame+action combination to ensure uniqueness."""
+        frame_bytes = frame.tobytes()
+        hash_input = frame_bytes + str(action_idx).encode('utf-8')
+        return hashlib.md5(hash_input).hexdigest()
+
+    def _train_action_model(self):
+        """Train the action model on collected experiences."""
+        if len(self.experience_buffer) < self.batch_size:
+            return
+
+        batch_indices = np.random.choice(len(self.experience_buffer), self.batch_size, replace=False)
+        batch = [self.experience_buffer[i] for i in batch_indices]
+
+        states = torch.stack([torch.from_numpy(exp['state']).float().to(self.device) for exp in batch])
+        action_indices = torch.tensor([exp['action_idx'] for exp in batch], dtype=torch.long, device=self.device)
+        rewards = torch.tensor([exp['reward'] for exp in batch], dtype=torch.float32, device=self.device)
+
+        self.optimizer.zero_grad()
+
+        combined_logits = self.action_model(states)
+        selected_logits = combined_logits.gather(1, action_indices.unsqueeze(1)).squeeze(1)
+        main_loss = F.binary_cross_entropy_with_logits(selected_logits, rewards)
+
+        all_probs = torch.sigmoid(combined_logits)
+        action_entropy = all_probs[:, :5].mean()
+        coord_entropy = all_probs[:, 5:].mean()
+
+        total_loss = main_loss - 0.0001 * action_entropy - 0.00001 * coord_entropy
+        total_loss.backward()
+        self.optimizer.step()
+
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    def _has_time_elapsed(self):
+        """Check if 8 hours have elapsed since start."""
+        return (time.time() - self.start_time) >= 8 * 3600 - 5 * 60
+
+    def is_done(self, frames, latest_frame):
+        """Decide if the agent is done playing."""
+        try:
+            return any([
+                latest_frame.state is GameState.WIN,
+                self._has_time_elapsed(),
+            ])
+        except Exception as e:
+            print(f"[DEBUG] is_done crashed: {e}")
+            traceback.print_exc()
+            return True  # bail out on error
+
+    def choose_action(self, frames, latest_frame):
+        """Choose action using action model predictions."""
+        try:
+            # DEBUG: Log frame info on first call
+            if self.action_counter == 0:
+                print(f"[DEBUG] latest_frame type: {type(latest_frame)}")
+                print(f"[DEBUG] latest_frame.state: {latest_frame.state}")
+                print(f"[DEBUG] latest_frame.levels_completed: {latest_frame.levels_completed}")
+                print(f"[DEBUG] has score: {hasattr(latest_frame, 'score')}")
+                print(f"[DEBUG] available_actions: {getattr(latest_frame, 'available_actions', 'N/A')}")
+                if hasattr(latest_frame, 'frame') and latest_frame.frame:
+                    frame_arr = np.array(latest_frame.frame)
+                    print(f"[DEBUG] frame shape: {frame_arr.shape}")
+
+            # Check if score/level has changed (triggers model reset for new level)
+            current_level = self._get_score(latest_frame)
+            if current_level != self.current_score:
+                self.logger.info(f"Score changed from {self.current_score} to {current_level} at action {self.action_counter}")
+                print(f"Score changed from {self.current_score} to {current_level} at action {self.action_counter}")
+
+                self.experience_buffer.clear()
+                self.experience_hashes.clear()
+                print("Cleared experience buffer - new level reached")
+
+                # Reset network and optimizer for new level
+                self.action_model = ActionModel(input_channels=self.num_colours, grid_size=self.grid_size).to(self.device)
+                self.optimizer = optim.Adam(self.action_model.parameters(), lr=0.0001)
+                print("Reset action model and optimizer for new level")
+
+                self.prev_frame = None
+                self.prev_action_idx = None
+                self.current_score = current_level
+
+            if latest_frame.state in [GameState.NOT_PLAYED, GameState.GAME_OVER]:
+                self.prev_frame = None
+                self.prev_action_idx = None
+                action = GameAction.RESET
+                action.reasoning = "Game needs reset."
+                return action
+
+            # Convert current frame to tensor
+            current_frame = self._frame_to_tensor(latest_frame)
+
+            if current_frame is None:
+                self.prev_frame = None
+                self.prev_action_idx = None
+                action = random.choice(self.action_list[:5])
+                action.reasoning = f"Skipped weird frame, random {action.value}"
+                return action
+
+            # Create experience from previous action
+            if self.prev_frame is not None:
+                experience_hash = self._compute_experience_hash(self.prev_frame, self.prev_action_idx)
+                if experience_hash not in self.experience_hashes:
+                    current_frame_np = current_frame.cpu().numpy().astype(bool)
+                    frame_changed = not np.array_equal(self.prev_frame, current_frame_np)
+                    experience = {
+                        'state': self.prev_frame,
+                        'action_idx': self.prev_action_idx,
+                        'reward': 1.0 if frame_changed else 0.0
+                    }
+                    self.experience_buffer.append(experience)
+                    self.experience_hashes.add(experience_hash)
+
+            # Get action predictions
+            available_actions = getattr(latest_frame, 'available_actions', None)
+            with torch.no_grad():
+                combined_logits = self.action_model(current_frame.unsqueeze(0))
+                combined_logits = combined_logits.squeeze(0)
+                action_idx, coords, coord_idx, all_probs = self._sample_from_combined_output(
+                    combined_logits, available_actions
+                )
+
+                if action_idx < 5:
+                    selected_action = self.action_list[action_idx]
+                    selected_action.reasoning = f"{selected_action.name} (prob: {all_probs[action_idx]:.3f})"
+                else:
+                    selected_action = GameAction.ACTION6
+                    y, x = coords
+                    selected_action.set_data({"x": int(x), "y": int(y)})
+                    selected_action.reasoning = f"ACTION6 at ({x}, {y}) (prob: {all_probs[coord_idx]:.3f})"
+
+            # Store current frame and action for next experience creation
+            self.prev_frame = current_frame.cpu().numpy().astype(bool)
+            if action_idx < 5:
+                self.prev_action_idx = action_idx
+            else:
+                self.prev_action_idx = 5 + coord_idx
+
+            # Train model periodically
+            if self.action_counter % self.train_frequency == 0:
+                self._train_action_model()
+
+            return selected_action
+
+        except Exception as e:
+            print(f"[DEBUG] choose_action CRASHED at action {self.action_counter}: {type(e).__name__}: {e}")
+            traceback.print_exc()
+            # Fallback: return a random action so the agent doesn't die
+            action = random.choice(self.action_list[:5])
+            action.reasoning = f"Fallback after error: {e}"
+            return action
+Writing /kaggle/working/my_agent.py
+import os
+
+if os.getenv('KAGGLE_IS_COMPETITION_RERUN'):
+    # Wait for gateway to be ready
+    !curl --fail --retry 999 --retry-all-errors --retry-delay 5 \
+          --retry-max-time 600 http://gateway:8001/api/games
+
+    # Copy repo to writable location
+    !cp -r /kaggle/input/competitions/arc-prize-2026-arc-agi-3/ARC-AGI-3-Agents \
+           /kaggle/working/ARC-AGI-3-Agents
+
+    # Copy custom agent
+    !cp /kaggle/working/my_agent.py \
+        /kaggle/working/ARC-AGI-3-Agents/agents/templates/my_agent.py
+
+    # Write a minimal __init__.py that only imports what we need
+    # (the original eagerly imports templates with unmet deps like langgraph, smolagents)
+    with open('/kaggle/working/ARC-AGI-3-Agents/agents/__init__.py', 'w') as f:
+        f.write("""from typing import Type, cast
+from dotenv import load_dotenv
+from .agent import Agent, Playback
+from .swarm import Swarm
+from .templates.random_agent import Random
+from .templates.my_agent import MyAgent
+
+load_dotenv()
+
+AVAILABLE_AGENTS: dict[str, Type[Agent]] = {
+    "random": Random,
+    "myagent": MyAgent,
+}
+""")
+
+    # Write a .env file that overrides .env.example defaults
+    # This is loaded second with override=True by main.py, so it wins
+    with open('/kaggle/working/ARC-AGI-3-Agents/.env', 'w') as f:
+        f.write("""SCHEME=http
+HOST=gateway
+PORT=8001
+ARC_API_KEY=test-key-123
+ARC_BASE_URL=http://gateway:8001/
+OPERATION_MODE=online
+ENVIRONMENTS_DIR=
+RECORDINGS_DIR=/kaggle/working/server_recording
+""")
+
+    # Run agent
+    !cd /kaggle/working/ARC-AGI-3-Agents && \
+        MPLBACKEND=agg \
+        python main.py --agent myagent
+import os
+if not os.getenv('KAGGLE_IS_COMPETITION_RERUN'):
+    # Non-competition mode: produce a dummy submission
+    import pandas as pd
+    submission = pd.DataFrame(
+        data=[['1_0', '1', True, 1]],
+        columns=['row_id', 'game_id', 'end_of_game', 'score'])
+    submission.to_parquet('/kaggle/working/submission.parquet', index=False)
+    submission.head()

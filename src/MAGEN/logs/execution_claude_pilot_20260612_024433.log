@@ -1,0 +1,30 @@
+2026-06-12 02:44:36 | INFO | 
+🚀 DÉMARRAGE TESTS MAGEN ARCADE
+2026-06-12 02:44:36 | INFO |    Jeux à tester: 3
+2026-06-12 02:44:36 | INFO |    Mode forensique: full
+2026-06-12 02:44:36 | INFO |    Max actions: 15
+
+[MAGEN] Système mémoire initialisé
+[MAGEN] Court terme: 50 expériences
+[MAGEN] Moyen terme: 200 patterns
+[MAGEN] Long terme: success_rate > 0.7
+[MAGEN] Logs: logs/magen
+[ARC Perception] Initialisé (max_size=64x64)
+[ARC Agent] Initialisé
+[ARC Agent] Exploration rate: 0.3
+[ARC Agent] Max actions/level: 50
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-12 02:44:36 | INFO | Got anonymous API key: 375b9bd6-f145-437e-934e-922c6f247090
+2026-06-12 02:44:36 | INFO | Got anonymous API key: 375b9bd6-f145-437e-934e-922c6f247090
+2026-06-12 02:44:36 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-12 02:44:36 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-12 02:44:36 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-12 02:44:36 | INFO | Successfully fetched 25 environment(s) from API
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/tests/test_magen_arcade_direct.py", line 400, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/tests/test_magen_arcade_direct.py", line 347, in main
+    game_iterator = tqdm(games, desc="🎮 Tests MAGEN", unit="jeu") if args.progress else games
+                    ^^^^
+NameError: name 'tqdm' is not defined

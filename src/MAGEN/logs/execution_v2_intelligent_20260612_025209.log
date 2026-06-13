@@ -1,0 +1,17 @@
+2026-06-12 02:52:12 | INFO | 
+🚀 DÉMARRAGE TESTS MAGEN V2 INTELLIGENT
+2026-06-12 02:52:12 | INFO |    Jeux à tester: 10
+2026-06-12 02:52:12 | INFO |    Mode forensique: full
+2026-06-12 02:52:12 | INFO |    Max actions: 100
+2026-06-12 02:52:12 | INFO |    Pattern learning: ACTIVÉ
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/tests/test_magen_v2_intelligent.py", line 336, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/tests/test_magen_v2_intelligent.py", line 256, in main
+    runner = MAGENTestRunnerV2(forensic_mode=args.forensic)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/tests/test_magen_v2_intelligent.py", line 59, in __init__
+    self.memory = MAGENMemory(
+                  ^^^^^^^^^^^^
+TypeError: MAGENMemory.__init__() got an unexpected keyword argument 'log_dir'

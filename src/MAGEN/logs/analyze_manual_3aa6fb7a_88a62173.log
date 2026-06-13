@@ -1,0 +1,256 @@
+
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+PUZZLE 1: 3aa6fb7a (object_relational)
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+================================================================================
+ANALYSE MANUELLE PUZZLE: 3aa6fb7a
+================================================================================
+
+📚 TRAIN PAIRS: 2
+
+================================================================================
+TRAIN PAIR 1/2
+================================================================================
+
+Input 1:
+  Shape: 7x7
+  .......
+  .8.....
+  .88....
+  ....88.
+  .....8.
+  .......
+  .......
+
+Output 1:
+  Shape: 7x7
+  .......
+  .81....
+  .88....
+  ....88.
+  ....18.
+  .......
+  .......
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (7, 7)
+  Output shape: (7, 7)
+  Shape preserved: True
+  Input colors:  [np.int64(0), np.int64(8)]
+  Output colors: [np.int64(0), np.int64(1), np.int64(8)]
+  New colors:    [np.int64(1)]
+  Cells changed: 2/49 (4.1%)
+  Changed positions:
+    (1,2): 0 → 1
+    (4,4): 0 → 1
+
+================================================================================
+TRAIN PAIR 2/2
+================================================================================
+
+Input 2:
+  Shape: 7x7
+  ....88.
+  .....8.
+  ..8....
+  ..88...
+  .......
+  ....8..
+  ...88..
+
+Output 2:
+  Shape: 7x7
+  ....88.
+  ....18.
+  ..81...
+  ..88...
+  .......
+  ...18..
+  ...88..
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (7, 7)
+  Output shape: (7, 7)
+  Shape preserved: True
+  Input colors:  [np.int64(0), np.int64(8)]
+  Output colors: [np.int64(0), np.int64(1), np.int64(8)]
+  New colors:    [np.int64(1)]
+  Cells changed: 3/49 (6.1%)
+  Changed positions:
+    (1,4): 0 → 1
+    (2,3): 0 → 1
+    (5,3): 0 → 1
+
+================================================================================
+TEST PAIR
+================================================================================
+
+Test Input:
+  Shape: 7x7
+  .....88
+  88....8
+  8......
+  ...8...
+  ...88..
+  .8.....
+  88.....
+
+Test Output (solution):
+  Shape: 7x7
+  .....88
+  88...18
+  81.....
+  ...81..
+  ...88..
+  18.....
+  88.....
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (7, 7)
+  Output shape: (7, 7)
+  Shape preserved: True
+  Input colors:  [np.int64(0), np.int64(8)]
+  Output colors: [np.int64(0), np.int64(1), np.int64(8)]
+  New colors:    [np.int64(1)]
+  Cells changed: 4/49 (8.2%)
+  Changed positions:
+    (1,5): 0 → 1
+    (2,1): 0 → 1
+    (3,4): 0 → 1
+    (5,0): 0 → 1
+
+================================================================================
+COMPARAISON LOGIQUES TRAIN PAIRS
+================================================================================
+
+Train Pair 1:
+  Couleurs ajoutées: [np.int64(1)]
+  Positions changées: 2
+    (1,2): 0 → 1
+    (4,4): 0 → 1
+
+Train Pair 2:
+  Couleurs ajoutées: [np.int64(1)]
+  Positions changées: 3
+    (1,4): 0 → 1
+    (2,3): 0 → 1
+    (5,3): 0 → 1
+
+
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+PUZZLE 2: 88a62173 (semantic_region)
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+================================================================================
+ANALYSE MANUELLE PUZZLE: 88a62173
+================================================================================
+
+📚 TRAIN PAIRS: 3
+
+================================================================================
+TRAIN PAIR 1/3
+================================================================================
+
+Input 1:
+  Shape: 5x5
+  .2..2
+  22.22
+  .....
+  .2.22
+  22.2.
+
+Output 1:
+  Shape: 2x2
+  22
+  2.
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (5, 5)
+  Output shape: (2, 2)
+  Shape preserved: False
+  Input colors:  [np.int64(0), np.int64(2)]
+  Output colors: [np.int64(0), np.int64(2)]
+
+================================================================================
+TRAIN PAIR 2/3
+================================================================================
+
+Input 2:
+  Shape: 5x5
+  1..1.
+  .1..1
+  .....
+  1..1.
+  11..1
+
+Output 2:
+  Shape: 2x2
+  1.
+  11
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (5, 5)
+  Output shape: (2, 2)
+  Shape preserved: False
+  Input colors:  [np.int64(0), np.int64(1)]
+  Output colors: [np.int64(0), np.int64(1)]
+
+================================================================================
+TRAIN PAIR 3/3
+================================================================================
+
+Input 3:
+  Shape: 5x5
+  88..8
+  8..8.
+  .....
+  88.88
+  8..8.
+
+Output 3:
+  Shape: 2x2
+  .8
+  8.
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (5, 5)
+  Output shape: (2, 2)
+  Shape preserved: False
+  Input colors:  [np.int64(0), np.int64(8)]
+  Output colors: [np.int64(0), np.int64(8)]
+
+================================================================================
+TEST PAIR
+================================================================================
+
+Test Input:
+  Shape: 5x5
+  55.5.
+  .5..5
+  .....
+  55.55
+  .5..5
+
+Test Output (solution):
+  Shape: 2x2
+  5.
+  .5
+
+🔍 ANALYSE TRANSFORMATION:
+  Input shape:  (5, 5)
+  Output shape: (2, 2)
+  Shape preserved: False
+  Input colors:  [np.int64(0), np.int64(5)]
+  Output colors: [np.int64(0), np.int64(5)]
+
+================================================================================
+COMPARAISON LOGIQUES TRAIN PAIRS
+================================================================================
+
+Train Pair 1:
+  Ratio dimensions: 0.40x0.40
+
+Train Pair 2:
+  Ratio dimensions: 0.40x0.40
+
+Train Pair 3:
+  Ratio dimensions: 0.40x0.40

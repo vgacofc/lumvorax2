@@ -1,8 +1,8 @@
 # PROTOCOLE MDBAI - MASTER DEBUG AI PLATFORM
 
 **Date création**: 2026-05-27
-**Dernière mise à jour**: 2026-05-30T18:20Z
-**Version**: 2.0.0
+**Dernière mise à jour**: 2026-06-02T02:17Z
+**Version**: 2.1.0
 **Avancement global**: 🟢 **100%** — Infrastructure ✅ | Telegram ✅ | Forensic ✅ | Analysis ✅ | GitHub PR ✅ | Tests ✅
 **Objectif**: Plateforme d'analyse forensique automatisée de dépôts GitHub avec technologie LumVorax
 **Principe**: MVP 100% gratuit utilisant GitHub Codespaces + forensic bit-level
@@ -33,6 +33,29 @@ Créer une plateforme d'analyse forensique automatisée qui:
 - GitHub Actions (2000 min/mois gratuit)
 - Doppler (secrets management gratuit)
 - Telegram Bot (gratuit)
+
+### 🔐 CREDENTIALS SYSTÈME
+
+**SUDO PASSWORD**: `emmaus`
+
+**RÈGLE ABSOLUE**: Toutes les commandes nécessitant des permissions root DOIVENT utiliser ce mot de passe.
+
+**Commandes avec sudo**:
+```bash
+# Tests Firecracker (nécessite CAP_NET_ADMIN)
+echo "emmaus" | sudo -S cargo test --lib --package vmm device::tests
+
+# Installation packages système
+echo "emmaus" | sudo -S apt-get install -y package-name
+
+# Modification fichiers système
+echo "emmaus" | sudo -S chmod +x /path/to/file
+```
+
+**Format standard**:
+```bash
+echo "emmaus" | sudo -S <commande>
+```
 
 ---
 
@@ -623,6 +646,587 @@ gh codespace logs
 ```
 
 ---
+---
+
+## 🔬 VÉRIFICATIONS FORENSIQUES MULTI-NIVEAUX
+
+### Niveau 1 : Vérification Génération Logs Forensiques Primaires
+
+**Objectif** : Garantir que les logs forensiques sont RÉELLEMENT générés en temps réel, pas théoriquement.
+
+#### Vérifications Obligatoires
+
+```javascript
+// src/services/forensic-verification.service.js
+class ForensicVerificationService {
+  
+  /**
+   * NIVEAU 1 : Vérification génération logs forensiques primaires
+   * Exécuté PENDANT l'analyse, pas après
+   */
+  async verifyPrimaryLogGeneration(jobId, forensicLogPath, memoryLogPath) {
+    const verification = {
+      timestamp: Date.now(),
+      jobId,
+      checks: []
+    };
+    
+    // CHECK 1 : Existence fichiers
+    const logExists = fs.existsSync(forensicLogPath);
+    const memExists = fs.existsSync(memoryLogPath);
+    verification.checks.push({
+      name: 'file_existence',
+      forensic_log: logExists,
+      memory_log: memExists,
+      passed: logExists && memExists
+    });
+    
+    // CHECK 2 : Taille fichiers (> 0 bytes)
+    if (logExists && memExists) {
+      const logSize = fs.statSync(forensicLogPath).size;
+      const memSize = fs.statSync(memoryLogPath).size;
+      verification.checks.push({
+        name: 'file_size',
+        forensic_log_bytes: logSize,
+        memory_log_bytes: memSize,
+        passed: logSize > 0 && memSize > 0
+      });
+    }
+    
+    // CHECK 3 : Checksum SHA256
+    if (logExists) {
+      const logChecksum = crypto.createHash('sha256')
+        .update(fs.readFileSync(forensicLogPath))
+        .digest('hex');
+      verification.checks.push({
+        name: 'checksum',
+        forensic_log_sha256: logChecksum,
+        passed: true
+      });
+    }
+    
+    // CHECK 4 : Timestamps cohérents
+    if (logExists) {
+      const logContent = fs.readFileSync(forensicLogPath, 'utf8');
+      const lines = logContent.split('\n').filter(l => l.trim());
+      const timestamps = lines.map(line => {
+        try {
+          const json = JSON.parse(line);
+          return json.ts;
+        } catch {
+          return null;
+        }
+      }).filter(t => t !== null);
+      
+      verification.checks.push({
+        name: 'timestamps',
+        count: timestamps.length,
+        first: timestamps[0],
+        last: timestamps[timestamps.length - 1],
+        passed: timestamps.length > 0
+      });
+    }
+    
+    // CHECK 5 : Magic number validé
+    if (memExists) {
+      const buffer = fs.readFileSync(memoryLogPath);
+      const magic = buffer.readUInt32LE(0);
+      const expectedMagic = 0x4D444241; // 'MDBA'
+      verification.checks.push({
+        name: 'magic_number',
+        found: `0x${magic.toString(16).toUpperCase()}`,
+        expected: `0x${expectedMagic.toString(16).toUpperCase()}`,
+        passed: magic === expectedMagic
+      });
+    }
+    
+    // CHECK 6 : Contenu valide (parsing JSON)
+    if (logExists) {
+      const logContent = fs.readFileSync(forensicLogPath, 'utf8');
+      const lines = logContent.split('\n').filter(l => l.trim());
+      let validLines = 0;
+      for (const line of lines) {
+        try {
+          JSON.parse(line);
+          validLines++;
+        } catch {}
+      }
+      verification.checks.push({
+        name: 'content_validity',
+        total_lines: lines.length,
+        valid_lines: validLines,
+        passed: validLines === lines.length
+      });
+    }
+    
+    // Résultat global
+    verification.passed = verification.checks.every(c => c.passed);
+    
+    // Logger événement forensique
+    await this.logForensicEvent('primary_verification', verification);
+    
+    return verification;
+  }
+}
+```
+
+### Niveau 2 : Vérification Transmission Logs Post-Vérification
+
+**Objectif** : Confirmer que les logs forensiques sont transmis avec succès à Bob Shell.
+
+#### Vérifications Obligatoires
+
+```javascript
+/**
+ * NIVEAU 2 : Vérification transmission logs à Bob Shell
+ * Exécuté APRÈS génération logs, AVANT analyse Bob
+ */
+async verifyLogTransmissionToBob(jobId, forensicData) {
+  const verification = {
+    timestamp: Date.now(),
+    jobId,
+    checks: []
+  };
+  
+  // CHECK 1 : Prompt Bob contient chemins logs
+  const bobPromptPath = path.join(forensicData.taskDir, 'bob-prompt.md');
+  if (fs.existsSync(bobPromptPath)) {
+    const promptContent = fs.readFileSync(bobPromptPath, 'utf8');
+    const containsForensicLog = promptContent.includes('forensic.log');
+    const containsMemoryLog = promptContent.includes('memory.lum');
+    verification.checks.push({
+      name: 'prompt_contains_logs',
+      forensic_log: containsForensicLog,
+      memory_log: containsMemoryLog,
+      passed: containsForensicLog && containsMemoryLog
+    });
+  }
+  
+  // CHECK 2 : Fichiers forensiques copiés dans task dir
+  const forensicLogInTask = path.join(forensicData.taskDir, 'forensic.log');
+  const memoryLogInTask = path.join(forensicData.taskDir, 'memory.lum');
+  const forensicCopied = fs.existsSync(forensicLogInTask);
+  const memoryCopied = fs.existsSync(memoryLogInTask);
+  verification.checks.push({
+    name: 'files_copied_to_task',
+    forensic_log: forensicCopied,
+    memory_log: memoryCopied,
+    passed: forensicCopied && memoryCopied
+  });
+  
+  // CHECK 3 : Checksums identiques (original vs copie)
+  if (forensicCopied) {
+    const originalChecksum = crypto.createHash('sha256')
+      .update(fs.readFileSync(forensicData.forensicLogPath))
+      .digest('hex');
+    const copiedChecksum = crypto.createHash('sha256')
+      .update(fs.readFileSync(forensicLogInTask))
+      .digest('hex');
+    verification.checks.push({
+      name: 'checksum_integrity',
+      original: originalChecksum,
+      copied: copiedChecksum,
+      passed: originalChecksum === copiedChecksum
+    });
+  }
+  
+  // Résultat global
+  verification.passed = verification.checks.every(c => c.passed);
+  
+  return verification;
+}
+```
+
+### Niveau 3 : Vérification Intégrité Bout-en-Bout
+
+**Objectif** : Garantir l'intégrité de la chaîne forensique complète.
+
+```javascript
+/**
+ * NIVEAU 3 : Vérification intégrité bout-en-bout
+ * Exécuté APRÈS analyse Bob, AVANT génération rapport utilisateur
+ */
+async verifyEndToEndIntegrity(jobId, bobAnalysisPath, reportPath) {
+  const verification = {
+    timestamp: Date.now(),
+    jobId,
+    checks: []
+  };
+  
+  // CHECK 1 : Analyse Bob existe et est valide
+  if (fs.existsSync(bobAnalysisPath)) {
+    const bobAnalysis = JSON.parse(fs.readFileSync(bobAnalysisPath, 'utf8'));
+    const hasScore = typeof bobAnalysis.quality_score === 'number';
+    const hasErrors = Array.isArray(bobAnalysis.errors);
+    verification.checks.push({
+      name: 'bob_analysis_valid',
+      has_score: hasScore,
+      has_errors: hasErrors,
+      score: bobAnalysis.quality_score,
+      error_count: bobAnalysis.errors?.length || 0,
+      passed: hasScore && hasErrors
+    });
+  }
+  
+  // CHECK 2 : Rapport utilisateur utilise données Bob réelles
+  if (fs.existsSync(reportPath) && fs.existsSync(bobAnalysisPath)) {
+    const report = fs.readFileSync(reportPath, 'utf8');
+    const bobAnalysis = JSON.parse(fs.readFileSync(bobAnalysisPath, 'utf8'));
+    
+    // Vérifier que le score dans le rapport correspond au score Bob
+    const scoreMatch = report.match(/Score[:\s]+(\d+)\/100/i);
+    if (scoreMatch) {
+      const reportScore = parseInt(scoreMatch[1]);
+      const scoreDivergence = Math.abs(reportScore - bobAnalysis.quality_score);
+      verification.checks.push({
+        name: 'score_consistency',
+        report_score: reportScore,
+        bob_score: bobAnalysis.quality_score,
+        divergence: scoreDivergence,
+        passed: scoreDivergence <= 10 // Tolérance 10 points
+      });
+    }
+  }
+  
+  // CHECK 3 : Pas de mode fallback utilisé
+  const fallbackIndicators = [
+    'quality_score: 100',
+    'errors: []',
+    'Analysis incomplete',
+    'Bob CLI not available'
+  ];
+  if (fs.existsSync(reportPath)) {
+    const report = fs.readFileSync(reportPath, 'utf8');
+    const hasFallback = fallbackIndicators.some(indicator => 
+      report.includes(indicator)
+    );
+    verification.checks.push({
+      name: 'no_fallback_mode',
+      passed: !hasFallback,
+      warning: hasFallback ? 'Fallback mode detected' : null
+    });
+  }
+  
+  // Résultat global
+  verification.passed = verification.checks.every(c => c.passed);
+  
+  // ALERTE si échec
+  if (!verification.passed) {
+    await this.alertIntegrityFailure(verification);
+  }
+  
+  return verification;
+}
+```
+
+---
+
+## 📋 DOCUMENTATION BOB SHELL vs BOB CLI vs BOB IDE
+
+### Vue d'Ensemble
+
+Bob est disponible en 3 interfaces distinctes, chacune adaptée à un cas d'usage spécifique.
+
+| Caractéristique | Bob Shell | Bob CLI | Bob IDE |
+|----------------|-----------|---------|---------|
+| **Type** | Environnement interactif | Outil automatisation | Environnement développement |
+| **Interface** | Ligne de commande interactive | Ligne de commande scriptable | Interface graphique |
+| **Usage principal** | Exploration, débogage temps réel | CI/CD, batch processing | Développement, édition code |
+| **Session** | Persistante avec historique | Non-interactive | Persistante avec projet |
+| **Interaction** | Commandes temps réel | Scripts automatisés | GUI + commandes |
+| **Cas d'usage MDBAI** | Analyse forensique interactive | Analyse automatisée dépôts | Développement MDBAI |
+
+### Bob Shell — Environnement Interactif
+
+**Description** : Interface ligne de commande interactive pour interaction directe avec le système.
+
+#### Caractéristiques
+
+- **Session persistante** : Historique commandes, variables d'environnement
+- **Interaction temps réel** : Réponses immédiates, feedback interactif
+- **Navigation système** : Gestion fichiers, exploration répertoires
+- **Débogage live** : Inspection variables, traces d'exécution
+
+#### Commandes Typiques
+
+```bash
+# Démarrer Bob Shell
+bob shell
+
+# Analyser un fichier
+> analyze src/main.c
+
+# Inspecter résultats
+> show errors
+> show memory-leaks
+> show vulnerabilities
+
+# Navigation
+> cd src/
+> ls
+> cat main.c
+```
+
+#### Utilisation MDBAI
+
+Bob Shell est utilisé pour :
+- Analyse forensique interactive des logs
+- Débogage analyses échouées
+- Exploration résultats détaillés
+- Tests manuels nouvelles fonctionnalités
+
+### Bob CLI — Outil Automatisation
+
+**Description** : Interface ligne de commande scriptable pour automatisation et intégration CI/CD.
+
+#### Caractéristiques
+
+- **Non-interactive** : Exécution batch, pas d'interaction utilisateur
+- **Scriptable** : Intégration scripts shell, pipelines CI/CD
+- **Sortie structurée** : JSON, XML, formats parsables
+- **Exit codes** : 0 (succès), 1 (erreur), 2 (warning)
+
+#### Commandes Typiques
+
+```bash
+# Analyse simple
+bob analyze --input src/ --output report.json
+
+# Analyse avec options
+bob analyze \
+  --input src/ \
+  --output report.json \
+  --format json \
+  --language c \
+  --forensic-logs forensic.log \
+  --memory-logs memory.lum
+```
+
+#### Utilisation MDBAI
+
+Bob CLI est utilisé pour :
+- Analyse automatisée dépôts GitHub
+- Intégration pipeline BullMQ workers
+- Génération rapports batch
+- Tests automatisés CI/CD
+
+### Bob IDE — Environnement Développement
+
+**Description** : Environnement de développement intégré avec interface graphique complète.
+
+#### Caractéristiques
+
+- **Interface graphique** : Fenêtres, menus, boutons
+- **Éditeur code** : Coloration syntaxique, auto-complétion
+- **Débogueur intégré** : Breakpoints, watch variables, call stack
+- **Outils refactorisation** : Rename, extract method, inline
+- **Gestion projet** : Arborescence fichiers, recherche globale
+
+#### Utilisation MDBAI
+
+Bob IDE est utilisé pour :
+- Développement MDBAI lui-même
+- Création nouveaux analyseurs forensiques
+- Débogage code MDBAI
+- Tests interactifs nouvelles fonctionnalités
+
+---
+
+## 🔧 DÉTECTION ET INSTALLATION DÉPENDANCES
+
+### Gestionnaires de Paquets Supportés
+
+| Langage | Gestionnaires | Fichiers Manifeste | Commande Installation |
+|---------|---------------|-------------------|----------------------|
+| **Node.js** | npm, yarn, pnpm, bun | package.json, package-lock.json, yarn.lock, pnpm-lock.yaml | `npm install --ignore-scripts` |
+| **Python** | pip, pip3, poetry, conda, pipenv | requirements.txt, setup.py, pyproject.toml, Pipfile | `pip install -r requirements.txt` |
+| **Rust** | cargo | Cargo.toml, Cargo.lock | `cargo build --release` |
+| **Go** | go mod | go.mod, go.sum | `go mod download` |
+| **Ruby** | gem, bundler | Gemfile, Gemfile.lock | `bundle install` |
+| **PHP** | composer | composer.json, composer.lock | `composer install` |
+| **Java** | maven, gradle | pom.xml, build.gradle | `mvn install` |
+| **C/C++** | make, cmake | Makefile, CMakeLists.txt | `make` |
+
+### Implémentation Détection Automatique
+
+```javascript
+// src/services/dependency-detection.service.js
+class DependencyDetectionService {
+  
+  /**
+   * Détecter gestionnaire de paquets et installer dépendances
+   */
+  async detectAndInstallDependencies(repoDir, language) {
+    const detection = {
+      language,
+      package_managers: [],
+      manifest_files: [],
+      install_commands: [],
+      success: false
+    };
+    
+    // Détecter fichiers manifeste
+    const manifestFiles = await this.detectManifestFiles(repoDir, language);
+    detection.manifest_files = manifestFiles;
+    
+    if (manifestFiles.length === 0) {
+      logger.warn(`No manifest files found for ${language}`);
+      return detection;
+    }
+    
+    // Détecter gestionnaires de paquets
+    const packageManagers = await this.detectPackageManagers(repoDir, manifestFiles);
+    detection.package_managers = packageManagers;
+    
+    // Générer commandes d'installation
+    const installCommands = this.generateInstallCommands(language, packageManagers);
+    detection.install_commands = installCommands;
+    
+    // Exécuter installation
+    for (const cmd of installCommands) {
+      try {
+        logger.info(`Installing dependencies: ${cmd}`);
+        execSync(cmd, {
+          cwd: repoDir,
+          stdio: 'pipe',
+          timeout: 300000, // 5 minutes max
+          env: {
+            ...process.env,
+            NODE_ENV: 'production',
+            CI: 'true' // Désactiver prompts interactifs
+          }
+        });
+        detection.success = true;
+        logger.info(`Dependencies installed successfully`);
+        break; // Succès, pas besoin d'essayer autres commandes
+      } catch (error) {
+        logger.warn(`Installation failed: ${error.message}`);
+        // Continuer avec prochaine commande
+      }
+    }
+    
+    return detection;
+  }
+}
+```
+
+---
+
+## 🔍 ANALYSE CRITIQUE EXPERTS — LACUNES SYSTÈME
+
+### Architecture 8 Couches
+
+Le système MDBAI opère sur 8 couches distinctes, de l'application utilisateur jusqu'au hardware.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ COUCHE 7 : Application / UI                             │
+│ • Génération rapports utilisateur                       │
+│ • Envoi notifications Telegram                          │
+│ • Création Pull Requests GitHub                         │
+│ • Couverture forensique: 0% ❌                          │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ COUCHE 6 : Orchestration                                │
+│ • BullMQ workers                                         │
+│ • Redis queue management                                │
+│ • Job scheduling                                         │
+│ • Couverture forensique: 25% ⚠️                         │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ COUCHE 5 : Analyseurs                                   │
+│ • Bob Shell / Bob CLI                                    │
+│ • Détection erreurs (regex)                             │
+│ • Scan vulnérabilités (npm audit)                       │
+│ • Couverture forensique: 50% ✅                         │
+└─────────────────────────────────────────────────────────┘
+
+COUVERTURE GLOBALE: 19.4% (155/800 points possibles)
+```
+
+### Lacunes Identifiées par Couche
+
+#### Couche 7 : Application / UI (0% couverture)
+
+**Lacunes critiques** :
+1. ❌ Génération rapports NON surveillée
+2. ❌ Falsification scores possible (BUG #79)
+3. ❌ Envoi Telegram NON tracé
+4. ❌ Création PR GitHub NON validée
+
+**Impact** :
+- Fraude possible (score 100/100 hardcodé)
+- Utilisateur trompé sur qualité code
+- Responsabilité légale si code défectueux déployé
+
+**Solution** :
+```javascript
+// Instrumenter génération rapports
+function generateReport(jobId, analysisData) {
+  forensic.logEvent('report_generation_start', { jobId });
+  
+  const bobScore = analysisData.bob?.quality_score;
+  const reportScore = calculateScore(analysisData);
+  
+  // Détection anomalie
+  if (Math.abs(bobScore - reportScore) > 10) {
+    forensic.logAnomaly('score_divergence', {
+      bob_score: bobScore,
+      report_score: reportScore,
+      divergence: Math.abs(bobScore - reportScore)
+    });
+    throw new Error('Score divergence detected - possible fraud');
+  }
+  
+  forensic.logEvent('report_generation_end', {
+    score: reportScore,
+    errors: analysisData.errors.length,
+    vulnerabilities: analysisData.vulnerabilities.length
+  });
+  
+  return report;
+}
+```
+
+### Questions Critiques Experts
+
+#### Expert Sécurité
+
+**Q1** : Comment garantir que les logs forensiques n'ont pas été falsifiés ?  
+**R** : Signature cryptographique HMAC-SHA256 ou Ed25519 de chaque événement.
+
+**Q2** : Que se passe-t-il si un attaquant modifie libmdbai_forensic.so ?  
+**R** : Checksum SHA256 de la bibliothèque validé au démarrage.
+
+**Q3** : Les logs forensiques sont-ils protégés contre suppression ?  
+**R** : Copie immédiate dans stockage immuable (S3 avec versioning).
+
+#### Expert Architecture Système
+
+**Q4** : Pourquoi les couches 0-1 (CPU/Bus) ne sont pas surveillées ?  
+**R** : Nécessite instrumentation kernel (eBPF) ou hardware (Intel PT).
+
+**Q5** : Comment détecter une fraude dans la couche 7 (génération rapports) ?  
+**R** : Comparaison données Bob Shell vs rapport final + alerte si divergence >10%.
+
+**Q6** : Quel est le point aveugle le plus critique ?  
+**R** : Gap temporel 6min32s entre fin forensic et génération rapport (BUG #80).
+
+#### Expert Auditeur Critique
+
+**Q7** : Le système peut-il détecter sa propre compromission ?  
+**R** : Partiellement - détection anomalies temps réel mais pas si forensic désactivé.
+
+**Q8** : Quelle est la chaîne de confiance ?  
+**R** : libmdbai_forensic.so (checksum) → logs (signature) → validation (indépendante).
+
+**Q9** : Comment prouver qu'une analyse est authentique ?  
+**R** : Chaîne forensique complète : checksums code source + logs signés + timestamps.
+
+---
+
 
 ## 📚 DOCUMENTATION RÉFÉRENCE
 

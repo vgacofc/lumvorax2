@@ -1,0 +1,228 @@
+🧪 TESTS AGENT V3 COGNITIVE
+======================================================================
+
+======================================================================
+TEST 1: Rotation 90°
+======================================================================
+[MAGEN] Système mémoire initialisé
+[MAGEN] Court terme: 50 expériences
+[MAGEN] Moyen terme: 200 patterns
+[MAGEN] Long terme: success_rate > 0.7
+[MAGEN] Logs: /tmp/magen_test_v3
+[ARC Perception] Initialisé (max_size=64x64)
+[ARC Agent V3] 🧠 Initialisé (COGNITIVE)
+[ARC Agent V3] Exploration rate: 0.1
+[ARC Agent V3] Max actions/level: 200
+[ARC Agent V3] Modules: RuleExtractor + HypothesisTester
+
+[ARC Agent V3] 🎮 Nouveau jeu: test_rotation_90
+[ARC Agent V3] Tentative #1
+
+[ARC Agent V3] 🔬 ANALYSE TRAINING PAIRS
+[ARC Agent V3] Nombre de pairs: 2
+[RuleExtractor] Training pair 1 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 1 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 2 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 2 ajoutée: (2, 2) → (2, 2)
+
+[RuleExtractor] 🎯 4 hypothèses générées:
+  1. rotation_90 (conf=1.00): Rotation 90° sens horaire
+  2. rotation_90 (conf=1.00): Rotation 90° sens horaire
+  3. color_map (conf=0.80): Mapping de couleurs: {np.int64(1): np.int64(2), np.int64(2): np.int64(4), np.int64(3): np.int64(1), np.int64(4): np.int64(3)}
+  4. color_map (conf=0.80): Mapping de couleurs: {np.int64(5): np.int64(6), np.int64(6): np.int64(8), np.int64(7): np.int64(5), np.int64(8): np.int64(7)}
+
+[ARC Agent V3] ✅ Règle identifiée:
+   Type: rotation_90
+   Confiance: 100.0%
+   Description: Rotation 90° sens horaire
+
+[ARC Agent V3] 🔮 PRÉDICTION TEST OUTPUT
+[ARC Agent V3] Test input shape: (2, 2)
+
+[HypothesisTester] 🧪 Test de toutes les hypothèses sur test input (2, 2)
+
+[RuleExtractor] 🎯 4 hypothèses générées:
+  1. rotation_90 (conf=1.00): Rotation 90° sens horaire
+  2. rotation_90 (conf=1.00): Rotation 90° sens horaire
+  3. color_map (conf=0.80): Mapping de couleurs: {np.int64(1): np.int64(2), np.int64(2): np.int64(4), np.int64(3): np.int64(1), np.int64(4): np.int64(3)}
+  4. color_map (conf=0.80): Mapping de couleurs: {np.int64(5): np.int64(6), np.int64(6): np.int64(8), np.int64(7): np.int64(5), np.int64(8): np.int64(7)}
+
+[HypothesisTester] 📊 4 hypothèses testées:
+  1. Test(rotation_90, val=1.00, conf=0.86)
+  2. Test(rotation_90, val=1.00, conf=0.86)
+  3. Test(color_map, val=0.50, conf=0.52)
+  4. Test(color_map, val=0.50, conf=0.52)
+
+[ARC Agent V3] ✅ Prédiction générée:
+   Validation score: 100.0%
+   Test confidence: 86.0%
+   Output shape: (2, 2)
+
+✅ Prédiction générée:
+Input:
+[[ 9 10]
+ [11 12]]
+
+Predicted:
+[[10 12]
+ [ 9 11]]
+
+Expected:
+[[10 12]
+ [ 9 11]]
+
+🎉 TEST RÉUSSI - Prédiction correcte!
+
+======================================================================
+TEST 2: Flip Horizontal
+======================================================================
+[MAGEN] Système mémoire initialisé
+[MAGEN] Court terme: 50 expériences
+[MAGEN] Moyen terme: 200 patterns
+[MAGEN] Long terme: success_rate > 0.7
+[MAGEN] Logs: /tmp/magen_test_v3
+[ARC Perception] Initialisé (max_size=64x64)
+[ARC Agent V3] 🧠 Initialisé (COGNITIVE)
+[ARC Agent V3] Exploration rate: 0.1
+[ARC Agent V3] Max actions/level: 200
+[ARC Agent V3] Modules: RuleExtractor + HypothesisTester
+
+[ARC Agent V3] 🎮 Nouveau jeu: test_flip_h
+[ARC Agent V3] Tentative #1
+
+[ARC Agent V3] 🔬 ANALYSE TRAINING PAIRS
+[ARC Agent V3] Nombre de pairs: 2
+[RuleExtractor] Training pair 1 ajoutée: (2, 3) → (2, 3)
+[RuleExtractor] Training pair 1 ajoutée: (2, 3) → (2, 3)
+[RuleExtractor] Training pair 2 ajoutée: (2, 3) → (2, 3)
+[RuleExtractor] Training pair 2 ajoutée: (2, 3) → (2, 3)
+
+[RuleExtractor] 🎯 4 hypothèses générées:
+  1. flip_horizontal (conf=1.00): Flip horizontal (miroir vertical)
+  2. flip_horizontal (conf=1.00): Flip horizontal (miroir vertical)
+  3. color_map (conf=0.86): Mapping de couleurs: {np.int64(1): np.int64(3), np.int64(2): np.int64(2), np.int64(3): np.int64(1), np.int64(4): np.int64(6), np.int64(5): np.int64(5), np.int64(6): np.int64(4)}
+  4. color_map (conf=0.86): Mapping de couleurs: {np.int64(7): np.int64(9), np.int64(8): np.int64(8), np.int64(9): np.int64(7), np.int64(10): np.int64(12), np.int64(11): np.int64(11), np.int64(12): np.int64(10)}
+
+[ARC Agent V3] ✅ Règle identifiée:
+   Type: flip_horizontal
+   Confiance: 100.0%
+   Description: Flip horizontal (miroir vertical)
+
+[ARC Agent V3] 🔮 PRÉDICTION TEST OUTPUT
+[ARC Agent V3] Test input shape: (2, 3)
+
+[HypothesisTester] 🧪 Test de toutes les hypothèses sur test input (2, 3)
+
+[RuleExtractor] 🎯 4 hypothèses générées:
+  1. flip_horizontal (conf=1.00): Flip horizontal (miroir vertical)
+  2. flip_horizontal (conf=1.00): Flip horizontal (miroir vertical)
+  3. color_map (conf=0.86): Mapping de couleurs: {np.int64(1): np.int64(3), np.int64(2): np.int64(2), np.int64(3): np.int64(1), np.int64(4): np.int64(6), np.int64(5): np.int64(5), np.int64(6): np.int64(4)}
+  4. color_map (conf=0.86): Mapping de couleurs: {np.int64(7): np.int64(9), np.int64(8): np.int64(8), np.int64(9): np.int64(7), np.int64(10): np.int64(12), np.int64(11): np.int64(11), np.int64(12): np.int64(10)}
+
+[HypothesisTester] 📊 4 hypothèses testées:
+  1. Test(flip_horizontal, val=1.00, conf=0.86)
+  2. Test(flip_horizontal, val=1.00, conf=0.86)
+  3. Test(color_map, val=0.50, conf=0.53)
+  4. Test(color_map, val=0.50, conf=0.53)
+
+[ARC Agent V3] ✅ Prédiction générée:
+   Validation score: 100.0%
+   Test confidence: 86.0%
+   Output shape: (2, 3)
+
+✅ Prédiction générée:
+Input:
+[[13 14 15]
+ [16 17 18]]
+
+Predicted:
+[[15 14 13]
+ [18 17 16]]
+
+Expected:
+[[15 14 13]
+ [18 17 16]]
+
+🎉 TEST RÉUSSI - Prédiction correcte!
+
+======================================================================
+TEST 3: Color Mapping
+======================================================================
+[MAGEN] Système mémoire initialisé
+[MAGEN] Court terme: 50 expériences
+[MAGEN] Moyen terme: 200 patterns
+[MAGEN] Long terme: success_rate > 0.7
+[MAGEN] Logs: /tmp/magen_test_v3
+[ARC Perception] Initialisé (max_size=64x64)
+[ARC Agent V3] 🧠 Initialisé (COGNITIVE)
+[ARC Agent V3] Exploration rate: 0.1
+[ARC Agent V3] Max actions/level: 200
+[ARC Agent V3] Modules: RuleExtractor + HypothesisTester
+
+[ARC Agent V3] 🎮 Nouveau jeu: test_color_map
+[ARC Agent V3] Tentative #1
+
+[ARC Agent V3] 🔬 ANALYSE TRAINING PAIRS
+[ARC Agent V3] Nombre de pairs: 2
+[RuleExtractor] Training pair 1 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 1 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 2 ajoutée: (2, 2) → (2, 2)
+[RuleExtractor] Training pair 2 ajoutée: (2, 2) → (2, 2)
+
+[RuleExtractor] 🎯 2 hypothèses générées:
+  1. color_map (conf=0.75): Mapping de couleurs: {np.int64(1): np.int64(2), np.int64(2): np.int64(3), np.int64(3): np.int64(1)}
+  2. color_map (conf=0.75): Mapping de couleurs: {np.int64(2): np.int64(3), np.int64(3): np.int64(1), np.int64(1): np.int64(2)}
+
+[ARC Agent V3] ✅ Règle identifiée:
+   Type: color_map
+   Confiance: 75.0%
+   Description: Mapping de couleurs: {np.int64(1): np.int64(2), np.int64(2): np.int64(3), np.int64(3): np.int64(1)}
+
+[ARC Agent V3] 🔮 PRÉDICTION TEST OUTPUT
+[ARC Agent V3] Test input shape: (2, 2)
+
+[HypothesisTester] 🧪 Test de toutes les hypothèses sur test input (2, 2)
+
+[RuleExtractor] 🎯 2 hypothèses générées:
+  1. color_map (conf=0.75): Mapping de couleurs: {np.int64(1): np.int64(2), np.int64(2): np.int64(3), np.int64(3): np.int64(1)}
+  2. color_map (conf=0.75): Mapping de couleurs: {np.int64(2): np.int64(3), np.int64(3): np.int64(1), np.int64(1): np.int64(2)}
+
+[HypothesisTester] 📊 2 hypothèses testées:
+  1. Test(color_map, val=1.00, conf=0.95)
+  2. Test(color_map, val=1.00, conf=0.95)
+
+[ARC Agent V3] ✅ Prédiction générée:
+   Validation score: 100.0%
+   Test confidence: 95.0%
+   Output shape: (2, 2)
+
+✅ Prédiction générée:
+Input:
+[[3 1]
+ [2 3]]
+
+Predicted:
+[[1 2]
+ [3 1]]
+
+Expected:
+[[1 2]
+ [3 1]]
+
+🎉 TEST RÉUSSI - Prédiction correcte!
+
+======================================================================
+📊 RÉSUMÉ DES TESTS
+======================================================================
+✅ PASS - Rotation 90°
+✅ PASS - Flip Horizontal
+✅ PASS - Color Mapping
+
+🎯 Score: 3/3 (100%)
+
+🎉 TOUS LES TESTS RÉUSSIS!
+✅ Agent V3 Cognitive opérationnel
+✅ RuleExtractor fonctionnel
+✅ HypothesisTester fonctionnel
+
+🚀 Prêt pour LOOP 2 avec jeux ARC-AGI-3 réels

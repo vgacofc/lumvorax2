@@ -1,0 +1,32 @@
+================================================================================
+TEST V2 SESSION 34 - ARCHITECTURE COGNITIVE COMPLÈTE
+================================================================================
+Timestamp: 2026-06-13T10:17:57.575105
+Objectif: 11/11 (100%)
+
+
+================================================================================
+PUZZLE: 007bbfb7
+================================================================================
+
+[PERCEPTION] Analyse entités...
+  Entités détectées: 6
+
+[CLASSIFICATION] Analyse type puzzle...
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_v2_session34_COGNITIVE.py", line 358, in <module>
+    success = main()
+              ^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_v2_session34_COGNITIVE.py", line 302, in main
+    success, solution, metadata = solver.solve_puzzle(puzzle_id, puzzle_data)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_v2_session34_COGNITIVE.py", line 109, in solve_puzzle
+    puzzle_type = self.classifier.classify(train)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/classification/puzzle_classifier.py", line 80, in classify
+    score, features = check_func(train_pairs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/classification/puzzle_classifier.py", line 134, in _check_geometric
+    if inp.shape != out.shape:
+       ^^^^^^^^^
+AttributeError: 'str' object has no attribute 'shape'

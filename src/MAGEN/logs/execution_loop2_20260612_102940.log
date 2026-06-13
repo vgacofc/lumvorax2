@@ -1,0 +1,225 @@
+2026-06-12 10:29:43 | INFO | 
+================================================================================
+2026-06-12 10:29:43 | INFO | 🧠 MAGEN V3 ENHANCED - LOOP 2
+2026-06-12 10:29:43 | INFO | CognitiveLogger + ActionPlanner + LumVorax Forensic
+2026-06-12 10:29:43 | INFO | ================================================================================
+
+2026-06-12 10:29:43 | INFO | ================================================================================
+2026-06-12 10:29:43 | INFO | 🚀 MAGEN V3 ENHANCED - LOOP 2
+2026-06-12 10:29:43 | INFO | ================================================================================
+2026-06-12 10:29:43 | INFO | Configuration:
+2026-06-12 10:29:43 | INFO |   - Jeux à tester: 5
+2026-06-12 10:29:43 | INFO |   - Max actions/jeu: 200
+2026-06-12 10:29:43 | INFO |   - CognitiveLogger: ✅ ACTIVÉ
+2026-06-12 10:29:43 | INFO |   - ActionPlanner: ✅ ACTIVÉ
+2026-06-12 10:29:43 | INFO |   - LumVorax Forensic: ✅ ACTIVÉ
+2026-06-12 10:29:43 | INFO | ================================================================================
+2026-06-12 10:29:43 | INFO | ✅ LumVorax Logger initialisé
+2026-06-12 10:29:43 | INFO | 
+================================================================================
+2026-06-12 10:29:43 | INFO | 🎮 DÉBUT TESTS - 5 JEUX
+2026-06-12 10:29:43 | INFO | ================================================================================
+
+[LumVorax] Binary log: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/forensic/magen_forensic_20260612_102943.lum
+[LumVorax] JSON log: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/forensic/magen_forensic_20260612_102943.json
+[LumVorax] Logger forensique initialisé
+[LumVorax] Logs: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/forensic
+[LumVorax] Binary: True, JSON: True
+[LumVorax] Secret key: 1a2d76ada87045eb...
+[MAGEN] Système mémoire initialisé
+[MAGEN] Court terme: 50 expériences
+[MAGEN] Moyen terme: 200 patterns
+[MAGEN] Long terme: success_rate > 0.7
+[MAGEN] Logs: /home/lvx/LVX/lumvorax2/src/MAGEN/data
+[ARC Perception] Initialisé (max_size=64x64)
+[ARC Agent V3] 🧠 Initialisé (COGNITIVE)
+[ARC Agent V3] Exploration rate: 0.05
+[ARC Agent V3] Max actions/level: 200
+[ARC Agent V3] Modules: RuleExtractor + HypothesisTester
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-12 10:29:44 | INFO | Got anonymous API key: b0d6cf5b-5b74-4358-afb7-175f372dcd09
+2026-06-12 10:29:44 | INFO | Got anonymous API key: b0d6cf5b-5b74-4358-afb7-175f372dcd09
+2026-06-12 10:29:44 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-12 10:29:44 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-12 10:29:44 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-12 10:29:44 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-12 10:29:44 | INFO | 📋 5 jeux sélectionnés
+2026-06-12 10:29:44 | INFO | 
+================================================================================
+2026-06-12 10:29:44 | INFO | 🎮 JEU 1/5: bp35-0a0ad940
+2026-06-12 10:29:44 | INFO | ================================================================================
+2026-06-12 10:29:44 | INFO | Created new scorecard: 5d16ae03-ae32-4cc0-943e-44734202e19f
+2026-06-12 10:29:44 | INFO | Created new scorecard: 5d16ae03-ae32-4cc0-943e-44734202e19f
+2026-06-12 10:29:44 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:44 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:45 | INFO | Successfully loaded game class Bp35 from environment_files/bp35/0a0ad940/bp35.py
+2026-06-12 10:29:45 | INFO | Successfully loaded game class Bp35 from environment_files/bp35/0a0ad940/bp35.py
+2026-06-12 10:29:45 | INFO | ⚠️ Pas de training pairs disponibles
+2026-06-12 10:29:45 | INFO | 🎯 Grille initiale: (2, 64, 64)
+2026-06-12 10:29:45 | ERROR | ❌ ERREUR JEU 1: too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_loop2_v3_enhanced.py", line 205, in run_loop2_v3_enhanced
+    action_id = agent.choose_action(
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/agent/arc_agent_v3_cognitive.py", line 294, in choose_action
+    features = self.perception.extract_features(grid)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/perception/arc_perception.py", line 94, in extract_features
+    height, width = grid.shape
+    ^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-06-12 10:29:45 | INFO | 
+================================================================================
+2026-06-12 10:29:45 | INFO | 🎮 JEU 2/5: wa30-ee6fe8c0
+2026-06-12 10:29:45 | INFO | ================================================================================
+[ARC Agent V3] 📝 CognitiveLogger activé: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/cognitive/cognitive_trace_bp35-0a0ad940_1781252985116747936.json
+
+[ARC Agent V3] 🎮 Nouveau jeu: bp35-0a0ad940
+[ARC Agent V3] Tentative #1
+2026-06-12 10:29:45 | INFO | Successfully fetched metadata for game wa30
+2026-06-12 10:29:45 | INFO | Successfully fetched metadata for game wa30
+2026-06-12 10:29:46 | ERROR | Failed to download game wa30 from API: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/arc_agi/base.py", line 1045, in _download_game
+    source_response.raise_for_status()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+2026-06-12 10:29:46 | ERROR | Failed to download game wa30 from API: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/arc_agi/base.py", line 1045, in _download_game
+    source_response.raise_for_status()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+2026-06-12 10:29:46 | INFO | ⚠️ Pas de training pairs disponibles
+2026-06-12 10:29:46 | ERROR | ❌ ERREUR JEU 2: 'NoneType' object has no attribute 'reset'
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_loop2_v3_enhanced.py", line 184, in run_loop2_v3_enhanced
+    obs = env.reset()
+          ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'reset'
+2026-06-12 10:29:46 | INFO | 
+================================================================================
+2026-06-12 10:29:46 | INFO | 🎮 JEU 3/5: bp35-0a0ad940
+2026-06-12 10:29:46 | INFO | ================================================================================
+[ARC Agent V3] 📝 CognitiveLogger activé: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/cognitive/cognitive_trace_wa30-ee6fe8c0_1781252986381840095.json
+
+[ARC Agent V3] 🎮 Nouveau jeu: wa30-ee6fe8c0
+[ARC Agent V3] Tentative #1
+2026-06-12 10:29:46 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:46 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:46 | INFO | ⚠️ Pas de training pairs disponibles
+2026-06-12 10:29:47 | INFO | 🎯 Grille initiale: (2, 64, 64)
+2026-06-12 10:29:47 | ERROR | ❌ ERREUR JEU 3: too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_loop2_v3_enhanced.py", line 205, in run_loop2_v3_enhanced
+    action_id = agent.choose_action(
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/agent/arc_agent_v3_cognitive.py", line 294, in choose_action
+    features = self.perception.extract_features(grid)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/perception/arc_perception.py", line 94, in extract_features
+    height, width = grid.shape
+    ^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-06-12 10:29:47 | INFO | 
+================================================================================
+2026-06-12 10:29:47 | INFO | 🎮 JEU 4/5: wa30-ee6fe8c0
+2026-06-12 10:29:47 | INFO | ================================================================================
+[ARC Agent V3] 📝 CognitiveLogger activé: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/cognitive/cognitive_trace_bp35-0a0ad940_1781252986992395609.json
+
+[ARC Agent V3] 🎮 Nouveau jeu: bp35-0a0ad940
+[ARC Agent V3] Tentative #2
+2026-06-12 10:29:47 | INFO | Successfully fetched metadata for game wa30
+2026-06-12 10:29:47 | INFO | Successfully fetched metadata for game wa30
+2026-06-12 10:29:47 | ERROR | Failed to download game wa30 from API: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/arc_agi/base.py", line 1045, in _download_game
+    source_response.raise_for_status()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+2026-06-12 10:29:47 | ERROR | Failed to download game wa30 from API: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/arc_agi/base.py", line 1045, in _download_game
+    source_response.raise_for_status()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/venv/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://three.arcprize.org/api/games/wa30-ee6fe8c0/source
+2026-06-12 10:29:47 | INFO | ⚠️ Pas de training pairs disponibles
+2026-06-12 10:29:47 | ERROR | ❌ ERREUR JEU 4: 'NoneType' object has no attribute 'reset'
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_loop2_v3_enhanced.py", line 184, in run_loop2_v3_enhanced
+    obs = env.reset()
+          ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'reset'
+2026-06-12 10:29:47 | INFO | 
+================================================================================
+2026-06-12 10:29:47 | INFO | 🎮 JEU 5/5: bp35-0a0ad940
+2026-06-12 10:29:47 | INFO | ================================================================================
+[ARC Agent V3] 📝 CognitiveLogger activé: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/cognitive/cognitive_trace_wa30-ee6fe8c0_1781252987643237775.json
+
+[ARC Agent V3] 🎮 Nouveau jeu: wa30-ee6fe8c0
+[ARC Agent V3] Tentative #2
+2026-06-12 10:29:47 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:47 | INFO | Successfully fetched metadata for game bp35
+2026-06-12 10:29:48 | INFO | ⚠️ Pas de training pairs disponibles
+2026-06-12 10:29:48 | INFO | 🎯 Grille initiale: (2, 64, 64)
+2026-06-12 10:29:48 | ERROR | ❌ ERREUR JEU 5: too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_loop2_v3_enhanced.py", line 205, in run_loop2_v3_enhanced
+    action_id = agent.choose_action(
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/agent/arc_agent_v3_cognitive.py", line 294, in choose_action
+    features = self.perception.extract_features(grid)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/perception/arc_perception.py", line 94, in extract_features
+    height, width = grid.shape
+    ^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-06-12 10:29:48 | INFO | 
+================================================================================
+2026-06-12 10:29:48 | INFO | 📊 STATISTIQUES FINALES LOOP 2
+2026-06-12 10:29:48 | INFO | ================================================================================
+2026-06-12 10:29:48 | INFO |   Jeux testés: 5
+2026-06-12 10:29:48 | INFO |   Succès: 0 (0.0%)
+2026-06-12 10:29:48 | INFO |   Échecs: 5
+2026-06-12 10:29:48 | INFO |   Actions totales: 0
+2026-06-12 10:29:48 | INFO |   Actions moyennes: 0.0
+2026-06-12 10:29:48 | INFO | ================================================================================
+2026-06-12 10:29:48 | INFO | 
+📈 STATISTIQUES AGENT V3 ENHANCED
+2026-06-12 10:29:48 | INFO | ================================================================================
+2026-06-12 10:29:48 | INFO |   total_actions: 3
+2026-06-12 10:29:48 | INFO |   successful_levels: 0
+2026-06-12 10:29:48 | INFO |   failed_levels: 0
+2026-06-12 10:29:48 | INFO |   total_levels: 0
+2026-06-12 10:29:48 | INFO |   success_rate: 0.0
+2026-06-12 10:29:48 | INFO |   avg_actions_per_level: 0.0
+2026-06-12 10:29:48 | INFO |   exploration_rate: 0.05
+2026-06-12 10:29:48 | INFO |   patterns_used: 0
+2026-06-12 10:29:48 | INFO |   patterns_successful: 0
+2026-06-12 10:29:48 | INFO |   pattern_success_rate: 0.0
+2026-06-12 10:29:48 | INFO |   unique_games_learned: 2
+2026-06-12 10:29:48 | INFO |   total_patterns_learned: 0
+2026-06-12 10:29:48 | INFO | ================================================================================
+2026-06-12 10:29:48 | INFO | 
+💾 Résultats sauvegardés: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/loop2_results_20260612_102943.json
+2026-06-12 10:29:48 | INFO | 🔒 Logs forensiques LumVorax: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/forensic
+2026-06-12 10:29:48 | INFO | ================================================================================
+
+2026-06-12 10:29:48 | INFO | 
+================================================================================
+2026-06-12 10:29:48 | INFO | ✅ LOOP 2 TERMINÉ
+2026-06-12 10:29:48 | INFO | ================================================================================
+2026-06-12 10:29:48 | INFO | Succès: 0/5
+2026-06-12 10:29:48 | INFO | Taux de succès: 0.0%
+2026-06-12 10:29:48 | INFO | 
+⚠️ Aucun succès - Analyse forensique requise pour LOOP 3
+2026-06-12 10:29:48 | INFO | ================================================================================
+
+[ARC Agent V3] 📝 CognitiveLogger activé: /home/lvx/LVX/lumvorax2/src/MAGEN/logs/cognitive/cognitive_trace_bp35-0a0ad940_1781252988019644278.json
+
+[ARC Agent V3] 🎮 Nouveau jeu: bp35-0a0ad940
+[ARC Agent V3] Tentative #3

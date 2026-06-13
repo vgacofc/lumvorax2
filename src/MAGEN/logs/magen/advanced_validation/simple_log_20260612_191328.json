@@ -1,0 +1,127 @@
+{
+  "session_start": 1781284408.673364,
+  "total_events": 7,
+  "events": [
+    {
+      "timestamp": 1781284408.6733692,
+      "timestamp_ns": 1781284408673369558,
+      "event_type": "SESSION_START",
+      "data": {
+        "mode": "LOCAL",
+        "protocol": "CLAUDE_PILOT",
+        "pipeline": "ADVANCED_FULL_INTEGRATION"
+      }
+    },
+    {
+      "timestamp": 1781284408.6736627,
+      "timestamp_ns": 1781284408673663173,
+      "event_type": "DATASET_LOADED",
+      "data": {
+        "path": "/home/lvx/LVX/lumvorax2/src/MAGEN/arc-agi_training_challenges.json",
+        "total": 3,
+        "selected": 3
+      }
+    },
+    {
+      "timestamp": 1781284408.6737452,
+      "timestamp_ns": 1781284408673745178,
+      "event_type": "PIPELINE_INIT",
+      "data": {
+        "beam_width": 10,
+        "max_depth": 5,
+        "use_memory": false
+      }
+    },
+    {
+      "timestamp": 1781284408.6740794,
+      "timestamp_ns": 1781284408674079699,
+      "event_type": "PUZZLE_SOLVED",
+      "data": {
+        "puzzle_id": "007bbfb7",
+        "success": true,
+        "elapsed": 0.000255584716796875
+      }
+    },
+    {
+      "timestamp": 1781284408.6744926,
+      "timestamp_ns": 1781284408674492801,
+      "event_type": "PUZZLE_SOLVED",
+      "data": {
+        "puzzle_id": "00d62c1b",
+        "success": false,
+        "elapsed": 0.0003542900085449219
+      }
+    },
+    {
+      "timestamp": 1781284408.674685,
+      "timestamp_ns": 1781284408674685147,
+      "event_type": "PUZZLE_SOLVED",
+      "data": {
+        "puzzle_id": "025d127b",
+        "success": false,
+        "elapsed": 0.00013136863708496094
+      }
+    },
+    {
+      "timestamp": 1781284408.6747231,
+      "timestamp_ns": 1781284408674723286,
+      "event_type": "VALIDATION_COMPLETE",
+      "data": {
+        "total": 3,
+        "successes": 1,
+        "failures": 2,
+        "success_rate": 33.33333333333333,
+        "results": [
+          {
+            "puzzle_id": "007bbfb7",
+            "success": true,
+            "elapsed": 0.000255584716796875,
+            "train_pairs": 2,
+            "test_shape": [
+              7,
+              7
+            ]
+          },
+          {
+            "puzzle_id": "00d62c1b",
+            "success": false,
+            "elapsed": 0.0003542900085449219,
+            "train_pairs": 1,
+            "test_shape": [
+              9,
+              9
+            ]
+          },
+          {
+            "puzzle_id": "025d127b",
+            "success": false,
+            "elapsed": 0.00013136863708496094,
+            "train_pairs": 1,
+            "test_shape": [
+              10,
+              10
+            ]
+          }
+        ],
+        "pipeline_stats": {
+          "puzzles_solved": 4,
+          "total_puzzles": 3,
+          "success_rate": 1.3333333333333333,
+          "primitives": {
+            "total_transforms": 0
+          },
+          "object_level": {
+            "transforms_applied": 0
+          },
+          "scene_level": {
+            "transforms_applied": 0
+          },
+          "global_level": {
+            "transforms_applied": 0
+          },
+          "rules_detected": 0
+        }
+      }
+    }
+  ]
+}

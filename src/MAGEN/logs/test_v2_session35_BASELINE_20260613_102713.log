@@ -1,0 +1,166 @@
+================================================================================
+TEST V2 SESSION 35 - TRAIN VALIDATION
+Basé sur Session 33 (9/11) - Validation baseline
+OBJECTIF: Maintenir 9/11 avant implémentation AdaptiveStrategy complète
+================================================================================
+
+================================================================================
+TEST V2 SESSION 33 - APPRENTISSAGE EN BOUCLE
+LearningMemory (GEN8-24) + Corrections architecturales
+OBJECTIF: Apprendre des échecs et améliorer en continu
+================================================================================
+
+📚 Mémoire chargée:
+  - Expériences totales: 22
+  - Taux de succès: 81.8%
+  - Patterns d'échecs: 3
+  - Classifications apprises: 3
+
+[2dee498d]
+  Classification: periodic (67%)
+  Candidats générés: 18
+  ✓ Programme trouvé (score: 0.950, depth: 1)
+    Program(
+  extract_periodic_columns(3)
+)
+  Temps: 0.013s
+
+[3aa6fb7a]
+  Classification: object_relational (80%)
+  Candidats générés: 17
+  ✗ Échec tentative 1: relational_marking_failed
+  ✗ Aucun programme valide après 3 tentatives
+  Temps: 0.006s
+
+[3c9b0459]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 14
+  ✓ Programme trouvé (score: 1.000, depth: 1)
+    Program(
+  rotate180
+)
+  Temps: 0.004s
+
+[5bd6f4ac]
+  Classification: semantic_region (100%)
+  Candidats générés: 18
+  ✓ Programme trouvé (score: 0.949, depth: 1)
+    Program(
+  crop_region
+)
+  Temps: 0.007s
+
+[6150a2bd]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 14
+  ✓ Programme trouvé (score: 1.000, depth: 1)
+    Program(
+  rotate180
+)
+  Temps: 0.003s
+
+[67a3c6ac]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 15
+  ✓ Programme trouvé (score: 1.000, depth: 1)
+    Program(
+  mirror_horizontal
+)
+  Temps: 0.004s
+
+[68b16354]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 14
+  ✓ Programme trouvé (score: 1.000, depth: 1)
+    Program(
+  mirror_vertical
+)
+  Temps: 0.004s
+
+[88a62173]
+  Classification: semantic_region (100%)
+    → Puzzles similaires résolus: 1
+    → Stratégie alternative suggérée par mémoire
+  Candidats générés: 16
+  ✗ Échec tentative 1: region_extraction_failed
+  → Tentative 2/3 (apprentissage)
+    → Puzzles similaires résolus: 1
+    → Stratégie alternative suggérée par mémoire
+  Candidats générés: 16
+  ✗ Échec tentative 2: region_extraction_failed
+  → Tentative 3/3 (apprentissage)
+    → Puzzles similaires résolus: 1
+    → Stratégie alternative suggérée par mémoire
+  Candidats générés: 16
+  ✗ Échec tentative 3: region_extraction_failed
+  ✗ Aucun programme valide après 3 tentatives
+  Temps: 0.013s
+
+[9172f3a0]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 15
+  ✓ Programme trouvé (score: 0.950, depth: 1)
+    Program(
+  scale(3)
+)
+  Temps: 0.003s
+
+[c59eb873]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 15
+  ✓ Programme trouvé (score: 0.950, depth: 1)
+    Program(
+  scale(2)
+)
+  Temps: 0.003s
+
+[ed36ccf7]
+  Classification: geometric (100%)
+    → Puzzles similaires résolus: 6
+  Candidats générés: 14
+  ✓ Programme trouvé (score: 1.000, depth: 1)
+    Program(
+  rotate270
+)
+  Temps: 0.004s
+
+================================================================================
+RÉSULTAT FINAL: 9/11 (81.8%)
+================================================================================
+✅ AMÉLIORATION: +1 puzzles récupérés!
+   Puzzles récupérés: {'5bd6f4ac'}
+
+📊 STATISTIQUES D'APPRENTISSAGE:
+  - Expériences session: 13
+  - Taux succès session: 81.8%
+  - Patterns échecs identifiés: 3
+
+🔍 PATTERNS D'ÉCHECS RÉCURRENTS:
+  - relational_marking_failed: 2x sur 1 puzzles
+    Puzzles: ['3aa6fb7a']
+  - region_extraction_failed: 4x sur 1 puzzles
+    Puzzles: ['88a62173']
+  - all_programs_failed: 2x sur 2 puzzles
+    Puzzles: ['3aa6fb7a', '88a62173']
+
+💾 Knowledge base exportée: memory/knowledge_base_session33.json
+
+✓ PROGRESSION MAJEURE: 9/11
+
+Gain vs Session 31 (8/11): +1 puzzles
+
+================================================================================
+SESSION 35 - ANALYSE
+================================================================================
+
+✓ Baseline Session 33 validée: 9/11 (81.8%)
+
+PROCHAINE ÉTAPE:
+- Intégrer AdaptiveStrategy avec validation sur TRAIN
+- Objectif: Récupérer 3aa6fb7a et 88a62173 → 11/11 (100%)

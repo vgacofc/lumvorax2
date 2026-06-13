@@ -342,4 +342,4 @@ Tous les tests Rust de Firecracker sont dans les modules sources, pas dans `test
 **Statut**: ✅ DÉCOUVERTE MAJEURE — Structure tests Firecracker comprise  
 **Prochaine étape**: C167 — Intégration tests dans `device.rs`  
 **Temps estimé**: 1h15  
-**Blocage**: Aucun
+**Blocage**: Aucundomaine

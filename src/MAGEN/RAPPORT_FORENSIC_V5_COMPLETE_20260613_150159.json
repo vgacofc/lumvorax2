@@ -1,0 +1,94 @@
+{
+  "timestamp": "20260613_150159",
+  "summary": {
+    "total_puzzles": 400,
+    "successes": 45,
+    "failures": 355,
+    "errors": 16,
+    "success_rate": 11.25
+  },
+  "success_analysis": {
+    "puzzle_ids": [
+      "0b148d64",
+      "11852cab",
+      "1a07d186",
+      "1cf80156",
+      "1f642eb9",
+      "1f85a75f",
+      "2204b7a8",
+      "22233c11",
+      "239be575",
+      "2c608aff",
+      "2dc579da",
+      "2dee498d",
+      "32597951",
+      "36d67576",
+      "36fdfd69",
+      "3c9b0459",
+      "50846271",
+      "54d82841",
+      "5614dbcf",
+      "5bd6f4ac",
+      "6150a2bd",
+      "67a3c6ac",
+      "68b16354",
+      "6cf79266",
+      "72322fa7",
+      "72ca375d",
+      "74dd1130",
+      "776ffc46",
+      "7ddcd7ec",
+      "88a62173",
+      "890034e9",
+      "9172f3a0",
+      "9dfd6313",
+      "ac0a08a4",
+      "ae4f1146",
+      "af902bf9",
+      "b91ae062",
+      "ba97ae07",
+      "be94b721",
+      "c59eb873",
+      "cbded52d",
+      "d10ecb37",
+      "e9614598",
+      "ec883f72",
+      "ed36ccf7"
+    ],
+    "avg_time": 0.004749896791246202,
+    "avg_attempts": 0.0
+  },
+  "failure_analysis": {
+    "no_attempts": 16,
+    "few_attempts": 0,
+    "many_attempts": 339
+  },
+  "error_analysis": {
+    "index_errors": 16,
+    "shape_errors": 0,
+    "other_errors": 0
+  },
+  "recommendations": [
+    {
+      "priority": "CRITIQUE",
+      "category": "Validation Bounds",
+      "issue": "16 puzzles \u00e9chouent avec IndexError",
+      "solution": "Impl\u00e9menter try-catch global + validation bounds stricte",
+      "impact": "+16 puzzles potentiels"
+    },
+    {
+      "priority": "MOYENNE",
+      "category": "PWFE Exploration",
+      "issue": "115 puzzles \u00e9chouent malgr\u00e9 >7 tentatives",
+      "solution": "Am\u00e9liorer pruning PWFE + scoring progressif",
+      "impact": "+5 puzzles potentiels"
+    },
+    {
+      "priority": "HAUTE",
+      "category": "Catalogue Transformations",
+      "issue": "Actions abstraites non li\u00e9es aux op\u00e9rateurs ARC r\u00e9els",
+      "solution": "Impl\u00e9menter 28 transformations concr\u00e8tes du catalogue",
+      "impact": "+10-20 puzzles potentiels"
+    }
+  ]
+}

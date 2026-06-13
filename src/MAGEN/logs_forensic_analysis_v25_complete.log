@@ -1,0 +1,37 @@
+================================================================================
+LECTURE FORENSIQUE V25 - LIGNE PAR LIGNE SANS EXCEPTION
+================================================================================
+Total événements: 36,263
+
+[ANALYSE] Lecture ligne par ligne...
+  Progress: 5,000/36,263 lignes
+  Progress: 10,000/36,263 lignes
+  Progress: 15,000/36,263 lignes
+  Progress: 20,000/36,263 lignes
+  Progress: 25,000/36,263 lignes
+  Progress: 30,000/36,263 lignes
+  Progress: 35,000/36,263 lignes
+
+[ANALYSE] ✅ 36,263 lignes analysées
+
+[ANOMALIES] Détectées:
+  empty_causal_chain: 14,357 occurrences
+  identity_failure: 6,466 occurrences
+  high_error_non_identity: 2,739 occurrences
+
+[CORRECTIONS] Identification...
+
+[CORRECTIONS] 3 corrections identifiées:
+  [HIGH] C7: Identity Failure Epidemic (6,466 cas)
+      Fix: Blacklist identity après N échecs consécutifs
+      File: transformation_learning_engine.py
+  [MEDIUM] C8: Empty Causal Chains (14,357 cas)
+      Fix: Initialiser causal_chain au début de chaque puzzle
+      File: transformation_learning_engine.py
+  [MEDIUM] C9: High Error Non-Identity Actions (2,739 cas)
+      Fix: Early stopping si error>0.9 pour 3 actions consécutives
+      File: transformation_learning_engine.py
+
+================================================================================
+✅ ANALYSE FORENSIQUE COMPLÈTE
+================================================================================

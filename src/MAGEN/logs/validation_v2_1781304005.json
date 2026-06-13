@@ -1,0 +1,174 @@
+================================================================================
+TEST VALIDATION ARCHITECTURE V2 - PROGRAM SYNTHESIS ENGINE
+================================================================================
+
+Objectif: Reproduire 11/11 succès Session 26
+Puzzles cibles: 11
+
+Chargement dataset...
+✓ Dataset chargé: 400 puzzles
+
+Initialisation Program Synthesizer V2...
+✓ Synthesizer initialisé
+
+================================================================================
+TESTS INDIVIDUELS
+================================================================================
+
+[1/11] Test puzzle 2dee498d...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ❌ ÉCHEC
+     Train: 0.0%
+     Test:  0.0%
+     Temps: 0.020s
+     Erreur: No program synthesized
+
+[2/11] Test puzzle 3aa6fb7a...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 51
+  [DEBUG] Total unique candidates: 70
+  ❌ ÉCHEC
+     Train: 0.0%
+     Test:  0.0%
+     Temps: 0.028s
+     Erreur: No program synthesized
+
+[3/11] Test puzzle 3c9b0459...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.021s
+     Complexité: 1
+     Programme: Program(
+  rotate180
+)...
+
+[4/11] Test puzzle 5bd6f4ac...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ❌ ÉCHEC
+     Train: 0.0%
+     Test:  0.0%
+     Temps: 0.034s
+     Erreur: No program synthesized
+
+[5/11] Test puzzle 6150a2bd...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.015s
+     Complexité: 1
+     Programme: Program(
+  rotate180
+)...
+
+[6/11] Test puzzle 67a3c6ac...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 54
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.021s
+     Complexité: 1
+     Programme: Program(
+  mirror_horizontal
+)...
+
+[7/11] Test puzzle 68b16354...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.022s
+     Complexité: 1
+     Programme: Program(
+  mirror_vertical
+)...
+
+[8/11] Test puzzle 88a62173...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 51
+  [DEBUG] Total unique candidates: 70
+  ❌ ÉCHEC
+     Train: 0.0%
+     Test:  0.0%
+     Temps: 0.021s
+     Erreur: No program synthesized
+
+[9/11] Test puzzle 9172f3a0...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.022s
+     Complexité: 2
+     Programme: Program(
+  scale(3)
+)...
+
+[10/11] Test puzzle c59eb873...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 53
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.021s
+     Complexité: 2
+     Programme: Program(
+  scale(2)
+)...
+
+[11/11] Test puzzle ed36ccf7...
+  [DEBUG] Analysis programs: 30
+  [DEBUG] Single-op programs: 51
+  [DEBUG] Total unique candidates: 70
+  ✅ SUCCÈS
+     Train: 100.0%
+     Test:  100.0%
+     Temps: 0.022s
+     Complexité: 1
+     Programme: Program(
+  rotate270
+)...
+
+================================================================================
+RAPPORT FINAL
+================================================================================
+
+📊 RÉSULTATS:
+   Succès:        7/11 (63.6%)
+   Temps total:   0.25s
+   Temps moyen:   0.022s/puzzle
+
+📈 COMPARAISON SESSION 26:
+   Session 26 (V1):  11/11 (100%)
+   V2 actuel:        7/11 (63.6%)
+
+❌ OBJECTIF NON ATTEINT: V2 en-dessous de V1 (7/11)
+
+📊 STATISTIQUES SYNTHESIZER:
+   Total syntheses:     11
+   Syntheses réussies:  7
+   Taux de succès:      63.6%
+   Candidats générés:   770
+   Candidats validés:   770
+   Temps moyen:         0.022s
+
+💾 Résultats sauvegardés: logs/magen/v2_validation/validation_v2_1781304006.json
+
+================================================================================

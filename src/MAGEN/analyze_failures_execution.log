@@ -1,0 +1,79 @@
+================================================================================
+MAGEN V26 - FAILURE SIGNATURE MINING
+================================================================================
+[MINING] Chargement logs/forensic/v23_corrected_20260613_214904.json...
+[MINING] 36,263 événements chargés
+[MINING] Succès: 174, Échecs: 226
+[MINING] 251 trajectoires extraites
+
+[ANALYSIS] Analyse patterns échecs...
+
+[PATTERNS] Top 10 actions dans échecs:
+  identity: 3881 (32.9%)
+  rotate_90: 2265 (19.2%)
+  mirror_horizontal: 1952 (16.5%)
+  mirror_vertical: 1882 (15.9%)
+  rotate_180: 1824 (15.5%)
+
+[PATTERNS] Erreur moyenne échecs: 0.467
+
+[PATTERNS] Top 5 transformations shape dans échecs:
+  (10, 10) → (10, 10): 2489
+  (3, 3) → (3, 3): 1796
+  (9, 9) → (9, 9): 932
+  (6, 6) → (6, 6): 693
+  (11, 11) → (11, 11): 438
+
+[COMPARISON] Succès vs Échecs...
+
+[COMPARISON] Actions dominantes SUCCÈS:
+  identity: 5336 (51.7%)
+  mirror_vertical: 1342 (13.0%)
+  rotate_180: 1298 (12.6%)
+  mirror_horizontal: 1283 (12.4%)
+  rotate_90: 1059 (10.3%)
+
+[COMPARISON] Actions dominantes ÉCHECS:
+  identity: 3881 (32.9%)
+  rotate_90: 2265 (19.2%)
+  mirror_horizontal: 1952 (16.5%)
+  mirror_vertical: 1882 (15.9%)
+  rotate_180: 1824 (15.5%)
+
+[COMPARISON] Actions PLUS utilisées dans SUCCÈS:
+  identity: +18.8%
+  rotate_180: +-2.9%
+  mirror_vertical: +-2.9%
+  mirror_horizontal: +-4.1%
+  rotate_90: +-8.9%
+
+[COMPARISON] Actions PLUS utilisées dans ÉCHECS:
+  identity: 18.8%
+  rotate_180: -2.9%
+  mirror_vertical: -2.9%
+  mirror_horizontal: -4.1%
+  rotate_90: -8.9%
+
+[DISCOVERY] Identification primitives manquantes...
+
+[DISCOVERY] Primitives géométriques actuelles: 7
+[DISCOVERY] Primitives sémantiques nécessaires: 26
+
+[DISCOVERY] Top 10 primitives sémantiques prioritaires:
+  [HIGH] remove_object_by_color: Supprimer objets par couleur
+  [HIGH] replicate_pattern: Répliquer pattern détecté
+  [HIGH] propagate_color: Propager couleur selon règle
+  [HIGH] expand_until_boundary: Étendre jusqu'à frontière
+  [HIGH] conditional_replace: Remplacer si condition
+  [MEDIUM] count_and_generate: Compter et générer
+  [MEDIUM] flood_fill: Remplissage par diffusion
+  [MEDIUM] connect_components: Connecter composants
+  [MEDIUM] tile_pattern: Paver grille avec pattern
+  [LOW] crop_to_content: Rogner au contenu
+
+[REPORT] Génération RAPPORT_FAILURE_MINING_V26.md...
+[REPORT] ✅ Rapport généré: RAPPORT_FAILURE_MINING_V26.md
+
+================================================================================
+✅ ANALYSE COMPLÈTE
+================================================================================
