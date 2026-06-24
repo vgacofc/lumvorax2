@@ -257,6 +257,46 @@ Timestamp : ${new Date().toISOString()}
       text
     });
   }
+
+// Export de l'instance singleton
+const emailService = new EmailService();
+export default emailService;
+
+// Export des fonctions pour compatibilité
+export async function sendVerificationCodeEmail(email, code) {
+  await emailService.initialize();
+  const subject = '[MDBAI] Code de vérification';
+  const text = `
+Votre code de vérification MDBAI est : ${code}
+
+Ce code expire dans 10 minutes.
+
+Si vous n'avez pas demandé ce code, ignorez cet email.
+
+L'équipe MDBAI
+  `.trim();
+  
+  return emailService.sendEmail({
+    to: email,
+    subject,
+    text
+  });
+}
+
+export async function sendWelcomeEmail(user) {
+  await emailService.initialize();
+  return emailService.sendWelcomeEmail(user);
+}
+
+export async function sendAnalysisCompleteEmail(user, analysis) {
+  await emailService.initialize();
+  return emailService.sendAnalysisCompleteEmail(user, analysis);
+}
+
+export async function sendErrorNotificationEmail(adminEmail, error) {
+  await emailService.initialize();
+  return emailService.sendErrorNotificationEmail(adminEmail, error);
+}
 }
 
 // Instance singleton
