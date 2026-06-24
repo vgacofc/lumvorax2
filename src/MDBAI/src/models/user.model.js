@@ -3,6 +3,11 @@
  * Modèle de données pour les utilisateurs MDBAI
  */
 
+// Constantes pour les méthodes d'authentification
+export const AUTH_METHOD_EMAIL = 'email';
+export const AUTH_METHOD_PHONE = 'phone';
+export const AUTH_METHOD_GITHUB = 'github';
+
 export class User {
   constructor(data = {}) {
     this.id = data.id || null;
