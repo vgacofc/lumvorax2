@@ -1,6 +1,42 @@
-# MDBAI gitignore
+# Dependencies
 node_modules/
-*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Reports (trop nombreux - garder seulement les essentiels)
+reports/
+
+# Backups
+backups/
+*.backup
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+*.tgz
+
+# Binaires
+*.o
+*.so
+*.a
+*.exe
