@@ -166,6 +166,13 @@ export async function findUserByEmail(email) {
 export async function registerUser(userData) {
   return createUser(userData);
 }
+/**
+ * Trouve un utilisateur par son ID (alias pour compatibilité)
+ */
+export async function findUserById(userId) {
+  return getUserById(userId);
+}
+
 
 /**
  * Trouve un utilisateur par son Telegram ID (alias pour compatibilité)
