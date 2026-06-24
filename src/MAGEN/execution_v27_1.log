@@ -1,0 +1,394 @@
+================================================================================
+MAGEN V27.1 CAUSAL - EXÉCUTION RÉELLE ARC-AGI-3
+================================================================================
+Date: 2026-06-14 20:07:57
+Session: 72
+
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → None
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent V27.1 initialisé
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:07:58 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+
+################################################################################
+# JEU 1/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:07:58 | INFO | Created new scorecard: 0efdd25a-6a45-46bf-9669-656b85451a59
+2026-06-14 20:07:58 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:07:58 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 321, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 267, in main
+    result = run_game(agent, arcade, game_id, max_actions=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 103, in run_game
+    perception = agent.perceive(obs)
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_1_causal.py", line 116, in perceive
+    entity_obs = self.entity_detector.observe(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/core/behavioral_entity_detector.py", line 152, in observe
+    entities_detected = self._extract_entities(grid, timestamp)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/core/behavioral_entity_detector.py", line 201, in _extract_entities
+    positions = list(zip(*np.where(grid == value)))
+                          ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Calling nonzero on 0d arrays is not allowed. Use np.atleast_1d(scalar).nonzero() instead. If the context of this error is of the form `arr[nonzero(cond)]`, just use `arr[cond]`.
+================================================================================
+MAGEN V27.1 CAUSAL - EXÉCUTION RÉELLE ARC-AGI-3
+================================================================================
+Date: 2026-06-14 20:08:18
+Session: 72
+
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → None
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent V27.1 initialisé
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:08:18 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+
+################################################################################
+# JEU 1/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:08:18 | INFO | Created new scorecard: 8d2c8b61-a449-4ed3-b770-99d7ac277a98
+2026-06-14 20:08:19 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:08:19 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 321, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 267, in main
+    result = run_game(agent, arcade, game_id, max_actions=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 103, in run_game
+    perception = agent.perceive(obs)
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_1_causal.py", line 122, in perceive
+    perception['agent_detected_causal'] = entity_obs['agent_detected']
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'GridObservation' object does not support item assignment
+================================================================================
+MAGEN V27.1 CAUSAL - EXÉCUTION RÉELLE ARC-AGI-3
+================================================================================
+Date: 2026-06-14 20:09:34
+Session: 72
+
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → None
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent V27.1 initialisé
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:09:34 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+
+################################################################################
+# JEU 1/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:09:34 | INFO | Created new scorecard: 4e02e00a-8aa5-4003-af0a-5f8a9adc8f16
+2026-06-14 20:09:35 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:09:35 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #10: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2819.4µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 321, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 267, in main
+    result = run_game(agent, arcade, game_id, max_actions=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 108, in run_game
+    decision = agent.decide(perception, available_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_1_causal.py", line 202, in decide
+    decision_obj = super().decide(grid_obs_for_parent, filtered_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_cognitive.py", line 566, in decide
+    decision = self.decide_reputation(obs, available_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_cognitive.py", line 704, in decide_reputation
+    action=self.env_action_mapping[best_action],
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'ACTION10'

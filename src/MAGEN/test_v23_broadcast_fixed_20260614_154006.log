@@ -1,0 +1,383 @@
+
+================================================================================
+🧪 TEST AGENT MAGEN V23 - ARC-AGI-3 LOCAL
+================================================================================
+Architecture: V22 (TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C17+C18)
+            + V23 (ActionDiscovery+WorldModel+InformationGainReward)
+Test: 3 jeux avec max 200 actions par jeu
+================================================================================
+
+[MAGEN V23] Agent initialisé avec architecture complète
+[MAGEN V23] V22: TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C17+C18
+[MAGEN V23] V23: ActionDiscovery+WorldModel+InformationGainReward
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 15:40:08 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade initialisé
+🔒 Mode: NORMAL (test local)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Test: 3 jeux
+🔒 Mode: PRIVÉ
+⏱️  Début: 2026-06-14T15:40:08.799464
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+🎮 Jeu: ar25-0c556536
+
+[MAGEN V23] Agent réinitialisé pour nouveau jeu
+2026-06-14 15:40:08 | INFO | Created new scorecard: d415cccd-1708-4c38-a54e-4a4632671cc4
+2026-06-14 15:40:09 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 15:40:09 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V23] Début jeu - Max actions: 200
+
+[EXPLORATION] Action: rotate_90 (bonus=1.00)
+[EXPLORATION] Action: rotate_180 (bonus=1.00)
+[EXPLORATION] Action: mirror_horizontal (bonus=1.00)
+[EXPLORATION] Action: mirror_vertical (bonus=1.00)
+[EXPLORATION] Action: identity (bonus=1.00)
+[EXPLORATION] Action: action_6 (bonus=1.00)
+[EXPLORATION] Action: undo (bonus=1.00)
+[EXPLORATION] Action: rotate_90 (bonus=0.85)
+[EXPLORATION] Action: rotate_180 (bonus=0.85)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.85)
+[MAGEN V23] Actions: 10 | Phase: EXPLORATION
+  World Model: 10 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.238
+  Actions découvertes: 0
+[EXPLORATION] Action: mirror_vertical (bonus=0.85)
+[EXPLORATION] Action: identity (bonus=0.85)
+[EXPLORATION] Action: action_6 (bonus=0.85)
+[EXPLORATION] Action: undo (bonus=0.85)
+[EXPLORATION] Action: rotate_90 (bonus=0.70)
+[EXPLORATION] Action: rotate_180 (bonus=0.70)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.70)
+[EXPLORATION] Action: mirror_vertical (bonus=0.70)
+[EXPLORATION] Action: identity (bonus=0.70)
+[EXPLORATION] Action: action_6 (bonus=0.70)
+[ACTION DISCOVERY] Analyse de action_6 (3 transitions)...
+  ✅ Effets causaux: 2
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 1.000
+[MAGEN V23] Actions: 20 | Phase: EXPLORATION
+  World Model: 20 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.228
+  Actions découvertes: 1
+[MAGEN V23] Actions: 20/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[EXPLORATION] Action: undo (bonus=0.70)
+[EXPLORATION] Action: rotate_90 (bonus=0.55)
+[EXPLORATION] Action: rotate_180 (bonus=0.55)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.55)
+[EXPLORATION] Action: mirror_vertical (bonus=0.55)
+[EXPLORATION] Action: identity (bonus=0.55)
+[EXPLORATION] Action: action_6 (bonus=0.55)
+[EXPLORATION] Action: undo (bonus=0.55)
+[EXPLORATION] Action: rotate_90 (bonus=0.40)
+[EXPLORATION] Action: rotate_90 (bonus=0.50)
+[ACTION DISCOVERY] Analyse de rotate_90 (6 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 1.000
+[MAGEN V23] Actions: 30 | Phase: EXPLORATION
+  World Model: 30 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.224
+  Actions découvertes: 2
+[EXPLORATION] Action: rotate_90 (bonus=0.42)
+[EXPLORATION] Action: rotate_180 (bonus=0.40)
+[EXPLORATION] Action: rotate_180 (bonus=0.50)
+[EXPLORATION] Action: rotate_180 (bonus=0.42)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.40)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.50)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.42)
+[EXPLORATION] Action: mirror_vertical (bonus=0.40)
+[EXPLORATION] Action: mirror_vertical (bonus=0.50)
+[EXPLORATION] Action: mirror_vertical (bonus=0.42)
+[ACTION DISCOVERY] Analyse de mirror_vertical (7 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 1.000
+[MAGEN V23] Actions: 40 | Phase: EXPLORATION
+  World Model: 40 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.219
+  Actions découvertes: 3
+[MAGEN V23] Actions: 40/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[EXPLORATION] Action: identity (bonus=0.40)
+[EXPLORATION] Action: identity (bonus=0.50)
+[EXPLORATION] Action: identity (bonus=0.42)
+[EXPLORATION] Action: action_6 (bonus=0.40)
+[EXPLORATION] Action: action_6 (bonus=0.50)
+[EXPLORATION] Action: action_6 (bonus=0.42)
+[EXPLORATION] Action: undo (bonus=0.40)
+[EXPLORATION] Action: undo (bonus=0.50)
+[EXPLORATION] Action: undo (bonus=0.42)
+[EXPLORATION] Action: rotate_90 (bonus=0.34)
+[WORLD MODEL] Apprentissage règles causales (50 transitions)...
+  ✅ 1 nouvelles règles apprises (total: 1)
+[ACTION DISCOVERY] Analyse de rotate_90 (8 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 1.000
+[MAGEN V23] Actions: 50 | Phase: EXPLORATION
+  World Model: 50 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.213
+  Actions découvertes: 3
+
+[MAGEN V23] ===== FIN PHASE EXPLORATION =====
+[MAGEN V23] Actions découvertes: 3
+[MAGEN V23] World model: 50 transitions
+[MAGEN V23] ===== DÉBUT PHASE EXPLOITATION =====
+
+[MAGEN V23] Actions: 60 | Phase: EXPLOITATION
+  World Model: 60 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.207
+  Actions découvertes: 3
+[MAGEN V23] Actions: 60/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[MAGEN V23] Actions: 70 | Phase: EXPLOITATION
+  World Model: 70 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.207
+  Actions découvertes: 3
+[MAGEN V23] Actions: 80 | Phase: EXPLOITATION
+  World Model: 80 transitions, accuracy=0.00
+  Info Gain: avg_reward=0.205
+  Actions découvertes: 3
+[MAGEN V23] Actions: 80/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+
+[MAGEN V23] Résultats finaux:
+  Niveaux complétés: 0
+  Actions: 87
+  Succès: False
+  État final: GameState.GAME_OVER
+  Durée: 0.29s
+
+[MAGEN V23] Statistiques agent:
+  Phase exploration: 50 actions
+  Phase exploitation: 37 actions
+  Actions découvertes: 3
+  World model accuracy: 0.00
+  Avg info gain reward: 0.204
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+🎮 Jeu: ar25-0c556536
+
+[MAGEN V23] Agent réinitialisé pour nouveau jeu
+2026-06-14 15:40:09 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V23] Début jeu - Max actions: 200
+
+[EXPLORATION] Action: rotate_90 (bonus=1.00)
+[EXPLORATION] Action: rotate_180 (bonus=1.00)
+[EXPLORATION] Action: mirror_horizontal (bonus=1.00)
+[EXPLORATION] Action: mirror_vertical (bonus=1.00)
+[EXPLORATION] Action: identity (bonus=1.00)
+[EXPLORATION] Action: action_6 (bonus=1.00)
+[EXPLORATION] Action: undo (bonus=1.00)
+[EXPLORATION] Action: rotate_90 (bonus=0.85)
+[EXPLORATION] Action: rotate_180 (bonus=0.85)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.85)
+[ACTION DISCOVERY] Analyse de mirror_horizontal (9 transitions)...
+  ✅ Effets causaux: 2
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.667
+[MAGEN V23] Actions: 10 | Phase: EXPLORATION
+  World Model: 97 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.207
+  Actions découvertes: 4
+[EXPLORATION] Action: mirror_vertical (bonus=0.85)
+[EXPLORATION] Action: identity (bonus=0.85)
+[EXPLORATION] Action: action_6 (bonus=0.85)
+[WORLD MODEL] Apprentissage règles causales (100 transitions)...
+  ✅ 15 nouvelles règles apprises (total: 16)
+[EXPLORATION] Action: undo (bonus=0.85)
+[EXPLORATION] Action: rotate_90 (bonus=0.70)
+[EXPLORATION] Action: rotate_180 (bonus=0.70)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.70)
+[EXPLORATION] Action: mirror_vertical (bonus=0.70)
+[EXPLORATION] Action: identity (bonus=0.70)
+[EXPLORATION] Action: action_6 (bonus=0.70)
+[ACTION DISCOVERY] Analyse de action_6 (10 transitions)...
+  ✅ Effets causaux: 2
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.500
+[MAGEN V23] Actions: 20 | Phase: EXPLORATION
+  World Model: 107 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.208
+  Actions découvertes: 4
+[MAGEN V23] Actions: 20/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[EXPLORATION] Action: undo (bonus=0.70)
+[EXPLORATION] Action: rotate_90 (bonus=0.55)
+[EXPLORATION] Action: rotate_180 (bonus=0.55)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.55)
+[EXPLORATION] Action: mirror_vertical (bonus=0.55)
+[EXPLORATION] Action: identity (bonus=0.55)
+[EXPLORATION] Action: undo (bonus=0.55)
+[EXPLORATION] Action: rotate_90 (bonus=0.40)
+[EXPLORATION] Action: rotate_90 (bonus=0.50)
+[EXPLORATION] Action: rotate_90 (bonus=0.42)
+[ACTION DISCOVERY] Analyse de rotate_90 (15 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.533
+[MAGEN V23] Actions: 30 | Phase: EXPLORATION
+  World Model: 117 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.210
+  Actions découvertes: 4
+[EXPLORATION] Action: rotate_180 (bonus=0.40)
+[EXPLORATION] Action: rotate_180 (bonus=0.50)
+[EXPLORATION] Action: rotate_180 (bonus=0.42)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.40)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.50)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.42)
+[EXPLORATION] Action: mirror_vertical (bonus=0.40)
+[EXPLORATION] Action: mirror_vertical (bonus=0.50)
+[EXPLORATION] Action: mirror_vertical (bonus=0.42)
+[EXPLORATION] Action: identity (bonus=0.40)
+[ACTION DISCOVERY] Analyse de identity (12 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.583
+[MAGEN V23] Actions: 40 | Phase: EXPLORATION
+  World Model: 127 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.209
+  Actions découvertes: 5
+[MAGEN V23] Actions: 40/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[EXPLORATION] Action: identity (bonus=0.50)
+[EXPLORATION] Action: identity (bonus=0.42)
+[EXPLORATION] Action: undo (bonus=0.40)
+[EXPLORATION] Action: undo (bonus=0.50)
+[EXPLORATION] Action: undo (bonus=0.42)
+[EXPLORATION] Action: rotate_90 (bonus=0.34)
+[EXPLORATION] Action: rotate_180 (bonus=0.34)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.34)
+[EXPLORATION] Action: mirror_vertical (bonus=0.34)
+[EXPLORATION] Action: identity (bonus=0.34)
+[ACTION DISCOVERY] Analyse de identity (15 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.533
+[MAGEN V23] Actions: 50 | Phase: EXPLORATION
+  World Model: 137 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.209
+  Actions découvertes: 5
+
+[MAGEN V23] ===== FIN PHASE EXPLORATION =====
+[MAGEN V23] Actions découvertes: 5
+[MAGEN V23] World model: 137 transitions
+[MAGEN V23] ===== DÉBUT PHASE EXPLOITATION =====
+
+[MAGEN V23] Actions: 60 | Phase: EXPLOITATION
+  World Model: 147 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.209
+  Actions découvertes: 5
+[MAGEN V23] Actions: 60/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[WORLD MODEL] Apprentissage règles causales (150 transitions)...
+  ✅ 48 nouvelles règles apprises (total: 64)
+[MAGEN V23] Actions: 70 | Phase: EXPLOITATION
+  World Model: 157 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.207
+  Actions découvertes: 5
+[MAGEN V23] Actions: 80 | Phase: EXPLOITATION
+  World Model: 167 transitions, accuracy=0.08
+  Info Gain: avg_reward=0.205
+  Actions découvertes: 5
+[MAGEN V23] Actions: 80/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+
+[MAGEN V23] Résultats finaux:
+  Niveaux complétés: 0
+  Actions: 86
+  Succès: False
+  État final: GameState.GAME_OVER
+  Durée: 0.62s
+
+[MAGEN V23] Statistiques agent:
+  Phase exploration: 100 actions
+  Phase exploitation: 73 actions
+  Actions découvertes: 5
+  World model accuracy: 0.08
+  Avg info gain reward: 0.205
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+🎮 Jeu: cd82-fb555c5d
+
+[MAGEN V23] Agent réinitialisé pour nouveau jeu
+2026-06-14 15:40:10 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 15:40:10 | INFO | Successfully loaded game class Cd82 from environment_files/cd82/fb555c5d/cd82.py
+[MAGEN V23] Début jeu - Max actions: 200
+
+[EXPLORATION] Action: rotate_90 (bonus=1.00)
+[EXPLORATION] Action: rotate_180 (bonus=1.00)
+[EXPLORATION] Action: mirror_horizontal (bonus=1.00)
+[EXPLORATION] Action: mirror_vertical (bonus=1.00)
+[EXPLORATION] Action: identity (bonus=1.00)
+[EXPLORATION] Action: undo (bonus=1.00)
+[EXPLORATION] Action: rotate_90 (bonus=0.85)
+[EXPLORATION] Action: rotate_180 (bonus=0.85)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.85)
+[EXPLORATION] Action: mirror_vertical (bonus=0.85)
+[ACTION DISCOVERY] Analyse de mirror_vertical (17 transitions)...
+  ✅ Effets causaux: 1
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.588
+[MAGEN V23] Actions: 10 | Phase: EXPLORATION
+  World Model: 183 transitions, accuracy=0.13
+  Info Gain: avg_reward=0.206
+  Actions découvertes: 5
+[EXPLORATION] Action: identity (bonus=0.85)
+[EXPLORATION] Action: undo (bonus=0.85)
+[EXPLORATION] Action: rotate_90 (bonus=0.70)
+[EXPLORATION] Action: rotate_180 (bonus=0.70)
+[EXPLORATION] Action: mirror_horizontal (bonus=0.70)
+[EXPLORATION] Action: mirror_vertical (bonus=0.70)
+[EXPLORATION] Action: identity (bonus=0.70)
+[EXPLORATION] Action: undo (bonus=0.70)
+[EXPLORATION] Action: rotate_90 (bonus=0.55)
+[EXPLORATION] Action: rotate_180 (bonus=0.55)
+[ACTION DISCOVERY] Analyse de rotate_180 (19 transitions)...
+  ✅ Effets causaux: 2
+  ✅ Taux succès: 0.00%
+  ✅ Reward moyen: 0.000
+  ✅ Gain d'information: 0.632
+[MAGEN V23] Actions: 20 | Phase: EXPLORATION
+  World Model: 193 transitions, accuracy=0.13
+  Info Gain: avg_reward=0.204
+  Actions découvertes: 6
+[MAGEN V23] Actions: 20/200 | Niveaux: 0 | État: GameState.NOT_FINISHED
+[EXPLORATION] Action: mirror_horizontal (bonus=0.55)
+[EXPLORATION] Action: mirror_vertical (bonus=0.55)
+[EXPLORATION] Action: identity (bonus=0.55)
+[EXPLORATION] Action: undo (bonus=0.55)
+[EXPLORATION] Action: rotate_90 (bonus=0.40)
+[EXPLORATION] Action: rotate_90 (bonus=0.50)
+[EXPLORATION] Action: rotate_90 (bonus=0.42)
+[WORLD MODEL] Apprentissage règles causales (200 transitions)...
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v23_local.py", line 172, in <module>
+    test_magen_v23_local()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v23_local.py", line 99, in test_magen_v23_local
+    agent.learn(grid_obs, decision, grid_obs_after)
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v23.py", line 344, in learn
+    self.world_model.record_transition(transition_wm)
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/core/world_model.py", line 112, in record_transition
+    self._learn_causal_rules()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/core/world_model.py", line 272, in _learn_causal_rules
+    features = np.array([t.state_before.flatten() for t in transitions])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (25,) + inhomogeneous part.

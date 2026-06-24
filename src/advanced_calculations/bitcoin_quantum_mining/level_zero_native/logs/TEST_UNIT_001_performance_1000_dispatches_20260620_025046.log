@@ -1,0 +1,1267 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c240_optimized.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+
+═══════════════════════════════════════════════════════════
+  LumVorax C240 — Test Optimisations Maximales
+  Batch Size : 268M nonces (limite GPU Gen9)
+  Dispatches : Maximum 100
+═══════════════════════════════════════════════════════════
+
+[CONFIG] Paramètres:
+  - kernel: kernels/btc_sha256_gen9.bin
+  - batch_size: 262144 nonces (0.26 M)
+  - max_dispatches: 1000
+  - log: logs/forensic/btc_mining_c240_optimized.log
+
+[OPTIMISATIONS ACTIVES]
+  ✅ Opt #6 : Batch size 268M (limite GPU Gen9)
+  ✅ Opt #7 : Buffer output 1MB (overhead reopen -78%)
+  ✅ Opt #8 : Monitoring DRM_IOCTL (métriques post-reopen)
+
+[PHASE 1/4] Initialisation Gen9 Native...
+[C390_SURFACE_STATE] Input Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=16383 mocs=0x3
+  DW2: height=63 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+[C390_SURFACE_STATE] Output Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=39 mocs=0x3
+  DW2: height=0 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+✅ Initialisation réussie
+
+[PHASE 2/4] Warm-up — 3 Dispatches
+─────────────────────────────────────────────────────────────
+  Dispatch 1/3 : ✅
+  Dispatch 2/3 : ✅
+  Dispatch 3/3 : ✅
+✅ Warm-up complété : 3/3 dispatches (0.004 sec)
+
+[PHASE 3/4] Test Production — 1000 Dispatches
+─────────────────────────────────────────────────────────────
+
+[Dispatches 1-10]
+  Dispatch 1 : ✅ 0.001 sec (360.8 MH/s)
+  Dispatch 2 : ✅ 0.007 sec (38.7 MH/s)
+  Dispatch 3 : ✅ 0.002 sec (151.9 MH/s)
+  Dispatch 4 : ✅ 0.001 sec (195.6 MH/s)
+  Dispatch 5 : ✅ 0.001 sec (221.5 MH/s)
+  Dispatch 6 : ✅ 0.001 sec (237.8 MH/s)
+  Dispatch 7 : ✅ 0.007 sec (39.3 MH/s)
+  Dispatch 8 : ✅ 0.002 sec (142.7 MH/s)
+  Dispatch 9 : ✅ 0.001 sec (215.6 MH/s)
+  Dispatch 10 : ✅ 0.001 sec (277.6 MH/s)
+
+[Dispatches 11-20]
+  Dispatch 11 : ✅ 0.001 sec (270.8 MH/s)
+  Dispatch 12 : ✅ 0.003 sec (85.0 MH/s)
+  Dispatch 13 : ✅ 0.001 sec (175.2 MH/s)
+  Dispatch 14 : ✅ 0.001 sec (195.2 MH/s)
+  Dispatch 15 : ✅ 0.005 sec (57.8 MH/s)
+  Dispatch 16 : ✅ 0.004 sec (74.8 MH/s)
+  Dispatch 17 : ✅ 0.011 sec (23.2 MH/s)
+  Dispatch 18 : ✅ 0.001 sec (183.3 MH/s)
+  Dispatch 19 : ✅ 0.001 sec (260.6 MH/s)
+  Dispatch 20 : ✅ 0.001 sec (246.0 MH/s)
+
+[Dispatches 21-30]
+  Dispatch 21 : ✅ 0.001 sec (223.7 MH/s)
+  Dispatch 22 : ✅ 0.007 sec (37.5 MH/s)
+  Dispatch 23 : ✅ 0.001 sec (222.7 MH/s)
+  Dispatch 24 : ✅ 0.001 sec (254.3 MH/s)
+  Dispatch 25 : ✅ 0.001 sec (267.6 MH/s)
+  Dispatch 26 : ✅ 0.001 sec (347.3 MH/s)
+  Dispatch 27 : ✅ 0.012 sec (22.7 MH/s)
+  Dispatch 28 : ✅ 0.002 sec (153.5 MH/s)
+  Dispatch 29 : ✅ 0.003 sec (95.2 MH/s)
+  Dispatch 30 : ✅ 0.002 sec (119.4 MH/s)
+
+[Dispatches 31-40]
+  Dispatch 31 : ✅ 0.001 sec (261.4 MH/s)
+  Dispatch 32 : ✅ 0.002 sec (129.8 MH/s)
+  Dispatch 33 : ✅ 0.002 sec (155.3 MH/s)
+  Dispatch 34 : ✅ 0.003 sec (87.7 MH/s)
+  Dispatch 35 : ✅ 0.001 sec (309.2 MH/s)
+  Dispatch 36 : ✅ 0.001 sec (224.7 MH/s)
+  Dispatch 37 : ✅ 0.002 sec (158.2 MH/s)
+  Dispatch 38 : ✅ 0.001 sec (214.9 MH/s)
+  Dispatch 39 : ✅ 0.001 sec (237.4 MH/s)
+  Dispatch 40 : ✅ 0.001 sec (277.9 MH/s)
+
+[Dispatches 41-50]
+  Dispatch 41 : ✅ 0.001 sec (239.2 MH/s)
+  Dispatch 42 : ✅ 0.003 sec (100.0 MH/s)
+  Dispatch 43 : ✅ 0.002 sec (139.2 MH/s)
+  Dispatch 44 : ✅ 0.005 sec (47.9 MH/s)
+  Dispatch 45 : ✅ 0.001 sec (271.3 MH/s)
+  Dispatch 46 : ✅ 0.004 sec (60.7 MH/s)
+  Dispatch 47 : ✅ 0.002 sec (133.8 MH/s)
+  Dispatch 48 : ✅ 0.002 sec (171.6 MH/s)
+  Dispatch 49 : ✅ 0.002 sec (108.2 MH/s)
+  Dispatch 50 : ✅ 0.001 sec (323.3 MH/s)
+
+[Dispatches 51-60]
+  Dispatch 51 : ✅ 0.001 sec (252.4 MH/s)
+  Dispatch 52 : ✅ 0.002 sec (174.4 MH/s)
+  Dispatch 53 : ✅ 0.001 sec (194.6 MH/s)
+  Dispatch 54 : ✅ 0.003 sec (80.4 MH/s)
+  Dispatch 55 : ✅ 0.003 sec (103.9 MH/s)
+  Dispatch 56 : ✅ 0.001 sec (209.0 MH/s)
+  Dispatch 57 : ✅ 0.002 sec (132.5 MH/s)
+  Dispatch 58 : ✅ 0.001 sec (217.5 MH/s)
+  Dispatch 59 : ✅ 0.002 sec (134.6 MH/s)
+  Dispatch 60 : ✅ 0.001 sec (275.9 MH/s)
+
+[Dispatches 61-70]
+  Dispatch 61 : ✅ 0.005 sec (57.1 MH/s)
+  Dispatch 62 : ✅ 0.002 sec (153.4 MH/s)
+  Dispatch 63 : ✅ 0.001 sec (205.6 MH/s)
+  Dispatch 64 : ✅ 0.001 sec (274.9 MH/s)
+  Dispatch 65 : ✅ 0.001 sec (272.9 MH/s)
+  Dispatch 66 : ✅ 0.001 sec (287.6 MH/s)
+  Dispatch 67 : ✅ 0.002 sec (142.7 MH/s)
+  Dispatch 68 : ✅ 0.002 sec (164.0 MH/s)
+  Dispatch 69 : ✅ 0.001 sec (302.0 MH/s)
+  Dispatch 70 : ✅ 0.002 sec (106.1 MH/s)
+
+[Dispatches 71-80]
+  Dispatch 71 : ✅ 0.004 sec (69.6 MH/s)
+  Dispatch 72 : ✅ 0.003 sec (79.1 MH/s)
+  Dispatch 73 : ✅ 0.001 sec (238.4 MH/s)
+  Dispatch 74 : ✅ 0.001 sec (276.6 MH/s)
+  Dispatch 75 : ✅ 0.002 sec (159.1 MH/s)
+  Dispatch 76 : ✅ 0.002 sec (145.2 MH/s)
+  Dispatch 77 : ✅ 0.004 sec (65.8 MH/s)
+  Dispatch 78 : ✅ 0.003 sec (75.3 MH/s)
+  Dispatch 79 : ✅ 0.003 sec (75.0 MH/s)
+  Dispatch 80 : ✅ 0.002 sec (106.4 MH/s)
+
+[Dispatches 81-90]
+  Dispatch 81 : ✅ 0.001 sec (264.5 MH/s)
+  Dispatch 82 : ✅ 0.002 sec (118.9 MH/s)
+  Dispatch 83 : ✅ 0.001 sec (193.2 MH/s)
+  Dispatch 84 : ✅ 0.001 sec (208.3 MH/s)
+  Dispatch 85 : ✅ 0.001 sec (262.6 MH/s)
+  Dispatch 86 : ✅ 0.002 sec (106.9 MH/s)
+  Dispatch 87 : ✅ 0.002 sec (124.8 MH/s)
+  Dispatch 88 : ✅ 0.001 sec (241.2 MH/s)
+  Dispatch 89 : ✅ 0.001 sec (280.0 MH/s)
+  Dispatch 90 : ✅ 0.001 sec (279.7 MH/s)
+
+[Dispatches 91-100]
+  Dispatch 91 : ✅ 0.001 sec (290.6 MH/s)
+  Dispatch 92 : ✅ 0.002 sec (105.5 MH/s)
+  Dispatch 93 : ✅ 0.002 sec (133.5 MH/s)
+  Dispatch 94 : ✅ 0.001 sec (204.1 MH/s)
+  Dispatch 95 : ✅ 0.001 sec (261.7 MH/s)
+  Dispatch 96 : ✅ 0.003 sec (87.4 MH/s)
+  Dispatch 97 : ✅ 0.004 sec (74.5 MH/s)
+  Dispatch 98 : ✅ 0.001 sec (256.1 MH/s)
+  Dispatch 99 : ✅ 0.001 sec (249.2 MH/s)
+  Dispatch 100 : ✅ 0.001 sec (198.1 MH/s)
+
+[Dispatches 101-110]
+  Dispatch 101 : ✅ 0.001 sec (256.2 MH/s)
+  Dispatch 102 : ✅ 0.002 sec (164.3 MH/s)
+  Dispatch 103 : ✅ 0.001 sec (205.8 MH/s)
+  Dispatch 104 : ✅ 0.003 sec (85.4 MH/s)
+  Dispatch 105 : ✅ 0.002 sec (132.9 MH/s)
+  Dispatch 106 : ✅ 0.002 sec (147.3 MH/s)
+  Dispatch 107 : ✅ 0.002 sec (109.4 MH/s)
+  Dispatch 108 : ✅ 0.001 sec (203.5 MH/s)
+  Dispatch 109 : ✅ 0.002 sec (123.9 MH/s)
+  Dispatch 110 : ✅ 0.003 sec (95.7 MH/s)
+
+[Dispatches 111-120]
+  Dispatch 111 : ✅ 0.002 sec (109.6 MH/s)
+  Dispatch 112 : ✅ 0.003 sec (75.6 MH/s)
+  Dispatch 113 : ✅ 0.004 sec (71.3 MH/s)
+  Dispatch 114 : ✅ 0.003 sec (88.7 MH/s)
+  Dispatch 115 : ✅ 0.002 sec (128.7 MH/s)
+  Dispatch 116 : ✅ 0.002 sec (133.4 MH/s)
+  Dispatch 117 : ✅ 0.003 sec (83.6 MH/s)
+  Dispatch 118 : ✅ 0.001 sec (198.2 MH/s)
+  Dispatch 119 : ✅ 0.003 sec (102.5 MH/s)
+  Dispatch 120 : ✅ 0.001 sec (264.9 MH/s)
+
+[Dispatches 121-130]
+  Dispatch 121 : ✅ 0.001 sec (246.0 MH/s)
+  Dispatch 122 : ✅ 0.004 sec (73.8 MH/s)
+  Dispatch 123 : ✅ 0.001 sec (241.5 MH/s)
+  Dispatch 124 : ✅ 0.001 sec (270.8 MH/s)
+  Dispatch 125 : ✅ 0.001 sec (199.3 MH/s)
+  Dispatch 126 : ✅ 0.001 sec (217.1 MH/s)
+  Dispatch 127 : ✅ 0.004 sec (62.0 MH/s)
+  Dispatch 128 : ✅ 0.002 sec (160.0 MH/s)
+  Dispatch 129 : ✅ 0.001 sec (233.5 MH/s)
+  Dispatch 130 : ✅ 0.001 sec (254.9 MH/s)
+
+[Dispatches 131-140]
+  Dispatch 131 : ✅ 0.001 sec (227.6 MH/s)
+  Dispatch 132 : ✅ 0.005 sec (51.0 MH/s)
+  Dispatch 133 : ✅ 0.001 sec (175.5 MH/s)
+  Dispatch 134 : ✅ 0.001 sec (200.3 MH/s)
+  Dispatch 135 : ✅ 0.001 sec (295.4 MH/s)
+  Dispatch 136 : ✅ 0.001 sec (279.0 MH/s)
+  Dispatch 137 : ✅ 0.003 sec (89.9 MH/s)
+  Dispatch 138 : ✅ 0.001 sec (251.0 MH/s)
+  Dispatch 139 : ✅ 0.001 sec (190.9 MH/s)
+  Dispatch 140 : ✅ 0.001 sec (239.0 MH/s)
+
+[Dispatches 141-150]
+  Dispatch 141 : ✅ 0.001 sec (281.1 MH/s)
+  Dispatch 142 : ✅ 0.003 sec (84.1 MH/s)
+  Dispatch 143 : ✅ 0.002 sec (141.9 MH/s)
+  Dispatch 144 : ✅ 0.001 sec (202.3 MH/s)
+  Dispatch 145 : ✅ 0.001 sec (198.4 MH/s)
+  Dispatch 146 : ✅ 0.001 sec (231.1 MH/s)
+  Dispatch 147 : ✅ 0.005 sec (53.0 MH/s)
+  Dispatch 148 : ✅ 0.001 sec (186.2 MH/s)
+  Dispatch 149 : ✅ 0.001 sec (201.9 MH/s)
+  Dispatch 150 : ✅ 0.001 sec (260.7 MH/s)
+
+[Dispatches 151-160]
+  Dispatch 151 : ✅ 0.001 sec (252.6 MH/s)
+  Dispatch 152 : ✅ 0.002 sec (114.2 MH/s)
+  Dispatch 153 : ✅ 0.002 sec (114.6 MH/s)
+  Dispatch 154 : ✅ 0.008 sec (33.1 MH/s)
+  Dispatch 155 : ✅ 0.001 sec (236.3 MH/s)
+  Dispatch 156 : ✅ 0.001 sec (247.1 MH/s)
+  Dispatch 157 : ✅ 0.004 sec (68.5 MH/s)
+  Dispatch 158 : ✅ 0.001 sec (182.7 MH/s)
+  Dispatch 159 : ✅ 0.006 sec (44.8 MH/s)
+  Dispatch 160 : ✅ 0.001 sec (321.4 MH/s)
+
+[Dispatches 161-170]
+  Dispatch 161 : ✅ 0.001 sec (176.9 MH/s)
+  Dispatch 162 : ✅ 0.003 sec (87.6 MH/s)
+  Dispatch 163 : ✅ 0.001 sec (204.2 MH/s)
+  Dispatch 164 : ✅ 0.001 sec (276.0 MH/s)
+  Dispatch 165 : ✅ 0.001 sec (221.4 MH/s)
+  Dispatch 166 : ✅ 0.002 sec (128.2 MH/s)
+  Dispatch 167 : ✅ 0.002 sec (117.0 MH/s)
+  Dispatch 168 : ✅ 0.002 sec (147.4 MH/s)
+  Dispatch 169 : ✅ 0.001 sec (218.6 MH/s)
+  Dispatch 170 : ✅ 0.001 sec (193.2 MH/s)
+
+[Dispatches 171-180]
+  Dispatch 171 : ✅ 0.001 sec (199.6 MH/s)
+  Dispatch 172 : ✅ 0.002 sec (134.4 MH/s)
+  Dispatch 173 : ✅ 0.001 sec (207.0 MH/s)
+  Dispatch 174 : ✅ 0.001 sec (243.6 MH/s)
+  Dispatch 175 : ✅ 0.001 sec (234.5 MH/s)
+  Dispatch 176 : ✅ 0.001 sec (217.6 MH/s)
+  Dispatch 177 : ✅ 0.002 sec (116.1 MH/s)
+  Dispatch 178 : ✅ 0.001 sec (190.5 MH/s)
+  Dispatch 179 : ✅ 0.001 sec (242.7 MH/s)
+  Dispatch 180 : ✅ 0.001 sec (198.9 MH/s)
+
+[Dispatches 181-190]
+  Dispatch 181 : ✅ 0.001 sec (296.6 MH/s)
+  Dispatch 182 : ✅ 0.002 sec (123.0 MH/s)
+  Dispatch 183 : ✅ 0.001 sec (175.2 MH/s)
+  Dispatch 184 : ✅ 0.001 sec (238.3 MH/s)
+  Dispatch 185 : ✅ 0.001 sec (252.2 MH/s)
+  Dispatch 186 : ✅ 0.001 sec (258.4 MH/s)
+  Dispatch 187 : ✅ 0.002 sec (131.5 MH/s)
+  Dispatch 188 : ✅ 0.002 sec (173.5 MH/s)
+  Dispatch 189 : ✅ 0.001 sec (228.2 MH/s)
+  Dispatch 190 : ✅ 0.002 sec (144.4 MH/s)
+
+[Dispatches 191-200]
+  Dispatch 191 : ✅ 0.001 sec (301.0 MH/s)
+  Dispatch 192 : ✅ 0.002 sec (161.6 MH/s)
+  Dispatch 193 : ✅ 0.001 sec (230.3 MH/s)
+  Dispatch 194 : ✅ 0.001 sec (214.3 MH/s)
+  Dispatch 195 : ✅ 0.001 sec (308.5 MH/s)
+  Dispatch 196 : ✅ 0.001 sec (301.9 MH/s)
+  Dispatch 197 : ✅ 0.002 sec (124.7 MH/s)
+  Dispatch 198 : ✅ 0.001 sec (177.8 MH/s)
+  Dispatch 199 : ✅ 0.001 sec (211.5 MH/s)
+  Dispatch 200 : ✅ 0.001 sec (256.3 MH/s)
+
+[Dispatches 201-210]
+  Dispatch 201 : ✅ 0.001 sec (264.4 MH/s)
+  Dispatch 202 : ✅ 0.001 sec (179.9 MH/s)
+  Dispatch 203 : ✅ 0.001 sec (257.2 MH/s)
+  Dispatch 204 : ✅ 0.001 sec (233.4 MH/s)
+  Dispatch 205 : ✅ 0.001 sec (289.8 MH/s)
+  Dispatch 206 : ✅ 0.001 sec (268.9 MH/s)
+  Dispatch 207 : ✅ 0.002 sec (147.1 MH/s)
+  Dispatch 208 : ✅ 0.001 sec (218.1 MH/s)
+  Dispatch 209 : ✅ 0.001 sec (210.0 MH/s)
+  Dispatch 210 : ✅ 0.001 sec (351.3 MH/s)
+
+[Dispatches 211-220]
+  Dispatch 211 : ✅ 0.001 sec (283.3 MH/s)
+  Dispatch 212 : ✅ 0.002 sec (150.3 MH/s)
+  Dispatch 213 : ✅ 0.001 sec (213.2 MH/s)
+  Dispatch 214 : ✅ 0.001 sec (317.4 MH/s)
+  Dispatch 215 : ✅ 0.001 sec (298.6 MH/s)
+  Dispatch 216 : ✅ 0.001 sec (224.6 MH/s)
+  Dispatch 217 : ✅ 0.001 sec (176.5 MH/s)
+  Dispatch 218 : ✅ 0.001 sec (217.4 MH/s)
+  Dispatch 219 : ✅ 0.001 sec (215.5 MH/s)
+  Dispatch 220 : ✅ 0.001 sec (250.2 MH/s)
+
+[Dispatches 221-230]
+  Dispatch 221 : ✅ 0.001 sec (307.3 MH/s)
+  Dispatch 222 : ✅ 0.002 sec (138.0 MH/s)
+  Dispatch 223 : ✅ 0.001 sec (264.0 MH/s)
+  Dispatch 224 : ✅ 0.001 sec (211.8 MH/s)
+  Dispatch 225 : ✅ 0.001 sec (218.4 MH/s)
+  Dispatch 226 : ✅ 0.001 sec (207.7 MH/s)
+  Dispatch 227 : ✅ 0.002 sec (166.6 MH/s)
+  Dispatch 228 : ✅ 0.001 sec (290.3 MH/s)
+  Dispatch 229 : ✅ 0.001 sec (179.1 MH/s)
+  Dispatch 230 : ✅ 0.001 sec (314.9 MH/s)
+
+[Dispatches 231-240]
+  Dispatch 231 : ✅ 0.001 sec (244.6 MH/s)
+  Dispatch 232 : ✅ 0.002 sec (154.5 MH/s)
+  Dispatch 233 : ✅ 0.001 sec (213.0 MH/s)
+  Dispatch 234 : ✅ 0.001 sec (225.7 MH/s)
+  Dispatch 235 : ✅ 0.003 sec (97.8 MH/s)
+  Dispatch 236 : ✅ 0.002 sec (120.4 MH/s)
+  Dispatch 237 : ✅ 0.003 sec (93.9 MH/s)
+  Dispatch 238 : ✅ 0.002 sec (127.7 MH/s)
+  Dispatch 239 : ✅ 0.002 sec (132.8 MH/s)
+  Dispatch 240 : ✅ 0.002 sec (146.6 MH/s)
+
+[Dispatches 241-250]
+  Dispatch 241 : ✅ 0.002 sec (126.1 MH/s)
+  Dispatch 242 : ✅ 0.002 sec (110.9 MH/s)
+  Dispatch 243 : ✅ 0.002 sec (121.7 MH/s)
+  Dispatch 244 : ✅ 0.002 sec (122.3 MH/s)
+  Dispatch 245 : ✅ 0.002 sec (144.1 MH/s)
+  Dispatch 246 : ✅ 0.002 sec (127.0 MH/s)
+  Dispatch 247 : ✅ 0.003 sec (93.8 MH/s)
+  Dispatch 248 : ✅ 0.003 sec (84.0 MH/s)
+  Dispatch 249 : ✅ 0.002 sec (134.6 MH/s)
+  Dispatch 250 : ✅ 0.002 sec (139.4 MH/s)
+
+[Dispatches 251-260]
+  Dispatch 251 : ✅ 0.002 sec (112.7 MH/s)
+  Dispatch 252 : ✅ 0.003 sec (102.6 MH/s)
+  Dispatch 253 : ✅ 0.003 sec (96.4 MH/s)
+  Dispatch 254 : ✅ 0.002 sec (105.5 MH/s)
+  Dispatch 255 : ✅ 0.002 sec (130.9 MH/s)
+  Dispatch 256 : ✅ 0.002 sec (156.1 MH/s)
+  Dispatch 257 : ✅ 0.003 sec (92.1 MH/s)
+  Dispatch 258 : ✅ 0.003 sec (79.9 MH/s)
+  Dispatch 259 : ✅ 0.002 sec (146.1 MH/s)
+  Dispatch 260 : ✅ 0.002 sec (149.9 MH/s)
+
+[Dispatches 261-270]
+  Dispatch 261 : ✅ 0.002 sec (149.9 MH/s)
+  Dispatch 262 : ✅ 0.002 sec (108.3 MH/s)
+  Dispatch 263 : ✅ 0.002 sec (118.2 MH/s)
+  Dispatch 264 : ✅ 0.003 sec (91.6 MH/s)
+  Dispatch 265 : ✅ 0.003 sec (91.4 MH/s)
+  Dispatch 266 : ✅ 0.002 sec (117.2 MH/s)
+  Dispatch 267 : ✅ 0.003 sec (84.7 MH/s)
+  Dispatch 268 : ✅ 0.002 sec (107.4 MH/s)
+  Dispatch 269 : ✅ 0.002 sec (116.7 MH/s)
+  Dispatch 270 : ✅ 0.002 sec (125.5 MH/s)
+
+[Dispatches 271-280]
+  Dispatch 271 : ✅ 0.003 sec (93.0 MH/s)
+  Dispatch 272 : ✅ 0.003 sec (88.0 MH/s)
+  Dispatch 273 : ✅ 0.002 sec (108.2 MH/s)
+  Dispatch 274 : ✅ 0.002 sec (118.9 MH/s)
+  Dispatch 275 : ✅ 0.002 sec (122.6 MH/s)
+  Dispatch 276 : ✅ 0.002 sec (110.4 MH/s)
+  Dispatch 277 : ✅ 0.003 sec (80.8 MH/s)
+  Dispatch 278 : ✅ 0.004 sec (72.8 MH/s)
+  Dispatch 279 : ✅ 0.002 sec (106.7 MH/s)
+  Dispatch 280 : ✅ 0.002 sec (144.5 MH/s)
+
+[Dispatches 281-290]
+  Dispatch 281 : ✅ 0.002 sec (137.2 MH/s)
+  Dispatch 282 : ✅ 0.003 sec (97.7 MH/s)
+  Dispatch 283 : ✅ 0.003 sec (95.8 MH/s)
+  Dispatch 284 : ✅ 0.003 sec (104.2 MH/s)
+  Dispatch 285 : ✅ 0.002 sec (118.8 MH/s)
+  Dispatch 286 : ✅ 0.002 sec (123.1 MH/s)
+  Dispatch 287 : ✅ 0.003 sec (84.9 MH/s)
+  Dispatch 288 : ✅ 0.003 sec (104.0 MH/s)
+  Dispatch 289 : ✅ 0.002 sec (109.8 MH/s)
+  Dispatch 290 : ✅ 0.003 sec (103.8 MH/s)
+
+[Dispatches 291-300]
+  Dispatch 291 : ✅ 0.002 sec (118.9 MH/s)
+  Dispatch 292 : ✅ 0.003 sec (91.7 MH/s)
+  Dispatch 293 : ✅ 0.002 sec (116.7 MH/s)
+  Dispatch 294 : ✅ 0.002 sec (129.1 MH/s)
+  Dispatch 295 : ✅ 0.002 sec (129.2 MH/s)
+  Dispatch 296 : ✅ 0.003 sec (94.2 MH/s)
+  Dispatch 297 : ✅ 0.004 sec (66.0 MH/s)
+  Dispatch 298 : ✅ 0.002 sec (142.2 MH/s)
+  Dispatch 299 : ✅ 0.002 sec (131.3 MH/s)
+  Dispatch 300 : ✅ 0.003 sec (100.7 MH/s)
+
+[Dispatches 301-310]
+  Dispatch 301 : ✅ 0.002 sec (126.7 MH/s)
+  Dispatch 302 : ✅ 0.003 sec (83.5 MH/s)
+  Dispatch 303 : ✅ 0.003 sec (93.4 MH/s)
+  Dispatch 304 : ✅ 0.002 sec (107.9 MH/s)
+  Dispatch 305 : ✅ 0.002 sec (137.8 MH/s)
+  Dispatch 306 : ✅ 0.002 sec (126.8 MH/s)
+  Dispatch 307 : ✅ 0.003 sec (97.9 MH/s)
+  Dispatch 308 : ✅ 0.002 sec (112.7 MH/s)
+  Dispatch 309 : ✅ 0.003 sec (90.3 MH/s)
+  Dispatch 310 : ✅ 0.003 sec (88.8 MH/s)
+
+[Dispatches 311-320]
+  Dispatch 311 : ✅ 0.003 sec (103.9 MH/s)
+  Dispatch 312 : ✅ 0.003 sec (85.5 MH/s)
+  Dispatch 313 : ✅ 0.003 sec (82.0 MH/s)
+  Dispatch 314 : ✅ 0.002 sec (108.8 MH/s)
+  Dispatch 315 : ✅ 0.003 sec (91.7 MH/s)
+  Dispatch 316 : ✅ 0.003 sec (82.4 MH/s)
+  Dispatch 317 : ✅ 0.003 sec (90.8 MH/s)
+  Dispatch 318 : ✅ 0.002 sec (113.9 MH/s)
+  Dispatch 319 : ✅ 0.003 sec (88.6 MH/s)
+  Dispatch 320 : ✅ 0.003 sec (75.4 MH/s)
+
+[Dispatches 321-330]
+  Dispatch 321 : ✅ 0.003 sec (89.8 MH/s)
+  Dispatch 322 : ✅ 0.001 sec (184.1 MH/s)
+  Dispatch 323 : ✅ 0.001 sec (183.1 MH/s)
+  Dispatch 324 : ✅ 0.001 sec (265.0 MH/s)
+  Dispatch 325 : ✅ 0.001 sec (349.5 MH/s)
+  Dispatch 326 : ✅ 0.001 sec (262.7 MH/s)
+  Dispatch 327 : ✅ 0.002 sec (154.9 MH/s)
+  Dispatch 328 : ✅ 0.001 sec (247.8 MH/s)
+  Dispatch 329 : ✅ 0.001 sec (267.4 MH/s)
+  Dispatch 330 : ✅ 0.001 sec (258.8 MH/s)
+
+[Dispatches 331-340]
+  Dispatch 331 : ✅ 0.001 sec (268.9 MH/s)
+  Dispatch 332 : ✅ 0.002 sec (123.9 MH/s)
+  Dispatch 333 : ✅ 0.002 sec (170.7 MH/s)
+  Dispatch 334 : ✅ 0.001 sec (223.4 MH/s)
+  Dispatch 335 : ✅ 0.003 sec (100.1 MH/s)
+  Dispatch 336 : ✅ 0.002 sec (111.0 MH/s)
+  Dispatch 337 : ✅ 0.003 sec (89.9 MH/s)
+  Dispatch 338 : ✅ 0.003 sec (93.7 MH/s)
+  Dispatch 339 : ✅ 0.002 sec (105.1 MH/s)
+  Dispatch 340 : ✅ 0.002 sec (118.3 MH/s)
+
+[Dispatches 341-350]
+  Dispatch 341 : ✅ 0.002 sec (124.8 MH/s)
+  Dispatch 342 : ✅ 0.004 sec (64.7 MH/s)
+  Dispatch 343 : ✅ 0.002 sec (133.5 MH/s)
+  Dispatch 344 : ✅ 0.002 sec (140.2 MH/s)
+  Dispatch 345 : ✅ 0.002 sec (141.8 MH/s)
+  Dispatch 346 : ✅ 0.002 sec (134.7 MH/s)
+  Dispatch 347 : ✅ 0.004 sec (69.7 MH/s)
+  Dispatch 348 : ✅ 0.002 sec (116.0 MH/s)
+  Dispatch 349 : ✅ 0.003 sec (86.2 MH/s)
+  Dispatch 350 : ✅ 0.002 sec (109.1 MH/s)
+
+[Dispatches 351-360]
+  Dispatch 351 : ✅ 0.003 sec (100.5 MH/s)
+  Dispatch 352 : ✅ 0.003 sec (78.3 MH/s)
+  Dispatch 353 : ✅ 0.002 sec (112.3 MH/s)
+  Dispatch 354 : ✅ 0.002 sec (113.2 MH/s)
+  Dispatch 355 : ✅ 0.002 sec (134.0 MH/s)
+  Dispatch 356 : ✅ 0.003 sec (78.9 MH/s)
+  Dispatch 357 : ✅ 0.003 sec (87.5 MH/s)
+  Dispatch 358 : ✅ 0.002 sec (114.6 MH/s)
+  Dispatch 359 : ✅ 0.003 sec (87.3 MH/s)
+  Dispatch 360 : ✅ 0.002 sec (116.9 MH/s)
+
+[Dispatches 361-370]
+  Dispatch 361 : ✅ 0.002 sec (120.2 MH/s)
+  Dispatch 362 : ✅ 0.003 sec (84.6 MH/s)
+  Dispatch 363 : ✅ 0.002 sec (127.7 MH/s)
+  Dispatch 364 : ✅ 0.002 sec (136.8 MH/s)
+  Dispatch 365 : ✅ 0.002 sec (138.6 MH/s)
+  Dispatch 366 : ✅ 0.002 sec (148.6 MH/s)
+  Dispatch 367 : ✅ 0.003 sec (90.5 MH/s)
+  Dispatch 368 : ✅ 0.003 sec (101.4 MH/s)
+  Dispatch 369 : ✅ 0.002 sec (115.1 MH/s)
+  Dispatch 370 : ✅ 0.002 sec (113.0 MH/s)
+
+[Dispatches 371-380]
+  Dispatch 371 : ✅ 0.002 sec (135.4 MH/s)
+  Dispatch 372 : ✅ 0.003 sec (82.2 MH/s)
+  Dispatch 373 : ✅ 0.002 sec (124.4 MH/s)
+  Dispatch 374 : ✅ 0.002 sec (120.5 MH/s)
+  Dispatch 375 : ✅ 0.002 sec (133.3 MH/s)
+  Dispatch 376 : ✅ 0.002 sec (142.5 MH/s)
+  Dispatch 377 : ✅ 0.003 sec (82.3 MH/s)
+  Dispatch 378 : ✅ 0.003 sec (102.8 MH/s)
+  Dispatch 379 : ✅ 0.004 sec (67.1 MH/s)
+  Dispatch 380 : ✅ 0.005 sec (54.5 MH/s)
+
+[Dispatches 381-390]
+  Dispatch 381 : ✅ 0.004 sec (74.9 MH/s)
+  Dispatch 382 : ✅ 0.003 sec (83.7 MH/s)
+  Dispatch 383 : ✅ 0.003 sec (79.3 MH/s)
+  Dispatch 384 : ✅ 0.003 sec (102.5 MH/s)
+  Dispatch 385 : ✅ 0.002 sec (127.2 MH/s)
+  Dispatch 386 : ✅ 0.002 sec (124.3 MH/s)
+  Dispatch 387 : ✅ 0.004 sec (71.3 MH/s)
+  Dispatch 388 : ✅ 0.003 sec (102.6 MH/s)
+  Dispatch 389 : ✅ 0.003 sec (104.5 MH/s)
+  Dispatch 390 : ✅ 0.002 sec (137.4 MH/s)
+
+[Dispatches 391-400]
+  Dispatch 391 : ✅ 0.002 sec (146.7 MH/s)
+  Dispatch 392 : ✅ 0.003 sec (90.6 MH/s)
+  Dispatch 393 : ✅ 0.002 sec (117.0 MH/s)
+  Dispatch 394 : ✅ 0.002 sec (108.7 MH/s)
+  Dispatch 395 : ✅ 0.004 sec (58.3 MH/s)
+  Dispatch 396 : ✅ 0.002 sec (117.7 MH/s)
+  Dispatch 397 : ✅ 0.003 sec (87.3 MH/s)
+  Dispatch 398 : ✅ 0.003 sec (96.4 MH/s)
+  Dispatch 399 : ✅ 0.002 sec (108.8 MH/s)
+  Dispatch 400 : ✅ 0.002 sec (107.9 MH/s)
+
+[Dispatches 401-410]
+  Dispatch 401 : ✅ 0.002 sec (120.9 MH/s)
+  Dispatch 402 : ✅ 0.003 sec (82.8 MH/s)
+  Dispatch 403 : ✅ 0.002 sec (108.3 MH/s)
+  Dispatch 404 : ✅ 0.002 sec (118.7 MH/s)
+  Dispatch 405 : ✅ 0.002 sec (126.7 MH/s)
+  Dispatch 406 : ✅ 0.002 sec (124.6 MH/s)
+  Dispatch 407 : ✅ 0.002 sec (105.4 MH/s)
+  Dispatch 408 : ✅ 0.003 sec (95.0 MH/s)
+  Dispatch 409 : ✅ 0.003 sec (76.1 MH/s)
+  Dispatch 410 : ✅ 0.002 sec (128.7 MH/s)
+
+[Dispatches 411-420]
+  Dispatch 411 : ✅ 0.002 sec (116.8 MH/s)
+  Dispatch 412 : ✅ 0.003 sec (78.7 MH/s)
+  Dispatch 413 : ✅ 0.003 sec (101.4 MH/s)
+  Dispatch 414 : ✅ 0.003 sec (93.4 MH/s)
+  Dispatch 415 : ✅ 0.002 sec (121.8 MH/s)
+  Dispatch 416 : ✅ 0.002 sec (124.6 MH/s)
+  Dispatch 417 : ✅ 0.003 sec (95.5 MH/s)
+  Dispatch 418 : ✅ 0.002 sec (119.0 MH/s)
+  Dispatch 419 : ✅ 0.002 sec (131.5 MH/s)
+  Dispatch 420 : ✅ 0.002 sec (145.5 MH/s)
+
+[Dispatches 421-430]
+  Dispatch 421 : ✅ 0.002 sec (143.0 MH/s)
+  Dispatch 422 : ✅ 0.003 sec (91.9 MH/s)
+  Dispatch 423 : ✅ 0.002 sec (134.5 MH/s)
+  Dispatch 424 : ✅ 0.002 sec (123.5 MH/s)
+  Dispatch 425 : ✅ 0.002 sec (154.0 MH/s)
+  Dispatch 426 : ✅ 0.002 sec (127.5 MH/s)
+  Dispatch 427 : ✅ 0.003 sec (100.5 MH/s)
+  Dispatch 428 : ✅ 0.002 sec (123.8 MH/s)
+  Dispatch 429 : ✅ 0.002 sec (117.0 MH/s)
+  Dispatch 430 : ✅ 0.002 sec (110.4 MH/s)
+
+[Dispatches 431-440]
+  Dispatch 431 : ✅ 0.002 sec (140.6 MH/s)
+  Dispatch 432 : ✅ 0.003 sec (83.5 MH/s)
+  Dispatch 433 : ✅ 0.003 sec (101.8 MH/s)
+  Dispatch 434 : ✅ 0.002 sec (133.3 MH/s)
+  Dispatch 435 : ✅ 0.003 sec (94.0 MH/s)
+  Dispatch 436 : ✅ 0.002 sec (105.1 MH/s)
+  Dispatch 437 : ✅ 0.002 sec (117.5 MH/s)
+  Dispatch 438 : ✅ 0.002 sec (122.0 MH/s)
+  Dispatch 439 : ✅ 0.002 sec (133.0 MH/s)
+  Dispatch 440 : ✅ 0.002 sec (122.8 MH/s)
+
+[Dispatches 441-450]
+  Dispatch 441 : ✅ 0.002 sec (141.3 MH/s)
+  Dispatch 442 : ✅ 0.003 sec (92.9 MH/s)
+  Dispatch 443 : ✅ 0.003 sec (102.2 MH/s)
+  Dispatch 444 : ✅ 0.002 sec (140.6 MH/s)
+  Dispatch 445 : ✅ 0.002 sec (153.2 MH/s)
+  Dispatch 446 : ✅ 0.003 sec (84.7 MH/s)
+  Dispatch 447 : ✅ 0.004 sec (71.0 MH/s)
+  Dispatch 448 : ✅ 0.004 sec (74.0 MH/s)
+  Dispatch 449 : ✅ 0.002 sec (109.1 MH/s)
+  Dispatch 450 : ✅ 0.002 sec (114.0 MH/s)
+
+[Dispatches 451-460]
+  Dispatch 451 : ✅ 0.002 sec (122.0 MH/s)
+  Dispatch 452 : ✅ 0.003 sec (87.1 MH/s)
+  Dispatch 453 : ✅ 0.003 sec (99.3 MH/s)
+  Dispatch 454 : ✅ 0.003 sec (89.8 MH/s)
+  Dispatch 455 : ✅ 0.003 sec (94.4 MH/s)
+  Dispatch 456 : ✅ 0.003 sec (100.5 MH/s)
+  Dispatch 457 : ✅ 0.003 sec (93.0 MH/s)
+  Dispatch 458 : ✅ 0.002 sec (116.2 MH/s)
+  Dispatch 459 : ✅ 0.003 sec (83.6 MH/s)
+  Dispatch 460 : ✅ 0.003 sec (89.2 MH/s)
+
+[Dispatches 461-470]
+  Dispatch 461 : ✅ 0.002 sec (118.1 MH/s)
+  Dispatch 462 : ✅ 0.003 sec (98.2 MH/s)
+  Dispatch 463 : ✅ 0.002 sec (112.7 MH/s)
+  Dispatch 464 : ✅ 0.002 sec (122.0 MH/s)
+  Dispatch 465 : ✅ 0.002 sec (148.9 MH/s)
+  Dispatch 466 : ✅ 0.002 sec (133.0 MH/s)
+  Dispatch 467 : ✅ 0.003 sec (101.6 MH/s)
+  Dispatch 468 : ✅ 0.002 sec (108.8 MH/s)
+  Dispatch 469 : ✅ 0.002 sec (138.4 MH/s)
+  Dispatch 470 : ✅ 0.003 sec (102.2 MH/s)
+
+[Dispatches 471-480]
+  Dispatch 471 : ✅ 0.002 sec (143.8 MH/s)
+  Dispatch 472 : ✅ 0.003 sec (77.3 MH/s)
+  Dispatch 473 : ✅ 0.002 sec (124.0 MH/s)
+  Dispatch 474 : ✅ 0.002 sec (129.2 MH/s)
+  Dispatch 475 : ✅ 0.002 sec (113.0 MH/s)
+  Dispatch 476 : ✅ 0.002 sec (136.0 MH/s)
+  Dispatch 477 : ✅ 0.002 sec (105.5 MH/s)
+  Dispatch 478 : ✅ 0.002 sec (115.3 MH/s)
+  Dispatch 479 : ✅ 0.002 sec (113.0 MH/s)
+  Dispatch 480 : ✅ 0.002 sec (133.7 MH/s)
+
+[Dispatches 481-490]
+  Dispatch 481 : ✅ 0.003 sec (78.1 MH/s)
+  Dispatch 482 : ✅ 0.003 sec (78.9 MH/s)
+  Dispatch 483 : ✅ 0.002 sec (127.9 MH/s)
+  Dispatch 484 : ✅ 0.002 sec (126.4 MH/s)
+  Dispatch 485 : ✅ 0.002 sec (140.9 MH/s)
+  Dispatch 486 : ✅ 0.002 sec (135.1 MH/s)
+  Dispatch 487 : ✅ 0.003 sec (99.9 MH/s)
+  Dispatch 488 : ✅ 0.002 sec (116.2 MH/s)
+  Dispatch 489 : ✅ 0.002 sec (116.3 MH/s)
+  Dispatch 490 : ✅ 0.002 sec (138.3 MH/s)
+
+[Dispatches 491-500]
+  Dispatch 491 : ✅ 0.002 sec (156.6 MH/s)
+  Dispatch 492 : ✅ 0.003 sec (95.7 MH/s)
+  Dispatch 493 : ✅ 0.002 sec (119.4 MH/s)
+  Dispatch 494 : ✅ 0.002 sec (117.1 MH/s)
+  Dispatch 495 : ✅ 0.002 sec (144.7 MH/s)
+  Dispatch 496 : ✅ 0.002 sec (124.4 MH/s)
+  Dispatch 497 : ✅ 0.003 sec (91.8 MH/s)
+  Dispatch 498 : ✅ 0.003 sec (102.8 MH/s)
+  Dispatch 499 : ✅ 0.003 sec (98.9 MH/s)
+  Dispatch 500 : ✅ 0.002 sec (140.0 MH/s)
+
+[Dispatches 501-510]
+  Dispatch 501 : ✅ 0.003 sec (95.3 MH/s)
+  Dispatch 502 : ✅ 0.003 sec (81.3 MH/s)
+  Dispatch 503 : ✅ 0.003 sec (82.6 MH/s)
+  Dispatch 504 : ✅ 0.002 sec (116.6 MH/s)
+  Dispatch 505 : ✅ 0.003 sec (102.0 MH/s)
+  Dispatch 506 : ✅ 0.003 sec (94.3 MH/s)
+  Dispatch 507 : ✅ 0.005 sec (56.1 MH/s)
+  Dispatch 508 : ✅ 0.003 sec (84.9 MH/s)
+  Dispatch 509 : ✅ 0.002 sec (133.2 MH/s)
+  Dispatch 510 : ✅ 0.002 sec (127.3 MH/s)
+
+[Dispatches 511-520]
+  Dispatch 511 : ✅ 0.002 sec (128.6 MH/s)
+  Dispatch 512 : ✅ 0.003 sec (86.5 MH/s)
+  Dispatch 513 : ✅ 0.002 sec (110.6 MH/s)
+  Dispatch 514 : ✅ 0.002 sec (115.7 MH/s)
+  Dispatch 515 : ✅ 0.002 sec (112.0 MH/s)
+  Dispatch 516 : ✅ 0.002 sec (124.1 MH/s)
+  Dispatch 517 : ✅ 0.003 sec (85.9 MH/s)
+  Dispatch 518 : ✅ 0.002 sec (127.1 MH/s)
+  Dispatch 519 : ✅ 0.002 sec (123.7 MH/s)
+  Dispatch 520 : ✅ 0.002 sec (108.2 MH/s)
+
+[Dispatches 521-530]
+  Dispatch 521 : ✅ 0.002 sec (122.1 MH/s)
+  Dispatch 522 : ✅ 0.003 sec (103.7 MH/s)
+  Dispatch 523 : ✅ 0.002 sec (113.4 MH/s)
+  Dispatch 524 : ✅ 0.002 sec (136.0 MH/s)
+  Dispatch 525 : ✅ 0.002 sec (141.7 MH/s)
+  Dispatch 526 : ✅ 0.002 sec (124.0 MH/s)
+  Dispatch 527 : ✅ 0.002 sec (108.7 MH/s)
+  Dispatch 528 : ✅ 0.002 sec (113.7 MH/s)
+  Dispatch 529 : ✅ 0.003 sec (96.8 MH/s)
+  Dispatch 530 : ✅ 0.002 sec (125.4 MH/s)
+
+[Dispatches 531-540]
+  Dispatch 531 : ✅ 0.002 sec (138.8 MH/s)
+  Dispatch 532 : ✅ 0.003 sec (103.4 MH/s)
+  Dispatch 533 : ✅ 0.002 sec (114.8 MH/s)
+  Dispatch 534 : ✅ 0.002 sec (123.2 MH/s)
+  Dispatch 535 : ✅ 0.002 sec (123.4 MH/s)
+  Dispatch 536 : ✅ 0.002 sec (118.7 MH/s)
+  Dispatch 537 : ✅ 0.003 sec (91.5 MH/s)
+  Dispatch 538 : ✅ 0.003 sec (88.4 MH/s)
+  Dispatch 539 : ✅ 0.002 sec (109.8 MH/s)
+  Dispatch 540 : ✅ 0.003 sec (101.2 MH/s)
+
+[Dispatches 541-550]
+  Dispatch 541 : ✅ 0.002 sec (141.2 MH/s)
+  Dispatch 542 : ✅ 0.003 sec (88.3 MH/s)
+  Dispatch 543 : ✅ 0.002 sec (114.3 MH/s)
+  Dispatch 544 : ✅ 0.002 sec (114.2 MH/s)
+  Dispatch 545 : ✅ 0.002 sec (128.2 MH/s)
+  Dispatch 546 : ✅ 0.002 sec (125.7 MH/s)
+  Dispatch 547 : ✅ 0.003 sec (80.0 MH/s)
+  Dispatch 548 : ✅ 0.003 sec (96.0 MH/s)
+  Dispatch 549 : ✅ 0.002 sec (110.9 MH/s)
+  Dispatch 550 : ✅ 0.002 sec (132.3 MH/s)
+
+[Dispatches 551-560]
+  Dispatch 551 : ✅ 0.002 sec (138.3 MH/s)
+  Dispatch 552 : ✅ 0.003 sec (83.5 MH/s)
+  Dispatch 553 : ✅ 0.003 sec (90.7 MH/s)
+  Dispatch 554 : ✅ 0.003 sec (87.2 MH/s)
+  Dispatch 555 : ✅ 0.002 sec (109.4 MH/s)
+  Dispatch 556 : ✅ 0.002 sec (120.3 MH/s)
+  Dispatch 557 : ✅ 0.003 sec (95.2 MH/s)
+  Dispatch 558 : ✅ 0.002 sec (116.7 MH/s)
+  Dispatch 559 : ✅ 0.002 sec (121.8 MH/s)
+  Dispatch 560 : ✅ 0.002 sec (120.7 MH/s)
+
+[Dispatches 561-570]
+  Dispatch 561 : ✅ 0.002 sec (129.7 MH/s)
+  Dispatch 562 : ✅ 0.003 sec (85.7 MH/s)
+  Dispatch 563 : ✅ 0.003 sec (99.9 MH/s)
+  Dispatch 564 : ✅ 0.003 sec (99.5 MH/s)
+  Dispatch 565 : ✅ 0.002 sec (123.7 MH/s)
+  Dispatch 566 : ✅ 0.002 sec (139.8 MH/s)
+  Dispatch 567 : ✅ 0.003 sec (99.7 MH/s)
+  Dispatch 568 : ✅ 0.003 sec (88.7 MH/s)
+  Dispatch 569 : ✅ 0.003 sec (92.7 MH/s)
+  Dispatch 570 : ✅ 0.003 sec (102.0 MH/s)
+
+[Dispatches 571-580]
+  Dispatch 571 : ✅ 0.002 sec (135.9 MH/s)
+  Dispatch 572 : ✅ 0.003 sec (80.4 MH/s)
+  Dispatch 573 : ✅ 0.003 sec (95.1 MH/s)
+  Dispatch 574 : ✅ 0.002 sec (106.1 MH/s)
+  Dispatch 575 : ✅ 0.002 sec (146.1 MH/s)
+  Dispatch 576 : ✅ 0.002 sec (138.9 MH/s)
+  Dispatch 577 : ✅ 0.003 sec (100.7 MH/s)
+  Dispatch 578 : ✅ 0.002 sec (121.0 MH/s)
+  Dispatch 579 : ✅ 0.002 sec (120.4 MH/s)
+  Dispatch 580 : ✅ 0.002 sec (153.6 MH/s)
+
+[Dispatches 581-590]
+  Dispatch 581 : ✅ 0.002 sec (134.3 MH/s)
+  Dispatch 582 : ✅ 0.002 sec (108.7 MH/s)
+  Dispatch 583 : ✅ 0.002 sec (120.4 MH/s)
+  Dispatch 584 : ✅ 0.002 sec (119.6 MH/s)
+  Dispatch 585 : ✅ 0.002 sec (135.3 MH/s)
+  Dispatch 586 : ✅ 0.002 sec (132.9 MH/s)
+  Dispatch 587 : ✅ 0.003 sec (75.2 MH/s)
+  Dispatch 588 : ✅ 0.003 sec (83.4 MH/s)
+  Dispatch 589 : ✅ 0.003 sec (97.4 MH/s)
+  Dispatch 590 : ✅ 0.002 sec (106.6 MH/s)
+
+[Dispatches 591-600]
+  Dispatch 591 : ✅ 0.002 sec (114.6 MH/s)
+  Dispatch 592 : ✅ 0.003 sec (92.0 MH/s)
+  Dispatch 593 : ✅ 0.003 sec (102.9 MH/s)
+  Dispatch 594 : ✅ 0.003 sec (82.0 MH/s)
+  Dispatch 595 : ✅ 0.003 sec (98.9 MH/s)
+  Dispatch 596 : ✅ 0.002 sec (123.9 MH/s)
+  Dispatch 597 : ✅ 0.003 sec (78.1 MH/s)
+  Dispatch 598 : ✅ 0.003 sec (96.0 MH/s)
+  Dispatch 599 : ✅ 0.003 sec (78.4 MH/s)
+  Dispatch 600 : ✅ 0.002 sec (135.0 MH/s)
+
+[Dispatches 601-610]
+  Dispatch 601 : ✅ 0.002 sec (123.5 MH/s)
+  Dispatch 602 : ✅ 0.003 sec (80.4 MH/s)
+  Dispatch 603 : ✅ 0.003 sec (83.8 MH/s)
+  Dispatch 604 : ✅ 0.003 sec (99.8 MH/s)
+  Dispatch 605 : ✅ 0.004 sec (72.6 MH/s)
+  Dispatch 606 : ✅ 0.003 sec (92.1 MH/s)
+  Dispatch 607 : ✅ 0.004 sec (72.5 MH/s)
+  Dispatch 608 : ✅ 0.003 sec (77.7 MH/s)
+  Dispatch 609 : ✅ 0.003 sec (103.2 MH/s)
+  Dispatch 610 : ✅ 0.003 sec (80.6 MH/s)
+
+[Dispatches 611-620]
+  Dispatch 611 : ✅ 0.003 sec (87.1 MH/s)
+  Dispatch 612 : ✅ 0.006 sec (41.0 MH/s)
+  Dispatch 613 : ✅ 0.006 sec (44.8 MH/s)
+  Dispatch 614 : ✅ 0.005 sec (51.5 MH/s)
+  Dispatch 615 : ✅ 0.005 sec (57.2 MH/s)
+  Dispatch 616 : ✅ 0.003 sec (81.3 MH/s)
+  Dispatch 617 : ✅ 0.007 sec (38.3 MH/s)
+  Dispatch 618 : ✅ 0.006 sec (46.2 MH/s)
+  Dispatch 619 : ✅ 0.003 sec (85.0 MH/s)
+  Dispatch 620 : ✅ 0.004 sec (74.8 MH/s)
+
+[Dispatches 621-630]
+  Dispatch 621 : ✅ 0.003 sec (91.1 MH/s)
+  Dispatch 622 : ✅ 0.005 sec (57.3 MH/s)
+  Dispatch 623 : ✅ 0.003 sec (87.2 MH/s)
+  Dispatch 624 : ✅ 0.003 sec (82.8 MH/s)
+  Dispatch 625 : ✅ 0.003 sec (85.5 MH/s)
+  Dispatch 626 : ✅ 0.003 sec (75.4 MH/s)
+  Dispatch 627 : ✅ 0.005 sec (56.2 MH/s)
+  Dispatch 628 : ✅ 0.004 sec (67.9 MH/s)
+  Dispatch 629 : ✅ 0.003 sec (81.0 MH/s)
+  Dispatch 630 : ✅ 0.003 sec (100.3 MH/s)
+
+[Dispatches 631-640]
+  Dispatch 631 : ✅ 0.003 sec (80.1 MH/s)
+  Dispatch 632 : ✅ 0.005 sec (55.7 MH/s)
+  Dispatch 633 : ✅ 0.005 sec (56.4 MH/s)
+  Dispatch 634 : ✅ 0.003 sec (88.5 MH/s)
+  Dispatch 635 : ✅ 0.003 sec (81.4 MH/s)
+  Dispatch 636 : ✅ 0.003 sec (94.1 MH/s)
+  Dispatch 637 : ✅ 0.003 sec (77.5 MH/s)
+  Dispatch 638 : ✅ 0.003 sec (81.5 MH/s)
+  Dispatch 639 : ✅ 0.004 sec (70.3 MH/s)
+  Dispatch 640 : ✅ 0.003 sec (81.7 MH/s)
+
+[Dispatches 641-650]
+  Dispatch 641 : ✅ 0.003 sec (79.3 MH/s)
+  Dispatch 642 : ✅ 0.007 sec (39.1 MH/s)
+  Dispatch 643 : ✅ 0.006 sec (40.4 MH/s)
+  Dispatch 644 : ✅ 0.003 sec (86.4 MH/s)
+  Dispatch 645 : ✅ 0.003 sec (80.6 MH/s)
+  Dispatch 646 : ✅ 0.004 sec (58.9 MH/s)
+  Dispatch 647 : ✅ 0.008 sec (32.3 MH/s)
+  Dispatch 648 : ✅ 0.004 sec (58.7 MH/s)
+  Dispatch 649 : ✅ 0.003 sec (82.5 MH/s)
+  Dispatch 650 : ✅ 0.003 sec (104.6 MH/s)
+
+[Dispatches 651-660]
+  Dispatch 651 : ✅ 0.002 sec (107.9 MH/s)
+  Dispatch 652 : ✅ 0.005 sec (56.5 MH/s)
+  Dispatch 653 : ✅ 0.006 sec (42.9 MH/s)
+  Dispatch 654 : ✅ 0.004 sec (64.3 MH/s)
+  Dispatch 655 : ✅ 0.004 sec (63.1 MH/s)
+  Dispatch 656 : ✅ 0.004 sec (62.8 MH/s)
+  Dispatch 657 : ✅ 0.004 sec (67.4 MH/s)
+  Dispatch 658 : ✅ 0.004 sec (72.1 MH/s)
+  Dispatch 659 : ✅ 0.003 sec (88.4 MH/s)
+  Dispatch 660 : ✅ 0.003 sec (79.7 MH/s)
+
+[Dispatches 661-670]
+  Dispatch 661 : ✅ 0.003 sec (93.1 MH/s)
+  Dispatch 662 : ✅ 0.004 sec (69.5 MH/s)
+  Dispatch 663 : ✅ 0.003 sec (100.3 MH/s)
+  Dispatch 664 : ✅ 0.002 sec (105.4 MH/s)
+  Dispatch 665 : ✅ 0.002 sec (108.4 MH/s)
+  Dispatch 666 : ✅ 0.003 sec (86.1 MH/s)
+  Dispatch 667 : ✅ 0.004 sec (67.4 MH/s)
+  Dispatch 668 : ✅ 0.004 sec (73.1 MH/s)
+  Dispatch 669 : ✅ 0.003 sec (80.3 MH/s)
+  Dispatch 670 : ✅ 0.003 sec (96.5 MH/s)
+
+[Dispatches 671-680]
+  Dispatch 671 : ✅ 0.003 sec (92.5 MH/s)
+  Dispatch 672 : ✅ 0.004 sec (66.9 MH/s)
+  Dispatch 673 : ✅ 0.006 sec (40.5 MH/s)
+  Dispatch 674 : ✅ 0.003 sec (87.9 MH/s)
+  Dispatch 675 : ✅ 0.002 sec (112.3 MH/s)
+  Dispatch 676 : ✅ 0.002 sec (107.0 MH/s)
+  Dispatch 677 : ✅ 0.004 sec (63.1 MH/s)
+  Dispatch 678 : ✅ 0.005 sec (50.3 MH/s)
+  Dispatch 679 : ✅ 0.005 sec (50.3 MH/s)
+  Dispatch 680 : ✅ 0.003 sec (87.5 MH/s)
+
+[Dispatches 681-690]
+  Dispatch 681 : ✅ 0.002 sec (112.4 MH/s)
+  Dispatch 682 : ✅ 0.004 sec (69.9 MH/s)
+  Dispatch 683 : ✅ 0.005 sec (52.8 MH/s)
+  Dispatch 684 : ✅ 0.003 sec (79.3 MH/s)
+  Dispatch 685 : ✅ 0.007 sec (40.1 MH/s)
+  Dispatch 686 : ✅ 0.003 sec (79.8 MH/s)
+  Dispatch 687 : ✅ 0.010 sec (27.1 MH/s)
+  Dispatch 688 : ✅ 0.007 sec (36.9 MH/s)
+  Dispatch 689 : ✅ 0.004 sec (63.5 MH/s)
+  Dispatch 690 : ✅ 0.004 sec (65.7 MH/s)
+
+[Dispatches 691-700]
+  Dispatch 691 : ✅ 0.003 sec (93.3 MH/s)
+  Dispatch 692 : ✅ 0.008 sec (34.5 MH/s)
+  Dispatch 693 : ✅ 0.007 sec (36.7 MH/s)
+  Dispatch 694 : ✅ 0.005 sec (53.7 MH/s)
+  Dispatch 695 : ✅ 0.003 sec (77.3 MH/s)
+  Dispatch 696 : ✅ 0.003 sec (86.8 MH/s)
+  Dispatch 697 : ✅ 0.005 sec (55.6 MH/s)
+  Dispatch 698 : ✅ 0.004 sec (74.5 MH/s)
+  Dispatch 699 : ✅ 0.005 sec (50.0 MH/s)
+  Dispatch 700 : ✅ 0.003 sec (81.4 MH/s)
+
+[Dispatches 701-710]
+  Dispatch 701 : ✅ 0.003 sec (102.1 MH/s)
+  Dispatch 702 : ✅ 0.004 sec (59.5 MH/s)
+  Dispatch 703 : ✅ 0.003 sec (76.9 MH/s)
+  Dispatch 704 : ✅ 0.004 sec (72.7 MH/s)
+  Dispatch 705 : ✅ 0.003 sec (89.2 MH/s)
+  Dispatch 706 : ✅ 0.003 sec (86.3 MH/s)
+  Dispatch 707 : ✅ 0.005 sec (53.8 MH/s)
+  Dispatch 708 : ✅ 0.004 sec (69.4 MH/s)
+  Dispatch 709 : ✅ 0.002 sec (109.0 MH/s)
+  Dispatch 710 : ✅ 0.003 sec (103.9 MH/s)
+
+[Dispatches 711-720]
+  Dispatch 711 : ✅ 0.002 sec (109.1 MH/s)
+  Dispatch 712 : ✅ 0.003 sec (75.1 MH/s)
+  Dispatch 713 : ✅ 0.002 sec (106.1 MH/s)
+  Dispatch 714 : ✅ 0.003 sec (81.3 MH/s)
+  Dispatch 715 : ✅ 0.003 sec (87.9 MH/s)
+  Dispatch 716 : ✅ 0.002 sec (108.1 MH/s)
+  Dispatch 717 : ✅ 0.004 sec (65.8 MH/s)
+  Dispatch 718 : ✅ 0.003 sec (87.4 MH/s)
+  Dispatch 719 : ✅ 0.003 sec (83.7 MH/s)
+  Dispatch 720 : ✅ 0.002 sec (116.7 MH/s)
+
+[Dispatches 721-730]
+  Dispatch 721 : ✅ 0.002 sec (106.8 MH/s)
+  Dispatch 722 : ✅ 0.004 sec (65.6 MH/s)
+  Dispatch 723 : ✅ 0.004 sec (64.0 MH/s)
+  Dispatch 724 : ✅ 0.002 sec (111.1 MH/s)
+  Dispatch 725 : ✅ 0.002 sec (124.2 MH/s)
+  Dispatch 726 : ✅ 0.002 sec (122.5 MH/s)
+  Dispatch 727 : ✅ 0.003 sec (84.6 MH/s)
+  Dispatch 728 : ✅ 0.004 sec (61.1 MH/s)
+  Dispatch 729 : ✅ 0.002 sec (110.1 MH/s)
+  Dispatch 730 : ✅ 0.002 sec (114.6 MH/s)
+
+[Dispatches 731-740]
+  Dispatch 731 : ✅ 0.004 sec (64.0 MH/s)
+  Dispatch 732 : ✅ 0.004 sec (63.9 MH/s)
+  Dispatch 733 : ✅ 0.003 sec (97.9 MH/s)
+  Dispatch 734 : ✅ 0.002 sec (112.5 MH/s)
+  Dispatch 735 : ✅ 0.003 sec (102.0 MH/s)
+  Dispatch 736 : ✅ 0.003 sec (102.9 MH/s)
+  Dispatch 737 : ✅ 0.003 sec (79.6 MH/s)
+  Dispatch 738 : ✅ 0.003 sec (89.1 MH/s)
+  Dispatch 739 : ✅ 0.002 sec (117.9 MH/s)
+  Dispatch 740 : ✅ 0.002 sec (118.9 MH/s)
+
+[Dispatches 741-750]
+  Dispatch 741 : ✅ 0.002 sec (112.2 MH/s)
+  Dispatch 742 : ✅ 0.004 sec (65.2 MH/s)
+  Dispatch 743 : ✅ 0.003 sec (101.0 MH/s)
+  Dispatch 744 : ✅ 0.003 sec (99.1 MH/s)
+  Dispatch 745 : ✅ 0.003 sec (99.9 MH/s)
+  Dispatch 746 : ✅ 0.002 sec (120.4 MH/s)
+  Dispatch 747 : ✅ 0.003 sec (93.1 MH/s)
+  Dispatch 748 : ✅ 0.003 sec (94.9 MH/s)
+  Dispatch 749 : ✅ 0.003 sec (99.0 MH/s)
+  Dispatch 750 : ✅ 0.002 sec (121.2 MH/s)
+
+[Dispatches 751-760]
+  Dispatch 751 : ✅ 0.003 sec (82.1 MH/s)
+  Dispatch 752 : ✅ 0.007 sec (35.7 MH/s)
+  Dispatch 753 : ✅ 0.006 sec (44.1 MH/s)
+  Dispatch 754 : ✅ 0.005 sec (52.0 MH/s)
+  Dispatch 755 : ✅ 0.003 sec (75.1 MH/s)
+  Dispatch 756 : ✅ 0.004 sec (70.9 MH/s)
+  Dispatch 757 : ✅ 0.003 sec (77.6 MH/s)
+  Dispatch 758 : ✅ 0.003 sec (83.6 MH/s)
+  Dispatch 759 : ✅ 0.003 sec (76.7 MH/s)
+  Dispatch 760 : ✅ 0.003 sec (76.5 MH/s)
+
+[Dispatches 761-770]
+  Dispatch 761 : ✅ 0.004 sec (69.3 MH/s)
+  Dispatch 762 : ✅ 0.008 sec (30.8 MH/s)
+  Dispatch 763 : ✅ 0.005 sec (49.6 MH/s)
+  Dispatch 764 : ✅ 0.003 sec (89.5 MH/s)
+  Dispatch 765 : ✅ 0.003 sec (99.4 MH/s)
+  Dispatch 766 : ✅ 0.003 sec (79.0 MH/s)
+  Dispatch 767 : ✅ 0.006 sec (43.4 MH/s)
+  Dispatch 768 : ✅ 0.005 sec (53.2 MH/s)
+  Dispatch 769 : ✅ 0.003 sec (90.0 MH/s)
+  Dispatch 770 : ✅ 0.003 sec (95.8 MH/s)
+
+[Dispatches 771-780]
+  Dispatch 771 : ✅ 0.003 sec (83.8 MH/s)
+  Dispatch 772 : ✅ 0.003 sec (79.3 MH/s)
+  Dispatch 773 : ✅ 0.003 sec (95.9 MH/s)
+  Dispatch 774 : ✅ 0.003 sec (98.5 MH/s)
+  Dispatch 775 : ✅ 0.003 sec (85.5 MH/s)
+  Dispatch 776 : ✅ 0.002 sec (109.0 MH/s)
+  Dispatch 777 : ✅ 0.004 sec (71.8 MH/s)
+  Dispatch 778 : ✅ 0.002 sec (104.9 MH/s)
+  Dispatch 779 : ✅ 0.003 sec (86.8 MH/s)
+  Dispatch 780 : ✅ 0.003 sec (75.7 MH/s)
+
+[Dispatches 781-790]
+  Dispatch 781 : ✅ 0.002 sec (127.7 MH/s)
+  Dispatch 782 : ✅ 0.003 sec (87.2 MH/s)
+  Dispatch 783 : ✅ 0.002 sec (120.6 MH/s)
+  Dispatch 784 : ✅ 0.002 sec (115.0 MH/s)
+  Dispatch 785 : ✅ 0.002 sec (109.8 MH/s)
+  Dispatch 786 : ✅ 0.003 sec (95.9 MH/s)
+  Dispatch 787 : ✅ 0.003 sec (82.4 MH/s)
+  Dispatch 788 : ✅ 0.003 sec (104.4 MH/s)
+  Dispatch 789 : ✅ 0.002 sec (107.8 MH/s)
+  Dispatch 790 : ✅ 0.002 sec (132.5 MH/s)
+
+[Dispatches 791-800]
+  Dispatch 791 : ✅ 0.002 sec (135.3 MH/s)
+  Dispatch 792 : ✅ 0.005 sec (58.0 MH/s)
+  Dispatch 793 : ✅ 0.002 sec (107.7 MH/s)
+  Dispatch 794 : ✅ 0.003 sec (91.6 MH/s)
+  Dispatch 795 : ✅ 0.003 sec (81.8 MH/s)
+  Dispatch 796 : ✅ 0.003 sec (87.1 MH/s)
+  Dispatch 797 : ✅ 0.004 sec (69.8 MH/s)
+  Dispatch 798 : ✅ 0.004 sec (73.3 MH/s)
+  Dispatch 799 : ✅ 0.003 sec (84.1 MH/s)
+  Dispatch 800 : ✅ 0.003 sec (81.7 MH/s)
+
+[Dispatches 801-810]
+  Dispatch 801 : ✅ 0.003 sec (87.2 MH/s)
+  Dispatch 802 : ✅ 0.004 sec (72.7 MH/s)
+  Dispatch 803 : ✅ 0.003 sec (82.9 MH/s)
+  Dispatch 804 : ✅ 0.003 sec (85.8 MH/s)
+  Dispatch 805 : ✅ 0.003 sec (102.6 MH/s)
+  Dispatch 806 : ✅ 0.003 sec (100.3 MH/s)
+  Dispatch 807 : ✅ 0.003 sec (82.7 MH/s)
+  Dispatch 808 : ✅ 0.002 sec (109.0 MH/s)
+  Dispatch 809 : ✅ 0.003 sec (83.9 MH/s)
+  Dispatch 810 : ✅ 0.003 sec (92.5 MH/s)
+
+[Dispatches 811-820]
+  Dispatch 811 : ✅ 0.003 sec (95.5 MH/s)
+  Dispatch 812 : ✅ 0.004 sec (66.2 MH/s)
+  Dispatch 813 : ✅ 0.003 sec (99.3 MH/s)
+  Dispatch 814 : ✅ 0.003 sec (101.2 MH/s)
+  Dispatch 815 : ✅ 0.003 sec (95.5 MH/s)
+  Dispatch 816 : ✅ 0.003 sec (87.7 MH/s)
+  Dispatch 817 : ✅ 0.002 sec (108.8 MH/s)
+  Dispatch 818 : ✅ 0.001 sec (223.3 MH/s)
+  Dispatch 819 : ✅ 0.001 sec (227.1 MH/s)
+  Dispatch 820 : ✅ 0.001 sec (310.5 MH/s)
+
+[Dispatches 821-830]
+  Dispatch 821 : ✅ 0.001 sec (302.7 MH/s)
+  Dispatch 822 : ✅ 0.002 sec (143.1 MH/s)
+  Dispatch 823 : ✅ 0.002 sec (145.9 MH/s)
+  Dispatch 824 : ✅ 0.001 sec (264.5 MH/s)
+  Dispatch 825 : ✅ 0.001 sec (269.0 MH/s)
+  Dispatch 826 : ✅ 0.001 sec (310.8 MH/s)
+  Dispatch 827 : ✅ 0.002 sec (158.6 MH/s)
+  Dispatch 828 : ✅ 0.001 sec (207.7 MH/s)
+  Dispatch 829 : ✅ 0.001 sec (257.1 MH/s)
+  Dispatch 830 : ✅ 0.001 sec (287.4 MH/s)
+
+[Dispatches 831-840]
+  Dispatch 831 : ✅ 0.001 sec (251.7 MH/s)
+  Dispatch 832 : ✅ 0.005 sec (50.6 MH/s)
+  Dispatch 833 : ✅ 0.002 sec (129.1 MH/s)
+  Dispatch 834 : ✅ 0.002 sec (131.0 MH/s)
+  Dispatch 835 : ✅ 0.004 sec (65.9 MH/s)
+  Dispatch 836 : ✅ 0.004 sec (60.2 MH/s)
+  Dispatch 837 : ✅ 0.003 sec (103.8 MH/s)
+  Dispatch 838 : ✅ 0.001 sec (178.3 MH/s)
+  Dispatch 839 : ✅ 0.002 sec (173.1 MH/s)
+  Dispatch 840 : ✅ 0.001 sec (235.0 MH/s)
+
+[Dispatches 841-850]
+  Dispatch 841 : ✅ 0.002 sec (169.2 MH/s)
+  Dispatch 842 : ✅ 0.003 sec (87.9 MH/s)
+  Dispatch 843 : ✅ 0.001 sec (176.7 MH/s)
+  Dispatch 844 : ✅ 0.001 sec (223.8 MH/s)
+  Dispatch 845 : ✅ 0.001 sec (277.3 MH/s)
+  Dispatch 846 : ✅ 0.001 sec (188.4 MH/s)
+  Dispatch 847 : ✅ 0.003 sec (90.8 MH/s)
+  Dispatch 848 : ✅ 0.002 sec (162.9 MH/s)
+  Dispatch 849 : ✅ 0.001 sec (297.2 MH/s)
+  Dispatch 850 : ✅ 0.002 sec (117.4 MH/s)
+
+[Dispatches 851-860]
+  Dispatch 851 : ✅ 0.002 sec (134.1 MH/s)
+  Dispatch 852 : ✅ 0.006 sec (44.8 MH/s)
+  Dispatch 853 : ✅ 0.005 sec (52.8 MH/s)
+  Dispatch 854 : ✅ 0.002 sec (139.5 MH/s)
+  Dispatch 855 : ✅ 0.001 sec (217.8 MH/s)
+  Dispatch 856 : ✅ 0.003 sec (81.8 MH/s)
+  Dispatch 857 : ✅ 0.002 sec (107.7 MH/s)
+  Dispatch 858 : ✅ 0.002 sec (169.9 MH/s)
+  Dispatch 859 : ✅ 0.002 sec (165.3 MH/s)
+  Dispatch 860 : ✅ 0.001 sec (190.5 MH/s)
+
+[Dispatches 861-870]
+  Dispatch 861 : ✅ 0.001 sec (289.9 MH/s)
+  Dispatch 862 : ✅ 0.003 sec (98.4 MH/s)
+  Dispatch 863 : ✅ 0.002 sec (159.0 MH/s)
+  Dispatch 864 : ✅ 0.001 sec (257.9 MH/s)
+  Dispatch 865 : ✅ 0.001 sec (264.9 MH/s)
+  Dispatch 866 : ✅ 0.001 sec (245.8 MH/s)
+  Dispatch 867 : ✅ 0.003 sec (93.2 MH/s)
+  Dispatch 868 : ✅ 0.002 sec (141.3 MH/s)
+  Dispatch 869 : ✅ 0.005 sec (55.1 MH/s)
+  Dispatch 870 : ✅ 0.001 sec (197.6 MH/s)
+
+[Dispatches 871-880]
+  Dispatch 871 : ✅ 0.001 sec (231.4 MH/s)
+  Dispatch 872 : ✅ 0.002 sec (124.0 MH/s)
+  Dispatch 873 : ✅ 0.002 sec (165.1 MH/s)
+  Dispatch 874 : ✅ 0.001 sec (231.4 MH/s)
+  Dispatch 875 : ✅ 0.001 sec (222.0 MH/s)
+  Dispatch 876 : ✅ 0.001 sec (213.7 MH/s)
+  Dispatch 877 : ✅ 0.002 sec (110.4 MH/s)
+  Dispatch 878 : ✅ 0.002 sec (150.2 MH/s)
+  Dispatch 879 : ✅ 0.002 sec (117.8 MH/s)
+  Dispatch 880 : ✅ 0.002 sec (169.6 MH/s)
+
+[Dispatches 881-890]
+  Dispatch 881 : ✅ 0.001 sec (312.8 MH/s)
+  Dispatch 882 : ✅ 0.004 sec (72.2 MH/s)
+  Dispatch 883 : ✅ 0.004 sec (60.7 MH/s)
+  Dispatch 884 : ✅ 0.002 sec (129.3 MH/s)
+  Dispatch 885 : ✅ 0.001 sec (233.2 MH/s)
+  Dispatch 886 : ✅ 0.003 sec (95.7 MH/s)
+  Dispatch 887 : ✅ 0.002 sec (118.3 MH/s)
+  Dispatch 888 : ✅ 0.001 sec (177.7 MH/s)
+  Dispatch 889 : ✅ 0.003 sec (86.7 MH/s)
+  Dispatch 890 : ✅ 0.001 sec (261.2 MH/s)
+
+[Dispatches 891-900]
+  Dispatch 891 : ✅ 0.003 sec (103.9 MH/s)
+  Dispatch 892 : ✅ 0.002 sec (108.7 MH/s)
+  Dispatch 893 : ✅ 0.001 sec (177.6 MH/s)
+  Dispatch 894 : ✅ 0.001 sec (213.3 MH/s)
+  Dispatch 895 : ✅ 0.001 sec (175.3 MH/s)
+  Dispatch 896 : ✅ 0.001 sec (239.4 MH/s)
+  Dispatch 897 : ✅ 0.007 sec (35.1 MH/s)
+  Dispatch 898 : ✅ 0.002 sec (133.7 MH/s)
+  Dispatch 899 : ✅ 0.001 sec (223.2 MH/s)
+  Dispatch 900 : ✅ 0.002 sec (133.8 MH/s)
+
+[Dispatches 901-910]
+  Dispatch 901 : ✅ 0.001 sec (182.4 MH/s)
+  Dispatch 902 : ✅ 0.002 sec (124.6 MH/s)
+  Dispatch 903 : ✅ 0.001 sec (182.6 MH/s)
+  Dispatch 904 : ✅ 0.001 sec (199.2 MH/s)
+  Dispatch 905 : ✅ 0.002 sec (129.3 MH/s)
+  Dispatch 906 : ✅ 0.002 sec (111.8 MH/s)
+  Dispatch 907 : ✅ 0.005 sec (50.8 MH/s)
+  Dispatch 908 : ✅ 0.005 sec (52.9 MH/s)
+  Dispatch 909 : ✅ 0.005 sec (49.9 MH/s)
+  Dispatch 910 : ✅ 0.002 sec (150.4 MH/s)
+
+[Dispatches 911-920]
+  Dispatch 911 : ✅ 0.001 sec (229.2 MH/s)
+  Dispatch 912 : ✅ 0.003 sec (97.3 MH/s)
+  Dispatch 913 : ✅ 0.002 sec (168.2 MH/s)
+  Dispatch 914 : ✅ 0.001 sec (249.3 MH/s)
+  Dispatch 915 : ✅ 0.001 sec (188.9 MH/s)
+  Dispatch 916 : ✅ 0.001 sec (254.2 MH/s)
+  Dispatch 917 : ✅ 0.002 sec (116.4 MH/s)
+  Dispatch 918 : ✅ 0.002 sec (161.8 MH/s)
+  Dispatch 919 : ✅ 0.001 sec (186.7 MH/s)
+  Dispatch 920 : ✅ 0.001 sec (222.4 MH/s)
+
+[Dispatches 921-930]
+  Dispatch 921 : ✅ 0.002 sec (158.2 MH/s)
+  Dispatch 922 : ✅ 0.002 sec (107.3 MH/s)
+  Dispatch 923 : ✅ 0.002 sec (172.0 MH/s)
+  Dispatch 924 : ✅ 0.003 sec (82.2 MH/s)
+  Dispatch 925 : ✅ 0.001 sec (249.6 MH/s)
+  Dispatch 926 : ✅ 0.001 sec (322.1 MH/s)
+  Dispatch 927 : ✅ 0.002 sec (124.3 MH/s)
+  Dispatch 928 : ✅ 0.002 sec (131.8 MH/s)
+  Dispatch 929 : ✅ 0.001 sec (238.2 MH/s)
+  Dispatch 930 : ✅ 0.001 sec (216.1 MH/s)
+
+[Dispatches 931-940]
+  Dispatch 931 : ✅ 0.003 sec (85.6 MH/s)
+  Dispatch 932 : ✅ 0.004 sec (70.1 MH/s)
+  Dispatch 933 : ✅ 0.003 sec (85.8 MH/s)
+  Dispatch 934 : ✅ 0.003 sec (86.3 MH/s)
+  Dispatch 935 : ✅ 0.003 sec (104.5 MH/s)
+  Dispatch 936 : ✅ 0.002 sec (109.1 MH/s)
+  Dispatch 937 : ✅ 0.004 sec (68.6 MH/s)
+  Dispatch 938 : ✅ 0.003 sec (78.3 MH/s)
+  Dispatch 939 : ✅ 0.002 sec (109.1 MH/s)
+  Dispatch 940 : ✅ 0.003 sec (84.2 MH/s)
+
+[Dispatches 941-950]
+  Dispatch 941 : ✅ 0.003 sec (87.7 MH/s)
+  Dispatch 942 : ✅ 0.003 sec (89.7 MH/s)
+  Dispatch 943 : ✅ 0.003 sec (75.1 MH/s)
+  Dispatch 944 : ✅ 0.002 sec (109.4 MH/s)
+  Dispatch 945 : ✅ 0.003 sec (84.0 MH/s)
+  Dispatch 946 : ✅ 0.003 sec (77.7 MH/s)
+  Dispatch 947 : ✅ 0.004 sec (62.2 MH/s)
+  Dispatch 948 : ✅ 0.001 sec (184.4 MH/s)
+  Dispatch 949 : ✅ 0.004 sec (66.4 MH/s)
+  Dispatch 950 : ✅ 0.001 sec (203.7 MH/s)
+
+[Dispatches 951-960]
+  Dispatch 951 : ✅ 0.001 sec (205.4 MH/s)
+  Dispatch 952 : ✅ 0.004 sec (72.3 MH/s)
+  Dispatch 953 : ✅ 0.002 sec (170.8 MH/s)
+  Dispatch 954 : ✅ 0.008 sec (31.5 MH/s)
+  Dispatch 955 : ✅ 0.001 sec (192.3 MH/s)
+  Dispatch 956 : ✅ 0.004 sec (69.7 MH/s)
+  Dispatch 957 : ✅ 0.005 sec (54.8 MH/s)
+  Dispatch 958 : ✅ 0.003 sec (80.3 MH/s)
+  Dispatch 959 : ✅ 0.006 sec (41.1 MH/s)
+  Dispatch 960 : ✅ 0.002 sec (132.3 MH/s)
+
+[Dispatches 961-970]
+  Dispatch 961 : ✅ 0.001 sec (219.1 MH/s)
+  Dispatch 962 : ✅ 0.005 sec (53.7 MH/s)
+  Dispatch 963 : ✅ 0.003 sec (87.9 MH/s)
+  Dispatch 964 : ✅ 0.002 sec (168.5 MH/s)
+  Dispatch 965 : ✅ 0.001 sec (185.6 MH/s)
+  Dispatch 966 : ✅ 0.001 sec (222.7 MH/s)
+  Dispatch 967 : ✅ 0.002 sec (113.4 MH/s)
+  Dispatch 968 : ✅ 0.001 sec (198.7 MH/s)
+  Dispatch 969 : ✅ 0.001 sec (250.9 MH/s)
+  Dispatch 970 : ✅ 0.001 sec (245.7 MH/s)
+
+[Dispatches 971-980]
+  Dispatch 971 : ✅ 0.002 sec (122.7 MH/s)
+  Dispatch 972 : ✅ 0.002 sec (127.6 MH/s)
+  Dispatch 973 : ✅ 0.002 sec (170.7 MH/s)
+  Dispatch 974 : ✅ 0.002 sec (158.4 MH/s)
+  Dispatch 975 : ✅ 0.001 sec (283.1 MH/s)
+  Dispatch 976 : ✅ 0.001 sec (249.0 MH/s)
+  Dispatch 977 : ✅ 0.003 sec (99.7 MH/s)
+  Dispatch 978 : ✅ 0.001 sec (188.9 MH/s)
+  Dispatch 979 : ✅ 0.001 sec (175.6 MH/s)
+  Dispatch 980 : ✅ 0.001 sec (187.1 MH/s)
+
+[Dispatches 981-990]
+  Dispatch 981 : ✅ 0.001 sec (243.9 MH/s)
+  Dispatch 982 : ✅ 0.002 sec (129.4 MH/s)
+  Dispatch 983 : ✅ 0.001 sec (178.8 MH/s)
+  Dispatch 984 : ✅ 0.001 sec (229.5 MH/s)
+  Dispatch 985 : ✅ 0.001 sec (233.0 MH/s)
+  Dispatch 986 : ✅ 0.001 sec (250.6 MH/s)
+  Dispatch 987 : ✅ 0.005 sec (56.5 MH/s)
+  Dispatch 988 : ✅ 0.005 sec (57.8 MH/s)
+  Dispatch 989 : ✅ 0.001 sec (225.2 MH/s)
+  Dispatch 990 : ✅ 0.001 sec (245.7 MH/s)
+
+[Dispatches 991-1000]
+  Dispatch 991 : ✅ 0.001 sec (197.6 MH/s)
+  Dispatch 992 : ✅ 0.003 sec (85.5 MH/s)
+  Dispatch 993 : ✅ 0.002 sec (148.9 MH/s)
+  Dispatch 994 : ✅ 0.006 sec (45.4 MH/s)
+  Dispatch 995 : ✅ 0.001 sec (209.8 MH/s)
+  Dispatch 996 : ✅ 0.013 sec (19.9 MH/s)
+  Dispatch 997 : ✅ 0.005 sec (57.8 MH/s)
+  Dispatch 998 : ✅ 0.002 sec (109.3 MH/s)
+  Dispatch 999 : ✅ 0.002 sec (174.3 MH/s)
+  Dispatch 1000 : ✅ 0.001 sec (219.9 MH/s)
+
+═══════════════════════════════════════════════════════════
+  RÉSULTATS FINAUX C240
+═══════════════════════════════════════════════════════════
+
+Dispatches réussis : 1000/1000
+Dispatches échoués : 0
+Total hashes calculés : 262144000 (0.26 G)
+Temps total : 52.627 secondes (0.88 minutes)
+Hashrate moyen : 4.98 MH/s
+Temps moyen/dispatch : 0.053 sec
+Débit : 19.001 dispatches/sec
+
+📊 Logs forensiques : logs/forensic/btc_mining_c240_optimized.log
+
+[PHASE 4/4] Cleanup...
+✅ Cleanup terminé
+
+✅ Test C240 terminé avec succès
+

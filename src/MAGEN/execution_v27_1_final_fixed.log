@@ -1,0 +1,102 @@
+================================================================================
+MAGEN V27.1 CAUSAL - EXÉCUTION RÉELLE ARC-AGI-3
+================================================================================
+Date: 2026-06-14 20:14:42
+Session: 72
+
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → None
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent V27.1 initialisé
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:14:42 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+
+################################################################################
+# JEU 1/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:14:42 | INFO | Created new scorecard: de6d0404-725b-44ee-84dd-d49f5a7a1c0b
+2026-06-14 20:14:42 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:14:42 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 328, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 274, in main
+    result = run_game(agent, arcade, game_id, max_actions=20)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 171, in run_game
+    agent.learn(state_before, action_name, state_after, reward_env, done)
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_1_causal.py", line 332, in learn
+    super().learn(grid_obs_before, action, grid_obs_after, reward_total, done)
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_cognitive.py", line 813, in learn
+    intrinsic_reward = self._compute_intrinsic_reward(obs_before, obs_after, action)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v27_cognitive.py", line 497, in _compute_intrinsic_reward
+    hash_after = obs_after.embedding.topological_hash
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'topological_hash'

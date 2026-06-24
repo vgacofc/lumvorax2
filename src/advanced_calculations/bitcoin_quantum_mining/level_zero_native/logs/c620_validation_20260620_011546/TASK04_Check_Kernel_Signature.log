@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════════════
+TASK: TASK04_Check_Kernel_Signature
+DATE: 2026-06-20 01:15:46
+═══════════════════════════════════════════════════════════
+
+__kernel void btc_sha256_mining_gen9(
+    __global const uint* block_header,   /* 20 uint32 (80 bytes) */
+    __global const uint* target,         /* 8 uint32 (256 bits) */
+    uint nonce_start,                    /* Nonce de départ */
+    __global uint* output_buffer         /* Format: [best_nonce, leading_zeros, hash[8]] */
+) {
+    uint gid = get_global_id(0);
+    uint lid = get_local_id(0);
+    uint nonce = nonce_start + gid;
+    
+    /* Copier block header en registres privés */
+    uint header[20];
+    #pragma unroll
+    for (int i = 0; i < 19; i++) {
+        header[i] = block_header[i];
+    }
+    
+    /* Insérer nonce à la position 19 (bytes 76-79) */
+    header[19] = nonce;
+    
+    /* Premier SHA-256 */
+    uint hash1[8];
+    sha256_hash_btc(header, hash1);
+    
+    /* Second SHA-256 */
+    uint hash2[8];
+    sha256_hash_32(hash1, hash2);
+    
+    /* Compter leading zeros */
+    uint leading_zeros = count_leading_zeros(hash2);
+    
+
+═══════════════════════════════════════════════════════════
+TASK TERMINÉE: TASK04_Check_Kernel_Signature
+═══════════════════════════════════════════════════════════

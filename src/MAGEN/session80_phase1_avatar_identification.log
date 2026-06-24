@@ -1,0 +1,43 @@
+
+================================================================================
+🌍 DIAGNOSTIC COMPRÉHENSION DU MONDE
+================================================================================
+Jeu: ls20-9607627b
+Steps: 150
+Objectif: Mesurer ce qui MANQUE dans les logs actuels
+================================================================================
+
+🔧 Initialisation environnement...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-17 16:57:54 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-17 16:57:55 | INFO | Created new scorecard: fc1b7106-869f-471f-8ec6-f8a90e8b9efd
+2026-06-17 16:57:55 | INFO | Successfully fetched metadata for game ls20
+2026-06-17 16:57:55 | INFO | Successfully reset game ls20-9607627b, guid=a1065dfe-592f-43f0-be0a-89c5b837c9e1, scorecard_id=fc1b7106-869f-471f-8ec6-f8a90e8b9efd
+🎮 Démarrage jeu...
+2026-06-17 16:57:55 | INFO | Successfully reset game ls20-9607627b, guid=a1065dfe-592f-43f0-be0a-89c5b837c9e1, scorecard_id=fc1b7106-869f-471f-8ec6-f8a90e8b9efd
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 164, in step
+    action_name = f"ACTION{action.value}"
+                           ^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'value'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_world_understanding.py", line 404, in <module>
+    report = run_diagnostic()
+             ^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_world_understanding.py", line 318, in run_diagnostic
+    obs = env.step(action_int)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 220, in step
+    f"Unexpected error while performing action {action.name}: {e}"
+                                                ^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'name'
+
+================================================================================
+📊 COLLECTE DONNÉES WORLD UNDERSTANDING
+================================================================================
+
+
+❌ ERREUR: 'int' object has no attribute 'name'

@@ -1,0 +1,82 @@
+
+================================================================================
+🧪 TEST AGENT MAGEN V25 - ARC-AGI-3 LOCAL + LOGS FORENSIQUES
+================================================================================
+Architecture V22: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17 + C18
+Architecture V23: ActionDiscovery + WorldModel + InformationGainReward
+Architecture V24: StateEncoder + GoalGrounder + SemanticActionLibrary
+Architecture V25: CausalTransitionGraph + BFS Planning + Cycle Detection
+Nouveautés V25:
+  - CausalTransitionGraph: Graphe états → actions → objectifs
+  - BFS Planning: Planification dirigée vers goal
+  - Cycle Detection: Évitement répétitions trajectoire
+  - Priorité décision: Planning > Exploitation > Exploration
+  - Logs forensiques: Traçabilité bit-level + nanoseconde
+Test: 3 jeux avec max 200 actions par jeu
+================================================================================
+
+📁 Répertoire logs forensiques: logs_forensic_v25_20260614_165932
+
+[STATE ENCODER] Initialisé
+  Embedding dim: 128
+  Motion threshold: 0.1
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.85
+  Max nodes: 10000
+  Max edges per node: 50
+[MAGEN V25] Agent initialisé avec architecture complète
+[MAGEN V25] V22: TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C17+C18
+[MAGEN V25] V23: ActionDiscovery+WorldModel+InformationGainReward
+[MAGEN V25] V24: StateEncoder+GoalGrounder+SemanticActionLibrary
+[MAGEN V25] V25: CausalTransitionGraph+BFSPlanning+CycleDetection
+[MAGEN V25] Forensic logging: ENABLED
+[MAGEN V25] Forensic log path: logs_forensic_v25_20260614_165932/forensic_log.jsonl
+✅ Agent V25 initialisé avec logs forensiques
+📝 Fichier logs: logs_forensic_v25_20260614_165932/forensic_log.jsonl
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 16:59:32 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade initialisé
+🔒 Mode: NORMAL (test local)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Test: 3 jeux
+🔒 Mode: PRIVÉ (aucune soumission)
+⏱️  Début: 2026-06-14T16:59:32.827540
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+🎮 Jeu: ar25-0c556536
+
+[MAGEN V25] Agent réinitialisé pour nouveau jeu
+2026-06-14 16:59:32 | INFO | Created new scorecard: 4d1d0aee-c0d6-4c49-8d29-9483990ab1bc
+2026-06-14 16:59:33 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 16:59:33 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V25] Début jeu - Max actions: 200
+[MAGEN V25] Logs forensiques: ACTIVÉS (bit-level + nanoseconde)
+[MAGEN V25] Planification: BFS + Cycle Detection
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v25_local.py", line 296, in <module>
+    test_magen_v25_local()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v25_local.py", line 109, in test_magen_v25_local
+    grid_obs = agent.perceive(obs)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent_v25.py", line 214, in perceive
+    embedding = self.state_encoder.encode(grid)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/core/state_encoder.py", line 88, in encode
+    if state.ndim == 2:
+       ^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'ndim'

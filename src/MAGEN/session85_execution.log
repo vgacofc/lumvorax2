@@ -1,0 +1,1118 @@
+
+================================================================================
+SESSION 85 - EXPLORATION ESPACE D'ÉTATS
+================================================================================
+
+Objectif: Exécuter actions EN BOUCLE jusqu'à arrêt du jeu
+Hypothèse: ACTION1/3/4 = opérateur T sur régions différentes
+Sécurité: Max 10000 steps
+
+================================================================================
+INITIALISATION ENVIRONNEMENT
+================================================================================
+✅ Game ID vérifié: ls20-9607627b
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-18 00:17:44 | INFO | Got anonymous API key: 993de5f4-3f36-4b62-bad1-2153b0678fd5
+2026-06-18 00:17:44 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-18 00:17:44 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-18 00:17:45 | INFO | Created new scorecard: e1db7b26-1ce0-4144-bf15-b5df34800e57
+2026-06-18 00:17:45 | INFO | Successfully fetched metadata for game ls20
+2026-06-18 00:17:45 | INFO | Successfully reset game ls20-9607627b, guid=26861301-f687-4d28-9d83-da6734144603, scorecard_id=e1db7b26-1ce0-4144-bf15-b5df34800e57
+✅ Environnement créé pour ls20-9607627b
+2026-06-18 00:17:45 | INFO | Successfully reset game ls20-9607627b, guid=26861301-f687-4d28-9d83-da6734144603, scorecard_id=e1db7b26-1ce0-4144-bf15-b5df34800e57
+✅ Frame shape: (64, 64)
+
+================================================================================
+STRATÉGIE: CYCLE ACTIONS (ACTION1→2→3→4→1...)
+================================================================================
+
+================================================================================
+EXPLORATION STRATÉGIE: cycle_actions
+================================================================================
+2026-06-18 00:17:46 | INFO | Successfully reset game ls20-9607627b, guid=26861301-f687-4d28-9d83-da6734144603, scorecard_id=e1db7b26-1ce0-4144-bf15-b5df34800e57
+
+📍 État initial:
+   Hash: cfe5196fb75182bb
+   Distribution: {0: 3, 1: 2, 3: 892, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 84, 12: 10}
+
+================================================================================
+BOUCLE EXPLORATION
+================================================================================
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 1
+   Action: ACTION1
+   Hash: dbbfea829c27a122
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 894, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 82, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 2
+   Action: ACTION2
+   Hash: ab8d6e29ece21f90
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 896, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 80, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 3
+   Action: ACTION3
+   Hash: a30ebdd0951969f6
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 898, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 78, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 4
+   Action: ACTION4
+   Hash: dc0c6413b2db207c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 900, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 76, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 5
+   Action: ACTION1
+   Hash: cf4eb778324c9b80
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 902, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 74, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 6
+   Action: ACTION2
+   Hash: f268714f6819252f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 904, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 72, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 7
+   Action: ACTION3
+   Hash: 7afa5a0b65e0d9e7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 906, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 70, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 8
+   Action: ACTION4
+   Hash: 509fd30f3bfdea4d
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 908, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 68, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 9
+   Action: ACTION1
+   Hash: 78ac85803a17d852
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 910, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 66, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 10
+   Action: ACTION2
+   Hash: 50eabd9d84d92c26
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 912, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 64, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 11
+   Action: ACTION3
+   Hash: 0b3fd8ff7ed05455
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 914, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 62, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 12
+   Action: ACTION4
+   Hash: 37ab68b670ad2747
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 916, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 60, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 13
+   Action: ACTION1
+   Hash: 289c95a26aceaf72
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 918, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 58, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 14
+   Action: ACTION2
+   Hash: 5d9a7033370949cc
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 920, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 56, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 15
+   Action: ACTION3
+   Hash: 53213a1854e4f2c2
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 922, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 54, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 16
+   Action: ACTION4
+   Hash: 2bdeafbf7f59e04f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 924, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 52, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 17
+   Action: ACTION1
+   Hash: 65c7fdac2a76c0ad
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 926, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 50, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 18
+   Action: ACTION2
+   Hash: ceec9797921d914c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 928, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 48, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 19
+   Action: ACTION3
+   Hash: 16cd06125e12573f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 930, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 46, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 20
+   Action: ACTION4
+   Hash: 6e5a10c672806ce7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 932, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 44, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 21
+   Action: ACTION1
+   Hash: 7ae9aa744c646097
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 934, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 42, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 22
+   Action: ACTION2
+   Hash: 157c6bf1a3437385
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 936, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 40, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 23
+   Action: ACTION3
+   Hash: 61f5dc0116d3e599
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 938, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 38, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 24
+   Action: ACTION4
+   Hash: bdb23df1f99bb771
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 940, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 36, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 25
+   Action: ACTION1
+   Hash: a4889156f68c269f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 942, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 34, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 26
+   Action: ACTION2
+   Hash: 0d7a9812d0f398a9
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 944, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 32, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 27
+   Action: ACTION3
+   Hash: 011c6da48caf29bf
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 946, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 30, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 28
+   Action: ACTION4
+   Hash: 572db6070d7ab817
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 948, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 28, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 29
+   Action: ACTION1
+   Hash: e44eba5984e26b5d
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 950, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 26, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 30
+   Action: ACTION2
+   Hash: 2e5450df608d9145
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 952, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 24, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 31
+   Action: ACTION3
+   Hash: b51318e230a9e341
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 954, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 22, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 32
+   Action: ACTION4
+   Hash: ee52dac695778f4e
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 956, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 20, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 33
+   Action: ACTION1
+   Hash: 687475f34dec260f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 958, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 18, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 34
+   Action: ACTION2
+   Hash: 0e8556329b85086e
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 960, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 16, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 35
+   Action: ACTION3
+   Hash: 882e3fba80505b0c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 962, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 14, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 36
+   Action: ACTION4
+   Hash: aea1f3278ee5d953
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 964, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 12, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 37
+   Action: ACTION1
+   Hash: ffddc741381b8873
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 966, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 10, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 38
+   Action: ACTION2
+   Hash: b35ffcd4211d3812
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 968, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 8, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 39
+   Action: ACTION3
+   Hash: 2e8b78cbcda408e3
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 970, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 6, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 40
+   Action: ACTION4
+   Hash: ce9ce921f8de1775
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 972, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 4, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 41
+   Action: ACTION1
+   Hash: 2246128ae8daf5b7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 974, 4: 2609, 5: 439, 8: 12, 9: 45, 11: 2, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 42
+   Action: ACTION2
+   Hash: b2e55ec7bac6b00f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 976, 4: 2609, 5: 439, 8: 12, 9: 45, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 43
+   Action: ACTION3
+   Hash: 8a56edb984242671
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 896, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 20564, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 44
+   Action: ACTION4
+   Hash: bd252c7bc7f43868
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 898, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 82, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 45
+   Action: ACTION1
+   Hash: d0aca7691e842b6f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 900, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 80, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 46
+   Action: ACTION2
+   Hash: c7286f7e47e69f4a
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 902, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 78, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 47
+   Action: ACTION3
+   Hash: f26acd641acbad98
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 904, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 76, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 48
+   Action: ACTION4
+   Hash: f4ea966571a080ed
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 906, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 74, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 49
+   Action: ACTION1
+   Hash: 2089c862d0ee5eae
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 908, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 72, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 50
+   Action: ACTION2
+   Hash: 5b94e579a1c47293
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 910, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 70, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 51
+   Action: ACTION3
+   Hash: b17287ea79b1bc5f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 912, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 68, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 52
+   Action: ACTION4
+   Hash: 5eb79c226ae6fc35
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 914, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 66, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 53
+   Action: ACTION1
+   Hash: ffe4a4cf0aa230ba
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 916, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 64, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 54
+   Action: ACTION2
+   Hash: 264891ce028e9fa8
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 918, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 62, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 55
+   Action: ACTION3
+   Hash: 26869c7ad0132a7e
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 920, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 60, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 56
+   Action: ACTION4
+   Hash: 8a96134decef911c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 922, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 58, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 57
+   Action: ACTION1
+   Hash: 60f88f6958d5e8ce
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 924, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 56, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 58
+   Action: ACTION2
+   Hash: fe43f0aa66d8b369
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 926, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 54, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 59
+   Action: ACTION3
+   Hash: e1797a377a695e33
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 928, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 52, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 60
+   Action: ACTION4
+   Hash: 03ca2f7ee0b4559e
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 930, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 50, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 61
+   Action: ACTION1
+   Hash: 5168c92f8bc1fa19
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 932, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 48, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 62
+   Action: ACTION2
+   Hash: e1b121ee818c46a3
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 934, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 46, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 63
+   Action: ACTION3
+   Hash: b6eb6b1d70f3626c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 936, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 44, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 64
+   Action: ACTION4
+   Hash: 5ad2f84893921407
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 938, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 42, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 65
+   Action: ACTION1
+   Hash: 451855a5cc2ca9e1
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 940, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 40, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 66
+   Action: ACTION2
+   Hash: b20f478eee372ed7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 942, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 38, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 67
+   Action: ACTION3
+   Hash: 441c13f90fd74357
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 944, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 36, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 68
+   Action: ACTION4
+   Hash: c4a2e89e927c957c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 946, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 34, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 69
+   Action: ACTION1
+   Hash: a9e4e8f7a407852f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 948, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 32, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 70
+   Action: ACTION2
+   Hash: 69197b00168bcca7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 950, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 30, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 71
+   Action: ACTION3
+   Hash: 33dc7bffdb562abf
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 952, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 28, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 72
+   Action: ACTION4
+   Hash: 61e680e2c0446046
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 954, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 26, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 73
+   Action: ACTION1
+   Hash: b3d96804925dbc20
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 956, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 24, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 74
+   Action: ACTION2
+   Hash: 0951c54c35337755
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 958, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 22, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 75
+   Action: ACTION3
+   Hash: 2b018ccf5626c65d
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 960, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 20, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 76
+   Action: ACTION4
+   Hash: d355731945bc74f0
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 962, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 18, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 77
+   Action: ACTION1
+   Hash: 61aab6b910032ee0
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 964, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 16, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 78
+   Action: ACTION2
+   Hash: bac55b8f43edc768
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 966, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 14, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 79
+   Action: ACTION3
+   Hash: bfd45274899e9666
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 968, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 12, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 80
+   Action: ACTION4
+   Hash: 573c7a353ff98d38
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 970, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 10, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 81
+   Action: ACTION1
+   Hash: 275dc6a8482b1cce
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 972, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 8, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 82
+   Action: ACTION2
+   Hash: a9a7a699ee1c78b9
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 974, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 6, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 83
+   Action: ACTION3
+   Hash: aa02f2db8b129fc2
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 976, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 4, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 84
+   Action: ACTION4
+   Hash: 06e29a890afb8374
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 978, 4: 2609, 5: 439, 8: 8, 9: 45, 11: 2, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 85
+   Action: ACTION1
+   Hash: fd45bf0e04531955
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 980, 4: 2609, 5: 439, 8: 8, 9: 45, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 86
+   Action: ACTION2
+   Hash: 7cde40f2b9d9e233
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 900, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 20564, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 87
+   Action: ACTION3
+   Hash: 2eff94936cf9f080
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 902, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 82, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 88
+   Action: ACTION4
+   Hash: bcd5a2df133c4b03
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 904, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 80, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 89
+   Action: ACTION1
+   Hash: 1e0bd4332d949dd2
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 906, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 78, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 90
+   Action: ACTION2
+   Hash: e54ef6e268f668ff
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 908, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 76, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 91
+   Action: ACTION3
+   Hash: 7561ebe5efd83c86
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 910, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 74, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 92
+   Action: ACTION4
+   Hash: 96e39c071d01b7dd
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 912, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 72, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 93
+   Action: ACTION1
+   Hash: 39d9510c39f8bc09
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 914, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 70, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 94
+   Action: ACTION2
+   Hash: 5f93aa43eb6d83f0
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 916, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 68, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 95
+   Action: ACTION3
+   Hash: 2646af1f5331647f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 918, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 66, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 96
+   Action: ACTION4
+   Hash: de0df0a963e95056
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 920, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 64, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 97
+   Action: ACTION1
+   Hash: f946b7808317b3c0
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 922, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 62, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 98
+   Action: ACTION2
+   Hash: d5bd3bb874f7e07c
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 924, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 60, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 99
+   Action: ACTION3
+   Hash: 4b3c04fa0186aaf6
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 926, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 58, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 100
+   Action: ACTION4
+   Hash: 8d5c7bf4494d4a8f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 928, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 56, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 101
+   Action: ACTION1
+   Hash: 356bf8357d3cd802
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 930, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 54, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 102
+   Action: ACTION2
+   Hash: ca629a5250faf169
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 932, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 52, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 103
+   Action: ACTION3
+   Hash: 36a3ee74376bbdc4
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 934, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 50, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 104
+   Action: ACTION4
+   Hash: e2f7ed50d3fa3d8f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 936, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 48, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 105
+   Action: ACTION1
+   Hash: 88f79ec0a5338e3d
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 938, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 46, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 106
+   Action: ACTION2
+   Hash: 6d521ff63d44ded7
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 940, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 44, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 107
+   Action: ACTION3
+   Hash: bf5d01f6a1f80f76
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 942, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 42, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 108
+   Action: ACTION4
+   Hash: 7699478edf736a3f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 944, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 40, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 109
+   Action: ACTION1
+   Hash: db4639fdc3b35c93
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 946, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 38, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 110
+   Action: ACTION2
+   Hash: c7d68a45afd7c7a8
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 948, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 36, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 111
+   Action: ACTION3
+   Hash: 0516d4fe4bb0689b
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 950, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 34, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 112
+   Action: ACTION4
+   Hash: 7313dfbd4f59ea4f
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 952, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 32, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 113
+   Action: ACTION1
+   Hash: 9f16d7798492260a
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 954, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 30, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 114
+   Action: ACTION2
+   Hash: 013b34e41e8d4b8e
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 956, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 28, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 115
+   Action: ACTION3
+   Hash: 6342fe1a54fc179b
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 958, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 26, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 116
+   Action: ACTION4
+   Hash: 651c297fabc5042a
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 960, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 24, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 117
+   Action: ACTION1
+   Hash: dd7b2652de7a3f46
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 962, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 22, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 118
+   Action: ACTION2
+   Hash: 4b4cfb8cb7ecac17
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 964, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 20, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 119
+   Action: ACTION3
+   Hash: 77ff78f7c205f272
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 966, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 18, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 120
+   Action: ACTION4
+   Hash: 20558fd61078378d
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 968, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 16, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 121
+   Action: ACTION1
+   Hash: 90f872851fab73cf
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 970, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 14, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 122
+   Action: ACTION2
+   Hash: 688d1c0b9dff94f8
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 972, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 12, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 123
+   Action: ACTION3
+   Hash: bf93674d025d72f8
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 974, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 10, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 124
+   Action: ACTION4
+   Hash: 9863f827abba65af
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 976, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 8, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 125
+   Action: ACTION1
+   Hash: 5b157b03e9b936fd
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 978, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 6, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 126
+   Action: ACTION2
+   Hash: b94fe617e1bde381
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 980, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 4, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 127
+   Action: ACTION3
+   Hash: 28e7fd34a01b812a
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 982, 4: 2609, 5: 439, 8: 4, 9: 45, 11: 2, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 128
+   Action: ACTION4
+   Hash: 4bbc8af61672703a
+   Reward: 0.0
+   Done: False
+   Distribution: {0: 3, 1: 2, 3: 984, 4: 2609, 5: 439, 8: 4, 9: 45, 12: 10}
+
+✨ NOUVEL ÉTAT découvert!
+   Step: 129
+   Action: ACTION1
+   Hash: 365d2e461062ce28
+   Reward: 0.0
+   Done: True
+   Distribution: {0: 3, 1: 2, 3: 988, 4: 2609, 5: 439, 9: 45, 12: 10}
+
+================================================================================
+🎯 JEU TERMINÉ!
+================================================================================
+   Step final: 129
+   Reward final: 0.0
+   Raison: done=True
+
+================================================================================
+ANALYSE RÉSULTATS
+================================================================================
+
+📊 Statistiques globales:
+   Total steps: 129
+   États découverts: 130
+   Transitions enregistrées: 129
+
+🔄 Analyse transitions:
+   ACTION1: 33 fois (reward moyen: 0.0000)
+   ACTION2: 32 fois (reward moyen: 0.0000)
+   ACTION3: 32 fois (reward moyen: 0.0000)
+   ACTION4: 32 fois (reward moyen: 0.0000)
+
+🔁 Recherche cycles:
+   Aucun cycle détecté
+
+💰 Analyse rewards:
+   Rewards uniques: [0.0]
+   Reward min: 0.0
+   Reward max: 0.0
+   Reward moyen: 0.0000
+
+🗺️ Analyse états:
+   États uniques: 130
+   Aucun état avec reward > 0
+
+✅ Résultats sauvegardés: session85_state_exploration_20260618_001828.json
+
+================================================================================
+✅ SESSION 85 COMPLÉTÉE
+================================================================================
+   Total steps: 129
+   États découverts: 130
+   Reward final: 0.0
+   Done: True
+   Fichier: session85_state_exploration_20260618_001828.json

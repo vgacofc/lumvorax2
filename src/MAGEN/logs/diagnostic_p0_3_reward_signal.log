@@ -1,0 +1,822 @@
+✅ ARC_API_KEY chargée: 705f499b...
+✅ arc-agi importé
+
+
+================================================================================
+🔬 DIAGNOSTIC P0.3 - IDENTIFICATION SIGNAL REWARD
+================================================================================
+Objectif: Identifier précisément le signal de progression
+Méthode: Tracer TOUS les attributs à chaque step
+Test: 200 steps avec actions variées
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 23:30:32 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie
+
+2026-06-16 23:30:32 | INFO | Created new scorecard: de3b2d65-acc1-4cf3-8ce1-575c55784299
+✅ Scorecard créé: de3b2d65-acc1-4cf3-8ce1-575c55784299
+
+2026-06-16 23:30:33 | INFO | Successfully fetched metadata for game ls20
+2026-06-16 23:30:33 | INFO | Recording to recordings/de3b2d65-acc1-4cf3-8ce1-575c55784299/ls20-9607627b-74796bfe-15f3-42f2-94e9-5903f1120d15.jsonl
+2026-06-16 23:30:33 | INFO | Successfully reset game ls20-9607627b, guid=74796bfe-15f3-42f2-94e9-5903f1120d15, scorecard_id=de3b2d65-acc1-4cf3-8ce1-575c55784299
+🔄 RESET environnement...
+2026-06-16 23:30:33 | INFO | Recording to recordings/de3b2d65-acc1-4cf3-8ce1-575c55784299/ls20-9607627b-74796bfe-15f3-42f2-94e9-5903f1120d15.jsonl
+2026-06-16 23:30:33 | INFO | Successfully reset game ls20-9607627b, guid=74796bfe-15f3-42f2-94e9-5903f1120d15, scorecard_id=de3b2d65-acc1-4cf3-8ce1-575c55784299
+/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_reward_signal.py:125: PydanticDeprecatedSince211: Accessing the 'model_computed_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(obs, attr)
+/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_reward_signal.py:125: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(obs, attr)
+✅ Environnement démarré
+
+================================================================================
+ÉTAT INITIAL
+================================================================================
+
+  action_input_id          : RESET
+  available_actions        : [1, 2, 3, 4]
+  frame_hash               : cfe5196fb75182bb
+  frame_max                : 12
+  frame_mean               : 4.11474609375
+  frame_min                : 0
+  frame_nonzero            : 4093
+  frame_shape              : (1, 64, 64)
+  frame_unique             : 9
+  full_reset               : False
+  game_id                  : ls20-9607627b
+  guid                     : 74796bfe-15f3-42f2-94e9-5903f1120d15
+  levels_completed         : 0
+  state                    : NOT_FINISHED
+  state_value              : NOT_FINISHED
+  win_levels               : 7
+
+================================================================================
+TEST: 200 STEPS - TRAÇAGE COMPLET
+================================================================================
+
+Step   1 | Action: ACTION4  | FRAME: CHANGED
+Step   2 | Action: ACTION4  | FRAME: CHANGED
+Step   3 | Action: ACTION4  | FRAME: CHANGED
+Step   4 | Action: ACTION2  | FRAME: CHANGED
+Step   5 | Action: ACTION2  | FRAME: CHANGED
+Step   6 | Action: ACTION1  | FRAME: CHANGED
+Step   7 | Action: ACTION3  | FRAME: CHANGED
+Step   8 | Action: ACTION4  | FRAME: CHANGED
+Step   9 | Action: ACTION4  | FRAME: CHANGED
+Step  10 | Action: ACTION4  | FRAME: CHANGED
+Step  11 | Action: ACTION4  | FRAME: CHANGED
+Step  12 | Action: ACTION2  | FRAME: CHANGED
+Step  13 | Action: ACTION2  | FRAME: CHANGED
+Step  14 | Action: ACTION1  | FRAME: CHANGED
+Step  15 | Action: ACTION3  | FRAME: CHANGED
+Step  16 | Action: ACTION4  | FRAME: CHANGED
+Step  17 | Action: ACTION4  | FRAME: CHANGED
+Step  18 | Action: ACTION4  | FRAME: CHANGED
+Step  19 | Action: ACTION4  | FRAME: CHANGED
+Step  20 | Action: ACTION2  | FRAME: CHANGED
+Step  21 | Action: ACTION2  | FRAME: CHANGED
+Step  22 | Action: ACTION1  | FRAME: CHANGED
+Step  23 | Action: ACTION3  | FRAME: CHANGED
+Step  24 | Action: ACTION4  | FRAME: CHANGED
+Step  25 | Action: ACTION4  | FRAME: CHANGED
+Step  26 | Action: ACTION4  | FRAME: CHANGED
+Step  27 | Action: ACTION4  | FRAME: CHANGED
+Step  28 | Action: ACTION2  | FRAME: CHANGED
+Step  29 | Action: ACTION2  | FRAME: CHANGED
+Step  30 | Action: ACTION1  | FRAME: CHANGED
+Step  31 | Action: ACTION3  | FRAME: CHANGED
+Step  32 | Action: ACTION4  | FRAME: CHANGED
+Step  33 | Action: ACTION4  | FRAME: CHANGED
+Step  34 | Action: ACTION4  | FRAME: CHANGED
+Step  35 | Action: ACTION4  | FRAME: CHANGED
+Step  36 | Action: ACTION2  | FRAME: CHANGED
+Step  37 | Action: ACTION2  | FRAME: CHANGED
+Step  38 | Action: ACTION1  | FRAME: CHANGED
+Step  39 | Action: ACTION3  | FRAME: CHANGED
+Step  40 | Action: ACTION4  | FRAME: CHANGED
+Step  41 | Action: ACTION4  | FRAME: CHANGED
+Step  42 | Action: ACTION4  | FRAME: CHANGED
+Step  43 | Action: ACTION4  | FRAME: CHANGED
+Step  44 | Action: ACTION2  | FRAME: CHANGED
+Step  45 | Action: ACTION2  | FRAME: CHANGED
+Step  46 | Action: ACTION1  | FRAME: CHANGED
+Step  47 | Action: ACTION3  | FRAME: CHANGED
+Step  48 | Action: ACTION4  | FRAME: CHANGED
+Step  49 | Action: ACTION4  | FRAME: CHANGED
+Step  50 | Action: ACTION4  | FRAME: CHANGED
+Step  51 | Action: ACTION4  | FRAME: CHANGED
+Step  52 | Action: ACTION2  | FRAME: CHANGED
+Step  53 | Action: ACTION2  | FRAME: CHANGED
+Step  54 | Action: ACTION1  | FRAME: CHANGED
+Step  55 | Action: ACTION3  | FRAME: CHANGED
+Step  56 | Action: ACTION4  | FRAME: CHANGED
+Step  57 | Action: ACTION4  | FRAME: CHANGED
+Step  58 | Action: ACTION4  | FRAME: CHANGED
+Step  59 | Action: ACTION4  | FRAME: CHANGED
+Step  60 | Action: ACTION2  | FRAME: CHANGED
+Step  61 | Action: ACTION2  | FRAME: CHANGED
+Step  62 | Action: ACTION1  | FRAME: CHANGED
+Step  63 | Action: ACTION3  | FRAME: CHANGED
+Step  64 | Action: ACTION4  | FRAME: CHANGED
+Step  65 | Action: ACTION4  | FRAME: CHANGED
+Step  66 | Action: ACTION4  | FRAME: CHANGED
+Step  67 | Action: ACTION4  | FRAME: CHANGED
+Step  68 | Action: ACTION2  | FRAME: CHANGED
+Step  69 | Action: ACTION2  | FRAME: CHANGED
+Step  70 | Action: ACTION1  | FRAME: CHANGED
+Step  71 | Action: ACTION3  | FRAME: CHANGED
+Step  72 | Action: ACTION4  | FRAME: CHANGED
+Step  73 | Action: ACTION4  | FRAME: CHANGED
+Step  74 | Action: ACTION4  | FRAME: CHANGED
+Step  75 | Action: ACTION4  | FRAME: CHANGED
+Step  76 | Action: ACTION2  | FRAME: CHANGED
+Step  77 | Action: ACTION2  | FRAME: CHANGED
+Step  78 | Action: ACTION1  | FRAME: CHANGED
+Step  79 | Action: ACTION3  | FRAME: CHANGED
+Step  80 | Action: ACTION4  | FRAME: CHANGED
+Step  81 | Action: ACTION4  | FRAME: CHANGED
+Step  82 | Action: ACTION4  | FRAME: CHANGED
+Step  83 | Action: ACTION4  | FRAME: CHANGED
+Step  84 | Action: ACTION2  | FRAME: CHANGED
+Step  85 | Action: ACTION2  | FRAME: CHANGED
+Step  86 | Action: ACTION1  | FRAME: CHANGED
+Step  87 | Action: ACTION3  | FRAME: CHANGED
+Step  88 | Action: ACTION4  | FRAME: CHANGED
+Step  89 | Action: ACTION4  | FRAME: CHANGED
+Step  90 | Action: ACTION4  | FRAME: CHANGED
+Step  91 | Action: ACTION4  | FRAME: CHANGED
+Step  92 | Action: ACTION2  | FRAME: CHANGED
+Step  93 | Action: ACTION2  | FRAME: CHANGED
+Step  94 | Action: ACTION1  | FRAME: CHANGED
+Step  95 | Action: ACTION3  | FRAME: CHANGED
+Step  96 | Action: ACTION4  | FRAME: CHANGED
+Step  97 | Action: ACTION4  | FRAME: CHANGED
+Step  98 | Action: ACTION4  | FRAME: CHANGED
+Step  99 | Action: ACTION4  | FRAME: CHANGED
+Step 100 | Action: ACTION2  | FRAME: CHANGED
+Step 101 | Action: ACTION2  | FRAME: CHANGED
+Step 102 | Action: ACTION1  | FRAME: CHANGED
+Step 103 | Action: ACTION3  | FRAME: CHANGED
+Step 104 | Action: ACTION4  | FRAME: CHANGED
+Step 105 | Action: ACTION4  | FRAME: CHANGED
+Step 106 | Action: ACTION4  | FRAME: CHANGED
+Step 107 | Action: ACTION4  | FRAME: CHANGED
+Step 108 | Action: ACTION2  | FRAME: CHANGED
+Step 109 | Action: ACTION2  | FRAME: CHANGED
+Step 110 | Action: ACTION1  | FRAME: CHANGED
+Step 111 | Action: ACTION3  | FRAME: CHANGED
+Step 112 | Action: ACTION4  | FRAME: CHANGED
+Step 113 | Action: ACTION4  | FRAME: CHANGED
+Step 114 | Action: ACTION4  | FRAME: CHANGED
+Step 115 | Action: ACTION4  | FRAME: CHANGED
+Step 116 | Action: ACTION2  | FRAME: CHANGED
+Step 117 | Action: ACTION2  | FRAME: CHANGED
+Step 118 | Action: ACTION1  | FRAME: CHANGED
+Step 119 | Action: ACTION3  | FRAME: CHANGED
+Step 120 | Action: ACTION4  | FRAME: CHANGED
+Step 121 | Action: ACTION4  | FRAME: CHANGED
+Step 122 | Action: ACTION4  | FRAME: CHANGED
+Step 123 | Action: ACTION4  | FRAME: CHANGED
+Step 124 | Action: ACTION2  | FRAME: CHANGED
+Step 125 | Action: ACTION2  | FRAME: CHANGED
+Step 126 | Action: ACTION1  | FRAME: CHANGED
+Step 127 | Action: ACTION3  | FRAME: CHANGED
+Step 128 | Action: ACTION4  | FRAME: CHANGED
+Step 129 | Action: ACTION4  | STATE: NOT_FINISHED → GAME_OVER | FRAME: CHANGED
+
+   🎉 PROGRESSION DÉTECTÉE!
+   Changements: {
+      "frame_hash": {
+            "before": "cff075875dee0400",
+            "after": "c6553f66e7ac162a"
+      },
+      "frame_mean": {
+            "before": 3.94091796875,
+            "after": 3.93603515625
+      },
+      "frame_unique": {
+            "before": 8,
+            "after": 7
+      },
+      "state": {
+            "before": "NOT_FINISHED",
+            "after": "GAME_OVER"
+      },
+      "state_value": {
+            "before": "NOT_FINISHED",
+            "after": "GAME_OVER"
+      }
+}
+Step 130 | Action: ACTION4  | 2026-06-16 23:31:23 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 131 | Action: ACTION4  | 2026-06-16 23:31:23 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 132 | Action: ACTION2  | 2026-06-16 23:31:24 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 133 | Action: ACTION2  | 2026-06-16 23:31:24 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 134 | Action: ACTION1  | 2026-06-16 23:31:24 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 135 | Action: ACTION3  | 2026-06-16 23:31:25 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 136 | Action: ACTION4  | 2026-06-16 23:31:25 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 137 | Action: ACTION4  | 2026-06-16 23:31:25 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 138 | Action: ACTION4  | 2026-06-16 23:31:26 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 139 | Action: ACTION4  | 2026-06-16 23:31:26 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 140 | Action: ACTION2  | 2026-06-16 23:31:26 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 141 | Action: ACTION2  | 2026-06-16 23:31:27 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 142 | Action: ACTION1  | 2026-06-16 23:31:27 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 143 | Action: ACTION3  | 2026-06-16 23:31:28 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 144 | Action: ACTION4  | 2026-06-16 23:31:28 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 145 | Action: ACTION4  | 2026-06-16 23:31:28 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 146 | Action: ACTION4  | 2026-06-16 23:31:28 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 147 | Action: ACTION4  | 2026-06-16 23:31:29 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 148 | Action: ACTION2  | 2026-06-16 23:31:29 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 149 | Action: ACTION2  | 2026-06-16 23:31:29 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 150 | Action: ACTION1  | 2026-06-16 23:31:29 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 151 | Action: ACTION3  | 2026-06-16 23:31:30 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 152 | Action: ACTION4  | 2026-06-16 23:31:30 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 153 | Action: ACTION4  | 2026-06-16 23:31:31 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 154 | Action: ACTION4  | 2026-06-16 23:31:31 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 155 | Action: ACTION4  | 2026-06-16 23:31:32 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 156 | Action: ACTION2  | 2026-06-16 23:31:32 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 157 | Action: ACTION2  | 2026-06-16 23:31:32 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 158 | Action: ACTION1  | 2026-06-16 23:31:32 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 159 | Action: ACTION3  | 2026-06-16 23:31:33 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 160 | Action: ACTION4  | 2026-06-16 23:31:33 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 161 | Action: ACTION4  | 2026-06-16 23:31:33 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 162 | Action: ACTION4  | 2026-06-16 23:31:34 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 163 | Action: ACTION4  | 2026-06-16 23:31:34 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 164 | Action: ACTION2  | 2026-06-16 23:31:35 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 165 | Action: ACTION2  | 2026-06-16 23:31:35 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 166 | Action: ACTION1  | 2026-06-16 23:31:35 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 167 | Action: ACTION3  | 2026-06-16 23:31:36 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 168 | Action: ACTION4  | 2026-06-16 23:31:36 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 169 | Action: ACTION4  | 2026-06-16 23:31:36 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 170 | Action: ACTION4  | 2026-06-16 23:31:37 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 171 | Action: ACTION4  | 2026-06-16 23:31:37 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 172 | Action: ACTION2  | 2026-06-16 23:31:38 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 173 | Action: ACTION2  | 2026-06-16 23:31:38 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 174 | Action: ACTION1  | 2026-06-16 23:31:39 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 175 | Action: ACTION3  | 2026-06-16 23:31:39 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 176 | Action: ACTION4  | 2026-06-16 23:31:39 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 177 | Action: ACTION4  | 2026-06-16 23:31:39 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 178 | Action: ACTION4  | 2026-06-16 23:31:40 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 179 | Action: ACTION4  | 2026-06-16 23:31:40 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 180 | Action: ACTION2  | 2026-06-16 23:31:40 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 181 | Action: ACTION2  | 2026-06-16 23:31:40 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 182 | Action: ACTION1  | 2026-06-16 23:31:41 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 183 | Action: ACTION3  | 2026-06-16 23:31:41 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 184 | Action: ACTION4  | 2026-06-16 23:31:42 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 185 | Action: ACTION4  | 2026-06-16 23:31:42 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 186 | Action: ACTION4  | 2026-06-16 23:31:42 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 187 | Action: ACTION4  | 2026-06-16 23:31:43 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 188 | Action: ACTION2  | 2026-06-16 23:31:43 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 189 | Action: ACTION2  | 2026-06-16 23:31:43 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 190 | Action: ACTION1  | 2026-06-16 23:31:44 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 191 | Action: ACTION3  | 2026-06-16 23:31:44 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 192 | Action: ACTION4  | 2026-06-16 23:31:44 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 193 | Action: ACTION4  | 2026-06-16 23:31:45 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 194 | Action: ACTION4  | 2026-06-16 23:31:45 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 195 | Action: ACTION4  | 2026-06-16 23:31:46 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+Step 196 | Action: ACTION2  | 2026-06-16 23:31:46 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 197 | Action: ACTION2  | 2026-06-16 23:31:46 | ERROR | Failed to perform action ACTION2 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION2
+No critical changes
+Step 198 | Action: ACTION1  | 2026-06-16 23:31:46 | ERROR | Failed to perform action ACTION1 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION1
+No critical changes
+Step 199 | Action: ACTION3  | 2026-06-16 23:31:47 | ERROR | Failed to perform action ACTION3 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION3
+No critical changes
+Step 200 | Action: ACTION4  | 2026-06-16 23:31:47 | ERROR | Failed to perform action ACTION4 for game ls20-9607627b: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4 Response body: {"error":"GAME_NOT_STARTED_ERROR","message":"game ls20-9607627b is available but has not been started, send RESET to begin playing"}
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/ACTION4
+No critical changes
+
+================================================================================
+ANALYSE FINALE
+================================================================================
+
+Total steps: 200
+Steps avec changements: 129
+Taux changement: 64.5%
+
+Attributs qui ont changé:
+  - action_input_id          :  65 fois (32.5%)
+  - frame_hash               : 129 fois (64.5%)
+  - frame_mean               : 129 fois (64.5%)
+  - frame_nonzero            :   4 fois (2.0%)
+  - frame_shape              :   4 fois (2.0%)
+  - frame_unique             :   6 fois (3.0%)
+  - state                    :   1 fois (0.5%)
+  - state_value              :   1 fois (0.5%)
+
+Progressions levels_completed: 0
+
+Changements state: 1
+  Détails:
+    Step 129: {'before': 'NOT_FINISHED', 'after': 'GAME_OVER'}
+
+État final:
+  state: N/A
+  levels_completed: N/A
+  win_levels: N/A
+  frame_hash: N/A
+
+================================================================================
+DIAGNOSTIC SIGNAL REWARD
+================================================================================
+
+✅ SIGNAL REWARD IDENTIFIÉ: state
+   Changements détectés: 1
+   Signal exploitable pour reward externe
+
+✅ Résultats sauvegardés: /home/lvx/LVX/lumvorax2/src/MAGEN/results/diagnostic_reward_20260616_233147.json
+
+================================================================================
+FIN DIAGNOSTIC P0.3
+================================================================================
+

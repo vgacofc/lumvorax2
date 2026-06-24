@@ -1,0 +1,71 @@
+✅ ARC_API_KEY chargée depuis Doppler: 705f499b-05a...
+✅ Modules arc_agi et arcengine importés
+
+================================================================================
+TEST 1: CONNEXION API
+================================================================================
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 19:15:40 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie
+
+================================================================================
+TEST 2: LISTE DES JEUX DISPONIBLES
+================================================================================
+✅ API initialisée avec succès
+   25 environnements Arcade disponibles (selon logs)
+
+================================================================================
+TEST 3: CRÉATION SCORECARD
+================================================================================
+2026-06-16 19:15:40 | INFO | Created new scorecard: 34fd8a87-bd17-46e9-bbee-15dc8f125cc3
+✅ Scorecard créé: 34fd8a87-bd17-46e9-bbee-15dc8f125cc3
+
+================================================================================
+TEST 4: CHARGEMENT JEU ls20-9607627b
+================================================================================
+2026-06-16 19:15:41 | INFO | Successfully fetched metadata for game ls20
+2026-06-16 19:15:41 | INFO | Recording to recordings/34fd8a87-bd17-46e9-bbee-15dc8f125cc3/ls20-9607627b-7bb436e6-4603-41de-9db0-2fc3d12025f4.jsonl
+2026-06-16 19:15:41 | INFO | Successfully reset game ls20-9607627b, guid=7bb436e6-4603-41de-9db0-2fc3d12025f4, scorecard_id=34fd8a87-bd17-46e9-bbee-15dc8f125cc3
+✅ Environnement créé pour ls20-9607627b
+
+================================================================================
+TEST 5: RESET ENVIRONNEMENT
+================================================================================
+2026-06-16 19:15:41 | INFO | Recording to recordings/34fd8a87-bd17-46e9-bbee-15dc8f125cc3/ls20-9607627b-7bb436e6-4603-41de-9db0-2fc3d12025f4.jsonl
+2026-06-16 19:15:41 | INFO | Successfully reset game ls20-9607627b, guid=7bb436e6-4603-41de-9db0-2fc3d12025f4, scorecard_id=34fd8a87-bd17-46e9-bbee-15dc8f125cc3
+✅ RESET réussi
+   Type observation: <class 'arcengine.enums.FrameDataRaw'>
+
+================================================================================
+TEST 6: ACTIONS DISPONIBLES
+================================================================================
+✅ 4 actions disponibles
+   Actions: [<GameAction.ACTION1: 1>, <GameAction.ACTION2: 2>, <GameAction.ACTION3: 3>, <GameAction.ACTION4: 4>]
+
+================================================================================
+TEST 7: EXÉCUTION ACTION TEST
+================================================================================
+✅ Action exécutée avec succès
+   Type observation: <class 'arcengine.enums.FrameDataRaw'>
+   Reward: 0.0
+   État: NOT_FINISHED
+
+================================================================================
+TEST 8: RÉCUPÉRATION RÈGLES DU JEU VIA API
+================================================================================
+⚠️  Impossible de récupérer métadonnées: 'Arcade' object has no attribute 'get_game_metadata'
+
+================================================================================
+TEST 9: FERMETURE PROPRE
+================================================================================
+✅ Pas de fermeture explicite nécessaire (géré par scorecard)
+
+================================================================================
+✅ TOUS LES TESTS RÉUSSIS!
+================================================================================
+
+Le système est prêt pour l'entraînement.
+Scorecard actif: 34fd8a87-bd17-46e9-bbee-15dc8f125cc3
+
+Pour lancer l'entraînement:
+  doppler run -- python3 train_single_game_ls20_realtime.py

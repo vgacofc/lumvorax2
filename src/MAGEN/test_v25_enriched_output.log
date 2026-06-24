@@ -1,0 +1,927 @@
+================================================================================
+TEST MAGEN ARC-AGI AGENT V25 ENRICHED - ITÉRATION #10
+Session 70 - Solution A Révisée Complète
+================================================================================
+
+✅ Clé API trouvée: b6ebc9c5...6c9455d4
+
+📦 Création de l'agent V25 Enriched...
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+[MAGEN V25 ENRICHED] Agent initialisé avec architecture complète
+[MAGEN V25 ENRICHED] V22: TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C17+C18
+[MAGEN V25 ENRICHED] V23: ActionDiscovery+WorldModel+InformationGainReward
+[MAGEN V25 ENRICHED] V24: GoalGrounder+SemanticActionLibrary
+[MAGEN V25 ENRICHED] V25: StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[MAGEN V25 ENRICHED] ENRICHED: RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[MAGEN V25 ENRICHED] Forensic logging: ENABLED
+[MAGEN V25 ENRICHED] Forensic log path: None
+✅ Agent V25 Enriched créé avec succès
+   - StateEncoder: 256D (vs 128D V25)
+   - Threshold graphe: 0.70 (vs 0.85 V25)
+   - Exploration: 80% (vs 28.5% V25)
+   - Pénalisation répétition: ACTIVE
+   - Cycle avoidance: ACTIF
+   - Reward shaping: INTRINSÈQUE
+
+🎮 JEU 1/3: e21a174a
+--------------------------------------------------------------------------------
+[MAGEN V25 ENRICHED] Agent réinitialisé pour nouveau jeu
+⚠️ Module arc_prize_2024_env non trouvé, utilisation du mock
+✅ Jeu démarré: e21a174a
+   Frame shape: (10, 10)
+
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.050
+[STATE ENCODER V25] Encoding #10: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1935.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.025
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.006
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.002
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #20: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2291.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #30: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2528.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #40: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1790.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #50: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2161.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #60: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1816.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #70: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1817.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #80: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1846.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #90: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2038.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #100: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2928.2µs
+   Action 50/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #110: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2132.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #120: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1868.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #130: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2011.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #140: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1902.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #150: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2123.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #160: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1861.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #170: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2143.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #180: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=8160.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #190: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2208.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #200: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1946.8µs
+   Action 100/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #210: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1973.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #220: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1846.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #230: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=3392.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #240: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=4310.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #250: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=3671.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #260: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=3946.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #270: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=4019.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #280: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2932.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #290: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1994.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #300: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1810.0µs
+   Action 150/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #310: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1708.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #320: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1823.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #330: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1790.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #340: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1898.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #350: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1892.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #360: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2113.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #370: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1825.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #380: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1805.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #390: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2008.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #400: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1855.7µs
+   Action 200/200: reward=0.00, intrinsic=0.000
+
+📊 RÉSULTATS JEU 1:
+   Actions: 200
+   Reward total: 0.00
+   Reward intrinsèque: 0.000
+   Statut: ⏸️ TRONQUÉ
+
+📈 STATISTIQUES AGENT:
+   Graphe causal: 0 nodes, 0 edges
+   Plans générés: 0
+   Cycles détectés: 573
+   Hashes uniques: 0
+   Transitions uniques: 0
+   Exploration: 0 (0.0%)
+   Exploitation: 0 (0.0%)
+
+
+🎮 JEU 2/3: 3906de3d
+--------------------------------------------------------------------------------
+[MAGEN V25 ENRICHED] Agent réinitialisé pour nouveau jeu
+⚠️ Module arc_prize_2024_env non trouvé, utilisation du mock
+✅ Jeu démarré: 3906de3d
+   Frame shape: (10, 10)
+
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.050
+[STATE ENCODER V25] Encoding #410: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1914.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.025
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.006
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.002
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #420: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2018.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #430: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1783.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #440: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1864.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #450: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1920.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #460: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2077.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #470: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1984.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #480: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1696.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #490: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1725.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #500: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1680.7µs
+   Action 50/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #510: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1962.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #520: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1889.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #530: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1863.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #540: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1854.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #550: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1902.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #560: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1982.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #570: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1879.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #580: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1860.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #590: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1884.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #600: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2097.0µs
+   Action 100/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #610: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1970.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #620: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1893.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #630: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1816.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #640: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1910.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #650: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1812.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #660: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2069.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #670: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1872.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #680: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1881.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #690: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1892.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #700: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1943.2µs
+   Action 150/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #710: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2401.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #720: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1751.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #730: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1756.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #740: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1841.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #750: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1791.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #760: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1866.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #770: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1778.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #780: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1850.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #790: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1838.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #800: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2012.7µs
+   Action 200/200: reward=0.00, intrinsic=0.000
+
+📊 RÉSULTATS JEU 2:
+   Actions: 200
+   Reward total: 0.00
+   Reward intrinsèque: 0.000
+   Statut: ⏸️ TRONQUÉ
+
+📈 STATISTIQUES AGENT:
+   Graphe causal: 0 nodes, 0 edges
+   Plans générés: 0
+   Cycles détectés: 1173
+   Hashes uniques: 0
+   Transitions uniques: 0
+   Exploration: 0 (0.0%)
+   Exploitation: 0 (0.0%)
+
+
+🎮 JEU 3/3: a699fb00
+--------------------------------------------------------------------------------
+[MAGEN V25 ENRICHED] Agent réinitialisé pour nouveau jeu
+⚠️ Module arc_prize_2024_env non trouvé, utilisation du mock
+✅ Jeu démarré: a699fb00
+   Frame shape: (10, 10)
+
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.050
+[STATE ENCODER V25] Encoding #810: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1835.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.025
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.006
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.002
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #820: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1856.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #830: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1876.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #840: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1804.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #850: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1781.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #860: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1825.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #870: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2198.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #880: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=3373.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #890: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=3176.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #900: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2610.0µs
+   Action 50/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #910: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2080.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #920: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2028.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #930: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1792.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #940: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2318.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #950: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2641.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #960: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2157.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #970: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1972.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #980: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2176.8µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #990: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2362.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1000: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2119.7µs
+   Action 100/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1010: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2569.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1020: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1987.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1030: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2253.7µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1040: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2252.4µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1050: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2664.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1060: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1899.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1070: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1877.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1080: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1776.1µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1090: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2034.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1100: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1858.2µs
+   Action 150/200: reward=0.00, intrinsic=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1110: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1723.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1120: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1843.0µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1130: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=2721.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1140: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1882.2µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1150: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1827.6µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1160: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1952.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1170: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1871.5µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1180: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1763.9µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1190: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1867.3µs
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[EXPLORATION] Action: ACTION0 (ACTION0) score=0.000
+[STATE ENCODER V25] Encoding #1200: objects=0, motion=0.000, regions=0, relations=0, unique_hashes=1, time=1793.6µs
+   Action 200/200: reward=0.00, intrinsic=0.000
+
+📊 RÉSULTATS JEU 3:
+   Actions: 200
+   Reward total: 0.00
+   Reward intrinsèque: 0.000
+   Statut: ⏸️ TRONQUÉ
+
+📈 STATISTIQUES AGENT:
+   Graphe causal: 0 nodes, 0 edges
+   Plans générés: 0
+   Cycles détectés: 1773
+   Hashes uniques: 0
+   Transitions uniques: 0
+   Exploration: 0 (0.0%)
+   Exploitation: 0 (0.0%)
+
+
+================================================================================
+📊 RÉSULTATS GLOBAUX V25 ENRICHED - ITÉRATION #10
+================================================================================
+
+🎮 Jeux testés: 3
+   ✅ Complétés: 0
+   ❌ Échoués: 3
+   📊 Score: 0/3
+
+🎯 Actions:
+   Total: 600
+   Exploration: 0 (0.0%)
+   Exploitation: 0 (0.0%)
+
+💰 Rewards:
+   Total: 0.00
+   Intrinsèque: 0.000
+
+🔄 Cycles détectés: 3519
+
+⏱️ Temps d'exécution: 2.67s
+
+================================================================================
+📈 COMPARAISON V25 vs V25 ENRICHED
+================================================================================
+
+Métriques                  | V25 (Test #9) | V25 Enriched (Test #10) | Objectif
+--------------------------------------------------------------------------------
+Graphe nodes               | 1             |               0 | >10
+Graphe edges               | 1             |               0 | >20
+Plans générés              | 0             |               0 | >1
+Score                      | 0/3           | 0/3             | >0/3
+Cycles détectés            | 570           |            3519 | <100
+Hashes uniques             | ~1            |               0 | >50
+Exploration %              | 28.5%         |            0.0% | 80%
+Intrinsic rewards          | 0.0           |          0.000 | >5.0
+
+================================================================================
+🎯 VERDICT
+================================================================================
+
+Critères de succès: 0/8
+
+   ❌ graphe_nodes
+   ❌ graphe_edges
+   ❌ plans_generated
+   ❌ score
+   ❌ cycles
+   ❌ hashes
+   ❌ exploration
+   ❌ intrinsic_rewards
+
+❌ ÉCHEC: V25 Enriched nécessite des corrections supplémentaires
+   → Analyser logs forensiques et réviser architecture
+
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v25_enriched_local.py", line 347, in <module>
+    success = test_agent_v25_enriched_local()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_magen_v25_enriched_local.py", line 339, in test_agent_v25_enriched_local
+    json.dump(results_data, f, indent=2)
+  File "/usr/lib/python3.12/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type set is not JSON serializable

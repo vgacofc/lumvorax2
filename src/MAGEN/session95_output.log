@@ -1,0 +1,181 @@
+================================================================================
+SESSION 95 - VALIDATION EXPÉRIMENTALE
+================================================================================
+Date: 2026-06-18T10:51:37.177911
+================================================================================
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-18 10:51:38 | INFO | Got anonymous API key: 21feedd1-6c0e-4529-a02e-206aab587442
+2026-06-18 10:51:38 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-18 10:51:38 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-18 10:51:38 | INFO | Created new scorecard: 31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:51:38 | INFO | Successfully fetched metadata for game ls20
+2026-06-18 10:51:39 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+================================================================================
+PRIORITÉ 1: VALIDATION MÉTRIQUE DISTANCE
+================================================================================
+2026-06-18 10:51:39 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+Distance INITIALE:
+  Centroïde: 23.85
+  Pixel-à-pixel (min): 21.63
+  Pixel-à-pixel (mean): 39.16
+  Pixel-à-pixel (max): 54.23
+
+Distance FINALE (après 50×ACTION4):
+  Centroïde: 13.93
+  Pixel-à-pixel (min): 12.37
+  Pixel-à-pixel (mean): 34.83
+  Pixel-à-pixel (max): 54.23
+
+VARIATION:
+  Centroïde: -9.93
+  Pixel-à-pixel (min): -9.26
+  Pixel-à-pixel (mean): -4.33
+
+✅ CONFIRMÉ: ACTION4 rapproche réellement (pixel-à-pixel)
+
+================================================================================
+PRIORITÉ 2: TEST ACTION4 × 42 STEPS (LIMITE TIMER)
+================================================================================
+2026-06-18 10:51:54 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+Step 0:
+  Distance (min): 21.63
+  Distance (mean): 39.16
+  Pixel 11: 84
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+Step 10:
+  Distance (min): 12.37
+  Distance (mean): 34.83
+  Pixel 11: 64
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+Step 20:
+  Distance (min): 12.37
+  Distance (mean): 34.83
+  Pixel 11: 44
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+Step 30:
+  Distance (min): 12.37
+  Distance (mean): 34.83
+  Pixel 11: 24
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+Step 40:
+  Distance (min): 12.37
+  Distance (mean): 34.83
+  Pixel 11: 4
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+Step 41:
+  Distance (min): 12.37
+  Distance (mean): 34.83
+  Pixel 11: 2
+  Levels completed: 0
+  Game state: GameState.NOT_FINISHED
+
+❌ Pas de victoire après 42 steps
+Distance finale (min): 12.37
+Distance finale (mean): 34.83
+
+================================================================================
+PRIORITÉ 3: EXPLORATION SÉQUENCES MIXTES (LONGUEUR 2-3)
+================================================================================
+
+--- SÉQUENCES LONGUEUR 2 ---
+2026-06-18 10:52:07 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:08 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:09 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:10 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:11 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:12 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:14 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:15 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:16 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:16 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:17 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:18 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:20 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:21 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:22 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:23 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+Meilleures séquences (longueur 2):
+  1. ['ACTION4', 'ACTION4']: dist_min=14.42, victoire=False
+  2. ['ACTION2', 'ACTION4']: dist_min=17.69, victoire=False
+  3. ['ACTION4', 'ACTION2']: dist_min=17.69, victoire=False
+  4. ['ACTION1', 'ACTION4']: dist_min=21.40, victoire=False
+  5. ['ACTION4', 'ACTION1']: dist_min=21.40, victoire=False
+
+--- SÉQUENCES LONGUEUR 3 (TOP 5 de longueur 2) ---
+2026-06-18 10:52:23 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:25 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:26 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:27 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:28 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:29 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:30 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:31 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:32 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:33 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:35 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:36 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:37 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:39 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:40 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:42 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:42 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:44 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:45 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+2026-06-18 10:52:46 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+Meilleures séquences (longueur 3):
+  1. ['ACTION4', 'ACTION4', 'ACTION4']: dist_min=12.37, victoire=False
+  2. ['ACTION4', 'ACTION4', 'ACTION2']: dist_min=14.42, victoire=False
+  3. ['ACTION2', 'ACTION4', 'ACTION4']: dist_min=14.42, victoire=False
+  4. ['ACTION4', 'ACTION2', 'ACTION4']: dist_min=14.42, victoire=False
+  5. ['ACTION4', 'ACTION4', 'ACTION3']: dist_min=17.69, victoire=False
+
+================================================================================
+PRIORITÉ 4: VÉRIFICATION CYCLE ACTION1 (HASH MD5)
+================================================================================
+2026-06-18 10:52:47 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+
+Détection de cycles:
+  État du step 7 == État du step 8
+  Cycle de longueur: 1
+  Hash: 35cfc64fb3295e85...
+
+================================================================================
+PRIORITÉ 5: TEST CONDITION DE VICTOIRE
+================================================================================
+
+--- Stratégie: ACTION4 × 42 ---
+2026-06-18 10:52:52 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+❌ Échec. Distance finale (min): 12.37
+
+--- Stratégie: ACTION4 × 35 + ACTION3 × 7 ---
+2026-06-18 10:53:06 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+❌ Échec. Distance finale (min): 35.11
+
+--- Stratégie: ACTION4 × 30 + ACTION3 × 12 ---
+2026-06-18 10:53:20 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+❌ Échec. Distance finale (min): 35.11
+
+--- Stratégie: ACTION4 × 20 + ACTION3 × 20 + ACTION4 × 2 ---
+2026-06-18 10:53:33 | INFO | Successfully reset game ls20-9607627b, guid=e1a3df90-9e60-4fbe-8814-a7b6933360fb, scorecard_id=31defce7-1f94-4fcf-aa1c-f9ed58c14465
+❌ Échec. Distance finale (min): 25.94
+
+❌ Aucune stratégie n'a mené à la victoire
+
+================================================================================
+Résultats sauvegardés: /home/lvx/LVX/lumvorax2/src/MAGEN/session95_validation_experimentale_20260618_105346.json
+================================================================================

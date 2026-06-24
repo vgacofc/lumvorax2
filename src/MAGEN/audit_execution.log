@@ -1,0 +1,59 @@
+================================================================================
+AUDIT PIPELINE PERCEPTIONNEL V27.1 - SESSION 73
+================================================================================
+❌ API key non trouvée (ni ARC_API_KEY env var, ni ~/.arc_agi_api_key)
+💡 Utilisation mode anonyme (clé temporaire)
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → audit_perception_logs
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent initialisé
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/audit_pipeline_perception_v27_1.py", line 385, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/audit_pipeline_perception_v27_1.py", line 324, in main
+    auditor = PerceptionPipelineAuditor()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/audit_pipeline_perception_v27_1.py", line 59, in __init__
+    os.makedirs(log_dir, exist_ok=True)
+  File "<frozen os>", line 225, in makedirs
+FileExistsError: [Errno 17] File exists: 'audit_perception_logs'

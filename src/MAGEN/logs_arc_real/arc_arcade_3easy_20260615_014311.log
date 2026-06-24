@@ -1,0 +1,86 @@
+================================================================================
+TEST MAGEN V28.2.2 - JEUX ARCADE ARC-AGI-3 (MODE COMPETITION)
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-15 01:43:12 | INFO | Successfully fetched 25 environment(s) from API
+✅ API ARC-AGI-3 configurée (mode COMPETITION)
+✅ 31 environnements disponibles
+
+🎯 Test sur 3 jeux ARCADE les plus faciles:
+  1. CD82 (cd82-fb555c5d): 171 actions baseline
+  2. CD82 (cd82-fb555c5d): 171 actions baseline
+  3. FT09 (ft09-0d8bbf25): 208 actions baseline
+
+
+================================================================================
+PUZZLE: cd82-fb555c5d
+================================================================================
+
+2026-06-15 01:43:13 | INFO | Created new scorecard: 849f5d46-cce9-4920-be40-42826b2b8e73
+2026-06-15 01:43:13 | INFO | Successfully fetched metadata for game cd82
+2026-06-15 01:43:14 | INFO | Successfully reset game cd82-fb555c5d, guid=c009c0f9-bc0f-44d8-b64e-74ba6f9c5bef, scorecard_id=849f5d46-cce9-4920-be40-42826b2b8e73
+2026-06-15 01:43:14 | INFO | Successfully reset game cd82-fb555c5d, guid=c009c0f9-bc0f-44d8-b64e-74ba6f9c5bef, scorecard_id=849f5d46-cce9-4920-be40-42826b2b8e73
+Grid: (64, 64)
+Agent: (0, 0)
+Goal: (63, 63)
+
+Résultats:
+  Success: ❌
+  Steps: 50
+  Reward: 0.00
+
+================================================================================
+PUZZLE: cd82-fb555c5d
+================================================================================
+
+2026-06-15 01:43:33 | INFO | Successfully fetched metadata for game cd82
+2026-06-15 01:43:34 | ERROR | Failed to reset game cd82-fb555c5d: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 108, in reset
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+2026-06-15 01:43:34 | ERROR | Failed to reset game cd82-fb555c5d: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 108, in reset
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+❌ Erreur reset: state invalide
+
+================================================================================
+PUZZLE: ft09-0d8bbf25
+================================================================================
+
+2026-06-15 01:43:35 | INFO | Successfully fetched metadata for game ft09
+2026-06-15 01:43:35 | INFO | Successfully reset game ft09-0d8bbf25, guid=cf30a97a-01c6-40aa-8f3c-fdbbd82ddbbb, scorecard_id=849f5d46-cce9-4920-be40-42826b2b8e73
+2026-06-15 01:43:35 | INFO | Successfully reset game ft09-0d8bbf25, guid=cf30a97a-01c6-40aa-8f3c-fdbbd82ddbbb, scorecard_id=849f5d46-cce9-4920-be40-42826b2b8e73
+Grid: (64, 64)
+Agent: (0, 0)
+Goal: (63, 63)
+
+Résultats:
+  Success: ❌
+  Steps: 32
+  Reward: 0.00
+
+================================================================================
+ANALYSE GLOBALE
+================================================================================
+
+Puzzles résolus: 0/3 (0.0%)
+
+Comparaison:
+  Environnements synthétiques: 42.9% (3/7 goals)
+  Puzzles ARC réels: 0.0% (0/3)
+
+⚠️  MAGEN performe MOINS BIEN sur ARC réels
+
+Résultats sauvegardés: /home/lvx/LVX/lumvorax2/src/MAGEN/logs_arc_real/arc_real_results_20260615_014346.json
+
+================================================================================
+TEST TERMINÉ
+================================================================================

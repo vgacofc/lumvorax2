@@ -1,0 +1,97 @@
+================================================================================
+🔒 MAGEN V21 - SOUMISSION ARC-AGI-3 MODE PRIVÉ
+================================================================================
+Session ID: 20260614_014208
+API Key: b6ebc9c5...55d4
+Mode: 🔒 PRIVÉ (aucune soumission publique)
+================================================================================
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 01:42:08 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-14 01:42:08 | INFO | Created new scorecard: ff9ce5ac-4194-41e3-bb85-0ea2dad9b260
+✅ Arcade initialisé (scorecard: ff9ce5ac...)
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Compétition: 3 jeux
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+⏱️  Début: 2026-06-14T01:42:08.193587
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 01:42:09 | INFO | Created new scorecard: 1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+2026-06-14 01:42:09 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 01:42:09 | INFO | Successfully reset game ar25-0c556536, guid=b702fef2-2b20-4b46-8778-e8755923eb94, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+2026-06-14 01:42:10 | INFO | Successfully reset game ar25-0c556536, guid=b702fef2-2b20-4b46-8778-e8755923eb94, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+📊 État initial: NOT_FINISHED
+🎯 Niveaux complétés: 0
+❌ Erreur pendant le jeu: 'FrameDataRaw' object has no attribute 'score'
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 01:42:10 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 01:42:10 | INFO | Successfully reset game ar25-0c556536, guid=d470b99b-37c4-4e1b-877f-0af5bde37eab, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+2026-06-14 01:42:10 | INFO | Successfully reset game ar25-0c556536, guid=d470b99b-37c4-4e1b-877f-0af5bde37eab, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+📊 État initial: NOT_FINISHED
+🎯 Niveaux complétés: 0
+❌ Erreur pendant le jeu: 'FrameDataRaw' object has no attribute 'score'
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+================================================================================
+🎮 Jeu: cd82-fb555c5d
+================================================================================
+2026-06-14 01:42:11 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 01:42:11 | INFO | Successfully reset game cd82-fb555c5d, guid=a07b52a6-cb9c-4ee8-bfab-3e77d56c5d3b, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+2026-06-14 01:42:11 | INFO | Successfully reset game cd82-fb555c5d, guid=a07b52a6-cb9c-4ee8-bfab-3e77d56c5d3b, scorecard_id=1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+📊 État initial: NOT_FINISHED
+🎯 Niveaux complétés: 0
+❌ Erreur pendant le jeu: 'FrameDataRaw' object has no attribute 'score'
+2026-06-14 01:42:11 | INFO | Closed scorecard: 1a815e9f-6070-4888-8182-fcd4ac0ab6c1
+
+================================================================================
+🏆 SCORECARD FINAL
+================================================================================
+Score: 0.00
+Scorecard ID: ff9ce5ac-4194-41e3-bb85-0ea2dad9b260
+================================================================================
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 354, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 350, in main
+    submitter.run_competition(max_games=3)
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 300, in run_competition
+    self.save_results()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 313, in save_results
+    json.dump(self.results, f, indent=2)
+  File "/usr/lib/python3.12/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type GameAction is not JSON serializable

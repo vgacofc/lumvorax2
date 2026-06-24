@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════════════
+TASK: TASK01_Check_BATCH_POOL_SIZE
+DATE: 2026-06-20 01:15:46
+═══════════════════════════════════════════════════════════
+
+src/btc_gen9_native_runner.c:116:    #define BATCH_POOL_SIZE 90  /* 90 dispatches sans reopen (vs 27 = 3 reopens) */
+src/btc_gen9_native_runner.c:117:    uint32_t batch_bo_pool[BATCH_POOL_SIZE];   /* Pool de 9 batch buffers */
+src/btc_gen9_native_runner.c:118:    void* batch_map_pool[BATCH_POOL_SIZE];     /* Mappings CPU correspondants */
+src/btc_gen9_native_runner.c:1090:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+src/btc_gen9_native_runner.c:1231:        for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+src/btc_gen9_native_runner.c:1577:    ctx->batch_pool_index = (ctx->batch_pool_index + 1) % BATCH_POOL_SIZE;
+src/btc_gen9_native_runner.c:1580:             batch_index, BATCH_POOL_SIZE, current_batch_bo);
+src/btc_gen9_native_runner.c:2313:    /* C228 SOLUTION #3 : Réouverture DRM périodique (après BATCH_POOL_SIZE dispatches)
+src/btc_gen9_native_runner.c:2316:     * STRATÉGIE : Réouvrir DRM après BATCH_POOL_SIZE dispatches pour reset compteur cycles
+src/btc_gen9_native_runner.c:2318:     * C255v8b CORRECTION BUG #1 : Utiliser BATCH_POOL_SIZE au lieu de 9 hardcodé
+src/btc_gen9_native_runner.c:2329:    if (0 && ctx->total_dispatches % BATCH_POOL_SIZE == 0 && ctx->total_dispatches > 0 && !ctx->in_batch_mode) {
+src/btc_gen9_native_runner.c:2536:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+src/btc_gen9_native_runner.c:2563:    LOG_EVENT(ctx, "DRM_REOPEN_BATCH_RECREATED: count=%d", BATCH_POOL_SIZE);
+src/btc_gen9_native_runner.c:2757:             reopen_time_ms, ctx->drm_fd, 3 + BATCH_POOL_SIZE);  /* kernel + input + output + 90 batch */
+src/btc_gen9_native_runner.c:3337:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:82:    #define BATCH_POOL_SIZE 27  /* 27 dispatches sans reopen (vs 9 = 3 reopens) */
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:83:    uint32_t batch_bo_pool[BATCH_POOL_SIZE];   /* Pool de 9 batch buffers */
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:84:    void* batch_map_pool[BATCH_POOL_SIZE];     /* Mappings CPU correspondants */
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:642:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:754:        for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:847:    ctx->batch_pool_index = (ctx->batch_pool_index + 1) % BATCH_POOL_SIZE;
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:850:             batch_index, BATCH_POOL_SIZE, current_batch_bo);
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1011:    /* C228 SOLUTION #3 : Réouverture DRM périodique (après BATCH_POOL_SIZE dispatches)
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1014:     * STRATÉGIE : Réouvrir DRM après BATCH_POOL_SIZE dispatches pour reset compteur cycles
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1016:     * C255v8b CORRECTION BUG #1 : Utiliser BATCH_POOL_SIZE au lieu de 9 hardcodé
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1026:    if (ctx->total_dispatches % BATCH_POOL_SIZE == 0 && ctx->total_dispatches > 0 && !ctx->in_batch_mode) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1027:        LOG_EVENT(ctx, "DRM_REOPEN_TRIGGER: dispatches=%lu (multiple de %d)", ctx->total_dispatches, BATCH_POOL_SIZE);
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1138:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1269:             reopen_time_ms, ctx->drm_fd, 3 + BATCH_POOL_SIZE);  /* kernel + input + output + 9 batch */
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1388:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+backup_pre_optim_20260515_235125/src/btc_gen9_native_runner.c:1685:    for (int i = 0; i < BATCH_POOL_SIZE; i++) {
+
+═══════════════════════════════════════════════════════════
+TASK TERMINÉE: TASK01_Check_BATCH_POOL_SIZE
+═══════════════════════════════════════════════════════════

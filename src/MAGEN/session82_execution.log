@@ -1,0 +1,111 @@
+
+================================================================================
+SESSION 82 - TEST ACTION2 RÉPÉTÉE
+================================================================================
+
+Questions critiques:
+1. Que deviennent pixels après plusieurs ACTION2?
+2. Y a-t-il des pixels qui se déplacent réellement?
+3. ACTION2 est-elle un toggle ou one-way?
+
+================================================================================
+INITIALISATION ENVIRONNEMENT
+================================================================================
+✅ Game ID vérifié: ls20-9607627b
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-17 23:37:11 | INFO | Got anonymous API key: 6319bca2-2092-4dd7-a8e1-6467e447975a
+2026-06-17 23:37:11 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-17 23:37:11 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-17 23:37:11 | INFO | Created new scorecard: f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+2026-06-17 23:37:12 | INFO | Successfully fetched metadata for game ls20
+2026-06-17 23:37:12 | INFO | Successfully reset game ls20-9607627b, guid=701de598-f93d-420d-b5cb-2fc84905bbd0, scorecard_id=f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+✅ Environnement créé pour ls20-9607627b
+2026-06-17 23:37:12 | INFO | Successfully reset game ls20-9607627b, guid=701de598-f93d-420d-b5cb-2fc84905bbd0, scorecard_id=f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+✅ Frame shape: (64, 64)
+✅ Pixel values: [ 0  1  3  4  5  8  9 11 12]
+
+================================================================================
+TEST 1: ACTION2 RÉPÉTÉE
+================================================================================
+
+================================================================================
+TEST ACTION2 RÉPÉTÉE (10 fois)
+================================================================================
+2026-06-17 23:37:12 | INFO | Successfully reset game ls20-9607627b, guid=701de598-f93d-420d-b5cb-2fc84905bbd0, scorecard_id=f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+
+📍 Coordonnées surveillées: [(61, 13), (62, 13)]
+📊 Valeurs initiales: [np.int8(11), np.int8(11)]
+
+Step 1:
+  Valeurs: [np.int8(3), np.int8(3)]
+
+Step 2:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 3:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 4:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 5:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 6:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 7:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 8:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 9:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+Step 10:
+  Valeurs: [np.int8(3), np.int8(3)]
+  ⚠️ STABLE (pas de changement)
+
+================================================================================
+ANALYSE PATTERN
+================================================================================
+
+États uniques: 2
+  État 0: [np.int8(11), np.int8(11)]
+  État 1: [np.int8(3), np.int8(3)]
+
+🔍 Pattern détecté: ONE-WAY (A → B permanent)
+
+================================================================================
+TEST 2: RECHERCHE PIXELS MOBILES
+================================================================================
+
+================================================================================
+RECHERCHE PIXELS MOBILES (20 steps)
+================================================================================
+2026-06-17 23:37:16 | INFO | Successfully reset game ls20-9607627b, guid=701de598-f93d-420d-b5cb-2fc84905bbd0, scorecard_id=f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+
+================================================================================
+TEST ACTION1
+================================================================================
+2026-06-17 23:37:16 | INFO | Successfully reset game ls20-9607627b, guid=701de598-f93d-420d-b5cb-2fc84905bbd0, scorecard_id=f9fa0c2f-1e75-4d59-bc6f-a5c5587f2b17
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/session82_test_action2_repeated.py", line 337, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/session82_test_action2_repeated.py", line 324, in main
+    result2 = tester.test_search_moving_pixels(num_steps=20)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/session82_test_action2_repeated.py", line 247, in test_search_moving_pixels
+    x, y = coord
+    ^^^^
+ValueError: too many values to unpack (expected 2)

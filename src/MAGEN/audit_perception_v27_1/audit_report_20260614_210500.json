@@ -1,0 +1,2660 @@
+{
+  "timestamp": "2026-06-14T21:05:00.402389",
+  "action_count": 20,
+  "metrics": {
+    "grid_shapes": {
+      "values": [
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ],
+        [
+          1,
+          64,
+          64
+        ]
+      ],
+      "empty_count": 0,
+      "valid_count": 20,
+      "unique_shapes": [
+        [
+          1,
+          64,
+          64
+        ]
+      ]
+    },
+    "motion": {
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": 0.0,
+      "max": 0.0,
+      "non_zero_count": 0
+    },
+    "hashes": {
+      "unique_count": 1,
+      "hashes": [
+        "1e4a1b03"
+      ]
+    },
+    "detections": {
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "detected_count": 0,
+      "detection_rate": 0.0
+    }
+  },
+  "audit_log": [
+    {
+      "timestamp_ns": 152434762726,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.932861328125,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2990315556526184,
+            "mean": 0.025600431486964226,
+            "sample": [
+              0.0105540556833148,
+              0.0105540556833148,
+              0.0105540556833148,
+              0.010847223922610283,
+              0.010700639337301254,
+              0.0105540556833148,
+              0.0105540556833148,
+              0.010847223922610283,
+              0.0105540556833148,
+              0.0105540556833148
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "None",
+          "timestamp_ns": "152431226409",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152438193321,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION1",
+        "action_idx": "1",
+        "duration_ns": "1902173",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463899920900735",
+        "timestamp_after": "1781463899922802908"
+      }
+    },
+    {
+      "timestamp_ns": 152449930704,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152449972524,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152459215392,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.931396484375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835986018180847,
+            "mean": 0.02595794014632702,
+            "sample": [
+              0.010009363293647766,
+              0.010009363293647766,
+              0.010009363293647766,
+              0.010287401266396046,
+              0.010148381814360619,
+              0.010009363293647766,
+              0.010009363293647766,
+              0.010183135978877544,
+              0.010009363293647766,
+              0.010009363293647766
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION1",
+          "timestamp_ns": "152456535259",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152462146076,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION2",
+        "action_idx": "2",
+        "duration_ns": "1702778",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463899945029617",
+        "timestamp_after": "1781463899946732395"
+      }
+    },
+    {
+      "timestamp_ns": 152472906826,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152472949188,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152482795414,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.929931640625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835882604122162,
+            "mean": 0.02597428672015667,
+            "sample": [
+              0.010008997283875942,
+              0.010008997283875942,
+              0.010008997283875942,
+              0.010287025012075901,
+              0.010148011147975922,
+              0.010008997283875942,
+              0.010008997283875942,
+              0.01007850468158722,
+              0.010008997283875942,
+              0.010008997283875942
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION2",
+          "timestamp_ns": "152480212936",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152485383550,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION3",
+        "action_idx": "3",
+        "duration_ns": "1435116",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463899968565824",
+        "timestamp_after": "1781463899970000940"
+      }
+    },
+    {
+      "timestamp_ns": 152495899854,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152495940307,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152504820880,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.928466796875,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835703194141388,
+            "mean": 0.02599019929766655,
+            "sample": [
+              0.010008364915847778,
+              0.010008364915847778,
+              0.010008364915847778,
+              0.01028637494891882,
+              0.010147370398044586,
+              0.010008364915847778,
+              0.010008364915847778,
+              0.009973613545298576,
+              0.010008364915847778,
+              0.009938862174749374
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION3",
+          "timestamp_ns": "152502341477",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152507557302,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION4",
+        "action_idx": "4",
+        "duration_ns": "1422126",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463899990750177",
+        "timestamp_after": "1781463899992172303"
+      }
+    },
+    {
+      "timestamp_ns": 152519127860,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152519168803,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152528127162,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.927001953125,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835470736026764,
+            "mean": 0.026005879044532776,
+            "sample": [
+              0.010007544420659542,
+              0.010007544420659542,
+              0.010007544420659542,
+              0.010285531170666218,
+              0.01014653779566288,
+              0.010007544420659542,
+              0.010007544420659542,
+              0.00986855011433363,
+              0.010007544420659542,
+              0.010007544420659542
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION4",
+          "timestamp_ns": "152525418453",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152531751152,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION5",
+        "action_idx": "5",
+        "duration_ns": "2346589",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900013990431",
+        "timestamp_after": "1781463900016337020"
+      }
+    },
+    {
+      "timestamp_ns": 152542819066,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152542856474,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152552608547,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.925537109375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835160791873932,
+            "mean": 0.02602110430598259,
+            "sample": [
+              0.010006450116634369,
+              0.010006450116634369,
+              0.010006450116634369,
+              0.010284407064318657,
+              0.010145428590476513,
+              0.010006450116634369,
+              0.010006450116634369,
+              0.009763237088918686,
+              0.010006450116634369,
+              0.010006450116634369
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION5",
+          "timestamp_ns": "152549910028",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152555237206,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION6",
+        "action_idx": "6",
+        "duration_ns": "1454002",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900038399337",
+        "timestamp_after": "1781463900039853339"
+      }
+    },
+    {
+      "timestamp_ns": 152566123919,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152566214915,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152576127830,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.925537109375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835160791873932,
+            "mean": 0.02602110430598259,
+            "sample": [
+              0.010006450116634369,
+              0.010006450116634369,
+              0.010006450116634369,
+              0.010284407064318657,
+              0.010145428590476513,
+              0.010006450116634369,
+              0.010006450116634369,
+              0.009763237088918686,
+              0.010006450116634369,
+              0.010006450116634369
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION6",
+          "timestamp_ns": "152573470309",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152578886210,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION7",
+        "action_idx": "7",
+        "duration_ns": "1456159",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900062044707",
+        "timestamp_after": "1781463900063500866"
+      }
+    },
+    {
+      "timestamp_ns": 152590480936,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152590517276,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152600083905,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.925537109375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2835152745246887,
+            "mean": 0.02602103166282177,
+            "sample": [
+              0.01000642217695713,
+              0.01000642217695713,
+              0.01000642217695713,
+              0.010284378193318844,
+              0.0101453997194767,
+              0.01000642217695713,
+              0.01000642217695713,
+              0.009763210080564022,
+              0.01000642217695713,
+              0.009936932474374771
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION7",
+          "timestamp_ns": "152596839953",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152602961096,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION1",
+        "action_idx": "8",
+        "duration_ns": "1522306",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900086054484",
+        "timestamp_after": "1781463900087576790"
+      }
+    },
+    {
+      "timestamp_ns": 152613833811,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152613875268,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152623984049,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.924072265625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28347769379615784,
+            "mean": 0.02603589929640293,
+            "sample": [
+              0.010005095973610878,
+              0.010005095973610878,
+              0.010005095973610878,
+              0.010283014737069607,
+              0.01014405582100153,
+              0.010005095973610878,
+              0.010005095973610878,
+              0.009657696820795536,
+              0.010005095973610878,
+              0.009796656668186188
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION1",
+          "timestamp_ns": "152621261150",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152626661014,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION2",
+        "action_idx": "9",
+        "duration_ns": "1479767",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900109797219",
+        "timestamp_after": "1781463900111276986"
+      }
+    },
+    {
+      "timestamp_ns": 152638593869,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152638631984,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152648021947,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.922607421875,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2834324240684509,
+            "mean": 0.026050303131341934,
+            "sample": [
+              0.010003497824072838,
+              0.010003497824072838,
+              0.010003497824072838,
+              0.010281371884047985,
+              0.010142435319721699,
+              0.010003497824072838,
+              0.010003497824072838,
+              0.009551949799060822,
+              0.010003497824072838,
+              0.00993402861058712
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION2",
+          "timestamp_ns": "152645259828",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152651668853,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION3",
+        "action_idx": "10",
+        "duration_ns": "1929840",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900134349052",
+        "timestamp_after": "1781463900136278892"
+      }
+    },
+    {
+      "timestamp_ns": 152662794956,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152662828944,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152673178748,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.921142578125,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2833808362483978,
+            "mean": 0.026064369827508926,
+            "sample": [
+              0.010001677088439465,
+              0.010001677088439465,
+              0.010001677088439465,
+              0.010279500856995583,
+              0.010140588507056236,
+              0.010001677088439465,
+              0.010001677088439465,
+              0.00944602768868208,
+              0.010001677088439465,
+              0.009723852388560772
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION3",
+          "timestamp_ns": "152670222354",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152675777426,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION4",
+        "action_idx": "11",
+        "duration_ns": "1398071",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900158997961",
+        "timestamp_after": "1781463900160396032"
+      }
+    },
+    {
+      "timestamp_ns": 152688172077,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152688211653,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152697581967,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.919677734375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28332188725471497,
+            "mean": 0.026077987626194954,
+            "sample": [
+              0.009999596513807774,
+              0.009999596513807774,
+              0.009999596513807774,
+              0.010277362540364265,
+              0.010138479992747307,
+              0.009999596513807774,
+              0.009999596513807774,
+              0.009444063529372215,
+              0.009999596513807774,
+              0.009930155239999294
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION4",
+          "timestamp_ns": "152694777968",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152700925951,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION5",
+        "action_idx": "12",
+        "duration_ns": "2092088",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900183439479",
+        "timestamp_after": "1781463900185531567"
+      }
+    },
+    {
+      "timestamp_ns": 152711976263,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152712025249,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152722013862,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.918212890625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28325626254081726,
+            "mean": 0.02609122171998024,
+            "sample": [
+              0.00999728124588728,
+              0.00999728124588728,
+              0.00999728124588728,
+              0.010274983011186123,
+              0.010136132128536701,
+              0.00999728124588728,
+              0.00999728124588728,
+              0.009441876783967018,
+              0.00999728124588728,
+              0.009927854873239994
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION5",
+          "timestamp_ns": "152719130696",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152724544158,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION6",
+        "action_idx": "13",
+        "duration_ns": "1361089",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900207800086",
+        "timestamp_after": "1781463900209161175"
+      }
+    },
+    {
+      "timestamp_ns": 152736540203,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152736602218,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152752442753,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.918212890625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28325626254081726,
+            "mean": 0.02609122171998024,
+            "sample": [
+              0.00999728124588728,
+              0.00999728124588728,
+              0.00999728124588728,
+              0.010274983011186123,
+              0.010136132128536701,
+              0.00999728124588728,
+              0.00999728124588728,
+              0.009441876783967018,
+              0.00999728124588728,
+              0.009927854873239994
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION6",
+          "timestamp_ns": "152746954875",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152756280128,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION1",
+        "action_idx": "14",
+        "duration_ns": "2172802",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900238708963",
+        "timestamp_after": "1781463900240881765"
+      }
+    },
+    {
+      "timestamp_ns": 152769237526,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152769278573,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152778389978,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.916748046875,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2831841707229614,
+            "mean": 0.026104077696800232,
+            "sample": [
+              0.009994735941290855,
+              0.009994735941290855,
+              0.009994735941290855,
+              0.010272367857396603,
+              0.010133551433682442,
+              0.009994735941290855,
+              0.009994735941290855,
+              0.009439473040401936,
+              0.009994735941290855,
+              0.009786512702703476
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION1",
+          "timestamp_ns": "152775451165",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152781028597,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION2",
+        "action_idx": "15",
+        "duration_ns": "1465395",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900264173461",
+        "timestamp_after": "1781463900265638856"
+      }
+    },
+    {
+      "timestamp_ns": 152792194173,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152792228617,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152802142864,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.915283203125,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28310438990592957,
+            "mean": 0.026116440072655678,
+            "sample": [
+              0.009991920553147793,
+              0.009991920553147793,
+              0.009991920553147793,
+              0.010269473306834698,
+              0.010130696929991245,
+              0.009991920553147793,
+              0.009991920553147793,
+              0.009436814114451408,
+              0.009991920553147793,
+              0.009922532364726067
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION2",
+          "timestamp_ns": "152798697935",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152804796019,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION3",
+        "action_idx": "16",
+        "duration_ns": "1413382",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900287992647",
+        "timestamp_after": "1781463900289406029"
+      }
+    },
+    {
+      "timestamp_ns": 152815678195,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152815754602,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152825718361,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.913818359375,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2830183804035187,
+            "mean": 0.026128431782126427,
+            "sample": [
+              0.009988885372877121,
+              0.009988885372877121,
+              0.009988885372877121,
+              0.01026635430753231,
+              0.010127619840204716,
+              0.009988885372877121,
+              0.009988885372877121,
+              0.009433946572244167,
+              0.009988885372877121,
+              0.009711415506899357
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION3",
+          "timestamp_ns": "152822858868",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152828644591,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION4",
+        "action_idx": "17",
+        "duration_ns": "1725833",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900311529667",
+        "timestamp_after": "1781463900313255500"
+      }
+    },
+    {
+      "timestamp_ns": 152840508521,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152840546809,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152850667803,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.912353515625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2829251289367676,
+            "mean": 0.02613995224237442,
+            "sample": [
+              0.009985593147575855,
+              0.009985593147575855,
+              0.009985593147575855,
+              0.010262969881296158,
+              0.010124281980097294,
+              0.009985593147575855,
+              0.009985593147575855,
+              0.0094308378174901,
+              0.009985593147575855,
+              0.009916248731315136
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION4",
+          "timestamp_ns": "152847268680",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152853334236,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION7",
+        "action_idx": "18",
+        "duration_ns": "1436862",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900336513004",
+        "timestamp_after": "1781463900337949866"
+      }
+    },
+    {
+      "timestamp_ns": 152864480733,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152864518986,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152875142765,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.912353515625,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.2829253375530243,
+            "mean": 0.026139970868825912,
+            "sample": [
+              0.009985600598156452,
+              0.009985600598156452,
+              0.009985600598156452,
+              0.01026297826319933,
+              0.01012428943067789,
+              0.009985600598156452,
+              0.009985600598156452,
+              0.009430844336748123,
+              0.009985600598156452,
+              0.009708222001791
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION7",
+          "timestamp_ns": "152872090851",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152877839336,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION5",
+        "action_idx": "19",
+        "duration_ns": "1550195",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900360899276",
+        "timestamp_after": "1781463900362449471"
+      }
+    },
+    {
+      "timestamp_ns": 152889349194,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152889385802,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    },
+    {
+      "timestamp_ns": 152899382380,
+      "step": "agent_perceive_result",
+      "data": {
+        "type": "dict",
+        "is_dict": "True",
+        "keys": [
+          "grid",
+          "embedding",
+          "spatial_analysis",
+          "patterns",
+          "objects",
+          "metadata",
+          "agent_detected_causal",
+          "agent_id",
+          "agent_confidence",
+          "agent_position_causal",
+          "mobile_entities",
+          "stable_entities"
+        ],
+        "grid": {
+          "type": "ndarray",
+          "shape": [
+            1,
+            64,
+            64
+          ],
+          "dtype": "uint8",
+          "min": 0.0,
+          "max": 11.0,
+          "mean": 8.910888671875,
+          "sample": [
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9,
+            9
+          ]
+        },
+        "grid_shape": [
+          "1",
+          "64",
+          "64"
+        ],
+        "embedding": {
+          "vector": {
+            "type": "ndarray",
+            "shape": [
+              256
+            ],
+            "dtype": "float32",
+            "min": 0.0,
+            "max": 0.28282544016838074,
+            "mean": 0.026151074096560478,
+            "sample": [
+              0.009982075542211533,
+              0.009982075542211533,
+              0.009982075542211533,
+              0.010259355418384075,
+              0.010120715014636517,
+              0.009982075542211533,
+              0.009982075542211533,
+              0.009427515789866447,
+              0.009982075542211533,
+              0.00970479566603899
+            ]
+          },
+          "objects_detected": "12",
+          "motion_magnitude": "0.0",
+          "active_regions": [],
+          "spatial_relations_count": "66",
+          "topological_hash": "1e4a1b03",
+          "action_context": "ACTION5",
+          "timestamp_ns": "152896073298",
+          "raw_shape": "(64, 64, 1)"
+        }
+      }
+    },
+    {
+      "timestamp_ns": 152902517965,
+      "step": "env_step_result",
+      "data": {
+        "action": "ACTION1",
+        "action_idx": "20",
+        "duration_ns": "1507011",
+        "grid_shape": [
+          "64",
+          "64"
+        ],
+        "grid_dtype": "int8",
+        "state": {
+          "_value_": "NOT_FINISHED",
+          "_name_": "NOT_FINISHED",
+          "__objclass__": "{'_generate_next_value_': <staticmethod(<function Enum._generate_next_value_ at 0x79eff23751c0>)>, '__module__': 'arcengine.enums', '_new_member_': <built-in method __new__ of type object at 0xa462c0>, '_use_args_': True, '_member_names_': ['NOT_PLAYED', 'NOT_FINISHED', 'WIN', 'GAME_OVER'], '_member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_value2member_map_': {'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>}, '_unhashable_values_': [], '_member_type_': <class 'str'>, '_value_repr_': <slot wrapper '__repr__' of 'str' objects>, '__dict__': <attribute '__dict__' of 'GameState' objects>, '__weakref__': <attribute '__weakref__' of 'GameState' objects>, '__doc__': None, 'NOT_PLAYED': <GameState.NOT_PLAYED: 'NOT_PLAYED'>, 'NOT_FINISHED': <GameState.NOT_FINISHED: 'NOT_FINISHED'>, 'WIN': <GameState.WIN: 'WIN'>, 'GAME_OVER': <GameState.GAME_OVER: 'GAME_OVER'>, '__repr__': <function Enum.__repr__ at 0x79eff2375300>, '__str__': <function Enum.__str__ at 0x79eff23753a0>, '__format__': <function Enum.__format__ at 0x79eff23754e0>, '__new__': <function Enum.__new__ at 0x79eff2375080>}",
+          "_sort_order_": "1"
+        },
+        "timestamp_before": "1781463900385623255",
+        "timestamp_after": "1781463900387130266"
+      }
+    },
+    {
+      "timestamp_ns": 152913589105,
+      "step": "state_encoder_result",
+      "data": {
+        "vector_shape": [
+          "256"
+        ],
+        "topological_hash": "1e4a1b03",
+        "motion_score": "None",
+        "spatial_relations": "None"
+      }
+    },
+    {
+      "timestamp_ns": 152913621668,
+      "step": "entity_detector_error",
+      "data": {
+        "error": "'dict' object has no attribute 'shape'"
+      }
+    }
+  ]
+}

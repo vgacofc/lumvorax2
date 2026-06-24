@@ -1,0 +1,1886 @@
+
+================================================================================
+MAGEN V40.3 FINAL - SOUMISSION ARC-AGI-3 API
+================================================================================
+API Key: b6ebc9c5-a296-4578-b...
+Mode: COMPETITION
+Timestamp: 2026-06-16T15:55:55.608856
+Version: V40.3 Final (Fondations V39 + PolicyManager V40.3)
+================================================================================
+
+✅ arc-agi importé avec succès
+✅ MAGEN V40.3 modules chargés:
+  - Fondations V39: WorldStateGraph, AgentLocalization, CausalMemory, LearningSystem
+  - PolicyManager V40.3: Consultation forcée du World Model
+  - Cognitifs V39: Reputation, Budget, Trajectory
+  - Orchestrateur V39: CognitiveOrchestrator
+✅ Répertoire résultats: /home/lvx/LVX/lumvorax2/src/MAGEN/results/arc_agi_3_v40_3_final
+
+================================================================================
+PHASE 1: CONNEXION API ARC-AGI-3
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 15:55:57 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie (mode COMPETITION)
+✅ 32 jeux disponibles:
+   1. ar25-0c556536: AR25
+   2. ar25-0c556536: AR25
+   3. cd82-fb555c5d: CD82
+   4. cd82-fb555c5d: CD82
+   5. lp85-305b61c3: LP85
+   6. bp35-0a0ad940: BP35
+   7. ft09-0d8bbf25: FT09
+   8. ft09-0d8bbf25: FT09
+   9. su15-1944f8ab: SU15
+   10. cn04-2fe56bfb: CN04
+   ... et 22 autres
+
+================================================================================
+PHASE 2: CRÉATION SCORECARD OFFICIEL
+================================================================================
+
+2026-06-16 15:55:57 | INFO | Created new scorecard: 988459b4-7bdf-432c-94e1-411f4459b326
+✅ Scorecard créé: 988459b4-7bdf-432c-94e1-411f4459b326
+   URL: https://arcprize.org/scorecards/988459b4-7bdf-432c-94e1-411f4459b326
+
+================================================================================
+PHASE 3: EXÉCUTION MAGEN V39 COMPLET SUR 32 JEUX
+================================================================================
+
+✅ 25 jeux uniques après déduplication
+
+[1/25] Jeu: ar25-0c556536 (AR25)
+2026-06-16 15:55:57 | INFO | Successfully fetched metadata for game ar25
+2026-06-16 15:55:58 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/ar25-0c556536-9d68d91b-f2db-4a45-aa4f-9e1dcf59c95c.jsonl
+2026-06-16 15:55:58 | INFO | Successfully reset game ar25-0c556536, guid=9d68d91b-f2db-4a45-aa4f-9e1dcf59c95c, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour ar25-0c556536
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:56:01 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:02 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:02 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:05 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:06 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:06 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:08 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:10 | ERROR | Failed to perform action ACTION6 for game ar25-0c556536: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[2/25] Jeu: cd82-fb555c5d (CD82)
+2026-06-16 15:56:13 | INFO | Successfully fetched metadata for game cd82
+2026-06-16 15:56:14 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/cd82-fb555c5d-bc955ff5-557b-483e-8f38-562ce5e417ad.jsonl
+2026-06-16 15:56:14 | INFO | Successfully reset game cd82-fb555c5d, guid=bc955ff5-557b-483e-8f38-562ce5e417ad, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour cd82-fb555c5d
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:56:15 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:18 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:20 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:21 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:27 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:28 | ERROR | Failed to perform action ACTION6 for game cd82-fb555c5d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[3/25] Jeu: lp85-305b61c3 (LP85)
+2026-06-16 15:56:36 | INFO | Successfully fetched metadata for game lp85
+2026-06-16 15:56:36 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/lp85-305b61c3-9795d27c-0343-498b-a5ee-e792bc8c58e6.jsonl
+2026-06-16 15:56:36 | INFO | Successfully reset game lp85-305b61c3, guid=9795d27c-0343-498b-a5ee-e792bc8c58e6, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour lp85-305b61c3
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:56:37 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:40 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:40 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:45 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:46 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:49 | ERROR | Failed to perform action ACTION6 for game lp85-305b61c3: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[4/25] Jeu: bp35-0a0ad940 (BP35)
+2026-06-16 15:56:51 | INFO | Successfully fetched metadata for game bp35
+2026-06-16 15:56:52 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/bp35-0a0ad940-5f5ff9ad-8b02-4cb8-8b29-24379d36a361.jsonl
+2026-06-16 15:56:52 | INFO | Successfully reset game bp35-0a0ad940, guid=5f5ff9ad-8b02-4cb8-8b29-24379d36a361, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour bp35-0a0ad940
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:56:53 | ERROR | Failed to perform action ACTION6 for game bp35-0a0ad940: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:56:57 | ERROR | Failed to perform action ACTION6 for game bp35-0a0ad940: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:00 | ERROR | Failed to perform action ACTION6 for game bp35-0a0ad940: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:00 | ERROR | Failed to perform action ACTION6 for game bp35-0a0ad940: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[5/25] Jeu: ft09-0d8bbf25 (FT09)
+2026-06-16 15:57:08 | INFO | Successfully fetched metadata for game ft09
+2026-06-16 15:57:09 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/ft09-0d8bbf25-f3ca7c6d-55af-41fd-8df1-ad75981384d2.jsonl
+2026-06-16 15:57:09 | INFO | Successfully reset game ft09-0d8bbf25, guid=f3ca7c6d-55af-41fd-8df1-ad75981384d2, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour ft09-0d8bbf25
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:57:10 | ERROR | Failed to perform action ACTION6 for game ft09-0d8bbf25: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:13 | ERROR | Failed to perform action ACTION6 for game ft09-0d8bbf25: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:14 | ERROR | Failed to perform action ACTION6 for game ft09-0d8bbf25: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:14 | ERROR | Failed to perform action ACTION6 for game ft09-0d8bbf25: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[6/25] Jeu: su15-1944f8ab (SU15)
+2026-06-16 15:57:20 | INFO | Successfully fetched metadata for game su15
+2026-06-16 15:57:20 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/su15-1944f8ab-9ee418c0-19f5-4b74-949a-225d2c34ffa4.jsonl
+2026-06-16 15:57:20 | INFO | Successfully reset game su15-1944f8ab, guid=9ee418c0-19f5-4b74-949a-225d2c34ffa4, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour su15-1944f8ab
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:57:21 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:22 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:24 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:26 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:30 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:32 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:32 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:34 | ERROR | Failed to perform action ACTION6 for game su15-1944f8ab: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[7/25] Jeu: cn04-2fe56bfb (CN04)
+2026-06-16 15:57:36 | INFO | Successfully fetched metadata for game cn04
+2026-06-16 15:57:36 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/cn04-2fe56bfb-238b6e11-6dda-45e3-83c6-fce25561a94b.jsonl
+2026-06-16 15:57:36 | INFO | Successfully reset game cn04-2fe56bfb, guid=238b6e11-6dda-45e3-83c6-fce25561a94b, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour cn04-2fe56bfb
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:57:37 | ERROR | Failed to perform action ACTION6 for game cn04-2fe56bfb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:44 | ERROR | Failed to perform action ACTION6 for game cn04-2fe56bfb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:44 | ERROR | Failed to perform action ACTION6 for game cn04-2fe56bfb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:45 | ERROR | Failed to perform action ACTION6 for game cn04-2fe56bfb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:45 | ERROR | Failed to perform action ACTION6 for game cn04-2fe56bfb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[8/25] Jeu: sc25-635fd71a (SC25)
+2026-06-16 15:57:54 | INFO | Successfully fetched metadata for game sc25
+2026-06-16 15:57:55 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/sc25-635fd71a-0a2ce23e-0866-4b35-b46a-08f6c0f299ad.jsonl
+2026-06-16 15:57:55 | INFO | Successfully reset game sc25-635fd71a, guid=0a2ce23e-0866-4b35-b46a-08f6c0f299ad, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour sc25-635fd71a
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:57:57 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:57:59 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:01 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:03 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:07 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:07 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:09 | ERROR | Failed to perform action ACTION6 for game sc25-635fd71a: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[9/25] Jeu: wa30-ee6fef47 (WA30)
+2026-06-16 15:58:13 | INFO | Successfully fetched metadata for game wa30
+2026-06-16 15:58:13 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/wa30-ee6fef47-f1a768f4-4194-463f-9f7e-413ab3725c07.jsonl
+2026-06-16 15:58:13 | INFO | Successfully reset game wa30-ee6fef47, guid=f1a768f4-4194-463f-9f7e-413ab3725c07, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour wa30-ee6fef47
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:58:14 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:15 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:19 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:20 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:23 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:23 | ERROR | Failed to perform action ACTION6 for game wa30-ee6fef47: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[10/25] Jeu: sk48-d8078629 (SK48)
+2026-06-16 15:58:29 | INFO | Successfully fetched metadata for game sk48
+2026-06-16 15:58:29 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/sk48-d8078629-21529d8e-8fa0-4d4b-ae51-510fd7fec400.jsonl
+2026-06-16 15:58:29 | INFO | Successfully reset game sk48-d8078629, guid=21529d8e-8fa0-4d4b-ae51-510fd7fec400, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour sk48-d8078629
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:58:32 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:32 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:33 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:34 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:36 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:37 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:38 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:42 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:43 | ERROR | Failed to perform action ACTION6 for game sk48-d8078629: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[11/25] Jeu: dc22-fdcac232 (DC22)
+2026-06-16 15:58:47 | INFO | Successfully fetched metadata for game dc22
+2026-06-16 15:58:47 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/dc22-fdcac232-77304ece-440b-4b63-af6a-70b1813b335d.jsonl
+2026-06-16 15:58:47 | INFO | Successfully reset game dc22-fdcac232, guid=77304ece-440b-4b63-af6a-70b1813b335d, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour dc22-fdcac232
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:58:49 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:50 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:52 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:53 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:55 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:58:57 | ERROR | Failed to perform action ACTION6 for game dc22-fdcac232: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[12/25] Jeu: m0r0-492f87ba (M0R0)
+2026-06-16 15:59:03 | INFO | Successfully fetched metadata for game m0r0
+2026-06-16 15:59:03 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/m0r0-492f87ba-2f723021-5666-4a4f-9d36-e0bcd66c470e.jsonl
+2026-06-16 15:59:03 | INFO | Successfully reset game m0r0-492f87ba, guid=2f723021-5666-4a4f-9d36-e0bcd66c470e, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour m0r0-492f87ba
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:59:04 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:12 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:12 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:13 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:17 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:17 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:18 | ERROR | Failed to perform action ACTION6 for game m0r0-492f87ba: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[13/25] Jeu: lf52-271a04aa (LF52)
+2026-06-16 15:59:19 | INFO | Successfully fetched metadata for game lf52
+2026-06-16 15:59:20 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/lf52-271a04aa-7bea000f-dd78-432a-abb6-9dcbad6dde23.jsonl
+2026-06-16 15:59:20 | INFO | Successfully reset game lf52-271a04aa, guid=7bea000f-dd78-432a-abb6-9dcbad6dde23, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour lf52-271a04aa
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:59:24 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:24 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:26 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:26 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:33 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:33 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:35 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:35 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:36 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:36 | ERROR | Failed to perform action ACTION6 for game lf52-271a04aa: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[14/25] Jeu: ka59-38d34dbb (KA59)
+2026-06-16 15:59:42 | INFO | Successfully fetched metadata for game ka59
+2026-06-16 15:59:43 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/ka59-38d34dbb-fd96c66c-ac4f-4963-8fe5-e110ca6ccdf9.jsonl
+2026-06-16 15:59:43 | INFO | Successfully reset game ka59-38d34dbb, guid=fd96c66c-ac4f-4963-8fe5-e110ca6ccdf9, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour ka59-38d34dbb
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 15:59:43 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:45 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:45 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:45 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:46 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:46 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:47 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:50 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:53 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 15:59:56 | ERROR | Failed to perform action ACTION6 for game ka59-38d34dbb: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[15/25] Jeu: r11l-495a7899 (R11L)
+2026-06-16 15:59:57 | INFO | Successfully fetched metadata for game r11l
+2026-06-16 15:59:58 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/r11l-495a7899-eb1dc70d-a91e-4c1e-9ecc-15f2cde7ec96.jsonl
+2026-06-16 15:59:58 | INFO | Successfully reset game r11l-495a7899, guid=eb1dc70d-a91e-4c1e-9ecc-15f2cde7ec96, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour r11l-495a7899
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:00:00 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:01 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:05 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:13 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:17 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:20 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:20 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:21 | ERROR | Failed to perform action ACTION6 for game r11l-495a7899: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ⚠️  Pas d'observation
+
+[16/25] Jeu: sp80-589a99af (SP80)
+2026-06-16 16:00:23 | INFO | Successfully fetched metadata for game sp80
+2026-06-16 16:00:23 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/sp80-589a99af-2683c357-b168-456e-a2f0-b95af6686e3e.jsonl
+2026-06-16 16:00:23 | INFO | Successfully reset game sp80-589a99af, guid=2683c357-b168-456e-a2f0-b95af6686e3e, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour sp80-589a99af
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:00:26 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:29 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:30 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:31 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:31 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:33 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:34 | ERROR | Failed to perform action ACTION6 for game sp80-589a99af: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[17/25] Jeu: g50t-5849a774 (G50T)
+2026-06-16 16:00:37 | INFO | Successfully fetched metadata for game g50t
+2026-06-16 16:00:38 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/g50t-5849a774-45f24935-7279-4d23-9cd0-156030c45b56.jsonl
+2026-06-16 16:00:38 | INFO | Successfully reset game g50t-5849a774, guid=45f24935-7279-4d23-9cd0-156030c45b56, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour g50t-5849a774
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:00:38 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:42 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:44 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:47 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:50 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:52 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:00:53 | ERROR | Failed to perform action ACTION6 for game g50t-5849a774: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[18/25] Jeu: s5i5-18d95033 (S5I5)
+2026-06-16 16:01:00 | INFO | Successfully fetched metadata for game s5i5
+2026-06-16 16:01:00 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/s5i5-18d95033-43e74274-076d-40c5-8a82-9b5051986b3b.jsonl
+2026-06-16 16:01:00 | INFO | Successfully reset game s5i5-18d95033, guid=43e74274-076d-40c5-8a82-9b5051986b3b, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour s5i5-18d95033
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:01:02 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:04 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:06 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:07 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:07 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:12 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:13 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:13 | ERROR | Failed to perform action ACTION6 for game s5i5-18d95033: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[19/25] Jeu: re86-8af5384d (RE86)
+2026-06-16 16:01:15 | INFO | Successfully fetched metadata for game re86
+2026-06-16 16:01:16 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/re86-8af5384d-a2c614a6-852f-4dd7-a952-2f837f33986b.jsonl
+2026-06-16 16:01:16 | INFO | Successfully reset game re86-8af5384d, guid=a2c614a6-852f-4dd7-a952-2f837f33986b, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour re86-8af5384d
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:01:17 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:17 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:19 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:21 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:24 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:26 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:29 | ERROR | Failed to perform action ACTION6 for game re86-8af5384d: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+   ❌ ERREUR: 'WorldStateGraph' object has no attribute 'visited_cells'
+
+[20/25] Jeu: tu93-0768757b (TU93)
+2026-06-16 16:01:31 | INFO | Successfully fetched metadata for game tu93
+2026-06-16 16:01:31 | INFO | Recording to recordings/988459b4-7bdf-432c-94e1-411f4459b326/tu93-0768757b-439e5496-16bb-4529-ba0a-d6952d48ef56.jsonl
+2026-06-16 16:01:31 | INFO | Successfully reset game tu93-0768757b, guid=439e5496-16bb-4529-ba0a-d6952d48ef56, scorecard_id=988459b4-7bdf-432c-94e1-411f4459b326
+[MAGEN V40.3] Adaptateur initialisé pour tu93-0768757b
+[MAGEN V40.3] Modules actifs:
+  - WorldStateGraph V39: ✅
+  - AgentLocalization V39: ✅
+  - CausalMemory V39: ✅
+  - LearningSystem V39: ✅
+  - PolicyManager V40.3: ✅ (consultation forcée)
+  - ReputationSystem V39: ✅
+  - BudgetAllocator V39: ✅
+  - TrajectoryMonitor V39: ✅
+  - CognitiveOrchestrator V39: ✅
+2026-06-16 16:01:32 | ERROR | Failed to perform action ACTION6 for game tu93-0768757b: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:41 | ERROR | Failed to perform action ACTION6 for game tu93-0768757b: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6
+2026-06-16 16:01:44 | ERROR | Failed to perform action ACTION6 for game tu93-0768757b: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6 Response body: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 199, in step
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://three.arcprize.org/api/cmd/ACTION6

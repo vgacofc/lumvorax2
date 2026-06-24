@@ -1,0 +1,96 @@
+
+================================================================================
+TEST V32 - DIAGNOSTIC INERTIE COGNITIVE
+================================================================================
+
+✓ Chargement puzzle simple...
+✓ Création environnement ARC...
+✓ Initialisation DecisionKernel V32...
+  Log forensic: logs/magen_v32/cognitive_inertia_diagnosis.jsonl
+
+================================================================================
+EXÉCUTION SIMULATION (50 steps)
+================================================================================
+
+Step   0: action=wait  health=0.220
+Step  10: action=wait  health=0.220
+Step  20: action=wait  health=0.220
+Step  30: action=wait  health=0.220
+Step  40: action=wait  health=0.220
+
+✓ Fermeture DecisionKernel...
+
+================================================================================
+ANALYSE LOGS FORENSIC
+================================================================================
+
+================================================================================
+ANALYSE FORENSIC - DÉTECTION INERTIE COGNITIVE
+================================================================================
+
+Total événements: 202
+
+Distribution événements:
+  observation_processing_start: 50
+  observation_processing_complete: 50
+  decision_start: 50
+  decision_complete: 50
+  module_initialized: 1
+  module_closing: 1
+
+================================================================================
+DÉTECTION PATTERNS RÉPÉTITION
+================================================================================
+
+Séquence actions (50 décisions):
+  ['wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait', 'wait']...
+
+⚠️ INERTIE DÉTECTÉE:
+  Pattern: ['wait']
+  Répétitions: 49
+  Début: step 49
+
+================================================================================
+ANALYSE SANTÉ COGNITIVE
+================================================================================
+
+Observations traitées: 50
+
+Santé cognitive:
+  Initiale: 0.220
+  Finale: 0.220
+  Min: 0.220
+  Max: 0.220
+  Moyenne: 0.220
+
+⚠️ COLLAPSE COGNITIF DÉTECTÉ:
+  Santé finale: 0.220 < 0.3
+  Début collapse: step 0
+
+================================================================================
+ANALYSE STABILITÉ DÉCISIONNELLE
+================================================================================
+
+Événements stabilité: 50
+Instabilité détectée: 0 fois
+
+================================================================================
+RAPPORT FINAL
+================================================================================
+
+Puzzle: Simple copy (2x2)
+Steps exécutés: 50
+Actions prises: 50
+Événements forensic: 202
+Log forensic: logs/magen_v32/cognitive_inertia_diagnosis.jsonl
+
+Actions distribution:
+  wait :  50 (100.0%)
+
+⚠️ INERTIE SIMPLE DÉTECTÉE:
+  Dernières 10 actions identiques: wait
+
+================================================================================
+FIN DIAGNOSTIC
+================================================================================
+

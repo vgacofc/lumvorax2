@@ -1,0 +1,701 @@
+================================================================================
+AUDIT PIPELINE PERCEPTIONNEL V27.1 - SESSION 73
+================================================================================
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → logs_forensic_audit
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent initialisé
+[AUDIT] Logs dans: audit_perception_v27_1
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:37:13 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+[JEU: ar25]
+2026-06-14 20:37:13 | INFO | Created new scorecard: 2fe5d15e-9a25-490d-9c3e-4333c5105ddb
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+2026-06-14 20:37:13 | INFO | Created new scorecard: b86c3512-ac8b-4834-b3bd-078bacbb5a7b
+2026-06-14 20:37:13 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:37:14 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[AUDIT env.step() - Action 1]
+
+[AUDIT STEP] env_step_result
+  action: ACTION1
+  action_idx: 1
+  duration_ns: 6715144
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234095783678
+  timestamp_after: 1781462234102498822
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[AUDIT env.step() - Action 2]
+
+[AUDIT STEP] env_step_result
+  action: ACTION2
+  action_idx: 2
+  duration_ns: 1402256
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234121420462
+  timestamp_after: 1781462234122822718
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[AUDIT env.step() - Action 3]
+
+[AUDIT STEP] env_step_result
+  action: ACTION3
+  action_idx: 3
+  duration_ns: 1478261
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234141587334
+  timestamp_after: 1781462234143065595
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[STATE ENCODER V25] Encoding #10: objects=12, motion=0.001, regions=0, relations=66, unique_hashes=1, time=5792.6µs
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[AUDIT env.step() - Action 4]
+
+[AUDIT STEP] env_step_result
+  action: ACTION4
+  action_idx: 4
+  duration_ns: 1449402
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234160669864
+  timestamp_after: 1781462234162119266
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[AUDIT env.step() - Action 5]
+
+[AUDIT STEP] env_step_result
+  action: ACTION5
+  action_idx: 5
+  duration_ns: 2745538
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234180406633
+  timestamp_after: 1781462234183152171
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[AUDIT env.step() - Action 6]
+
+[AUDIT STEP] env_step_result
+  action: ACTION6
+  action_idx: 6
+  duration_ns: 899414
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234195688857
+  timestamp_after: 1781462234196588271
+  ⚠️ Grid None après step
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[AUDIT env.step() - Action 7]
+
+[AUDIT STEP] env_step_result
+  action: ACTION7
+  action_idx: 7
+  duration_ns: 1022010
+  grid_shape: list with 0 items
+  grid_dtype: None
+  state: GameState.NOT_FINISHED
+  timestamp_before: 1781462234212178894
+  timestamp_after: 1781462234213200904
+  ⚠️ Grid None après step
+[STATE ENCODER V25] Encoding #20: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2809.5µs
+
+[AUDIT STEP] state_encoder_result
+  vector_shape: list with 1 items
+  topological_hash: 1e4a1b03
+  motion_score: None
+  spatial_relations: None
+
+[AUDIT STEP] entity_detector_error
+  error: 'dict' object has no attribute 'shape'
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 8]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 8
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 8
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 9]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 9
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 9
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 10]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 10
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 10
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 11]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 11
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 11
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 12]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 12
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 12
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 13]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 13
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 13
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 14]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 14
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 14
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 15]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 15
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 15
+[STATE ENCODER V25] Encoding #30: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2492.4µs
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 16]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 16
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 16
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 17]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 17
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 17
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 18]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 18
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 18
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 19]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 19
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 19
+
+[AUDIT STEP] agent_perceive_result
+  type: dict
+  is_dict: True
+  keys: list with 12 items
+  grid: shape=(1, 64, 64), dtype=uint8, min=0, max=11
+  grid_shape: list with 3 items
+  embedding: dict with 9 keys
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[AUDIT env.step() - Action 20]
+
+[AUDIT STEP] env_step_error
+  action: ACTION8
+  action_idx: 20
+  error: 'str' object has no attribute 'name'
+  error_type: AttributeError
+  ❌ Erreur env.step(): 'str' object has no attribute 'name'
+⚠️ arcade.step() échoué, skip action 20
+
+================================================================================
+RAPPORT D'AUDIT FINAL
+================================================================================
+
+📊 MÉTRIQUES GLOBALES (20 actions)
+
+1. GRID SHAPES:
+   - Valides: 20/20
+   - Vides: 0/20
+   - Shapes uniques: [(1, 64, 64)]
+
+2. MOTION:
+   - Moyenne: 0.0000
+   - Max: 0.0000
+   - Non-zéro: 0/20
+
+3. HASHES:
+   - Uniques: 1
+   - Cible: >10 après 20 actions
+   - Status: ❌ ÉCHEC
+
+4. DÉTECTIONS AGENT:
+   - Détectées: 0/20
+   - Taux: 0.0%
+   - Cible: >10%
+   - Status: ❌ ÉCHEC
+
+📄 Rapport sauvegardé: audit_perception_v27_1/audit_report_20260614_203714.json
+
+✅ AUDIT COMPLET TERMINÉ

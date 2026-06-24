@@ -1,104 +1,51 @@
-# =========================
-# PYTHON CACHE
-# =========================
+# Fichiers volumineux (>100MB)
+tests/cloudbreak_stress_test/*.db
+*.db
+
+# Environnements virtuels Python
+venv/
+venv_*/
+env/
+ENV/
+.venv/
+
+# Node modules
+node_modules/
+monitoring/backend/node_modules/
+
+# Logs
+*.log
+logs/
+*.jsonl
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.cache/
 __pycache__/
 *.pyc
 *.pyo
 
-# =========================
-# ENV / SECRETS
-# =========================
-.env
-.kaggle/
-*.json
-src/advanced_calculations/quantum_problem_hubbard_hts/CHAT/reports/secret.md
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# =========================
-# DEPENDENCIES / SYSTEM
-# =========================
-*.whl
-*.tar
-*.tar.gz
+# OS
+.DS_Store
+Thumbs.db
 
-# =========================
-# RESULTS ONLY (NOT CONFIG)
-# =========================
-results/
-outputs/
-checkpoints/
-experiments/
-
-# Ignorer uniquement les CSV de résultats
-**/results/*.csv
-**/outputs/*.csv
-
-# Ignorer logs runtime
-*.log
-
-# =========================
-# IMPORTANT: DO NOT IGNORE BENCHMARKS
-# =========================
-!benchmarks/
-!benchmarks/**/*.csv
-
-# =========================
-# EXCEPTIONS (CRITICAL FOR YOUR PROJECT)
-# =========================
-!src/
-!src/**
-
-# =========================
-# BINAIRES COMPILES (JAMAIS COMMITER — cause SIGILL cross-platform)
-# =========================
+# Build artifacts
 *.o
-*.a
 *.so
-src/qdayprize/qdayprize_runner
-src/qdayprize/qdayprize_runner_debug
-src/advanced_calculations/bitcoin_quantum_mining/btc_mining_runner
-btc_mining_runner
-qdayprize_runner
+*.a
+bin/
+build/
+dist/
 
-# =========================
-# FICHIERS RUNTIME UBUNTU
-# =========================
-src/advanced_calculations/bitcoin_quantum_mining/config/btc_nx48_last.csv
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/anomalies/
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/hw_samples/
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/
-src/qdayprize/logs/
-src/advanced_calculations/quantum_problem_hubbard_hts/logs/
-src/advanced_calculations/quantum_problem_hubbard_hts/results/
-src/advanced_calculations/quantum_problem_hubbard_hts/backups/
-src/advanced_calculations/quantum_problem_hubbard_hts/.run_current_phase
-src/advanced_calculations/quantum_problem_hubbard_hts/.run_checkpoint
-
-# =========================
-# ROTATION 50MB — AUCUN FICHIER > 50MB AUTORISE (C65)
-# LFS DESACTIVE — Rotation locale appliquee
-# =========================
-# Fragments worm (>20 MB)
-worm_part_*
-*_part_a*
-
-# Bench brut volumineux
-logs/bench_raw.txt
-
-# Logs forensic modules — rotation automatique 50MB
-*.log_part_*
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/modules/*.log
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/*.log
-src/advanced_calculations/bitcoin_quantum_mining/logs/forensic/metrics/btc_qm_engine_metrics.log
-
-# Archives vesuvius/rapports volumineux
-*.tif
-*.tiff
-*.zip
-
-# Cache Python volumineux
-.cache/uv/
-.pythonlibs/
-venv_quantum/
-src/MDBAI/PILOT/
-src/MDBAI/forensic/logs_e2e_20260603_000801/test_git_repo/
+# Secrets
+.env
+.env.local
+*.pem
+*.key

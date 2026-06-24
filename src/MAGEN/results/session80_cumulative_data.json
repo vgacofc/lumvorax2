@@ -1,0 +1,241 @@
+{
+  "session_id": "session80",
+  "game": "ls20-9607627b",
+  "start_time": "2026-06-17T17:00:00Z",
+  "objective": "Construire représentation persistante du monde",
+  "phases_planned": 4,
+  "phases_completed": 2,
+  "current_phase": "2.5_bis_strict_causality",
+  
+  "phase1_avatar_identification": {
+    "timestamp": "2026-06-17T17:12:36Z",
+    "status": "completed",
+    "duration_minutes": 5,
+    "script": "session80_phase1_identify_avatar.py",
+    "script_lines": 320,
+    "report": "avatar_identification_20260617_171236.json",
+    "results": {
+      "avatar_position": [61, 0],
+      "pixel_value": 4,
+      "confidence": 0.9918,
+      "candidates_initial": 347,
+      "candidates_filtered": 12,
+      "candidates_final": 1,
+      "method": "movement_analysis_50_frames"
+    },
+    "validation": {
+      "threshold": 0.80,
+      "achieved": 0.9918,
+      "status": "success"
+    }
+  },
+  
+  "phase2_position_tracking": {
+    "timestamp": "2026-06-17T17:33:09Z",
+    "status": "completed",
+    "duration_minutes": 10,
+    "script": "session80_phase2_track_position.py",
+    "script_lines": 318,
+    "report": "position_tracking_20260617_173309.json",
+    "results": {
+      "total_steps": 101,
+      "successful_tracks": 101,
+      "coverage": 1.0,
+      "unique_positions": 13,
+      "zone_explored": {
+        "width": 52,
+        "height": 5
+      },
+      "teleportations_detected": 14,
+      "movement_pattern": "dx_plus_minus_5_pixels"
+    },
+    "validation": {
+      "threshold": 0.95,
+      "achieved": 1.0,
+      "status": "success"
+    },
+    "observations": {
+      "autonomous_movement": "dx=±5 pixels régulier",
+      "hypothesis": "mouvement autonome du jeu (animation/scrolling/inertie)"
+    }
+  },
+  
+  "phase2_5_causality_validation": {
+    "timestamp": "2026-06-17T18:13:28Z",
+    "status": "partial",
+    "duration_minutes": 15,
+    "script": "session80_phase2_5_validate_causality.py",
+    "script_lines": 385,
+    "report": "causality_validation_20260617_181328.json",
+    "results": {
+      "total_tests": 40,
+      "actions_tested": 4,
+      "actions_validated": 3,
+      "validation_rate": 0.75,
+      "action1_left": {
+        "correlation": 0.5,
+        "pattern": [-10, -10, -10, -10, -7, 0, 0, 0, 0, 0],
+        "validated": false,
+        "reason": "avatar_blocked_at_border"
+      },
+      "action2_right": {
+        "correlation": 1.0,
+        "direction": "NONE",
+        "validated": true,
+        "reason": "avatar_blocked_no_movement_possible"
+      },
+      "action3_up": {
+        "correlation": 1.0,
+        "direction": "NONE",
+        "validated": true,
+        "reason": "avatar_blocked_no_movement_possible"
+      },
+      "action4_down": {
+        "correlation": 1.0,
+        "direction": "NONE",
+        "validated": true,
+        "reason": "avatar_blocked_no_movement_possible"
+      }
+    },
+    "validation": {
+      "threshold": 0.95,
+      "achieved": 0.5,
+      "status": "partial"
+    },
+    "critical_findings": {
+      "deterministic_pattern_action1": true,
+      "collision_detection": true,
+      "protocol_bias": "actions_tested_with_blocked_avatar",
+      "movement_difference": {
+        "phase2": "dx=±5",
+        "phase2_5": "dx=-10",
+        "hypothesis": "autonomous_vs_commanded_movement"
+      }
+    },
+    "user_feedback": {
+      "key_insight": "Pattern déterministe plus important que score 75%",
+      "conclusion": "Système physique cohérent, pas bruit statistique",
+      "next_requirement": "Phase 2.5 BIS avec protocole strict"
+    }
+  },
+  
+  "phase2_5_bis_strict_causality": {
+    "timestamp": "pending",
+    "status": "in_progress",
+    "duration_minutes": null,
+    "script": "session80_phase2_5_bis_strict_causality.py",
+    "script_lines": 485,
+    "report": "pending",
+    "protocol": {
+      "repetitions_per_action": 20,
+      "correlation_threshold": 0.95,
+      "variance_threshold": 2.0,
+      "reset_between_series": true,
+      "avatar_position": "center_not_border",
+      "autonomous_baseline": "measured_before_actions"
+    },
+    "objectives": {
+      "validate_action1_left": "P(dx < 0 | ACTION1) > 95%",
+      "validate_action2_right": "P(dx > 0 | ACTION2) > 95%",
+      "validate_action3_up": "P(dy < 0 | ACTION3) > 95%",
+      "validate_action4_down": "P(dy > 0 | ACTION4) > 95%",
+      "measure_variance": "σ² < 2.0 for deterministic pattern",
+      "isolate_mechanisms": "autonomous vs commanded movement"
+    },
+    "validation": {
+      "threshold": 0.95,
+      "achieved": null,
+      "status": "pending"
+    }
+  },
+  
+  "phase3_navigation_graph": {
+    "timestamp": null,
+    "status": "pending",
+    "prerequisite": "phase2_5_bis_validated",
+    "objectives": {
+      "identify_rooms": "5+ rooms with spatial hash",
+      "build_graph": "nodes=rooms, edges=transitions",
+      "locate_avatar": "position in graph",
+      "memorize_transitions": "action→room_change"
+    }
+  },
+  
+  "phase4_world_causality": {
+    "timestamp": null,
+    "status": "pending",
+    "prerequisite": "phase3_completed",
+    "objectives": {
+      "test_actions_per_room": "all actions in each room",
+      "observe_consequences": "doors, objects, enemies",
+      "build_causal_graph": "100+ causal links",
+      "validate_predictions": "action→consequence"
+    }
+  },
+  
+  "cumulative_metrics": {
+    "total_time_minutes": 30,
+    "total_scripts": 4,
+    "total_script_lines": 1508,
+    "total_reports": 4,
+    "total_report_lines": 1419,
+    "total_logs": 3,
+    "total_log_lines": 901,
+    "grand_total_lines": 3828
+  },
+  
+  "lessons_learned": {
+    "lesson_80_1": "Biais protocole expérimental: tester actions avec avatar bloqué invalide conclusions",
+    "lesson_80_2": "Pattern déterministe vs bruit: ACTION1 montre système physique cohérent",
+    "lesson_80_3": "Deux mécanismes mouvement: autonome (±5) vs commandé (-10)",
+    "lesson_80_4": "Données cumulatives essentielles: traçabilité et reproductibilité"
+  },
+  
+  "validation_summary": {
+    "detection_mobile_pixel": {
+      "level": "very_strong",
+      "confidence": 0.9918,
+      "status": "proven"
+    },
+    "temporal_tracking": {
+      "level": "very_strong",
+      "confidence": 1.0,
+      "status": "proven"
+    },
+    "identity_persistence": {
+      "level": "strong",
+      "confidence": 0.85,
+      "status": "proven"
+    },
+    "causal_control_action1": {
+      "level": "medium_to_strong",
+      "confidence": 0.70,
+      "status": "partial"
+    },
+    "causal_control_action2_4": {
+      "level": "not_demonstrated",
+      "confidence": 0.0,
+      "status": "pending"
+    },
+    "avatar_identification": {
+      "level": "not_demonstrated",
+      "confidence": 0.60,
+      "status": "pending"
+    },
+    "magen_knows_control": {
+      "level": "partial",
+      "confidence": 0.50,
+      "status": "pending"
+    }
+  },
+  
+  "next_actions": [
+    "Execute phase2_5_bis_strict_causality.py",
+    "Validate 4/4 actions > 95% correlation",
+    "Update cumulative_data.json with results",
+    "Proceed to phase3 if validation successful",
+    "Update LEÇONS_APPRISES_MAGEN.md with new lessons"
+  ],
+  
+  "last_update": "2026-06-17T18:47:00Z"
+}

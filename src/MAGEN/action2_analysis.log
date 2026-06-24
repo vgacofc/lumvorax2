@@ -1,0 +1,34 @@
+✅ Module ls20 importé depuis: /home/lvx/LVX/lumvorax2/src/environment_files/ls20/9607627b/ls20.py
+======================================================================
+PHASE 4.4.1 - ANALYSE EXHAUSTIVE ACTION2
+======================================================================
+Date: 2026-06-19 19:49:28
+Objectif: Comprendre les 50 états ACTION2
+======================================================================
+
+🔬 ANALYSE ACTION2 EXHAUSTIVE
+======================================================================
+Observations cibles: 1000
+Action testée: ACTION2 (index 1)
+======================================================================
+
+🎮 Initialisation jeu ARC-AGI ls20-9607627b...
+   ✅ Jeu initialisé: Niveau 1
+   📊 Actions disponibles: 4 (ACTION1-4)
+   📐 Dimensions: (64, 64)
+
+📊 Exécution observations...
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/arc_integration/test_action2_exhaustive.py", line 394, in <module>
+    analyzer = main()
+               ^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/arc_integration/test_action2_exhaustive.py", line 380, in main
+    observations = analyzer.run_analysis()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/arc_integration/test_action2_exhaustive.py", line 190, in run_analysis
+    obs = self.run_observation(i + 1)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/arc_integration/test_action2_exhaustive.py", line 126, in run_observation
+    self.game.action = 1  # Définir ACTION2
+    ^^^^^^^^^^^^^^^^
+AttributeError: property 'action' of 'Ls20' object has no setter

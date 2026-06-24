@@ -1,0 +1,44 @@
+
+================================================================================
+🚀 EXÉCUTION AUTOMATIQUE CORRECTIONS SESSION 79
+================================================================================
+Timestamp: 2026-06-16T23:38:19.131993
+Backup: /home/lvx/LVX/lumvorax2/src/MAGEN/backups/session79_20260616_233819
+Logs: /home/lvx/LVX/lumvorax2/src/MAGEN/logs
+================================================================================
+
+[█░░░░░░░░░]  10% | STEP  | STEP 1/10: Backup fichier cible
+[█░░░░░░░░░]  10% | INFO  | Backup: train_single_game_ls20_realtime.py
+[█░░░░░░░░░]  10% | INFO  | Backup créé: train_single_game_ls20_realtime.py (SHA256: 1d0017165dcd1a27...)
+[██░░░░░░░░]  20% | STEP  | STEP 2/10: Application Correction 1
+[██░░░░░░░░]  20% | EXEC  | CORRECTION 1: Remplacer obs.metadata par obs.state
+[██░░░░░░░░]  20% | SUCCESS | ✅ Correction 1 appliquée: obs.metadata → obs.state
+[████░░░░░░]  40% | STEP  | STEP 4/10: Application Correction 2
+[████░░░░░░]  40% | EXEC  | CORRECTION 2: Améliorer reward intrinsèque
+[████░░░░░░]  40% | SUCCESS | ✅ Correction 2 appliquée: Reward intrinsèque frame diff
+[██████░░░░]  60% | STEP  | STEP 6/10: Test corrections
+[██████░░░░]  60% | TEST  | TEST: Exécution 50 steps pour validation
+[██████░░░░]  60% | TEST  | Test terminé: test_corrections_20260616_233931.log
+[██████░░░░]  60% | TEST  | Métriques: {
+  "reward_externe_detected": false,
+  "reward_intrinsique_detected": true,
+  "game_over_detected": false,
+  "niveau_complete_detected": false,
+  "errors": false
+}
+[██████░░░░]  60% | SUCCESS | ✅ Test réussi: Corrections fonctionnelles
+[█████████░]  90% | STEP  | STEP 9/10: Génération rapport
+[█████████░]  90% | INFO  | Génération rapport final
+[█████████░]  90% | SUCCESS | ✅ Rapport généré: rapport_corrections_auto_session79.md
+[██████████] 100% | STEP  | STEP 10/10: Finalisation
+
+================================================================================
+RÉSUMÉ EXÉCUTION
+================================================================================
+Correction 1: ✅ OK
+Correction 2: ✅ OK
+Tests: ✅ OK
+Rapport: /home/lvx/LVX/lumvorax2/src/MAGEN/results/rapport_corrections_auto_session79.md
+Durée: 71.9s
+================================================================================
+

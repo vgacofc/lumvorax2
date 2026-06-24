@@ -1,0 +1,21 @@
+
+INSTRUCTIONS SOUMISSION ARCADE API
+==================================
+
+1. Tester MAGEN sur les 25 jeux Arcade:
+   cd /home/lvx/LVX/lumvorax2/src/MAGEN
+   python3 test_v40_3_real_arc_dataset.py --arcade-only
+
+2. Remplir le fichier de soumission:
+   /home/lvx/LVX/lumvorax2/src/MAGEN/results/external_validation/arcade_submission/arcade_submission.json
+
+3. Soumettre via API:
+   curl -X POST https://arcprize.org/api/v1/submit \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer d34384c6-6add-4f03-8946-20dc3daa0315" \
+     -d @/home/lvx/LVX/lumvorax2/src/MAGEN/results/external_validation/arcade_submission/arcade_submission.json
+
+4. Récupérer le score et le sauvegarder:
+   echo "YY.YY" > /home/lvx/LVX/lumvorax2/src/MAGEN/results/external_validation/arcade_score.txt
+
+IMPORTANT: Le score Arcade API est la VÉRITÉ ABSOLUE

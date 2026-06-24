@@ -1,0 +1,73 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c240_optimized.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+
+═══════════════════════════════════════════════════════════
+  LumVorax C240 — Test Optimisations Maximales
+  Batch Size : 268M nonces (limite GPU Gen9)
+  Dispatches : Maximum 100
+═══════════════════════════════════════════════════════════
+
+[CONFIG] Paramètres:
+  - kernel: kernels/btc_sha256_gen9.bin
+  - batch_size: 262144 nonces (0.26 M)
+  - max_dispatches: 100
+  - log: logs/forensic/btc_mining_c240_optimized.log
+
+[OPTIMISATIONS ACTIVES]
+  ✅ Opt #6 : Batch size 268M (limite GPU Gen9)
+  ✅ Opt #7 : Buffer output 1MB (overhead reopen -78%)
+  ✅ Opt #8 : Monitoring DRM_IOCTL (métriques post-reopen)
+
+[PHASE 1/4] Initialisation Gen9 Native...
+[C390_SURFACE_STATE] Input Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=16383 mocs=0x3
+  DW2: height=63 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+[C390_SURFACE_STATE] Output Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=39 mocs=0x3
+  DW2: height=0 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+✅ Initialisation réussie
+
+[PHASE 2/4] Warm-up — 3 Dispatches
+─────────────────────────────────────────────────────────────
+  Dispatch 1/3 : ✅
+  Dispatch 2/3 : ✅
+  Dispatch 3/3 : ✅
+✅ Warm-up complété : 3/3 dispatches (0.010 sec)
+
+[PHASE 3/4] Test Production — 100 Dispatches
+─────────────────────────────────────────────────────────────
+
+[Dispatches 1-10]
+  Dispatch 1 : ✅ 0.004 sec (74.3 MH/s)
+  Dispatch 2 : ✅ 0.005 sec (58.2 MH/s)
+  Dispatch 3 : ✅ 0.003 sec (88.1 MH/s)
+  Dispatch 4 : ❌ ÉCHEC (0.000 sec)
+
+═══════════════════════════════════════════════════════════
+  RÉSULTATS FINAUX C240
+═══════════════════════════════════════════════════════════
+
+Dispatches réussis : 3/100
+Dispatches échoués : 1
+Total hashes calculés : 786432 (0.00 G)
+Temps total : 0.162 secondes (0.00 minutes)
+Hashrate moyen : 4.84 MH/s
+Temps moyen/dispatch : 0.054 sec
+Débit : 18.472 dispatches/sec
+
+📊 Logs forensiques : logs/forensic/btc_mining_c240_optimized.log
+
+[PHASE 4/4] Cleanup...
+✅ Cleanup terminé
+
+✅ Test C240 terminé avec succès
+

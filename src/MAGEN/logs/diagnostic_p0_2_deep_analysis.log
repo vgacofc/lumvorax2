@@ -1,0 +1,72 @@
+✅ ARC_API_KEY chargée: 705f499b...
+✅ arc-agi importé
+
+
+================================================================================
+🔬 DIAGNOSTIC P0.2 - ANALYSE APPROFONDIE
+================================================================================
+Hypothèse A: obs.frame change réellement (hash différent)
+Hypothèse B: Format actions incorrect (API attend autre chose)
+Hypothèse C: Actions non appliquées (frame identique avant/après)
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 23:23:15 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie
+
+2026-06-16 23:23:15 | INFO | Created new scorecard: e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26
+✅ Scorecard créé: e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26
+
+2026-06-16 23:23:16 | INFO | Successfully fetched metadata for game ls20
+2026-06-16 23:23:16 | INFO | Recording to recordings/e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26/ls20-9607627b-02241ad0-dcb5-4892-855e-e5a8dd735566.jsonl
+2026-06-16 23:23:16 | INFO | Successfully reset game ls20-9607627b, guid=02241ad0-dcb5-4892-855e-e5a8dd735566, scorecard_id=e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26
+🔄 RESET environnement...
+2026-06-16 23:23:16 | INFO | Recording to recordings/e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26/ls20-9607627b-02241ad0-dcb5-4892-855e-e5a8dd735566.jsonl
+2026-06-16 23:23:16 | INFO | Successfully reset game ls20-9607627b, guid=02241ad0-dcb5-4892-855e-e5a8dd735566, scorecard_id=e8fc4e9f-b511-4a1c-a38e-e7aa7c852b26
+/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_deep_analysis.py:86: PydanticDeprecatedSince211: Accessing the 'model_computed_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(obs, attr)
+✅ Environnement démarré
+
+================================================================================
+ANALYSE OBSERVATION INITIALE COMPLÈTE
+================================================================================
+
+1. Type observation: <class 'arcengine.enums.FrameDataRaw'>
+2. Classe: FrameDataRaw
+
+3. Attributs disponibles (38):
+   - action_input: ActionInput
+   - available_actions: list
+   - frame: list
+   - full_reset: bool
+   - game_id: str
+   - guid: str
+   - levels_completed: int
+   - model_computed_fields: dict
+   - model_config: dict
+   - model_extra: NoneType
+
+================================================================================
+ANALYSE CRITIQUE: available_actions
+================================================================================
+Type: <class 'list'>
+Contenu: [1, 2, 3, 4]
+Nombre: 4
+Premier élément type: <class 'int'>
+Premier élément: 1
+
+================================================================================
+ANALYSE CRITIQUE: action_input
+================================================================================
+Type: <class 'arcengine.enums.ActionInput'>
+Contenu: id=<GameAction.RESET: 0> data={} reasoning=None
+
+================================================================================
+ANALYSE CRITIQUE: frame (observation pixels)
+================================================================================
+Type: <class 'list'>
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_deep_analysis.py", line 129, in <module>
+    print(f"Shape: {frame.shape}")
+                    ^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'

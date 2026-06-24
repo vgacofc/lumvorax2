@@ -1,0 +1,60 @@
+================================================================================
+TEST MAGEN V28.2.2 - PUZZLES ARC-AGI-3 RÉELS
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-15 01:35:23 | INFO | Successfully fetched 25 environment(s) from API
+✅ API ARC-AGI-3 configurée (mode COMPETITION)
+✅ 31 environnements disponibles
+Test sur 10 puzzles: ['ar25-0c556536', 'ar25-0c556536', 'cd82-fb555c5d', 'cd82-fb555c5d', 'bp35-0a0ad940']...
+
+================================================================================
+PUZZLE: ar25-0c556536
+================================================================================
+
+2026-06-15 01:35:23 | INFO | Created new scorecard: 6d85289f-235e-4576-a3b7-0b8a1b2cf6cf
+2026-06-15 01:35:24 | INFO | Successfully fetched metadata for game ar25
+2026-06-15 01:35:24 | INFO | Successfully reset game ar25-0c556536, guid=7c445626-6f8b-42eb-add9-82518dfd7a1f, scorecard_id=6d85289f-235e-4576-a3b7-0b8a1b2cf6cf
+2026-06-15 01:35:25 | INFO | Successfully reset game ar25-0c556536, guid=7c445626-6f8b-42eb-add9-82518dfd7a1f, scorecard_id=6d85289f-235e-4576-a3b7-0b8a1b2cf6cf
+Grid: (64, 64)
+Agent: (0, 0)
+Goal: [(np.int64(19), np.int64(16)), (np.int64(22), np.int64(16)), (np.int64(25), np.int64(16)), (np.int64(25), np.int64(19)), (np.int64(25), np.int64(22))]
+❌ Erreur step 1: 'str' object has no attribute 'name'
+
+Résultats:
+  Success: ❌
+  Steps: 1
+  Reward: 0.00
+
+================================================================================
+PUZZLE: ar25-0c556536
+================================================================================
+
+2026-06-15 01:35:25 | INFO | Successfully fetched metadata for game ar25
+2026-06-15 01:35:25 | ERROR | Failed to reset game ar25-0c556536: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 108, in reset
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+2026-06-15 01:35:25 | ERROR | Failed to reset game ar25-0c556536: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+Traceback (most recent call last):
+  File "/home/lvx/.local/lib/python3.12/site-packages/arc_agi/remote_wrapper.py", line 108, in reset
+    response.raise_for_status()
+  File "/home/lvx/.local/lib/python3.12/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://three.arcprize.org/api/cmd/RESET
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_arc_real_api.py", line 322, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_arc_real_api.py", line 270, in main
+    result = run_arc_puzzle(arcade, game_id, kernel, world_model, max_steps=100)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_arc_real_api.py", line 158, in run_arc_puzzle
+    magen_state = convert_arc_state_to_magen(state)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/test_arc_real_api.py", line 65, in convert_arc_state_to_magen
+    grid = arc_state.frame[0].copy()
+           ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'frame'

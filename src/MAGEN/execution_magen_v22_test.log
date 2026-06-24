@@ -1,0 +1,296 @@
+
+================================================================================
+🧪 TEST AGENT MAGEN V22 - ARC-AGI-3 LOCAL
+================================================================================
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline: 174/400 (43.5%) sur puzzles statiques
+Test: 3 jeux avec max 100 actions par jeu
+================================================================================
+
+[TLE] Action space initialized: 5 actions
+[MAGEN] Agent ARC-AGI-3 initialisé avec architecture complète
+[MAGEN] Composants: TLE, PatternMatcher, ObjectExtractor, MetaArbiter, C17+C18+C19
+================================================================================
+🧠 MAGEN V22 - AGENT COMPLET POUR ARC-AGI-3
+================================================================================
+Session ID: 20260614_020303
+API Key: b6ebc9c5...55d4
+Mode: 🔒 PRIVÉ (aucune soumission publique)
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline MAGEN: 174/400 (43.5%) sur puzzles statiques
+================================================================================
+
+🚀 Lancement test sur 3 jeux...
+
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 02:03:04 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-14 02:03:04 | INFO | Created new scorecard: 6b125d8f-015b-4585-90f0-892324ca5ffa
+✅ Arcade initialisé (scorecard: 6b125d8f...)
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Compétition: 3 jeux
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+⏱️  Début: 2026-06-14T02:03:03.524979
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:03:04 | INFO | Created new scorecard: 1ee18899-2663-4004-a105-a23d29fd44f5
+2026-06-14 02:03:05 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:03:05 | INFO | Successfully reset game ar25-0c556536, guid=dbece8fc-a752-4921-8efb-981369e01dbc, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:03:05 | INFO | Successfully reset game ar25-0c556536, guid=dbece8fc-a752-4921-8efb-981369e01dbc, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 507, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:03:05 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:03:05 | INFO | Successfully reset game ar25-0c556536, guid=9cfff99b-4144-4e82-bd0f-852c000c97c9, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:03:06 | INFO | Successfully reset game ar25-0c556536, guid=9cfff99b-4144-4e82-bd0f-852c000c97c9, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 507, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+================================================================================
+🎮 Jeu: cd82-fb555c5d
+================================================================================
+2026-06-14 02:03:06 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 02:03:06 | INFO | Successfully reset game cd82-fb555c5d, guid=451e62a7-b9fc-47d0-a08b-2252f70dbb85, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:03:06 | INFO | Successfully reset game cd82-fb555c5d, guid=451e62a7-b9fc-47d0-a08b-2252f70dbb85, scorecard_id=1ee18899-2663-4004-a105-a23d29fd44f5
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 507, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+2026-06-14 02:03:06 | INFO | Closed scorecard: 1ee18899-2663-4004-a105-a23d29fd44f5
+
+================================================================================
+🏆 SCORECARD FINAL
+================================================================================
+Score: 0.00
+Scorecard ID: 6b125d8f-015b-4585-90f0-892324ca5ffa
+================================================================================
+
+💾 Résultats sauvegardés: results/arc_agi_3/private_submission_20260614_020303.json
+
+================================================================================
+📊 RÉSUMÉ FINAL - MODE PRIVÉ
+================================================================================
+Session: 20260614_020303
+Jeux joués: 3
+Score total: 0.00
+Score scorecard: 0.00
+Début: 2026-06-14T02:03:03.524979
+Fin: 2026-06-14T02:03:06.703507
+================================================================================
+🔒 Mode: PRIVÉ (aucune soumission publique)
+================================================================================
+
+================================================================================
+✅ TEST TERMINÉ
+================================================================================
+Résultats sauvegardés dans: results_magen_v22_20260614_020303.json
+Logs forensiques disponibles dans le répertoire forensic/
+================================================================================
+
+
+================================================================================
+🧪 TEST AGENT MAGEN V22 - ARC-AGI-3 LOCAL
+================================================================================
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline: 174/400 (43.5%) sur puzzles statiques
+Test: 3 jeux avec max 100 actions par jeu
+================================================================================
+
+[TLE] Action space initialized: 5 actions
+[MAGEN] Agent ARC-AGI-3 initialisé avec architecture complète
+[MAGEN] Composants: TLE, PatternMatcher, ObjectExtractor, MetaArbiter, C17+C18+C19
+================================================================================
+🧠 MAGEN V22 - AGENT COMPLET POUR ARC-AGI-3
+================================================================================
+Session ID: 20260614_020417
+API Key: b6ebc9c5...55d4
+Mode: 🔒 PRIVÉ (aucune soumission publique)
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline MAGEN: 174/400 (43.5%) sur puzzles statiques
+================================================================================
+
+🚀 Lancement test sur 3 jeux...
+
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 02:04:17 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-14 02:04:17 | INFO | Created new scorecard: be0995a6-9d8d-48eb-86c3-a2a5e80aec2a
+✅ Arcade initialisé (scorecard: be0995a6...)
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Compétition: 3 jeux
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+⏱️  Début: 2026-06-14T02:04:17.091754
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:04:18 | INFO | Created new scorecard: 76ae9b48-813c-419a-9810-6d4f26b98502
+2026-06-14 02:04:18 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:04:19 | INFO | Successfully reset game ar25-0c556536, guid=8a9a0253-1a08-44dc-94da-e3c729a2beec, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:04:19 | INFO | Successfully reset game ar25-0c556536, guid=8a9a0253-1a08-44dc-94da-e3c729a2beec, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:04:19 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:04:19 | INFO | Successfully reset game ar25-0c556536, guid=bc03582b-f565-40b0-9295-573ab5f36f8f, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:04:19 | INFO | Successfully reset game ar25-0c556536, guid=bc03582b-f565-40b0-9295-573ab5f36f8f, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+================================================================================
+🎮 Jeu: cd82-fb555c5d
+================================================================================
+2026-06-14 02:04:20 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 02:04:20 | INFO | Successfully reset game cd82-fb555c5d, guid=df6028c1-db66-4338-a5a8-079ace28777f, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:04:20 | INFO | Successfully reset game cd82-fb555c5d, guid=df6028c1-db66-4338-a5a8-079ace28777f, scorecard_id=76ae9b48-813c-419a-9810-6d4f26b98502
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 283, in decide
+    reputation = self.reputation_system.get_action_reputation(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: 'ActionReputationSystem' object has no attribute 'get_action_reputation'
+2026-06-14 02:04:20 | INFO | Closed scorecard: 76ae9b48-813c-419a-9810-6d4f26b98502
+
+================================================================================
+🏆 SCORECARD FINAL
+================================================================================
+Score: 0.00
+Scorecard ID: be0995a6-9d8d-48eb-86c3-a2a5e80aec2a
+================================================================================
+
+💾 Résultats sauvegardés: results/arc_agi_3/private_submission_20260614_020417.json
+
+================================================================================
+📊 RÉSUMÉ FINAL - MODE PRIVÉ
+================================================================================
+Session: 20260614_020417
+Jeux joués: 3
+Score total: 0.00
+Score scorecard: 0.00
+Début: 2026-06-14T02:04:17.091754
+Fin: 2026-06-14T02:04:20.572256
+================================================================================
+🔒 Mode: PRIVÉ (aucune soumission publique)
+================================================================================
+
+================================================================================
+✅ TEST TERMINÉ
+================================================================================
+Résultats sauvegardés dans: results_magen_v22_20260614_020417.json
+Logs forensiques disponibles dans le répertoire forensic/
+================================================================================
+

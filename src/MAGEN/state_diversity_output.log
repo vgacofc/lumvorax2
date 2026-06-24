@@ -1,0 +1,116 @@
+✅ ARC_API_KEY chargée: 705f499b...
+✅ arc-agi importé
+
+================================================================================
+ANALYSE DIVERSITÉ D'ÉTATS - JEU ls20-9607627b
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 22:03:49 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie
+
+
+================================================================================
+RUN #1/3
+================================================================================
+
+2026-06-16 22:03:49 | INFO | Created new scorecard: 49c68dc5-7e0a-4889-aa24-2183ce1c48b8
+✅ Scorecard créé: 49c68dc5-7e0a-4889-aa24-2183ce1c48b8
+2026-06-16 22:03:49 | INFO | Successfully fetched metadata for game ls20
+2026-06-16 22:03:50 | INFO | Successfully downloaded game ls20 (version: 9607627b) to environment_files/ls20/9607627b
+2026-06-16 22:03:50 | INFO | Successfully loaded game class Ls20 from environment_files/ls20/9607627b/ls20.py
+✅ Jeu démarré
+
+   Step 20/100 - États uniques: 1
+   Step 40/100 - États uniques: 1
+   Step 60/100 - États uniques: 1
+   Step 80/100 - États uniques: 1
+   Step 100/100 - États uniques: 1
+
+✅ Run #1 terminé
+
+📊 STATISTIQUES RUN #1:
+   Steps totaux: 100
+   États uniques: 1
+   Taux changement: 0.00%
+
+================================================================================
+RUN #2/3
+================================================================================
+
+2026-06-16 22:03:50 | INFO | Created new scorecard: 0976e066-df88-48e3-9b67-8ec8ef36ede2
+✅ Scorecard créé: 0976e066-df88-48e3-9b67-8ec8ef36ede2
+2026-06-16 22:03:50 | INFO | Successfully fetched metadata for game ls20
+✅ Jeu démarré
+
+   Step 20/100 - États uniques: 1
+   Step 40/100 - États uniques: 1
+   Step 60/100 - États uniques: 1
+   Step 80/100 - États uniques: 1
+   Step 100/100 - États uniques: 1
+
+✅ Run #2 terminé
+
+📊 STATISTIQUES RUN #2:
+   Steps totaux: 100
+   États uniques: 1
+   Taux changement: 0.00%
+
+================================================================================
+RUN #3/3
+================================================================================
+
+2026-06-16 22:03:50 | INFO | Created new scorecard: 1190d3e9-cdce-4018-abd1-897b3f3b1fc1
+✅ Scorecard créé: 1190d3e9-cdce-4018-abd1-897b3f3b1fc1
+2026-06-16 22:03:51 | INFO | Successfully fetched metadata for game ls20
+✅ Jeu démarré
+
+   Step 20/100 - États uniques: 1
+   Step 40/100 - États uniques: 1
+   Step 60/100 - États uniques: 1
+   Step 80/100 - États uniques: 1
+   Step 100/100 - États uniques: 1
+
+✅ Run #3 terminé
+
+📊 STATISTIQUES RUN #3:
+   Steps totaux: 100
+   États uniques: 1
+   Taux changement: 0.00%
+
+================================================================================
+STATISTIQUES GLOBALES (3 runs)
+================================================================================
+
+📊 MÉTRIQUES CRITIQUES:
+   Steps totaux: 300
+   États uniques totaux: 3
+   États uniques moyens/run: 1.0
+   Taux changement moyen: 0.00%
+   Ratio états/steps: 1.00%
+
+📊 DIVERSITÉ MÉTADONNÉES:
+   ⚠️  Aucune métadonnée détectée!
+
+📊 CORRÉLATION ACTION → CHANGEMENT:
+   ACTION1: 0.00% changements (0/23)
+   ACTION2: 0.00% changements (0/14)
+   ACTION3: 0.00% changements (0/11)
+   ACTION4: 0.00% changements (0/12)
+   ACTION5: 0.00% changements (0/15)
+   ACTION7: 0.00% changements (0/24)
+
+================================================================================
+DIAGNOSTIC
+================================================================================
+
+🔴 CRITIQUE: Très faible diversité d'états (<10%)
+   → L'environnement change très peu
+   → Reward intrinsèque s'effondre normalement
+   → Apprentissage impossible sans plus d'observabilité
+
+🔴 CRITIQUE: Faible taux de changement (<30%)
+   → Actions ont peu d'effet sur l'environnement
+   → Vérifier mapping actions → commandes jeu
+
+✅ Résultats sauvegardés: results/state_diversity_analysis_20260616_220351.json

@@ -1,0 +1,3393 @@
+================================================================================
+MAGEN V27.1 CAUSAL - EXÉCUTION RÉELLE ARC-AGI-3
+================================================================================
+Date: 2026-06-14 20:18:09
+Session: 72
+
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → None
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent V27.1 initialisé
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:18:09 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+
+################################################################################
+# JEU 1/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:18:09 | INFO | Created new scorecard: 278f10b8-af42-4838-a5a2-0cdd8b6639dd
+2026-06-14 20:18:09 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 20:18:09 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #10: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2130.9µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION1             : priority=0.509 (rep=0.438, attempts=1)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #20: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2132.3µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION1             : priority=0.509 (rep=0.438, attempts=1)
+  3. ACTION2             : priority=0.409 (rep=0.338, attempts=1)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION1             : priority=0.509 (rep=0.438, attempts=1)
+  2. ACTION2             : priority=0.409 (rep=0.338, attempts=1)
+  3. ACTION3             : priority=0.409 (rep=0.338, attempts=1)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION2             : priority=0.409 (rep=0.338, attempts=1)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION2             : priority=0.409 (rep=0.338, attempts=1)
+  3. ACTION3             : priority=0.409 (rep=0.338, attempts=1)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.40s
+================================================================================
+
+
+################################################################################
+# JEU 2/10: cd82
+################################################################################
+
+================================================================================
+JEU: cd82
+================================================================================
+2026-06-14 20:18:10 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 20:18:10 | INFO | Successfully loaded game class Cd82 from environment_files/cd82/fb555c5d/cd82.py
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #30: objects=4, motion=0.000, regions=0, relations=6, unique_hashes=1, time=2140.3µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #40: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=2190.8µs
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.505 (rep=0.448, attempts=2)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.505 (rep=0.448, attempts=2)
+  3. ACTION3             : priority=0.438 (rep=0.380, attempts=2)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.505 (rep=0.448, attempts=2)
+  2. ACTION3             : priority=0.438 (rep=0.380, attempts=2)
+  3. ACTION4             : priority=0.438 (rep=0.380, attempts=2)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #50: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=2025.9µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.505 (rep=0.448, attempts=2)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.505 (rep=0.448, attempts=2)
+  3. ACTION3             : priority=0.438 (rep=0.380, attempts=2)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.42s
+================================================================================
+
+
+################################################################################
+# JEU 3/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:18:12 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #60: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2458.7µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #70: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2091.6µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.447 (rep=0.397, attempts=3)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.447 (rep=0.397, attempts=3)
+  3. ACTION3             : priority=0.416 (rep=0.366, attempts=3)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.447 (rep=0.397, attempts=3)
+  2. ACTION3             : priority=0.416 (rep=0.366, attempts=3)
+  3. ACTION4             : priority=0.416 (rep=0.366, attempts=3)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #80: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2119.0µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.447 (rep=0.397, attempts=3)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.447 (rep=0.397, attempts=3)
+  3. ACTION3             : priority=0.416 (rep=0.366, attempts=3)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.38s
+================================================================================
+
+
+################################################################################
+# JEU 4/10: cd82
+################################################################################
+
+================================================================================
+JEU: cd82
+================================================================================
+2026-06-14 20:18:13 | INFO | Successfully fetched metadata for game cd82
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #90: objects=4, motion=0.002, regions=0, relations=6, unique_hashes=1, time=2492.4µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #100: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=2084.7µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.492 (rep=0.448, attempts=4)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.492 (rep=0.448, attempts=4)
+  3. ACTION3             : priority=0.425 (rep=0.380, attempts=4)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.492 (rep=0.448, attempts=4)
+  2. ACTION3             : priority=0.425 (rep=0.380, attempts=4)
+  3. ACTION4             : priority=0.425 (rep=0.380, attempts=4)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #110: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=1957.9µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.492 (rep=0.448, attempts=4)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.492 (rep=0.448, attempts=4)
+  3. ACTION3             : priority=0.425 (rep=0.380, attempts=4)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.40s
+================================================================================
+
+
+################################################################################
+# JEU 5/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:18:15 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #120: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2382.4µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #130: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2181.4µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.458 (rep=0.417, attempts=5)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.458 (rep=0.417, attempts=5)
+  3. ACTION3             : priority=0.412 (rep=0.372, attempts=5)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.458 (rep=0.417, attempts=5)
+  2. ACTION3             : priority=0.412 (rep=0.372, attempts=5)
+  3. ACTION4             : priority=0.412 (rep=0.372, attempts=5)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.458 (rep=0.417, attempts=5)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #140: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2082.9µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.458 (rep=0.417, attempts=5)
+  3. ACTION3             : priority=0.412 (rep=0.372, attempts=5)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.33s
+================================================================================
+
+
+################################################################################
+# JEU 6/10: cd82
+################################################################################
+
+================================================================================
+JEU: cd82
+================================================================================
+2026-06-14 20:18:16 | INFO | Successfully fetched metadata for game cd82
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #150: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=2648.9µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 7/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 8/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 9/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 10/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 11/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 12/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #160: objects=6, motion=0.000, regions=0, relations=15, unique_hashes=1, time=1961.9µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+  3. ACTION3             : priority=0.418 (rep=0.380, attempts=6)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 13/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+  2. ACTION3             : priority=0.418 (rep=0.380, attempts=6)
+  3. ACTION4             : priority=0.418 (rep=0.380, attempts=6)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 14/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 15/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 16/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 17/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 18/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 19/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+  3. ACTION3             : priority=0.418 (rep=0.380, attempts=6)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 20/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.69s
+================================================================================
+
+
+################################################################################
+# JEU 7/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:18:18 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #170: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2269.8µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+  2. ACTION4             : priority=0.409 (rep=0.374, attempts=7)
+  3. ACTION2             : priority=0.355 (rep=0.320, attempts=7)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 6/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #180: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2183.1µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.485 (rep=0.448, attempts=6)
+  2. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+  3. ACTION4             : priority=0.409 (rep=0.374, attempts=7)
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 7/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.461 (rep=0.426, attempts=7)
+  2. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+  3. ACTION4             : priority=0.409 (rep=0.374, attempts=7)
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 8/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.461 (rep=0.426, attempts=7)
+  2. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+  3. ACTION4             : priority=0.409 (rep=0.374, attempts=7)
+[EXPLORATION] Action: ACTION2 (move_down) score=0.400
+
+[Action 9/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 10/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 11/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 12/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #190: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2199.7µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 13/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.461 (rep=0.426, attempts=7)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 14/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.461 (rep=0.426, attempts=7)
+  3. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 15/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.461 (rep=0.426, attempts=7)
+  2. ACTION3             : priority=0.409 (rep=0.374, attempts=7)
+  3. ACTION4             : priority=0.409 (rep=0.374, attempts=7)
+[EXPLORATION] Action: ACTION3 (move_left) score=0.400
+
+[Action 16/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 17/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 18/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 19/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 20/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.41s
+================================================================================
+
+
+################################################################################
+# JEU 8/10: cd82
+################################################################################
+
+================================================================================
+JEU: cd82
+================================================================================
+2026-06-14 20:18:19 | INFO | Successfully fetched metadata for game cd82
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #200: objects=4, motion=0.000, regions=0, relations=6, unique_hashes=1, time=2926.3µs
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 2/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 3/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[STATE ENCODER V25] Encoding #210: objects=3, motion=0.000, regions=0, relations=3, unique_hashes=1, time=2188.5µs
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+  2. ACTION4             : priority=0.398 (rep=0.365, attempts=8)
+  3. ACTION3             : priority=0.390 (rep=0.359, attempts=9)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 7/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 8/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 9/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 10/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 11/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 12/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 13/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #220: objects=4, motion=0.000, regions=0, relations=6, unique_hashes=1, time=1988.4µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+  3. ACTION4             : priority=0.398 (rep=0.365, attempts=8)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 14/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+  2. ACTION4             : priority=0.398 (rep=0.365, attempts=8)
+  3. ACTION3             : priority=0.390 (rep=0.359, attempts=9)
+[EXPLORATION] Action: ACTION2 (move_down) score=0.400
+
+[Action 15/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 16/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 17/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 18/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 19/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 20/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.42s
+================================================================================
+
+
+################################################################################
+# JEU 9/10: ar25
+################################################################################
+
+================================================================================
+JEU: ar25
+================================================================================
+2026-06-14 20:18:21 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[STATE ENCODER V25] Encoding #230: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2370.9µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 2/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 3/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+  2. ACTION3             : priority=0.387 (rep=0.357, attempts=10)
+  3. ACTION2             : priority=0.343 (rep=0.314, attempts=11)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 6/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[STATE ENCODER V25] Encoding #240: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2052.5µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.481 (rep=0.448, attempts=8)
+  2. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+  3. ACTION3             : priority=0.387 (rep=0.357, attempts=10)
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 7/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.462 (rep=0.431, attempts=9)
+  2. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+  3. ACTION3             : priority=0.387 (rep=0.357, attempts=10)
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 8/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.462 (rep=0.431, attempts=9)
+  2. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+  3. ACTION3             : priority=0.387 (rep=0.357, attempts=10)
+[EXPLORATION] Action: ACTION2 (move_down) score=0.400
+
+[Action 9/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 10/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 11/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 12/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 13/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #250: objects=12, motion=0.000, regions=0, relations=66, unique_hashes=1, time=2176.8µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.462 (rep=0.431, attempts=9)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 14/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.462 (rep=0.431, attempts=9)
+  3. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 15/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.462 (rep=0.431, attempts=9)
+  2. ACTION4             : priority=0.393 (rep=0.362, attempts=9)
+  3. ACTION3             : priority=0.387 (rep=0.357, attempts=10)
+[EXPLORATION] Action: ACTION3 (move_left) score=0.400
+
+[Action 16/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 17/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 18/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 19/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 20/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.66s
+================================================================================
+
+
+################################################################################
+# JEU 10/10: cd82
+################################################################################
+
+================================================================================
+JEU: cd82
+================================================================================
+2026-06-14 20:18:22 | INFO | Successfully fetched metadata for game cd82
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+
+[Action 1/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[STATE ENCODER V25] Encoding #260: objects=4, motion=0.000, regions=0, relations=6, unique_hashes=1, time=2455.5µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+
+[Action 2/20]
+  Action: ACTION3
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+
+[Action 3/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+
+[Action 4/20]
+  Action: ACTION4
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+
+[Action 5/20]
+  Action: ACTION5
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+
+[Action 6/20]
+  Action: ACTION6
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[STATE ENCODER V25] Encoding #270: objects=3, motion=0.000, regions=0, relations=3, unique_hashes=1, time=2035.8µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.478 (rep=0.448, attempts=10)
+  2. ACTION4             : priority=0.386 (rep=0.356, attempts=10)
+  3. ACTION3             : priority=0.376 (rep=0.348, attempts=12)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.400
+
+[Action 7/20]
+  Action: ACTION1
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+
+[Action 8/20]
+  Action: ACTION7
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 9/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 10/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 11/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 12/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.478 (rep=0.448, attempts=10)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 13/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION13            : priority=0.600 (new)
+  2. ACTION6             : priority=0.478 (rep=0.448, attempts=10)
+  3. ACTION4             : priority=0.386 (rep=0.356, attempts=10)
+[REPUTATION C17] Action: ACTION13 (ACTION13) reputation=0.600
+[EXPLORATION] Action: ACTION13 (ACTION13) score=0.800
+
+[Action 14/20]
+  Action: ACTION13
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[STATE ENCODER V25] Encoding #280: objects=4, motion=0.000, regions=0, relations=6, unique_hashes=1, time=1998.2µs
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION6             : priority=0.478 (rep=0.448, attempts=10)
+  2. ACTION4             : priority=0.386 (rep=0.356, attempts=10)
+  3. ACTION3             : priority=0.376 (rep=0.348, attempts=12)
+[EXPLORATION] Action: ACTION2 (move_down) score=0.400
+
+[Action 15/20]
+  Action: ACTION2
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+[FORENSIC ERROR] Object of type bool is not JSON serializable
+  État: GameState.NOT_FINISHED
+  Reward: 0.000
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION8             : priority=0.600 (new)
+  2. ACTION9             : priority=0.600 (new)
+  3. ACTION10            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION8 (ACTION8) reputation=0.600
+[EXPLORATION] Action: ACTION8 (ACTION8) score=0.800
+
+[Action 16/20]
+  Action: ACTION8
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION9             : priority=0.600 (new)
+  2. ACTION10            : priority=0.600 (new)
+  3. ACTION11            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION9 (ACTION9) reputation=0.600
+[EXPLORATION] Action: ACTION9 (ACTION9) score=0.800
+
+[Action 17/20]
+  Action: ACTION9
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION10            : priority=0.600 (new)
+  2. ACTION11            : priority=0.600 (new)
+  3. ACTION12            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION10 (ACTION10) reputation=0.600
+[EXPLORATION] Action: ACTION10 (ACTION10) score=0.800
+
+[Action 18/20]
+  Action: ACTION10
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION11            : priority=0.600 (new)
+  2. ACTION12            : priority=0.600 (new)
+  3. ACTION13            : priority=0.600 (new)
+[REPUTATION C17] Action: ACTION11 (ACTION11) reputation=0.600
+[EXPLORATION] Action: ACTION11 (ACTION11) score=0.800
+
+[Action 19/20]
+  Action: ACTION11
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+[WARNING] GridAnalyzer suggestion error: 'dict' object has no attribute 'player_position'
+[C17 REPUTATION] Top-3 actions:
+  1. ACTION12            : priority=0.600 (new)
+  2. ACTION13            : priority=0.600 (new)
+  3. ACTION6             : priority=0.478 (rep=0.448, attempts=10)
+[REPUTATION C17] Action: ACTION12 (ACTION12) reputation=0.600
+[EXPLORATION] Action: ACTION12 (ACTION12) score=0.800
+
+[Action 20/20]
+  Action: ACTION12
+  Agent détecté (causal): False
+  Confiance: 0.000
+  Validation: True
+  ⚠️ Erreur API: 'str' object has no attribute 'name'
+
+================================================================================
+RÉSULTAT: ❌ ÉCHEC
+Score: 0.0
+Actions: 20
+Durée: 0.39s
+================================================================================
+
+
+================================================================================
+RÉSUMÉ GLOBAL V27.1
+================================================================================
+
+Jeux joués: 10
+Jeux réussis: 0/10 (0.0%)
+Actions totales: 200
+Score total: 0.0
+Durée totale: 4.49s
+Actions/seconde: 44.6
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 329, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/run_v27_1_real_arc_agi_3.py", line 307, in main
+    json.dump({
+  File "/usr/lib/python3.12/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  [Previous line repeated 3 more times]
+  File "/usr/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int64 is not JSON serializable

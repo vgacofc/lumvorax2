@@ -1,0 +1,148 @@
+
+================================================================================
+🧪 TEST AGENT MAGEN V22 - ARC-AGI-3 LOCAL
+================================================================================
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline: 174/400 (43.5%) sur puzzles statiques
+Test: 3 jeux avec max 100 actions par jeu
+================================================================================
+
+[TLE] Action space initialized: 5 actions
+[MAGEN] Agent ARC-AGI-3 initialisé avec architecture complète
+[MAGEN] Composants: TLE, PatternMatcher, ObjectExtractor, MetaArbiter, C17+C18+C19
+================================================================================
+🧠 MAGEN V22 - AGENT COMPLET POUR ARC-AGI-3
+================================================================================
+Session ID: 20260614_020506
+API Key: b6ebc9c5...55d4
+Mode: 🔒 PRIVÉ (aucune soumission publique)
+Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19
+Score baseline MAGEN: 174/400 (43.5%) sur puzzles statiques
+================================================================================
+
+🚀 Lancement test sur 3 jeux...
+
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 02:05:06 | INFO | Successfully fetched 25 environment(s) from API
+2026-06-14 02:05:07 | INFO | Created new scorecard: bcb3ec99-920c-46f2-8b54-bf310a498329
+✅ Arcade initialisé (scorecard: bcb3ec99...)
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Compétition: 3 jeux
+🔒 Mode: PRIVÉ (pas de leaderboard public)
+⏱️  Début: 2026-06-14T02:05:06.123827
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:05:07 | INFO | Created new scorecard: cbcfd215-79a1-4806-9b23-395cd3daca8b
+2026-06-14 02:05:07 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:05:08 | INFO | Successfully reset game ar25-0c556536, guid=5b172525-bae5-44ed-a0e8-21b5b7fc9219, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:05:08 | INFO | Successfully reset game ar25-0c556536, guid=5b172525-bae5-44ed-a0e8-21b5b7fc9219, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 292, in decide
+    budget = self.budget_manager.allocate_budget(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+================================================================================
+🎮 Jeu: ar25-0c556536
+================================================================================
+2026-06-14 02:05:08 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 02:05:08 | INFO | Successfully reset game ar25-0c556536, guid=8c3d3b6c-f621-41fd-9a28-7a990a4b29e0, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:05:08 | INFO | Successfully reset game ar25-0c556536, guid=8c3d3b6c-f621-41fd-9a28-7a990a4b29e0, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 292, in decide
+    budget = self.budget_manager.allocate_budget(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+================================================================================
+🎮 Jeu: cd82-fb555c5d
+================================================================================
+2026-06-14 02:05:09 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 02:05:09 | INFO | Successfully reset game cd82-fb555c5d, guid=9cda6f93-1bdd-468c-b450-477967b8f7c3, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+
+[MAGEN] Début jeu - Max actions: 100
+2026-06-14 02:05:09 | INFO | Successfully reset game cd82-fb555c5d, guid=9cda6f93-1bdd-468c-b450-477967b8f7c3, scorecard_id=cbcfd215-79a1-4806-9b23-395cd3daca8b
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/submit_arc_agi_3_private.py", line 184, in play_game
+    magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 498, in play_game
+    decision = self.decide(obs, safe_actions)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/magen_arc_agi_agent.py", line 292, in decide
+    budget = self.budget_manager.allocate_budget(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+[ObjectExtractor] Extracted 0 structured objects
+❌ Erreur pendant le jeu: ExplorationBudgetManager.allocate_budget() got an unexpected keyword argument 'context'
+2026-06-14 02:05:09 | INFO | Closed scorecard: cbcfd215-79a1-4806-9b23-395cd3daca8b
+
+================================================================================
+🏆 SCORECARD FINAL
+================================================================================
+Score: 0.00
+Scorecard ID: bcb3ec99-920c-46f2-8b54-bf310a498329
+================================================================================
+
+💾 Résultats sauvegardés: results/arc_agi_3/private_submission_20260614_020506.json
+
+================================================================================
+📊 RÉSUMÉ FINAL - MODE PRIVÉ
+================================================================================
+Session: 20260614_020506
+Jeux joués: 3
+Score total: 0.00
+Score scorecard: 0.00
+Début: 2026-06-14T02:05:06.123827
+Fin: 2026-06-14T02:05:09.469145
+================================================================================
+🔒 Mode: PRIVÉ (aucune soumission publique)
+================================================================================
+
+================================================================================
+✅ TEST TERMINÉ
+================================================================================
+Résultats sauvegardés dans: results_magen_v22_20260614_020506.json
+Logs forensiques disponibles dans le répertoire forensic/
+================================================================================
+

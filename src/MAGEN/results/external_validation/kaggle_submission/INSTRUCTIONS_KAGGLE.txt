@@ -1,0 +1,29 @@
+
+INSTRUCTIONS SOUMISSION KAGGLE
+==============================
+
+1. Copier l'agent dans le framework Kaggle:
+   cp /home/lvx/LVX/lumvorax2/src/MAGEN/results/external_validation/kaggle_submission/magen_agent.py \
+      /home/lvx/LVX/lumvorax2/src/MAGEN/data/arc_agi_3_kaggle/agent/my_agent.py
+
+2. Tester localement:
+   cd /home/lvx/LVX/lumvorax2/src/MAGEN/data/arc_agi_3_kaggle
+   export KAGGLE_API_TOKEN=KGAT_370b5fe5bff37fed114881c49208f260
+   make play-local GAME=ls20
+
+3. Soumettre à Kaggle:
+   make submit
+
+4. Vérifier statut:
+   make status
+
+5. Une fois 'complete', aller sur Kaggle:
+   - https://www.kaggle.com/
+   - Trouver votre kernel
+   - Cliquer "Submit to Competition"
+   - Sélectionner submission.parquet
+
+6. Récupérer le score et le sauvegarder:
+   echo "XX.XX" > /home/lvx/LVX/lumvorax2/src/MAGEN/results/external_validation/kaggle_score.txt
+
+IMPORTANT: Le score Kaggle est la VÉRITÉ ABSOLUE

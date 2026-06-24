@@ -1,0 +1,66 @@
+================================================================================
+AUDIT PIPELINE PERCEPTIONNEL V27.1 - SESSION 73
+================================================================================
+✅ API key chargée
+
+[INITIALISATION AGENT V27.1]
+[STATE ENCODER V25] Initialisé
+  Embedding dim: 256 (augmenté de 128→256)
+  Motion threshold: 0.1
+  Features: Spatial Relations + Topological Hash + Action Context
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[CAUSAL GRAPH] Initialisé
+  Similarity threshold: 0.7
+  Max nodes: 10000
+  Max edges per node: 50
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+================================================================================
+[MAGEN V27 COGNITIVE] Agent initialisé avec architecture cognitive complète
+[V22] TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C18
+[V23] ActionDiscovery+WorldModel+InformationGainReward
+[V24] GoalGrounder+SemanticActionLibrary
+[V25] StateEncoderV25(256D)+CausalGraph(0.70)+BFSPlanning+CycleDetection
+[V25 ENRICHED] RewardShaping+CycleAvoidance+RepetitionPenalty+Exploration80%
+[V26 GRID-AWARE] GridAnalyzer+SpatialAnalysis+PathfindingAStar+SmartNavigation
+[V27 COGNITIVE] ActionReputationSystem(C17)+MémoireDécisionnelle+PrioritizationCognitive
+[FORENSIC] Logging: ENABLED → logs_forensic_audit
+[GRID-AWARE] Status: ENABLED
+[REPUTATION C17] Status: ENABLED
+================================================================================
+[V27.1 FORENSIC] Logs configurés dans logs_forensic_v27_1/
+[MAGEN V27.1 CAUSAL] Agent initialisé
+[V27.1] BehavioralEntityDetector: ENABLED
+[V27.1] ProgressiveRewardShaper: ENABLED
+[V27.1] ContextualActionValidator: ENABLED
+[V27.1] Forensic Logging: ENABLED
+✅ Agent initialisé
+[AUDIT] Logs dans: audit_perception_v27_1
+
+[CONNEXION ARC-AGI-3]
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 20:35:33 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade connecté
+
+[JEU: ar25]
+2026-06-14 20:35:33 | INFO | Created new scorecard: 0ecc55c1-8231-4f9c-8d4e-47c20fe30e0b
+[MAGEN V27 COGNITIVE] Agent réinitialisé pour nouveau jeu
+[MAGEN V27.1 CAUSAL] Agent réinitialisé pour nouveau jeu
+Traceback (most recent call last):
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/audit_pipeline_perception_v27_1.py", line 385, in <module>
+    main()
+  File "/home/lvx/LVX/lumvorax2/src/MAGEN/audit_pipeline_perception_v27_1.py", line 344, in main
+    obs = arcade.get_observation()
+          ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Arcade' object has no attribute 'get_observation'

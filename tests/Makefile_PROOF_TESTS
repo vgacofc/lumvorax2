@@ -1,0 +1,127 @@
+# Makefile pour Tests de Preuve Forensique LumVorax
+# Répond à Section 5.2.1 Limitations Techniques
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O2 -g -std=c11 -pthread
+CFLAGS += -I../src -I../include
+LDFLAGS = -lm -lpthread -lrt
+
+# Répertoires
+SRC_DIR = ../src
+BUILD_DIR = build_proof
+BIN_DIR = bin_proof
+
+# Sources communes
+COMMON_SRCS = \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/lum/lum_memory_tracer.c \
+	$(SRC_DIR)/vorax/vorax_operations.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/utils/time_ns.c \
+	$(SRC_DIR)/neural_network/nx49_biological_neuron.c
+
+# Tests de preuve
+PROOF_TESTS = \
+	test_forensic_bit_traceable_PROOF \
+	test_forensic_cache_dynamique_PROOF \
+	test_forensic_temps_externe_PROOF \
+	test_forensic_nn_orchestrateur_PROOF
+
+# Couleurs
+GREEN = \033[32m
+RED = \033[31m
+YELLOW = \033[33m
+RESET = \033[0m
+
+.PHONY: all clean run_all_proofs report
+
+all: $(BIN_DIR) $(PROOF_TESTS)
+
+$(BIN_DIR):
+	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(BUILD_DIR)
+
+# Compilation tests individuels
+test_forensic_bit_traceable_PROOF: test_forensic_bit_traceable_PROOF.c
+	@echo "$(YELLOW)Compilation $@...$(RESET)"
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/$@ $< \
+		$(SRC_DIR)/lum/lum_core.c \
+		$(SRC_DIR)/lum/lum_memory_tracer.c \
+		$(LDFLAGS)
+	@echo "$(GREEN)✓ $@ compilé$(RESET)"
+
+test_forensic_cache_dynamique_PROOF: test_forensic_cache_dynamique_PROOF.c
+	@echo "$(YELLOW)Compilation $@...$(RESET)"
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/$@ $< \
+		$(SRC_DIR)/lum/lum_core.c \
+		$(SRC_DIR)/vorax/vorax_operations.c \
+		$(SRC_DIR)/debug/memory_tracker.c \
+		$(LDFLAGS)
+	@echo "$(GREEN)✓ $@ compilé$(RESET)"
+
+test_forensic_temps_externe_PROOF: test_forensic_temps_externe_PROOF.c
+	@echo "$(YELLOW)Compilation $@...$(RESET)"
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/$@ $< \
+		$(SRC_DIR)/lum/lum_core.c \
+		$(SRC_DIR)/utils/time_ns.c \
+		$(LDFLAGS)
+	@echo "$(GREEN)✓ $@ compilé$(RESET)"
+
+test_forensic_nn_orchestrateur_PROOF: test_forensic_nn_orchestrateur_PROOF.c
+	@echo "$(YELLOW)Compilation $@...$(RESET)"
+	$(CC) $(CFLAGS) -o $(BIN_DIR)/$@ $< \
+		$(SRC_DIR)/neural_network/nx49_biological_neuron.c \
+		$(SRC_DIR)/lum/lum_core.c \
+		$(LDFLAGS)
+	@echo "$(GREEN)✓ $@ compilé$(RESET)"
+
+# Exécuter tous les tests
+run_all_proofs: all
+	@echo ""
+	@echo "╔════════════════════════════════════════════════════════════╗"
+	@echo "║  EXÉCUTION TESTS DE PREUVE FORENSIQUE LUMVORAX            ║"
+	@echo "║  Répond à: Section 5.2.1 Limitations Techniques           ║"
+	@echo "╚════════════════════════════════════════════════════════════╝"
+	@echo ""
+	@echo "$(YELLOW)═══ TEST 1/4: BIT TRAÇABLE ═══$(RESET)"
+	@$(BIN_DIR)/test_forensic_bit_traceable_PROOF 2>&1 | tee $(BUILD_DIR)/test1_bit_traceable.log
+	@echo ""
+	@echo "$(YELLOW)═══ TEST 2/4: CACHE DYNAMIQUE ═══$(RESET)"
+	@$(BIN_DIR)/test_forensic_cache_dynamique_PROOF 2>&1 | tee $(BUILD_DIR)/test2_cache_dynamique.log
+	@echo ""
+	@echo "$(YELLOW)═══ TEST 3/4: TEMPS EXTERNE ═══$(RESET)"
+	@$(BIN_DIR)/test_forensic_temps_externe_PROOF 2>&1 | tee $(BUILD_DIR)/test3_temps_externe.log
+	@echo ""
+	@echo "$(YELLOW)═══ TEST 4/4: NN ORCHESTRATEUR ═══$(RESET)"
+	@$(BIN_DIR)/test_forensic_nn_orchestrateur_PROOF 2>&1 | tee $(BUILD_DIR)/test4_nn_orchestrateur.log
+	@echo ""
+	@echo "$(GREEN)✓ Tous les tests exécutés$(RESET)"
+	@echo "$(GREEN)✓ Logs sauvegardés dans $(BUILD_DIR)/$(RESET)"
+
+# Générer rapport
+report: run_all_proofs
+	@echo ""
+	@echo "$(YELLOW)Génération rapport MD...$(RESET)"
+	@python3 generate_proof_report.py
+	@echo "$(GREEN)✓ Rapport généré: RAPPORT_PREUVES_FORENSIQUES_LUMVORAX.md$(RESET)"
+
+clean:
+	@echo "$(YELLOW)Nettoyage...$(RESET)"
+	@rm -rf $(BIN_DIR) $(BUILD_DIR)
+	@echo "$(GREEN)✓ Nettoyage terminé$(RESET)"
+
+help:
+	@echo "Makefile Tests de Preuve Forensique LumVorax"
+	@echo ""
+	@echo "Cibles disponibles:"
+	@echo "  all              - Compiler tous les tests"
+	@echo "  run_all_proofs   - Compiler et exécuter tous les tests"
+	@echo "  report           - Générer rapport MD complet"
+	@echo "  clean            - Nettoyer fichiers compilés"
+	@echo "  help             - Afficher cette aide"
+	@echo ""
+	@echo "Tests individuels:"
+	@echo "  test_forensic_bit_traceable_PROOF"
+	@echo "  test_forensic_cache_dynamique_PROOF"
+	@echo "  test_forensic_temps_externe_PROOF"
+	@echo "  test_forensic_nn_orchestrateur_PROOF"

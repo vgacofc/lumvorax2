@@ -1,0 +1,187 @@
+[DEBUG] Tentative ouverture log: logs/forensic/btc_mining_c240_optimized.log
+[DEBUG] Log ouvert avec succès
+[C293] Output buffer: 40 bytes pour 262144 nonces
+
+═══════════════════════════════════════════════════════════
+  LumVorax C240 — Test Optimisations Maximales
+  Batch Size : 268M nonces (limite GPU Gen9)
+  Dispatches : Maximum 100
+═══════════════════════════════════════════════════════════
+
+[CONFIG] Paramètres:
+  - kernel: kernels/btc_sha256_gen9.bin
+  - batch_size: 262144 nonces (0.26 M)
+  - max_dispatches: 100
+  - log: logs/forensic/btc_mining_c240_optimized.log
+
+[OPTIMISATIONS ACTIVES]
+  ✅ Opt #6 : Batch size 268M (limite GPU Gen9)
+  ✅ Opt #7 : Buffer output 1MB (overhead reopen -78%)
+  ✅ Opt #8 : Monitoring DRM_IOCTL (métriques post-reopen)
+
+[PHASE 1/4] Initialisation Gen9 Native...
+[C390_SURFACE_STATE] Input Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=16383 mocs=0x3
+  DW2: height=63 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+[C390_SURFACE_STATE] Output Buffer:
+  DW0: type=0 format=0x1ff tile=0 cache_rw=1
+  DW1: width=39 mocs=0x3
+  DW2: height=0 depth=0
+  DW3: pitch=0
+  DW8-9: base_address=0x0000000000000000
+  Size: 64 bytes
+✅ Initialisation réussie
+
+[PHASE 2/4] Warm-up — 3 Dispatches
+─────────────────────────────────────────────────────────────
+  Dispatch 1/3 : ✅
+  Dispatch 2/3 : ✅
+  Dispatch 3/3 : ✅
+✅ Warm-up complété : 3/3 dispatches (0.007 sec)
+
+[PHASE 3/4] Test Production — 100 Dispatches
+─────────────────────────────────────────────────────────────
+
+[Dispatches 1-10]
+  Dispatch 1 : ✅ 0.001 sec (335.5 MH/s)
+  Dispatch 2 : ✅ 0.004 sec (68.6 MH/s)
+  Dispatch 3 : ✅ 0.002 sec (123.9 MH/s)
+  Dispatch 4 : ✅ 0.001 sec (198.1 MH/s)
+  Dispatch 5 : ✅ 0.003 sec (98.3 MH/s)
+  Dispatch 6 : ✅ 0.001 sec (262.0 MH/s)
+  Dispatch 7 : ✅ 0.055 sec (4.8 MH/s)
+  Dispatch 8 : ✅ 0.005 sec (53.1 MH/s)
+  Dispatch 9 : ✅ 0.002 sec (167.0 MH/s)
+  Dispatch 10 : ✅ 0.001 sec (184.5 MH/s)
+
+[Dispatches 11-20]
+  Dispatch 11 : ✅ 0.001 sec (201.8 MH/s)
+  Dispatch 12 : ✅ 0.003 sec (78.5 MH/s)
+  Dispatch 13 : ✅ 0.001 sec (194.3 MH/s)
+  Dispatch 14 : ✅ 0.002 sec (113.6 MH/s)
+  Dispatch 15 : ✅ 0.002 sec (132.2 MH/s)
+  Dispatch 16 : ✅ 0.002 sec (123.9 MH/s)
+  Dispatch 17 : ✅ 0.004 sec (67.4 MH/s)
+  Dispatch 18 : ✅ 0.002 sec (117.1 MH/s)
+  Dispatch 19 : ✅ 0.002 sec (139.6 MH/s)
+  Dispatch 20 : ✅ 0.004 sec (67.4 MH/s)
+
+[Dispatches 21-30]
+  Dispatch 21 : ✅ 0.007 sec (36.6 MH/s)
+  Dispatch 22 : ✅ 0.010 sec (26.7 MH/s)
+  Dispatch 23 : ✅ 0.009 sec (29.6 MH/s)
+  Dispatch 24 : ✅ 0.010 sec (26.3 MH/s)
+  Dispatch 25 : ✅ 0.007 sec (35.4 MH/s)
+  Dispatch 26 : ✅ 0.006 sec (47.0 MH/s)
+  Dispatch 27 : ✅ 0.011 sec (23.3 MH/s)
+  Dispatch 28 : ✅ 0.010 sec (26.4 MH/s)
+  Dispatch 29 : ✅ 0.005 sec (53.1 MH/s)
+  Dispatch 30 : ✅ 0.006 sec (41.6 MH/s)
+
+[Dispatches 31-40]
+  Dispatch 31 : ✅ 0.003 sec (94.5 MH/s)
+  Dispatch 32 : ✅ 0.010 sec (25.8 MH/s)
+  Dispatch 33 : ✅ 0.009 sec (29.7 MH/s)
+  Dispatch 34 : ✅ 0.008 sec (31.4 MH/s)
+  Dispatch 35 : ✅ 0.007 sec (37.9 MH/s)
+  Dispatch 36 : ✅ 0.007 sec (37.6 MH/s)
+  Dispatch 37 : ✅ 0.010 sec (25.1 MH/s)
+  Dispatch 38 : ✅ 0.008 sec (32.7 MH/s)
+  Dispatch 39 : ✅ 0.008 sec (34.3 MH/s)
+  Dispatch 40 : ✅ 0.003 sec (75.2 MH/s)
+
+[Dispatches 41-50]
+  Dispatch 41 : ✅ 0.007 sec (37.3 MH/s)
+  Dispatch 42 : ✅ 0.011 sec (24.5 MH/s)
+  Dispatch 43 : ✅ 0.008 sec (33.3 MH/s)
+  Dispatch 44 : ✅ 0.008 sec (32.3 MH/s)
+  Dispatch 45 : ✅ 0.007 sec (38.0 MH/s)
+  Dispatch 46 : ✅ 0.007 sec (37.8 MH/s)
+  Dispatch 47 : ✅ 0.006 sec (40.9 MH/s)
+  Dispatch 48 : ✅ 0.008 sec (32.0 MH/s)
+  Dispatch 49 : ✅ 0.004 sec (63.7 MH/s)
+  Dispatch 50 : ✅ 0.004 sec (74.7 MH/s)
+
+[Dispatches 51-60]
+  Dispatch 51 : ✅ 0.003 sec (91.4 MH/s)
+  Dispatch 52 : ✅ 0.003 sec (91.2 MH/s)
+  Dispatch 53 : ✅ 0.009 sec (30.0 MH/s)
+  Dispatch 54 : ✅ 0.008 sec (32.9 MH/s)
+  Dispatch 55 : ✅ 0.008 sec (33.7 MH/s)
+  Dispatch 56 : ✅ 0.008 sec (34.4 MH/s)
+  Dispatch 57 : ✅ 0.011 sec (24.9 MH/s)
+  Dispatch 58 : ✅ 0.009 sec (28.6 MH/s)
+  Dispatch 59 : ✅ 0.008 sec (31.7 MH/s)
+  Dispatch 60 : ✅ 0.008 sec (32.2 MH/s)
+
+[Dispatches 61-70]
+  Dispatch 61 : ✅ 0.003 sec (100.1 MH/s)
+  Dispatch 62 : ✅ 0.004 sec (59.0 MH/s)
+  Dispatch 63 : ✅ 0.003 sec (95.3 MH/s)
+  Dispatch 64 : ✅ 0.003 sec (75.4 MH/s)
+  Dispatch 65 : ✅ 0.009 sec (28.7 MH/s)
+  Dispatch 66 : ✅ 0.006 sec (41.3 MH/s)
+  Dispatch 67 : ✅ 0.004 sec (73.3 MH/s)
+  Dispatch 68 : ✅ 0.003 sec (92.0 MH/s)
+  Dispatch 69 : ✅ 0.003 sec (99.6 MH/s)
+  Dispatch 70 : ✅ 0.005 sec (51.1 MH/s)
+
+[Dispatches 71-80]
+  Dispatch 71 : ✅ 0.009 sec (28.4 MH/s)
+  Dispatch 72 : ✅ 0.004 sec (64.8 MH/s)
+  Dispatch 73 : ✅ 0.007 sec (39.1 MH/s)
+  Dispatch 74 : ✅ 0.008 sec (34.5 MH/s)
+  Dispatch 75 : ✅ 0.008 sec (34.2 MH/s)
+  Dispatch 76 : ✅ 0.007 sec (36.8 MH/s)
+  Dispatch 77 : ✅ 0.011 sec (24.4 MH/s)
+  Dispatch 78 : ✅ 0.008 sec (31.3 MH/s)
+  Dispatch 79 : ✅ 0.008 sec (32.6 MH/s)
+  Dispatch 80 : ✅ 0.004 sec (61.7 MH/s)
+
+[Dispatches 81-90]
+  Dispatch 81 : ✅ 0.004 sec (59.6 MH/s)
+  Dispatch 82 : ✅ 0.006 sec (44.2 MH/s)
+  Dispatch 83 : ✅ 0.005 sec (50.9 MH/s)
+  Dispatch 84 : ✅ 0.008 sec (32.3 MH/s)
+  Dispatch 85 : ✅ 0.007 sec (35.2 MH/s)
+  Dispatch 86 : ✅ 0.008 sec (31.5 MH/s)
+  Dispatch 87 : ✅ 0.011 sec (23.3 MH/s)
+  Dispatch 88 : ✅ 0.008 sec (32.3 MH/s)
+  Dispatch 89 : ✅ 0.007 sec (35.3 MH/s)
+  Dispatch 90 : ✅ 0.002 sec (111.6 MH/s)
+
+[Dispatches 91-100]
+  Dispatch 91 : ✅ 0.005 sec (55.7 MH/s)
+  Dispatch 92 : ✅ 0.011 sec (24.3 MH/s)
+  Dispatch 93 : ✅ 0.008 sec (31.1 MH/s)
+  Dispatch 94 : ✅ 0.008 sec (31.1 MH/s)
+  Dispatch 95 : ✅ 0.008 sec (32.8 MH/s)
+  Dispatch 96 : ✅ 0.008 sec (32.0 MH/s)
+  Dispatch 97 : ✅ 0.011 sec (24.8 MH/s)
+  Dispatch 98 : ✅ 0.009 sec (29.9 MH/s)
+  Dispatch 99 : ✅ 0.005 sec (53.7 MH/s)
+  Dispatch 100 : ✅ 0.002 sec (116.3 MH/s)
+
+═══════════════════════════════════════════════════════════
+  RÉSULTATS FINAUX C240
+═══════════════════════════════════════════════════════════
+
+Dispatches réussis : 100/100
+Dispatches échoués : 0
+Total hashes calculés : 26214400 (0.03 G)
+Temps total : 5.671 secondes (0.09 minutes)
+Hashrate moyen : 4.62 MH/s
+Temps moyen/dispatch : 0.057 sec
+Débit : 17.633 dispatches/sec
+
+📊 Logs forensiques : logs/forensic/btc_mining_c240_optimized.log
+
+[PHASE 4/4] Cleanup...
+✅ Cleanup terminé
+
+✅ Test C240 terminé avec succès
+

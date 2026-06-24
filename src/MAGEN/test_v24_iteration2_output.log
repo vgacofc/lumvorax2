@@ -1,0 +1,1161 @@
+
+================================================================================
+🧪 TEST AGENT MAGEN V24 - ARC-AGI-3 LOCAL + LOGS FORENSIQUES
+================================================================================
+Architecture V22: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17 + C18
+Architecture V23: ActionDiscovery + WorldModel + InformationGainReward
+Architecture V24: StateEncoder + GoalGrounder + SemanticActionLibrary
+Nouveautés V24:
+  - StateEncoder: Embeddings causaux 128D (vs pixels bruts)
+  - GoalGrounder: Prioritisation par goal progress (vs information gain)
+  - SemanticActionLibrary: Primitives interaction (vs transformations géométriques)
+  - Logs forensiques: Traçabilité bit-level + nanoseconde
+Test: 3 jeux avec max 200 actions par jeu
+================================================================================
+
+📁 Répertoire logs forensiques: logs_forensic_v24_20260614_163424
+
+[STATE ENCODER] Initialisé
+  Embedding dim: 128
+  Motion threshold: 0.1
+[GOAL GROUNDER] Initialisé
+  Abandonment threshold: 20 échecs consécutifs
+  Promising threshold: 0.1 reward/attempt
+  History size: 100
+[SEMANTIC ACTION LIBRARY] Initialisé
+  Actions par défaut: 13
+[SEMANTIC LIB] Mapped ACTION1 → move_up
+[SEMANTIC LIB] Mapped ACTION2 → move_down
+[SEMANTIC LIB] Mapped ACTION3 → move_left
+[SEMANTIC LIB] Mapped ACTION4 → move_right
+[SEMANTIC LIB] Mapped ACTION5 → interact
+[SEMANTIC LIB] Mapped ACTION6 → collect
+[SEMANTIC LIB] Mapped ACTION7 → undo
+[SEMANTIC LIB] Mapped RESET → reset
+[MAGEN V24] Agent initialisé avec architecture complète
+[MAGEN V24] V22: TLE+PatternMatcher+ObjectExtractor+MetaArbiter+C17+C18
+[MAGEN V24] V23: ActionDiscovery+WorldModel+InformationGainReward
+[MAGEN V24] V24: StateEncoder+GoalGrounder+SemanticActionLibrary+ForensicProfond
+[MAGEN V24] Forensic logging: ENABLED
+✅ Agent V24 initialisé avec logs forensiques
+📝 Fichier logs: logs_forensic_v24_20260614_163424/forensic_log.jsonl
+
+📡 Initialisation ARC-AGI Arcade...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-14 16:34:25 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade initialisé
+🔒 Mode: NORMAL (test local)
+
+🎮 Récupération liste des jeux...
+✅ 31 jeux disponibles
+
+🎯 Test: 3 jeux
+🔒 Mode: PRIVÉ (aucune soumission)
+⏱️  Début: 2026-06-14T16:34:25.399768
+
+================================================================================
+📍 Progression: 1/3 (33.3%)
+================================================================================
+
+🎮 Jeu: ar25-0c556536
+
+[MAGEN V24] Agent réinitialisé pour nouveau jeu
+2026-06-14 16:34:25 | INFO | Created new scorecard: a46c8720-478e-46d6-8ac0-da5976d3b66d
+2026-06-14 16:34:25 | INFO | Successfully fetched metadata for game ar25
+2026-06-14 16:34:26 | INFO | Successfully loaded game class Ar25 from environment_files/ar25/0c556536/ar25.py
+[MAGEN V24] Début jeu - Max actions: 200
+[MAGEN V24] Logs forensiques: ACTIVÉS (bit-level + nanoseconde)
+
+[EXPLORATION] Action: ACTION1 (move_up) score=0.800
+[EXPLORATION] Action: ACTION2 (move_down) score=0.800
+[EXPLORATION] Action: ACTION3 (move_left) score=0.800
+[EXPLORATION] Action: ACTION4 (move_right) score=0.800
+[EXPLORATION] Action: ACTION5 (interact) score=0.800
+[STATE ENCODER] Encoding #10: objects=2, motion=0.000, regions=0, time=6475.1µs
+[EXPLORATION] Action: ACTION6 (collect) score=0.800
+[EXPLORATION] Action: ACTION7 (undo) score=0.800
+[EXPLORATION] Action: RESET (reset) score=0.800
+[EXPLORATION] Action: ACTION1 (move_up) score=0.255
+[EXPLORATION] Action: ACTION2 (move_down) score=0.255
+[STATE ENCODER] Encoding #20: objects=2, motion=0.000, regions=0, time=3090.2µs
+[GOAL GROUNDER] Progression #10: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[MAGEN V24] Actions: 10 | Phase: EXPLORATION
+  State Encoder: 20 embeddings generated
+  World Model: 10 transitions, accuracy=0.00
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 42 logs generated
+[EXPLORATION] Action: ACTION3 (move_left) score=0.255
+[EXPLORATION] Action: ACTION4 (move_right) score=0.255
+[EXPLORATION] Action: ACTION5 (interact) score=0.255
+[EXPLORATION] Action: ACTION6 (collect) score=0.255
+[EXPLORATION] Action: ACTION7 (undo) score=0.255
+[STATE ENCODER] Encoding #30: objects=2, motion=0.000, regions=0, time=3957.9µs
+[EXPLORATION] Action: RESET (reset) score=0.255
+[EXPLORATION] Action: ACTION1 (move_up) score=0.210
+[EXPLORATION] Action: ACTION2 (move_down) score=0.210
+[EXPLORATION] Action: ACTION3 (move_left) score=0.210
+[EXPLORATION] Action: ACTION4 (move_right) score=0.210
+[STATE ENCODER] Encoding #40: objects=2, motion=0.000, regions=0, time=3024.1µs
+[GOAL GROUNDER] Progression #20: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[MAGEN V24] Actions: 20 | Phase: EXPLORATION
+  State Encoder: 40 embeddings generated
+  World Model: 20 transitions, accuracy=0.00
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 82 logs generated
+[MAGEN V24] Actions: 20/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION5 (interact) score=0.210
+[EXPLORATION] Action: ACTION6 (collect) score=0.210
+[EXPLORATION] Action: ACTION7 (undo) score=0.210
+[EXPLORATION] Action: RESET (reset) score=0.210
+[EXPLORATION] Action: ACTION1 (move_up) score=0.165
+[STATE ENCODER] Encoding #50: objects=2, motion=0.000, regions=0, time=2419.9µs
+[EXPLORATION] Action: ACTION2 (move_down) score=0.165
+[EXPLORATION] Action: ACTION3 (move_left) score=0.165
+[EXPLORATION] Action: ACTION4 (move_right) score=0.165
+[EXPLORATION] Action: ACTION5 (interact) score=0.165
+[EXPLORATION] Action: ACTION6 (collect) score=0.165
+[STATE ENCODER] Encoding #60: objects=2, motion=0.000, regions=0, time=2258.9µs
+[GOAL GROUNDER] Progression #30: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[MAGEN V24] Actions: 30 | Phase: EXPLORATION
+  State Encoder: 60 embeddings generated
+  World Model: 30 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 122 logs generated
+[EXPLORATION] Action: ACTION7 (undo) score=0.165
+[EXPLORATION] Action: RESET (reset) score=0.165
+[EXPLORATION] Action: ACTION1 (move_up) score=0.120
+[EXPLORATION] Action: ACTION1 (move_up) score=0.150
+[EXPLORATION] Action: ACTION1 (move_up) score=0.126
+[STATE ENCODER] Encoding #70: objects=2, motion=0.000, regions=0, time=2776.0µs
+[EXPLORATION] Action: ACTION2 (move_down) score=0.120
+[EXPLORATION] Action: ACTION2 (move_down) score=0.150
+[EXPLORATION] Action: ACTION2 (move_down) score=0.126
+[EXPLORATION] Action: ACTION3 (move_left) score=0.120
+[EXPLORATION] Action: ACTION3 (move_left) score=0.150
+[STATE ENCODER] Encoding #80: objects=2, motion=0.000, regions=0, time=2659.2µs
+[GOAL GROUNDER] Progression #40: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[MAGEN V24] Actions: 40 | Phase: EXPLORATION
+  State Encoder: 80 embeddings generated
+  World Model: 40 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 162 logs generated
+[MAGEN V24] Actions: 40/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION3 (move_left) score=0.126
+[EXPLORATION] Action: ACTION4 (move_right) score=0.120
+[EXPLORATION] Action: ACTION4 (move_right) score=0.150
+[EXPLORATION] Action: ACTION4 (move_right) score=0.126
+[EXPLORATION] Action: ACTION5 (interact) score=0.120
+[STATE ENCODER] Encoding #90: objects=2, motion=0.000, regions=0, time=2423.8µs
+[EXPLORATION] Action: ACTION5 (interact) score=0.150
+[EXPLORATION] Action: ACTION5 (interact) score=0.126
+[EXPLORATION] Action: ACTION6 (collect) score=0.120
+[EXPLORATION] Action: ACTION6 (collect) score=0.150
+[EXPLORATION] Action: ACTION6 (collect) score=0.126
+[STATE ENCODER] Encoding #100: objects=2, motion=0.000, regions=0, time=1770.8µs
+[GOAL GROUNDER] Progression #50: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[WORLD MODEL] Apprentissage règles causales (50 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 8)
+[MAGEN V24] Actions: 50 | Phase: EXPLORATION
+  State Encoder: 100 embeddings generated
+  World Model: 50 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 202 logs generated
+
+[MAGEN V24] ===== FIN PHASE EXPLORATION =====
+[MAGEN V24] Actions découvertes: 0
+[MAGEN V24] World model: 50 transitions
+[MAGEN V24] Semantic mappings: 8
+[MAGEN V24] ===== DÉBUT PHASE EXPLOITATION =====
+
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[STATE ENCODER] Encoding #110: objects=2, motion=0.000, regions=0, time=1925.2µs
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[STATE ENCODER] Encoding #120: objects=2, motion=0.000, regions=0, time=1958.3µs
+[GOAL GROUNDER] Progression #60: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=0
+[MAGEN V24] Actions: 60 | Phase: EXPLOITATION
+  State Encoder: 120 embeddings generated
+  World Model: 60 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=0, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 243 logs generated
+[MAGEN V24] Actions: 60/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION1 (move_up) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[STATE ENCODER] Encoding #130: objects=2, motion=0.000, regions=0, time=1757.7µs
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[STATE ENCODER] Encoding #140: objects=2, motion=0.000, regions=0, time=1863.3µs
+[GOAL GROUNDER] Progression #70: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=1
+[MAGEN V24] Actions: 70 | Phase: EXPLOITATION
+  State Encoder: 140 embeddings generated
+  World Model: 70 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=1, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 283 logs generated
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[STATE ENCODER] Encoding #150: objects=2, motion=0.000, regions=0, time=2183.3µs
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION2 (move_down) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[STATE ENCODER] Encoding #160: objects=2, motion=0.000, regions=0, time=3550.3µs
+[GOAL GROUNDER] Progression #80: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=2
+[MAGEN V24] Actions: 80 | Phase: EXPLOITATION
+  State Encoder: 160 embeddings generated
+  World Model: 80 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=2, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 323 logs generated
+[MAGEN V24] Actions: 80/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[STATE ENCODER] Encoding #170: objects=2, motion=0.000, regions=0, time=3288.9µs
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[STATE ENCODER] Encoding #180: objects=2, motion=0.000, regions=0, time=1908.4µs
+[GOAL GROUNDER] Progression #90: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=2
+[MAGEN V24] Actions: 90 | Phase: EXPLOITATION
+  State Encoder: 180 embeddings generated
+  World Model: 90 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=2, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 363 logs generated
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION3 (move_left) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[STATE ENCODER] Encoding #190: objects=2, motion=0.000, regions=0, time=1940.9µs
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[STATE ENCODER] Encoding #200: objects=2, motion=0.000, regions=0, time=2078.3µs
+[GOAL GROUNDER] Progression #100: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=3
+[WORLD MODEL] Apprentissage règles causales (100 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 16)
+[MAGEN V24] Actions: 100 | Phase: EXPLOITATION
+  State Encoder: 200 embeddings generated
+  World Model: 100 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=3, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 403 logs generated
+[MAGEN V24] Actions: 100/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[STATE ENCODER] Encoding #210: objects=2, motion=0.000, regions=0, time=1840.0µs
+[EXPLOITATION] Action: ACTION4 (move_right) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[STATE ENCODER] Encoding #220: objects=2, motion=0.000, regions=0, time=1801.5µs
+[GOAL GROUNDER] Progression #110: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=4
+[MAGEN V24] Actions: 110 | Phase: EXPLOITATION
+  State Encoder: 220 embeddings generated
+  World Model: 110 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=4, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 443 logs generated
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+[STATE ENCODER] Encoding #230: objects=2, motion=0.000, regions=0, time=1775.1µs
+[EXPLOITATION] Action: ACTION5 (interact) score=0.000
+
+[MAGEN V24] Résultats finaux:
+  Niveaux complétés: 0
+  Actions: 116
+  Succès: False
+  État final: GameState.GAME_OVER
+  Durée: 1.35s
+
+[MAGEN V24] Statistiques détaillées:
+  Phase exploration: 50 actions
+  Phase exploitation: 66 actions
+  Phase actuelle: EXPLOITATION
+
+  StateEncoder:
+    Embeddings générés: 0
+    Temps encoding moyen: 0.00 µs
+
+  GoalGrounder:
+    Actions prioritaires: 0
+    Actions abandonnées: 0
+    Goal progress moyen: 0.000
+
+  SemanticActionLibrary:
+    Actions sémantiques découvertes: 0
+    Confidence moyenne: 0.000
+
+  World Model (V23):
+    Accuracy: 0.00
+    Prédictions: 0
+
+💾 Logs jeu sauvegardés: logs_forensic_v24_20260614_163424/game_ar25-0c556536_20260614_163424.json
+
+================================================================================
+📍 Progression: 2/3 (66.7%)
+================================================================================
+
+🎮 Jeu: ar25-0c556536
+
+[MAGEN V24] Agent réinitialisé pour nouveau jeu
+2026-06-14 16:34:27 | INFO | Successfully fetched metadata for game ar25
+[MAGEN V24] Début jeu - Max actions: 200
+[MAGEN V24] Logs forensiques: ACTIVÉS (bit-level + nanoseconde)
+
+[EXPLORATION] Action: ACTION1 (move_up) score=0.300
+[EXPLORATION] Action: ACTION2 (move_down) score=0.300
+[EXPLORATION] Action: ACTION3 (move_left) score=0.300
+[EXPLORATION] Action: ACTION4 (move_right) score=0.300
+[STATE ENCODER] Encoding #240: objects=2, motion=0.000, regions=0, time=2383.5µs
+[GOAL GROUNDER] Progression #120: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=4
+[EXPLORATION] Action: ACTION5 (interact) score=0.300
+[EXPLORATION] Action: ACTION6 (collect) score=0.300
+[EXPLORATION] Action: ACTION7 (undo) score=0.300
+[EXPLORATION] Action: RESET (reset) score=0.300
+[EXPLORATION] Action: ACTION1 (move_up) score=0.255
+[STATE ENCODER] Encoding #250: objects=2, motion=0.000, regions=0, time=1805.2µs
+[EXPLORATION] Action: ACTION2 (move_down) score=0.255
+[MAGEN V24] Actions: 10 | Phase: EXPLORATION
+  State Encoder: 252 embeddings generated
+  World Model: 126 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=4, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 508 logs generated
+[EXPLORATION] Action: ACTION3 (move_left) score=0.255
+[EXPLORATION] Action: ACTION4 (move_right) score=0.255
+[EXPLORATION] Action: ACTION5 (interact) score=0.255
+[EXPLORATION] Action: ACTION6 (collect) score=0.255
+[STATE ENCODER] Encoding #260: objects=2, motion=0.000, regions=0, time=1892.0µs
+[GOAL GROUNDER] Progression #130: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=4
+[EXPLORATION] Action: ACTION7 (undo) score=0.255
+[EXPLORATION] Action: RESET (reset) score=0.255
+[EXPLORATION] Action: ACTION1 (move_up) score=0.210
+[EXPLORATION] Action: ACTION2 (move_down) score=0.210
+[EXPLORATION] Action: ACTION3 (move_left) score=0.210
+[STATE ENCODER] Encoding #270: objects=2, motion=0.000, regions=0, time=1893.4µs
+[EXPLORATION] Action: ACTION4 (move_right) score=0.210
+[MAGEN V24] Actions: 20 | Phase: EXPLORATION
+  State Encoder: 272 embeddings generated
+  World Model: 136 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=4, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 548 logs generated
+[MAGEN V24] Actions: 20/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION5 (interact) score=0.210
+[EXPLORATION] Action: ACTION6 (collect) score=0.210
+[EXPLORATION] Action: ACTION7 (undo) score=0.210
+[EXPLORATION] Action: RESET (reset) score=0.210
+[STATE ENCODER] Encoding #280: objects=2, motion=0.001, regions=0, time=2986.7µs
+[GOAL GROUNDER] Progression #140: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=4
+[EXPLORATION] Action: ACTION1 (move_up) score=0.165
+[EXPLORATION] Action: ACTION2 (move_down) score=0.165
+[EXPLORATION] Action: ACTION3 (move_left) score=0.165
+[EXPLORATION] Action: ACTION4 (move_right) score=0.165
+[EXPLORATION] Action: ACTION5 (interact) score=0.165
+[STATE ENCODER] Encoding #290: objects=2, motion=0.000, regions=0, time=2474.3µs
+[EXPLORATION] Action: ACTION6 (collect) score=0.165
+[MAGEN V24] Actions: 30 | Phase: EXPLORATION
+  State Encoder: 292 embeddings generated
+  World Model: 146 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=4, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 588 logs generated
+[EXPLORATION] Action: ACTION7 (undo) score=0.165
+[EXPLORATION] Action: RESET (reset) score=0.165
+[EXPLORATION] Action: ACTION1 (move_up) score=0.120
+[EXPLORATION] Action: ACTION1 (move_up) score=0.150
+[STATE ENCODER] Encoding #300: objects=2, motion=0.000, regions=0, time=2564.4µs
+[GOAL GROUNDER] Progression #150: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=5
+[WORLD MODEL] Apprentissage règles causales (150 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 24)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.126
+[EXPLORATION] Action: ACTION2 (move_down) score=0.120
+[EXPLORATION] Action: ACTION2 (move_down) score=0.150
+[EXPLORATION] Action: ACTION2 (move_down) score=0.126
+[EXPLORATION] Action: ACTION3 (move_left) score=0.120
+[STATE ENCODER] Encoding #310: objects=2, motion=0.000, regions=0, time=2200.7µs
+[EXPLORATION] Action: ACTION3 (move_left) score=0.150
+[MAGEN V24] Actions: 40 | Phase: EXPLORATION
+  State Encoder: 312 embeddings generated
+  World Model: 156 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=5, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 628 logs generated
+[MAGEN V24] Actions: 40/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION3 (move_left) score=0.126
+[EXPLORATION] Action: ACTION4 (move_right) score=0.120
+[EXPLORATION] Action: ACTION4 (move_right) score=0.150
+[EXPLORATION] Action: ACTION4 (move_right) score=0.126
+[STATE ENCODER] Encoding #320: objects=2, motion=0.000, regions=0, time=1787.1µs
+[GOAL GROUNDER] Progression #160: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=5
+[EXPLORATION] Action: ACTION5 (interact) score=0.120
+[EXPLORATION] Action: ACTION5 (interact) score=0.150
+[EXPLORATION] Action: ACTION5 (interact) score=0.126
+[EXPLORATION] Action: ACTION6 (collect) score=0.120
+[EXPLORATION] Action: ACTION6 (collect) score=0.150
+[STATE ENCODER] Encoding #330: objects=2, motion=0.000, regions=0, time=1914.5µs
+[EXPLORATION] Action: ACTION6 (collect) score=0.126
+[MAGEN V24] Actions: 50 | Phase: EXPLORATION
+  State Encoder: 332 embeddings generated
+  World Model: 166 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=5, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 668 logs generated
+
+[MAGEN V24] ===== FIN PHASE EXPLORATION =====
+[MAGEN V24] Actions découvertes: 0
+[MAGEN V24] World model: 166 transitions
+[MAGEN V24] Semantic mappings: 8
+[MAGEN V24] ===== DÉBUT PHASE EXPLOITATION =====
+
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[STATE ENCODER] Encoding #340: objects=2, motion=0.000, regions=0, time=1811.5µs
+[GOAL GROUNDER] Progression #170: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=5
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION6 (collect) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[STATE ENCODER] Encoding #350: objects=2, motion=0.000, regions=0, time=1784.1µs
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[MAGEN V24] Actions: 60 | Phase: EXPLOITATION
+  State Encoder: 352 embeddings generated
+  World Model: 176 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=5, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 709 logs generated
+[MAGEN V24] Actions: 60/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[STATE ENCODER] Encoding #360: objects=2, motion=0.000, regions=0, time=1774.1µs
+[GOAL GROUNDER] Progression #180: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=6
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[STATE ENCODER] Encoding #370: objects=2, motion=0.000, regions=0, time=1771.0µs
+[EXPLOITATION] Action: ACTION7 (undo) score=0.000
+[MAGEN V24] Actions: 70 | Phase: EXPLOITATION
+  State Encoder: 372 embeddings generated
+  World Model: 186 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=6, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 749 logs generated
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[STATE ENCODER] Encoding #380: objects=2, motion=0.000, regions=0, time=2915.7µs
+[GOAL GROUNDER] Progression #190: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=7
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[STATE ENCODER] Encoding #390: objects=2, motion=0.000, regions=0, time=2955.2µs
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[MAGEN V24] Actions: 80 | Phase: EXPLOITATION
+  State Encoder: 392 embeddings generated
+  World Model: 196 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=7, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 789 logs generated
+[MAGEN V24] Actions: 80/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[EXPLOITATION] Action: RESET (reset) score=0.000
+[STATE ENCODER] Encoding #400: objects=2, motion=0.000, regions=0, time=2573.6µs
+[GOAL GROUNDER] Progression #200: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (200 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 32)
+[STATE ENCODER] Encoding #410: objects=2, motion=0.000, regions=0, time=2504.5µs
+[MAGEN V24] Actions: 90 | Phase: EXPLOITATION
+  State Encoder: 412 embeddings generated
+  World Model: 206 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 822 logs generated
+[STATE ENCODER] Encoding #420: objects=2, motion=0.000, regions=0, time=2433.8µs
+[GOAL GROUNDER] Progression #210: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #430: objects=2, motion=0.000, regions=0, time=2566.7µs
+[MAGEN V24] Actions: 100 | Phase: EXPLOITATION
+  State Encoder: 432 embeddings generated
+  World Model: 216 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 852 logs generated
+[MAGEN V24] Actions: 100/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #440: objects=2, motion=0.000, regions=0, time=2201.0µs
+[GOAL GROUNDER] Progression #220: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #450: objects=2, motion=0.000, regions=0, time=2260.0µs
+[MAGEN V24] Actions: 110 | Phase: EXPLOITATION
+  State Encoder: 452 embeddings generated
+  World Model: 226 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 882 logs generated
+[STATE ENCODER] Encoding #460: objects=2, motion=0.000, regions=0, time=2262.0µs
+[GOAL GROUNDER] Progression #230: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #470: objects=2, motion=0.000, regions=0, time=1962.2µs
+[MAGEN V24] Actions: 120 | Phase: EXPLOITATION
+  State Encoder: 472 embeddings generated
+  World Model: 236 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 912 logs generated
+[MAGEN V24] Actions: 120/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #480: objects=2, motion=0.000, regions=0, time=2206.1µs
+[GOAL GROUNDER] Progression #240: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #490: objects=2, motion=0.000, regions=0, time=2498.9µs
+[MAGEN V24] Actions: 130 | Phase: EXPLOITATION
+  State Encoder: 492 embeddings generated
+  World Model: 246 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 942 logs generated
+[STATE ENCODER] Encoding #500: objects=2, motion=0.000, regions=0, time=2132.7µs
+[GOAL GROUNDER] Progression #250: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (250 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 40)
+[STATE ENCODER] Encoding #510: objects=2, motion=0.000, regions=0, time=2394.4µs
+[MAGEN V24] Actions: 140 | Phase: EXPLOITATION
+  State Encoder: 512 embeddings generated
+  World Model: 256 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 972 logs generated
+[MAGEN V24] Actions: 140/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #520: objects=2, motion=0.000, regions=0, time=2270.9µs
+[GOAL GROUNDER] Progression #260: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #530: objects=2, motion=0.000, regions=0, time=2671.6µs
+[MAGEN V24] Actions: 150 | Phase: EXPLOITATION
+  State Encoder: 532 embeddings generated
+  World Model: 266 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1002 logs generated
+[STATE ENCODER] Encoding #540: objects=2, motion=0.000, regions=0, time=2512.6µs
+[GOAL GROUNDER] Progression #270: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #550: objects=2, motion=0.000, regions=0, time=2674.8µs
+[MAGEN V24] Actions: 160 | Phase: EXPLOITATION
+  State Encoder: 552 embeddings generated
+  World Model: 276 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1032 logs generated
+[MAGEN V24] Actions: 160/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #560: objects=2, motion=0.000, regions=0, time=1940.2µs
+[GOAL GROUNDER] Progression #280: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #570: objects=2, motion=0.000, regions=0, time=1742.1µs
+[MAGEN V24] Actions: 170 | Phase: EXPLOITATION
+  State Encoder: 572 embeddings generated
+  World Model: 286 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1062 logs generated
+[STATE ENCODER] Encoding #580: objects=2, motion=0.001, regions=0, time=1938.6µs
+[GOAL GROUNDER] Progression #290: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #590: objects=2, motion=0.000, regions=0, time=2410.6µs
+[MAGEN V24] Actions: 180 | Phase: EXPLOITATION
+  State Encoder: 592 embeddings generated
+  World Model: 296 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1092 logs generated
+[MAGEN V24] Actions: 180/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #600: objects=2, motion=0.000, regions=0, time=2271.6µs
+[GOAL GROUNDER] Progression #300: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (300 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 48)
+[STATE ENCODER] Encoding #610: objects=2, motion=0.000, regions=0, time=2291.1µs
+[MAGEN V24] Actions: 190 | Phase: EXPLOITATION
+  State Encoder: 612 embeddings generated
+  World Model: 306 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1122 logs generated
+[STATE ENCODER] Encoding #620: objects=2, motion=0.000, regions=0, time=1938.2µs
+[GOAL GROUNDER] Progression #310: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #630: objects=2, motion=0.000, regions=0, time=1840.5µs
+[MAGEN V24] Actions: 200 | Phase: EXPLOITATION
+  State Encoder: 632 embeddings generated
+  World Model: 316 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1152 logs generated
+[MAGEN V24] Actions: 200/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+
+[MAGEN V24] Résultats finaux:
+  Niveaux complétés: 0
+  Actions: 200
+  Succès: False
+  État final: GameState.NOT_FINISHED
+  Durée: 1.84s
+
+[MAGEN V24] Statistiques détaillées:
+  Phase exploration: 100 actions
+  Phase exploitation: 216 actions
+  Phase actuelle: EXPLOITATION
+
+  StateEncoder:
+    Embeddings générés: 0
+    Temps encoding moyen: 0.00 µs
+
+  GoalGrounder:
+    Actions prioritaires: 0
+    Actions abandonnées: 0
+    Goal progress moyen: 0.000
+
+  SemanticActionLibrary:
+    Actions sémantiques découvertes: 0
+    Confidence moyenne: 0.000
+
+  World Model (V23):
+    Accuracy: 0.00
+    Prédictions: 0
+
+💾 Logs jeu sauvegardés: logs_forensic_v24_20260614_163424/game_ar25-0c556536_20260614_163424.json
+
+================================================================================
+📍 Progression: 3/3 (100.0%)
+================================================================================
+
+🎮 Jeu: cd82-fb555c5d
+
+[MAGEN V24] Agent réinitialisé pour nouveau jeu
+2026-06-14 16:34:29 | INFO | Successfully fetched metadata for game cd82
+2026-06-14 16:34:29 | INFO | Successfully loaded game class Cd82 from environment_files/cd82/fb555c5d/cd82.py
+[MAGEN V24] Début jeu - Max actions: 200
+[MAGEN V24] Logs forensiques: ACTIVÉS (bit-level + nanoseconde)
+
+[EXPLORATION] Action: ACTION1 (move_up) score=0.300
+[EXPLORATION] Action: ACTION2 (move_down) score=0.300
+[EXPLORATION] Action: ACTION3 (move_left) score=0.300
+[EXPLORATION] Action: ACTION4 (move_right) score=0.300
+[STATE ENCODER] Encoding #640: objects=1, motion=0.002, regions=0, time=2126.2µs
+[GOAL GROUNDER] Progression #320: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[EXPLORATION] Action: ACTION5 (interact) score=0.300
+[EXPLORATION] Action: ACTION6 (collect) score=0.300
+[EXPLORATION] Action: ACTION7 (undo) score=0.300
+[EXPLORATION] Action: RESET (reset) score=0.300
+[EXPLORATION] Action: ACTION1 (move_up) score=0.255
+[STATE ENCODER] Encoding #650: objects=1, motion=0.000, regions=0, time=2115.8µs
+[EXPLORATION] Action: ACTION2 (move_down) score=0.255
+[MAGEN V24] Actions: 10 | Phase: EXPLORATION
+  State Encoder: 652 embeddings generated
+  World Model: 326 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1193 logs generated
+[EXPLORATION] Action: ACTION3 (move_left) score=0.255
+[EXPLORATION] Action: ACTION4 (move_right) score=0.255
+[EXPLORATION] Action: ACTION5 (interact) score=0.255
+[EXPLORATION] Action: ACTION6 (collect) score=0.255
+[STATE ENCODER] Encoding #660: objects=1, motion=0.000, regions=0, time=2753.6µs
+[GOAL GROUNDER] Progression #330: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[EXPLORATION] Action: ACTION7 (undo) score=0.255
+[EXPLORATION] Action: RESET (reset) score=0.255
+[EXPLORATION] Action: ACTION1 (move_up) score=0.210
+[EXPLORATION] Action: ACTION2 (move_down) score=0.210
+[EXPLORATION] Action: ACTION3 (move_left) score=0.210
+[STATE ENCODER] Encoding #670: objects=1, motion=0.002, regions=0, time=2936.1µs
+[EXPLORATION] Action: ACTION4 (move_right) score=0.210
+[MAGEN V24] Actions: 20 | Phase: EXPLORATION
+  State Encoder: 672 embeddings generated
+  World Model: 336 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1233 logs generated
+[MAGEN V24] Actions: 20/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION5 (interact) score=0.210
+[EXPLORATION] Action: ACTION6 (collect) score=0.210
+[EXPLORATION] Action: ACTION7 (undo) score=0.210
+[EXPLORATION] Action: RESET (reset) score=0.210
+[STATE ENCODER] Encoding #680: objects=1, motion=0.001, regions=0, time=2880.1µs
+[GOAL GROUNDER] Progression #340: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[EXPLORATION] Action: ACTION1 (move_up) score=0.165
+[EXPLORATION] Action: ACTION2 (move_down) score=0.165
+[EXPLORATION] Action: ACTION3 (move_left) score=0.165
+[EXPLORATION] Action: ACTION4 (move_right) score=0.165
+[EXPLORATION] Action: ACTION5 (interact) score=0.165
+[STATE ENCODER] Encoding #690: objects=2, motion=0.000, regions=0, time=2732.3µs
+[EXPLORATION] Action: ACTION6 (collect) score=0.165
+[MAGEN V24] Actions: 30 | Phase: EXPLORATION
+  State Encoder: 692 embeddings generated
+  World Model: 346 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1273 logs generated
+[EXPLORATION] Action: ACTION7 (undo) score=0.165
+[EXPLORATION] Action: RESET (reset) score=0.165
+[EXPLORATION] Action: ACTION1 (move_up) score=0.120
+[EXPLORATION] Action: ACTION1 (move_up) score=0.150
+[STATE ENCODER] Encoding #700: objects=1, motion=0.000, regions=0, time=3052.9µs
+[GOAL GROUNDER] Progression #350: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (350 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 56)
+[EXPLORATION] Action: ACTION1 (move_up) score=0.126
+[EXPLORATION] Action: ACTION2 (move_down) score=0.120
+[EXPLORATION] Action: ACTION2 (move_down) score=0.150
+[EXPLORATION] Action: ACTION2 (move_down) score=0.126
+[EXPLORATION] Action: ACTION3 (move_left) score=0.120
+[STATE ENCODER] Encoding #710: objects=1, motion=0.002, regions=0, time=2007.4µs
+[EXPLORATION] Action: ACTION3 (move_left) score=0.150
+[MAGEN V24] Actions: 40 | Phase: EXPLORATION
+  State Encoder: 712 embeddings generated
+  World Model: 356 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1313 logs generated
+[MAGEN V24] Actions: 40/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLORATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[EXPLORATION] Action: ACTION3 (move_left) score=0.126
+[EXPLORATION] Action: ACTION4 (move_right) score=0.120
+[EXPLORATION] Action: ACTION4 (move_right) score=0.150
+[EXPLORATION] Action: ACTION4 (move_right) score=0.126
+[STATE ENCODER] Encoding #720: objects=1, motion=0.000, regions=0, time=1730.4µs
+[GOAL GROUNDER] Progression #360: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[EXPLORATION] Action: ACTION5 (interact) score=0.120
+[EXPLORATION] Action: ACTION5 (interact) score=0.150
+[EXPLORATION] Action: ACTION5 (interact) score=0.126
+[EXPLORATION] Action: ACTION6 (collect) score=0.120
+[EXPLORATION] Action: ACTION6 (collect) score=0.150
+[STATE ENCODER] Encoding #730: objects=1, motion=0.000, regions=0, time=3122.7µs
+[EXPLORATION] Action: ACTION6 (collect) score=0.126
+[MAGEN V24] Actions: 50 | Phase: EXPLORATION
+  State Encoder: 732 embeddings generated
+  World Model: 366 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1353 logs generated
+
+[MAGEN V24] ===== FIN PHASE EXPLORATION =====
+[MAGEN V24] Actions découvertes: 0
+[MAGEN V24] World model: 366 transitions
+[MAGEN V24] Semantic mappings: 8
+[MAGEN V24] ===== DÉBUT PHASE EXPLOITATION =====
+
+[STATE ENCODER] Encoding #740: objects=1, motion=0.000, regions=0, time=2672.9µs
+[GOAL GROUNDER] Progression #370: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #750: objects=1, motion=0.000, regions=0, time=2816.9µs
+[MAGEN V24] Actions: 60 | Phase: EXPLOITATION
+  State Encoder: 752 embeddings generated
+  World Model: 376 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1384 logs generated
+[MAGEN V24] Actions: 60/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #760: objects=1, motion=0.000, regions=0, time=2014.0µs
+[GOAL GROUNDER] Progression #380: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #770: objects=1, motion=0.000, regions=0, time=1845.8µs
+[MAGEN V24] Actions: 70 | Phase: EXPLOITATION
+  State Encoder: 772 embeddings generated
+  World Model: 386 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1414 logs generated
+[STATE ENCODER] Encoding #780: objects=1, motion=0.000, regions=0, time=2125.3µs
+[GOAL GROUNDER] Progression #390: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #790: objects=2, motion=0.000, regions=0, time=2832.2µs
+[MAGEN V24] Actions: 80 | Phase: EXPLOITATION
+  State Encoder: 792 embeddings generated
+  World Model: 396 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1444 logs generated
+[MAGEN V24] Actions: 80/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #800: objects=1, motion=0.002, regions=0, time=3237.4µs
+[GOAL GROUNDER] Progression #400: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (400 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 64)
+[STATE ENCODER] Encoding #810: objects=1, motion=0.000, regions=0, time=2610.7µs
+[MAGEN V24] Actions: 90 | Phase: EXPLOITATION
+  State Encoder: 812 embeddings generated
+  World Model: 406 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1474 logs generated
+[STATE ENCODER] Encoding #820: objects=1, motion=0.000, regions=0, time=3132.5µs
+[GOAL GROUNDER] Progression #410: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #830: objects=1, motion=0.002, regions=0, time=2928.1µs
+[MAGEN V24] Actions: 100 | Phase: EXPLOITATION
+  State Encoder: 832 embeddings generated
+  World Model: 416 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1504 logs generated
+[MAGEN V24] Actions: 100/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #840: objects=1, motion=0.000, regions=0, time=2820.2µs
+[GOAL GROUNDER] Progression #420: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #850: objects=1, motion=0.000, regions=0, time=1862.3µs
+[MAGEN V24] Actions: 110 | Phase: EXPLOITATION
+  State Encoder: 852 embeddings generated
+  World Model: 426 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1534 logs generated
+[STATE ENCODER] Encoding #860: objects=1, motion=0.002, regions=0, time=2742.5µs
+[GOAL GROUNDER] Progression #430: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #870: objects=2, motion=0.000, regions=0, time=2953.3µs
+[MAGEN V24] Actions: 120 | Phase: EXPLOITATION
+  State Encoder: 872 embeddings generated
+  World Model: 436 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1564 logs generated
+[MAGEN V24] Actions: 120/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #880: objects=2, motion=0.000, regions=0, time=2944.4µs
+[GOAL GROUNDER] Progression #440: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #890: objects=2, motion=0.000, regions=0, time=3105.4µs
+[MAGEN V24] Actions: 130 | Phase: EXPLOITATION
+  State Encoder: 892 embeddings generated
+  World Model: 446 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1594 logs generated
+[STATE ENCODER] Encoding #900: objects=2, motion=0.000, regions=0, time=8593.6µs
+[GOAL GROUNDER] Progression #450: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (450 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 72)
+[STATE ENCODER] Encoding #910: objects=2, motion=0.000, regions=0, time=4773.4µs
+[MAGEN V24] Actions: 140 | Phase: EXPLOITATION
+  State Encoder: 912 embeddings generated
+  World Model: 456 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1624 logs generated
+[MAGEN V24] Actions: 140/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #920: objects=1, motion=0.000, regions=0, time=3621.8µs
+[GOAL GROUNDER] Progression #460: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #930: objects=1, motion=0.002, regions=0, time=3109.8µs
+[MAGEN V24] Actions: 150 | Phase: EXPLOITATION
+  State Encoder: 932 embeddings generated
+  World Model: 466 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1654 logs generated
+[STATE ENCODER] Encoding #940: objects=1, motion=0.000, regions=0, time=3124.6µs
+[GOAL GROUNDER] Progression #470: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #950: objects=1, motion=0.000, regions=0, time=2516.2µs
+[MAGEN V24] Actions: 160 | Phase: EXPLOITATION
+  State Encoder: 952 embeddings generated
+  World Model: 476 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1684 logs generated
+[MAGEN V24] Actions: 160/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #960: objects=1, motion=0.000, regions=0, time=2546.9µs
+[GOAL GROUNDER] Progression #480: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #970: objects=1, motion=0.000, regions=0, time=3321.7µs
+[MAGEN V24] Actions: 170 | Phase: EXPLOITATION
+  State Encoder: 972 embeddings generated
+  World Model: 486 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1714 logs generated
+[STATE ENCODER] Encoding #980: objects=1, motion=0.001, regions=0, time=3026.7µs
+[GOAL GROUNDER] Progression #490: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #990: objects=1, motion=0.000, regions=0, time=3904.0µs
+[MAGEN V24] Actions: 180 | Phase: EXPLOITATION
+  State Encoder: 992 embeddings generated
+  World Model: 496 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1744 logs generated
+[MAGEN V24] Actions: 180/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+[STATE ENCODER] Encoding #1000: objects=2, motion=0.000, regions=0, time=3524.9µs
+[GOAL GROUNDER] Progression #500: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[WORLD MODEL] Apprentissage règles causales (500 transitions)...
+  ✅ 8 nouvelles règles apprises (total: 80)
+[STATE ENCODER] Encoding #1010: objects=1, motion=0.000, regions=0, time=3284.2µs
+[MAGEN V24] Actions: 190 | Phase: EXPLOITATION
+  State Encoder: 1012 embeddings generated
+  World Model: 506 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1774 logs generated
+[STATE ENCODER] Encoding #1020: objects=1, motion=0.002, regions=0, time=3564.6µs
+[GOAL GROUNDER] Progression #510: success_rate=0.00%, reward_gained=0.00, levels=0, promising=0, abandoned=8
+[STATE ENCODER] Encoding #1030: objects=1, motion=0.002, regions=0, time=3254.0µs
+[MAGEN V24] Actions: 200 | Phase: EXPLOITATION
+  State Encoder: 1032 embeddings generated
+  World Model: 516 transitions, accuracy=0.94
+  Goal Progress: avg=0.000, abandoned=8, promising=0
+  Semantic: 8/13 actions used, 8 env mappings
+  Forensic: 1804 logs generated
+[MAGEN V24] Actions: 200/200
+  Niveaux: 0 | État: GameState.NOT_FINISHED
+  Phase: EXPLOITATION
+  Embeddings générés: 0
+  Actions prioritaires: 0
+  Actions abandonnées: 0
+  Semantic actions: 0
+
+[MAGEN V24] Résultats finaux:
+  Niveaux complétés: 0
+  Actions: 200
+  Succès: False
+  État final: GameState.NOT_FINISHED
+  Durée: 3.34s
+
+[MAGEN V24] Statistiques détaillées:
+  Phase exploration: 150 actions
+  Phase exploitation: 366 actions
+  Phase actuelle: EXPLOITATION
+
+  StateEncoder:
+    Embeddings générés: 0
+    Temps encoding moyen: 0.00 µs
+
+  GoalGrounder:
+    Actions prioritaires: 0
+    Actions abandonnées: 0
+    Goal progress moyen: 0.000
+
+  SemanticActionLibrary:
+    Actions sémantiques découvertes: 0
+    Confidence moyenne: 0.000
+
+  World Model (V23):
+    Accuracy: 0.00
+    Prédictions: 0
+
+💾 Logs jeu sauvegardés: logs_forensic_v24_20260614_163424/game_cd82-fb555c5d_20260614_163424.json
+
+
+================================================================================
+📊 RÉSUMÉ FINAL - MAGEN V24
+================================================================================
+Session: 20260614_163424
+Jeux joués: 3
+Score total: 0.00
+Niveaux complétés: 0
+Succès: 0/3
+Durée totale: 6.53s
+================================================================================
+🔒 Mode: PRIVÉ (aucune soumission publique)
+================================================================================
+
+📈 STATISTIQUES GLOBALES V24:
+  Total embeddings: 0
+  Total actions prioritaires: 0
+  Total actions abandonnées: 0
+  Total semantic actions: 0
+  Avg goal progress: 0.000
+  Avg semantic confidence: 0.000
+
+💾 Résultats globaux sauvegardés: logs_forensic_v24_20260614_163424/results_summary_20260614_163424.json
+📝 Logs forensiques complets: logs_forensic_v24_20260614_163424/forensic_log.jsonl
+📁 Tous les fichiers dans: logs_forensic_v24_20260614_163424
+
+================================================================================
+🔍 ANALYSE LOGS FORENSIQUES
+================================================================================
+Total événements forensiques: 1804
+
+Événements par type:
+  perception: 1032
+  learning: 516
+  decision: 249
+  reset: 3
+  phase_transition: 3
+  initialization: 1
+
+Événements par composant:
+  agent: 1804
+
+================================================================================
+✅ TEST TERMINÉ
+================================================================================
+Résultats dans: logs_forensic_v24_20260614_163424
+Logs forensiques: logs_forensic_v24_20260614_163424/forensic_log.jsonl
+================================================================================
+

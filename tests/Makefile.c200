@@ -1,0 +1,58 @@
+# Makefile pour bench_c200_tps_real.c - TPS RÉEL avec GPU OpenCL
+# Compile avec TOUS les modules : PoH, GPU, Pipeline, Gulf Stream, Sealevel
+
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -march=native -pthread -fopenmp
+CFLAGS += -I../src -I/usr/include
+CFLAGS += -DLUM_POH_USE_SHA_NI
+
+# Bibliothèques
+LIBS = -lm -lpthread -lssl -lcrypto -lgomp
+LIBS += -lOpenCL  # OpenCL pour GPU
+
+# Fichiers sources
+SRCS = bench_c200_tps_real.c
+SRCS += ../src/consensus/lum_poh.c
+SRCS += ../src/consensus/lum_poh_gpu.c
+SRCS += ../src/consensus/lum_poh_simd.c
+SRCS += ../src/pipeline/lum_pipeline.c
+SRCS += ../src/mempool/lum_gulf_stream.c
+SRCS += ../src/vm/lum_sealevel.c
+SRCS += ../src/debug/ultra_forensic_logger.c
+
+# Fichier exécutable
+TARGET = bench_c200_tps_real
+
+# Règle par défaut
+all: $(TARGET)
+
+$(TARGET): $(SRCS)
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║  Compilation Benchmark TPS RÉEL avec GPU OpenCL          ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	@echo ""
+	@echo "[1/3] Vérification dépendances OpenCL..."
+	@pkg-config --exists OpenCL && echo "[OK] OpenCL trouvé" || echo "[WARNING] OpenCL non trouvé, utilisation CPU"
+	@echo ""
+	@echo "[2/3] Compilation avec optimisations..."
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS) $(LIBS)
+	@echo "[OK] Compilation réussie"
+	@echo ""
+	@echo "[3/3] Exécutable créé : $(TARGET)"
+	@echo ""
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║  Pour exécuter : sudo ./$(TARGET)                        ║"
+	@echo "║  (sudo requis pour accès GPU)                            ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+
+clean:
+	rm -f $(TARGET)
+	@echo "[OK] Nettoyage terminé"
+
+run: $(TARGET)
+	@echo "╔══════════════════════════════════════════════════════════╗"
+	@echo "║  Exécution Benchmark TPS RÉEL (60 secondes)              ║"
+	@echo "╚══════════════════════════════════════════════════════════╝"
+	sudo ./$(TARGET)
+
+.PHONY: all clean run

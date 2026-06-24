@@ -1,0 +1,164 @@
+✅ ARC_API_KEY chargée: 705f499b...
+✅ arc-agi importé
+
+
+================================================================================
+🔬 DIAGNOSTIC P0.2 - ANALYSE APPROFONDIE
+================================================================================
+Hypothèse A: obs.frame change réellement (hash différent)
+Hypothèse B: Format actions incorrect (API attend autre chose)
+Hypothèse C: Actions non appliquées (frame identique avant/après)
+================================================================================
+
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-16 23:24:10 | INFO | Successfully fetched 25 environment(s) from API
+✅ Connexion API réussie
+
+2026-06-16 23:24:11 | INFO | Created new scorecard: 4cf6ed78-d962-462d-92d7-1da1d9f7d59e
+✅ Scorecard créé: 4cf6ed78-d962-462d-92d7-1da1d9f7d59e
+
+2026-06-16 23:24:11 | INFO | Successfully fetched metadata for game ls20
+2026-06-16 23:24:11 | INFO | Recording to recordings/4cf6ed78-d962-462d-92d7-1da1d9f7d59e/ls20-9607627b-bec1e59f-98ca-4230-8ccb-794e298dbb1d.jsonl
+2026-06-16 23:24:11 | INFO | Successfully reset game ls20-9607627b, guid=bec1e59f-98ca-4230-8ccb-794e298dbb1d, scorecard_id=4cf6ed78-d962-462d-92d7-1da1d9f7d59e
+🔄 RESET environnement...
+2026-06-16 23:24:11 | INFO | Recording to recordings/4cf6ed78-d962-462d-92d7-1da1d9f7d59e/ls20-9607627b-bec1e59f-98ca-4230-8ccb-794e298dbb1d.jsonl
+2026-06-16 23:24:11 | INFO | Successfully reset game ls20-9607627b, guid=bec1e59f-98ca-4230-8ccb-794e298dbb1d, scorecard_id=4cf6ed78-d962-462d-92d7-1da1d9f7d59e
+/home/lvx/LVX/lumvorax2/src/MAGEN/diagnostic_deep_analysis.py:86: PydanticDeprecatedSince211: Accessing the 'model_computed_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+  value = getattr(obs, attr)
+✅ Environnement démarré
+
+================================================================================
+ANALYSE OBSERVATION INITIALE COMPLÈTE
+================================================================================
+
+1. Type observation: <class 'arcengine.enums.FrameDataRaw'>
+2. Classe: FrameDataRaw
+
+3. Attributs disponibles (38):
+   - action_input: ActionInput
+   - available_actions: list
+   - frame: list
+   - full_reset: bool
+   - game_id: str
+   - guid: str
+   - levels_completed: int
+   - model_computed_fields: dict
+   - model_config: dict
+   - model_extra: NoneType
+
+================================================================================
+ANALYSE CRITIQUE: available_actions
+================================================================================
+Type: <class 'list'>
+Contenu: [1, 2, 3, 4]
+Nombre: 4
+Premier élément type: <class 'int'>
+Premier élément: 1
+
+================================================================================
+ANALYSE CRITIQUE: action_input
+================================================================================
+Type: <class 'arcengine.enums.ActionInput'>
+Contenu: id=<GameAction.RESET: 0> data={} reasoning=None
+
+================================================================================
+ANALYSE CRITIQUE: frame (observation pixels)
+================================================================================
+Type: <class 'list'>
+⚠️  frame est une LIST, conversion en numpy array...
+Après conversion: <class 'numpy.ndarray'>
+Shape: (1, 64, 64)
+Dtype: int8
+Min: 0
+Max: 12
+Mean: 4.11
+Unique values: 9
+Hash SHA256: cfe5196fb75182bb
+
+Échantillon pixels (5x5 coin supérieur gauche, canal 0):
+[[5 5 5 5 5]]
+
+================================================================================
+ANALYSE: state
+================================================================================
+État: NOT_FINISHED
+Type: <enum 'GameState'>
+
+================================================================================
+ANALYSE: Progression jeu
+================================================================================
+Niveaux complétés: 0
+Niveaux gagnés: 7
+
+================================================================================
+TEST HYPOTHÈSE A: obs.frame CHANGE-T-IL ?
+================================================================================
+
+Step  1 | Action: ACTION1 (HAUT) | Hash: dbbfea829c27a122 | ✅ CHANGÉ
+Step  2 | Action: ACTION1 (HAUT) | Hash: aa064b05ebda60d5 | ✅ CHANGÉ
+Step  3 | Action: ACTION1 (HAUT) | Hash: 1fa078beec596279 | ✅ CHANGÉ
+Step  4 | Action: ACTION1 (HAUT) | Hash: a3291ce56842300f | ✅ CHANGÉ
+Step  5 | Action: ACTION1 (HAUT) | Hash: cfdd386d1ca04100 | ✅ CHANGÉ
+Step  6 | Action: ACTION1 (HAUT) | Hash: 70e517e2f75aa321 | ✅ CHANGÉ
+Step  7 | Action: ACTION1 (HAUT) | Hash: e1512076788b24df | ✅ CHANGÉ
+Step  8 | Action: ACTION1 (HAUT) | Hash: e1512076788b24df | ❌ IDENTIQUE
+Step  9 | Action: ACTION1 (HAUT) | Hash: e1512076788b24df | ❌ IDENTIQUE
+Step 10 | Action: ACTION1 (HAUT) | Hash: e1512076788b24df | ❌ IDENTIQUE
+
+================================================================================
+TEST HYPOTHÈSE B: FORMAT ACTIONS ATTENDU
+================================================================================
+
+Test 1: Envoyer GameAction.ACTION1 (enum)
+✅ GameAction.ACTION1 accepté
+
+Test 2: Envoyer entier 1
+❌ Entier 1 rejeté: 'int' object has no attribute 'name'
+
+Test 3: Vérifier available_actions après step
+available_actions: [1, 2, 3, 4]
+
+================================================================================
+TEST HYPOTHÈSE C: ACTIONS SONT-ELLES APPLIQUÉES ?
+================================================================================
+
+Séquence: DROITE × 5 (ACTION4)
+Step 1 | Action: DROITE | Avant: e1512076788b24df | Après: 15103a508f72f8cb | ✅ CHANGÉ
+Step 2 | Action: DROITE | Avant: 15103a508f72f8cb | Après: 8f252e1a56c2ed4a | ✅ CHANGÉ
+Step 3 | Action: DROITE | Avant: 8f252e1a56c2ed4a | Après: cf74d03c78f7e842 | ✅ CHANGÉ
+Step 4 | Action: DROITE | Avant: cf74d03c78f7e842 | Après: f8519050f52a924e | ✅ CHANGÉ
+Step 5 | Action: DROITE | Avant: f8519050f52a924e | Après: 0a3acee288e5fab5 | ✅ CHANGÉ
+
+================================================================================
+ANALYSE FINALE
+================================================================================
+
+HYPOTHÈSE A: obs.frame CHANGE-T-IL ?
+  - Hashes uniques: 8/11
+  - Taux changement: 70.0%
+  ✅ VALIDÉE: Le frame change réellement
+  → L'environnement réagit aux actions
+
+HYPOTHÈSE C: ACTIONS APPLIQUÉES ?
+  - Changements détectés: 5/5
+  - Taux application: 100.0%
+  ✅ VALIDÉE: Les actions sont appliquées
+
+================================================================================
+DIAGNOSTIC FINAL
+================================================================================
+
+✅ ENVIRONNEMENT RÉACTIF
+   Le jeu évolue en réponse aux actions.
+
+   Problème reward = 0.00 a une AUTRE cause:
+   1. Extraction reward incorrecte (pas dans metadata)
+   2. Conditions victoire non atteintes
+   3. Reward encodé dans frame (pixels)
+
+✅ Résultats sauvegardés: /home/lvx/LVX/lumvorax2/src/MAGEN/results/diagnostic_deep_20260616_232421.json
+
+================================================================================
+FIN DIAGNOSTIC P0.2
+================================================================================
+

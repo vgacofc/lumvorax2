@@ -1,0 +1,29 @@
+═══════════════════════════════════════════════════════════
+TASK: TASK02_Analyze_VM_Support
+DATE: 2026-06-20 01:15:46
+═══════════════════════════════════════════════════════════
+
+92:    /* C277: Support VM Intel pour isolation contextes (∞ dispatches) */
+93:    uint32_t vm_pool[CTX_POOL_SIZE];       /* Pool de 2 VMs (1 VM par contexte) */
+617: * C277: Crée contexte GPU avec VM (format Intel correct)
+620: * - OpenCL utilise DRM_IOCTL_I915_GEM_VM_CREATE
+622: * - OpenCL fait 3× CONTEXT_SETPARAM (VM, RECOVERABLE, PERSISTENCE)
+625: * SOLUTION: VM isole chaque contexte → ∞ utilisations possibles
+632:    /* ÉTAPE 1: Créer VM (Virtual Memory) */
+634:    ret = ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_CREATE, &vm_create);
+636:        LOG_EVENT(ctx, "VM_CREATE_FAILED: errno=%d (%s)", errno, strerror(errno));
+640:    LOG_EVENT(ctx, "VM_CREATE_SUCCESS: vm_id=%u", *vm_id_out);
+650:        /* Cleanup VM */
+652:        ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_DESTROY, &vm_destroy);
+658:    /* ÉTAPE 3: Associer VM au contexte */
+661:        .param = I915_CONTEXT_PARAM_VM,
+666:        LOG_EVENT(ctx, "CONTEXT_SETPARAM_VM_FAILED: errno=%d (%s)", errno, strerror(errno));
+667:        /* Cleanup contexte et VM */
+671:        ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_DESTROY, &vm_destroy);
+674:    LOG_EVENT(ctx, "CONTEXT_SETPARAM_VM_SUCCESS: ctx_id=%u vm_id=%u", *ctx_id_out, *vm_id_out);
+698:    LOG_EVENT(ctx, "CREATE_GPU_CONTEXT_WITH_VM_COMPLETE: vm_id=%u ctx_id=%u", 
+1052:    /* C277: Créer pool de contextes avec VM (format Intel correct) */
+
+═══════════════════════════════════════════════════════════
+TASK TERMINÉE: TASK02_Analyze_VM_Support
+═══════════════════════════════════════════════════════════

@@ -1,0 +1,158 @@
+================================================================================
+TEST COMPARATIF MAGEN V28.2.2 vs V30.0.0 (TVT)
+================================================================================
+
+
+================================================================================
+Environnement : simple_direct
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : True
+  Steps : 22
+  Reward : 1.00
+  Durée : 0.01s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.10s
+  Policy breaks : 0
+
+[COMPARAISON]
+  ✗ V28 meilleur que V30 (régression)
+
+================================================================================
+Environnement : with_obstacles
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.01s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.05s
+  Policy breaks : 0
+
+[COMPARAISON]
+  = Échec pour les deux versions
+
+================================================================================
+Environnement : maze_simple
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : True
+  Steps : 37
+  Reward : 1.00
+  Durée : 0.02s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.05s
+  Policy breaks : 0
+
+[COMPARAISON]
+  ✗ V28 meilleur que V30 (régression)
+
+================================================================================
+Environnement : long_corridor
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : True
+  Steps : 27
+  Reward : 1.00
+  Durée : 0.01s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.04s
+  Policy breaks : 0
+
+[COMPARAISON]
+  ✗ V28 meilleur que V30 (régression)
+
+================================================================================
+Environnement : u_shape
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : True
+  Steps : 13
+  Reward : 1.00
+  Durée : 0.00s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.02s
+  Policy breaks : 0
+
+[COMPARAISON]
+  ✗ V28 meilleur que V30 (régression)
+
+================================================================================
+Environnement : multi_goal
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : True
+  Steps : 39
+  Reward : 4.00
+  Durée : 0.01s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 2.00
+  Durée : 0.03s
+  Policy breaks : 0
+
+[COMPARAISON]
+  ✗ V28 meilleur que V30 (régression)
+
+================================================================================
+Environnement : complex_maze
+================================================================================
+
+[V28.2.2] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.01s
+
+[V30.0.0] Exécution...
+  Succès : False
+  Steps : 100
+  Reward : 0.00
+  Durée : 0.03s
+  Policy breaks : 0
+
+[COMPARAISON]
+  = Échec pour les deux versions
+
+================================================================================
+STATISTIQUES GLOBALES
+================================================================================
+
+Taux succès :
+  V28.2.2 : 5/7 (71.4%)
+  V30.0.0 : 0/7 (0.0%)
+
+Steps moyens V28 (succès) : 27.6
+
+Policy breaks V30 : 0
+
+Résultats sauvegardés : test_v30_results_20260615_021039.json

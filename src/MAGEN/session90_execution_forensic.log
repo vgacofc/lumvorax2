@@ -1,0 +1,576 @@
+
+================================================================================
+SESSION 90 - RECHERCHE SOLUTION PUZZLE (FORENSIC)
+================================================================================
+Jeu: ls20-9607627b
+Cartographie: 3253 états (Session 89)
+Objectif: Trouver reward > 0
+Logging forensique: session90_forensic_20260618_044204.jsonl
+
+================================================================================
+DÉMARRAGE RECHERCHE SOLUTION (SANS TIMEOUT)
+================================================================================
+Début: 04:42:04
+Tests prévus: 130 (10 + 65 + 5 + 50)
+
+🎮 Initialisation environnement...
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-18 04:42:05 | INFO | Got anonymous API key: 3f57a7d0-5579-48b2-b097-fd108b326e1a
+2026-06-18 04:42:05 | INFO | You can register for an API key at https://three.arcprize.org
+2026-06-18 04:42:05 | INFO | Successfully fetched 25 environment(s) from API
+✅ Arcade créé
+2026-06-18 04:42:06 | INFO | Created new scorecard: 71099620-ae02-4f99-9c0a-8af7f931bb97
+2026-06-18 04:42:06 | INFO | Successfully fetched metadata for game ls20
+2026-06-18 04:42:06 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+✅ Environnement créé pour ls20-9607627b
+
+================================================================================
+STRATÉGIE 1: PATTERNS CONNUS (10 tests)
+================================================================================
+
+[Test 1] Cycle pur ACTION1-4
+2026-06-18 04:42:06 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=129
+
+[Test 2] ACTION5 × 10 puis cycle
+2026-06-18 04:42:45 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 3] Cycle puis ACTION5 × 10
+2026-06-18 04:43:26 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 4] ACTION5 intercalées (1/5)
+2026-06-18 04:44:07 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 5] Forcer pixels_8=0 rapidement
+2026-06-18 04:44:47 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 6] ACTION5 × 50 (durée 179)
+2026-06-18 04:45:38 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=179
+
+[Test 7] Alternance ACTION5/ACTION1
+2026-06-18 04:46:32 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 8] Cycle inverse ACTION4-1
+2026-06-18 04:47:23 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=129
+
+[Test 9] ACTION5 × 200
+2026-06-18 04:48:01 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=200
+
+[Test 10] Aléatoire × 150
+2026-06-18 04:49:02 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=129
+
+================================================================================
+STRATÉGIE 2: EXPLORATION SYSTÉMATIQUE ACTION5 (65 tests)
+================================================================================
+
+[Test 11] ACTION5 × 1 @ pos 0
+2026-06-18 04:49:42 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 12] ACTION5 × 5 @ pos 0
+2026-06-18 04:50:22 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 13] ACTION5 × 10 @ pos 0
+2026-06-18 04:51:05 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 14] ACTION5 × 20 @ pos 0
+2026-06-18 04:51:48 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 15] ACTION5 × 30 @ pos 0
+2026-06-18 04:52:33 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 16] ACTION5 × 1 @ pos 10
+2026-06-18 04:53:23 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 17] ACTION5 × 5 @ pos 10
+2026-06-18 04:54:02 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 18] ACTION5 × 10 @ pos 10
+2026-06-18 04:54:44 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 19] ACTION5 × 20 @ pos 10
+2026-06-18 04:55:28 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 20] ACTION5 × 30 @ pos 10
+2026-06-18 04:56:14 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 21] ACTION5 × 1 @ pos 20
+2026-06-18 04:57:02 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 22] ACTION5 × 5 @ pos 20
+2026-06-18 04:57:42 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 23] ACTION5 × 10 @ pos 20
+2026-06-18 04:58:24 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 24] ACTION5 × 20 @ pos 20
+2026-06-18 04:59:06 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 25] ACTION5 × 30 @ pos 20
+2026-06-18 04:59:51 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 26] ACTION5 × 1 @ pos 30
+2026-06-18 05:00:41 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 27] ACTION5 × 5 @ pos 30
+2026-06-18 05:01:20 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 28] ACTION5 × 10 @ pos 30
+2026-06-18 05:02:02 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 29] ACTION5 × 20 @ pos 30
+2026-06-18 05:02:45 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 30] ACTION5 × 30 @ pos 30
+2026-06-18 05:03:32 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 31] ACTION5 × 1 @ pos 40
+2026-06-18 05:04:21 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 32] ACTION5 × 5 @ pos 40
+2026-06-18 05:05:01 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 33] ACTION5 × 10 @ pos 40
+2026-06-18 05:05:41 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 34] ACTION5 × 20 @ pos 40
+2026-06-18 05:06:22 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 35] ACTION5 × 30 @ pos 40
+2026-06-18 05:07:09 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 36] ACTION5 × 1 @ pos 50
+2026-06-18 05:08:00 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 37] ACTION5 × 5 @ pos 50
+2026-06-18 05:08:40 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 38] ACTION5 × 10 @ pos 50
+2026-06-18 05:09:19 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 39] ACTION5 × 20 @ pos 50
+2026-06-18 05:10:02 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 40] ACTION5 × 30 @ pos 50
+2026-06-18 05:10:46 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 41] ACTION5 × 1 @ pos 60
+2026-06-18 05:11:36 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 42] ACTION5 × 5 @ pos 60
+2026-06-18 05:12:17 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 43] ACTION5 × 10 @ pos 60
+2026-06-18 05:12:57 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 44] ACTION5 × 20 @ pos 60
+2026-06-18 05:13:40 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 45] ACTION5 × 30 @ pos 60
+2026-06-18 05:14:26 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 46] ACTION5 × 1 @ pos 70
+2026-06-18 05:15:15 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 47] ACTION5 × 5 @ pos 70
+2026-06-18 05:15:52 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 48] ACTION5 × 10 @ pos 70
+2026-06-18 05:16:31 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 49] ACTION5 × 20 @ pos 70
+2026-06-18 05:17:15 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 50] ACTION5 × 30 @ pos 70
+2026-06-18 05:18:03 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 51] ACTION5 × 1 @ pos 80
+2026-06-18 05:18:49 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 52] ACTION5 × 5 @ pos 80
+2026-06-18 05:19:29 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 53] ACTION5 × 10 @ pos 80
+2026-06-18 05:20:07 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 54] ACTION5 × 20 @ pos 80
+2026-06-18 05:20:51 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 55] ACTION5 × 30 @ pos 80
+2026-06-18 05:21:35 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 56] ACTION5 × 1 @ pos 90
+2026-06-18 05:22:22 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 57] ACTION5 × 5 @ pos 90
+2026-06-18 05:23:01 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 58] ACTION5 × 10 @ pos 90
+2026-06-18 05:23:43 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 59] ACTION5 × 20 @ pos 90
+2026-06-18 05:24:27 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 60] ACTION5 × 30 @ pos 90
+2026-06-18 05:25:11 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 61] ACTION5 × 1 @ pos 100
+2026-06-18 05:26:00 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 62] ACTION5 × 5 @ pos 100
+2026-06-18 05:26:41 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 63] ACTION5 × 10 @ pos 100
+2026-06-18 05:27:24 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 64] ACTION5 × 20 @ pos 100
+2026-06-18 05:28:05 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 65] ACTION5 × 30 @ pos 100
+2026-06-18 05:28:53 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 66] ACTION5 × 1 @ pos 110
+2026-06-18 05:29:42 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 67] ACTION5 × 5 @ pos 110
+2026-06-18 05:30:23 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 68] ACTION5 × 10 @ pos 110
+2026-06-18 05:31:04 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 69] ACTION5 × 20 @ pos 110
+2026-06-18 05:31:47 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 70] ACTION5 × 30 @ pos 110
+2026-06-18 05:32:31 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+[Test 71] ACTION5 × 1 @ pos 120
+2026-06-18 05:33:19 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 72] ACTION5 × 5 @ pos 120
+2026-06-18 05:33:57 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=133
+
+[Test 73] ACTION5 × 10 @ pos 120
+2026-06-18 05:34:38 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 74] ACTION5 × 20 @ pos 120
+2026-06-18 05:35:19 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=148
+
+[Test 75] ACTION5 × 30 @ pos 120
+2026-06-18 05:36:04 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=158
+
+================================================================================
+STRATÉGIE 3: CHEMINS CRITIQUES (5 tests)
+================================================================================
+
+[Test 76] pixels_11=0 en premier
+2026-06-18 05:36:53 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=42
+
+[Test 77] pixels_8=0 en premier
+2026-06-18 05:37:14 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+[Test 78] Équilibrage compteurs
+2026-06-18 05:38:19 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=150
+
+[Test 79] Durée maximale
+2026-06-18 05:39:33 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=229
+
+[Test 80] Durée minimale
+2026-06-18 05:41:07 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=129
+
+================================================================================
+STRATÉGIE 4: EXPLORATION ALÉATOIRE (50 tests)
+================================================================================
+
+[Test 81] Aléatoire #1
+2026-06-18 05:42:11 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=127
+
+[Test 82] Aléatoire #2
+2026-06-18 05:42:48 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=164
+
+[Test 83] Aléatoire #3
+2026-06-18 05:43:41 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=134
+
+[Test 84] Aléatoire #4
+2026-06-18 05:44:23 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=161
+
+[Test 85] Aléatoire #5
+2026-06-18 05:45:12 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=149
+
+[Test 86] Aléatoire #6
+2026-06-18 05:45:58 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 87] Aléatoire #7
+2026-06-18 05:46:39 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=146
+
+[Test 88] Aléatoire #8
+2026-06-18 05:47:27 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=157
+
+[Test 89] Aléatoire #9
+2026-06-18 05:48:18 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=147
+
+[Test 90] Aléatoire #10
+2026-06-18 05:49:04 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=119
+
+[Test 91] Aléatoire #11
+2026-06-18 05:49:40 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=150
+
+[Test 92] Aléatoire #12
+2026-06-18 05:50:26 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=170
+
+[Test 93] Aléatoire #13
+2026-06-18 05:51:18 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=134
+
+[Test 94] Aléatoire #14
+2026-06-18 05:52:01 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=126
+
+[Test 95] Aléatoire #15
+2026-06-18 05:52:40 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=153
+
+[Test 96] Aléatoire #16
+2026-06-18 05:53:28 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=145
+
+[Test 97] Aléatoire #17
+2026-06-18 05:54:14 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=156
+
+[Test 98] Aléatoire #18
+2026-06-18 05:55:06 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=114
+
+[Test 99] Aléatoire #19
+2026-06-18 05:55:39 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=155
+
+[Test 100] Aléatoire #20
+2026-06-18 05:56:26 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=134
+
+[Test 101] Aléatoire #21
+2026-06-18 05:57:07 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=135
+
+[Test 102] Aléatoire #22
+2026-06-18 05:57:48 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=150
+
+[Test 103] Aléatoire #23
+2026-06-18 05:58:34 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=172
+
+[Test 104] Aléatoire #24
+2026-06-18 05:59:28 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=127
+
+[Test 105] Aléatoire #25
+2026-06-18 06:00:09 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=163
+
+[Test 106] Aléatoire #26
+2026-06-18 06:01:00 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=100
+
+[Test 107] Aléatoire #27
+2026-06-18 06:01:31 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=160
+
+[Test 108] Aléatoire #28
+2026-06-18 06:02:23 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=160
+
+[Test 109] Aléatoire #29
+2026-06-18 06:03:11 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=138
+
+[Test 110] Aléatoire #30
+2026-06-18 06:03:54 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=157
+
+[Test 111] Aléatoire #31
+2026-06-18 06:04:40 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=141
+
+[Test 112] Aléatoire #32
+2026-06-18 06:05:25 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=167
+
+[Test 113] Aléatoire #33
+2026-06-18 06:06:18 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=166
+
+[Test 114] Aléatoire #34
+2026-06-18 06:07:08 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=174
+
+[Test 115] Aléatoire #35
+2026-06-18 06:08:01 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=101
+
+[Test 116] Aléatoire #36
+2026-06-18 06:08:33 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=124
+
+[Test 117] Aléatoire #37
+2026-06-18 06:09:12 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=153
+
+[Test 118] Aléatoire #38
+2026-06-18 06:09:58 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=130
+
+[Test 119] Aléatoire #39
+2026-06-18 06:10:39 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=161
+
+[Test 120] Aléatoire #40
+2026-06-18 06:11:31 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=157
+
+[Test 121] Aléatoire #41
+2026-06-18 06:12:20 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=166
+
+[Test 122] Aléatoire #42
+2026-06-18 06:13:10 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=159
+
+[Test 123] Aléatoire #43
+2026-06-18 06:14:00 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=159
+
+[Test 124] Aléatoire #44
+2026-06-18 06:14:48 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=102
+
+[Test 125] Aléatoire #45
+2026-06-18 06:15:18 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=137
+
+[Test 126] Aléatoire #46
+2026-06-18 06:15:59 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=156
+
+[Test 127] Aléatoire #47
+2026-06-18 06:16:46 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=151
+
+[Test 128] Aléatoire #48
+2026-06-18 06:17:32 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=162
+
+[Test 129] Aléatoire #49
+2026-06-18 06:18:24 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=False, steps=123
+
+[Test 130] Aléatoire #50
+2026-06-18 06:19:00 | INFO | Successfully reset game ls20-9607627b, guid=95a5c46d-824a-4091-b0b3-706442afa6a7, scorecard_id=71099620-ae02-4f99-9c0a-8af7f931bb97
+   Résultat: reward=0.000, done=True, steps=171
+
+❌ AUCUNE SOLUTION TROUVÉE
+   Tests effectués: 130
+   Meilleur reward: 0.0
+
+💾 Résultats finaux sauvegardés: session90_results_final_20260618_044204.json
+
+================================================================================
+STATISTIQUES FINALES
+================================================================================
+Durée totale: 5865.3 secondes (97.8 minutes)
+Tests effectués: 130
+Solutions trouvées: 0
+Meilleur reward: 0.0
+Forensic entries: 18961
