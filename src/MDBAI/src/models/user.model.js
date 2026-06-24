@@ -21,6 +21,7 @@ export class User {
     this.telegramId = data.telegramId || null;
     this.username = data.username || null;
     this.email = data.email || null;
+    this.password = data.password || null;
     this.avatarUrl = data.avatarUrl || null;
     this.accessToken = data.accessToken || null;
     this.refreshToken = data.refreshToken || null;
@@ -35,8 +36,16 @@ export class User {
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
     this.lastLoginAt = data.lastLoginAt || null;
-    this.isActive = data.isActive !== undefined ? data.isActive : true;
+    this.isActive = data.isActive !== undefined ? data.isActive : false; // Par défaut false jusqu'à vérification email
     this.isBetaTester = data.isBetaTester || false;
+    
+    // Propriétés pour vérification email
+    this.email_verification_code = data.email_verification_code || null;
+    this.email_verification_code_expires = data.email_verification_code_expires || null;
+    
+    // Propriétés GitHub
+    this.github_login = data.github_login || null;
+    this.github_token = data.github_token || null;
   }
 
   /**
@@ -203,12 +212,16 @@ export class User {
     });
   }
   /**
-   * Vérifie l'email d'un utilisateur
+   * Vérifie l'email d'un utilisateur et active son compte
+   * @param {User} user - L'utilisateur à vérifier
+   * @returns {User} - L'utilisateur avec isActive=true
    */
-  static async verifyUserEmail(userId, email) {
-    // Cette fonction devrait être implémentée avec la logique de vérification
-    // Pour l'instant, on retourne true pour permettre le démarrage
-    return true;
+  static verifyUserEmail(user) {
+    user.isActive = true;
+    user.email_verification_code = null;
+    user.email_verification_code_expires = null;
+    user.updatedAt = new Date();
+    return user;
   }
 }
 

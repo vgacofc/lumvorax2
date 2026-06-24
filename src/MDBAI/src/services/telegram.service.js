@@ -314,21 +314,21 @@ export class TelegramService {
     logger.info(`[TELEGRAM] /github depuis chatId=${chatId} user=${username}`);
 
     try {
-      // 1. Vérifier si utilisateur inscrit ET actif (BUG #30 FIX)
+      // 1. Vérifier si utilisateur inscrit ET actif (CORRECTION BUG: isActive + email)
       const user = await findUserByTelegram(telegramId);
       
-      if (!user || user.status !== 'active' || !user.email_verified) {
+      if (!user || !user.isActive || !user.email) {
         // Utilisateur non inscrit OU inscription incomplète
         let message = `*Erreur*: Vous devez d'abord creer un compte actif.\n\n`;
         
-        if (user && user.status === 'pending') {
-          message += `Votre inscription est en cours. Veuillez verifier votre email (${user.email}) pour activer votre compte.\n\n`;
+        if (user && !user.isActive) {
+          message += `Votre inscription est en cours. Veuillez verifier votre email (${user.email || 'non renseigné'}) pour activer votre compte.\n\n`;
         } else {
           message += `Tapez /register pour vous inscrire.\n\n`;
         }
         
         await this.bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-        logger.warn(`[TELEGRAM] /github refuse — utilisateur ${telegramId} non actif (status=${user?.status}, verified=${user?.email_verified})`);
+        logger.warn(`[TELEGRAM] /github refuse — utilisateur ${telegramId} non actif (isActive=${user?.isActive}, email=${user?.email})`);
         return;
       }
 
@@ -403,20 +403,20 @@ export class TelegramService {
 
     logger.info(`[TELEGRAM] /analyze depuis chatId=${chatId}`, { url });
 
-    // BUG #30 FIX: Vérifier si utilisateur inscrit ET actif
+    // CORRECTION BUG: Vérifier isActive + email au lieu de status + email_verified
     const user = await findUserByTelegram(telegramId);
     
-    if (!user || user.status !== 'active' || !user.email_verified) {
+    if (!user || !user.isActive || !user.email) {
       let message = `*Erreur*: Vous devez avoir un compte actif pour analyser des dépôts.\n\n`;
       
-      if (user && user.status === 'pending') {
-        message += `Votre inscription est en cours. Veuillez vérifier votre email (${user.email}) pour activer votre compte.`;
+      if (user && !user.isActive) {
+        message += `Votre inscription est en cours. Veuillez vérifier votre email (${user.email || 'non renseigné'}) pour activer votre compte.`;
       } else {
         message += `Tapez /register pour vous inscrire.`;
       }
       
       await this.bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-      logger.warn(`[TELEGRAM] /analyze refusé — utilisateur ${telegramId} non actif (status=${user?.status}, verified=${user?.email_verified})`);
+      logger.warn(`[TELEGRAM] /analyze refusé — utilisateur ${telegramId} non actif (isActive=${user?.isActive}, email=${user?.email})`);
       return;
     }
 
@@ -533,13 +533,24 @@ export class TelegramService {
         }
         
         // Créer utilisateur (compte non vérifié)
-        const newUser = await registerUser({
+        const result = await registerUser({
           authMethod: 'email',
           email: registration.email,
           password: text,
           telegramId: registration.telegramId,
           username: registration.username
         });
+        
+        // CORRECTION BUG: registerUser retourne {success, user}
+        if (!result.success) {
+          await this.bot.sendMessage(chatId,
+            `Erreur lors de la creation du compte: ${result.error || 'Erreur inconnue'}\n\n` +
+            `Reessayez avec /register`);
+          this.pendingRegistrations.delete(chatId);
+          return;
+        }
+        
+        const newUser = result.user;
         
         // Envoyer email avec code 6 chiffres
         await sendVerificationCodeEmail(newUser.email, newUser.email_verification_code);
@@ -599,14 +610,19 @@ export class TelegramService {
         
         // Activer compte avec verifyUserEmail() pour garantir cohérence
         const verified = verifyUserEmail(user);
-        await updateUser(verified);
+        await updateUser(user.id, {
+          isActive: verified.isActive,
+          email_verification_code: verified.email_verification_code,
+          email_verification_code_expires: verified.email_verification_code_expires,
+          updatedAt: verified.updatedAt
+        });
         
         this.pendingRegistrations.delete(chatId);
         
         await this.bot.sendMessage(chatId,
           `Inscription reussie!\n\n` +
           `Email: ${user.email}\n` +
-          `Compte cree le: ${new Date(user.created_at).toLocaleDateString('fr-FR')}\n\n` +
+          `Compte cree le: ${new Date(user.createdAt).toLocaleDateString('fr-FR')}\n\n` +
           `Prochaine etape: Connectez votre compte GitHub avec /github`);
         
         logger.info(`[TELEGRAM] /register — utilisateur ${user.email} verifie et active`);

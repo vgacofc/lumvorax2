@@ -14,6 +14,19 @@ const users = new Map();
  */
 export async function createUser(userData) {
   try {
+    // Hash password si fourni
+    if (userData.password) {
+      const bcrypt = await import('bcrypt');
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
+    
+    // Générer code vérification email (6 chiffres)
+    if (userData.email && !userData.email_verification_code) {
+      userData.email_verification_code = Math.floor(100000 + Math.random() * 900000).toString();
+      userData.email_verification_code_expires = Date.now() + 10 * 60 * 1000; // 10 minutes
+      userData.isActive = false; // Compte inactif jusqu'à vérification
+    }
+    
     const user = new User(userData);
     const validation = user.validate();
     
@@ -30,7 +43,7 @@ export async function createUser(userData) {
     }
 
     users.set(user.id, user);
-    logger.info(`Utilisateur créé: ${user.id}`, { username: user.username });
+    logger.info(`Utilisateur créé: ${user.id}`, { username: user.username, email: user.email });
 
     return {
       success: true,
