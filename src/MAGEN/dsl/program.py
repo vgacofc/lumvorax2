@@ -43,6 +43,7 @@ class Program:
         ])
         
         result = program.execute(input_grid)
+    
     """
     operations: List[Operation] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)

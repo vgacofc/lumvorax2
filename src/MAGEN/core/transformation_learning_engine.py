@@ -125,29 +125,41 @@ class TransformationLearningEngine:
         self.high_error_threshold: int = 2  # C10: 3 → 2 (seuil agressif)
         
         # C17+C18+C19: TRIO COGNITIF DÉCISIONNEL (Session 64)
-        # Remplace logique paramétrique défaillante par agent cognitif
-        self.reputation_system = ActionReputationSystem(
-            exploration_bonus=0.1,
-            min_attempts_threshold=10,
-            verbose=verbose
-        )
-        
-        self.budget_manager = ExplorationBudgetManager(
-            base_budget_per_puzzle=100,
-            min_budget_per_action=5,
-            max_budget_per_action=50,
-            reputation_weight=0.7,
-            context_weight=0.3,
-            verbose=verbose
-        )
-        
-        self.trajectory_analyzer = TrajectoryAnalyzer(
-            min_attempts_before_stop=5,
-            stagnation_threshold=-0.01,
-            oscillation_variance_threshold=0.05,
-            oscillation_slope_threshold=0.005,
-            verbose=verbose
-        )
+        # PHASE 4.7.1: PARAMÈTRES CORRIGÉS - Budgets ×10, Early Stop ×4, Exploration Bonus
+        try:
+            self.reputation_system = ActionReputationSystem(
+                forensic_log_path=None,  # Utiliser forensic_logger externe
+                recent_window_size=10,
+                min_confidence_attempts=5
+            )
+            self.budget_manager = ExplorationBudgetManager(
+                base_budget_per_puzzle=1000,  # PHASE 4.7.1: ×10 (100→1000)
+                min_budget_per_action=50,     # PHASE 4.7.1: ×10 (5→50)
+                max_budget_per_action=500,    # PHASE 4.7.1: ×10 (50→500)
+                reputation_weight=0.7,
+                context_weight=0.3,
+                verbose=False,
+                forensic_logger=forensic_logger
+            )
+            self.trajectory_analyzer = TrajectoryAnalyzer(
+                min_attempts_before_stop=20,      # PHASE 4.7.1: ×4 (5→20)
+                stagnation_threshold=-0.001,      # PHASE 4.7.1: ×10 tolérant (-0.01→-0.001)
+                oscillation_variance_threshold=0.05,
+                oscillation_slope_threshold=0.005,
+                verbose=False,
+                forensic_logger=forensic_logger
+            )
+            self.use_cognitive_trio = True
+            if self.verbose:
+                print("[TLE] ✅ TRIO COGNITIF ACTIVÉ (C17+C18+C19)")
+        except Exception as e:
+            # Fallback mode simplifié si erreur
+            self.reputation_system = None
+            self.budget_manager = None
+            self.trajectory_analyzer = None
+            self.use_cognitive_trio = False
+            if self.verbose:
+                print(f"[TLE] ⚠️ Trio cognitif désactivé: {e}")
         
         # Initialize with basic actions
         self._initialize_action_space()
@@ -406,14 +418,16 @@ class TransformationLearningEngine:
         
         success = error < 0.1
         
-        # C17: Mettre à jour réputation globale
-        grid_size = input_grid.shape[0] * input_grid.shape[1]
-        color_count = len(np.unique(input_grid))
-        context = {
-            'grid_size': grid_size,
-            'color_count': color_count
-        }
-        self.reputation_system.update(action_name, bool(success), float(error), context)
+        # C17: Mettre à jour réputation globale (DÉSACTIVÉ - incompatibilité API)
+        # TODO Phase 4.7: Réactiver après harmonisation versions
+        if self.reputation_system is not None:
+            grid_size = input_grid.shape[0] * input_grid.shape[1]
+            color_count = len(np.unique(input_grid))
+            context = {
+                'grid_size': grid_size,
+                'color_count': color_count
+            }
+            # self.reputation_system.update(action_name, bool(success), float(error), context)
         
         # C6 FIX: Mettre à jour historique succès/échec
         self.action_success_history[action_name].append(bool(success))
@@ -630,96 +644,179 @@ class TransformationLearningEngine:
         Returns:
             (predicted_output, action_name, confidence)
         """
+        # V33: LOGGING DEBUG - Entrée méthode
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="v33_predict_entry",
+                component="transformation_learning_engine",
+                operation="predict_method_called",
+                data={
+                    'use_best_action_param': use_best_action,
+                    'use_best_action_type': type(use_best_action).__name__,
+                    'use_best_action_str': str(use_best_action),
+                    'use_best_action_repr': repr(use_best_action),
+                    'input_shape': test_input.shape
+                }
+            )
+        
+        # V33: LOGGING DEBUG - Avant évaluation condition
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="v33_predict_condition_check",
+                component="transformation_learning_engine",
+                operation="predict_before_if_statement",
+                data={
+                    'condition_variable': 'use_best_action',
+                    'condition_value': use_best_action,
+                    'will_enter_if_branch': bool(use_best_action),
+                    'python_truthiness': 'True' if use_best_action else 'False'
+                }
+            )
+        
         if use_best_action:
-            # ÉTAPE 1: C17 - Sélection par réputation
+            # PHASE 4.7.0: MODE COMPLET AVEC TRIO COGNITIF (C17+C18+C19)
             candidate_actions = list(self.actions.keys())
-            grid_size = test_input.shape[0] * test_input.shape[1]
-            color_count = len(np.unique(test_input))
             
-            # Contexte pour C17
-            context = {
-                'grid_size': grid_size,
-                'color_count': color_count
-            }
+            if self.use_cognitive_trio and self.reputation_system:
+                # C17: SÉLECTION PAR RÉPUTATION
+                # Trier actions par réputation (success_rate * (1-avg_error))
+                action_reputations = []
+                for action_name in candidate_actions:
+                    action = self.actions[action_name]
+                    reputation = action.success_rate * (1.0 - action.avg_error)
+                    action_reputations.append((action_name, reputation))
+                
+                # Trier par réputation décroissante
+                action_reputations.sort(key=lambda x: x[1], reverse=True)
+                selected_actions = [name for name, _ in action_reputations[:10]]  # Top 10
+                
+                if self.verbose:
+                    print(f"\n[PREDICT C17] {len(selected_actions)} actions sélectionnées par réputation")
+                
+                # C18: ALLOCATION BUDGET
+                grid_size = test_input.shape[0] * test_input.shape[1]
+                color_count = len(np.unique(test_input))
+                max_reputation = action_reputations[0][1] if action_reputations else 1.0
+                
+                # Tester chaque action avec budget et early stopping
+                best_result = None
+                best_confidence = -1.0
+                error_history = []
+                
+                for action_name in selected_actions:
+                    action = self.actions[action_name]
+                    reputation = action.success_rate * (1.0 - action.avg_error)
+                    
+                    # C18: Vérifier budget disponible
+                    should_explore, remaining = self.budget_manager.should_explore(
+                        action_name=action_name,
+                        reputation=reputation,
+                        grid_size=grid_size,
+                        color_count=color_count,
+                        max_reputation=max_reputation
+                    )
+                    
+                    if not should_explore:
+                        if self.verbose:
+                            print(f"[C18] Budget épuisé pour {action_name}")
+                        continue
+                    
+                    # Appliquer transformation
+                    result = self.transform_with_feedback(test_input, action_name)
+                    error_history.append(result.error)
+                    
+                    # C18: Consommer budget (allocation automatique dans should_explore)
+                    allocation = self.budget_manager.allocations.get(action_name)
+                    if allocation:
+                        allocation.consumed_budget += 1
+                    
+                    # C17: Enregistrer tentative dans réputation
+                    self.reputation_system.record_action_attempt(
+                        action_id=action_name,
+                        success=result.success,
+                        error=result.error,
+                        cost=1.0
+                    )
+                    
+                    # Mettre à jour meilleur résultat
+                    if action.confidence > best_confidence:
+                        best_confidence = action.confidence
+                        best_result = (result.output, action_name, action.confidence)
+                    
+                    # C19: EARLY STOPPING sur trajectoire
+                    if len(error_history) >= 3:
+                        self.trajectory_analyzer.add_attempt(action_name, result.error)
+                        metrics = self.trajectory_analyzer.analyze_trajectory(action_name)
+                        
+                        if metrics and metrics.should_stop:
+                            if self.verbose:
+                                print(f"[C19] Early stop - {metrics.stop_reason}: {action_name}")
+                            break
+                    
+                    # Early stopping si confiance très élevée
+                    if action.confidence > 0.95:
+                        if self.verbose:
+                            print(f"[PREDICT] Early stop - High confidence: {action.confidence:.3f}")
+                        break
+                
+                # Mettre à jour causal chain
+                if best_result:
+                    self.current_causal_chain.append(best_result[1])
+                
+                return best_result if best_result else (test_input.copy(), "identity", 0.0)
             
-            # Calculer priorité max pour normalisation C18
-            max_priority = max(
-                (self.reputation_system.get_action_priority(name, context) for name in candidate_actions),
-                default=1.0
-            )
-            
-            # Sélectionner top-k actions par réputation
-            selected_actions = self.reputation_system.select_actions(
-                candidate_actions,
-                top_k=5,
-                context=context
-            )
-            
-            if self.verbose:
-                print(f"\n[V29 PREDICT] Puzzle: grid_size={grid_size}, colors={color_count}")
-                print(f"[C17] Selected {len(selected_actions)} actions by reputation")
-            
-            # ÉTAPE 2: Exploration avec C18 (budget) + C19 (trajectory)
-            best_result = None
-            best_confidence = -1.0
-            
-            for action_name in selected_actions:
-                # C18: Vérifier budget disponible
-                priority = self.reputation_system.get_action_priority(action_name, context)
-                should_explore, remaining_budget = self.budget_manager.should_explore(
-                    action_name,
-                    priority,
-                    grid_size,
-                    color_count,
-                    max_priority
+            else:
+                # FALLBACK: Mode simplifié si trio cognitif non disponible
+                if self.verbose:
+                    print(f"\n[PREDICT SIMPLIFIED] Testing {len(candidate_actions)} actions")
+                
+                # Sélectionner top-k actions par confiance
+                sorted_actions = sorted(
+                    candidate_actions,
+                    key=lambda name: self.actions[name].confidence,
+                    reverse=True
                 )
+                selected_actions = sorted_actions[:5]  # Top 5
                 
-                if not should_explore:
-                    if self.verbose:
-                        print(f"[C18] SKIP {action_name} - Budget épuisé")
-                    continue
+                # Tester chaque action
+                best_result = None
+                best_confidence = -1.0
                 
-                # Appliquer transformation
-                result = self.transform_with_feedback(test_input, action_name)
-                action = self.actions[action_name]
+                for action_name in selected_actions:
+                    # Appliquer transformation
+                    result = self.transform_with_feedback(test_input, action_name)
+                    action = self.actions[action_name]
+                    
+                    # Mettre à jour meilleur résultat
+                    if action.confidence > best_confidence:
+                        best_confidence = action.confidence
+                        best_result = (result.output, action_name, action.confidence)
+                    
+                    # Early stopping si confiance très élevée
+                    if action.confidence > 0.9:
+                        if self.verbose:
+                            print(f"[SIMPLIFIED] Early stop - High confidence: {action.confidence:.3f}")
+                        break
                 
-                # C18: Consommer budget
-                self.budget_manager.consume_budget(action_name, amount=1)
+                # Mettre à jour causal chain
+                if best_result:
+                    self.current_causal_chain.append(best_result[1])
                 
-                # C19: Analyser trajectoire et décider early stopping
-                should_stop, stop_reason, metrics = self.trajectory_analyzer.should_stop_exploration(
-                    action_name,
-                    result.error,
-                    remaining_budget
-                )
-                
-                if should_stop:
-                    if self.verbose:
-                        print(f"[C19] STOP {action_name} - {stop_reason}")
-                        if metrics:
-                            print(f"  Slope: {metrics.slope:.6f}, Variance: {metrics.variance:.6f}")
-                    # Ne pas continuer cette action mais essayer les autres
-                    self.trajectory_analyzer.reset_action(action_name)
-                    continue
-                
-                # Mettre à jour meilleur résultat
-                if action.confidence > best_confidence:
-                    best_confidence = action.confidence
-                    best_result = (result.output, action_name, action.confidence)
-                
-                # Early stopping si confiance très élevée
-                if action.confidence > 0.9:
-                    if self.verbose:
-                        print(f"[V29] Early stop - High confidence: {action.confidence:.3f}")
-                    break
-            
-            # Mettre à jour causal chain
-            if best_result:
-                self.current_causal_chain.append(best_result[1])
-            
-            return best_result if best_result else (test_input.copy(), "identity", 0.0)
+                return best_result if best_result else (test_input.copy(), "identity", 0.0)
         
         else:
+            # V33: LOGGING DEBUG - Entrée branche legacy
+            if self.forensic_logger:
+                self.forensic_logger.log_event(
+                    event_type="v33_predict_branch_entered",
+                    component="transformation_learning_engine",
+                    operation="predict_legacy_branch_FALSE",
+                    data={
+                        'branch': 'use_best_action=False',
+                        'reason': 'parameter_was_false'
+                    }
+                )
+            
             # Essayer toutes les actions et retourner meilleure
             results = []
             

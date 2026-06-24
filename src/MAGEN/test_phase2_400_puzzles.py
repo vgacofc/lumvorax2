@@ -126,6 +126,7 @@ def _generate_for_strategy(strategy, train_pairs, test_input, classification):
     CORRECTION V20: Fonction helper pour cascade fallbacks
     CORRECTION V21: Ajout stratégie TRANSFORMATION_LEARNING (TLE)
     CORRECTION V23 P0.1: Appel systématique advanced_detectors pour logging
+    CORRECTION V37: Ajout attribut 'source' pour analyse forensique distribution scores
     """
     programs = []
     
@@ -174,9 +175,8 @@ def _generate_for_strategy(strategy, train_pairs, test_input, classification):
     elif strategy == ReasoningStrategy.TRANSFORMATION_LEARNING:
         # CORRECTION V21: Privilégier Transformation Learning Engine
         # P0.2 CORRECTION: Passer logger forensique à TLE
-        # CORRECTION V23: Utiliser logger global (injecté par test_v23)
-        global FORENSIC_LOGGER_TLE
-        programs.extend(_generate_with_tle(train_pairs, test_input, forensic_logger=FORENSIC_LOGGER_TLE or get_logger()))
+        # CORRECTION V35: Toujours utiliser logger actif (pas variable globale None)
+        programs.extend(_generate_with_tle(train_pairs, test_input, forensic_logger=get_logger()))
     
     elif strategy == ReasoningStrategy.ARCADE_DISCOVERY:
         # CORRECTION V22: Privilégier Arcade Discovery Engine
@@ -205,27 +205,63 @@ def _generate_with_tle(train_pairs, test_input, forensic_logger=None):
     programs = []
     
     try:
+        # V35 DEBUG: Vérifier logger avant utilisation
+        if forensic_logger is None:
+            print("⚠️  V35 WARNING: forensic_logger is None in _generate_with_tle!")
+        else:
+            print(f"✅ V35 DEBUG: forensic_logger type = {type(forensic_logger).__name__}")
+        
         # Créer TLE avec logger forensique
         tle = TransformationLearningEngine(verbose=False, forensic_logger=forensic_logger)
         
         # Phase 1: Apprentissage depuis train pairs
         learning_result = tle.learn_from_examples(train_pairs, max_iterations=5)
         
-        if learning_result['learned']:
-            # Phase 2: Prédiction sur test input
-            predicted_output, action_name, confidence = tle.predict(test_input, use_best_action=False)
-            
-            # Créer programme avec transformation apprise
-            def tle_transform(grid):
-                # Utiliser action apprise
-                result = tle.transform_with_feedback(grid, action_name)
-                return result.output
-            
-            prog = Program()
-            prog.add_operation(f"tle_{action_name}", tle_transform, ())
-            programs.append(prog)
-            
-            print(f"    🎓 TLE: action={action_name}, confidence={confidence:.2f}")
+        # V36 DEBUG: Logger learning_result AVEC traceback si échec
+        print(f"🔍 V36 DEBUG: learning_result = {learning_result}")
+        if forensic_logger:
+            try:
+                forensic_logger.log_event(
+                    event_type="v36_learning_result",
+                    component="test_phase2_400_puzzles",
+                    operation="_generate_with_tle",
+                    data={
+                        'learned': learning_result.get('learned', False),
+                        'best_action': learning_result.get('best_action', None),
+                        'best_error': learning_result.get('best_error', None),
+                        'reason': learning_result.get('reason', None),
+                        'full_result': str(learning_result)
+                    }
+                )
+            except Exception as log_error:
+                print(f"⚠️  V36 WARNING: log_event failed: {log_error}")
+        
+        # V36 CORRECTION: FORCER appel predict() pour debug (même si learned=False)
+        if True:  # V36 DEBUG: Toujours appeler predict()
+            try:
+                # Phase 2: Prédiction sur test input
+                # V31 CORRECTION: Activer pipeline cognitif C17+C18+C19
+                # use_best_action=True active la branche avec C17+C18+C19 (lignes 633-720)
+                # use_best_action=False utilise fallback legacy SANS C17+C18+C19 (lignes 722-731)
+                predicted_output, action_name, confidence = tle.predict(test_input, use_best_action=True)
+                print(f"✅ V36 DEBUG: predict() succeeded: action={action_name}, conf={confidence:.2f}")
+                
+                # Créer programme avec transformation apprise
+                def tle_transform(grid):
+                    # Utiliser action apprise
+                    result = tle.transform_with_feedback(grid, action_name)
+                    return result.output
+                
+                prog = Program()
+                prog.add_operation(f"tle_{action_name}", tle_transform, ())
+                programs.append(prog)
+                
+                print(f"    🎓 TLE: action={action_name}, confidence={confidence:.2f}")
+            except Exception as predict_error:
+                print(f"⚠️  V36 ERROR: predict() failed: {predict_error}")
+                import traceback
+                traceback.print_exc()
+                # Ne pas re-raise pour continuer pipeline
     
     except Exception as e:
         # Log erreur mais ne pas bloquer pipeline

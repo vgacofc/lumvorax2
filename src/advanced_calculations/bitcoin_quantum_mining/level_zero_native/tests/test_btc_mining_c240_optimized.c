@@ -21,7 +21,7 @@
 
 #define KERNEL_PATH "kernels/btc_sha256_gen9.bin"
 #define LOG_PATH "logs/forensic/btc_mining_c240_optimized.log"
-#define MAX_DISPATCHES 100
+#define MAX_DISPATCHES 1000  /* TEST-UNIT-001: Plan Scientifique - 1000 dispatches */
 
 int main(void) {
     printf("\n");

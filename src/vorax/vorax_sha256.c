@@ -153,7 +153,7 @@ static void sha256_double(const uint8_t* input, size_t len, uint8_t output[32]) 
  * Compter leading zeros dans hash
  */
 static uint8_t count_leading_zeros(const uint8_t hash[32]) {
-    uint8_t zeros = 0;
+    uint16_t zeros = 0; /* Use uint16_t to avoid comparison warning */
     for (int i = 31; i >= 0; i--) {  // Bitcoin little-endian
         if (hash[i] == 0) {
             zeros += 8;
@@ -166,7 +166,7 @@ static uint8_t count_leading_zeros(const uint8_t hash[32]) {
             break;
         }
     }
-    return zeros;
+    return (uint8_t)(zeros > 255 ? 255 : zeros);
 }
 
 /**

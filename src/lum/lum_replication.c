@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+/* _GNU_SOURCE déjà défini par CFLAGS dans Makefile */
 #include "lum_replication.h"
 #include <stdlib.h>
 #include <string.h>

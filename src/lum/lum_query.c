@@ -98,8 +98,12 @@ lumq_ast_t lumq_parse(const char* query) {
         ast.key   = _parse_uint64(sk, &ok_k);
         ast.value = _parse_uint64(sv, &ok_v);
         if (!ok_k || !ok_v) {
+            /* Truncate strings to prevent buffer overflow (DETTE TECHNIQUE PAYÉE) */
+            char sk_safe[32], sv_safe[32];
+            snprintf(sk_safe, sizeof(sk_safe), "%.31s", sk);
+            snprintf(sv_safe, sizeof(sv_safe), "%.31s", sv);
             snprintf(ast.error_msg, sizeof(ast.error_msg),
-                     "INSERT : cle='%s' ou valeur='%s' invalide", sk, sv);
+                     "INSERT : cle='%s' ou valeur='%s' invalide", sk_safe, sv_safe);
             return ast;
         }
         ast.valid = true;
@@ -140,8 +144,12 @@ lumq_ast_t lumq_parse(const char* query) {
         ast.range_lo = _parse_uint64(slo, &ok1);
         ast.range_hi = _parse_uint64(shi, &ok2);
         if (!ok1 || !ok2 || ast.range_lo > ast.range_hi) {
+            /* Truncate strings to prevent buffer overflow (DETTE TECHNIQUE PAYÉE) */
+            char slo_safe[32], shi_safe[32];
+            snprintf(slo_safe, sizeof(slo_safe), "%.31s", slo);
+            snprintf(shi_safe, sizeof(shi_safe), "%.31s", shi);
             snprintf(ast.error_msg, sizeof(ast.error_msg),
-                     "RANGE : bornes invalides [%s, %s]", slo, shi);
+                     "RANGE : bornes invalides [%s, %s]", slo_safe, shi_safe);
             return ast;
         }
         ast.valid = true;
@@ -386,6 +394,7 @@ lumq_result_t lumq_execute(lumq_ctx_t* ctx, const lumq_ast_t* ast) {
         uint32_t n_cols = 0;
         char buf[512];
         strncpy(buf, ast->create_cols, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = '\0'; /* Null-terminate (DETTE TECHNIQUE PAYÉE) */
         /* Supprimer parentheses */
         char* start = buf;
         if (*start == '(') start++;
@@ -400,7 +409,11 @@ lumq_result_t lumq_execute(lumq_ctx_t* ctx, const lumq_ast_t* ast) {
             char cname[LUM_CAT_NAME_LEN] = {0};
             char ctype[32] = {0};
             if (sscanf(token, "%63s %31s", cname, ctype) == 2) {
-                strncpy(cols[n_cols].name, cname, LUM_CAT_NAME_LEN - 1);
+                /* Use memcpy + explicit null-termination to avoid strncpy warning (DETTE TECHNIQUE PAYÉE) */
+                size_t len = strlen(cname);
+                if (len >= LUM_CAT_NAME_LEN) len = LUM_CAT_NAME_LEN - 1;
+                memcpy(cols[n_cols].name, cname, len);
+                cols[n_cols].name[len] = '\0';
                 /* Detecter le type */
                 if (strstr(ctype, "INT64"))        cols[n_cols].type = LUM_TYPE_INT64,  cols[n_cols].size = 8;
                 else if (strstr(ctype, "UINT64"))   cols[n_cols].type = LUM_TYPE_UINT64, cols[n_cols].size = 8;
@@ -415,8 +428,11 @@ lumq_result_t lumq_execute(lumq_ctx_t* ctx, const lumq_ast_t* ast) {
             token = strtok(NULL, ",");
         }
         if (n_cols == 0) {
+            /* Truncate string to prevent buffer overflow (DETTE TECHNIQUE PAYÉE) */
+            char cols_safe[128];
+            snprintf(cols_safe, sizeof(cols_safe), "%.127s", ast->create_cols);
             snprintf(res.message, sizeof(res.message),
-                     "CREATE : aucune colonne valide dans '%s'", ast->create_cols);
+                     "CREATE : aucune colonne valide dans '%s'", cols_safe);
             return res;
         }
         int tidx = lum_catalog_create_table(ctx->catalog, ast->table_name, cols, n_cols);

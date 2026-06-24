@@ -15,7 +15,7 @@ __author__ = "LumVorax Team"
 from .core.magen_memory import MAGENMemory, Experience, Pattern, MAGENMetrics
 from .perception.arc_perception import ARCPerception, GridFeatures
 from .agent.arc_agent import ARCAgent
-from .forensic.lumvorax_logger import LumVoraxLogger, ForensicEvent
+from .forensic.lumvorax_logger import LumVoraxLogger, LumVoraxEvent
 
 __all__ = [
     'MAGENMemory',
@@ -26,7 +26,7 @@ __all__ = [
     'GridFeatures',
     'ARCAgent',
     'LumVoraxLogger',
-    'ForensicEvent'
+    'LumVoraxEvent'
 ]
 
 # Made with Bob

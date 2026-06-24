@@ -34,6 +34,11 @@ from typing import List, Tuple, Dict, Optional
 from dataclasses import dataclass
 import math
 
+# V32: Import forensic logger pour traçabilité
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..forensic.lumvorax_logger import LumVoraxLogger
+
 
 @dataclass
 class TrajectoryMetrics:
@@ -84,25 +89,28 @@ class TrajectoryAnalyzer:
     
     def __init__(
         self,
-        min_attempts_before_stop: int = 5,
-        stagnation_threshold: float = -0.01,
+        min_attempts_before_stop: int = 20,      # PHASE 4.7.1: ×4 (5→20)
+        stagnation_threshold: float = -0.001,    # PHASE 4.7.1: ×10 plus tolérant (-0.01→-0.001)
         oscillation_variance_threshold: float = 0.05,
         oscillation_slope_threshold: float = 0.005,
-        verbose: bool = False
+        verbose: bool = False,
+        forensic_logger: Optional['LumVoraxLogger'] = None
     ):
         """
         Args:
-            min_attempts_before_stop: Tentatives min avant analyse
-            stagnation_threshold: Pente min pour progrès (défaut: -0.01)
+            min_attempts_before_stop: Tentatives min avant analyse (PHASE 4.7.1: augmenté ×4)
+            stagnation_threshold: Pente min pour progrès (PHASE 4.7.1: ×10 plus tolérant)
             oscillation_variance_threshold: Variance max pour oscillation
             oscillation_slope_threshold: Pente max pour oscillation
             verbose: Logs détaillés
+            forensic_logger: Logger forensique LumVorax (V32)
         """
         self.min_attempts_before_stop = min_attempts_before_stop
         self.stagnation_threshold = stagnation_threshold
         self.oscillation_variance_threshold = oscillation_variance_threshold
         self.oscillation_slope_threshold = oscillation_slope_threshold
         self.verbose = verbose
+        self.forensic_logger = forensic_logger
         
         # Historiques par action
         self.trajectories: Dict[str, List[float]] = {}
@@ -115,6 +123,21 @@ class TrajectoryAnalyzer:
             "OSCILLATION": 0
         }
         self.budget_saved = 0
+        
+        # V32: Log initialisation
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c19_initialization",
+                component="trajectory_analyzer",
+                operation="init",
+                data={
+                    'min_attempts_before_stop': min_attempts_before_stop,
+                    'stagnation_threshold': stagnation_threshold,
+                    'oscillation_variance_threshold': oscillation_variance_threshold,
+                    'oscillation_slope_threshold': oscillation_slope_threshold,
+                    'verbose': verbose
+                }
+            )
         
     def reset_action(self, action_name: str) -> None:
         """Réinitialiser historique action"""
@@ -263,6 +286,20 @@ class TrajectoryAnalyzer:
         Returns:
             (should_stop, reason, metrics)
         """
+        # V32: Log entrée
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c19_should_stop",
+                component="trajectory_analyzer",
+                operation="should_stop_check",
+                data={
+                    'action_name': action_name,
+                    'current_error': current_error,
+                    'remaining_budget': remaining_budget,
+                    'num_attempts': len(self.trajectories.get(action_name, []))
+                }
+            )
+        
         # Ajouter tentative
         self.add_attempt(action_name, current_error)
         
@@ -271,6 +308,14 @@ class TrajectoryAnalyzer:
         
         # Pas assez de données
         if metrics is None:
+            # V32: Log données insuffisantes
+            if self.forensic_logger:
+                self.forensic_logger.log_event(
+                    event_type="c19_should_stop",
+                    component="trajectory_analyzer",
+                    operation="should_stop_insufficient_data",
+                    data={'action_name': action_name, 'reason': 'INSUFFICIENT_DATA'}
+                )
             return False, "INSUFFICIENT_DATA", None
         
         # Décision stop
@@ -279,7 +324,39 @@ class TrajectoryAnalyzer:
             self.stops_by_reason[metrics.stop_reason] += 1
             self.budget_saved += remaining_budget
             
+            # V32: Log arrêt
+            if self.forensic_logger:
+                self.forensic_logger.log_event(
+                    event_type="c19_should_stop",
+                    component="trajectory_analyzer",
+                    operation="should_stop_approved",
+                    data={
+                        'action_name': action_name,
+                        'reason': metrics.stop_reason,
+                        'slope': metrics.slope,
+                        'variance': metrics.variance,
+                        'mean_error': metrics.mean_error,
+                        'attempts': metrics.attempts,
+                        'budget_saved': remaining_budget
+                    }
+                )
+            
             return True, metrics.stop_reason, metrics
+        
+        # V32: Log continuation
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c19_should_stop",
+                component="trajectory_analyzer",
+                operation="should_stop_continue",
+                data={
+                    'action_name': action_name,
+                    'reason': 'CONTINUE',
+                    'slope': metrics.slope,
+                    'variance': metrics.variance,
+                    'attempts': metrics.attempts
+                }
+            )
         
         return False, "CONTINUE", metrics
     

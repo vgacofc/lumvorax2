@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+/* _GNU_SOURCE déjà défini par CFLAGS dans Makefile */
 #include "lum_raft.h"
 #include <stdlib.h>
 #include <string.h>
@@ -90,6 +90,7 @@ static void become_candidate(raft_context_t* ctx) {
 /**
  * @brief Devient leader
  */
+static void become_leader(raft_context_t* ctx) __attribute__((unused));
 static void become_leader(raft_context_t* ctx) {
     pthread_mutex_lock(&ctx->lock);
     
@@ -109,6 +110,7 @@ static void become_leader(raft_context_t* ctx) {
 /**
  * @brief Devient follower
  */
+static void become_follower(raft_context_t* ctx, uint64_t term) __attribute__((unused));
 static void become_follower(raft_context_t* ctx, uint64_t term) {
     pthread_mutex_lock(&ctx->lock);
     
@@ -587,6 +589,7 @@ void raft_get_stats(const raft_context_t* ctx,
 bool raft_create_snapshot(raft_context_t* ctx,
                           uint64_t last_included_index,
                           uint64_t last_included_term) {
+    (void)last_included_term; /* Reserved for future snapshot metadata */
     if (!ctx || last_included_index == 0) {
         return false;
     }

@@ -25,7 +25,13 @@
 extern "C" {
 #endif
 
-#define LUM_PIPELINE_BUFFER_SIZE 10000
+// Buffers dynamiques OPTIMAUX : allocation adaptative selon charge
+// Dimensionnement optimal : 5× TPS pic (47,456) × latence (0.05s) = 11,864 TX → arrondi 15,000
+// LEÇON-317 : Capacités Maximales ≠ Performance Maximale (marge 5× > 20×)
+#define LUM_PIPELINE_BUFFER_SIZE_INITIAL 15000    // Optimal validé (vs 50K excessif)
+#define LUM_PIPELINE_BUFFER_SIZE_MAX 150000       // Optimal validé (vs 500K excessif)
+#define LUM_PIPELINE_BUFFER_GROWTH_FACTOR 2       // Doublement rapide
+#define LUM_PIPELINE_BUFFER_SHRINK_THRESHOLD 0.25 // Réduction si usage <25%
 
 typedef enum {
     STAGE_FETCH,
@@ -48,6 +54,7 @@ typedef struct {
     uint32_t head;
     uint32_t tail;
     uint32_t capacity;
+    uint32_t max_capacity;  // Capacité maximale pour croissance dynamique
     pthread_mutex_t mutex;
     pthread_cond_t not_empty;
     pthread_cond_t not_full;
@@ -68,12 +75,20 @@ typedef struct {
     
     bool running;
     
+    // Accélérateurs externes (pointeurs opaques)
+    void* gpu_context;      // lum_poh_gpu_context_t*
+    void* sealevel_vm;      // lum_sealevel_t*
+    
     // Métriques
     uint64_t total_fetched;
     uint64_t total_verified;
     uint64_t total_executed;
     uint64_t total_written;
     double avg_latency_ms;
+    
+    // Métriques accélérateurs
+    uint64_t gpu_verifications;
+    uint64_t sealevel_executions;
 } lum_pipeline_t;
 
 lum_pipeline_t* lum_pipeline_init(void);

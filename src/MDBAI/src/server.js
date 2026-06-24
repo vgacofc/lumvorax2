@@ -5,6 +5,7 @@
  * Conforme guidelines Flask: port 5000 réservé au projet principal
  */
 
+import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
@@ -15,6 +16,7 @@ import logger from './utils/logger.js';
 import webhookRouter from './routes/webhook.js';
 import analyzeRouter from './routes/analyze.js';
 import authRouter from './routes/auth.js';
+import authHybridRouter from './routes/auth-hybrid.js';
 import statusRouter from './routes/status.js';
 import dashboardRouter from './routes/dashboard.js';
 import { TelegramService } from './services/telegram.service.js';
@@ -22,8 +24,13 @@ import { getAnalysisQueue, pingRedis, closeRedis, getJobResult } from './service
 import { startAnalysisWorker } from './workers/analysis.worker.js';
 import { createJob } from './models/job.model.js';
 import { enqueueAnalysisJob } from './services/redis.service.js';
+import { findUserByTelegram } from './services/user.service.js';
 
 const app = express();
+
+// BUG #50: Activer trust proxy pour ngrok/reverse proxy
+app.set('trust proxy', true);
+
 let worker = null;
 let telegramService = null;
 
@@ -36,6 +43,7 @@ const generalLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  trust: true, // BUG #50: Accepter X-Forwarded-For de ngrok/proxy
   message: { error: 'Trop de requêtes — réessayez dans 1 minute', code: 'RATE_LIMIT_EXCEEDED' },
   skip: (req) => req.path === '/health' || req.path.startsWith('/dashboard'),
 });
@@ -45,6 +53,7 @@ const analyzeLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  trust: true, // BUG #50: Accepter X-Forwarded-For de ngrok/proxy
   message: { error: 'Limite analyses atteinte — 10 analyses par minute maximum', code: 'ANALYZE_RATE_LIMIT' },
 });
 
@@ -53,6 +62,7 @@ const webhookLimiter = rateLimit({
   max: 50,
   standardHeaders: true,
   legacyHeaders: false,
+  trust: true, // BUG #50: Accepter X-Forwarded-For de ngrok/proxy
   message: { error: 'Webhook rate limit dépassé', code: 'WEBHOOK_RATE_LIMIT' },
 });
 
@@ -95,6 +105,7 @@ app.use('/webhook', webhookLimiter, webhookRouter);
 app.use('/api/analyze', analyzeLimiter, analyzeRouter);
 app.use('/api/status', statusRouter);
 app.use('/auth', authRouter);
+app.use('/auth', authHybridRouter);
 app.use('/dashboard', dashboardRouter);
 
 /**
@@ -186,9 +197,19 @@ async function startMdbai() {
   }
 
   logger.info('[MDBAI] Initialisation bot Telegram...');
+  // BUG #61 FIX: Créer instance Telegram GLOBALE pour éviter 409 Conflict
   telegramService = new TelegramService();
+  global.telegramService = telegramService; // Instance globale accessible au worker
   telegramService.init(async (chatId, repoUrl, userId) => {
-    const job = createJob(repoUrl, String(chatId), '', 'main');
+    // BUG #39 FIX: Récupérer le token GitHub OAuth de l'utilisateur depuis Redis
+    const user = await findUserByTelegram(String(userId));
+    const githubToken = user?.github_token || '';
+    
+    if (!githubToken) {
+      logger.warn('[MDBAI] Pas de token GitHub pour utilisateur', { userId });
+    }
+    
+    const job = createJob(repoUrl, String(chatId), githubToken, 'main');
     try {
       if (redisOk) {
         await enqueueAnalysisJob(job);

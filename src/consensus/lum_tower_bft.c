@@ -1,4 +1,4 @@
-4''''/**
+/**
  * @file lum_tower_bft.c
  * @brief Implémentation Tower BFT - Consensus Byzantine Fault Tolerant
  * 
@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <openssl/sha.h>
+#include <openssl/evp.h>
 
 /* ============================================================================
  * TOWER (VALIDATEUR)
@@ -476,12 +477,15 @@ void lum_tower_calculate_vote_hash(uint64_t slot,
                                     uint8_t* vote_hash) {
     if (!block_hash || !validator_pubkey || !vote_hash) return;
     
-    SHA256_CTX ctx;
-    SHA256_Init(&ctx);
-    SHA256_Update(&ctx, &slot, sizeof(uint64_t));
-    SHA256_Update(&ctx, block_hash, 32);
-    SHA256_Update(&ctx, validator_pubkey, 32);
-    SHA256_Final(vote_hash, &ctx);
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    if (!ctx) return;
+    
+    EVP_DigestInit_ex(ctx, EVP_sha256(), NULL);
+    EVP_DigestUpdate(ctx, &slot, sizeof(uint64_t));
+    EVP_DigestUpdate(ctx, block_hash, 32);
+    EVP_DigestUpdate(ctx, validator_pubkey, 32);
+    EVP_DigestFinal_ex(ctx, vote_hash, NULL);
+    EVP_MD_CTX_free(ctx);
 }
 
 bool lum_tower_verify_vote_signature(const uint8_t* vote_hash,
@@ -489,6 +493,9 @@ bool lum_tower_verify_vote_signature(const uint8_t* vote_hash,
                                       const uint8_t* pubkey) {
     // TODO: Implémenter vérification Ed25519
     // Pour l'instant, retourner true (à implémenter avec libsodium)
+    (void)vote_hash;    // Suppress unused parameter warning
+    (void)signature;    // Suppress unused parameter warning
+    (void)pubkey;       // Suppress unused parameter warning
     return true;
 }
 

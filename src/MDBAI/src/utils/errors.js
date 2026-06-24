@@ -27,6 +27,10 @@ export const ERR_FORENSIC_INIT     = 'MDBAI_ERR_007';
 export const ERR_ANALYSIS_TIMEOUT  = 'MDBAI_ERR_008';
 export const ERR_REPORT_GEN        = 'MDBAI_ERR_009';
 export const ERR_PR_CREATE         = 'MDBAI_ERR_010';
+export const ERR_TRACE_FAILED      = 'MDBAI_ERR_011';
+export const ERR_COMPARE_FAILED    = 'MDBAI_ERR_012';
+export const ERR_CHART_GEN_FAILED  = 'MDBAI_ERR_013';
+export const ERR_LUM_FORMAT_FAILED = 'MDBAI_ERR_014';
 
 export function isMdbaiError(err) { return err instanceof MdbaiError; }
 

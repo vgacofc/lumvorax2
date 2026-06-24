@@ -136,6 +136,22 @@ export class GitHubService {
           timeout: 120000, stdio: 'pipe', env: gitEnv,
         });
       } catch (e) {
+        // BUG #51: Détecter erreurs de permissions pour message clair
+        const errorMsg = e.message || '';
+        if (errorMsg.includes('Repository not found') || errorMsg.includes('not found')) {
+          throw new MdbaiError(ERR_REPO_CLONE,
+            `❌ Dépôt privé sans accès GitHub App.\n\n` +
+            `📋 SOLUTION:\n` +
+            `1. Installez la GitHub App sur ce dépôt:\n` +
+            `   👉 https://github.com/apps/mdbai-master-debug-ai\n\n` +
+            `2. Cliquez "Install" ou "Configure"\n` +
+            `3. Sélectionnez "Only select repositories"\n` +
+            `4. Cochez votre dépôt: ${parsed?.repo || 'votre-repo'}\n` +
+            `5. Cliquez "Install"\n\n` +
+            `6. Relancez: /analyze ${repoUrl}\n\n` +
+            `ℹ️ Dépôt: ${repoUrl}\n` +
+            `ℹ️ Statut: Privé (nécessite installation app)`);
+        }
         throw new MdbaiError(ERR_REPO_CLONE, `Clone échoué: ${e.message}`);
       }
     }

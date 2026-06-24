@@ -8,6 +8,8 @@
 
 import { Router } from 'express';
 import { GitHubService } from '../services/github.service.js';
+import { findUserByTelegram, updateUser } from '../services/user.service.js';
+import TelegramBot from 'node-telegram-bot-api';
 import logger from '../utils/logger.js';
 import { config } from '../config.js';
 
@@ -41,6 +43,7 @@ authRouter.get('/github', (req, res) => {
 /**
  * GET /auth/github/callback
  * GitHub redirige ici après autorisation
+ * Support 2 flux: Web (session Express) + Telegram (Redis user)
  */
 authRouter.get('/github/callback', async (req, res) => {
   const { code, state, error } = req.query;
@@ -66,24 +69,85 @@ authRouter.get('/github/callback', async (req, res) => {
     const accessToken = await github.exchangeCode(code);
     const authedGitHub = new GitHubService(accessToken);
 
-    const { data: user } = await authedGitHub.octokit.users.getAuthenticated();
-    logger.info('[AUTH] OAuth réussi', { login: user.login });
+    const { data: githubUser } = await authedGitHub.octokit.users.getAuthenticated();
+    logger.info('[AUTH] OAuth réussi', { login: githubUser.login, state });
 
+    // FLUX TELEGRAM: state contient telegram_id
+    // Vérifier si state est un telegram_id (nombre pur sans ':')
+    const isTelegramFlow = state && !state.includes(':') && /^\d+$/.test(state);
+    
+    if (isTelegramFlow) {
+      const telegramId = state;
+      logger.info('[AUTH] Flux Telegram détecté', { telegramId, githubLogin: githubUser.login });
+      
+      // Récupérer utilisateur Redis via telegram_id
+      const user = await findUserByTelegram(telegramId);
+      
+      if (!user) {
+        logger.error('[AUTH] Utilisateur Telegram non trouvé', { telegramId });
+        return res.status(404).send(`
+          <h1>❌ Utilisateur non trouvé</h1>
+          <p>Aucun compte MDBAI associé à ce Telegram ID.</p>
+          <p>Utilisez <code>/start</code> sur Telegram pour créer un compte.</p>
+        `);
+      }
+      
+      // Mettre à jour Redis avec github_login et github_token
+      const updatedUser = {
+        ...user,
+        github_login: githubUser.login,
+        github_token: accessToken,
+        updated_at: new Date().toISOString(),
+      };
+      
+      await updateUser(updatedUser);
+      logger.info('[AUTH] User Redis mis à jour', {
+        userId: user.id,
+        email: user.email,
+        githubLogin: githubUser.login
+      });
+      
+      // Envoyer notification Telegram
+      try {
+        const bot = new TelegramBot(config.telegram.token);
+        await bot.sendMessage(
+          telegramId,
+          `GitHub connecte avec succes\n\n` +
+          `Compte GitHub: ${githubUser.login}\n` +
+          `Email MDBAI: ${user.email}\n\n` +
+          `Vous pouvez maintenant utiliser /analyze pour analyser vos depots.`
+        );
+        logger.info('[AUTH] Notification Telegram envoyée', { telegramId });
+      } catch (telegramErr) {
+        logger.error('[AUTH] Échec notification Telegram', { error: telegramErr.message });
+      }
+      
+      return res.send(`
+        <h1>✅ GitHub connecté avec succès!</h1>
+        <p>Compte GitHub: <strong>${githubUser.login}</strong></p>
+        <p>Email MDBAI: <strong>${user.email}</strong></p>
+        <p>Une notification a été envoyée sur Telegram.</p>
+        <p>Vous pouvez fermer cette fenêtre.</p>
+        <script>setTimeout(() => window.close(), 3000);</script>
+      `);
+    }
+    
+    // FLUX WEB: Stockage session Express (comportement original)
     if (req.session) {
       req.session.githubToken  = accessToken;
-      req.session.githubLogin  = user.login;
-      req.session.userId       = pending?.userId || user.login;
+      req.session.githubLogin  = githubUser.login;
+      req.session.userId       = pending?.userId || githubUser.login;
     }
 
     return res.send(`
       <h1>✅ Connexion GitHub réussie!</h1>
-      <p>Connecté en tant que <strong>${user.login}</strong></p>
+      <p>Connecté en tant que <strong>${githubUser.login}</strong></p>
       <p>Vous pouvez maintenant utiliser <code>/analyze</code> sur Telegram.</p>
       <p>Token stocké en session — jamais transmis en clair.</p>
       <script>setTimeout(() => window.close(), 3000);</script>
     `);
   } catch (e) {
-    logger.error('[AUTH] Échange code OAuth échoué', { error: e.message });
+    logger.error('[AUTH] Échange code OAuth échoué', { error: e.message, stack: e.stack });
     return res.status(500).json({ error: 'OAuth échoué', detail: e.message });
   }
 });

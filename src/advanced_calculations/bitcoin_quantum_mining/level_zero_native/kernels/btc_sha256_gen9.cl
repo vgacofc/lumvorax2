@@ -47,6 +47,15 @@ __constant uint H0[8] = {
 #define SIG1(x)      (ROTR(x, 17) ^ ROTR(x, 19) ^ ((x) >> 10))
 
 /**
+ * C628 FIX ROOT CAUSE #158: Conversion endianness little-endian → big-endian
+ * Bitcoin utilise big-endian, GPU Intel Gen9 utilise little-endian natif
+ */
+inline uint swap_endian(uint val) {
+    return ((val & 0xFF) << 24) | ((val & 0xFF00) << 8) |
+           ((val & 0xFF0000) >> 8) | ((val >> 24) & 0xFF);
+}
+
+/**
  * SHA-256 Transform OPTIMISÉ avec fenêtre glissante
  */
 void sha256_transform_opt(uint* state, __private const uint* data) {
@@ -197,15 +206,18 @@ __kernel void btc_sha256_mining_gen9(
     uint lid = get_local_id(0);
     uint nonce = nonce_start + gid;
     
-    /* Copier block header en registres privés */
+    /* C628 FIX ROOT CAUSE #158: Copier block header avec conversion endianness
+     * Bitcoin format: big-endian, GPU Intel: little-endian
+     * AVANT: header[i] = block_header[i] → hash incorrect
+     * APRÈS: header[i] = swap_endian(block_header[i]) → hash correct */
     uint header[20];
     #pragma unroll
     for (int i = 0; i < 19; i++) {
-        header[i] = block_header[i];
+        header[i] = swap_endian(block_header[i]);
     }
     
-    /* Insérer nonce à la position 19 (bytes 76-79) */
-    header[19] = nonce;
+    /* Insérer nonce à la position 19 (bytes 76-79) avec conversion endianness */
+    header[19] = swap_endian(nonce);
     
     /* Premier SHA-256 */
     uint hash1[8];

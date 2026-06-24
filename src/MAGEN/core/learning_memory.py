@@ -2,6 +2,11 @@
 """
 Learning Memory System - Apprentissage en boucle avec mémoire des échecs
 Intègre architecture GEN8-24 pour mémoire persistante
+
+FORENSIC INTEGRATION (PROTOCOLE_MAGEN V3.0):
+- Logs événements mémoire (store/consolidate/pattern_update)
+- Tracking patterns échecs/succès avec causalité
+- Intégrité hash chain pour audit complet
 """
 
 import json
@@ -11,6 +16,10 @@ from typing import Dict, List, Set, Tuple, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime
 import hashlib
+
+# FORENSIC: Import middleware standardisé
+from .forensic_middleware import ForensicMiddleware
+from .forensic_logger import CausalIDManager
 
 
 @dataclass
@@ -51,11 +60,28 @@ class LearningMemory:
     - Mid-term: Expériences dernières 10 sessions
     - Long-term: Patterns d'échecs consolidés
     - Deep archive: Toutes expériences (append-only)
+    
+    FORENSIC INTEGRATION:
+    - Logs tous événements mémoire (store/consolidate/pattern)
+    - Tracking causal sequences avec hash chain
+    - Audit complet patterns échecs/succès
     """
     
-    def __init__(self, memory_dir: Path = Path("memory")):
+    def __init__(self,
+                 memory_dir: Path = Path("memory"),
+                 forensic_log_path: Optional[str] = None,
+                 id_manager: Optional[CausalIDManager] = None):
         self.memory_dir = memory_dir
         self.memory_dir.mkdir(exist_ok=True)
+        
+        # FORENSIC: Middleware standardisé (PROTOCOLE_MAGEN V3.0)
+        self.forensic: Optional[ForensicMiddleware] = None
+        if forensic_log_path:
+            self.forensic = ForensicMiddleware(
+                forensic_log_path,
+                "LearningMemory",
+                id_manager
+            )
         
         # Multi-timescale memory (GEN11)
         self.short_term: List[PuzzleExperience] = []
@@ -76,23 +102,42 @@ class LearningMemory:
         # C8 FIX: Ajouter référence au transformation engine pour reset causal chain
         self.transformation_engine = None  # Sera injecté par le pipeline
         
+        # FORENSIC: Log initialisation
+        if self.forensic:
+            self.forensic.log_event('memory_initialized', {
+                'memory_dir': str(self.memory_dir),
+                'archive_exists': self.archive_path.exists()
+            })
+        
         # Load existing memory
         self._load_memory()
     
     def _load_memory(self):
         """Charge mémoire existante depuis archive"""
+        experiences_loaded = 0
+        
         if self.archive_path.exists():
             with open(self.archive_path) as f:
                 for line in f:
                     exp = json.loads(line)
                     experience = PuzzleExperience(**exp)
                     self.mid_term.append(experience)
+                    experiences_loaded += 1
                     
                     # Consolider patterns
                     if not experience.success and experience.failure_reason:
                         self._update_failure_pattern(experience)
                     elif experience.success:
                         self._update_success_pattern(experience)
+        
+        # FORENSIC: Log chargement mémoire
+        if self.forensic:
+            self.forensic.log_event('memory_loaded', {
+                'experiences_loaded': experiences_loaded,
+                'mid_term_size': len(self.mid_term),
+                'failure_patterns': len(self.failure_patterns),
+                'success_patterns': len(self.success_patterns)
+            })
         
         # Consolider long-term
         self._consolidate_memory()
@@ -101,6 +146,17 @@ class LearningMemory:
         """
         Stocke expérience puzzle (GEN8 append-only)
         """
+        # FORENSIC: Log début stockage
+        if self.forensic:
+            self.forensic.log_event('experience_store_start', {
+                'puzzle_id': experience.puzzle_id,
+                'success': experience.success,
+                'classification': experience.classification,
+                'confidence': float(experience.confidence),
+                'programs_tried': experience.programs_tried,
+                'best_score': float(experience.best_score)
+            })
+        
         # Short-term
         self.short_term.append(experience)
         
@@ -114,6 +170,14 @@ class LearningMemory:
         elif experience.success:
             self._update_success_pattern(experience)
         
+        # FORENSIC: Log stockage complet
+        if self.forensic:
+            self.forensic.log_event('experience_stored', {
+                'puzzle_id': experience.puzzle_id,
+                'short_term_size': len(self.short_term),
+                'pattern_updated': experience.failure_reason if not experience.success else experience.classification
+            })
+        
         # Consolidation si nécessaire
         if len(self.short_term) > 50:
             self._consolidate_memory()
@@ -126,7 +190,9 @@ class LearningMemory:
         if pattern_type is None:
             return
         
-        if pattern_type not in self.failure_patterns:
+        is_new_pattern = pattern_type not in self.failure_patterns
+        
+        if is_new_pattern:
             self.failure_patterns[pattern_type] = FailurePattern(
                 pattern_type=pattern_type,
                 puzzle_ids=[experience.puzzle_id],
@@ -141,27 +207,56 @@ class LearningMemory:
                 pattern.puzzle_ids.append(experience.puzzle_id)
             pattern.frequency += 1
             pattern.last_seen = experience.timestamp
+        
+        # FORENSIC: Log mise à jour pattern échec
+        if self.forensic:
+            pattern = self.failure_patterns[pattern_type]
+            self.forensic.log_event('failure_pattern_updated', {
+                'pattern_type': pattern_type,
+                'is_new_pattern': is_new_pattern,
+                'frequency': pattern.frequency,
+                'puzzle_count': len(pattern.puzzle_ids),
+                'puzzle_id': experience.puzzle_id
+            })
     
     def _update_success_pattern(self, experience: PuzzleExperience):
         """Met à jour patterns de succès"""
         classification = experience.classification
         
-        if classification not in self.success_patterns:
+        is_new_classification = classification not in self.success_patterns
+        
+        if is_new_classification:
             self.success_patterns[classification] = []
         
-        if experience.puzzle_id not in self.success_patterns[classification]:
+        is_new_puzzle = experience.puzzle_id not in self.success_patterns[classification]
+        
+        if is_new_puzzle:
             self.success_patterns[classification].append(experience.puzzle_id)
+        
+        # FORENSIC: Log mise à jour pattern succès
+        if self.forensic:
+            self.forensic.log_event('success_pattern_updated', {
+                'classification': classification,
+                'is_new_classification': is_new_classification,
+                'is_new_puzzle': is_new_puzzle,
+                'puzzle_count': len(self.success_patterns[classification]),
+                'puzzle_id': experience.puzzle_id
+            })
     
     def _consolidate_memory(self):
         """
         Consolidation mémoire (GEN11 multi-timescale)
         Short → Mid → Long
         """
+        short_to_mid = 0
+        mid_to_long = 0
+        
         # Migrer short → mid
         if len(self.short_term) > 50:
             migrated = self.short_term[:20]
             self.mid_term.extend(migrated)
             self.short_term = self.short_term[20:]
+            short_to_mid = len(migrated)
         
         # Migrer mid → long (patterns consolidés)
         if len(self.mid_term) > 200:
@@ -170,9 +265,24 @@ class LearningMemory:
                 if pattern.frequency >= 3:  # Pattern récurrent
                     if pattern not in self.long_term:
                         self.long_term.append(pattern)
+                        mid_to_long += 1
             
             # Garder seulement 100 expériences mid-term
+            pruned = len(self.mid_term) - 100
             self.mid_term = self.mid_term[-100:]
+        else:
+            pruned = 0
+        
+        # FORENSIC: Log consolidation
+        if self.forensic and (short_to_mid > 0 or mid_to_long > 0):
+            self.forensic.log_event('memory_consolidated', {
+                'short_to_mid': short_to_mid,
+                'mid_to_long': mid_to_long,
+                'mid_term_pruned': pruned,
+                'short_term_size': len(self.short_term),
+                'mid_term_size': len(self.mid_term),
+                'long_term_size': len(self.long_term)
+            })
     
     def get_failure_patterns(self, min_frequency: int = 2) -> List[FailurePattern]:
         """Retourne patterns d'échecs récurrents"""
@@ -197,11 +307,21 @@ class LearningMemory:
             pattern.correction_successful = success
             
             # Causal sequence (GEN8)
-            self.causal_sequences.append({
+            causal_entry = {
                 'failure_pattern': pattern_type,
                 'correction_success': success,
                 'timestamp': datetime.now().isoformat()
-            })
+            }
+            self.causal_sequences.append(causal_entry)
+            
+            # FORENSIC: Log tentative correction
+            if self.forensic:
+                self.forensic.log_event('correction_attempted', {
+                    'pattern_type': pattern_type,
+                    'success': success,
+                    'pattern_frequency': pattern.frequency,
+                    'causal_sequences_count': len(self.causal_sequences)
+                })
     
     def should_retry_puzzle(self, puzzle_id: str) -> Tuple[bool, Optional[str]]:
         """

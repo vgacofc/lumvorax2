@@ -28,6 +28,11 @@ from typing import Dict, Tuple, Optional
 from dataclasses import dataclass
 import math
 
+# V32: Import forensic logger pour traçabilité
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..forensic.lumvorax_logger import LumVoraxLogger
+
 
 @dataclass
 class BudgetAllocation:
@@ -68,21 +73,23 @@ class ExplorationBudgetManager:
     
     def __init__(
         self,
-        base_budget_per_puzzle: int = 100,
-        min_budget_per_action: int = 5,
-        max_budget_per_action: int = 50,
+        base_budget_per_puzzle: int = 1000,  # PHASE 4.7.1: ×10 (100→1000)
+        min_budget_per_action: int = 50,     # PHASE 4.7.1: ×10 (5→50)
+        max_budget_per_action: int = 500,    # PHASE 4.7.1: ×10 (50→500)
         reputation_weight: float = 0.7,
         context_weight: float = 0.3,
-        verbose: bool = False
+        verbose: bool = False,
+        forensic_logger: Optional['LumVoraxLogger'] = None
     ):
         """
         Args:
-            base_budget_per_puzzle: Budget total par puzzle
-            min_budget_per_action: Budget minimum par action
-            max_budget_per_action: Budget maximum par action
+            base_budget_per_puzzle: Budget total par puzzle (PHASE 4.7.1: augmenté ×10)
+            min_budget_per_action: Budget minimum par action (PHASE 4.7.1: augmenté ×10)
+            max_budget_per_action: Budget maximum par action (PHASE 4.7.1: augmenté ×10)
             reputation_weight: Poids réputation (0-1)
             context_weight: Poids contexte (0-1)
             verbose: Logs détaillés
+            forensic_logger: Logger forensique LumVorax (V32)
         """
         self.base_budget_per_puzzle = base_budget_per_puzzle
         self.min_budget_per_action = min_budget_per_action
@@ -90,6 +97,7 @@ class ExplorationBudgetManager:
         self.reputation_weight = reputation_weight
         self.context_weight = context_weight
         self.verbose = verbose
+        self.forensic_logger = forensic_logger
         
         # État actuel
         self.current_puzzle_budget = base_budget_per_puzzle
@@ -100,6 +108,22 @@ class ExplorationBudgetManager:
         self.puzzles_processed = 0
         self.total_budget_used = 0
         self.total_budget_wasted = 0  # Budget alloué non utilisé
+        
+        # V32: Log initialisation
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c18_initialization",
+                component="exploration_budget_manager",
+                operation="init",
+                data={
+                    'base_budget_per_puzzle': base_budget_per_puzzle,
+                    'min_budget_per_action': min_budget_per_action,
+                    'max_budget_per_action': max_budget_per_action,
+                    'reputation_weight': reputation_weight,
+                    'context_weight': context_weight,
+                    'verbose': verbose
+                }
+            )
         
     def reset_puzzle(self) -> None:
         """Réinitialiser pour nouveau puzzle"""
@@ -202,10 +226,33 @@ class ExplorationBudgetManager:
         Returns:
             (should_explore, remaining_budget)
         """
+        # V32: Log entrée
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c18_should_explore",
+                component="exploration_budget_manager",
+                operation="should_explore_check",
+                data={
+                    'action_name': action_name,
+                    'reputation': reputation,
+                    'grid_size': grid_size,
+                    'color_count': color_count,
+                    'current_puzzle_budget': self.current_puzzle_budget
+                }
+            )
+        
         # Vérifier budget global puzzle
         if self.current_puzzle_budget <= 0:
             if self.verbose:
                 print(f"[C18 BUDGET] STOP - Budget puzzle épuisé")
+            # V32: Log refus
+            if self.forensic_logger:
+                self.forensic_logger.log_event(
+                    event_type="c18_should_explore",
+                    component="exploration_budget_manager",
+                    operation="should_explore_denied_puzzle_budget",
+                    data={'action_name': action_name, 'reason': 'puzzle_budget_exhausted'}
+                )
             return False, 0
         
         # Obtenir/créer allocation
@@ -219,7 +266,28 @@ class ExplorationBudgetManager:
         if allocation.is_exhausted:
             if self.verbose:
                 print(f"[C18 BUDGET] SKIP {action_name} - Budget action épuisé")
+            # V32: Log refus
+            if self.forensic_logger:
+                self.forensic_logger.log_event(
+                    event_type="c18_should_explore",
+                    component="exploration_budget_manager",
+                    operation="should_explore_denied_action_budget",
+                    data={'action_name': action_name, 'reason': 'action_budget_exhausted'}
+                )
             return False, 0
+        
+        # V32: Log acceptation
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c18_should_explore",
+                component="exploration_budget_manager",
+                operation="should_explore_approved",
+                data={
+                    'action_name': action_name,
+                    'remaining_budget': allocation.remaining_budget,
+                    'allocated_budget': allocation.allocated_budget
+                }
+            )
         
         return True, allocation.remaining_budget
     
@@ -242,6 +310,22 @@ class ExplorationBudgetManager:
         self.current_puzzle_budget -= amount
         self.total_consumed += amount
         self.total_budget_used += amount
+        
+        # V32: Log consommation
+        if self.forensic_logger:
+            self.forensic_logger.log_event(
+                event_type="c18_consume_budget",
+                component="exploration_budget_manager",
+                operation="consume_budget",
+                data={
+                    'action_name': action_name,
+                    'amount': amount,
+                    'action_consumed': allocation.consumed_budget,
+                    'action_allocated': allocation.allocated_budget,
+                    'puzzle_remaining': self.current_puzzle_budget,
+                    'puzzle_total': self.base_budget_per_puzzle
+                }
+            )
         
         if self.verbose:
             print(f"[C18 BUDGET] Consommé {amount} pour {action_name}")

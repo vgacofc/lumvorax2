@@ -8,10 +8,12 @@
 import { Router } from 'express';
 import { createJob } from '../models/job.model.js';
 import { enqueueAnalysisJob, getJobStatus, getJobResult } from '../services/redis.service.js';
-import { validateAnalyzeRequest } from '../utils/validator.js';
+import { validateAnalyzeRequest, parseGitHubUrl } from '../utils/validator.js';
+import { DeduplicationService } from '../services/deduplication.service.js';
 import logger from '../utils/logger.js';
 
 const analyzeRouter = Router();
+const dedup = new DeduplicationService();
 
 /**
  * POST /api/analyze
@@ -28,6 +30,23 @@ analyzeRouter.post('/', async (req, res) => {
   }
 
   const { repo_url, user_id, github_token, branch } = validation.value;
+  
+  // BUG #60 FIX: Vérifier déduplication (même repo + branch)
+  const parsed = parseGitHubUrl(repo_url);
+  if (parsed) {
+    const branchName = branch || 'main';
+    const commitSha = 'api-request'; // Pour API, on utilise un identifiant générique
+    
+    if (await dedup.isDuplicate(repo_url, branchName, commitSha)) {
+      logger.info('[ANALYZE] Job dupliqué IGNORÉ via API', { repo: repo_url, branch: branchName, user: user_id });
+      return res.status(409).json({
+        error: 'Analyse déjà en cours',
+        message: 'Une analyse de ce dépôt est déjà en cours. Veuillez attendre qu\'elle se termine.',
+        deduplication: true
+      });
+    }
+  }
+  
   const job = createJob(repo_url, user_id, github_token || '', branch || 'main');
 
   try {

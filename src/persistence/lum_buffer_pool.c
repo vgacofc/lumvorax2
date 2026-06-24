@@ -236,7 +236,8 @@ uint64_t lum_pool_alloc_page(lum_buffer_pool_t* pool) {
     /* Etendre le fichier avec une page vide */
     uint8_t zero_page[LUM_PAGE_SIZE] = {0};
     off_t offset = (off_t)sizeof(hdr) + (off_t)new_page * LUM_PAGE_SIZE;
-    pwrite(pool->fd, zero_page, LUM_PAGE_SIZE, offset);
+    ssize_t written = pwrite(pool->fd, zero_page, LUM_PAGE_SIZE, offset);
+    (void)written; /* Intentionally ignore return value - best effort write */
 
     pthread_mutex_unlock(&pool->mutex);
     return new_page;

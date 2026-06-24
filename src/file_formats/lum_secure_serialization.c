@@ -1,6 +1,6 @@
-// Feature test macros for POSIX functions - _GNU_SOURCE defined in Makefile
+// Feature test macros for POSIX functions
+// _GNU_SOURCE and _DEFAULT_SOURCE already defined by CFLAGS in Makefile
 #define _POSIX_C_SOURCE 200809L
-#define _DEFAULT_SOURCE
 
 #include "lum_secure_serialization.h"
 

@@ -2,6 +2,7 @@
  * MDBAI — Service de génération de rapport Markdown
  * Conforme STANDARD_NAMES_MDBAI.md Section 5 (generateReport, formatErrors...)
  * CF-010: RAPPORT_MDBAI_*.md créé
+ * BUG-042 FIX: Inclut stdout/stderr complet dans le rapport pour prouver l'exécution réelle
  */
 
 import { writeFileSync, mkdirSync } from 'fs';
@@ -41,6 +42,7 @@ export class ReportService {
         this.formatMemoryLeaks(result.forensic?.memory_leaks || []),
         this.formatVulnerabilities(result.analysis?.vulnerabilities || []),
         this.formatPerformance(result.forensic?.performance || {}),
+        this.formatExecutionLogs(result), // BUG-042 FIX: Logs d'exécution réels
         this.formatForensic(result.forensic || {}),
         this._footer(score, repoUrl),
       ];
@@ -189,6 +191,175 @@ export class ReportService {
       `| Durée | ${metrics.duration_ms || 0} ms |`,
       `| Snapshots LUM | ${metrics.lum_snapshots_count || 0} |`,
     ].join('\n');
+  }
+
+  /**
+   * Formate la section logs d'exécution (BUG-042 FIX)
+   * Inclut stdout/stderr complet pour prouver l'exécution réelle
+   */
+  formatExecutionLogs(result) {
+    const stdout = result.execution?.stdout || '';
+    const stderr = result.execution?.stderr || '';
+    const stdoutFile = result.execution?.stdout_file || '';
+    const stderrFile = result.execution?.stderr_file || '';
+    
+    if (!stdout && !stderr) {
+      return `## 📋 Logs d'Exécution\n\n⚠️ **Aucun log capturé** — Le code n'a peut-être pas été exécuté ou n'a produit aucune sortie.`;
+    }
+    
+    const lines = [`## 📋 Logs d'Exécution\n`];
+    
+    if (stdoutFile) {
+      lines.push(`**Fichier stdout:** \`${stdoutFile}\`  `);
+    }
+    if (stderrFile) {
+      lines.push(`**Fichier stderr:** \`${stderrFile}\`  `);
+    }
+    lines.push('');
+    
+    if (stdout) {
+      const stdoutLines = stdout.split('\n').length;
+      lines.push(`### 📤 Stdout (${stdout.length} caractères, ${stdoutLines} lignes)\n`);
+      lines.push('```');
+      // Limiter à 15000 caractères pour éviter rapports trop lourds
+      const truncated = stdout.slice(0, 15000);
+      lines.push(truncated);
+      if (stdout.length > 15000) {
+        lines.push(`\n... (tronqué, ${stdout.length - 15000} caractères restants)`);
+        lines.push(`Voir fichier complet: ${stdoutFile}`);
+      }
+      lines.push('```\n');
+    }
+    
+    if (stderr) {
+      const stderrLines = stderr.split('\n').length;
+      lines.push(`### 📥 Stderr (${stderr.length} caractères, ${stderrLines} lignes)\n`);
+      lines.push('```');
+      const truncated = stderr.slice(0, 15000);
+      lines.push(truncated);
+      if (stderr.length > 15000) {
+        lines.push(`\n... (tronqué, ${stderr.length - 15000} caractères restants)`);
+        lines.push(`Voir fichier complet: ${stderrFile}`);
+      }
+      lines.push('```\n');
+    }
+    
+    return lines.join('\n');
+  }
+  
+  /**
+   * BUG-043 FIX: Formate la section d'analyse Bob avec preuves d'intervention
+   * Montre que Bob a été RÉELLEMENT activé et a analysé le code
+   */
+  formatBobAnalysis(result) {
+    let section = '\n## 🤖 Analyse IA Bob — Intervention Réelle\n\n';
+    
+    const bobAnalysis = result.analysis?.bob_analysis;
+    
+    if (!bobAnalysis || !bobAnalysis.bob_activated) {
+      section += '⚠️ **Bob n\'a pas été activé pour cette analyse**\n\n';
+      section += 'Mode: Détection automatique par regex (fallback)\n\n';
+      return section;
+    }
+    
+    // Preuves d'activation
+    section += '### ✅ Preuves d\'Activation\n\n';
+    section += `**Bob activé:** ${bobAnalysis.bob_activated ? '✅ OUI' : '❌ NON'}\n`;
+    section += `**Timestamp:** ${bobAnalysis.timestamp}\n`;
+    section += `**Job ID:** ${bobAnalysis.job_id}\n`;
+    section += `**Durée:** ${bobAnalysis.duration_ms}ms\n\n`;
+    
+    // Code source analysé
+    if (bobAnalysis.source_files) {
+      section += '### 📖 Code Source Analysé\n\n';
+      section += `**Fichiers lus:** ${bobAnalysis.source_files.count}\n`;
+      section += `**Lignes analysées:** ${bobAnalysis.source_files.lines}\n`;
+      section += `**SHA256:** \`${bobAnalysis.source_files.sha256}\`\n\n`;
+    }
+    
+    // Fichiers forensiques créés
+    if (bobAnalysis.files_created) {
+      section += '### 📁 Fichiers Forensiques Créés\n\n';
+      section += '**Preuves tangibles et vérifiables:**\n\n';
+      
+      const files = bobAnalysis.files_created;
+      if (files.source_code) section += `- 📄 Code source complet: \`${files.source_code}\`\n`;
+      if (files.manifest) section += `- 📋 Manifeste de lecture: \`${files.manifest}\`\n`;
+      if (files.task) section += `- 📝 Tâche Bob: \`${files.task}\`\n`;
+      if (files.prompt) section += `- 💬 Prompt Bob: \`${files.prompt}\`\n`;
+      if (files.activation) section += `- 🚨 Fichier d'activation: \`${files.activation}\`\n`;
+      if (files.analysis) section += `- 📊 Analyse Bob: \`${files.analysis}\`\n`;
+      if (files.report) section += `- 📄 Rapport Bob: \`${files.report}\`\n`;
+      
+      section += '\n';
+    }
+    
+    // Vérification forensique
+    if (bobAnalysis.verification) {
+      section += '### 🔐 Vérification Forensique\n\n';
+      const v = bobAnalysis.verification;
+      section += `- Code source existe: ${v.source_exists ? '✅' : '❌'}\n`;
+      section += `- Manifeste existe: ${v.manifest_exists ? '✅' : '❌'}\n`;
+      section += `- Tâche existe: ${v.task_exists ? '✅' : '❌'}\n`;
+      section += `- Prompt existe: ${v.prompt_exists ? '✅' : '❌'}\n`;
+      section += `- Activation existe: ${v.activation_exists ? '✅' : '❌'}\n`;
+      section += `- Analyse existe: ${v.analysis_exists ? '✅' : '❌'}\n`;
+      section += `- Tous fichiers lisibles: ${v.all_files_readable ? '✅' : '❌'}\n\n`;
+    }
+    
+    // Preuve cryptographique
+    if (bobAnalysis.forensic_proof) {
+      section += '### 🔏 Preuve Cryptographique\n\n';
+      const proof = bobAnalysis.forensic_proof;
+      section += '```json\n';
+      section += JSON.stringify(proof, null, 2);
+      section += '\n```\n\n';
+    }
+    
+    // Résultats de l'analyse Bob
+    if (bobAnalysis.bob_analysis) {
+      const analysis = bobAnalysis.bob_analysis;
+      
+      section += '### 📊 Résultats de l\'Analyse Bob\n\n';
+      
+      if (analysis.analysis_metadata) {
+        section += '**Métadonnées:**\n';
+        section += `- Version Bob: ${analysis.analysis_metadata.bob_version || 'N/A'}\n`;
+        section += `- Timestamp: ${analysis.analysis_metadata.timestamp || 'N/A'}\n`;
+        section += `- Durée: ${analysis.analysis_metadata.duration_ms || 0}ms\n`;
+        section += `- Fichiers: ${analysis.analysis_metadata.files_analyzed || 0}\n`;
+        section += `- Lignes: ${analysis.analysis_metadata.lines_analyzed || 0}\n\n`;
+      }
+      
+      if (analysis.quality_score !== undefined) {
+        section += `**Score de qualité:** ${analysis.quality_score}/100\n\n`;
+      }
+      
+      if (analysis.overall_reasoning) {
+        section += `**Raisonnement global:**\n${analysis.overall_reasoning}\n\n`;
+      }
+      
+      if (analysis.recommendations && analysis.recommendations.length > 0) {
+        section += '**Recommandations:**\n';
+        analysis.recommendations.forEach((rec, i) => {
+          section += `${i + 1}. ${rec}\n`;
+        });
+        section += '\n';
+      }
+      
+      if (analysis.fallback_mode) {
+        section += '⚠️ **Note:** Analyse en mode fallback - Bob CLI sera intégré prochainement\n\n';
+      }
+    }
+    
+    section += '---\n\n';
+    section += '**💡 Comment vérifier:**\n';
+    section += '1. Vérifier l\'existence des fichiers forensiques listés ci-dessus\n';
+    section += '2. Comparer le SHA256 du code source avec celui dans le manifeste\n';
+    section += '3. Lire le fichier d\'activation pour voir la tâche Bob\n';
+    section += '4. Consulter l\'analyse Bob pour voir le raisonnement complet\n\n';
+    
+    return section;
   }
 
   /**

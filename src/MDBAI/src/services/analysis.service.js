@@ -2,6 +2,7 @@
  * MDBAI — Service d'analyse forensique (moteur principal)
  * Conforme STANDARD_NAMES_MDBAI.md Section 5 (detectLanguage, runTests...)
  * Conforme prompt.txt Règle #1 : traçabilité bit-level active à 100%
+ * BUG-043 FIX: Intégration Bob réelle via BobIntegrationService
  */
 
 import { execSync, execFileSync } from 'child_process';
@@ -9,6 +10,7 @@ import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import logger from '../utils/logger.js';
 import { ForensicBridge } from '../utils/forensic.js';
+import { BobIntegrationService } from './bob-integration.service.js';
 import {
   LANG_NODEJS, LANG_PYTHON, LANG_RUST, LANG_GO, LANG_C_CPP, LANG_UNKNOWN,
   VULN_SEVERITY_LOW, VULN_SEVERITY_MEDIUM, VULN_SEVERITY_HIGH, VULN_SEVERITY_CRITICAL,
@@ -44,7 +46,12 @@ export class AnalysisService {
     this.forensic.init();
 
     try {
-      onProgress(5, 'Détection langage...');
+      // BUG #66 FIX: Bob activé EN PREMIER pour suivre tout le processus (comme Bob IDE)
+      onProgress(5, '🤖 Activation de Bob pour suivi temps réel...');
+      const bobService = new BobIntegrationService(this.jobId);
+      this.log.info('[ANALYSIS] Bob activé dès le début pour suivi complet');
+
+      onProgress(10, 'Détection langage...');
       const lang = await this.detectLanguage(repoDir);
       result.repo.language = lang;
       this.log.info(`[ANALYSIS] Langage détecté: ${lang}`);
@@ -73,17 +80,55 @@ export class AnalysisService {
         }
       }
 
-      onProgress(55, 'Détection erreurs et crashes...');
-      result.analysis.errors = this.detectErrors(forensicData.stdout, forensicData.stderr);
+      // BUG #66 FIX: Analyse Bob à 50% (après collecte des données)
+      onProgress(50, '🤖 Analyse Bob IA complète...');
+      const bobAnalysis = await bobService.analyzeCodeWithBob(repoDir, lang, forensicData);
+      
+      // Stocker l'analyse Bob complète
+      result.analysis.bob_analysis = bobAnalysis;
+      result.analysis.bob_activated = bobAnalysis.bob_activated;
+      result.analysis.bob_forensic_proof = bobAnalysis.forensic_proof;
+      
+      // Extraire les résultats structurés de Bob
+      if (bobAnalysis.bob_analysis && bobAnalysis.bob_analysis.errors) {
+        result.analysis.errors = bobAnalysis.bob_analysis.errors;
+      } else {
+        // Fallback sur détection regex si Bob n'a pas retourné d'erreurs
+        onProgress(55, 'Détection erreurs et crashes (fallback)...');
+        result.analysis.errors = this.detectErrors(forensicData.stdout, forensicData.stderr);
+      }
 
-      onProgress(65, 'Analyse fuites mémoire...');
-      result.forensic.memory_leaks = [
-        ...result.forensic.memory_leaks,
-        ...this.detectMemoryLeaks(forensicData),
-      ].filter((v, i, arr) => arr.findIndex(x => x.raw === v.raw) === i);
+      if (bobAnalysis.bob_analysis && bobAnalysis.bob_analysis.memory_leaks) {
+        result.forensic.memory_leaks = [
+          ...result.forensic.memory_leaks,
+          ...bobAnalysis.bob_analysis.memory_leaks,
+        ];
+      } else {
+        // Fallback sur détection regex
+        onProgress(65, 'Analyse fuites mémoire (fallback)...');
+        result.forensic.memory_leaks = [
+          ...result.forensic.memory_leaks,
+          ...this.detectMemoryLeaks(forensicData),
+        ].filter((v, i, arr) => arr.findIndex(x => x.raw === v.raw) === i);
+      }
 
-      onProgress(75, 'Scan vulnérabilités...');
-      result.analysis.vulnerabilities = await this.scanVulnerabilities(repoDir, lang);
+      if (bobAnalysis.bob_analysis && bobAnalysis.bob_analysis.vulnerabilities) {
+        result.analysis.vulnerabilities = bobAnalysis.bob_analysis.vulnerabilities;
+      } else {
+        // Fallback sur scan automatique
+        onProgress(75, 'Scan vulnérabilités (fallback)...');
+        result.analysis.vulnerabilities = await this.scanVulnerabilities(repoDir, lang);
+      }
+      
+      // Logger les preuves d'intervention de Bob
+      this.log.info('[ANALYSIS] Bob activé ✅', {
+        bob_activated: bobAnalysis.bob_activated,
+        files_analyzed: bobAnalysis.source_files?.count || 0,
+        lines_analyzed: bobAnalysis.source_files?.lines || 0,
+        sha256: bobAnalysis.source_files?.sha256?.substring(0, 16) + '...',
+        duration_ms: bobAnalysis.duration_ms,
+        forensic_files: Object.keys(bobAnalysis.files_created || {}).length
+      });
 
       onProgress(85, 'Analyse performance...');
       result.forensic.performance = this.analyzePerformance(forensicData);
@@ -164,7 +209,7 @@ export class AnalysisService {
    */
   async installDependencies(dir, lang) {
     const cmds = {
-      [LANG_NODEJS]:   ['npm', ['install', '--no-audit', '--no-fund', '--prefer-offline']],
+      [LANG_NODEJS]:   ['npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--prefer-offline']],
       [LANG_PYTHON]:   ['pip', ['install', '-r', 'requirements.txt', '-q']],
       [LANG_RUST]:     ['cargo', ['fetch']],
       [LANG_GO]:       ['go', ['mod', 'download']],

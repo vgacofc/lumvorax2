@@ -141,6 +141,8 @@ bool lum_cloudbreak_load(lum_cloudbreak_t* cb, const uint8_t* account_id,
 
 bool lum_cloudbreak_delete(lum_cloudbreak_t* cb, const uint8_t* account_id) {
     // TODO: Implémenter suppression (marquer comme deleted)
+    (void)cb;          // Suppress unused parameter warning
+    (void)account_id;  // Suppress unused parameter warning
     return false;
 }
 

@@ -1,837 +1,1740 @@
-# 🎓 LEÇONS APPRISES MAGEN
-## Mémoire Artificielle GEN — Compilation des Leçons Identifiées
+# LEÇONS APPRISES - MAGEN (Mémoire Artificielle GEN)
 
-**Version**: 1.62.0
-**Date création**: 2026-06-13T12:42:00+02:00
-**Dernière mise à jour**: 2026-06-13T22:22:00+02:00
-**Avancement global**: 🟢 **43.5%** — Evaluation 174/400 (43.5%) ✅ | V5→V26: +287% performance
-**Objectif**: Système cognitif résolution puzzles ARC-AGI avec architecture mémoire artificielle
-**Principe**: Moteur Transformationnel Causal + Forensic Maximal LumVorax + Pruning Intelligent + Mémoire Causale
-**Architecture**: 12,200+ lignes production, 62 sessions forensiques, protocole CLAUDE_PILOT + LUMVORAX
-
-## 📊 SESSION 62 - TEST COMPLET V26 + ANALYSE SCORE STABLE (2026-06-13)
-
-> **🔬 DÉCOUVERTE CRITIQUE**: Test complet 400 puzzles V26 révèle score **STABLE 174/400** (identique V25) malgré corrections C7+C8+C9 actives. Analyse forensique 36,299 événements identifie cause racine: **seuils trop permissifs** (5/3 échecs) + **réinitialisation trop agressive** (dès 1 succès) = corrections **INEFFICACES**. Validation philosophie LumVorax: seul test complet révèle vérité, tests unitaires insuffisants.
-
-### LEÇON-62.1: Tests Unitaires ≠ Tests d'Efficacité Réelle
-
-**Découverte**: Les tests unitaires C7+C8+C9 (3/3 PASSED) validaient la **logique** mais pas l'**efficacité**. Seul le test complet 400 puzzles révèle que le score reste stable à 174/400.
-
-**Contexte**: Après implémentation C7+C8+C9, tests unitaires passent 100% MAIS test complet montre 0% amélioration score.
-
-**Analyse**:
-- Tests unitaires vérifient: "Le code fait-il ce qu'il doit faire?" ✅
-- Tests d'efficacité vérifient: "Le code améliore-t-il la performance?" ❌
-- **Gap critique**: Logique correcte ≠ Impact positif
-
-**Métriques V26**:
-- Causal chains: 22,543/22,847 (98.7%) ✅ **ACTIF**
-- Identity actions: 9,426 (41.3%) ❌ **TOUJOURS PRÉSENTES** (vs 0% attendu)
-- High errors: 9,152 (40.1%) ❌ **TOUJOURS PRÉSENTES** (vs 0% attendu)
-- Score: 174/400 (43.5%) ❌ **AUCUNE AMÉLIORATION**
-
-**Impact**: Tests unitaires donnent **fausse confiance**. Corrections semblent fonctionner mais sont **inefficaces** en production.
-
-**Principe**: **Toujours valider avec données réelles complètes, pas seulement tests synthétiques**. Tests unitaires = validation logique, tests complets = validation efficacité.
+**FICHIER UNIQUE ET CENTRALISÉ**  
+**Date de création**: 2026-06-16
+**Dernière mise à jour**: 2026-06-17 16:52
 
 ---
 
-### LEÇON-62.2: Seuils Doivent Être Calibrés Empiriquement
+## 📋 TABLE DES MATIÈRES
 
-**Découverte**: Seuils C7 (5 échecs) et C9 (3 erreurs) basés sur **intuition** sont **trop permissifs**. Actions inefficaces continuent d'être explorées massivement.
-
-**Contexte**: Corrections C7+C9 utilisent seuils arbitraires sans validation empirique préalable.
-
-**Analyse forensique**:
-```
-C7 Identity Blacklist (seuil=5):
-- 9,426 actions identity (41.3%) toujours présentes
-- Blacklist rarement déclenché car seuil trop élevé
-- Recommandation: Réduire à 2-3 échecs
-
-C9 Early Stopping (seuil=3):
-- 9,152 transformations (40.1%) avec error >0.9
-- Early stopping rarement déclenché
-- Recommandation: Réduire à 2 erreurs
-```
-
-**Comparaison**:
-| Seuil | Basé sur | Résultat | Efficacité |
-|-------|----------|----------|------------|
-| 5/3 | Intuition | 41% identity, 40% high errors | ❌ Inefficace |
-| 2/2 | Analyse forensique | À valider V27 | ⏳ À tester |
-
-**Impact**: Seuils trop permissifs = système continue d'explorer actions inefficaces = aucun gain performance.
-
-**Principe**: **Calibration itérative avec feedback réel obligatoire**. Commencer conservateur (seuils bas), augmenter si trop agressif, jamais l'inverse.
+1. [Gestion des Secrets et Clés API](#gestion-secrets)
+2. [Protocole Tests Datasets Officiels](#protocole-tests)
+3. [Bugs Critiques Identifiés](#bugs-critiques)
+4. [Architecture et Versionnage](#architecture)
+5. [Analyse Forensique](#analyse-forensique)
 
 ---
 
-### LEÇON-62.3: Tracking ≠ Exploitation des Métriques
+## 🔐 GESTION DES SECRETS ET CLÉS API {#gestion-secrets}
 
-**Découverte**: C8 track 98.7% causal chains (EXCELLENT) MAIS score stable 174/400. Tracker sans exploiter = overhead sans gain.
+### LEÇON #79.1: Gestion Obligatoire via Doppler
 
-**Contexte**: Causal chains trackées dans 22,543/22,847 transformations mais **jamais utilisées** pour guider exploration.
+**Date**: 2026-06-16  
+**Contexte**: Session 79 - Correction bugs ls20-9607627b
 
-**Analyse**:
+#### RÈGLE ABSOLUE
+
+**JAMAIS de clés API en dur dans le code !**
+
 ```python
-# CODE ACTUEL: Tracking uniquement
-self.current_causal_chain.append(best_result[1])  # ✅ Track
-# MAIS: Aucune réutilisation des chaînes réussies
-# MAIS: Aucun évitement des chaînes échouées
+# ❌ INTERDIT - Clé en dur
+ARC_API_KEY = "705f499b-05a3-4e59-a248-5c8717da7d92"
+
+# ✅ OBLIGATOIRE - Lecture depuis Doppler
+ARC_API_KEY = os.getenv("ARC_API_KEY")
+if not ARC_API_KEY:
+    raise ValueError("❌ ARC_API_KEY non configurée! Exécutez: doppler run -- python3 script.py")
 ```
 
-**Métriques**:
-- V25: 8,061 causal chains (36%) → Score 174/400
-- V26: 22,543 causal chains (98.7%) → Score 174/400 (**AUCUN GAIN**)
-- Overhead: +174% tracking sans amélioration
+#### Workflow Doppler
 
-**Impact**: Ressources CPU/mémoire gaspillées pour tracker métriques inutilisées.
+**1. Mise à jour de la clé (30 secondes)**
 
-**Principe**: **Toute métrique trackée doit être utilisée pour guider décisions**. Si métrique pas exploitée, supprimer tracking ou implémenter exploitation.
+```bash
+# Vérifier le projet
+doppler projects
 
-**Correction C12 requise**:
+# Mettre à jour la clé
+doppler secrets set ARC_API_KEY "NOUVELLE_CLE" --project magen-arc-agi --config dev
+
+# Vérifier
+doppler secrets get ARC_API_KEY --project magen-arc-agi --config dev
+```
+
+**2. Exécution du script**
+
+```bash
+# TOUJOURS utiliser doppler run
+doppler run -- python3 mon_script.py
+```
+
+#### Avantages
+
+- ✅ **Sécurité**: Clés jamais dans le code source
+- ✅ **Centralisation**: Une seule source de vérité
+- ✅ **Audit**: Historique des modifications
+- ✅ **Rotation**: Changement de clé en 30s sans toucher au code
+- ✅ **Synchronisation**: Équipe entière à jour automatiquement
+
+#### Clés Actuelles (2026-06-16)
+
+- **ARC_API_KEY**: `705f499b-05a3-4e59-a248-5c8717da7d92`
+- **Projet Doppler**: `magen-arc-agi`
+- **Config**: `dev`
+
+---
+
+## 🧪 PROTOCOLE TESTS DATASETS OFFICIELS {#protocole-tests}
+
+### LEÇON #77.1: Datasets Officiels Obligatoires
+
+**Date**: 2026-06-13  
+**Contexte**: Session 77 - Détection surestimation (0% externe vs 100% interne)
+
+#### Problème Identifié
+
+Tests sur données **synthétiques** → Surestimation massive des performances
+
+#### Solution Obligatoire
+
+**TOUJOURS tester sur datasets officiels ARC-AGI**
+
 ```python
-# Réutiliser chaînes réussies
-def _get_successful_chains(self, context_key: str) -> List[List[str]]:
-    return self.successful_chains.get(context_key, [])
-
-# Éviter chaînes échouées
-def _is_failed_chain(self, chain: List[str]) -> bool:
-    return tuple(chain) in self.failed_chains
+# ✅ Datasets officiels installés
+OFFICIAL_TRAINING_PATH = "/home/lvx/.arc-agi/data/training"  # 400 puzzles
+OFFICIAL_EVALUATION_PATH = "/home/lvx/.arc-agi/data/evaluation"  # 400 puzzles
+OFFICIAL_ARCADE_PATH = "/home/lvx/.arc-agi/data/arcade"  # 25 jeux
 ```
+
+#### Protocole de Test
+
+1. **Phase 1**: Tests locaux sur 50 puzzles training officiels
+2. **Phase 2**: Tests locaux sur 100 puzzles (training + evaluation)
+3. **Phase 3**: Validation externe via API ARC-AGI-3
+4. **Phase 4**: Soumission Kaggle finale
+
+#### Métriques Réelles
+
+- **Tests internes synthétiques**: 100% (INVALIDE)
+- **Tests officiels locaux**: 0-10% (RÉALISTE)
+- **API ARC-AGI-3**: 0% (VÉRITÉ ABSOLUE)
 
 ---
 
-### LEÇON-62.4: Réinitialisation Immédiate = Blacklist Inefficace
+## 🐛 BUGS CRITIQUES IDENTIFIÉS {#bugs-critiques}
 
-**Découverte**: Réinitialiser compteurs C7+C9 dès 1 succès = **jamais blacklister** actions inefficaces. Compteurs doivent avoir **inertie**.
+### BUG #1: Réutilisation Scorecard (CORRIGÉ)
 
-**Contexte**: Code C7+C9 réinitialise compteurs à 0 dès qu'une action réussit une fois.
+**Date**: 2026-06-16  
+**Symptôme**: Premier RESET réussit, tous les suivants échouent avec HTTP 400
 
-**Analyse code**:
+**Cause**: L'API ARC-AGI-3 limite à **une session active par scorecard**
+
+**Solution**:
+
 ```python
-# C7: Réinitialisation immédiate
-if error >= 0.99:
-    self.identity_consecutive_failures += 1
-else:
-    self.identity_consecutive_failures = 0  # ❌ TROP AGRESSIF
+# ❌ AVANT - Scorecard créé UNE FOIS
+scorecard_id = arc.create_scorecard()
+for attempt in range(10):
+    env = arc.make(game, scorecard_id=scorecard_id)  # ÉCHOUE après la 1ère
 
-# C9: Réinitialisation immédiate
-if result.error > 0.9:
-    self.consecutive_high_errors += 1
-else:
-    self.consecutive_high_errors = 0  # ❌ TROP AGRESSIF
+# ✅ APRÈS - Scorecard créé pour CHAQUE tentative
+for attempt in range(10):
+    scorecard_id = arc.create_scorecard()  # NOUVEAU par tentative
+    env = arc.make(game, scorecard_id=scorecard_id)
 ```
 
-**Conséquence**:
-- Action échoue 4 fois → compteur = 4
-- Action réussit 1 fois → compteur = 0 (**RESET**)
-- Action échoue 4 fois → compteur = 4 (jamais atteint seuil 5)
-- **Résultat**: Blacklist **JAMAIS** déclenché
+### BUG #2: Absence env.close() (CORRIGÉ)
 
-**Impact**: 9,426 actions identity (41.3%) persistent malgré échecs répétés.
+**Date**: 2026-06-16  
+**Symptôme**: Fuite de ressources, scorecards non fermés
 
-**Principe**: **Compteurs doivent avoir inertie pour détecter patterns persistants**. Réinitialisation progressive (décrémentation -1) au lieu d'immédiate (reset 0).
+**Solution**:
 
-**Correction C11 requise**:
 ```python
-# Réinitialisation progressive
-if error >= 0.99:
-    self.identity_consecutive_failures += 1
-else:
-    self.identity_consecutive_failures = max(0, self.identity_consecutive_failures - 1)  # -1 au lieu de 0
+# ✅ Fermeture dans finally
+try:
+    # ... code ...
+except Exception as e:
+    print(f"Erreur: {e}")
+finally:
+    if env is not None:
+        try:
+            # Note: L'API arc-agi gère la fermeture via scorecard
+            # Pas de env.close() explicite nécessaire
+            pass
+        except Exception as e:
+            print(f"Erreur fermeture: {e}")
 ```
 
----
+### BUG #3: Clés API en dur (CORRIGÉ)
 
-### LEÇON-62.5: Score Stable = Corrections Insuffisantes
+**Date**: 2026-06-16  
+**Symptôme**: Clés exposées dans le code source
 
-**Découverte**: V25→V26 score stable 174/400 (0% amélioration) malgré 3 corrections actives = corrections **INSUFFISANTES**. Nécessite corrections **plus agressives**.
+**Solution**: Voir [Gestion des Secrets](#gestion-secrets)
 
-**Contexte**: Après 58 minutes test complet, score identique à V25.
+### BUG #4: Double RESET (CORRIGÉ)
 
-**Analyse comparative**:
-| Version | Corrections | Score | Évolution |
-|---------|-------------|-------|-----------|
-| V25 | C5+C6 | 174/400 (43.5%) | Baseline |
-| V26 | C5+C6+C7+C8+C9 | 174/400 (43.5%) | **0%** ❌ |
+**Date**: 2026-06-16  
+**Symptôme**: "Impossible de démarrer après 3 tentatives"
 
-**Métriques détaillées**:
-- Causal chains: +174% (8,061 → 22,543) ✅ **ACTIF**
-- Identity actions: +46% (6,466 → 9,426) ❌ **RÉGRESSION**
-- High errors: +234% (2,739 → 9,152) ❌ **RÉGRESSION**
+**Cause**: La fonction `reset_with_retry()` faisait un **double RESET**:
+1. Premier `env.reset()` → Succès
+2. `env.step(test_action)` → Test
+3. Deuxième `env.reset()` → **ÉCHEC** (jeu déjà démarré)
 
-**Analyse**:
-- C8 (causal chains) **ACTIF** mais **sans exploitation** = overhead inutile
-- C7+C9 **ACTIFS** mais **trop permissifs** = inefficaces
-- **Conclusion**: Corrections présentes mais **pas assez agressives**
+**Solution**:
 
-**Impact**: Temps développement gaspillé (3 corrections) sans gain performance.
-
-**Principe**: **Si score stable après corrections, augmenter agressivité**. Corrections incrémentales inefficaces, nécessite changements structurels.
-
-**Plan V27**:
-- C10: Seuils agressifs (5→2, 3→2)
-- C11: Réinitialisation progressive (-1 au lieu de 0)
-- C12: Exploitation causal chains (réutilisation + évitement)
-
-**Projection V27**:
-- Conservateur: 180/400 (45.0%) = +3.5%
-- Réaliste: 185/400 (46.2%) = +6.3%
-- Optimiste: 192/400 (48.0%) = +10.3%
-
----
-
-### LEÇON-62.6: Philosophie LumVorax Validée - Seul Test Complet Révèle Vérité
-
-**Découverte**: Tests unitaires (3/3 PASSED) + tests intégration (2/4 réussis) donnaient confiance MAIS seul test complet 400 puzzles révèle **inefficacité réelle**.
-
-**Contexte**: Protocole CLAUDE_PILOT suivi rigoureusement:
-1. ✅ Analyse forensique exhaustive (36,263 événements)
-2. ✅ Identification corrections (C7+C8+C9)
-3. ✅ Implémentation code
-4. ✅ Tests unitaires (3/3 PASSED)
-5. ✅ Tests intégration (2/4 réussis)
-6. ✅ Test complet 400 puzzles → **RÉVÉLATION: 0% amélioration**
-
-**Citation philosophie LumVorax**:
-> "Les logs ne sont pas du bruit mais la matière première de l'intelligence causale. Maximiser traçabilité = maximiser découverte causale."
-
-**Validation**:
-- Logs V26: 36,299 événements forensiques
-- Analyse révèle: C7+C9 actifs mais inefficaces (seuils trop permissifs)
-- **Sans logs forensiques**: Impossible identifier cause racine
-- **Avec logs forensiques**: Cause racine identifiée en 2 minutes
-
-**Impact**: Philosophie LumVorax **VALIDÉE**. Forensic maximal = découverte causale maximale.
-
-**Principe**: **"Développer à travers l'analyse des résultats réels, pas des suppositions"**. Tests synthétiques insuffisants, seules données production révèlent vérité.
-
----
-
-### LEÇON-62.7: Métriques Forensiques Doivent Être Actionnables
-
-**Découverte**: Métriques V26 (98.7% causal chains, 41.3% identity, 40.1% high errors) sont **descriptives** mais pas **actionnables** sans analyse approfondie.
-
-**Contexte**: Dashboard forensique affiche métriques en temps réel MAIS ne suggère pas actions correctives.
-
-**Analyse**:
-```
-Métrique descriptive: "98.7% transformations avec causal_chain"
-→ Interprétation: C8 actif ✅
-→ Action: Aucune (métrique positive)
-
-Métrique actionnable: "98.7% causal chains trackées MAIS 0% réutilisées"
-→ Interprétation: C8 actif mais inefficace ❌
-→ Action: Implémenter C12 (exploitation chains)
-```
-
-**Métriques V26 améliorées**:
-| Métrique | Descriptive | Actionnable |
-|----------|-------------|-------------|
-| Causal chains | 98.7% | 0% réutilisées → Implémenter C12 |
-| Identity | 41.3% | Seuil 5 trop élevé → Réduire à 2 |
-| High errors | 40.1% | Seuil 3 trop élevé → Réduire à 2 |
-
-**Impact**: Métriques descriptives = observation passive. Métriques actionnables = amélioration continue.
-
-**Principe**: **Chaque métrique doit suggérer action corrective si hors norme**. Format: "Métrique X = Y (attendu Z) → Action A".
-
----
-
-## 📈 RÉSUMÉ SESSION 62
-
-**Durée**: 58 minutes test + 15 minutes analyse = 73 minutes total
-**Score**: 174/400 (43.5%) - **STABLE** vs V25
-**Événements forensiques**: 36,299
-**Corrections testées**: C7+C8+C9 (actives mais inefficaces)
-**Leçons identifiées**: 7 nouvelles leçons critiques
-**Rapport généré**: RAPPORT_ANALYSE_V26_SCORE_STABLE.md (398 lignes)
-
-**Découverte majeure**: Corrections C7+C8+C9 **PRÉSENTES** dans code mais **INEFFICACES** car:
-1. Seuils trop permissifs (5/3 au lieu de 2/2)
-2. Réinitialisation trop agressive (0 au lieu de -1)
-3. Causal chains trackées mais pas exploitées
-
-**Plan V27**: Corrections C10+C11+C12 plus agressives
-**Projection**: 180-192/400 (45-48%) = +3.5% à +10.3%
-
-**Validation philosophie**: LumVorax forensic maximal = découverte causale maximale ✅
-
-
-## 📊 SESSION 61 - CORRECTIONS C5+C6 FORENSIQUES V25 (2026-06-13)
-
-> **🔬 APPLICATION CORRECTIONS FORENSIQUES**: Analyse ligne par ligne de 36,275 événements V24 → 2 corrections identifiées (C5 LOW, C6 HIGH) → Implémentation V25 → C5 résolu 100%, C6 actif 36% mais nécessite calibration. Score stable 174/400. Validation philosophie LumVorax : développer à travers l'analyse des résultats réels, pas des suppositions.
-
-### LEÇON-61.1: Correction C5 - Traçabilité Forensique Complète
-
-**Découverte**: Ajout du champ `component` à tous les événements résout complètement l'anomalie "missing_component" et améliore l'indexation forensique.
-
-**Contexte**: Analyse V24 révèle 1,611 événements (4.4%) sans champ `component` (puzzle_start, validation, adaptive_recoveries, etc.).
-
-**Correction appliquée** (`test_v23_corrected_pipeline.py`):
 ```python
-# AVANT
-forensic.log_event("puzzle_start", data={...})
-forensic.log_event("validation", data={...})
+# ❌ AVANT - Double RESET
+def reset_with_retry(env):
+    obs = env.reset()  # Premier RESET
+    env.step(test_action)  # Test
+    obs = env.reset()  # DEUXIÈME RESET → ÉCHEC !
+    return obs
 
-# APRÈS
-forensic.log_event("puzzle_start", component="test_pipeline", data={...})
-forensic.log_event("validation", component="test_pipeline", data={...})
-forensic.log_event("adaptive_recoveries", component="cross_puzzle_memory", data={...})
-forensic.log_event("explanation_generated", component="explanation_generator", data={...})
-forensic.log_event("symbolic_verifications", component="symbolic_verifier", data={...})
+# ✅ APRÈS - Un seul RESET
+def reset_with_retry(env):
+    obs = env.reset()  # Un seul RESET
+    time.sleep(2.0)  # Attente
+    return obs  # Retour direct
 ```
 
-**Résultat V25**: 
-- Événements sans component: **0/36,263 (0%)** vs 1,611/36,275 (4.4%)
-- ✅ **CORRECTION COMPLÈTE**
+**Résultat**: Taux de succès RESET passe de 2% à 100% ✅
 
-**Impact**: Traçabilité forensique 100% complète, indexation par composant fonctionnelle, aucun événement orphelin.
+### BUG #5: WorldModelConsultation non-hashable (CORRIGÉ)
+
+**Date**: 2026-06-16
+**Symptôme**: `unhashable type: 'WorldModelConsultation'`
+
+**Cause**: PolicyManager essaie d'utiliser un objet `WorldModelConsultation` comme clé de dictionnaire
+
+**Solution**: Implémentation de `__hash__()` et `__eq__()` dans la classe WorldModelConsultation
+
+**Résultat**: Le jeu progresse maintenant au-delà du premier step ✅
+
+### BUG #6: Timeout Session API (CORRIGÉ)
+
+**Date**: 2026-06-16
+**Symptôme**: Session expire après ~950 steps avec erreur GAME_NOT_STARTED_ERROR
+
+**Cause**: Le serveur ARC-AGI ferme la session après ~5 minutes d'inactivité
+
+**Solution**:
+1. Gestion automatique de reconnexion
+2. Réduction max_steps à 100 pour éviter timeout
+3. Création nouveau scorecard si session expirée
+
+**Résultat**: Jeu progresse de manière stable ✅
 
 ---
 
-### LEÇON-61.2: Correction C6 - Pruning Intelligent Partiellement Efficace
+## 🏗️ ARCHITECTURE ET VERSIONNAGE {#architecture}
 
-**Découverte**: Le système de pruning intelligent est actif (36% transformations avec causal_chain) mais le taux de succès baisse légèrement (-0.8%). Le pruning contextuel élimine peut-être des actions prometteuses.
+### LEÇON #78.1: Versionnage Critique
 
-**Contexte**: Analyse V24 révèle taux succès transformations 21.8% (< 30%) avec 0 chaînes causales utilisées. Root cause : exploration massive sans discrimination.
+**Date**: 2026-06-14  
+**Contexte**: Session 78 - Confusion versions V40.3 vs V41
 
-**Correction appliquée** (`transformation_learning_engine.py`):
+#### Problème
 
-1. **Causal Chain Tracking** (lignes 106-113):
+Confusion entre versions → Modifications perdues → Régression
+
+#### Solution
+
+### LEÇON #79.6: Audit Complet Révèle Architecture Fragmentée
+
+**Date**: 2026-06-16  
+**Contexte**: Session 79 - Audit exhaustif avant modifications reward system
+
+#### Problème Identifié
+
+**Architecture fragmentée sur 40 versions**:
+- 94 modules Python créés
+- **Seulement 16% utilisés** (15/94 modules actifs)
+- **84% dormants** (79/94 modules jamais appelés)
+- Duplications massives détectées
+
+#### Découvertes Critiques
+
+**1. Reward System EXISTE mais NON intégré**:
 ```python
-self.current_causal_chain: List[str] = []
-self.causal_dependencies: Dict[str, List[str]] = defaultdict(list)
-self.context_cache: Dict[str, List[str]] = {}
-self.action_success_history: Dict[str, List[bool]] = defaultdict(list)
+# core/information_gain_reward.py (295 lignes)
+# ✅ Fonctionnalités complètes:
+# - Reward intrinsèque (gain d'information)
+# - Reward causal (compréhension cause-effet)
+# - Reward nouveauté (exploration)
+# - Bonus exploration actions peu testées
+
+# ❌ PROBLÈME: Jamais importé ni utilisé dans le pipeline
 ```
 
-2. **Context-Aware Pruning** (lignes 467-502):
+**2. Decision Kernels Avancés DORMANTS**:
+- 6 kernels créés (minimal → v34_causal)
+- PolicyManager V40.3 utilise UNIQUEMENT le plus basique (minimal)
+- Kernels V29-V34 (sophistiqués) jamais activés
+
+**3. BOB IA (PILOT) Non Activé**:
 ```python
-def _filter_actions_by_context(self, input_grid, candidate_actions):
-    context_key = self._get_context_key(input_grid)
-    if context_key in self.context_cache:
-        return cached_actions
-    # Filtrer par préconditions + historique récent (>10% succès)
-    valid_actions = [a for a in candidates if recent_success_rate > 0.1]
-    return valid_actions if valid_actions else candidate_actions[:3]
+# core/mdbai_pilot_engine.py (429 lignes)
+# ✅ Orchestration workflow multi-phases
+# ❌ Jamais importé ni utilisé
 ```
 
-3. **Adaptive Selection + Early Stopping** (lignes 520-565):
+**4. Duplications Massives**:
+- **Mémoire**: 5 systèmes différents
+- **Decision Kernels**: 6 versions
+- **Action Discovery**: 4 systèmes
+- **Localisation Agent**: 4 systèmes
+
+#### Statistiques Utilisation
+
+| Catégorie | Actifs | Dormants | Taux |
+|-----------|--------|----------|------|
+| Decision Kernels | 1/6 | 5/6 | 17% |
+| Mémoire | 2/5 | 3/5 | 40% |
+| Action Discovery | 2/4 | 2/4 | 50% |
+| Métacognition | 0/8 | 8/8 | 0% |
+| Reward Systems | 0/1 | 1/1 | 0% |
+| **TOTAL** | **15/94** | **79/94** | **16%** |
+
+#### Cause Racine
+
+1. **Développement itératif sans consolidation**
+2. **Nouveaux modules créés sans supprimer anciens**
+3. **Manque de vision architecturale unifiée**
+4. **Absence d'audit régulier**
+
+#### Solution Appliquée
+
+**Principe**: **NE PAS créer de nouveaux modules**. Utiliser l'existant.
+
+**Plan d'intégration en 3 phases**:
+
+1. **Phase 1 (P0)**: Activer `information_gain_reward.py`
+   - Reward intrinsèque > 0.0 même sans progression
+   - Temps: 2-3h vs 20h pour créer nouveau système
+
+2. **Phase 2 (P1)**: Activer `decision_kernel_v34_causal.py`
+   - Remplacer kernel minimal par V34 (le plus sophistiqué)
+   - Activer Causal Reflection Engine
+   - Temps: 3-4h
+
+3. **Phase 3 (P2)**: Activer `mdbai_pilot_engine.py`
+   - Orchestration workflow multi-phases
+   - Temps: 4-5h
+
+**Gain total**: 10-12h vs 30-40h pour créer nouveaux modules
+
+#### Impact
+
+**Avant Audit**:
+- Reward: 0.00 (100% des steps)
+- Kernel: Minimal (basique)
+- Workflow: Linéaire simple
+- Modules utilisés: 16%
+
+**Après Intégration** (attendu):
+- Reward: 0.05-0.15 (reward intrinsèque)
+- Kernel: V34 Causal (sophistiqué)
+- Workflow: Multi-phases (PILOT)
+- Modules utilisés: 32%
+
+#### Leçons Apprises
+
+1. **Audit obligatoire** avant toute nouvelle fonctionnalité
+2. **Consolidation régulière** (tous les 5-10 versions)
+3. **Suppression modules obsolètes** systématique
+4. **Documentation architecture** à jour
+5. **Vérifier l'existant AVANT de créer**
+
+#### Protocole Audit Futur
+
+```bash
+# 1. Lister tous les modules
+find lumvorax2/src/MAGEN -name "*.py" -type f | wc -l
+
+# 2. Identifier modules importés
+grep -r "^from core\." lumvorax2/src/MAGEN/*.py | \
+  cut -d: -f2 | sort | uniq
+
+# 3. Comparer avec modules existants
+# 4. Identifier dormants
+# 5. Décider: Activer, Consolider, ou Supprimer
+```
+
+#### Fichiers Créés
+
+- `RAPPORT_AUDIT_COMPLET_SESSION79.md` (738 lignes)
+- `PLAN_INTEGRATION_DETAILLE_SESSION79.md` (847 lignes)
+
+#### Références
+
+- Audit complet: `RAPPORT_AUDIT_COMPLET_SESSION79.md`
+- Plan intégration: `PLAN_INTEGRATION_DETAILLE_SESSION79.md`
+- Inventaire modules: `INVENTAIRE_COMPLET_MODULES_MAGEN.md`
+
+---
+
+**Protocole de versionnage strict**:
+
+1. **Toujours indiquer la version** dans les noms de fichiers
+2. **Documenter les changements** dans CHANGELOG.md
+3. **Tester avant de merger** les modifications
+4. **Garder les anciennes versions** pour rollback
+
+#### Versions MAGEN
+
+- **V39**: Modules cognitifs de base
+- **V40.3**: PolicyManager + WorldStateGraph (ACTUELLE)
+- **V41**: Métriques de vérité (EN DÉVELOPPEMENT)
+
+---
+
+## 🔍 ANALYSE FORENSIQUE {#analyse-forensique}
+
+### LEÇON #79.2: Méthodologie d'Investigation
+
+**Date**: 2026-06-16  
+**Contexte**: Session 79 - Analyse forensique ls20-9607627b
+
+#### Méthode
+
+1. **Collecte des logs**: Tous les fichiers d'exécution
+2. **Pattern matching**: Recherche de patterns d'échec
+3. **Analyse ligne par ligne**: Examen détaillé des logs
+4. **Hypothèses**: Formulation de causes probables
+5. **Validation**: Tests ciblés pour confirmer
+6. **Correction**: Application des fixes
+7. **Vérification**: Tests de non-régression
+
+#### Outils
+
+```bash
+# Recherche dans les logs
+grep -r "ls20-9607627b" *.log
+
+# Analyse des patterns
+grep "RESET" execution.log | wc -l
+
+# Extraction d'erreurs
+grep "ERROR\|❌" execution.log
+```
+
+#### Métriques Forensiques
+
+- **Taux de succès RESET**: 2% → 100% (après correction bug #1)
+- **Reward moyen**: 0.00 (problème mécanique du jeu)
+- **Tentatives avant échec**: 3 (limite retry)
+
+
+### LEÇON #79.7: DÉCOUVERTE CRITIQUE - Infrastructure ≠ Compréhension
+
+**Date**: 2026-06-17  
+**Contexte**: Session 79 - Analyse forensique complète et validation utilisateur
+
+#### Problème Fondamental Identifié
+
+**Citation Clé Utilisateur**:
+> "MAGEN est devenu très bon pour mesurer son activité interne, mais il ne démontre pas encore qu'il construit une représentation persistante du monde qu'il explore."
+
+#### Diagnostic Validé
+
+**Infrastructure sophistiquée ≠ Compréhension du monde**
+
+**Métriques Infrastructure (✅ Excellentes)**:
+- 50 événements enregistrés
+- 6 commandes exécutées  
+- 1 erreur corrigée
+- Monitoring temps réel actif
+
+**Métriques Intelligence (❌ Absentes)**:
+- **0** positions agent trackées
+- **0%** couverture spatiale
+- **0** salles mémorisées
+- **0** nœuds graphe navigation
+- **false** avatar identifié
+- **0** liens causaux
+
+#### Métaphore de l'Explorateur
+
+**Sans Carte (État Actuel)**:
+```
+Journal de bord:
+- 08:00 | J'ai marché
+- 08:05 | J'ai tourné
+- 08:10 | J'ai ouvert une porte
+```
+→ Activité documentée, mais aucune carte du lieu
+
+**Avec Carte (Objectif)**:
+```
+Carte du monde:
+- Position actuelle: (32, 45)
+- Salle A → Porte Nord → Salle B
+- Bouton rouge en (15, 20) ouvre Porte Nord
+```
+→ Connaissance persistante et navigable
+
+#### 3 Problèmes P0 Identifiés
+
+**1. Position Agent = 0 ⚠️ CRITIQUE**
+- Impact: Tous systèmes supérieurs bloqués
+- Question non résolue: "Où suis-je actuellement ?"
+- Impossible: mémoire spatiale, détection boucles, planification
+
+**2. Avatar Non Identifié ⚠️ FONDAMENTAL**
+- Impact: Pas de référentiel principal
+- Ne sait pas: "Quel pixel me représente ?"
+- Distinction agent/environnement floue
+
+**3. Graphe Navigation = 0 ⚠️ PLUS GRAVE**
+- Impact: Aucune consolidation observations
+- 0 régions, 0 patterns spatiaux, 0 causalité persistante
+- Exploration = expérience locale et temporaire
+
+#### Insight Fondamental Validé
+
+**Ordre Correct**:
+```
+1. REPRÉSENTATION (connaissance) ← PRIORITÉ
+   ↓
+2. STRATÉGIE (décision)
+```
+
+**Pourquoi ?**
+- Sans carte: stratégie aveugle, exploration aléatoire
+- Avec carte: stratégie informée, exploration ciblée
+
+#### Correction Appliquée
+
+**Fichier créé**: `RAPPORT_P0_3_QUICK_WIN_SESSION79.md`
+- Diagnostic complet 3 problèmes P0
+- Plan correction détaillé
+- Estimation temps: 4-6h total
+
+---
+
+### LEÇON #88.1: Cartographie Exhaustive vs Résolution Puzzle
+
+**Date**: 2026-06-18  
+**Contexte**: Sessions 88-90 - Cartographie 3253 états, 18565 steps, 0 victoire
+
+#### Problème Identifié
+
+**Objectif mal défini**: "Cartographier 100% états" au lieu de "Résoudre puzzle"
+
+**Résultats**:
+- ✅ 3253 états uniques découverts (cartographie complète)
+- ✅ 70 parties jouées (exploration exhaustive)
+- ✅ Logging forensique 100% validé
+- ❌ **0 victoire** après 18,565 steps
+- ❌ **0 reward > 0** jamais obtenu
+
+#### Stratégie Utilisée (Sessions 88-90)
+
 ```python
-def predict(self, test_input, use_best_action=True):
-    # Étape 1: Filtrer par contexte
-    filtered_actions = self._filter_actions_by_context(test_input, candidates)
-    # Étape 2: Top-5 actions
-    top_actions = self._select_best_actions(filtered_actions, top_k=5)
-    # Étape 3: Early stopping si confidence > 0.8
-    for action_name in top_actions:
-        if action.confidence > 0.8:
-            break
-    # Mettre à jour causal chain
-    self.current_causal_chain.append(best_action)
+# ❌ APPROCHE INCORRECTE - Exploration aléatoire
+def choose_action():
+    return random.choice([ACTION1, ACTION2, ACTION3, ACTION4, ACTION5])
+
+# Objectif: Découvrir tous les états possibles
+# Résultat: 3253 états, mais aucun n'est une victoire
 ```
 
-**Résultat V25**:
-- Transformations avec causal_chain: **8,061/22,418 (36%)** vs 0/22,094 (0%)
-- Taux succès: **21.0%** vs 21.8% (-0.8%)
-- Score: **174/400 (43.5%)** stable
+#### Leçon Critique
 
-**Analyse**:
-- ✅ Causal chains **ACTIVES** (36% vs 0%)
-- ⚠️ Taux succès **légèrement baissé** (-0.8%)
-- ⚠️ Score **stable** (pas d'amélioration)
+**Cartographie ≠ Résolution**
 
-**Hypothèse**: Le pruning est peut-être trop agressif (top_k=5, confidence>0.8, history>0.1) et élimine des actions prometteuses dans certains contextes.
+- Cartographier l'espace d'états ne garantit PAS de trouver la solution
+- Exploration aléatoire inefficace pour puzzles avec objectifs spécifiques
+- Besoin d'une stratégie DIRIGÉE vers un objectif (goal-oriented)
 
-**Action requise**: Calibration des seuils + analyse qualitative des 226 échecs pour identifier si le pruning élimine des solutions valides.
+#### Métriques
+
+| Métrique | Session 88 | Session 89 | Session 90 | Total |
+|----------|-----------|-----------|-----------|-------|
+| Parties | 13 | 70 | 130 | 213 |
+| Steps | 1,685 | 9,530 | 18,565 | 29,780 |
+| États uniques | 872 | 3,253 | 1 | 3,253 |
+| Reward > 0 | 0 | 0 | 0 | **0** |
+| Temps | 10 min | 60 min | 97.8 min | 167.8 min |
 
 ---
 
-### LEÇON-61.3: Score Stable Malgré Corrections Structurelles
+### LEÇON #91.1: ERREUR CRITIQUE - Données Disponibles Ignorées
 
-**Découverte**: Les corrections C5+C6 n'améliorent pas le score (174/400 stable). Le problème fondamental n'est pas la quantité d'exploration mais la qualité des transformations.
+**Date**: 2026-06-18  
+**Contexte**: Session 91 - Correction suite feedback utilisateur
+**Criticité**: 🔴 MAXIMALE
 
-**Contexte**: V25 avec C5+C6 appliquées maintient exactement le même score que V24.
+#### Erreur Fondamentale Identifiée
 
-**Interprétation**:
-1. **C5 était LOW priority**: Traçabilité forensique, pas performance directe
-2. **C6 nécessite calibration**: Pruning actif mais peut-être mal calibré
-3. **Problème fondamental ailleurs**: Qualité des transformations > Quantité d'exploration
+**Citation utilisateur**: 
+> "COMMENT ÇA PAS ACCES A LA GRILLE VISUELLE ? EN A LE DROIT A QUOI AU DEBUT DU JEUX EXACTEMENT ???"
 
-**Métriques comparatives**:
+**Erreur dans nos rapports**:
+```markdown
+❌ FAUX: "Nous n'avions PAS accès à la grille visuelle"
+❌ FAUX: "Nous ne pouvions observer que reward et done"
+❌ FAUX: "Le modèle concurrent avait plus d'informations"
 ```
-V24: 22,094 transformations, 4,749 succès (21.8%), 0 causal_chain
-V25: 22,418 transformations, 4,697 succès (21.0%), 8,061 causal_chain (36%)
-Score: 174/400 STABLE
+
+#### Vérité Forensique
+
+**Preuves code (session81_analyze_action_effects.py, lignes 68-78)**:
+```python
+def extract_frame(self, obs):
+    """Extraire frame 2D depuis observation"""
+    if hasattr(obs, 'frame'):
+        frame_data = obs.frame
+        if isinstance(frame_data, list):
+            frame_array = np.asarray(frame_data)
+            if frame_array.ndim == 3 and frame_array.shape[0] == 1:
+                return frame_array[0]
+            return frame_array
+        return frame_data
+    return None
 ```
 
-**Conclusion**: Les corrections structurelles (pruning, causal tracking) sont nécessaires mais pas suffisantes. Il faut analyser **qualitativement** les échecs pour identifier patterns structurels et améliorer la qualité des transformations.
-
-**Prochaine étape**: Analyse qualitative des 226 échecs + extraction signatures d'échec + identification transformations manquantes.
-
----
-
-### LEÇON-61.4: Validation Philosophie LumVorax - Développement Basé sur Données Réelles
-
-**Découverte**: L'analyse forensique ligne par ligne (36,275 événements) a permis d'identifier précisément les corrections nécessaires sans aucune supposition.
-
-**Contexte**: Analyse profonde V24 → 1,611 anomalies détectées → 2 corrections identifiées → Implémentation V25 → Validation immédiate.
-
-**Validation empirique**:
-- C5 identifiée (1,611 événements sans component) → Corrigée → 0 événements sans component
-- C6 identifiée (0 causal_chain, 21.8% succès) → Implémentée → 36% causal_chain actif
-- Aucune supposition, que des données réelles bit level bit nanoseconde
-
-**Principe LumVorax confirmé**: 
-> "Développer à travers l'analyse et l'étude des résultats réels bit level bit nanoseconde obtenus et non des suppositions"
-
-**Impact**: 
-- Corrections précises basées sur anomalies réelles
-- Validation immédiate (C5 100%, C6 36%)
-- Pas de régression (score stable)
-- Traçabilité forensique maximale conservée
-
-**Application future**: Toute correction doit être basée sur analyse forensique ligne par ligne des logs réels, pas sur hypothèses théoriques.
-
----
-
-### LEÇON-61.5: Prochaine Frontière - Analyse Qualitative vs Quantitative
-
-**Découverte**: Les corrections quantitatives (pruning, early stopping) sont insuffisantes. Il faut analyser qualitativement les échecs pour identifier patterns structurels.
-
-**Contexte**: V25 avec pruning intelligent maintient le score stable. Le problème n'est pas la quantité d'exploration mais la qualité des transformations disponibles.
-
-**Analyse nécessaire**:
-1. **Comparaison trajectoires succès vs échec**: Quelles actions mènent au succès ? Lesquelles à l'échec ?
-2. **Extraction signatures d'échec**: Patterns structurels récurrents dans les 226 échecs
-3. **Identification transformations manquantes**: Quelles transformations ne sont pas dans l'action space ?
-4. **Graphe causal complet**: Visualiser dépendances causales découvertes (8,061 chaînes)
-
-**Objectif**: Passer de l'optimisation quantitative (combien de transformations ?) à l'optimisation qualitative (quelles transformations sont nécessaires ?).
-
-**Prochaine session**: Analyse qualitative profonde des 226 échecs + extraction patterns structurels + identification transformations manquantes.
-
----
-
-## 📊 SESSION 60 - LUMVORAX FORENSIC MAXIMAL V24 (2026-06-13)
-
-> **🔬 VALIDATION PHILOSOPHIE LUMVORAX**: Les logs ne sont PAS du bruit, ils sont la matière première de l'intelligence causale. Test V24 avec forensic maximal confirme : 174/400 (43.5%) maintenu + 17 MB logs forensiques avec contexte étendu (timestamps nanoseconde, shapes, causal_chain, transformation_id unique). Preuve empirique que l'approche forensic intensive FONCTIONNE.
-
-### LEÇON-60.1: Forensic Maximal > Optimisation Prématurée
-
-**Découverte**: Réduire les logs pour "optimiser" détruit l'intelligence causale. Le vrai coût n'est pas la taille des logs, c'est la perte d'information structurelle.
-
-**Contexte**: Tentative P1/P2 de réduction logs (filtrage transformations, suppression "unknown") ANNULÉE après réflexion sur philosophie LumVorax.
-
-**Preuve empirique**:
-- V23 filtré: 9 MB, 36,155 événements, contexte limité (4 champs)
-- V24 maximal: 17 MB, 36,275 événements, contexte étendu (13 champs)
-- Score: 174/400 MAINTENU (aucune régression)
-- Gain intelligence: MAXIMAL (toute l'information conservée)
-
-**Application**: Logger TOUT sans exception:
-- Tous les échecs (même error=1.0)
-- Toutes les actions (même "unknown")
-- Timestamps nanoseconde (précision absolue)
-- Contexte complet (shapes, causal_chain, memory_state)
-- ID unique par transformation (replay déterministe)
-
-**Impact mesuré**: +88% taille logs (+8 MB) = +225% contexte par événement (4→13 champs) = Intelligence causale maximale
-
----
-
-### LEÇON-60.2: Contexte Forensique Étendu = Mémoire Causale
-
-**Découverte**: Chaque transformation doit contenir son contexte complet pour permettre reconstruction causale et replay déterministe.
-
-**Contexte**: Implémentation forensic maximal dans `transformation_learning_engine.py` avec 13 champs par événement.
-
-**Preuve empirique** (événement réel):
+**Preuves données (session89_game_001.json, lignes 5-15)**:
 ```json
-{
-    "timestamp_ns": 1781379414120326442,
-    "action": "rotate_90",
-    "success": true,
-    "error": 0.0888,
-    "execution_time": 4.26e-05,
-    "input_shape": [6, 6],
-    "output_shape": [6, 6],
-    "target_shape": [6, 6],
-    "transformation_id": "rotate_90_1781379414120328353",
-    "causal_consistency": true,
-    "shape_match": true,
-    "causal_chain": [],
-    "memory_state": {"total_transformations": 1}
+"initial_distribution": {
+  "0": 3,
+  "1": 2,
+  "3": 892,
+  "4": 2609,  // CONSTANT - jamais changé
+  "5": 439,
+  "8": 12,
+  "9": 45,
+  "11": 84,   // DIMINUE progressivement
+  "12": 10
 }
 ```
 
-**Application**: Chaque événement devient un nœud dans le graphe causal complet du système, permettant:
-- Reconstruction temporelle précise (nanoseconde)
-- Replay déterministe (transformation_id unique)
-- Analyse causale (causal_chain, causal_consistency)
-- Comparaison trajectoires (succès vs échec)
-- Détection anomalies structurelles (shape_match, error patterns)
+#### Données RÉELLEMENT Disponibles
 
-**Impact attendu**: Base pour graphe causal, replay déterministe, et extraction structures cognitives émergentes
+✅ **obs.frame**: Grille visuelle 64×64 complète  
+✅ **Distribution pixels**: Comptage de chaque couleur  
+✅ **Hash d'état**: SHA256 pour détecter états uniques  
+✅ **Reward**: obs.levels_completed  
+✅ **État jeu**: obs.state (PLAYING/GAME_OVER)
 
----
+**NOUS AVIONS LES MÊMES DONNÉES QUE LE MODÈLE GAGNANT!**
 
-### LEÇON-60.3: Validation Expérimentale Philosophie LumVorax
+#### Pourquoi Nous Avons Échoué
 
-**Découverte**: L'approche forensic intensive est maintenant VALIDÉE expérimentalement par le saut V5→V23.
-
-**Contexte**: Évolution performance MAGEN sur 400 puzzles.
-
-**Preuve empirique**:
-- V5 (pattern matching statique): 45/400 (11.2%)
-- V23 (moteur transformationnel + forensic): 174/400 (43.5%)
-- Gain: +287% performance (+129 puzzles)
-- Durée: 43s (stable, pas d'explosion)
-
-**Application**: La philosophie "plus de logs + meilleure intelligence forensique" est la BONNE approche pour MAGEN. Ne JAMAIS réduire les logs de façon destructive.
-
-**Impact mesuré**: +287% performance prouve que forensic intensif → découverte causale → intelligence émergente
-
----
-
-### LEÇON-60.4: Métriques Forensiques Révèlent Architecture Cognitive
-
-**Découverte**: Les compteurs forensiques montrent que MAGEN n'est plus un "pattern matcher" mais un "moteur transformationnel causal".
-
-**Contexte**: Analyse compteurs forensiques V24 (400 puzzles).
-
-**Preuve empirique**:
-```
-pattern_detection: 12,570 (31.4 par puzzle)
-transformation: 22,094 (55.2 par puzzle)  ← DOMINANT
-validation: 400 (1 par puzzle)
-adaptive_recoveries: 400 (1 par puzzle)
-symbolic_verifications: 173 (43.2% des succès)
-```
-
-**Application**: Le système utilise maintenant RÉELLEMENT:
-- Transformations apprises (22k événements)
-- Récupération adaptative (400 tentatives)
-- Validation symbolique (173 vérifications)
-- Exploration transformationnelle (vs pattern matching exact)
-
-**Impact mesuré**: Transition architecturale confirmée: Pattern Matcher Statique → Moteur Transformationnel Causal
-
----
-
-### LEÇON-60.5: Prochaine Frontière = Extraction Structures Cognitives
-
-**Découverte**: Le défi n'est plus "collecter les données" mais "extraire les structures cognitives profondes".
-
-**Contexte**: 17 MB de logs forensiques avec contexte complet disponibles pour analyse.
-
-**Preuve empirique**:
-- 36,275 événements avec 13 champs chacun
-- Timestamps nanoseconde pour reconstruction temporelle
-- Transformation_id unique pour replay déterministe
-- Causal_chain pour graphe de dépendances
-- Shape_match + causal_consistency pour signatures
-
-**Application**: Implémenter couches d'intelligence forensique:
-1. **Graphe Causal**: Reconstruction dépendances transformations
-2. **Replay Déterministe**: Reproduction exacte trajectoires
-3. **Comparateur Succès/Échec**: Analyse différentielle
-4. **Signatures d'Échec**: Patterns structurels récurrents
-5. **Mémoire Méta-Cognitive**: Apprentissage sur trajectoires
-
-**Impact attendu**: Passage de "moteur transformationnel" à "raisonneur causal hiérarchique"
-
----
-
----
-
-## 📊 SESSION 49 - HYPOTHESIS SPACE RÉVOLUTION (2026-06-13)
-
-> **🔬 DÉCOUVERTE MAJEURE SESSION 49**: Le système MAGEN échoue (18/400 = 4.5%) car il manque un **Hypothesis Space Map (HSM)** - il teste séquentiellement au lieu de simuler en parallèle comme un cerveau humain. Cette découverte change TOUT - passage d'un "solveur de puzzles" à un "moteur de simulation cognitive".
-
-### LEÇON-49.1: Hypothesis Space > Sequential Testing
-
-**Découverte**: Un système qui teste séquentiellement ne peut pas rivaliser avec un cerveau qui simule en parallèle.
-
-**Contexte**: Analyse forensique 3,661 lignes (results_phase2 + knowledge_base) révèle que MAGEN teste programmes un par un, sans vision globale de l'espace des solutions possibles.
-
-**Preuve empirique**:
-- AdaptiveStrategy: 4,111 tentatives, 0 succès (0%)
-- Failure pattern "relational_marking_failed": 454 occurrences (95.5%)
-- Aucune amélioration après 4 corrections (18/400 constant)
-
-**Application**: Créer Hypothesis Space Map (HSM) pour simulation parallèle de toutes les solutions possibles, avec:
-- Nœuds = solutions candidates
-- Branches = transformations possibles
-- Barrières = contraintes (limites grilles, couleurs valides)
-- Filtres = train pairs (validation multi-cas)
-- Visualisation = toutes solutions visibles en parallèle
-
-**Impact attendu**: +20-30 puzzles (18→38-48/400) grâce à élimination anticipée et sélection globale.
-
----
-
-### LEÇON-49.2: Overfitting ≠ Généralisation
-
-**Découverte**: 11/11 (100%) training ne garantit PAS 400/400 evaluation - le système mémorise des "trucs qui marchent" au lieu de généraliser des "règles".
-
-**Contexte**: Training set résolu parfaitement (100%) mais evaluation set effondrement massif (4.5%).
-
-**Preuve empirique**:
-- Training: 11/11 (100%) ✅
-- Evaluation: 18/400 (4.5%) ❌
-- Ratio: 100% / 4.5% = 22× écart (overfitting extrême)
-
-**Explication**: Le système apprend des solutions locales correctes pour les 11 puzzles training, mais n'extrait pas les principes généraux applicables aux 400 puzzles evaluation.
-
-**Application**: 
-- Mesurer généralisation sur dataset séparé, pas juste training accuracy
-- Implémenter régularisation (dropout, early stopping)
-- Créer générateurs paramétriques au lieu de solutions hardcodées
-
-**Citation feedback utilisateur**: "Le système ne généralise pas des 'règles', il mémorise des 'trucs qui marchent'."
-
----
-
-### LEÇON-49.3: Global Constraints > Local Optimization
-
-**Découverte**: Optimiser train-par-train crée des solutions qui ne généralisent pas - contraintes globales simultanées nécessaires.
-
-**Contexte**: Le système valide programmes sur chaque train pair séparément, sans vérifier cohérence globale.
-
-**Preuve empirique**:
+**Ce que nous AURIONS DÛ faire**:
 ```python
-# AVANT (local)
-for train_input, train_output in train_pairs:
-    if program.execute(train_input) == train_output:
-        score += 1
-
-# APRÈS (global)
-def validate_global_constraints(program, train_pairs):
-    for train_input, train_output in train_pairs:
-        if not np.array_equal(program.execute(train_input), train_output):
-            return False
-    return True
+# ✅ APPROCHE CORRECTE - Analyse spatiale
+def analyze_frame_spatially(frame):
+    # 1. Détecter régions connexes
+    regions = find_connected_components(frame)
+    
+    # 2. Identifier patterns
+    goals = find_goal_patterns(frame)
+    agent = find_agent_pattern(frame)
+    obstacles = find_obstacle_patterns(frame)
+    
+    # 3. Planifier chemin
+    path = a_star(agent, goals, obstacles)
+    
+    return path
 ```
 
-**Application**: Implémenter validation globale où programme doit fonctionner sur TOUS les trains simultanément, pas juste maximiser score moyen.
-
-**Impact attendu**: +10-15 puzzles (38-48→48-63/400) grâce à élimination solutions localement optimales mais globalement invalides.
-
----
-
-### LEÇON-49.4: Pruning Mental > Exhaustive Search
-
-**Découverte**: Le cerveau élimine AVANT de tester, pas après - élimination anticipée (pruning) critique pour efficacité.
-
-**Contexte**: MAGEN génère tous programmes possibles puis teste un par un, sans élimination précoce des candidats invalides.
-
-**Preuve empirique**:
-- Programmes générés: 200-500 par puzzle
-- Programmes testés: 200-500 (100%)
-- Programmes valides: 0-1 (0.2-0.5%)
-- Efficacité: 99.5-99.8% tests inutiles
-
-**Ce que le cerveau humain fait**:
-- ✅ Élimination visuelle immédiate (pruning)
-- ✅ Sélection intuitive basée sur cohérence globale
-- ✅ Test uniquement candidats prometteurs (5-10%)
-
-**Application**: Implémenter pruning dans HSM:
+**Ce que nous avons RÉELLEMENT fait**:
 ```python
-def prune_invalid_hypotheses(hypotheses, constraints):
-    valid = []
-    for h in hypotheses:
-        # Élimination AVANT test
-        if h.violates_grid_limits(): continue
-        if h.violates_color_constraints(): continue
-        if h.violates_symmetry(): continue
-        valid.append(h)
-    return valid  # 95% éliminés sans test
+# ❌ APPROCHE INCORRECTE - Statistiques uniquement
+def analyze_frame_statistically(frame):
+    # Compter pixels de chaque couleur
+    distribution = Counter(frame.flatten())
+    
+    # Calculer hash
+    hash_state = hashlib.sha256(frame.tobytes()).hexdigest()
+    
+    # Choisir action aléatoire
+    action = random.choice(actions)
+    
+    return action
 ```
 
-**Impact attendu**: Réduction 95% tests inutiles, accélération 20× génération solutions.
+#### Comparaison Modèle Concurrent
+
+**Modèle Gagnant (Frame 719 Move Down Step.txt)**:
+- ✅ Analyse spatiale de obs.frame
+- ✅ Détection goals: (44,51), (45,51), (45,52)
+- ✅ Planification chemin A*
+- ✅ Navigation dirigée vers objectif
+- **Résultat**: ✅ Victoire en 645 steps
+
+**Notre Approche (Sessions 88-90)**:
+- ❌ Comptage pixels uniquement
+- ❌ Aucune analyse spatiale
+- ❌ Aucune détection goals
+- ❌ Exploration aléatoire
+- **Résultat**: ❌ Échec après 18,565 steps
+
+#### Données Ignorées - Exemple Critique
+
+**Pixel 11 - Comportement observé**:
+```
+Step 1:  84 occurrences
+Step 2:  82 (-2)
+Step 3:  80 (-2)
+...
+Step 42: 0  (disparu)
+Step 43: 20,564 (+20,564 !!!)
+```
+
+**Ce que cela signifiait** (et que nous n'avons PAS analysé):
+- Pixel 11 = probablement un "timer" ou "fuel"
+- Diminue de 2 par step
+- Quand atteint 0 → transformation majeure du jeu
+- Pourrait être lié à condition victoire
+
+**Pixel 4 - Constant à 2609**:
+- JAMAIS changé en 18,565 steps
+- Probablement background ou murs
+- Indique un labyrinthe fixe
+
+#### Erreur Stratégique Fondamentale
+
+**Nous avons traité obs.frame comme des STATISTIQUES au lieu d'une IMAGE**
+
+| Aspect | Statistiques | Image |
+|--------|-------------|-------|
+| Analyse | Comptage pixels | Détection patterns |
+| Objectif | Distribution | Goals visuels |
+| Stratégie | Aléatoire | Planification |
+| Résultat | 0 victoire | Victoire possible |
+
+#### Correction Appliquée
+
+**Fichier créé**: `RAPPORT_CORRECTION_CRITIQUE_ACCES_DONNEES.md` (400 lignes)
+- Section 1-2: Erreur identifiée + preuves forensiques
+- Section 3-4: Analyse comparative corrigée
+- Section 5-7: Comparaison juste + leçons critiques
+- Section 8-10: Prochaines étapes + validation
+
+#### Leçons Critiques
+
+1. **TOUJOURS vérifier les données disponibles** avant de conclure
+2. **Analyser obs.frame comme une IMAGE**, pas comme des statistiques
+3. **Chercher patterns visuels** (goals, obstacles, chemins)
+4. **Planifier stratégie** basée sur analyse spatiale
+5. **Ne PAS assumer** que "pas de reward" = "pas d'information"
+
+#### Impact
+
+**Avant correction**:
+- ❌ Croyance: "Nous n'avions pas accès à la grille"
+- ❌ Stratégie: Exploration aléatoire justifiée
+- ❌ Résultat: 0 victoire après 18,565 steps
+
+**Après correction**:
+- ✅ Vérité: "Nous avions obs.frame depuis le début"
+- ✅ Stratégie: Analyse spatiale nécessaire
+- ✅ Objectif: Session 92 avec détection goals
+
+#### Prochaine Action
+
+**Session 92**: Implémenter analyse spatiale de obs.frame
+- Détection patterns visuels
+- Identification goals
+- Planification chemin A*
+- Test 10 parties avec stratégie dirigée
 
 ---
 
-### LEÇON-49.5: Try-Catch Global Nécessaire
+### LEÇON #91.2: Vérification Forensique Obligatoire
 
-**Découverte**: Erreurs IndexError crashent puzzle entier au lieu de passer au programme suivant - wrapper try-catch global obligatoire.
+**Date**: 2026-06-18  
+**Contexte**: Session 91 - Validation suite feedback utilisateur
 
-**Contexte**: 16 puzzles échouent avec IndexError (index out of bounds), bloquant toute tentative résolution.
+#### Principe
 
-**Preuve empirique**:
+**TOUJOURS vérifier les affirmations par lecture forensique du code**
+
+#### Méthode Appliquée
+
+1. **Recherche dans le code**:
+```bash
+grep -r "obs\.frame" lumvorax2/src/MAGEN/*.py
+# Résultat: 117 occurrences trouvées
 ```
-Puzzle 0520fde7: "index 4 is out of bounds for axis 1 with size 3"
-Puzzle 1b2d62fb: "index 6 is out of bounds for axis 1 with size 3"
-... (14 autres puzzles similaires)
-```
 
-**Cause racine**: Primitives génèrent programmes avec indices HARDCODÉS qui dépassent limites grilles test.
+2. **Lecture fichiers clés**:
+- `session81_analyze_action_effects.py` (lignes 68-78)
+- `session89_cartographie_complete_forensic.py` (ligne 241)
+- `session89_game_001_20260618_025721.json` (lignes 5-15)
 
-**Solution appliquée**:
+3. **Validation croisée**:
+- Code montre `extract_frame(obs)` implémenté
+- Logs montrent distribution calculée depuis obs.frame
+- Fichiers parties contiennent données complètes
+
+#### Résultat
+
+**Affirmation initiale**: ❌ INVALIDE  
+**Vérité forensique**: ✅ VALIDÉE  
+**Correction**: ✅ APPLIQUÉE
+
+#### Protocole Futur
+
+**Avant toute affirmation sur les données disponibles**:
+1. Lire le code source
+2. Vérifier les logs forensiques
+3. Examiner les fichiers de données
+4. Valider avec preuves concrètes
+5. Documenter les preuves
+
+#### Impact
+
+**Sans vérification forensique**:
+- Erreurs propagées dans rapports
+- Conclusions invalides
+- Stratégies mal orientées
+
+**Avec vérification forensique**:
+- Vérité établie par preuves
+- Corrections rapides
+- Stratégies adaptées
+
+---
+
+
+#### Différence Critique
+
+**Analyse Statique du Code** (ce qui a été fait):
 ```python
-for program in candidates:
-    try:
-        score = scorer.score_program(program, train_dicts)
-        # ... validation ...
-    except IndexError as e:
-        print(f"⚠️ IndexError évité: {e}")
-        continue  # Passer au programme suivant
+patterns = {
+    "complete_action": 7,  # Occurrences textuelles
+    "win": 1,              # Mot-clé trouvé
+}
 ```
+→ Prouve que le système FONCTIONNE
 
-**Impact attendu**: 16 puzzles récupérés (18→34/400, +89%).
-
----
-
-### LEÇON-49.6: Forensic Ligne par Ligne Obligatoire
-
-**Découverte**: Lecture forensique ligne par ligne OBLIGATOIRE pour identifier patterns invisibles - métriques agrégées masquent problèmes.
-
-**Contexte**: Analyse 3,661 lignes (results_phase2 + knowledge_base) révèle patterns que métriques globales cachaient.
-
-**Patterns découverts**:
-1. **16 erreurs index identiques** entre Test V1 et V2 (correction inefficace)
-2. **454 échecs "relational_marking_failed"** (95.5% des échecs)
-3. **0% succès AdaptiveStrategy** sur 4,111 tentatives
-4. **18 succès identiques** malgré 4 corrections appliquées
-
-**Méthode**:
+**Compréhension Dynamique** (ce qui manque):
 ```python
-# Lecture ligne par ligne
-with open('results_phase2.json') as f:
-    for line_num, line in enumerate(f, 1):
-        # Analyser CHAQUE ligne
-        if 'index' in line and 'out of bounds' in line:
-            errors.append((line_num, line))
+world_state = {
+    "agent_pos": (32, 45),           # Position réelle
+    "discovered_map": set([(x,y)]),  # Carte construite
+    "room_graph": {1: [2, 3]},       # Navigation apprise
+}
+```
+→ Ne prouve PAS que le système COMPREND le monde
+
+#### Solution Appliquée
+
+**Plan d'Action Session 80** (4 Phases):
+
+1. **Phase 1 (P0)**: Identifier Avatar
+   - Objectif: Confiance > 80%
+   - Méthode: Pixel mobile unique sur 50 frames
+   - Validation: Position trackée 100+ steps
+
+2. **Phase 2 (P0)**: Tracker Position
+   - Objectif: 95%+ steps trackés
+   - Méthode: PositionTracker avec historique complet
+   - Validation: (x, y) à chaque step
+
+3. **Phase 3 (P0)**: Construire Graphe Navigation
+   - Objectif: 5+ salles connectées
+   - Méthode: NavigationGraph avec hash spatial
+   - Validation: Graphe navigable avec transitions
+
+4. **Phase 4 (P1)**: Mesurer Causalité
+   - Objectif: 100+ liens causaux
+   - Méthode: Analyse diff frame_before/after
+   - Validation: Patterns causaux détectés
+
+#### Métriques Cibles Session 80
+
+```json
+{
+  "positions_tracked": 150,
+  "spatial_coverage": 0.15,
+  "rooms_memorized": 5,
+  "navigation_graph": {"nodes": 5, "edges": 8},
+  "avatar_identified": true,
+  "avatar_confidence": 0.85,
+  "causal_links": 120
+}
 ```
 
-**Application**: Toujours lire logs forensiques ligne par ligne, ne jamais se fier uniquement aux métriques agrégées (TPS, success_rate, etc.).
+#### Validation Finale
+
+MAGEN peut répondre:
+1. ✅ "Où suis-je ?" → (x, y) avec confiance
+2. ✅ "Quel pixel = moi ?" → pixel_value 85%+
+3. ✅ "Quelles salles visitées ?" → Liste 5+
+4. ✅ "Comment aller A→B ?" → Chemin graphe
+5. ✅ "Que fait action UP ?" → Conséquence mesurée
+
+#### Fichiers Créés
+
+- `RAPPORT_FORENSIC_COMPLET_SESSION79.md` (186 lignes)
+- `RAPPORT_CRITIQUE_WORLD_UNDERSTANDING_SESSION79.md` (268 lignes)
+- `SYNTHESE_FINALE_SESSION79_REPRESENTATION_VS_STRATEGIE.md` (448 lignes)
+- `diagnostic_world_understanding.py` (368 lignes, 6 métriques)
+
+#### Impact
+
+**Avant Session 79**:
+- Focus: Infrastructure et monitoring
+- Métriques: Événements, commandes, erreurs
+- Compréhension monde: 0%
+
+**Après Session 79**:
+- Focus: Représentation persistante du monde
+- Métriques: Position, graphe, causalité
+- Compréhension monde: Objectif 15%+
+
+#### Leçons Apprises
+
+1. **Mesurer l'activité ≠ Comprendre le monde**
+2. **Représentation AVANT stratégie** (ordre critique)
+3. **Position agent = fondation** de tous systèmes supérieurs
+4. **Avatar identifié = référentiel** principal
+5. **Graphe navigation = consolidation** des observations
+6. **Logs forensiques doivent contenir métriques monde**, pas seulement infrastructure
+
+#### Protocole Futur
+
+**Avant toute optimisation stratégie**:
+1. ✅ Avatar identifié (confiance > 80%)
+2. ✅ Position trackée (95%+ steps)
+3. ✅ Graphe navigation construit (5+ salles)
+4. ✅ Causalité mesurée (100+ liens)
+
+**Seulement après**: Optimiser stratégie, exploration, décision
+
+#### Références
+
+- Synthèse complète: `SYNTHESE_FINALE_SESSION79_REPRESENTATION_VS_STRATEGIE.md`
+- Rapport critique: `RAPPORT_CRITIQUE_WORLD_UNDERSTANDING_SESSION79.md`
+- Script diagnostic: `diagnostic_world_understanding.py`
 
 ---
 
-### LEÇON-49.7: Corrections Séquentielles > Simultanées
-
-**Découverte**: Appliquer 4 corrections simultanément donne résultat IDENTIQUE (18/400) - corrections séquentielles avec validation nécessaires.
-
-**Contexte**: Corrections #1-4 appliquées ensemble, aucune amélioration observée.
-
-**Corrections appliquées**:
-1. primitives_advanced.py: Validation stricte limites ✅
-2. test_phase2_400_puzzles.py: Seuil 0.55→0.45 ✅
-3. test_phase2_400_puzzles.py: Validation 95%→80% ✅
-4. quadrant_extractor.py: Validation stricte limites ✅
-
-**Résultat**: 18/400 → 18/400 (0% amélioration)
-
-**Explication**: Corrections simultanées masquent effets individuels, impossible identifier laquelle fonctionne.
-
-**Application**: 
-- Appliquer corrections UNE PAR UNE
-- Tester après CHAQUE correction
-- Valider amélioration avant correction suivante
-- Documenter impact individuel
-
-**Principe**: Optimisations séquentielles > simultanées (LEÇON-321 MDBAI).
-
 ---
 
-### LEÇON-49.8: Rapport Forensique Après Chaque Test
+## 📊 STATISTIQUES GLOBALES
 
-**Découverte**: Rapport forensique MD après chaque test OBLIGATOIRE pour traçabilité et analyse patterns.
+### Bugs Corrigés
 
-**Contexte**: 49 sessions forensiques documentées, chacune avec rapport MD complet.
+- ✅ Bug #1: Réutilisation scorecard
+- ✅ Bug #2: Absence env.close()
+- ✅ Bug #3: Clés API en dur
+- ✅ Bug #4: Double RESET
+- 🔴 Bug #5: WorldModelConsultation non-hashable (EN COURS)
 
-**Structure rapport**:
-1. **Résumé exécutif** (objectifs, résultats, découvertes)
-2. **Lecture forensique complète** (ligne par ligne)
-3. **Analyse patterns** (erreurs, succès, échecs)
-4. **Corrections identifiées** (numérotées, prioritaires)
-5. **Leçons apprises** (nouvelles, numérotées)
-6. **Prochaines étapes** (plan action)
+### Tests Réalisés
 
-**Exemple**: RAPPORT_FORENSIC_SESSION49_HYPOTHESIS_SPACE.md (348 lignes).
+- ✅ 50 puzzles ARC-AGI officiels (training)
+- ✅ 100 puzzles ARC-AGI officiels (training + evaluation)
+- ✅ 25 jeux Arcade via API
+- ✅ Validation externe API ARC-AGI-3
 
-**Application**: Créer rapport MD après CHAQUE test, même si résultats identiques - patterns émergent sur plusieurs sessions.
+### Scores
 
----
-
-## 📈 MÉTRIQUES GLOBALES MAGEN
-
-### Scores ARC-AGI
-- **Training**: 11/11 (100%) ✅
-- **Evaluation**: 18/400 (4.5%) ⚠️
-- **Objectif**: 400/400 (100%)
-
-### Architecture
-- **Lignes code**: 12,111+ (production)
-- **Modules cognitifs**: 4,777 lignes
-- **Tests**: 2,614 lignes
-- **Documentation**: 13,232 lignes (rapports + leçons)
-
-### Sessions Forensiques
-- **Total sessions**: 49
-- **Lignes analysées**: 50,000+ (cumulatif)
-- **Rapports créés**: 49 (MD complets)
-- **Leçons apprises**: 49 (MAGEN) + 321 (MDBAI)
-
-### Corrections Appliquées
-- **Session 49**: 5 corrections (#1-5)
-- **Impact**: 0% amélioration (18/400 constant)
-- **Cause**: Corrections simultanées + ROOT CAUSE non adressée (HSM manquant)
+- **Tests synthétiques**: 100% (INVALIDE - surestimation)
+- **Tests officiels locaux**: 0-10% (RÉALISTE)
+- **API ARC-AGI-3**: 0% (VÉRITÉ ABSOLUE)
+- **Kaggle**: En attente
 
 ---
 
 ## 🎯 PROCHAINES ÉTAPES
 
-### Session 49 (EN COURS)
-- [x] Lecture forensique complète (3,661 lignes)
-- [x] Identification ROOT CAUSE (HSM manquant)
-- [x] Correction #5 (try-catch global)
-- [x] Rapport forensique (348 lignes)
-- [ ] Test V3 (objectif: 34/400)
+### Priorité 1: Corriger Bug #5
 
-### Session 50 (PLANIFIÉ)
-- [ ] Création Hypothesis Space Map (300+ lignes)
-- [ ] Intégration pipeline
-- [ ] Test V4 (objectif: 54-64/400)
+- Analyser PolicyManager
+- Identifier l'utilisation de WorldModelConsultation comme clé
+- Implémenter __hash__() et __eq__() ou utiliser un identifiant
 
-### Session 51-52 (PLANIFIÉ)
-- [ ] Global Constraint Reasoning
-- [ ] Refonte AdaptiveStrategy
-- [ ] Test V5 (objectif: 64-79/400)
+### Priorité 2: Comprendre Mécanique ls20
 
-### Session 53-60 (PLANIFIÉ)
-- [ ] Optimisation continue
-- [ ] Exploitation 574 expériences mémoire
-- [ ] Objectif final: 100+/400 (25%+)
+- Analyser le code source ls20.py (2060 lignes)
+- Identifier les conditions de victoire
+- Comprendre le système de reward
+- Adapter la stratégie MAGEN
+
+### Priorité 3: Améliorer Stratégie
+
+- Implémenter apprentissage par renforcement
+- Créer dataset d'apprentissage
+- Tester sur 100 tentatives
+- Mesurer progression
 
 ---
 
-## 🔬 PROTOCOLE FORENSIQUE
+## 📝 NOTES IMPORTANTES
 
-### CLAUDE_PILOT Activé
-- ✅ Lecture ligne par ligne OBLIGATOIRE
-- ✅ Corrections IMMÉDIATES après lecture
-- ✅ Rapport MD après chaque analyse
-- ✅ Traçabilité complète (timestamps, SHA-512)
+### Commandes Essentielles
 
-### LUMVORAX Activé
-- ✅ Tracking bit-level
-- ✅ Logs forensiques nanoseconde par nanoseconde
-- ✅ Mémoire artificielle: 574 expériences documentées
-- ✅ Détection anomalies automatique
+```bash
+# Mise à jour clé Doppler
+doppler secrets set ARC_API_KEY "NOUVELLE_CLE" --project magen-arc-agi --config dev
 
-### Mode 100% LOCAL
-- ✅ Respecté (49 sessions locales)
-- ✅ Aucune soumission Kaggle sans validation utilisateur
-- ✅ Tous fichiers dans `/home/lvx/LVX/lumvorax2/src/MAGEN`
+# Exécution avec Doppler
+doppler run -- python3 script.py
+
+# Tests de validation
+doppler run -- python3 test_api_connection_validation.py
+
+# Entraînement ls20
+doppler run -- python3 train_single_game_ls20_realtime.py
+```
+
+### Fichiers Clés
+
+- `train_single_game_ls20_realtime.py`: Script d'entraînement principal
+- `test_api_connection_validation.py`: Tests de validation API
+- `policy_manager_v40_3.py`: Gestionnaire de politiques (BUG #5)
+- `environment_files/ls20/9607627b/ls20.py`: Code source du jeu
+
+### Contacts et Ressources
+
+- **API ARC-AGI-3**: https://arcprize.org/api
+- **Documentation Doppler**: https://docs.doppler.com/
+- **Kaggle Competition**: https://www.kaggle.com/competitions/arc-prize-2024
 
 ---
 
-**Signature Forensique**: CLAUDE_PILOT + LUMVORAX  
-**Timestamp**: 2026-06-13T12:42:00+02:00  
-**Hash SHA-512**: [À générer après validation utilisateur]
+**FIN DU DOCUMENT**
+
+*Ce fichier est le SEUL et UNIQUE fichier de leçons apprises pour MAGEN.*  
+*Toutes les nouvelles leçons doivent être ajoutées ICI, pas dans de nouveaux fichiers.*
+
+
+---
+
+## 🔍 VALIDATION ET VÉRIFICATION {#validation-verification}
+
+### LEÇON #80.1: Valider Unicité Avant Tracking
+
+**Date**: 2026-06-17  
+**Contexte**: Session 80 - Pixel 4 présent à 2609 positions
+
+#### ERREUR COMMISE
+
+Assumer qu'un pixel est unique sans validation:
+
+```python
+# ❌ ERREUR: Assumer pixel 4 = avatar
+TARGET_PIXEL_VALUE = 4
+# Tracker position sans vérifier unicité
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Pixel 4 présent à 2609 positions (63.70% de la frame)**
+
+```
+Statistiques pixel 4:
+- Occurrences: 2609/4096 pixels
+- Pourcentage: 63.70%
+- Conclusion: NON UNIQUE
+```
+
+#### RÈGLE ABSOLUE
+
+**TOUJOURS valider unicité avant tracking**
+
+```python
+def validate_pixel_uniqueness(frame, pixel_value, max_occurrences=1):
+    """Valider qu'un pixel est unique"""
+    positions = np.argwhere(frame == pixel_value)
+    count = len(positions)
+    
+    if count > max_occurrences:
+        raise ValueError(
+            f"❌ Pixel {pixel_value} NON UNIQUE: {count} occurrences\n"
+            f"Un avatar doit être présent à 1 seule position!"
+        )
+    
+    return positions[0] if count == 1 else None
+```
+
+#### VALIDATION OBLIGATOIRE
+
+Avant de tracker un objet:
+1. ✅ Compter occurrences pixel dans frame
+2. ✅ Vérifier unicité (count == 1)
+3. ✅ Tester stabilité sur 10+ frames
+4. ❌ INTERDIT: Tracker sans validation unicité
+
+---
+
+### LEÇON #80.2: Confiance ≠ Validité
+
+**Date**: 2026-06-17  
+**Contexte**: Session 80 - Confiance 99.18% mais pixel non unique
+
+#### ERREUR COMMISE
+
+Confondre confiance statistique et validité logique:
+
+```python
+# ❌ ERREUR: Haute confiance = Validité
+confidence = 99.18%  # Très haute confiance
+# Mais pixel présent à 2609 positions!
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Confiance 99.18% sur pixel NON UNIQUE**
+
+```
+Phase 1 Résultats:
+- Avatar identifié: Position (61, 0)
+- Pixel value: 4
+- Confiance: 99.18%
+- Réalité: Pixel 4 présent à 2609 positions
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Haute confiance sur données invalides = Fausse certitude"
+
+**Confiance mesure**: Cohérence statistique  
+**Validité mesure**: Cohérence logique
+
+#### RÈGLE ABSOLUE
+
+**Valider logique AVANT mesurer confiance**
+
+```python
+# 1. VALIDATION LOGIQUE (obligatoire)
+if not is_pixel_unique(frame, pixel_value):
+    raise ValueError("Pixel non unique - validation échouée")
+
+# 2. MESURE CONFIANCE (optionnelle)
+confidence = measure_confidence(...)
+```
+
+#### CHECKLIST VALIDATION
+
+Avant d'accepter un résultat:
+- [ ] Validation logique (unicité, cohérence)
+- [ ] Validation empirique (tests répétés)
+- [ ] Validation causale (corrélation action→effet)
+- [ ] Mesure confiance (statistique)
+
+**Ordre obligatoire**: Logique → Empirique → Causale → Statistique
+
+---
+
+### LEÇON #80.3: Succès Apparent Peut Être Trompeur
+
+**Date**: 2026-06-17  
+**Contexte**: Session 80 - Phase 2 100% succès mais trackait mauvais objet
+
+#### ERREUR COMMISE
+
+Interpréter succès technique comme validation fonctionnelle:
+
+```python
+# ❌ ERREUR: 100% succès = Bon objet tracké
+Phase 2 Résultats:
+- Couverture: 100% (101/101 steps)
+- Positions uniques: 13
+- Conclusion: "Tracking réussi" ❌ FAUX
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**100% succès technique mais trackait n'importe quel pixel 4 proche**
+
+```
+Réalité:
+- Phase 2 trackait "un" pixel 4 (parmi 2609)
+- Pas nécessairement le même pixel
+- Pas nécessairement l'avatar
+- Succès technique ≠ Succès fonctionnel
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Succès technique sans validation fonctionnelle = Illusion de progrès"
+
+**Succès technique**: Code s'exécute sans erreur  
+**Succès fonctionnel**: Code fait ce qu'il doit faire
+
+#### RÈGLE ABSOLUE
+
+**Valider fonctionnalité AVANT déclarer succès**
+
+```python
+# ❌ ERREUR: Déclarer succès trop tôt
+if tracking_completed:
+    print("✅ Tracking réussi")  # FAUX
+
+# ✅ CORRECT: Valider fonctionnalité
+if tracking_completed and is_correct_object and is_controllable:
+    print("✅ Tracking validé")
+```
+
+#### VALIDATION FONCTIONNELLE
+
+Critères obligatoires:
+1. ✅ Succès technique (code s'exécute)
+2. ✅ Objet correct (unicité validée)
+3. ✅ Contrôlabilité (corrélation > 95%)
+4. ✅ Stabilité (100+ steps cohérents)
+
+**Tous critères requis**: 1 seul échec = Échec global
+
+---
+
+### LEÇON #80.4: Écouter Feedback Utilisateur
+
+**Date**: 2026-06-17  
+**Contexte**: Session 80 - Utilisateur identifie pixel 4 à 12-64 positions
+
+#### ERREUR COMMISE
+
+Ne pas écouter feedback critique de l'utilisateur:
+
+```
+Utilisateur: "Un avatar ne devrait pas apparaître à 12, 35, 54, 60 positions"
+Bob: Continue avec pixel 4 comme avatar ❌
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Feedback utilisateur était CORRECT**
+
+```
+Validation:
+- Pixel 4 présent à 2609 positions
+- Utilisateur avait raison dès le début
+- Bob a ignoré feedback évident
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Utilisateur voit ce que les métriques cachent"
+
+**Métriques**: Vision technique (confiance 99.18%)  
+**Utilisateur**: Vision fonctionnelle (pixel partout)
+
+#### RÈGLE ABSOLUE
+
+**TOUJOURS valider feedback utilisateur immédiatement**
+
+```python
+# Utilisateur signale anomalie
+if user_feedback_indicates_problem:
+    # 1. STOP immédiatement
+    # 2. Valider feedback (tests)
+    # 3. Corriger si feedback correct
+    # 4. Remercier utilisateur
+```
+
+#### CHECKLIST FEEDBACK
+
+Quand utilisateur signale problème:
+- [ ] Arrêter travail en cours
+- [ ] Lire feedback attentivement
+- [ ] Créer test validation feedback
+- [ ] Exécuter test
+- [ ] Si feedback correct: Corriger immédiatement
+- [ ] Documenter leçon apprise
+
+**Principe**: Feedback utilisateur = Signal d'alarme prioritaire
+
+---
+
+### LEÇON #80.5: API Peut Changer
+
+**Date**: 2026-06-17  
+**Contexte**: Session 80-81 - API arc-agi changée (task_id obsolète)
+
+#### ERREUR COMMISE
+
+Assumer que l'API reste stable:
+
+```python
+# ❌ ERREUR: Ancienne API
+env = Arcade(operation_mode=OperationMode.COMPETITION, task_id="00576224")
+# AttributeError: 'Arcade' object has no attribute 'task_id'
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**API arc-agi a changé entre sessions**
+
+```python
+# Ancienne API (Sessions 77-80)
+env = Arcade(operation_mode=OperationMode.COMPETITION, task_id="00576224")
+
+# Nouvelle API (Session 81+)
+arcade = Arcade(operation_mode=OperationMode.COMPETITION)
+env = arcade.make("ls20-9607627b")  # Jeu spécifique
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "API externe = Dépendance instable"
+
+**Conséquence**: Code fonctionnel peut casser sans modification
+
+#### RÈGLE ABSOLUE
+
+**Vérifier API au début de chaque session**
+
+```python
+# 1. Tester création environnement
+try:
+    arcade = Arcade(operation_mode=OperationMode.COMPETITION)
+    env = arcade.make("ls20-9607627b")
+except Exception as e:
+    print(f"❌ API changée: {e}")
+    # Adapter code à nouvelle API
+
+# 2. Logger version API
+print(f"API version: {arcade.__version__}")
+```
+
+#### PROTECTION CONTRE CHANGEMENTS
+
+Stratégies obligatoires:
+1. ✅ Wrapper API externe (isolation)
+2. ✅ Tests API au démarrage
+3. ✅ Documentation version API utilisée
+4. ✅ Gestion erreurs API gracieuse
+
+```python
+class ArcadeWrapper:
+    """Wrapper pour isoler changements API"""
+    
+    def __init__(self, game_id: str):
+        self.game_id = game_id
+        self._init_api()
+    
+    def _init_api(self):
+        """Initialiser API avec gestion versions"""
+        try:
+            # Nouvelle API
+            arcade = Arcade(operation_mode=OperationMode.COMPETITION)
+            self.env = arcade.make(self.game_id)
+        except AttributeError:
+            # Ancienne API
+            self.env = Arcade(
+                operation_mode=OperationMode.COMPETITION,
+                task_id=self.game_id
+            )
+```
+
+---
+
+## 🚫 INTERDICTIONS ET ERREURS CRITIQUES {#interdictions-erreurs}
+
+### LEÇON #81.1: Relire PROTOCOLE/LEÇONS Obligatoire
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Script créé sans relire documentation
+
+#### ERREUR COMMISE
+
+Créer script sans relire PROTOCOLE_MAGEN.md et LEÇONS_APPRISES_MAGEN.md:
+
+```python
+# ❌ ERREUR: Créer script directement
+# Sans relire:
+# - PROTOCOLE_MAGEN.md (812 lignes)
+# - LEÇONS_APPRISES_MAGEN.md (703 lignes)
+# Résultat: Répéter erreurs déjà documentées
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Erreurs répétées car documentation non relue**
+
+```
+Erreurs évitables:
+1. Pas de vérification game_id (déjà documenté)
+2. Pas de validation unicité (déjà documenté)
+3. Mauvais jeu utilisé (règle existante)
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Documentation non lue = Leçons non apprises"
+
+**Conséquence**: Répéter erreurs passées indéfiniment
+
+#### RÈGLE ABSOLUE
+
+**TOUJOURS relire PROTOCOLE + LEÇONS avant coder**
+
+```bash
+# Workflow obligatoire avant chaque script:
+
+# 1. Relire PROTOCOLE (focus règles récentes)
+cat PROTOCOLE_MAGEN.md | grep "RÈGLE #"
+
+# 2. Relire LEÇONS (focus leçons récentes)
+cat LEÇONS_APPRISES_MAGEN.md | grep "LEÇON #"
+
+# 3. Identifier règles applicables
+# 4. Créer checklist validation
+# 5. PUIS créer script
+```
+
+#### CHECKLIST PRÉ-CODAGE
+
+Avant de créer un script:
+- [ ] Lu PROTOCOLE_MAGEN.md (règles applicables)
+- [ ] Lu LEÇONS_APPRISES_MAGEN.md (erreurs à éviter)
+- [ ] Identifié règles applicables au script
+- [ ] Créé checklist validation
+- [ ] Vérifié que script respecte toutes règles
+
+**Temps investi**: 5-10 minutes  
+**Temps économisé**: Heures de debugging
+
+---
+
+### LEÇON #81.2: Nouvelle API arc-agi (arcade.make)
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Migration vers nouvelle API
+
+#### CHANGEMENT API
+
+**Ancienne méthode (obsolète)**:
+```python
+env = Arcade(operation_mode=OperationMode.COMPETITION, task_id="00576224")
+```
+
+**Nouvelle méthode (actuelle)**:
+```python
+arcade = Arcade(operation_mode=OperationMode.COMPETITION)
+env = arcade.make("ls20-9607627b")  # Jeu spécifique
+```
+
+#### DIFFÉRENCES CLÉS
+
+| Aspect | Ancienne API | Nouvelle API |
+|--------|--------------|--------------|
+| Création | `Arcade(task_id=...)` | `arcade.make(game_id)` |
+| Jeu | Paramètre constructeur | Méthode make() |
+| Flexibilité | 1 jeu par instance | N jeux par instance |
+
+#### MIGRATION OBLIGATOIRE
+
+Tous scripts doivent utiliser nouvelle API:
+
+```python
+# Template obligatoire
+from arcade import Arcade, OperationMode
+
+# 1. Créer instance Arcade
+arcade = Arcade(operation_mode=OperationMode.COMPETITION)
+
+# 2. Créer environnement jeu spécifique
+REQUIRED_GAME_ID = "ls20-9607627b"
+env = arcade.make(REQUIRED_GAME_ID)
+
+# 3. Vérifier jeu correct
+print(f"✅ Jeu créé: {REQUIRED_GAME_ID}")
+```
+
+#### AVANTAGES NOUVELLE API
+
+1. ✅ Réutiliser instance Arcade pour plusieurs jeux
+2. ✅ Séparation claire création/utilisation
+3. ✅ Plus flexible pour tests
+
+---
+
+### LEÇON #81.3: Observer Avant Modéliser
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Analyse différentielle révèle patterns
+
+#### ERREUR COMMISE
+
+Modéliser comportement avant observer effets:
+
+```python
+# ❌ ERREUR: Assumer modèle avatar
+class AvatarTracker:
+    def __init__(self):
+        self.avatar_position = None  # Assumer existence avatar
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Observation révèle patterns inattendus**
+
+```
+Analyse différentielle ls20-9607627b:
+- ACTION1: 52 pixels modifiés (transformation région)
+- ACTION2: 2 pixels modifiés (objet unique - avatar potentiel!)
+- ACTION3: 52 pixels modifiés (transformation région)
+- ACTION4: 52 pixels modifiés (transformation région)
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Observer d'abord, modéliser ensuite"
+
+**Méthodologie correcte**:
+1. Observer effets actions (analyse différentielle)
+2. Identifier patterns (classification)
+3. Formuler hypothèses (modèle)
+4. Valider hypothèses (tests)
+5. Implémenter modèle (code)
+
+#### RÈGLE ABSOLUE
+
+**Analyse différentielle AVANT toute modélisation**
+
+```python
+# Workflow obligatoire:
+
+# 1. OBSERVER (analyse différentielle)
+def analyze_action_effects(env, action, num_tests=20):
+    """Observer effets d'une action"""
+    results = []
+    for _ in range(num_tests):
+        frame_before = env.reset().frame
+        frame_after = env.step(action).frame
+        diff = (frame_before != frame_after)
+        results.append({
+            'pixels_modified': np.sum(diff),
+            'num_components': label(diff)[1]
+        })
+    return results
+
+# 2. CLASSIFIER (identifier patterns)
+def classify_action_type(results):
+    """Classifier type d'action selon effets"""
+    avg_pixels = np.mean([r['pixels_modified'] for r in results])
+    
+    if avg_pixels <= 5:
+        return "AVATAR"  # Objet unique
+    elif avg_pixels <= 100:
+        return "RÉGION"  # Transformation locale
+    else:
+        return "GLOBALE"  # Transformation complète
+
+# 3. MODÉLISER (créer modèle adapté)
+action_type = classify_action_type(results)
+if action_type == "AVATAR":
+    model = AvatarModel()
+elif action_type == "RÉGION":
+    model = RegionTransformModel()
+```
+
+#### VALIDATION MÉTHODOLOGIE
+
+Checklist obligatoire:
+- [ ] Analyse différentielle complétée (20+ tests par action)
+- [ ] Patterns identifiés (classification)
+- [ ] Hypothèses formulées (modèle théorique)
+- [ ] Hypothèses validées (tests empiriques)
+- [ ] Modèle implémenté (code)
+
+**Ordre strict**: Observer → Classifier → Hypothèse → Valider → Implémenter
+
+---
+
+### LEÇON #81.4: NE JAMAIS Changer de Jeu Sans Validation
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Changé de ar25 sans valider ls20
+
+#### ERREUR COMMISE
+
+Changer de jeu sans validation complète du jeu actuel:
+
+```python
+# ❌ ERREUR: Changé de jeu
+game_id = "ar25-0c556536"  # Nouveau jeu
+# Sans avoir validé ls20-9607627b (score 0/3)
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Résultats complètement différents selon jeu**
+
+```
+ar25-0c556536:
+- ACTION1-4: 109 pixels modifiés (transformation globale)
+
+ls20-9607627b:
+- ACTION1: 52 pixels (région)
+- ACTION2: 2 pixels (avatar potentiel!)
+- ACTION3-4: 52 pixels (région)
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Si ne passe pas le plus facile, ne passera pas le plus difficile"
+
+**Logique**:
+- ls20 = Niveau facile (score 0/3)
+- ar25 = Niveau plus difficile
+- Échec facile → Impossible difficile
+
+#### RÈGLE ABSOLUE
+
+**INTERDICTION de changer de jeu sans validation complète**
+
+```python
+# Constante OBLIGATOIRE au début de CHAQUE script
+REQUIRED_GAME_ID = "ls20-9607627b"  # JEU OBLIGATOIRE
+
+# Vérification OBLIGATOIRE
+def verify_game_id(game_id: str):
+    """Vérifier qu'on utilise le bon jeu"""
+    if game_id != REQUIRED_GAME_ID:
+        raise ValueError(
+            f"❌ ERREUR CRITIQUE: Jeu {game_id} ≠ {REQUIRED_GAME_ID}\n"
+            f"INTERDICTION de changer de jeu sans validation complète!\n"
+            f"Critères validation:\n"
+            f"- Avatar identifié (confiance > 80%)\n"
+            f"- Contrôlabilité validée (corrélation > 95%)\n"
+            f"- Graphe navigation construit (5+ salles)\n"
+            f"- Score obtenu (>0/3 sur le jeu)\n"
+        )
+    return True
+```
+
+#### CRITÈRES VALIDATION COMPLÈTE
+
+Avant de changer de jeu:
+- [ ] Avatar identifié (confiance > 80%)
+- [ ] Contrôlabilité validée (corrélation > 95%)
+- [ ] Graphe navigation construit (5+ salles)
+- [ ] Causalité mesurée (100+ liens)
+- [ ] Score obtenu (>0/3 sur le jeu)
+
+**Tous critères requis**: 1 seul manquant = INTERDIT changer
+
+---
+
+### LEÇON #81.5: Vérifier Game ID Dans Logs
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Logs révèlent mauvais jeu utilisé
+
+#### ERREUR COMMISE
+
+Ne pas vérifier quel jeu est réellement utilisé:
+
+```python
+# ❌ ERREUR: Assumer jeu correct
+game_id = "ls20-9607627b"  # Variable
+# Mais logs montrent: "ar25-0c556536"
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Logs révèlent jeu réel utilisé**
+
+```
+Logs:
+Successfully reset game ar25-0c556536, guid=...
+                      ^^^^^^^^^^^^^^^^
+                      MAUVAIS JEU!
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Logs ne mentent jamais"
+
+**Variable peut mentir**: game_id = "ls20" (mais utilise ar25)  
+**Logs disent vérité**: "reset game ar25-0c556536"
+
+#### RÈGLE ABSOLUE
+
+**TOUJOURS vérifier game_id dans logs d'exécution**
+
+```python
+# 1. Logger game_id au début
+logger.info(f"🎮 Jeu requis: {REQUIRED_GAME_ID}")
+
+# 2. Logger game_id après création env
+env = arcade.make(REQUIRED_GAME_ID)
+logger.info(f"✅ Environnement créé: {REQUIRED_GAME_ID}")
+
+# 3. Vérifier logs après exécution
+# Chercher: "Successfully reset game XXX"
+# Valider: XXX == REQUIRED_GAME_ID
+```
+
+#### VALIDATION LOGS
+
+Après exécution script:
+```bash
+# Extraire game_id des logs
+grep "Successfully reset game" logs.txt | head -1
+
+# Vérifier correspondance
+# Attendu: "Successfully reset game ls20-9607627b"
+# Si différent: ERREUR CRITIQUE
+```
+
+---
+
+### LEÇON #81.6: Résultats Dépendent du Jeu
+
+**Date**: 2026-06-17  
+**Contexte**: Session 81 - Résultats ar25 vs ls20 complètement différents
+
+#### ERREUR COMMISE
+
+Comparer résultats entre jeux différents:
+
+```python
+# ❌ ERREUR: Comparer résultats ar25 et ls20
+# ar25: 109 pixels modifiés
+# ls20: 2-52 pixels modifiés
+# Conclusion: "Comportement incohérent" ❌ FAUX
+```
+
+#### DÉCOUVERTE CRITIQUE
+
+**Chaque jeu a sa propre logique**
+
+```
+ar25-0c556536:
+- Transformation globale (109 pixels)
+- 5 composantes connexes
+- Toutes actions similaires
+
+ls20-9607627b:
+- ACTION2: 2 pixels (avatar potentiel)
+- ACTION1/3/4: 52 pixels (transformation région)
+- Comportement différencié
+```
+
+#### PRINCIPE FONDAMENTAL
+
+> "Jeu différent = Logique différente"
+
+**Conséquence**: Impossible de comparer résultats entre jeux
+
+#### RÈGLE ABSOLUE
+
+**NE JAMAIS comparer résultats entre jeux différents**
+
+```python
+# ❌ INTERDIT: Comparaison inter-jeux
+if results_ar25 != results_ls20:
+    print("Incohérence détectée")  # FAUX
+
+# ✅ CORRECT: Analyse intra-jeu
+if results_ls20_test1 != results_ls20_test2:
+    print("Incohérence détectée")  # VALIDE
+```
+
+#### VALIDATION RÉSULTATS
+
+Règles obligatoires:
+1. ✅ Comparer résultats MÊME jeu uniquement
+2. ✅ Documenter jeu utilisé dans TOUS rapports
+3. ✅ Séparer analyses par jeu
+4. ❌ INTERDIT: Mélanger résultats jeux différents
+
+**Principe**: 1 jeu = 1 analyse = 1 rapport
+
+---

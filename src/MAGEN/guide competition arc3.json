@@ -1,0 +1,249 @@
+{
+  "competition_name": "ARC Prize 2026 - ARC-AGI-3",
+  "api_key": "b6ebc9c5-a296-4578-be69-0cc16c9455d4",
+  "api_base_url": "https://three.arcprize.org",
+  "documentation_url": "https://docs.arcprize.org/llms.txt",
+  
+  "setup": {
+    "python_version": "3.9+",
+    "installation": [
+      "python3 -m venv venv_arc_agi",
+      "source venv_arc_agi/bin/activate",
+      "pip install --upgrade pip",
+      "pip install arc-agi"
+    ],
+    "environment_variables": {
+      "ARC_API_KEY": "b6ebc9c5-a296-4578-be69-0cc16c9455d4",
+      "OPERATION_MODE": "COMPETITION"
+    }
+  },
+  
+  "competition_mode": {
+    "description": "Mode REQUIS pour apparaître sur le leaderboard non vérifié",
+    "constraints": [
+      "Environnements doivent être accédés via API",
+      "Scoring contre TOUS les environnements disponibles",
+      "Seuls les Level Resets sont permis (pas de Game Resets)",
+      "Peut interagir (make) une seule fois par environnement",
+      "Peut ouvrir un seul Scorecard",
+      "get_scorecard() ne fonctionne pas pendant l'exécution"
+    ],
+    "usage": "arc = Arcade(operation_mode=OperationMode.COMPETITION)"
+  },
+  
+  "game_structure": {
+    "grid_dimensions": "Maximum 64x64",
+    "cell_values": "0-15 (couleurs/états)",
+    "coordinate_system": "(0,0) en haut-gauche, format (x,y)",
+    "game_id_format": "<game_name>-<version>"
+  },
+  
+  "actions": {
+    "RESET": "Initialise ou redémarre le jeu/niveau",
+    "ACTION1": "Action simple (sémantiquement mappée à 'up')",
+    "ACTION2": "Action simple (sémantiquement mappée à 'down')",
+    "ACTION3": "Action simple (sémantiquement mappée à 'left')",
+    "ACTION4": "Action simple (sémantiquement mappée à 'right')",
+    "ACTION5": "Action simple (interact, select, rotate, etc.)",
+    "ACTION6": "Action complexe nécessitant coordonnées x,y (0-63)",
+    "ACTION7": "Action simple - Undo"
+  },
+  
+  "example_games": [
+    {
+      "game_id": "ls20",
+      "title": "Agent reasoning",
+      "url": "https://arcprize.org/tasks/ls20"
+    },
+    {
+      "game_id": "ft09",
+      "title": "Elementary Logic",
+      "url": "https://arcprize.org/tasks/ft09"
+    },
+    {
+      "game_id": "vc33",
+      "title": "Orchestration",
+      "url": "https://arcprize.org/tasks/vc33"
+    }
+  ],
+  
+  "code_examples": {
+    "basic_setup": {
+      "description": "Configuration de base avec API key",
+      "code": [
+        "import arc_agi",
+        "from arc_agi import Arcade, OperationMode",
+        "from arcengine import GameAction",
+        "",
+        "# Configuration avec clé API",
+        "arc = Arcade(",
+        "    arc_api_key='b6ebc9c5-a296-4578-be69-0cc16c9455d4',",
+        "    operation_mode=OperationMode.COMPETITION",
+        ")",
+        "",
+        "# Lister les jeux disponibles",
+        "games = arc.get_environments()",
+        "for game in games:",
+        "    print(f'{game.game_id}: {game.title}')"
+      ]
+    },
+    
+    "play_game": {
+      "description": "Jouer un jeu avec actions",
+      "code": [
+        "# Créer environnement",
+        "env = arc.make('ls20', seed=0, save_recording=True)",
+        "",
+        "# Prendre des actions simples",
+        "obs = env.step(GameAction.ACTION1)",
+        "",
+        "# Action complexe avec coordonnées",
+        "obs = env.step(",
+        "    GameAction.ACTION6,",
+        "    data={'x': 32, 'y': 32},",
+        "    reasoning={'thought': 'clicking center'}",
+        ")",
+        "",
+        "# Vérifier état du jeu",
+        "if obs:",
+        "    print(f'State: {obs.state}')",
+        "    print(f'Score: {obs.score}')",
+        "    print(f'Levels completed: {obs.levels_completed}')"
+      ]
+    },
+    
+    "scorecard_management": {
+      "description": "Gestion des scorecards",
+      "code": [
+        "# Créer scorecard personnalisé",
+        "scorecard_id = arc.create_scorecard(",
+        "    source_url='https://github.com/my/repo',",
+        "    tags=['magen', 'v38', 'competition']",
+        ")",
+        "",
+        "# Utiliser scorecard",
+        "env = arc.make('ls20', scorecard_id=scorecard_id)",
+        "",
+        "# Fermer et obtenir résultats finaux",
+        "final_scorecard = arc.close_scorecard(scorecard_id)",
+        "if final_scorecard:",
+        "    print(f'Final score: {final_scorecard.score}')",
+        "    print(final_scorecard.model_dump_json(indent=2))"
+      ]
+    },
+    
+    "forensic_logging": {
+      "description": "Logging forensique LumVorax intégré",
+      "code": [
+        "import json",
+        "from datetime import datetime",
+        "",
+        "# Renderer personnalisé pour logging forensique",
+        "def forensic_renderer(step: int, frame_data):",
+        "    log_entry = {",
+        "        'timestamp': datetime.utcnow().isoformat(),",
+        "        'step': step,",
+        "        'state': frame_data.state.name,",
+        "        'score': frame_data.score,",
+        "        'levels_completed': frame_data.levels_completed,",
+        "        'frame_data': frame_data.model_dump()",
+        "    }",
+        "    with open('forensic_arc_agi.jsonl', 'a') as f:",
+        "        f.write(json.dumps(log_entry) + '\\n')",
+        "",
+        "# Utiliser renderer",
+        "env = arc.make('ls20', renderer=forensic_renderer)"
+      ]
+    }
+  },
+  
+  "magen_integration": {
+    "description": "Intégration architecture MAGEN avec ARC-AGI-3",
+    "components": [
+      "TransformationLearningEngine (TLE) - Apprentissage par transformation",
+      "Meta-Arbiter - Routage cognitif intelligent",
+      "Parallel World Frame Engine (PWFE) - Exploration mondes parallèles",
+      "Action Reputation System (C17) - Réputation actions",
+      "Exploration Budget Manager (C18) - Gestion budget exploration",
+      "Trajectory Analyzer (C19) - Analyse trajectoires",
+      "LumVorax Forensic Logger - Logging bit-level nanoseconde"
+    ],
+    "adaptation_strategy": [
+      "1. Mapper puzzles ARC (grilles 2D) vers environnements ARC-AGI-3 (jeux interactifs)",
+      "2. Adapter générateurs de programmes vers sélection d'actions",
+      "3. Utiliser TLE pour apprendre séquences d'actions optimales",
+      "4. Intégrer logging forensique pour chaque action/frame",
+      "5. Analyser patterns succès/échec pour amélioration continue"
+    ]
+  },
+  
+  "scoring": {
+    "description": "Méthodologie de scoring officielle",
+    "formula": [
+      "Score individuel niveau = (score_niveau)²",
+      "Score moyen jeu = moyenne pondérée par index niveau (1-indexed)",
+      "Exemple: score 0.5 devient 0.25 après carré"
+    ]
+  },
+  
+  "recordings": {
+    "description": "Enregistrements gameplay disponibles",
+    "format": "JSONL avec timestamps",
+    "location": "recordings/ directory",
+    "filename_format": "{game_id}.{agent_type}.{max_actions}.{guid}.recording.jsonl",
+    "online_replay": "https://arcprize.org/scorecards/<scorecard_id>"
+  },
+  
+  "troubleshooting": {
+    "400_error": "Jeu en état game-over, envoyer RESET",
+    "500_error": "Erreur serveur",
+    "404_scorecard": "Scorecard non trouvé, vérifier ID",
+    "rate_limits": "Utiliser OFFLINE mode pour développement local"
+  },
+  
+  "best_practices": [
+    "Développer et tester en mode OFFLINE d'abord",
+    "Utiliser save_recording=True pour debugging",
+    "Implémenter renderer personnalisé pour logging forensique",
+    "Créer scorecards avec tags descriptifs",
+    "Fermer scorecards proprement avec close_scorecard()",
+    "Gérer erreurs 400/500 avec try/except",
+    "Utiliser seed fixe pour reproductibilité",
+    "Analyser recordings JSONL pour patterns"
+  ],
+  
+  "workflow_competition": {
+    "phase_1_local": [
+      "1. Installer arc-agi dans venv",
+      "2. Configurer ARC_API_KEY",
+      "3. Tester en mode OFFLINE sur jeux locaux",
+      "4. Développer agent avec logging forensique",
+      "5. Valider sur tous jeux disponibles localement"
+    ],
+    "phase_2_online": [
+      "1. Passer en mode ONLINE pour accès API",
+      "2. Tester sur jeux distants avec save_recording=True",
+      "3. Analyser recordings et logs forensiques",
+      "4. Itérer sur stratégie agent"
+    ],
+    "phase_3_competition": [
+      "1. Passer en mode COMPETITION",
+      "2. Créer scorecard avec tags appropriés",
+      "3. Exécuter agent sur TOUS environnements",
+      "4. Fermer scorecard et récupérer résultats",
+      "5. Analyser logs forensiques bit-level",
+      "6. Soumettre sur leaderboard"
+    ]
+  },
+  
+  "resources": {
+    "documentation": "https://docs.arcprize.org/llms.txt",
+    "github_toolkit": "https://github.com/arcprize/arc-agi",
+    "github_agents": "https://github.com/arcprize/ARC-AGI-3-Agents",
+    "github_benchmarking": "https://github.com/arcprize/arc-agi-3-benchmarking",
+    "github_kaggle_starter": "https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter",
+    "platform": "https://arcprize.org/platform",
+    "tasks": "https://arcprize.org/tasks",
+    "scorecards": "https://arcprize.org/scorecards"
+  }
+}

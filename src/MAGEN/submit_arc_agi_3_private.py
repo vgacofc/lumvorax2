@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 """
-MAGEN V21 - Soumission ARC-AGI-3 MODE PRIVÉ
-============================================
+MAGEN V22 - Soumission ARC-AGI-3 avec Agent MAGEN Complet
+==========================================================
 
-IMPORTANT: MODE PRIVÉ STRICT - Aucune soumission publique
-- Utilise API ARC-AGI-3 en mode compétition privé
-- Monitoring temps réel avec barres de progression
-- Logs forensiques LumVorax bit-level
+ARCHITECTURE COMPLÈTE MAGEN (174/400 = 43.5% sur puzzles statiques):
+- TransformationLearningEngine (TLE) avec boucle physique fermée
+- PatternMatcher + ObjectExtractor pour perception structurée
+- MetaArbiter pour routage cognitif stratégique
+- ActionReputationSystem (C17) + ExplorationBudgetManager (C18) + TrajectoryAnalyzer (C19)
+- Logging forensique LumVorax bit-level nanoseconde par nanoseconde
+
+MODE PRIVÉ STRICT:
+- Aucune soumission publique
+- Tests locaux uniquement jusqu'à validation utilisateur
 - Doppler pour secrets
 
 Auteur: Bob (Mode Advanced)
-Date: 2026-06-13
-Protocole: MAGEN + LumVorax
+Date: 2026-06-14
+Session: 67
+Protocole: CLAUDE_PILOT + LUMVORAX + PROTOCOLE_MAGEN
 """
 
 import os
@@ -27,34 +34,55 @@ from arcengine import GameAction, GameState
 # Ajouter le répertoire parent au path
 sys.path.insert(0, str(Path(__file__).parent))
 
-# Import modules MAGEN
-from test_phase2_400_puzzles import (
-    load_dataset,
-    generate_programs_with_routing,
-    PuzzleClassifier,
-    LearningMemory,
-    MetaArbiter
-)
-from forensic.lumvorax_logger import get_logger, LumVoraxLogger
+# Import agent MAGEN complet
+from magen_arc_agi_agent import MAGENArcAgiAgent
+
+# Import logging forensique
+try:
+    from forensic.lumvorax_logger import get_logger, LumVoraxLogger
+except ImportError:
+    # Fallback si forensic pas disponible
+    import logging
+    def get_logger(session_id=None):
+        return logging.getLogger(__name__)
+    LumVoraxLogger = None
 
 
 class ArcAgi3PrivateSubmitter:
     """
-    Soumission ARC-AGI-3 en MODE PRIVÉ avec monitoring temps réel
+    Soumission ARC-AGI-3 avec Agent MAGEN Complet V22
+    
+    ARCHITECTURE:
+    - Agent MAGEN avec 100% technologie existante (174/400 = 43.5%)
+    - TransformationLearningEngine + PatternMatcher + ObjectExtractor
+    - MetaArbiter + C17+C18+C19 (reputation, budget, trajectory)
+    - Logging forensique LumVorax bit-level
     
     GARANTIES:
-    - Aucune option "public" activée
-    - Soumissions privées uniquement
-    - Logs forensiques complets
-    - Monitoring console temps réel
+    - Mode PRIVÉ strict (aucune soumission publique)
+    - Tests locaux uniquement jusqu'à validation utilisateur
+    - Logs forensiques complets nanoseconde par nanoseconde
     """
     
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.arcade = None
-        self.logger = get_logger()
+        
+        # Session ID
+        session_id = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Forensic logger
+        self.forensic_logger = get_logger(session_id=session_id)
+        
+        # Agent MAGEN complet
+        self.magen_agent = MAGENArcAgiAgent(
+            verbose=True,
+            forensic_logger=self.forensic_logger
+        )
+        
+        # Résultats
         self.results = {
-            'session_id': datetime.now().strftime('%Y%m%d_%H%M%S'),
+            'session_id': session_id,
             'mode': 'PRIVATE',
             'games_played': [],
             'total_score': 0.0,
@@ -62,17 +90,14 @@ class ArcAgi3PrivateSubmitter:
             'end_time': None
         }
         
-        # Composants MAGEN
-        self.classifier = PuzzleClassifier()
-        self.memory = LearningMemory()
-        self.meta_arbiter = MetaArbiter(verbose=True)
-        
         print("=" * 80)
-        print("🔒 MAGEN V21 - SOUMISSION ARC-AGI-3 MODE PRIVÉ")
+        print("🧠 MAGEN V22 - AGENT COMPLET POUR ARC-AGI-3")
         print("=" * 80)
-        print(f"Session ID: {self.results['session_id']}")
+        print(f"Session ID: {session_id}")
         print(f"API Key: {api_key[:8]}...{api_key[-4:]}")
         print(f"Mode: 🔒 PRIVÉ (aucune soumission publique)")
+        print(f"Architecture: TLE + PatternMatcher + ObjectExtractor + MetaArbiter + C17+C18+C19")
+        print(f"Score baseline MAGEN: 174/400 (43.5%) sur puzzles statiques")
         print("=" * 80)
     
     def initialize_arcade(self):
@@ -125,10 +150,13 @@ class ArcAgi3PrivateSubmitter:
     
     def play_game(self, game_id: str, max_actions: int = 100) -> Dict[str, Any]:
         """
-        Joue un jeu avec MAGEN V21
+        Jouer un jeu avec agent MAGEN complet V22
         
-        Returns:
-            Dict avec résultats du jeu
+        Utilise 100% de la technologie MAGEN:
+        - TransformationLearningEngine
+        - PatternMatcher + ObjectExtractor
+        - MetaArbiter + C17+C18+C19
+        - Logging forensique complet
         """
         print(f"\n{'='*80}")
         print(f"🎮 Jeu: {game_id}")
@@ -152,62 +180,26 @@ class ArcAgi3PrivateSubmitter:
                 game_result['error'] = "Failed to create environment"
                 return game_result
             
-            # Reset environnement
-            obs = env.reset()
+            # JOUER AVEC AGENT MAGEN
+            magen_result = self.magen_agent.play_game(env, max_actions=max_actions)
             
-            if not obs:
-                game_result['error'] = "Failed to reset environment"
-                return game_result
-            
-            print(f"📊 État initial: {obs.state.name}")
-            # Note: total_levels n'est pas disponible dans FrameDataRaw
-            print(f"🎯 Niveaux complétés: {obs.levels_completed}")
-            
-            # Boucle de jeu
-            action_count = 0
-            
-            while action_count < max_actions:
-                # Vérifier état (WIN ou GAME_OVER)
-                if obs.state in [GameState.WIN, GameState.GAME_OVER]:
-                    print(f"\n🏁 Jeu terminé: {obs.state}")
-                    break
-                
-                # Choisir action (pour l'instant aléatoire, sera remplacé par MAGEN)
-                available_actions = env.action_space
-                
-                if not available_actions:
-                    print("⚠️  Aucune action disponible")
-                    break
-                
-                # Prendre première action disponible (simplification)
-                action = available_actions[0]
-                
-                # Exécuter action
-                obs = env.step(action)
-                action_count += 1
-                
-                # Afficher progression
-                if action_count % 10 == 0:
-                    print(f"⏳ Actions: {action_count}/{max_actions} | "
-                          f"Niveaux: {obs.levels_completed} | "
-                          f"Score: {obs.score:.2f}")
-            
-            # Résultats finaux
-            game_result['score'] = obs.score
-            game_result['levels_completed'] = obs.levels_completed
-            game_result['actions_taken'] = action_count
+            # Copier résultats
+            game_result.update(magen_result)
+            game_result['game_id'] = game_id
             game_result['end_time'] = time.time()
             
-            duration = game_result['end_time'] - game_result['start_time']
-            
-            print(f"\n📊 RÉSULTATS:")
-            print(f"   Score: {obs.score:.2f}")
-            print(f"   Niveaux complétés: {obs.levels_completed}")
-            print(f"   Actions: {action_count}")
-            print(f"   Durée: {duration:.1f}s")
+            # Afficher statistiques MAGEN
+            stats = self.magen_agent.get_statistics()
+            print(f"\n📊 STATISTIQUES MAGEN:")
+            print(f"   Taux succès: {stats['success_rate']*100:.1f}%")
+            print(f"   Reward moyen: {stats['avg_reward']:.2f}")
+            print(f"   Patterns détectés: {stats.get('patterns_detected', 0)}")
+            print(f"   Objets extraits: {stats.get('objects_extracted', 0)}")
             
         except Exception as e:
             print(f"❌ Erreur pendant le jeu: {e}")
+            import traceback
+            traceback.print_exc()
             game_result['error'] = str(e)
             game_result['end_time'] = time.time()
         

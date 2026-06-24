@@ -28,7 +28,7 @@ static bool test_module_create_destroy(void) {
     printf("    ✅ Initialisation forensique réussie\n");
     
     // Test de destruction
-    forensic_logger_cleanup();
+    forensic_logger_destroy();
     printf("    ✅ Cleanup forensique réussi\n");
     
     return true;
@@ -38,28 +38,28 @@ static bool test_module_basic_operations(void) {
     printf("  Test 2/5: Basic Operations forensic_logger...\n");
     
     // Réinitialiser pour les tests
-    forensic_logger_init();
+    forensic_logger_init("logs/forensic/test_basic.log");
     
     // Test d'écriture de log forensique
     uint32_t test_lum_id = 12345678;
     uint64_t timestamp = get_precise_timestamp_ns();
     
     // Test du log basique
-    forensic_log_individual_lum(test_lum_id, timestamp, "TEST_CREATE");
+    forensic_log_individual_lum(test_lum_id, "TEST_CREATE", timestamp);
     printf("    ✅ Log forensique individuel écrit\n");
     
-    // Test du log avec données
-    write_real_forensic_log(test_lum_id, 100, 200, timestamp);
-    printf("    ✅ Log forensique avec données écrit\n");
+    // Test du log avec opération
+    forensic_log_individual_lum(test_lum_id, "TEST_OPERATION", timestamp);
+    printf("    ✅ Log forensique avec opération écrit\n");
     
-    forensic_logger_cleanup();
+    forensic_logger_destroy();
     return true;
 }
 
 static bool test_module_stress_100k(void) {
     printf("  Test 3/5: Stress 100K forensic_logger...\n");
     
-    forensic_logger_init();
+    forensic_logger_init("logs/forensic/test_stress.log");
     uint64_t start_time = get_precise_timestamp_ns();
     
     // Test avec 1000 logs (réduire pour éviter surcharge)
@@ -67,7 +67,7 @@ static bool test_module_stress_100k(void) {
     for (int i = 0; i < test_count; i++) {
         uint32_t lum_id = 1000000 + i;
         uint64_t timestamp = get_precise_timestamp_ns();
-        forensic_log_individual_lum(lum_id, timestamp, "STRESS_TEST");
+        forensic_log_individual_lum(lum_id, "STRESS_TEST", timestamp);
     }
     
     uint64_t end_time = get_precise_timestamp_ns();
@@ -76,7 +76,7 @@ static bool test_module_stress_100k(void) {
     
     printf("    ✅ %d logs en %lu ns (%.2f logs/sec)\n", test_count, duration_ns, ops_per_sec);
     
-    forensic_logger_cleanup();
+    forensic_logger_destroy();
     return true;
 }
 
@@ -84,22 +84,22 @@ static bool test_module_memory_safety(void) {
     printf("  Test 4/5: Memory Safety forensic_logger...\n");
     
     // Test avec pointeurs NULL et valeurs limites
-    forensic_logger_init();
+    forensic_logger_init("logs/forensic/test_safety.log");
     
     // Test avec LUM ID 0 (cas limite)
-    forensic_log_individual_lum(0, get_precise_timestamp_ns(), "NULL_ID_TEST");
+    forensic_log_individual_lum(0, "NULL_ID_TEST", get_precise_timestamp_ns());
     printf("    ✅ Test LUM ID = 0 traité\n");
     
     // Test avec timestamp 0
-    forensic_log_individual_lum(999999, 0, "ZERO_TIMESTAMP");
+    forensic_log_individual_lum(999999, "ZERO_TIMESTAMP", 0);
     printf("    ✅ Test timestamp = 0 traité\n");
     
-    // Test avec action NULL (gestion safe)
+    // Test avec opération sécurisée
     uint32_t safe_id = 777777;
-    write_real_forensic_log(safe_id, 50, 75, get_precise_timestamp_ns());
+    forensic_log_individual_lum(safe_id, "SAFE_OPERATION", get_precise_timestamp_ns());
     printf("    ✅ Test écriture forensique sécurisée\n");
     
-    forensic_logger_cleanup();
+    forensic_logger_destroy();
     return true;
 }
 

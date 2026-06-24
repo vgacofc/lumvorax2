@@ -22,7 +22,7 @@
 #include "../src/vm/lum_sealevel.h"
 #include "../src/pipeline/lum_pipeline.h"
 
-#define BENCH_DURATION_SEC 10
+#define BENCH_DURATION_SEC 3  // Réduit de 10s à 3s pour tests rapides
 #define ANSI_CYAN "\x1b[36m"
 #define ANSI_GREEN "\x1b[32m"
 #define ANSI_YELLOW "\x1b[33m"
@@ -48,6 +48,7 @@ void bench_poh_throughput(void) {
     lum_poh_start(poh);
     
     printf("Génération PoH pendant %d secondes...\n", BENCH_DURATION_SEC);
+    fflush(stdout);  // Force flush pour voir output immédiatement
     sleep(BENCH_DURATION_SEC);
     
     double tps;
@@ -90,13 +91,23 @@ void bench_transaction_throughput(void) {
     uint8_t data[100] = {0};
     
     printf("Soumission transactions pendant %d secondes...\n", BENCH_DURATION_SEC);
+    fflush(stdout);
     
     uint64_t start_ns = get_timestamp_ns();
     uint64_t submitted = 0;
+    uint64_t last_progress = start_ns;
     
     while ((get_timestamp_ns() - start_ns) < (BENCH_DURATION_SEC * 1000000000ULL)) {
+        // Progress reporting toutes les secondes
+        if ((get_timestamp_ns() - last_progress) > 1000000000ULL) {
+            printf("  Progress: %lu transactions soumises...\n", submitted);
+            fflush(stdout);
+            last_progress = get_timestamp_ns();
+        }
         if (lum_pipeline_submit(pipeline, sig, data, 100)) {
             submitted++;
+        } else {
+            usleep(10);  // Attendre 10µs si queue pleine
         }
     }
     
@@ -150,6 +161,7 @@ void bench_latency(void) {
     uint8_t data[100] = {0};
     
     printf("Mesure latence sur 1000 transactions...\n");
+    fflush(stdout);
     
     uint64_t total_latency_ns = 0;
     int samples = 1000;
@@ -162,9 +174,10 @@ void bench_latency(void) {
     }
     
     double avg_latency_ms = (double)total_latency_ns / (double)samples / 1000000.0;
+    double avg_latency_ns = (double)total_latency_ns / (double)samples;
     
     printf("\n" ANSI_BOLD "Résultats Latence:" ANSI_RESET "\n");
-    printf("  Latence moyenne : " ANSI_GREEN "%.2f ms" ANSI_RESET " (cible: <50ms)\n", avg_latency_ms);
+    printf("  Latence moyenne : " ANSI_GREEN "%.6f ms" ANSI_RESET " (" ANSI_GREEN "%.0f ns" ANSI_RESET ") (cible: <50ms)\n", avg_latency_ms, avg_latency_ns);
     
     // Comparaison Solana
     double solana_latency = 400.0;  // 400ms
@@ -196,6 +209,7 @@ void bench_parallel_execution(void) {
     lum_sealevel_t* vm = lum_sealevel_init(16);
     
     printf("Exécution parallèle de 10000 transactions...\n");
+    fflush(stdout);
     
     // Créer transactions
     int num_txs = 10000;

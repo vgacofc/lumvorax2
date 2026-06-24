@@ -10,10 +10,14 @@
  *  - Mesure CPU/RAM/IO réelles via /proc/self/stat + /proc/self/status + /proc/self/io
  *  - Échantillonnage avant/après exécution pour CPU delta
  *  - Fallback gracieux si /proc non disponible (macOS, Windows)
+ *
+ * BUG-041 FIX:
+ *  - Sauvegarde stdout/stderr sur disque (logs/execution/{jobId}_stdout.log)
+ *  - Traçabilité complète de l'exécution réelle du code utilisateur
  */
 
 import { execSync, execFileSync, spawnSync } from 'child_process';
-import { existsSync, mkdirSync, statSync, readFileSync } from 'fs';
+import { existsSync, mkdirSync, statSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import logger from './logger.js';
@@ -201,12 +205,30 @@ export class ForensicBridge {
 
   /**
    * Collecte et parse les données forensic produites
+   * BUG-041 FIX: Sauvegarde stdout/stderr sur disque
    * @param {object} perfMetrics - {cpu_percent, memory_mb, io_read_mb, io_write_mb, duration_ms}
    */
   _collectForensicData(logFile, memFile, stdout, stderr, exitCode, perfMetrics = {}) {
+    // BUG-041 FIX: Sauvegarder stdout/stderr sur disque pour traçabilité complète
+    const logsDir = join(FORENSIC_DIR, 'execution');
+    mkdirSync(logsDir, { recursive: true });
+    
+    const stdoutFile = join(logsDir, `${this.jobId}_stdout.log`);
+    const stderrFile = join(logsDir, `${this.jobId}_stderr.log`);
+    
+    try {
+      writeFileSync(stdoutFile, stdout || '', 'utf8');
+      writeFileSync(stderrFile, stderr || '', 'utf8');
+      logger.info(`[FORENSIC] Logs sauvegardés: stdout=${stdoutFile} (${(stdout||'').length} bytes), stderr=${stderrFile} (${(stderr||'').length} bytes)`);
+    } catch (e) {
+      logger.error(`[FORENSIC] Échec sauvegarde logs: ${e.message}`);
+    }
+    
     const data = {
       stdout,
       stderr,
+      stdout_file: stdoutFile,
+      stderr_file: stderrFile,
       exit_code:    exitCode,
       memory_leaks: [],
       syscalls:     [],

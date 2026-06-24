@@ -66,7 +66,8 @@
 
 **Cause identifiée**:
 - Heuristique `_extract_single_value()` trop complexe
-- Validation train pairs trop stricte
+- Validation train pairs trop strictepour la dernier fois  que je le repete !! **Objectif**: Passer de 400/400 (100%)et rien de moins ! interdiction de proposer de passe au kaggle sans mes 400/400 a 100% des puzzle resolut en local!! et tu explique les diference entre cest deux valeur! qui est quoi exqctement et clairement ? ce ne pas la meme chose ? je comprend rien la 6/400 succès maintenus (aucune régression)
+Pipeline: 35/400 puzzles résolus (+12.9%) et tu te me et tavail pourappliquer tout les correction immediatement apres lectured es log forensic !
 - Ne retourne pas couleur dominante par défaut
 
 **Impact**:

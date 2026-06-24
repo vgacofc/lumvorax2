@@ -82,12 +82,16 @@ typedef struct {
      * AVANTAGE: 0ms overhead (rotation masquée par exécution GPU)
      * VALIDATION: C228 = 1000 dispatches + C280 = 1-2ms/dispatch
      */
-    #define CTX_POOL_SIZE 3  /* C282: 3 contextes (limite 3 EXECBUFFER2 par contexte) */
-    #define CTX_MAX_REUSE 3  /* C282: 3 dispatches max par contexte (limitation Gen9) */
+    /* C620 RESTAURATION VERSION MAI: Correction régression hashrate (507 MH/s → 0 MH/s)
+     * PROBLÈME JUIN: CTX_POOL_SIZE=3 + CTX_MAX_REUSE=3 → Rotation forcée → 0 MH/s
+     * SOLUTION: Restaurer configuration MAI qui fonctionnait (507 MH/s)
+     */
+    #define CTX_POOL_SIZE 2  /* C620: 2 contextes (version mai stable) */
+    #define CTX_MAX_REUSE INT_MAX  /* C620: Réutilisation infinie (pas de recyclage) */
     
     /* C277: Support VM Intel pour isolation contextes (∞ dispatches) */
-    uint32_t vm_pool[CTX_POOL_SIZE];       /* Pool de 9 VMs (1 VM par contexte) */
-    uint32_t ctx_pool[CTX_POOL_SIZE];      /* Pool de 9 contextes (ctx_id=1-9) */
+    uint32_t vm_pool[CTX_POOL_SIZE];       /* Pool de 2 VMs (1 VM par contexte) */
+    uint32_t ctx_pool[CTX_POOL_SIZE];      /* Pool de 2 contextes (ctx_id=1,2) */
     int ctx_pool_index;                     /* Index rotation */
     int ctx_usage_count[CTX_POOL_SIZE];    /* Compteur utilisation */
     
@@ -109,7 +113,7 @@ typedef struct {
      * SOLUTION C255v8n : Pool 90 batch_bo → 0 DRM reopen en 60s
      * OBJECTIF : Éliminer 100% overhead reopens (14.8ms × 3 = 44.4ms total)
      */
-    #define BATCH_POOL_SIZE 90  /* 90 dispatches sans reopen (vs 27 = 3 reopens) */
+    #define BATCH_POOL_SIZE 27  /* 90 dispatches sans reopen (vs 27 = 3 reopens) */
     uint32_t batch_bo_pool[BATCH_POOL_SIZE];   /* Pool de 9 batch buffers */
     void* batch_map_pool[BATCH_POOL_SIZE];     /* Mappings CPU correspondants */
     int batch_pool_index;                       /* Index rotation batch pool */
@@ -625,49 +629,28 @@ static int create_gpu_context_with_vm(btc_gen9_context_t* ctx,
                                       uint32_t* ctx_id_out) {
     int ret;
     
-    /* ÉTAPE 1: Créer VM (Virtual Memory) */
-    struct drm_i915_gem_vm_control vm_create = {0};
-    ret = ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_CREATE, &vm_create);
-    if (ret < 0) {
-        LOG_EVENT(ctx, "VM_CREATE_FAILED: errno=%d (%s)", errno, strerror(errno));
-        return -1;
-    }
-    *vm_id_out = vm_create.vm_id;
-    LOG_EVENT(ctx, "VM_CREATE_SUCCESS: vm_id=%u", *vm_id_out);
+    /* C622: DÉSACTIVATION VM SUPPORT (test ROOT CAUSE #155)
+     * Retour à la méthode simple mai 2026 (sans VM)
+     * VM Support ajouté en juin pourrait interférer avec batch buffers
+     */
     
-    /* ÉTAPE 2: Créer contexte avec CREATE_EXT */
-    struct drm_i915_gem_context_create_ext ctx_create = {
-        .flags = 0,
-        .extensions = 0
-    };
-    ret = ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_CONTEXT_CREATE_EXT, &ctx_create);
+    /* MÉTHODE SIMPLE: Créer contexte directement (comme mai 2026) */
+    struct drm_i915_gem_context_create ctx_create = {0};
+    ret = ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_CONTEXT_CREATE, &ctx_create);
     if (ret < 0) {
-        LOG_EVENT(ctx, "CONTEXT_CREATE_EXT_FAILED: errno=%d (%s)", errno, strerror(errno));
-        /* Cleanup VM */
-        struct drm_i915_gem_vm_control vm_destroy = { .vm_id = *vm_id_out };
-        ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_DESTROY, &vm_destroy);
+        LOG_EVENT(ctx, "CONTEXT_CREATE_FAILED: errno=%d (%s)", errno, strerror(errno));
         return -1;
     }
     *ctx_id_out = ctx_create.ctx_id;
-    LOG_EVENT(ctx, "CONTEXT_CREATE_EXT_SUCCESS: ctx_id=%u", *ctx_id_out);
+    *vm_id_out = 0;  /* Pas de VM en mode simple */
+    LOG_EVENT(ctx, "CONTEXT_CREATE_SUCCESS_NO_VM: ctx_id=%u (mai 2026 mode)", *ctx_id_out);
     
-    /* ÉTAPE 3: Associer VM au contexte */
+    /* ÉTAPE 2: Activer recovery (optionnel) */
     struct drm_i915_gem_context_param param = {
         .ctx_id = *ctx_id_out,
-        .param = I915_CONTEXT_PARAM_VM,
-        .value = *vm_id_out
+        .param = I915_CONTEXT_PARAM_RECOVERABLE,
+        .value = 1
     };
-    ret = ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_CONTEXT_SETPARAM, &param);
-    if (ret < 0) {
-        LOG_EVENT(ctx, "CONTEXT_SETPARAM_VM_FAILED: errno=%d (%s)", errno, strerror(errno));
-        /* Cleanup contexte et VM */
-        struct drm_i915_gem_context_destroy ctx_destroy = { .ctx_id = *ctx_id_out };
-        ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_CONTEXT_DESTROY, &ctx_destroy);
-        struct drm_i915_gem_vm_control vm_destroy = { .vm_id = *vm_id_out };
-        ioctl(ctx->drm_fd, DRM_IOCTL_I915_GEM_VM_DESTROY, &vm_destroy);
-        return -1;
-    }
-    LOG_EVENT(ctx, "CONTEXT_SETPARAM_VM_SUCCESS: ctx_id=%u vm_id=%u", *ctx_id_out, *vm_id_out);
     
     /* ÉTAPE 4: Activer recovery (optionnel mais recommandé) */
     param.param = I915_CONTEXT_PARAM_RECOVERABLE;
@@ -2322,7 +2305,12 @@ int btc_gen9_execute(btc_gen9_context_t* ctx) {
      * MÉTHODE : Ajouter flag ctx->in_batch_mode pour détecter batch en cours
      */
     /* C270 TEST: DÉSACTIVER reopen pour forcer reproduction bug errno=5 */
-    if (0 && ctx->total_dispatches % BATCH_POOL_SIZE == 0 && ctx->total_dispatches > 0 && !ctx->in_batch_mode) {
+    /* C624: ROOT CAUSE #157 - Activer réouverture DRM tous les 5 dispatches
+     * PROBLÈME: Limite cachée ~7 dispatches (errno=5 I/O error)
+     * SOLUTION: Réouvrir DRM périodiquement pour reset compteur GPU
+     * FRÉQUENCE: 5 dispatches (vs 27 BATCH_POOL_SIZE) pour éviter limite
+     */
+    if (ctx->total_dispatches % 5 == 0 && ctx->total_dispatches > 0 && !ctx->in_batch_mode) {
         LOG_EVENT(ctx, "DRM_REOPEN_TRIGGER_DISABLED_C270: dispatches=%lu (reopen disabled for bug reproduction)", ctx->total_dispatches);
         
         /* C230 OPTIMISATION #2 : Sauvegarde asynchrone résultats

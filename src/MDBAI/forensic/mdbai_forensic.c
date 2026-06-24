@@ -9,7 +9,7 @@
  * Sur Ubuntu avec libstdc++ fix, utilise lum_memory_tracer complet.
  * ============================================================================ */
 
-#define _GNU_SOURCE
+/* _GNU_SOURCE déjà défini par CFLAGS dans Makefile */
 #include "mdbai_forensic.h"
 
 #include <stdio.h>
@@ -65,7 +65,8 @@ static int mdbai_write_memory_snapshot(const char* mem_file, const char* job_id)
     FILE* statm = fopen("/proc/self/statm", "r");
     uint64_t total_pages = 0, resident_pages = 0;
     if (statm) {
-        fscanf(statm, "%lu %lu", &total_pages, &resident_pages);
+        int ret = fscanf(statm, "%lu %lu", &total_pages, &resident_pages);
+        (void)ret; /* Ignore return value intentionally */
         fclose(statm);
     }
 
@@ -80,7 +81,10 @@ static int mdbai_write_memory_snapshot(const char* mem_file, const char* job_id)
     hdr.process_pid    = (uint64_t)getpid();
     hdr.total_pages    = total_pages;
     hdr.resident_pages = resident_pages;
-    if (job_id) strncpy((char*)hdr.job_id, job_id, sizeof(hdr.job_id) - 1);
+    if (job_id) {
+        strncpy((char*)hdr.job_id, job_id, sizeof(hdr.job_id) - 1);
+        hdr.job_id[sizeof(hdr.job_id) - 1] = '\0'; /* Null-terminate */
+    }
 
     size_t written = fwrite(&hdr, 1, sizeof(hdr), f);
     fflush(f);

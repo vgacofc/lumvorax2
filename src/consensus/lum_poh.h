@@ -80,6 +80,31 @@ typedef struct {
     bool enable_recording;  // Enregistrer historique ?
 } lum_poh_t;
 
+/* ============================================================================
+ * PIPELINE HYBRIDE CPU-GPU - PHASE 2.1
+ * ============================================================================ */
+
+/**
+ * @brief Contexte vérification GPU (exposé pour benchmarks)
+ */
+typedef struct {
+    void* poh;                                 // Référence PoH (opaque)
+    void* queue;                               // Queue batches (opaque)
+    pthread_t threads[3];                      // 3 threads vérification GPU
+    bool running;                              // Flag threads actifs
+    
+    // Métriques forensiques (accessibles publiquement)
+    uint64_t total_batches_verified;           // Total batches vérifiés
+    uint64_t total_errors_detected;            // Total erreurs détectées
+    double avg_verification_latency_ms;        // Latence moyenne vérification
+    uint64_t throughput_verifications_per_sec; // Throughput vérifications/s
+} lum_poh_verifier_context_t;
+
+/**
+ * @brief Accès contexte vérification global (pour benchmarks)
+ */
+extern lum_poh_verifier_context_t g_verifier_ctx;
+
 /**
  * @brief Preuve PoH pour transaction
  */

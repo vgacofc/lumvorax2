@@ -11,6 +11,7 @@ export const config = {
     env: process.env.NODE_ENV || 'development',
     port: parseInt(process.env.API_PORT || '3001', 10),
     logLevel: process.env.LOG_LEVEL || 'debug',
+    baseUrl: process.env.BASE_URL || `http://localhost:${process.env.API_PORT || '3001'}`,
   },
 
   telegram: {
@@ -40,6 +41,15 @@ export const config = {
 
   session: {
     secret: process.env.SESSION_SECRET || 'mdbai-dev-secret-change-in-prod',
+  },
+
+  email: {
+    smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+    smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
+    smtpSecure: process.env.SMTP_SECURE === 'true',
+    smtpUser: process.env.SMTP_USER || '',
+    smtpPassword: process.env.SMTP_PASSWORD || '',
+    fromAddress: process.env.EMAIL_FROM || 'noreply@mdbai.dev',
   },
 
   jobs: {
