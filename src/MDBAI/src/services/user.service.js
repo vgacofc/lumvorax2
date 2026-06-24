@@ -127,6 +127,40 @@ export async function getUserByTelegramId(telegramId) {
   } catch (error) {
     logger.error('Erreur lors de la récupération de l\'utilisateur par Telegram ID:', error);
     return {
+/**
+ * Trouve un utilisateur par son email
+ */
+export async function findUserByEmail(email) {
+  try {
+    for (const user of users.values()) {
+      if (user.email === email) {
+        return {
+          success: true,
+          user: user.toJSON()
+        };
+      }
+    }
+
+    return {
+      success: false,
+      error: 'User not found'
+    };
+  } catch (error) {
+    logger.error('Erreur lors de la recherche par email:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Enregistre un nouvel utilisateur (alias de createUser)
+ */
+export async function registerUser(userData) {
+  return createUser(userData);
+}
+
       success: false,
       error: error.message
     };
@@ -313,6 +347,8 @@ export default {
   getUserByTelegramId,
   findUserByGithub,
   findUserByTelegram,
+  findUserByEmail,
+  registerUser,
   updateUser,
   deleteUser,
   listUsers,
