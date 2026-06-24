@@ -134,6 +134,13 @@ export async function getUserByTelegramId(telegramId) {
 }
 
 /**
+ * Trouve un utilisateur par son Telegram ID (alias pour compatibilité)
+ */
+export async function findUserByTelegram(telegramId) {
+  return getUserByTelegramId(telegramId);
+}
+
+/**
  * Met à jour un utilisateur
  */
 export async function updateUser(userId, updates) {
@@ -305,6 +312,7 @@ export default {
   getUserByGithubId,
   getUserByTelegramId,
   findUserByGithub,
+  findUserByTelegram,
   updateUser,
   deleteUser,
   listUsers,
