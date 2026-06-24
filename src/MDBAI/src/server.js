@@ -151,6 +151,32 @@ app.get('/', (req, res) => {
 });
 
 /**
+ * GET /api — Route API principale (informations générales)
+ * CORRECTION BUG: Ajout route /api manquante
+ */
+app.get('/api', (req, res) => {
+  res.json({
+    service: 'mdbai',
+    version: '0.1.0',
+    status: 'operational',
+    endpoints: {
+      analyze: '/api/analyze',
+      status: '/api/status/:jobId',
+      report: '/api/report/:jobId',
+      health: '/health',
+      dashboard: '/dashboard',
+      auth: {
+        github: '/auth/github',
+        callback: '/auth/github/callback'
+      },
+      webhook: '/webhook/github'
+    },
+    documentation: 'https://github.com/yourusername/mdbai#readme',
+    telegram: '@masterdebugai_bot'
+  });
+});
+
+/**
  * 404 handler
  */
 app.use((req, res) => {

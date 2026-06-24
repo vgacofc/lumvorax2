@@ -42,6 +42,12 @@ export class TelegramService {
    * @returns {TelegramService}
    */
   init(onAnalyzeRequest) {
+    // CORRECTION BUG 409: Désactiver Telegram sur instance secondaire (api-2)
+    if (process.env.TELEGRAM_BOT_DISABLED === 'true') {
+      logger.info('[TELEGRAM] Bot désactivé sur cette instance (TELEGRAM_BOT_DISABLED=true)');
+      return this;
+    }
+    
     if (!config.telegram.token) {
       logger.warn('[TELEGRAM] TELEGRAM_BOT_TOKEN absent — bot désactivé (mode dégradé)');
       return this;
@@ -171,8 +177,9 @@ export class TelegramService {
     // Vérifier si utilisateur inscrit ET actif
     const user = await findUserByTelegram(telegramId);
 
-    // BUG #30 FIX: Vérifier statut ET email vérifié
-    if (!user || user.status !== 'active' || !user.email_verified) {
+    // BUG #30 FIX: Vérifier isActive ET email (camelCase)
+    // CORRECTION: user.isActive au lieu de user.status, user.email au lieu de user.email_verified
+    if (!user || !user.isActive || !user.email) {
       // Utilisateur NON inscrit OU inscription incomplète
       let text = `Master Debug AI — MDBAI v0.1.0\n\n` +
         `Bienvenue ${name}! Je suis votre assistant d'analyse forensique automatisée.\n\n` +
@@ -185,14 +192,14 @@ export class TelegramService {
         `/register — Créer un compte MDBAI\n\n`;
       
       // Message additionnel si inscription en cours
-      if (user && user.status === 'pending') {
-        text += `⚠️ Votre inscription est en cours. Veuillez vérifier votre email (${user.email}) pour activer votre compte.`;
+      if (user && !user.isActive) {
+        text += `⚠️ Votre inscription est en cours. Veuillez vérifier votre email (${user.email || 'non renseigné'}) pour activer votre compte.`;
       } else {
         text += `Commencez par: /register`;
       }
 
       await this.bot.sendMessage(chatId, text);
-      logger.info(`[TELEGRAM] /start — utilisateur ${telegramId} non actif (status=${user?.status}, verified=${user?.email_verified}) → message /register`);
+      logger.info(`[TELEGRAM] /start — utilisateur ${telegramId} non actif (isActive=${user?.isActive}, email=${user?.email}) → message /register`);
       return;
     }
 
@@ -231,10 +238,12 @@ export class TelegramService {
       const user = await findUserByTelegram(telegramId);
       
       if (user) {
+        // CORRECTION BUG: user.createdAt au lieu de user.created_at (camelCase)
+        const createdDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
         await this.bot.sendMessage(chatId,
           `Vous etes deja inscrit.\n\n` +
-          `Email: ${user.email}\n` +
-          `Compte cree le: ${new Date(user.created_at).toLocaleDateString('fr-FR')}\n\n` +
+          `Email: ${user.email || 'Non renseigné'}\n` +
+          `Compte cree le: ${createdDate}\n\n` +
           `Utilisez /github pour connecter votre compte GitHub.`);
         logger.info(`[TELEGRAM] /register — utilisateur ${user.email} deja inscrit`);
         return;

@@ -101,9 +101,11 @@ export async function getUserByGithubId(githubId) {
 
 /**
  * Trouve un utilisateur par son GitHub ID (alias pour compatibilité)
+ * CORRECTION BUG: Retourne directement l'objet user au lieu de {success, user}
  */
 export async function findUserByGithub(githubId) {
-  return getUserByGithubId(githubId);
+  const result = await getUserByGithubId(githubId);
+  return result.success ? result.user : null;
 }
 
 /**
@@ -135,28 +137,19 @@ export async function getUserByTelegramId(telegramId) {
 
 /**
  * Trouve un utilisateur par son email
+ * CORRECTION BUG: Retourne directement l'objet user au lieu de {success, user}
  */
 export async function findUserByEmail(email) {
   try {
     for (const user of users.values()) {
       if (user.email === email) {
-        return {
-          success: true,
-          user: user.toJSON()
-        };
+        return user.toJSON();
       }
     }
-
-    return {
-      success: false,
-      error: 'User not found'
-    };
+    return null;
   } catch (error) {
     logger.error('Erreur lors de la recherche par email:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    return null;
   }
 }
 
@@ -168,17 +161,21 @@ export async function registerUser(userData) {
 }
 /**
  * Trouve un utilisateur par son ID (alias pour compatibilité)
+ * CORRECTION BUG: Retourne directement l'objet user au lieu de {success, user}
  */
 export async function findUserById(userId) {
-  return getUserById(userId);
+  const result = await getUserById(userId);
+  return result.success ? result.user : null;
 }
 
 
 /**
  * Trouve un utilisateur par son Telegram ID (alias pour compatibilité)
+ * CORRECTION BUG: Retourne directement l'objet user au lieu de {success, user}
  */
 export async function findUserByTelegram(telegramId) {
-  return getUserByTelegramId(telegramId);
+  const result = await getUserByTelegramId(telegramId);
+  return result.success ? result.user : null;
 }
 
 /**
