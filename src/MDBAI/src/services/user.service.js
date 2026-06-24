@@ -167,12 +167,6 @@ export async function registerUser(userData) {
   return createUser(userData);
 }
 
-      success: false,
-      error: error.message
-    };
-  }
-}
-
 /**
  * Trouve un utilisateur par son Telegram ID (alias pour compatibilité)
  */
