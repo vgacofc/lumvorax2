@@ -127,6 +127,12 @@ export async function getUserByTelegramId(telegramId) {
   } catch (error) {
     logger.error('Erreur lors de la récupération de l\'utilisateur par Telegram ID:', error);
     return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
 /**
  * Trouve un utilisateur par son email
  */
