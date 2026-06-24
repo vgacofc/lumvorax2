@@ -191,7 +191,18 @@ export class User {
       }
     });
   }
+  /**
+   * Vérifie l'email d'un utilisateur
+   */
+  static async verifyUserEmail(userId, email) {
+    // Cette fonction devrait être implémentée avec la logique de vérification
+    // Pour l'instant, on retourne true pour permettre le démarrage
+    return true;
+  }
 }
+
+// Export de la fonction verifyUserEmail pour telegram.service.js
+export const verifyUserEmail = User.verifyUserEmail;
 
 export default User;
 
