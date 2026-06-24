@@ -257,6 +257,7 @@ Timestamp : ${new Date().toISOString()}
       text
     });
   }
+}
 
 // Export de l'instance singleton
 const emailService = new EmailService();
@@ -297,12 +298,3 @@ export async function sendErrorNotificationEmail(adminEmail, error) {
   await emailService.initialize();
   return emailService.sendErrorNotificationEmail(adminEmail, error);
 }
-}
-
-// Instance singleton
-const emailService = new EmailService();
-
-export default emailService;
-export { EmailService };
-
-// Made with Bob
