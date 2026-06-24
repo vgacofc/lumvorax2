@@ -55,9 +55,9 @@ export async function requireActiveUser(req, res, next) {
   }
   
   try {
-    const user = await findUserById(userId);
+    const result = await findUserById(userId);
     
-    if (!user) {
+    if (!result || !result.success) {
       logger.warn('[AUTH-MIDDLEWARE] Utilisateur introuvable', { userId });
       return res.status(401).json({
         error: 'USER_NOT_FOUND',
@@ -65,16 +65,18 @@ export async function requireActiveUser(req, res, next) {
       });
     }
     
-    if (user.status !== USER_STATUS_ACTIVE) {
+    const user = result.user;
+    
+    if (!user.isActive) {
       logger.warn('[AUTH-MIDDLEWARE] Utilisateur non actif', {
         userId,
-        status: user.status,
+        isActive: user.isActive,
       });
       
       return res.status(403).json({
         error: 'USER_NOT_ACTIVE',
         message: 'Compte non actif',
-        status: user.status,
+        isActive: user.isActive,
       });
     }
     

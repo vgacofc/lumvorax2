@@ -347,20 +347,283 @@ export async function removeCredits(userId, amount) {
   }
 }
 
+/**
+ * Authentifie un utilisateur par email et mot de passe
+ */
+export async function authenticateByEmail(email, password) {
+  try {
+    const result = await findUserByEmail(email);
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: 'Invalid credentials'
+      };
+    }
+
+    const user = result.user;
+    
+    // Vérifier le mot de passe (bcrypt)
+    const bcrypt = await import('bcrypt');
+    const isValid = await bcrypt.compare(password, user.password || '');
+    
+    if (!isValid) {
+      return {
+        success: false,
+        error: 'Invalid credentials'
+      };
+    }
+
+    // Mettre à jour le dernier login
+    await updateUser(user.id, { lastLoginAt: new Date() });
+
+    return {
+      success: true,
+      user: user
+    };
+  } catch (error) {
+    logger.error('Erreur lors de l\'authentification par email:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Authentifie un utilisateur par téléphone et code OTP
+ */
+export async function authenticateByPhone(phone, code) {
+  try {
+    const result = await findUserByPhone(phone);
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: 'Invalid credentials'
+      };
+    }
+
+    const user = result.user;
+    
+    // Vérifier le code OTP (stocké temporairement)
+    if (user.phoneOTP !== code) {
+      return {
+        success: false,
+        error: 'Invalid OTP code'
+      };
+    }
+
+    // Vérifier l'expiration (10 minutes)
+    const otpAge = Date.now() - (user.phoneOTPCreatedAt || 0);
+    if (otpAge > 10 * 60 * 1000) {
+      return {
+        success: false,
+        error: 'OTP code expired'
+      };
+    }
+
+    // Nettoyer l'OTP après utilisation
+    await updateUser(user.id, { 
+      phoneOTP: null, 
+      phoneOTPCreatedAt: null,
+      lastLoginAt: new Date()
+    });
+
+    return {
+      success: true,
+      user: user
+    };
+  } catch (error) {
+    logger.error('Erreur lors de l\'authentification par téléphone:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Trouve un utilisateur par son numéro de téléphone
+ */
+export async function findUserByPhone(phone) {
+  try {
+    for (const user of users.values()) {
+      if (user.phone === phone) {
+        return {
+          success: true,
+          user: user.toJSON ? user.toJSON() : user
+        };
+      }
+    }
+
+    return {
+      success: false,
+      error: 'User not found'
+    };
+  } catch (error) {
+    logger.error('Erreur lors de la recherche par téléphone:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Vérifie l'email d'un utilisateur avec un token
+ */
+export async function verifyEmail(userId, token) {
+  try {
+    const user = users.get(userId);
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not found'
+      };
+    }
+
+    // Vérifier le token
+    if (user.emailVerificationToken !== token) {
+      return {
+        success: false,
+        error: 'Invalid verification token'
+      };
+    }
+
+    // Marquer l'email comme vérifié
+    user.emailVerified = true;
+    user.emailVerificationToken = null;
+    user.updatedAt = new Date();
+    
+    users.set(userId, user);
+    logger.info(`Email vérifié pour utilisateur: ${userId}`);
+
+    return {
+      success: true,
+      user: user.toJSON ? user.toJSON() : user
+    };
+  } catch (error) {
+    logger.error('Erreur lors de la vérification de l\'email:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Vérifie le téléphone d'un utilisateur avec un code OTP
+ */
+export async function verifyPhone(userId, code) {
+  try {
+    const user = users.get(userId);
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not found'
+      };
+    }
+
+    // Vérifier le code OTP
+    if (user.phoneOTP !== code) {
+      return {
+        success: false,
+        error: 'Invalid OTP code'
+      };
+    }
+
+    // Vérifier l'expiration (10 minutes)
+    const otpAge = Date.now() - (user.phoneOTPCreatedAt || 0);
+    if (otpAge > 10 * 60 * 1000) {
+      return {
+        success: false,
+        error: 'OTP code expired'
+      };
+    }
+
+    // Marquer le téléphone comme vérifié
+    user.phoneVerified = true;
+    user.phoneOTP = null;
+    user.phoneOTPCreatedAt = null;
+    user.updatedAt = new Date();
+    
+    users.set(userId, user);
+    logger.info(`Téléphone vérifié pour utilisateur: ${userId}`);
+
+    return {
+      success: true,
+      user: user.toJSON ? user.toJSON() : user
+    };
+  } catch (error) {
+    logger.error('Erreur lors de la vérification du téléphone:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Génère un code OTP pour un numéro de téléphone
+ */
+export async function generatePhoneOTP(phone) {
+  try {
+    // Générer un code à 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Trouver l'utilisateur par téléphone
+    const result = await findUserByPhone(phone);
+    
+    if (result.success) {
+      // Stocker l'OTP avec timestamp
+      const user = users.get(result.user.id);
+      if (user) {
+        user.phoneOTP = code;
+        user.phoneOTPCreatedAt = Date.now();
+        users.set(result.user.id, user);
+      }
+    }
+
+    logger.info(`Code OTP généré pour téléphone: ${phone}`);
+
+    return {
+      success: true,
+      code: code,
+      expiresIn: 600 // 10 minutes en secondes
+    };
+  } catch (error) {
+    logger.error('Erreur lors de la génération de l\'OTP:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
 export default {
-  createUser,
-  getUserById,
-  getUserByGithubId,
-  getUserByTelegramId,
-  findUserByGithub,
-  findUserByTelegram,
-  findUserByEmail,
-  registerUser,
-  updateUser,
-  deleteUser,
-  listUsers,
-  addCredits,
-  removeCredits
+createUser,
+getUserById,
+getUserByGithubId,
+getUserByTelegramId,
+findUserByGithub,
+findUserByTelegram,
+findUserByEmail,
+findUserById,
+registerUser,
+updateUser,
+deleteUser,
+listUsers,
+addCredits,
+removeCredits,
+authenticateByEmail,
+authenticateByPhone,
+findUserByPhone,
+verifyEmail,
+verifyPhone,
+generatePhoneOTP
 };
 
 // Made with Bob

@@ -1,0 +1,61 @@
+{
+  "job_id": "mdbai-edb17994-ee42-43f4-95ee-7accc5586def",
+  "timestamp": "2026-06-06T01:07:10.533Z",
+  "bob_activated": true,
+  "bob_analysis_completed": true,
+  "duration_ms": 31,
+  "source_files": {
+    "count": 18,
+    "lines": 1163,
+    "sha256": "63efa379b116532be9330421d7bddd06caa5153c524e59f4c98b8c52093fd616"
+  },
+  "files_created": {
+    "source_code": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/source-code-complete.txt",
+    "manifest": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/read-manifest.json",
+    "task": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/bob-task.json",
+    "prompt": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/bob-prompt.md",
+    "activation": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/BOB_ACTIVATION_REQUIRED.txt",
+    "analysis": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/bob-analysis.json",
+    "report": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/bob-report.md"
+  },
+  "bob_analysis": {
+    "analysis_metadata": {
+      "bob_version": "BobIDE 2026 (Fallback Mode)",
+      "timestamp": "2026-06-06T01:07:10.563Z",
+      "duration_ms": 1,
+      "files_analyzed": 0,
+      "lines_analyzed": 0,
+      "mode": "fallback",
+      "note": "Bob CLI a échoué - fallback activé",
+      "error": "Code source non trouvé: /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/source-code-complete.txt"
+    },
+    "errors": [],
+    "memory_leaks": [],
+    "vulnerabilities": [],
+    "performance_issues": [],
+    "best_practices_violations": [],
+    "quality_score": 100,
+    "overall_reasoning": "Analyse en mode fallback - Erreur Bob CLI: Code source non trouvé: /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-edb17994-ee42-43f4-95ee-7accc5586def/source-code-complete.txt",
+    "recommendations": [
+      "Vérifier OPENAI_API_KEY dans Doppler",
+      "Installer module Python openai: pip3 install openai"
+    ],
+    "fallback_mode": true
+  },
+  "verification": {
+    "source_exists": true,
+    "manifest_exists": true,
+    "task_exists": true,
+    "prompt_exists": true,
+    "activation_exists": true,
+    "analysis_exists": true,
+    "all_files_readable": true
+  },
+  "forensic_proof": {
+    "source_sha256": "63efa379b116532be9330421d7bddd06caa5153c524e59f4c98b8c52093fd616",
+    "timestamp_activation": "2026-06-06T01:07:10.533Z",
+    "timestamp_completion": "2026-06-06T01:07:10.563Z",
+    "duration_ms": 31,
+    "bob_invoked": true
+  }
+}

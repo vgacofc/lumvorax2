@@ -1,0 +1,24 @@
+{
+  "analysis_metadata": {
+    "bob_version": "BobIDE 2026 (Fallback Mode)",
+    "timestamp": "2026-06-06T00:57:17.768Z",
+    "duration_ms": 426,
+    "files_analyzed": 0,
+    "lines_analyzed": 0,
+    "mode": "fallback",
+    "note": "Bob CLI a échoué - fallback activé",
+    "error": "Command failed: python3 /home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-08e3e7d5-8314-458c-9876-dee6731a1069/bob-task.json\n[BOB-CLI] ⚠️  OPENAI_API_KEY manquant - mode fallback\nTraceback (most recent call last):\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 192, in <module>\n    main()\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 186, in main\n    analysis = analyzer.analyze()\n               ^^^^^^^^^^^^^^^^^^\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 47, in analyze\n    with open(source_file, 'r') as f:\n         ^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-08e3e7d5-8314-458c-9876-dee6731a1069/source-code-complete.txt'\n"
+  },
+  "errors": [],
+  "memory_leaks": [],
+  "vulnerabilities": [],
+  "performance_issues": [],
+  "best_practices_violations": [],
+  "quality_score": 100,
+  "overall_reasoning": "Analyse en mode fallback - Erreur Bob CLI: Command failed: python3 /home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-08e3e7d5-8314-458c-9876-dee6731a1069/bob-task.json\n[BOB-CLI] ⚠️  OPENAI_API_KEY manquant - mode fallback\nTraceback (most recent call last):\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 192, in <module>\n    main()\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 186, in main\n    analysis = analyzer.analyze()\n               ^^^^^^^^^^^^^^^^^^\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 47, in analyze\n    with open(source_file, 'r') as f:\n         ^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-08e3e7d5-8314-458c-9876-dee6731a1069/source-code-complete.txt'\n",
+  "recommendations": [
+    "Vérifier OPENAI_API_KEY dans Doppler",
+    "Installer module Python openai: pip3 install openai"
+  ],
+  "fallback_mode": true
+}

@@ -16,7 +16,7 @@ import {
   verifyPhone,
   generatePhoneOTP,
 } from '../services/user.service.js';
-import { sendVerificationEmail, sendPasswordResetEmail } from '../services/email.service.js';
+import { sendVerificationCodeEmail, sendPasswordResetEmail } from '../services/email.service.js';
 import { TelegramService } from '../services/telegram.service.js';
 import logger from '../utils/logger.js';
 import { config } from '../config.js';
@@ -83,7 +83,7 @@ authHybridRouter.post('/register/email', async (req, res) => {
     });
 
     // Envoyer email de vérification
-    await sendVerificationEmail(user.email, user.email_verification_token);
+    await sendVerificationCodeEmail(user.email, user.email_verification_token);
 
     logger.info('[AUTH-HYBRID] Inscription email réussie', {
       userId: user.id,

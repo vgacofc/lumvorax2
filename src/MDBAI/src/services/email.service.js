@@ -298,3 +298,73 @@ export async function sendErrorNotificationEmail(adminEmail, error) {
   await emailService.initialize();
   return emailService.sendErrorNotificationEmail(adminEmail, error);
 }
+
+export async function sendVerificationEmail(email, token) {
+  await emailService.initialize();
+  const verifyUrl = `${process.env.APP_URL || process.env.BASE_URL || 'http://localhost:3001'}/verify-email?token=${token}`;
+  const subject = '[MDBAI] Vérification de votre email';
+  const text = `
+Bonjour,
+
+Merci de vous être inscrit sur MDBAI !
+
+Cliquez sur le lien suivant pour vérifier votre email :
+${verifyUrl}
+
+Ce lien expire dans 24 heures.
+
+Si vous n'avez pas créé de compte, ignorez cet email.
+
+L'équipe MDBAI
+  `.trim();
+  
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; background: #f9f9f9; }
+    .button { display: inline-block; padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Vérification de votre email</h1>
+    </div>
+    <div class="content">
+      <p>Bonjour,</p>
+      <p>Merci de vous être inscrit sur MDBAI !</p>
+      <p>Cliquez sur le bouton ci-dessous pour vérifier votre email :</p>
+      <p style="text-align: center;">
+        <a href="${verifyUrl}" class="button">Vérifier mon email</a>
+      </p>
+      <p>Ou copiez ce lien dans votre navigateur :</p>
+      <p style="word-break: break-all; color: #666;">${verifyUrl}</p>
+      <p><strong>Ce lien expire dans 24 heures.</strong></p>
+      <p>Si vous n'avez pas créé de compte, ignorez cet email.</p>
+    </div>
+    <div class="footer">
+      <p>L'équipe MDBAI</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+  
+  return emailService.sendEmail({
+    to: email,
+    subject,
+    text,
+    html
+  });
+}
+
+export async function sendPasswordResetEmail(user, resetToken) {
+  await emailService.initialize();
+  return emailService.sendPasswordResetEmail(user, resetToken);
+}

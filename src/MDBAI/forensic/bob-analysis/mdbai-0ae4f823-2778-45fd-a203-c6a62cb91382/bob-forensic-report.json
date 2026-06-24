@@ -1,0 +1,61 @@
+{
+  "job_id": "mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382",
+  "timestamp": "2026-06-06T01:30:49.431Z",
+  "bob_activated": true,
+  "bob_analysis_completed": true,
+  "duration_ms": 20125,
+  "source_files": {
+    "count": 18,
+    "lines": 1163,
+    "sha256": "7a7e310752f7bbd3e6bb92d0706c6bae7e0b14252dfdf5c7a511594bfd1a1485"
+  },
+  "files_created": {
+    "source_code": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/source-code-complete.txt",
+    "manifest": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/read-manifest.json",
+    "task": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/bob-task.json",
+    "prompt": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/bob-prompt.md",
+    "activation": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/BOB_ACTIVATION_REQUIRED.txt",
+    "analysis": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/bob-analysis.json",
+    "report": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-0ae4f823-2778-45fd-a203-c6a62cb91382/bob-report.md"
+  },
+  "bob_analysis": {
+    "analysis_metadata": {
+      "bob_version": "BobIDE 2026 (Fallback Mode)",
+      "timestamp": "2026-06-06T01:31:09.555Z",
+      "duration_ms": 20055,
+      "files_analyzed": 0,
+      "lines_analyzed": 0,
+      "mode": "fallback",
+      "note": "Bob CLI a échoué - fallback activé",
+      "error": "Command failed: export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && nvm use v22.22.3 && bob -y --chat-mode code --output-format json -p \"Analyse ce code et génère un rapport JSON\"\nYOLO mode is enabled. All tool calls will be automatically approved.\n{\n  \"error\": {\n    \"type\": \"Error\",\n    \"message\": \"API key required. Set BOBSHELL_API_KEY via environment variable or .env file.\",\n    \"code\": 1\n  }\n}\n"
+    },
+    "errors": [],
+    "memory_leaks": [],
+    "vulnerabilities": [],
+    "performance_issues": [],
+    "best_practices_violations": [],
+    "quality_score": 100,
+    "overall_reasoning": "Analyse en mode fallback - Erreur Bob CLI: Command failed: export NVM_DIR=\"$HOME/.nvm\" && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && nvm use v22.22.3 && bob -y --chat-mode code --output-format json -p \"Analyse ce code et génère un rapport JSON\"\nYOLO mode is enabled. All tool calls will be automatically approved.\n{\n  \"error\": {\n    \"type\": \"Error\",\n    \"message\": \"API key required. Set BOBSHELL_API_KEY via environment variable or .env file.\",\n    \"code\": 1\n  }\n}\n",
+    "recommendations": [
+      "Vérifier OPENAI_API_KEY dans Doppler",
+      "Installer module Python openai: pip3 install openai"
+    ],
+    "fallback_mode": true
+  },
+  "verification": {
+    "source_exists": true,
+    "manifest_exists": true,
+    "task_exists": true,
+    "prompt_exists": true,
+    "activation_exists": true,
+    "analysis_exists": true,
+    "all_files_readable": true
+  },
+  "forensic_proof": {
+    "source_sha256": "7a7e310752f7bbd3e6bb92d0706c6bae7e0b14252dfdf5c7a511594bfd1a1485",
+    "timestamp_activation": "2026-06-06T01:30:49.431Z",
+    "timestamp_completion": "2026-06-06T01:31:09.556Z",
+    "duration_ms": 20125,
+    "bob_invoked": true
+  }
+}

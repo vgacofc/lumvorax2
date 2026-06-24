@@ -1,0 +1,182 @@
+{
+  "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+  "startTime": 1781874695131,
+  "endTime": 1781874998910,
+  "totalDurationMs": 303779,
+  "snapshots": {
+    "bobAnalysis": {
+      "timestamp": 1781874991303,
+      "bob_activated": true,
+      "bob_version": "BobIDE 2026 v1.0.4",
+      "files_analyzed": 18,
+      "lines_analyzed": 1163,
+      "errors_count": 18,
+      "vulnerabilities_count": 6,
+      "memory_leaks_count": 4,
+      "quality_score": null,
+      "duration_ms": 290246,
+      "sha256": "b92b4335d03b70335e97151245a37a0d8e914d77c4503f8bd14983d9ba9cd050"
+    },
+    "reportGenerated": {
+      "timestamp": 1781874991319,
+      "score": 0,
+      "errors_count": 18,
+      "vulnerabilities_count": 6,
+      "memory_leaks_count": 4,
+      "markdown_size": 6973,
+      "markdown_sha256": "39905be45b9ab540006b74cbec3269abd8313f8fb8caf113f7322177244673c1"
+    },
+    "prCreated": {
+      "timestamp": 1781874998666,
+      "pr_url": "https://github.com/Vgactec/help-platform/pull/828",
+      "pr_number": 828,
+      "branch": "mdbai-analysis-1781874991329",
+      "commit_sha": "558031bdd2da17dab04ab87d150375553c9608f2"
+    },
+    "finalResult": {
+      "timestamp": 1781874998706,
+      "score": 0,
+      "errors_count": 18,
+      "vulnerabilities_count": 6,
+      "memory_leaks_count": 4,
+      "pr_url": "https://github.com/Vgactec/help-platform/pull/828"
+    }
+  },
+  "anomalies": [],
+  "events": [
+    {
+      "timestamp": 1781874695136,
+      "timestampISO": "2026-06-19T13:11:35.136Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "INIT",
+      "message": "Service forensic monitoring démarré",
+      "data": {
+        "layer": 6
+      },
+      "elapsedMs": 5,
+      "signature": "c23b034b8f3d4551eae5d54e0ed7ed6e02f60ad608baf83eb076ee226ccca8f6"
+    },
+    {
+      "timestamp": 1781874991304,
+      "timestampISO": "2026-06-19T13:16:31.304Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "SNAPSHOT_BOB",
+      "message": "Capture résultats Bob CLI",
+      "data": {
+        "layer": 5,
+        "snapshot": {
+          "timestamp": 1781874991303,
+          "bob_activated": true,
+          "bob_version": "BobIDE 2026 v1.0.4",
+          "files_analyzed": 18,
+          "lines_analyzed": 1163,
+          "errors_count": 18,
+          "vulnerabilities_count": 6,
+          "memory_leaks_count": 4,
+          "quality_score": null,
+          "duration_ms": 290246,
+          "sha256": "b92b4335d03b70335e97151245a37a0d8e914d77c4503f8bd14983d9ba9cd050"
+        }
+      },
+      "elapsedMs": 296173,
+      "signature": "b1326c312fd5eb46dc3885811b3a29957a06e60343459b3729f814eddf5668d2"
+    },
+    {
+      "timestamp": 1781874991319,
+      "timestampISO": "2026-06-19T13:16:31.319Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "SNAPSHOT_REPORT",
+      "message": "Capture rapport généré",
+      "data": {
+        "layer": 7,
+        "snapshot": {
+          "timestamp": 1781874991319,
+          "score": 0,
+          "errors_count": 18,
+          "vulnerabilities_count": 6,
+          "memory_leaks_count": 4,
+          "markdown_size": 6973,
+          "markdown_sha256": "39905be45b9ab540006b74cbec3269abd8313f8fb8caf113f7322177244673c1"
+        }
+      },
+      "elapsedMs": 296188,
+      "signature": "9ef1f1d28161f76bd6b8b612924e1390d03dfe53032e6e13203162209128aa33"
+    },
+    {
+      "timestamp": 1781874991321,
+      "timestampISO": "2026-06-19T13:16:31.321Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "ANOMALY_CHECK",
+      "message": "Aucune anomalie détectée",
+      "data": {
+        "layer": 7,
+        "bob_score": null,
+        "report_score": 0
+      },
+      "elapsedMs": 296190,
+      "signature": "77685de3efda15d5ab3ba94fef3026762c0b1b95700a61c6e357c6abece01231"
+    },
+    {
+      "timestamp": 1781874998666,
+      "timestampISO": "2026-06-19T13:16:38.666Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "SNAPSHOT_PR",
+      "message": "Capture PR créée",
+      "data": {
+        "layer": 6,
+        "snapshot": {
+          "timestamp": 1781874998666,
+          "pr_url": "https://github.com/Vgactec/help-platform/pull/828",
+          "pr_number": 828,
+          "branch": "mdbai-analysis-1781874991329",
+          "commit_sha": "558031bdd2da17dab04ab87d150375553c9608f2"
+        }
+      },
+      "elapsedMs": 303535,
+      "signature": "a936e7047fc627d862dab1bc95be1b939bdf1c7265cbd656be13f396d64f8372"
+    },
+    {
+      "timestamp": 1781874998706,
+      "timestampISO": "2026-06-19T13:16:38.706Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "SNAPSHOT_FINAL",
+      "message": "Capture résultat final",
+      "data": {
+        "layer": 7,
+        "snapshot": {
+          "timestamp": 1781874998706,
+          "score": 0,
+          "errors_count": 18,
+          "vulnerabilities_count": 6,
+          "memory_leaks_count": 4,
+          "pr_url": "https://github.com/Vgactec/help-platform/pull/828"
+        }
+      },
+      "elapsedMs": 303575,
+      "signature": "3e5007341233bc29d391321730b792d307c6b71357036743e107a80911286b94"
+    },
+    {
+      "timestamp": 1781874998708,
+      "timestampISO": "2026-06-19T13:16:38.708Z",
+      "jobId": "mdbai-6ba3be6a-3ea6-411c-882b-7235fb242157",
+      "type": "ANOMALY_CHECK",
+      "message": "Aucune anomalie détectée",
+      "data": {
+        "layer": 7,
+        "bob_score": null,
+        "report_score": 0
+      },
+      "elapsedMs": 303577,
+      "signature": "a7d3258b069fe90ec46159ade3c1c463ad40b9ee72fd93a83f8008c2a36f35f3"
+    }
+  ],
+  "summary": {
+    "total_events": 7,
+    "total_anomalies": 0,
+    "critical_anomalies": 0,
+    "high_anomalies": 0,
+    "medium_anomalies": 0,
+    "status": "CLEAN"
+  },
+  "signature": "1494799dd8faf11b068de5f1b49e632ffa0c4f33b48f12858c3d9c0b3ef53763"
+}

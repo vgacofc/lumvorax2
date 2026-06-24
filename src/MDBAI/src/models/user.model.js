@@ -8,6 +8,12 @@ export const AUTH_METHOD_EMAIL = 'email';
 export const AUTH_METHOD_PHONE = 'phone';
 export const AUTH_METHOD_GITHUB = 'github';
 
+// Constantes pour les statuts utilisateur
+export const USER_STATUS_ACTIVE = 'active';
+export const USER_STATUS_INACTIVE = 'inactive';
+export const USER_STATUS_SUSPENDED = 'suspended';
+export const USER_STATUS_PENDING = 'pending';
+
 export class User {
   constructor(data = {}) {
     this.id = data.id || null;

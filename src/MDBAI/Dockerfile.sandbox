@@ -1,0 +1,33 @@
+# MDBAI Sandbox - Isolation Docker pour exécution code client
+# Conforme BUG #46 - Isolation exécution CRITIQUE
+# Usage: docker build -f Dockerfile.sandbox -t mdbai-sandbox .
+
+FROM node:22-alpine
+
+# Créer utilisateur non-root
+RUN adduser -D -u 1000 mdbai && \
+    mkdir -p /workspace && \
+    chown mdbai:mdbai /workspace
+
+# Installer outils de base
+RUN apk add --no-cache \
+    bash \
+    git \
+    python3 \
+    py3-pip \
+    gcc \
+    g++ \
+    make \
+    cargo \
+    go
+
+# Limites ressources (appliquées au runtime)
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+# Utilisateur non-root
+USER mdbai
+WORKDIR /workspace
+
+# Point d'entrée
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["echo 'MDBAI Sandbox Ready'"]

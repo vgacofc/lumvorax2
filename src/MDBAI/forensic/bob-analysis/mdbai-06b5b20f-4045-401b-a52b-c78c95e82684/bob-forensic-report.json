@@ -1,0 +1,61 @@
+{
+  "job_id": "mdbai-06b5b20f-4045-401b-a52b-c78c95e82684",
+  "timestamp": "2026-06-06T00:58:51.798Z",
+  "bob_activated": true,
+  "bob_analysis_completed": true,
+  "duration_ms": 509,
+  "source_files": {
+    "count": 18,
+    "lines": 1163,
+    "sha256": "359ee6b8e3c50d43990468ab9a611e48d1ba58ea32e09ec96255258687ab8c40"
+  },
+  "files_created": {
+    "source_code": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/source-code-complete.txt",
+    "manifest": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/read-manifest.json",
+    "task": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-task.json",
+    "prompt": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-prompt.md",
+    "activation": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/BOB_ACTIVATION_REQUIRED.txt",
+    "analysis": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-analysis.json",
+    "report": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-report.md"
+  },
+  "bob_analysis": {
+    "analysis_metadata": {
+      "bob_version": "BobIDE 2026 (Fallback Mode)",
+      "timestamp": "2026-06-06T00:58:52.303Z",
+      "duration_ms": 447,
+      "files_analyzed": 0,
+      "lines_analyzed": 0,
+      "mode": "fallback",
+      "note": "Bob CLI a échoué - fallback activé",
+      "error": "Command failed: python3 /home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-task.json\n[BOB-CLI] ⚠️  OPENAI_API_KEY manquant - mode fallback\nTraceback (most recent call last):\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 192, in <module>\n    main()\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 186, in main\n    analysis = analyzer.analyze()\n               ^^^^^^^^^^^^^^^^^^\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 47, in analyze\n    with open(source_file, 'r') as f:\n         ^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/source-code-complete.txt'\n"
+    },
+    "errors": [],
+    "memory_leaks": [],
+    "vulnerabilities": [],
+    "performance_issues": [],
+    "best_practices_violations": [],
+    "quality_score": 100,
+    "overall_reasoning": "Analyse en mode fallback - Erreur Bob CLI: Command failed: python3 /home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py /home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/bob-task.json\n[BOB-CLI] ⚠️  OPENAI_API_KEY manquant - mode fallback\nTraceback (most recent call last):\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 192, in <module>\n    main()\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 186, in main\n    analysis = analyzer.analyze()\n               ^^^^^^^^^^^^^^^^^^\n  File \"/home/lvx/LVX/lumvorax2/src/MDBAI/bob-cli/bob_analyzer.py\", line 47, in analyze\n    with open(source_file, 'r') as f:\n         ^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-06b5b20f-4045-401b-a52b-c78c95e82684/source-code-complete.txt'\n",
+    "recommendations": [
+      "Vérifier OPENAI_API_KEY dans Doppler",
+      "Installer module Python openai: pip3 install openai"
+    ],
+    "fallback_mode": true
+  },
+  "verification": {
+    "source_exists": true,
+    "manifest_exists": true,
+    "task_exists": true,
+    "prompt_exists": true,
+    "activation_exists": true,
+    "analysis_exists": true,
+    "all_files_readable": true
+  },
+  "forensic_proof": {
+    "source_sha256": "359ee6b8e3c50d43990468ab9a611e48d1ba58ea32e09ec96255258687ab8c40",
+    "timestamp_activation": "2026-06-06T00:58:51.798Z",
+    "timestamp_completion": "2026-06-06T00:58:52.304Z",
+    "duration_ms": 509,
+    "bob_invoked": true
+  }
+}

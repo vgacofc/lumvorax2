@@ -1,0 +1,61 @@
+{
+  "job_id": "mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a",
+  "timestamp": "2026-06-06T01:45:12.847Z",
+  "bob_activated": true,
+  "bob_analysis_completed": true,
+  "duration_ms": 23,
+  "source_files": {
+    "count": 18,
+    "lines": 1163,
+    "sha256": "fa3d8829a69a069a12050a0fd24fe5f2ae42d017913109bb064e2ba25c0fada2"
+  },
+  "files_created": {
+    "source_code": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/source-code-complete.txt",
+    "manifest": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/read-manifest.json",
+    "task": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/bob-task.json",
+    "prompt": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/bob-prompt.md",
+    "activation": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-tasks/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/BOB_ACTIVATION_REQUIRED.txt",
+    "analysis": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/bob-analysis.json",
+    "report": "/home/lvx/LVX/lumvorax2/src/MDBAI/forensic/bob-analysis/mdbai-32db46ab-5a34-4d3d-9fdb-68ffef91079a/bob-report.md"
+  },
+  "bob_analysis": {
+    "analysis_metadata": {
+      "bob_version": "BobIDE 2026 (Fallback Mode)",
+      "timestamp": "2026-06-06T01:45:12.869Z",
+      "duration_ms": 3,
+      "files_analyzed": 0,
+      "lines_analyzed": 0,
+      "mode": "fallback",
+      "note": "Bob CLI a échoué - fallback activé",
+      "error": "__dirname is not defined"
+    },
+    "errors": [],
+    "memory_leaks": [],
+    "vulnerabilities": [],
+    "performance_issues": [],
+    "best_practices_violations": [],
+    "quality_score": 100,
+    "overall_reasoning": "Analyse en mode fallback - Erreur Bob CLI: __dirname is not defined",
+    "recommendations": [
+      "Vérifier OPENAI_API_KEY dans Doppler",
+      "Installer module Python openai: pip3 install openai"
+    ],
+    "fallback_mode": true
+  },
+  "verification": {
+    "source_exists": true,
+    "manifest_exists": true,
+    "task_exists": true,
+    "prompt_exists": true,
+    "activation_exists": true,
+    "analysis_exists": true,
+    "all_files_readable": true
+  },
+  "forensic_proof": {
+    "source_sha256": "fa3d8829a69a069a12050a0fd24fe5f2ae42d017913109bb064e2ba25c0fada2",
+    "timestamp_activation": "2026-06-06T01:45:12.847Z",
+    "timestamp_completion": "2026-06-06T01:45:12.869Z",
+    "duration_ms": 23,
+    "bob_invoked": true
+  }
+}
