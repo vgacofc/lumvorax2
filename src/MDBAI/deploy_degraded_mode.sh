@@ -31,7 +31,7 @@ echo "✅ Doppler configuré (config: $(doppler configure get config.name))"
 # Arrêter les conteneurs existants
 echo ""
 echo "🛑 Arrêt des conteneurs existants..."
-docker-compose -f docker-compose.production.yml down 2>/dev/null || true
+docker compose -f docker-compose.production.yml down 2>/dev/null || true
 
 # Nettoyer les images obsolètes
 echo ""
@@ -119,11 +119,11 @@ fi
 # Build et démarrage des conteneurs
 echo ""
 echo "🏗️  Build des images Docker..."
-docker-compose -f docker-compose.production.yml build --no-cache
+docker compose -f docker-compose.production.yml build --no-cache
 
 echo ""
 echo "🚀 Démarrage des conteneurs..."
-docker-compose -f docker-compose.production.yml up -d
+docker compose -f docker-compose.production.yml up -d
 
 # Attendre que les services soient prêts
 echo ""
@@ -133,11 +133,11 @@ sleep 30
 # Vérifier le statut des conteneurs
 echo ""
 echo "📊 Statut des conteneurs:"
-docker-compose -f docker-compose.production.yml ps
+docker compose -f docker-compose.production.yml ps
 
 # Compter les conteneurs actifs
-RUNNING_CONTAINERS=$(docker-compose -f docker-compose.production.yml ps --filter "status=running" -q | wc -l)
-TOTAL_CONTAINERS=$(docker-compose -f docker-compose.production.yml ps -q | wc -l)
+RUNNING_CONTAINERS=$(docker compose -f docker-compose.production.yml ps --filter "status=running" -q | wc -l)
+TOTAL_CONTAINERS=$(docker compose -f docker-compose.production.yml ps -q | wc -l)
 
 echo ""
 echo "   Conteneurs actifs: $RUNNING_CONTAINERS/$TOTAL_CONTAINERS"
@@ -179,7 +179,7 @@ fi
 # Afficher les logs récents
 echo ""
 echo "📋 Logs récents (dernières 30 lignes):"
-docker-compose -f docker-compose.production.yml logs --tail=30
+docker compose -f docker-compose.production.yml logs --tail=30
 
 # Résumé final
 echo ""
@@ -205,11 +205,11 @@ echo "   ❌ GitHub OAuth (credentials manquants)"
 echo "   ❌ Email (SMTP manquant)"
 echo ""
 echo "📋 Commandes utiles:"
-echo "   - Logs temps réel: docker-compose -f docker-compose.production.yml logs -f"
-echo "   - Logs API: docker-compose -f docker-compose.production.yml logs -f mdbai-api-1"
-echo "   - Statut: docker-compose -f docker-compose.production.yml ps"
-echo "   - Redémarrer: docker-compose -f docker-compose.production.yml restart"
-echo "   - Arrêter: docker-compose -f docker-compose.production.yml down"
+echo "   - Logs temps réel: docker compose -f docker-compose.production.yml logs -f"
+echo "   - Logs API: docker compose -f docker-compose.production.yml logs -f mdbai-api-1"
+echo "   - Statut: docker compose -f docker-compose.production.yml ps"
+echo "   - Redémarrer: docker compose -f docker-compose.production.yml restart"
+echo "   - Arrêter: docker compose -f docker-compose.production.yml down"
 echo ""
 echo "🔧 Pour activer toutes les fonctionnalités:"
 echo "   1. Ajouter les secrets manquants dans Doppler"

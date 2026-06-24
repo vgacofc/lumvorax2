@@ -21,7 +21,7 @@ echo "✅ Doppler configuré"
 # Arrêter les conteneurs existants
 echo ""
 echo "🛑 Arrêt des conteneurs existants..."
-docker-compose -f docker-compose.production.yml down || true
+docker compose -f docker-compose.production.yml down || true
 
 # Nettoyer les images obsolètes
 echo ""
@@ -68,11 +68,11 @@ fi
 # Build et démarrage des conteneurs
 echo ""
 echo "🏗️  Build des images Docker..."
-docker-compose -f docker-compose.production.yml build --no-cache
+docker compose -f docker-compose.production.yml build --no-cache
 
 echo ""
 echo "🚀 Démarrage des conteneurs..."
-docker-compose -f docker-compose.production.yml up -d
+docker compose -f docker-compose.production.yml up -d
 
 # Attendre que les services soient prêts
 echo ""
@@ -82,7 +82,7 @@ sleep 10
 # Vérifier le statut des conteneurs
 echo ""
 echo "📊 Statut des conteneurs:"
-docker-compose -f docker-compose.production.yml ps
+docker compose -f docker-compose.production.yml ps
 
 # Tester le health check
 echo ""
@@ -96,7 +96,7 @@ for i in {1..30}; do
         echo "❌ Health check échoué après 30 tentatives"
         echo ""
         echo "📋 Logs des conteneurs:"
-        docker-compose -f docker-compose.production.yml logs --tail=50
+        docker compose -f docker-compose.production.yml logs --tail=50
         exit 1
     fi
     echo "   Tentative $i/30..."
@@ -106,7 +106,7 @@ done
 # Afficher les logs récents
 echo ""
 echo "📋 Logs récents (dernières 20 lignes):"
-docker-compose -f docker-compose.production.yml logs --tail=20
+docker compose -f docker-compose.production.yml logs --tail=20
 
 # Afficher l'URL d'accès
 echo ""
@@ -120,10 +120,10 @@ echo "   - Dashboard: http://51.255.22.253/dashboard"
 echo "   - API: http://51.255.22.253/api"
 echo ""
 echo "📊 Commandes utiles:"
-echo "   - Logs en temps réel: docker-compose -f docker-compose.production.yml logs -f"
-echo "   - Statut: docker-compose -f docker-compose.production.yml ps"
-echo "   - Redémarrer: docker-compose -f docker-compose.production.yml restart"
-echo "   - Arrêter: docker-compose -f docker-compose.production.yml down"
+echo "   - Logs en temps réel: docker compose -f docker-compose.production.yml logs -f"
+echo "   - Statut: docker compose -f docker-compose.production.yml ps"
+echo "   - Redémarrer: docker compose -f docker-compose.production.yml restart"
+echo "   - Arrêter: docker compose -f docker-compose.production.yml down"
 echo ""
 
 # Made with Bob
