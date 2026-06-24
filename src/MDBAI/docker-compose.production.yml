@@ -33,8 +33,6 @@ services:
       - API_PORT=3000
       - REDIS_URL=redis://redis:6379
       - INSTANCE_ID=api-1
-    env_file:
-      - .env
     volumes:
       - ./logs:/app/logs
       - ./backups:/app/backups
@@ -66,8 +64,6 @@ services:
       - REDIS_URL=redis://redis:6379
       - INSTANCE_ID=api-2
       - TELEGRAM_BOT_DISABLED=true
-    env_file:
-      - .env
     volumes:
       - ./logs:/app/logs
       - ./backups:/app/backups
