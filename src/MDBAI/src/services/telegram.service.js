@@ -237,16 +237,22 @@ export class TelegramService {
       // Vérifier si utilisateur déjà inscrit
       const user = await findUserByTelegram(telegramId);
       
-      if (user) {
-        // CORRECTION BUG: user.createdAt au lieu de user.created_at (camelCase)
+      // Si utilisateur existe ET a un email valide → déjà inscrit
+      if (user && user.email) {
         const createdDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
         await this.bot.sendMessage(chatId,
           `Vous etes deja inscrit.\n\n` +
-          `Email: ${user.email || 'Non renseigné'}\n` +
+          `Email: ${user.email}\n` +
           `Compte cree le: ${createdDate}\n\n` +
           `Utilisez /github pour connecter votre compte GitHub.`);
         logger.info(`[TELEGRAM] /register — utilisateur ${user.email} deja inscrit`);
         return;
+      }
+      
+      // Si utilisateur existe MAIS sans email → données corrompues → permettre réinscription
+      if (user && !user.email) {
+        logger.warn(`[TELEGRAM] /register — utilisateur ${telegramId} avec données corrompues (email manquant) → réinscription autorisée`);
+        // Continuer vers l'inscription (ne pas return)
       }
 
       // ETAPE 1: Demander email
