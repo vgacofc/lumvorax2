@@ -22,7 +22,7 @@ import { verifyUserEmail } from '../models/user.model.js';
 import { sendVerificationCodeEmail } from './email-redis.service.js';
 import { GitHubService } from './github.service.js';
 // BUG-REGISTRATION-001 FIX: Import nouveau service d'inscription
-import { getUserByTelegramId } from './redis-registration.service.js';
+import { getUserByTelegramId, getUserRegistrationState } from './redis-registration.service.js';
 import { startRegistration, handleRegistrationInput } from './telegram-registration.service.js';
 
 const MAX_409_RETRIES    = 8;
@@ -440,7 +440,7 @@ export class TelegramService {
     // Gérer inscription en cours avec nouveau service
     const registrationState = await getUserRegistrationState(telegramId);
     if (registrationState) {
-      await handleRegistrationInput(this.bot, chatId, telegramId, msg.text, msg.from);
+      await handleRegistrationInput(this.bot, msg);
       return;
     }
     
