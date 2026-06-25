@@ -44,7 +44,7 @@ class EmailRedisService {
    * Envoie un code de vérification
    * Stocke dans Redis + notifie via Telegram
    */
-  async sendVerificationCode(email, code, telegramId) {
+  async sendVerificationCode(email, code, telegramId, bot = null) {
     if (!this.initialized) {
       logger.warn('[EMAIL-REDIS] Service non initialisé, tentative d\'initialisation...');
       await this.initialize();
@@ -62,10 +62,10 @@ class EmailRedisService {
       };
       
       await this.redis.setex(key, 600, JSON.stringify(data));
-      logger.info(`[EMAIL-REDIS] Code stocké dans Redis: ${email}`, { 
-        code, 
+      logger.info(`[EMAIL-REDIS] Code stocké dans Redis: ${email}`, {
+        code,
         ttl: '600s',
-        key 
+        key
       });
 
       // 2. Publier event pour notifier
@@ -79,10 +79,10 @@ class EmailRedisService {
       
       logger.info(`[EMAIL-REDIS] Event publié: email:send`, { email, code });
 
-      // 3. Notifier immédiatement via Telegram si disponible
-      if (telegramId && global.telegramService) {
+      // 3. Notifier immédiatement via Telegram si bot fourni
+      if (telegramId && bot) {
         try {
-          await global.telegramService.bot.sendMessage(
+          await bot.sendMessage(
             telegramId,
             `✅ *Code de vérification MDBAI*\n\n` +
             `📧 Email: \`${email}\`\n` +
@@ -91,18 +91,20 @@ class EmailRedisService {
             `Entrez ce code pour activer votre compte.`,
             { parse_mode: 'Markdown' }
           );
-          logger.info(`[EMAIL-REDIS] Notification Telegram envoyée: ${telegramId}`);
+          logger.info(`[EMAIL-REDIS] Notification Telegram envoyée: ${telegramId}`, { code });
         } catch (error) {
           logger.error('[EMAIL-REDIS] Erreur notification Telegram:', error);
         }
+      } else if (telegramId && !bot) {
+        logger.warn(`[EMAIL-REDIS] Bot non fourni, impossible d'envoyer notification Telegram`);
       }
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         method: 'redis',
         code,
         expiresIn: 600,
-        notifiedVia: telegramId ? 'telegram' : 'none'
+        notifiedVia: (telegramId && bot) ? 'telegram' : 'none'
       };
     } catch (error) {
       logger.error('[EMAIL-REDIS] Erreur envoi code:', error);
@@ -320,8 +322,8 @@ const emailRedisService = new EmailRedisService();
 export default emailRedisService;
 
 // Export fonctions compatibles avec l'ancienne API
-export async function sendVerificationCodeEmail(email, code, telegramId = null) {
-  return emailRedisService.sendVerificationCode(email, code, telegramId);
+export async function sendVerificationCodeEmail(email, code, telegramId = null, bot = null) {
+  return emailRedisService.sendVerificationCode(email, code, telegramId, bot);
 }
 
 export async function verifyEmailCode(email, code) {

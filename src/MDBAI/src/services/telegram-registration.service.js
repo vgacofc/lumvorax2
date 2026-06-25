@@ -265,8 +265,8 @@ async function handlePassword(bot, chatId, telegramId, text, data) {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   data.verificationCode = code;
   
-  // Envoyer code via email-redis
-  await sendVerificationCodeEmail(data.email, code, telegramId);
+  // Envoyer code via email-redis (passer bot pour éviter undefined)
+  await sendVerificationCodeEmail(data.email, code, telegramId, bot);
   
   await setUserRegistrationState(telegramId, 'verify_code', data);
   
