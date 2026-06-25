@@ -19,7 +19,7 @@ import { validateRepoUrl } from '../utils/validator.js';
 import { MdbaiError, ERR_TELEGRAM_CONNECT } from '../utils/errors.js';
 import { findUserByTelegram, findUserByEmail, registerUser, findUserById, updateUser } from './user.service.js';
 import { verifyUserEmail } from '../models/user.model.js';
-import { sendVerificationCodeEmail } from './email.service.js';
+import { sendVerificationCodeEmail } from './email-redis.service.js';
 import { GitHubService } from './github.service.js';
 
 const MAX_409_RETRIES    = 8;
@@ -552,8 +552,8 @@ export class TelegramService {
         
         const newUser = result.user;
         
-        // Envoyer email avec code 6 chiffres
-        await sendVerificationCodeEmail(newUser.email, newUser.email_verification_code);
+        // Envoyer email avec code 6 chiffres (via Redis + Telegram)
+        await sendVerificationCodeEmail(newUser.email, newUser.email_verification_code, registration.telegramId);
         
         // Passer à l'étape validation code
         registration.userId = newUser.id;
@@ -591,11 +591,14 @@ export class TelegramService {
           return;
         }
         
-        // Vérification code
-        if (user.email_verification_code !== code) {
+        // Vérification code via Redis
+        const { verifyEmailCode } = await import('./email-redis.service.js');
+        const verification = await verifyEmailCode(user.email, code);
+        
+        if (!verification.valid) {
           await this.bot.sendMessage(chatId,
-            `Code incorrect.\n` +
-            `Verifiez le code recu par email (6 chiffres) et reessayez.`);
+            `❌ ${verification.error}\n\n` +
+            `${verification.hint || 'Verifiez le code recu et reessayez.'}`);
           return;
         }
         

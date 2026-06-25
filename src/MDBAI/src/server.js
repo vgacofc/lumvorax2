@@ -25,6 +25,7 @@ import { startAnalysisWorker } from './workers/analysis.worker.js';
 import { createJob } from './models/job.model.js';
 import { enqueueAnalysisJob } from './services/redis.service.js';
 import { findUserByTelegram } from './services/user.service.js';
+import emailRedisService from './services/email-redis.service.js';
 
 const app = express();
 
@@ -222,6 +223,14 @@ async function startMdbai() {
     worker = startAnalysisWorker();
   }
 
+  logger.info('[MDBAI] Initialisation service email Redis...');
+  try {
+    await emailRedisService.initialize();
+    logger.info('[MDBAI] Email Redis: ✅ initialisé (mode natif sans SMTP)');
+  } catch (error) {
+    logger.error('[MDBAI] Email Redis: ⚠️ erreur initialisation', { error: error.message });
+  }
+
   logger.info('[MDBAI] Initialisation bot Telegram...');
   // BUG #61 FIX: Créer instance Telegram GLOBALE pour éviter 409 Conflict
   telegramService = new TelegramService();
@@ -265,6 +274,7 @@ async function gracefulShutdown(signal) {
   logger.info(`[MDBAI] Signal ${signal} reçu — arrêt propre...`);
   if (worker)          await worker.close().catch(() => {});
   if (telegramService) await telegramService.stop().catch(() => {});
+  await emailRedisService.stop().catch(() => {});
   await closeRedis().catch(() => {});
   logger.info('[MDBAI] Arrêt propre effectué ✅');
   process.exit(0);
