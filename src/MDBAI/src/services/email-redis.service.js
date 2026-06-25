@@ -27,7 +27,14 @@ class EmailRedisService {
       
       // Subscribe to email events
       await this.subscriber.subscribe('email:send', (message) => {
-        this.handleEmailEvent(JSON.parse(message));
+        try {
+          if (message) {
+            const event = JSON.parse(message);
+            this.handleEmailEvent(event);
+          }
+        } catch (error) {
+          logger.error('[EMAIL-REDIS] Erreur parsing message:', error, { message });
+        }
       });
       
       this.initialized = true;
@@ -178,6 +185,11 @@ class EmailRedisService {
    */
   async handleEmailEvent(event) {
     try {
+      if (!event) {
+        logger.warn('[EMAIL-REDIS] Event null reçu, ignoré');
+        return;
+      }
+      
       const { type, email, code, telegramId, timestamp } = event;
       
       logger.debug(`[EMAIL-REDIS] Event reçu: ${type}`, { email, telegramId });

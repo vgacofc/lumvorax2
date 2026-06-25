@@ -1,0 +1,55 @@
+# cg-cc template .gitignore
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code temporary files
+.claude/projects/
+.claude/cache/
+
+# Plan tracking (optional - uncomment if you don't want to track plans)
+# .cgcode/
+
+# Runtime state and plans (generated during execution)
+.pilot/
+
+# Legacy duplicate prefix (historical artifact)
+.claude-pilot/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.claude.backup.*
+
+# Temporary files (plugin workspace)
+.tmp/
+
+# Trash folder
+.trash/
+.serena/

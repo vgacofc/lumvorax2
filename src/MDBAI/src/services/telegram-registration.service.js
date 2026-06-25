@@ -271,9 +271,10 @@ async function handlePassword(bot, chatId, telegramId, text, data) {
   await setUserRegistrationState(telegramId, 'verify_code', data);
   
   return bot.sendMessage(chatId,
-    '✅ *Étape 7/7:* Vérification email\n\n' +
-    `📧 Un code à 6 chiffres a été envoyé à:\n\`${data.email}\`\n\n` +
-    '🔑 Entrez le code reçu pour activer votre compte.\n\n' +
+    '✅ *Étape 7/7:* Vérification\n\n' +
+    `📧 Email: \`${data.email}\`\n` +
+    `🔑 Un code à 6 chiffres vous a été envoyé via Telegram.\n\n` +
+    'Entrez ce code pour activer votre compte.\n\n' +
     '⏱️ Le code expire dans 10 minutes.',
     { parse_mode: 'Markdown' }
   );
