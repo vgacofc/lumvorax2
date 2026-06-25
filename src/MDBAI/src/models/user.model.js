@@ -39,7 +39,17 @@ export class User {
     this.isActive = data.isActive !== undefined ? data.isActive : false; // Par défaut false jusqu'à vérification email
     this.isBetaTester = data.isBetaTester || false;
     
-    // Propriétés pour vérification email
+    // NOUVEAU - Champs pour inscription complète (BUG-MODEL-004 FIX)
+    this.firstName = data.firstName || null;
+    this.lastName = data.lastName || null;
+    this.gender = data.gender || null; // 'homme' | 'femme'
+    this.phoneNumber = data.phoneNumber || null;
+    
+    // NOUVEAU - État d'inscription multi-étapes (BUG-REDIS-003 FIX)
+    this.registrationStep = data.registrationStep || null;
+    this.registrationCompleted = data.registrationCompleted || false;
+    
+    // Propriétés pour vérification email (à déplacer vers Redis - BUG-MODEL-003)
     this.email_verification_code = data.email_verification_code || null;
     this.email_verification_code_expires = data.email_verification_code_expires || null;
     
@@ -99,7 +109,14 @@ export class User {
       updatedAt: this.updatedAt,
       lastLoginAt: this.lastLoginAt,
       isActive: this.isActive,
-      isBetaTester: this.isBetaTester
+      isBetaTester: this.isBetaTester,
+      // Nouveaux champs inscription complète
+      firstName: this.firstName,
+      lastName: this.lastName,
+      gender: this.gender,
+      phoneNumber: this.phoneNumber,
+      registrationStep: this.registrationStep,
+      registrationCompleted: this.registrationCompleted
     };
   }
 
@@ -205,6 +222,9 @@ export class User {
     return new User({
       telegramId: telegramData.id,
       username: telegramData.username,
+      // Utiliser les champs firstName/lastName au lieu de metadata
+      firstName: telegramData.first_name || null,
+      lastName: telegramData.last_name || null,
       metadata: {
         telegramFirstName: telegramData.first_name,
         telegramLastName: telegramData.last_name

@@ -43,12 +43,9 @@ export const config = {
     secret: process.env.SESSION_SECRET || 'mdbai-dev-secret-change-in-prod',
   },
 
+  // Email via Redis (pas de SMTP - ports bloqués par OVH)
   email: {
-    smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
-    smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
-    smtpSecure: process.env.SMTP_SECURE === 'true',
-    smtpUser: process.env.SMTP_USER || '',
-    smtpPassword: process.env.SMTP_PASSWORD || '',
+    service: 'redis', // Utilise Redis + Telegram pour notifications
     fromAddress: process.env.EMAIL_FROM || 'noreply@mdbai.dev',
   },
 

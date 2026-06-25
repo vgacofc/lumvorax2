@@ -21,6 +21,9 @@ import { findUserByTelegram, findUserByEmail, registerUser, findUserById, update
 import { verifyUserEmail } from '../models/user.model.js';
 import { sendVerificationCodeEmail } from './email-redis.service.js';
 import { GitHubService } from './github.service.js';
+// BUG-REGISTRATION-001 FIX: Import nouveau service d'inscription
+import { getUserByTelegramId } from './redis-registration.service.js';
+import { startRegistration, handleRegistrationInput } from './telegram-registration.service.js';
 
 const MAX_409_RETRIES    = 8;
 const BACKOFF_BASE_MS    = 5000;
@@ -223,57 +226,21 @@ export class TelegramService {
   }
 
   /**
-   * Gère la commande /register - Inscription utilisateur ETAPE PAR ETAPE
-   * ETAPE 1: Demander email uniquement (SANS emojis)
+   * Gère la commande /register
+   * BUG-REGISTRATION-001 FIX: Flux complet multi-étapes (12 étapes)
    */
   async handleRegister(msg) {
     const chatId = msg.chat.id;
     const telegramId = String(msg.from.id);
-    const username = msg.from?.username || msg.from?.first_name || 'User';
-    
-    logger.info(`[TELEGRAM] /register depuis chatId=${chatId} user=${username}`);
+    logger.info(`[TELEGRAM] /register depuis chatId=${chatId}`);
 
     try {
-      // Vérifier si utilisateur déjà inscrit
-      const user = await findUserByTelegram(telegramId);
-      
-      // Si utilisateur existe ET a un email valide → déjà inscrit
-      if (user && user.email) {
-        const createdDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
-        await this.bot.sendMessage(chatId,
-          `Vous etes deja inscrit.\n\n` +
-          `Email: ${user.email}\n` +
-          `Compte cree le: ${createdDate}\n\n` +
-          `Utilisez /github pour connecter votre compte GitHub.`);
-        logger.info(`[TELEGRAM] /register — utilisateur ${user.email} deja inscrit`);
-        return;
-      }
-      
-      // Si utilisateur existe MAIS sans email → données corrompues → permettre réinscription
-      if (user && !user.email) {
-        logger.warn(`[TELEGRAM] /register — utilisateur ${telegramId} avec données corrompues (email manquant) → réinscription autorisée`);
-        // Continuer vers l'inscription (ne pas return)
-      }
-
-      // ETAPE 1: Demander email
-      await this.bot.sendMessage(chatId,
-        `Inscription MDBAI\n\n` +
-        `Etape 1/2: Entrez votre adresse email`);
-
-      // Stocker état inscription
-      this.pendingRegistrations.set(chatId, {
-        telegramId,
-        username,
-        step: 'waiting_email',
-        timestamp: Date.now()
-      });
-
-      logger.info(`[TELEGRAM] /register — demande email pour ${telegramId}`);
-      
+      // Déléguer au service d'inscription complet
+      await startRegistration(this.bot, chatId, telegramId, msg.from);
     } catch (error) {
       logger.error('[TELEGRAM] /register erreur', { error: error.message });
       await this.bot.sendMessage(chatId,
-        `Erreur lors de l'inscription. Reessayez avec /register`);
+        `❌ Erreur lors de l'inscription. Réessayez avec /register`);
     }
   }
 
@@ -463,15 +430,17 @@ export class TelegramService {
 
   /**
    * Gère les messages texte (entrée URL après /analyze sans argument)
+   * BUG-TELEGRAM-002 FIX: Intégration service d'inscription complet
    */
   async _handleTextInput(msg) {
     if (!msg.text || msg.text.startsWith('/')) return;
     const chatId = msg.chat.id;
+    const telegramId = String(msg.from.id);
     
-    // Gérer inscription en cours
-    const registration = this.pendingRegistrations.get(chatId);
-    if (registration) {
-      await this._handleRegistrationStep(msg, registration);
+    // Gérer inscription en cours avec nouveau service
+    const registrationState = await getUserRegistrationState(telegramId);
+    if (registrationState) {
+      await handleRegistrationInput(this.bot, chatId, telegramId, msg.text, msg.from);
       return;
     }
     
@@ -484,161 +453,6 @@ export class TelegramService {
     }
   }
 
-  /**
-   * Gère les étapes d'inscription (email puis mot de passe)
-   */
-  async _handleRegistrationStep(msg, registration) {
-    const chatId = msg.chat.id;
-    const text = msg.text.trim();
-    
-    try {
-      if (registration.step === 'waiting_email') {
-        // Valider format email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(text)) {
-          await this.bot.sendMessage(chatId,
-            `Email invalide. Veuillez entrer une adresse email valide:`);
-          return;
-        }
-        
-        // Vérifier si email déjà utilisé
-        const existingUser = await findUserByEmail(text);
-        if (existingUser) {
-          await this.bot.sendMessage(chatId,
-            `Cet email est deja utilise.\n\n` +
-            `Utilisez /register avec un autre email ou contactez le support.`);
-          this.pendingRegistrations.delete(chatId);
-          return;
-        }
-        
-        // Passer à l'étape mot de passe
-        registration.email = text;
-        registration.step = 'waiting_password';
-        this.pendingRegistrations.set(chatId, registration);
-        
-        await this.bot.sendMessage(chatId,
-          `Email enregistre: ${text}\n\n` +
-          `Etape 2/3: Entrez votre mot de passe\n` +
-          `(minimum 8 caracteres)`);
-        
-        logger.info(`[TELEGRAM] /register — email valide pour ${registration.telegramId}`);
-        
-      } else if (registration.step === 'waiting_password') {
-        // Valider mot de passe
-        if (text.length < 8) {
-          await this.bot.sendMessage(chatId,
-            `Mot de passe trop court (minimum 8 caracteres).\n` +
-            `Veuillez entrer un mot de passe plus long:`);
-          return;
-        }
-        
-        // Créer utilisateur (compte non vérifié)
-        const result = await registerUser({
-          authMethod: 'email',
-          email: registration.email,
-          password: text,
-          telegramId: registration.telegramId,
-          username: registration.username
-        });
-        
-        // CORRECTION BUG: registerUser retourne {success, user}
-        if (!result.success) {
-          await this.bot.sendMessage(chatId,
-            `Erreur lors de la creation du compte: ${result.error || 'Erreur inconnue'}\n\n` +
-            `Reessayez avec /register`);
-          this.pendingRegistrations.delete(chatId);
-          return;
-        }
-        
-        const newUser = result.user;
-        
-        // Envoyer email avec code 6 chiffres (via Redis + Telegram)
-        await sendVerificationCodeEmail(newUser.email, newUser.email_verification_code, registration.telegramId);
-        
-        // Passer à l'étape validation code
-        registration.userId = newUser.id;
-        registration.step = 'email_verification';
-        this.pendingRegistrations.set(chatId, registration);
-        
-        await this.bot.sendMessage(chatId,
-          `Etape 3/3: Verification email\n\n` +
-          `Un code a 6 chiffres a ete envoye a:\n` +
-          `${newUser.email}\n\n` +
-          `Consultez votre boite mail et entrez le code ici pour activer votre compte.\n` +
-          `(Le code expire dans 10 minutes)`);
-        
-        logger.info(`[TELEGRAM] /register — code verification envoye a ${newUser.email}`);
-        
-      } else if (registration.step === 'email_verification') {
-        const code = text.trim();
-        
-        // Validation format 6 chiffres
-        if (!/^\d{6}$/.test(code)) {
-          await this.bot.sendMessage(chatId,
-            `Code invalide. Le code doit contenir exactement 6 chiffres.\n` +
-            `Exemple: 123456\n\n` +
-            `Verifiez le code recu par email et reessayez.`);
-          return;
-        }
-        
-        // Récupération utilisateur
-        const user = await findUserById(registration.userId);
-        if (!user) {
-          this.pendingRegistrations.delete(chatId);
-          await this.bot.sendMessage(chatId,
-            `Erreur: Utilisateur introuvable.\n` +
-            `Veuillez recommencer l'inscription avec /register`);
-          return;
-        }
-        
-        // Vérification code via Redis
-        const { verifyEmailCode } = await import('./email-redis.service.js');
-        const verification = await verifyEmailCode(user.email, code);
-        
-        if (!verification.valid) {
-          await this.bot.sendMessage(chatId,
-            `❌ ${verification.error}\n\n` +
-            `${verification.hint || 'Verifiez le code recu et reessayez.'}`);
-          return;
-        }
-        
-        // Vérification expiration
-        if (Date.now() > user.email_verification_code_expires) {
-          this.pendingRegistrations.delete(chatId);
-          await this.bot.sendMessage(chatId,
-            `Code expire (validite: 10 minutes).\n` +
-            `Veuillez recommencer l'inscription avec /register`);
-          return;
-        }
-        
-        // Activer compte avec verifyUserEmail() pour garantir cohérence
-        const verified = verifyUserEmail(user);
-        await updateUser(user.id, {
-          isActive: verified.isActive,
-          email_verification_code: verified.email_verification_code,
-          email_verification_code_expires: verified.email_verification_code_expires,
-          updatedAt: verified.updatedAt
-        });
-        
-        this.pendingRegistrations.delete(chatId);
-        
-        await this.bot.sendMessage(chatId,
-          `Inscription reussie!\n\n` +
-          `Email: ${user.email}\n` +
-          `Compte cree le: ${new Date(user.createdAt).toLocaleDateString('fr-FR')}\n\n` +
-          `Prochaine etape: Connectez votre compte GitHub avec /github`);
-        
-        logger.info(`[TELEGRAM] /register — utilisateur ${user.email} verifie et active`);
-      }
-      
-    } catch (error) {
-      logger.error('[TELEGRAM] _handleRegistrationStep erreur', { error: error.message });
-      await this.bot.sendMessage(chatId,
-        `Erreur lors de l'inscription: ${error.message}\n\n` +
-        `Reessayez avec /register`);
-      this.pendingRegistrations.delete(chatId);
-    }
-  }
 
   /**
    * Envoie une notification de démarrage d'analyse
