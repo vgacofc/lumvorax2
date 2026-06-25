@@ -370,18 +370,28 @@ async function handleGithubUrl(bot, chatId, telegramId, text, data) {
     );
   }
   
-  // Validation URL GitHub
-  const githubRegex = /^https?:\/\/(www\.)?github\.com\/[\w-]+\/?$/;
-  if (!githubRegex.test(text)) {
+  // Validation URL GitHub - accepte plusieurs formats
+  const githubRegex = /^https?:\/\/(www\.)?github\.com\/([\w-]+)(\/)?$/;
+  const match = text.match(githubRegex);
+  
+  if (!match) {
     return bot.sendMessage(chatId,
-      '❌ URL GitHub invalide.\n\n' +
-      'Format attendu: https://github.com/username\n\n' +
-      'Ou tapez "skip" pour passer.'
+      '❌ *URL GitHub invalide*\n\n' +
+      '📝 *Formats acceptés:*\n' +
+      '• `https://github.com/username`\n' +
+      '• `https://github.com/username/`\n' +
+      '• `http://github.com/username`\n\n' +
+      '💡 *Exemples valides:*\n' +
+      '• `https://github.com/torvalds`\n' +
+      '• `https://github.com/microsoft`\n\n' +
+      '⚠️ *Attention:* Ne mettez PAS le nom d\'un dépôt, juste votre profil.\n\n' +
+      '🔄 Réessayez avec le bon format ou tapez `skip` pour passer.',
+      { parse_mode: 'Markdown' }
     );
   }
   
-  // Extraire le username
-  const username = text.split('/').pop().replace(/\/$/, '');
+  // Extraire le username depuis le match regex (groupe 2)
+  const username = match[2];
   
   // Mettre à jour l'utilisateur
   const user = await getUserByTelegramId(telegramId);
