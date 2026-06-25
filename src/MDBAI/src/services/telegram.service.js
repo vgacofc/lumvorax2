@@ -177,8 +177,8 @@ export class TelegramService {
     const name = msg.from?.first_name || 'Dev';
     logger.info(`[TELEGRAM] /start depuis chatId=${chatId} user=${name}`);
 
-    // Vérifier si utilisateur inscrit ET actif
-    const user = await findUserByTelegram(telegramId);
+    // Vérifier si utilisateur inscrit ET actif (BUG-GITHUB-002 FIX: utiliser getUserByTelegramId)
+    const user = await getUserByTelegramId(telegramId);
 
     // BUG #30 FIX: Vérifier isActive ET email (camelCase)
     // CORRECTION: user.isActive au lieu de user.status, user.email au lieu de user.email_verified
@@ -281,21 +281,21 @@ export class TelegramService {
     logger.info(`[TELEGRAM] /github depuis chatId=${chatId} user=${username}`);
 
     try {
-      // 1. Vérifier si utilisateur inscrit ET actif (CORRECTION BUG: isActive + email)
-      const user = await findUserByTelegram(telegramId);
+      // 1. Vérifier si utilisateur inscrit ET actif (BUG-GITHUB-002 FIX: utiliser getUserByTelegramId)
+      const user = await getUserByTelegramId(telegramId);
       
       if (!user || !user.isActive || !user.email) {
         // Utilisateur non inscrit OU inscription incomplète
-        let message = `*Erreur*: Vous devez d'abord creer un compte actif.\n\n`;
+        let message = `❌ *Erreur*: Vous devez d'abord créer un compte actif.\n\n`;
         
         if (user && !user.isActive) {
-          message += `Votre inscription est en cours. Veuillez verifier votre email (${user.email || 'non renseigné'}) pour activer votre compte.\n\n`;
+          message += `⏳ Votre inscription est en cours. Veuillez vérifier votre email (${user.email || 'non renseigné'}) pour activer votre compte.\n\n`;
         } else {
-          message += `Tapez /register pour vous inscrire.\n\n`;
+          message += `📝 Tapez /register pour vous inscrire.`;
         }
         
         await this.bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-        logger.warn(`[TELEGRAM] /github refuse — utilisateur ${telegramId} non actif (isActive=${user?.isActive}, email=${user?.email})`);
+        logger.warn(`[TELEGRAM] /github refusé — utilisateur ${telegramId} non actif (isActive=${user?.isActive}, email=${user?.email})`);
         return;
       }
 
