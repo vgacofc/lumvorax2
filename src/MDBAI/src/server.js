@@ -24,7 +24,7 @@ import { getAnalysisQueue, pingRedis, closeRedis, getJobResult } from './service
 import { startAnalysisWorker } from './workers/analysis.worker.js';
 import { createJob } from './models/job.model.js';
 import { enqueueAnalysisJob } from './services/redis.service.js';
-import { findUserByTelegram } from './services/user.service.js';
+import { getUserByTelegramId } from './services/redis-registration.service.js';
 import emailRedisService from './services/email-redis.service.js';
 
 const app = express();
@@ -237,7 +237,7 @@ async function startMdbai() {
   global.telegramService = telegramService; // Instance globale accessible au worker
   telegramService.init(async (chatId, repoUrl, userId) => {
     // BUG #39 FIX: Récupérer le token GitHub OAuth de l'utilisateur depuis Redis
-    const user = await findUserByTelegram(String(userId));
+    const user = await getUserByTelegramId(String(userId));
     const githubToken = user?.github_token || '';
     
     if (!githubToken) {

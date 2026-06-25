@@ -8,7 +8,7 @@
 
 import { Router } from 'express';
 import { GitHubService } from '../services/github.service.js';
-import { findUserByTelegram, updateUser } from '../services/user.service.js';
+import { getUserByTelegramId, updateUserRedis } from '../services/redis-registration.service.js';
 import TelegramBot from 'node-telegram-bot-api';
 import logger from '../utils/logger.js';
 import { config } from '../config.js';
@@ -81,7 +81,7 @@ authRouter.get('/github/callback', async (req, res) => {
       logger.info('[AUTH] Flux Telegram détecté', { telegramId, githubLogin: githubUser.login });
       
       // Récupérer utilisateur Redis via telegram_id
-      const user = await findUserByTelegram(telegramId);
+      const user = await getUserByTelegramId(telegramId);
       
       if (!user) {
         logger.error('[AUTH] Utilisateur Telegram non trouvé', { telegramId });
@@ -93,14 +93,10 @@ authRouter.get('/github/callback', async (req, res) => {
       }
       
       // Mettre à jour Redis avec github_login et github_token
-      const updatedUser = {
-        ...user,
+      await updateUserRedis(user.id, {
         github_login: githubUser.login,
-        github_token: accessToken,
-        updated_at: new Date().toISOString(),
-      };
-      
-      await updateUser(updatedUser);
+        github_token: accessToken
+      });
       logger.info('[AUTH] User Redis mis à jour', {
         userId: user.id,
         email: user.email,

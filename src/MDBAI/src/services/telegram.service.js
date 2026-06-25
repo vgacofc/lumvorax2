@@ -17,7 +17,7 @@ import logger from '../utils/logger.js';
 import { config } from '../config.js';
 import { validateRepoUrl } from '../utils/validator.js';
 import { MdbaiError, ERR_TELEGRAM_CONNECT } from '../utils/errors.js';
-import { findUserByTelegram, findUserByEmail, registerUser, findUserById, updateUser } from './user.service.js';
+import { findUserByEmail, registerUser, findUserById, updateUser } from './user.service.js';
 import { verifyUserEmail } from '../models/user.model.js';
 import { sendVerificationCodeEmail } from './email-redis.service.js';
 import { GitHubService } from './github.service.js';
@@ -371,7 +371,7 @@ export class TelegramService {
     logger.info(`[TELEGRAM] /analyze depuis chatId=${chatId}`, { url });
 
     // CORRECTION BUG: Vérifier isActive + email au lieu de status + email_verified
-    const user = await findUserByTelegram(telegramId);
+    const user = await getUserByTelegramId(telegramId);
     
     if (!user || !user.isActive || !user.email) {
       let message = `*Erreur*: Vous devez avoir un compte actif pour analyser des dépôts.\n\n`;
