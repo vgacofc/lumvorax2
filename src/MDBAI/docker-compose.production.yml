@@ -19,6 +19,22 @@ services:
     networks:
       - mdbai-network
 
+  # MailHog - Serveur SMTP local pour développement/beta
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mdbai-mailhog
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1025:1025"  # SMTP
+      - "127.0.0.1:8025:8025"  # Web UI
+    networks:
+      - mdbai-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8025"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
   # Instance MDBAI 1
   mdbai-api-1:
     build:
@@ -38,11 +54,11 @@ services:
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL}
       - SESSION_SECRET=${SESSION_SECRET}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_SECURE=${SMTP_SECURE}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_SECURE=false
+      - SMTP_USER=
+      - SMTP_PASS=
       - EMAIL_FROM=${EMAIL_FROM}
       - OVH_APPLICATION_KEY=${OVH_APPLICATION_KEY}
       - OVH_APPLICATION_SECRET=${OVH_APPLICATION_SECRET}
@@ -54,6 +70,8 @@ services:
       - ./reports:/app/reports
     depends_on:
       redis:
+        condition: service_healthy
+      mailhog:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
@@ -84,11 +102,11 @@ services:
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL}
       - SESSION_SECRET=${SESSION_SECRET}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_SECURE=${SMTP_SECURE}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_SECURE=false
+      - SMTP_USER=
+      - SMTP_PASS=
       - EMAIL_FROM=${EMAIL_FROM}
       - OVH_APPLICATION_KEY=${OVH_APPLICATION_KEY}
       - OVH_APPLICATION_SECRET=${OVH_APPLICATION_SECRET}
@@ -101,6 +119,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      mailhog:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 30s
@@ -110,7 +130,7 @@ services:
     networks:
       - mdbai-network
 
-  # Nginx Load Balancer
+  # Nginx reverse proxy
   nginx:
     image: nginx:alpine
     container_name: mdbai-nginx
@@ -121,7 +141,6 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
-      - nginx-cache:/var/cache/nginx
     depends_on:
       - mdbai-api-1
       - mdbai-api-2
@@ -133,29 +152,22 @@ services:
     networks:
       - mdbai-network
 
-  # Watchtower pour auto-updates
+  # Watchtower pour auto-update
   watchtower:
     image: containrrr/watchtower
     container_name: mdbai-watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=3600
-      - WATCHTOWER_INCLUDE_STOPPED=false
-      - WATCHTOWER_REVIVE_STOPPED=false
+    command: --interval 300 --cleanup
     networks:
       - mdbai-network
-
-volumes:
-  redis-data:
-    driver: local
-  nginx-cache:
-    driver: local
 
 networks:
   mdbai-network:
     driver: bridge
+
+volumes:
+  redis-data:
 
 # Made with Bob
