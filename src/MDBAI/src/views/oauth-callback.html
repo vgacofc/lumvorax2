@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion GitHub - MDBAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .error {
+            background-color: #fee;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #27ae60;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .retry-btn:active {
+            transform: translateY(0);
+        }
+        
+        .retry-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #f3f3f3;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .details {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔐</div>
+        <h1>Connexion GitHub</h1>
+        <div class="spinner" id="spinner"></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="status" id="status">Connexion en cours...</div>
+        <div id="messageContainer"></div>
+        <div class="details" id="details"></div>
+        <button class="retry-btn" id="retryBtn" style="display:none;">🔄 Réessayer</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const telegramId = urlParams.get('telegram_id');
+        
+        let retryCount = 0;
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 2000; // 2 secondes
+        
+        const elements = {
+            spinner: document.getElementById('spinner'),
+            status: document.getElementById('status'),
+            messageContainer: document.getElementById('messageContainer'),
+            details: document.getElementById('details'),
+            retryBtn: document.getElementById('retryBtn'),
+            progressFill: document.getElementById('progressFill')
+        };
+
+        function updateProgress(percent) {
+            elements.progressFill.style.width = `${percent}%`;
+        }
+
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = text;
+            elements.messageContainer.innerHTML = '';
+            elements.messageContainer.appendChild(messageDiv);
+        }
+
+        function updateDetails(text) {
+            elements.details.textContent = text;
+        }
+
+        async function exchangeCode() {
+            try {
+                const attemptNum = retryCount + 1;
+                elements.status.textContent = 
+                    retryCount > 0 
+                        ? `⏳ Tentative ${attemptNum}/${MAX_RETRIES + 1}...` 
+                        : '🔄 Échange du code OAuth...';
+                
+                updateProgress(25);
+                updateDetails(`Envoi de la requête à l'API...`);
+                
+                const response = await fetch('/api/auth/github/callback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code, 
+                        state, 
+                        telegram_id: telegramId 
+                    })
+                });
+
+                updateProgress(50);
+                updateDetails('Traitement de la réponse...');
+
+                const data = await response.json();
+
+                updateProgress(75);
+
+                if (response.ok && data.success) {
+                    updateProgress(100);
+                    elements.spinner.style.display = 'none';
+                    elements.status.textContent = '✅ Connexion réussie !';
+                    showMessage(
+                        `<strong>Bienvenue ${data.github_login || 'sur MDBAI'} !</strong><br>
+                        Votre compte GitHub est maintenant connecté.<br>
+                        Vous pouvez fermer cette fenêtre et retourner sur Telegram.`,
+                        'success'
+                    );
+                    updateDetails('Redirection automatique dans 3 secondes...');
+                    
+                    // Redirection automatique après 3 secondes
+                    setTimeout(() => {
+                        window.close();
+                        // Si window.close() ne fonctionne pas (popup bloqué)
+                        setTimeout(() => {
+                            showMessage(
+                                'Vous pouvez maintenant fermer cette fenêtre manuellement.',
+                                'success'
+                            );
+                        }, 1000);
+                    }, 3000);
+                } else {
+                    throw new Error(data.error || 'Erreur inconnue lors de la connexion');
+                }
+            } catch (error) {
+                console.error('Erreur OAuth:', error);
+                updateProgress(0);
+                
+                if (retryCount < MAX_RETRIES) {
+                    retryCount++;
+                    const waitTime = RETRY_DELAY / 1000;
+                    elements.status.textContent = `⚠️ Erreur, nouvelle tentative dans ${waitTime}s...`;
+                    showMessage(
+                        `<strong>Tentative ${retryCount}/${MAX_RETRIES} échouée</strong><br>
+                        ${error.message}<br>
+                        Nouvelle tentative automatique...`,
+                        'warning'
+                    );
+                    updateDetails(`Attente de ${waitTime} secondes avant retry...`);
+                    
+                    setTimeout(exchangeCode, RETRY_DELAY);
+                } else {
+                    elements.spinner.style.display = 'none';
+                    elements.status.textContent = '❌ Échec de la connexion';
+                    showMessage(
+                        `<strong>Erreur après ${MAX_RETRIES + 1} tentatives</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Causes possibles :</strong><br>
+                        • Le code OAuth a expiré (>10 minutes)<br>
+                        • Problème de connexion réseau<br>
+                        • Erreur serveur temporaire<br><br>
+                        <strong>Solution :</strong> Recommencez le processus depuis Telegram avec la commande <code>/github</code>`,
+                        'error'
+                    );
+                    updateDetails('Vous pouvez réessayer ou recommencer depuis Telegram');
+                    elements.retryBtn.style.display = 'block';
+                }
+            }
+        }
+
+        elements.retryBtn.addEventListener('click', () => {
+            retryCount = 0;
+            elements.spinner.style.display = 'block';
+            elements.retryBtn.style.display = 'none';
+            elements.messageContainer.innerHTML = '';
+            updateProgress(0);
+            exchangeCode();
+        });
+
+        // Validation des paramètres et démarrage
+        if (!code || !state) {
+            elements.spinner.style.display = 'none';
+            elements.status.textContent = '❌ Paramètres manquants';
+            showMessage(
+                '<strong>Erreur de configuration</strong><br>' +
+                'Les paramètres OAuth sont manquants dans l\'URL.<br>' +
+                'Veuillez recommencer le processus depuis Telegram.',
+                'error'
+            );
+            updateDetails('Code ou state manquant');
+        } else {
+            // Démarrer l'échange de code
+            updateDetails('Initialisation...');
+            exchangeCode();
+        }
+    </script>
+</body>
+</html>

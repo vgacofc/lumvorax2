@@ -37,6 +37,40 @@ function createAppJwt(appId, privateKey) {
   return `${signingInput}.${sig}`;
 }
 
+/**
+ * Fonction utilitaire pour retry automatique des requêtes HTTP
+ * @param {string} url - URL à appeler
+ * @param {object} options - Options fetch
+ * @param {number} maxRetries - Nombre maximum de tentatives
+ * @param {number} delay - Délai entre les tentatives (ms)
+ * @returns {Promise<Response>}
+ */
+async function fetchWithRetry(url, options, maxRetries = 3, delay = 2000) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      logger.info(`[GITHUB] Tentative ${attempt + 1}/${maxRetries}`, { url });
+      const response = await fetch(url, options);
+      
+      // Si 404 ou 422 et pas le dernier essai, attendre et réessayer
+      // Ces codes peuvent indiquer un code OAuth expiré
+      if ((response.status === 404 || response.status === 422) && attempt < maxRetries - 1) {
+        logger.warn(`[GITHUB] HTTP ${response.status}, retry dans ${delay}ms...`, { attempt: attempt + 1 });
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      
+      return response;
+    } catch (error) {
+      if (attempt === maxRetries - 1) {
+        logger.error('[GITHUB] Toutes les tentatives ont échoué', { error: error.message });
+        throw error;
+      }
+      logger.warn(`[GITHUB] Erreur réseau, retry ${attempt + 1}/${maxRetries}...`, { error: error.message });
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
 export class GitHubService {
   constructor(accessToken = null) {
     this.accessToken = accessToken;
@@ -59,6 +93,7 @@ export class GitHubService {
 
   /**
    * Échange un code OAuth contre un token d'accès
+   * Avec retry automatique (3 tentatives, 2s entre chaque)
    * @param {string} code - Code OAuth GitHub
    * @returns {Promise<string>} Token d'accès
    */
@@ -71,18 +106,103 @@ export class GitHubService {
       redirect_uri: config.github.callbackUrl,
     };
 
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    logger.info('[GITHUB] Début échange code OAuth', { codePrefix: code.substring(0, 10) + '...' });
 
-    if (!resp.ok) throw new MdbaiError(ERR_GITHUB_AUTH, `GitHub OAuth erreur HTTP ${resp.status}`);
+    const resp = await fetchWithRetry(
+      url,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      },
+      3,    // 3 tentatives
+      2000  // 2 secondes entre chaque
+    );
+
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      logger.error('[GITHUB] Échec échange code OAuth', {
+        status: resp.status,
+        error: errorText
+      });
+      throw new MdbaiError(
+        ERR_GITHUB_AUTH,
+        `GitHub OAuth erreur HTTP ${resp.status}: ${errorText}`
+      );
+    }
 
     const data = await resp.json();
-    if (data.error) throw new MdbaiError(ERR_GITHUB_AUTH, `GitHub OAuth: ${data.error_description}`);
-    logger.info('[GITHUB] Token OAuth obtenu');
+    if (data.error) {
+      logger.error('[GITHUB] Erreur OAuth dans réponse', { error: data.error });
+      throw new MdbaiError(
+        ERR_GITHUB_AUTH,
+        `GitHub OAuth: ${data.error_description || data.error}`
+      );
+    }
+    
+    logger.info('[GITHUB] Token OAuth obtenu avec succès');
     return data.access_token;
+  }
+
+  /**
+   * Vérifie si la GitHub App est installée pour l'utilisateur
+   * @param {string} accessToken - Token OAuth de l'utilisateur
+   * @returns {Promise<object>} { installed: boolean, installation: object, repositories: number|'all' }
+   */
+  async checkAppInstallation(accessToken = null) {
+    const token = accessToken || this.accessToken;
+    if (!token) {
+      throw new MdbaiError(ERR_GITHUB_AUTH, 'Token d\'accès requis');
+    }
+
+    try {
+      logger.info('[GITHUB] Vérification installation App');
+      const resp = await fetch('https://api.github.com/user/installations', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28'
+        }
+      });
+
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        logger.error('[GITHUB] Erreur vérification installation', {
+          status: resp.status,
+          error: errorText
+        });
+        throw new Error(`HTTP ${resp.status}: ${errorText}`);
+      }
+
+      const data = await resp.json();
+      
+      // Chercher notre App dans les installations
+      const ourApp = data.installations?.find(
+        inst => inst.app_id === parseInt(config.github.appId)
+      );
+
+      const result = {
+        installed: !!ourApp,
+        installation: ourApp || null,
+        repositories: ourApp?.repository_selection === 'all'
+          ? 'all'
+          : ourApp?.repositories?.length || 0
+      };
+
+      logger.info('[GITHUB] Résultat vérification App', result);
+      return result;
+    } catch (error) {
+      logger.error('[GITHUB] Erreur vérification installation App', {
+        error: error.message
+      });
+      return {
+        installed: false,
+        error: error.message
+      };
+    }
   }
 
   /**
