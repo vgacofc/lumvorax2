@@ -56,7 +56,7 @@ Les emails étaient "envoyés" vers Ethereal (visible dans les logs) mais **jama
 1. **Aller sur**: https://myaccount.google.com/security
 
 2. **Activer "Validation en 2 étapes"**:
-   - Cliquer sur "Validation en 2 étapes"
+   - Cliquer sur "Validation en 2 étapessmtp.gmail.com"
    - Suivre les instructions (SMS ou application)
    - Confirmer l'activation
 

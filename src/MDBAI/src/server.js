@@ -105,8 +105,8 @@ app.use((req, res, next) => {
 app.use('/webhook', webhookLimiter, webhookRouter);
 app.use('/api/analyze', analyzeLimiter, analyzeRouter);
 app.use('/api/status', statusRouter);
-app.use('/auth', authRouter);
-app.use('/auth', authHybridRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/auth', authHybridRouter);
 app.use('/dashboard', dashboardRouter);
 
 /**

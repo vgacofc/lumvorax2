@@ -404,6 +404,23 @@ export class TelegramService {
       return;
     }
 
+    // CORRECTION CRITIQUE: Vérifier si l'utilisateur a un token GitHub
+    if (!user.github_token) {
+      await this.bot.sendMessage(chatId,
+        `❌ *Connexion GitHub requise*\n\n` +
+        `Vous devez d'abord connecter votre compte GitHub pour analyser des dépôts privés.\n\n` +
+        `📋 *Étapes*:\n` +
+        `1. Utilisez la commande /github\n` +
+        `2. Cliquez sur le bouton de connexion\n` +
+        `3. Autorisez MDBAI sur GitHub\n` +
+        `4. Relancez /analyze\n\n` +
+        `ℹ️ Les dépôts publics peuvent être analysés sans connexion, mais avec des limitations.`,
+        { parse_mode: 'Markdown' }
+      );
+      logger.warn(`[TELEGRAM] /analyze refusé — utilisateur ${user.email} sans token GitHub`);
+      return;
+    }
+
     // BUG #67 FIX: Message supprimé ici (sera envoyé par sendAnalysisStarted avec Job ID)
     
     if (this.onAnalyzeRequest) {
