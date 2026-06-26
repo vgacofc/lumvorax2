@@ -11,13 +11,15 @@ ENV NODE_ENV=production \
     PORT=3000 \
     TZ=Europe/Paris
 
-# Installation des dépendances système
+# Installation des dépendances système et Doppler CLI
 RUN apk add --no-cache \
     bash \
     git \
     curl \
     ca-certificates \
     tzdata \
+    gnupg \
+    && curl -Ls https://cli.doppler.com/install.sh | sh \
     && rm -rf /var/cache/apk/*
 
 # Création du répertoire de travail
@@ -51,5 +53,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Commande de démarrage
-CMD ["node", "src/server.js"]
+# Commande de démarrage avec Doppler
+CMD ["doppler", "run", "--project", "mdbai", "--config", "dev", "--", "node", "src/server.js"]

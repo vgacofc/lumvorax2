@@ -25,12 +25,16 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-    env_file:
-      - .env
+    # CORRECTION: Utiliser Doppler directement au lieu de .env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        doppler run --project mdbai --config dev -- node src/server.js
     environment:
       - NODE_ENV=production
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
     volumes:
       - ./logs:/app/logs
       - ./forensic:/app/forensic
@@ -49,12 +53,17 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-    env_file:
-      - .env
+    # CORRECTION: Utiliser Doppler directement au lieu de .env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        doppler run --project mdbai --config dev -- node src/server.js
     environment:
       - NODE_ENV=production
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+      - TELEGRAM_BOT_DISABLED=true
     volumes:
       - ./logs:/app/logs
       - ./forensic:/app/forensic
