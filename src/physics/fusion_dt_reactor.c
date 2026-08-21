@@ -5,6 +5,7 @@
 // journalisee par l'infrastructure forensique nanoseconde du projet.
 
 #include "fusion_dt_reactor.h"
+#include "fusion_dt_profiles.h"
 #include "../debug/forensic_logger.h"
 #include "../debug/ultra_forensic_logger.h"
 #include "../debug/memory_tracker.h"
@@ -33,6 +34,8 @@ fusion_dt_material_catalog_t fusion_dt_catalog_lts_iter(void) {
     c.div_limit_MW_m = 17.0;      // divertor tungstene classe ITER (~15-17 MW/m)
     c.f_rad_max = 0.70;           // semis Ne/Ar demontre (ASDEX-U, JET)
     c.gamma_cd = 0.30;            // NBI/ECCD etat de l'art
+    c.tbr_local = 1.30;           // couverture HCPB (EU-DEMO, publie ~1.30)
+    c.blanket_coverage = 0.85;    // 15% perdus (ports + divertor) -> TBR ~1.10
     c.hypothetical = false;
     return c;
 }
@@ -52,6 +55,8 @@ fusion_dt_material_catalog_t fusion_dt_catalog_hts_rebco(void) {
     c.div_limit_MW_m = 20.0;      // divertor avance (geometrie longue jambe)
     c.f_rad_max = 0.80;           // semis pousse type DEMO
     c.gamma_cd = 0.35;            // LHCD haute efficacite (design ARC)
+    c.tbr_local = 1.42;           // couverture liquide FLiBe+Be immersive
+    c.blanket_coverage = 0.92;    // couverture quasi-complete -> TBR ~1.31 (ARC: 1.3)
     c.hypothetical = false;
     return c;
 }
@@ -71,6 +76,8 @@ fusion_dt_material_catalog_t fusion_dt_catalog_future_hypothetical(void) {
     c.div_limit_MW_m = 25.0;      // HYPOTHESE : divertor metal liquide
     c.f_rad_max = 0.85;           // HYPOTHESE : controle radiatif avance
     c.gamma_cd = 0.45;            // HYPOTHESE : CD haute efficacite
+    c.tbr_local = 1.50;           // HYPOTHESE : couverture enrichie 6Li optimisee
+    c.blanket_coverage = 0.93;    // HYPOTHESE : integration poussee -> TBR ~1.40
     c.hypothetical = true;
     return c;
 }
@@ -137,6 +144,7 @@ void fusion_dt_machine_derive(fusion_dt_machine_t* machine,
 // Combustion reelle d'un design a p_aux donne (IPB98 complete + cendres)
 static bool fusion_dt_reactor_burn(const fusion_dt_machine_t* machine,
                                    double n_e_m3, double p_aux_W,
+                                   double profile_peaking,
                                    fusion_dt_reactor_point_t* out,
                                    double* p_brems_total_W,
                                    fusion_dt_burn_result_t* burn_out) {
@@ -160,7 +168,7 @@ static bool fusion_dt_reactor_burn(const fusion_dt_machine_t* machine,
     cfg.ipb98_kappa = machine->kappa;
     cfg.ipb98_M_amu = 2.5;
     cfg.ipb98_h98 = 1.0;             // conservateur : conforme base mondiale
-    cfg.profile_peaking = 1.3;       // profils piques, calibre sur ITER (cf. .h)
+    cfg.profile_peaking = profile_peaking;  // V5 : calcule par profils radiaux
 
     fusion_dt_plasma_t* plasma = fusion_dt_plasma_create(&cfg);
     if (!plasma) return false;
@@ -195,9 +203,17 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
     double p_brems_W = 0.0;
     fusion_dt_burn_result_t burn;
     memset(&burn, 0, sizeof(burn));
-    if (!fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux_W, out,
-                                &p_brems_W, &burn))
+    // Premier burn avec le piquage de calibration ITER (1.3)
+    out->peaking_used = 1.3;
+    if (!fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux_W,
+                                out->peaking_used, out, &p_brems_W, &burn))
         return false;
+
+    // V5 : piquage recalcule par integration radiale reelle a la temperature
+    // d'equilibre du design (forme calculee, amplitude ancree ITER — cf.
+    // fusion_dt_profiles.h)
+    double peaking_calc = fusion_dt_profiles_effective_peaking(
+        out->T_final_keV, FUSION_DT_ALPHA_N_DEFAULT, FUSION_DT_ALPHA_T_DEFAULT);
 
     // ---- V4 : stationnarite (bootstrap + generation de courant) ----
     // beta_p = 2 mu0 <p> / B_p^2, B_p = mu0 I_p / l_p (perimetre poloidal)
@@ -218,14 +234,17 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
                        / catalog->gamma_cd / 1e6;
     }
 
-    // Coherence stationnaire : la puissance CD chauffe aussi le plasma.
-    // Si P_CD depasse le chauffage suppose, on re-simule la combustion avec
-    // p_aux = P_CD (une iteration suffit : P_CD depend faiblement de T).
-    // Machines pulsees (ITER) : courant par transformateur, pas de re-burn.
-    if (steady_state && out->p_cd_MW * 1e6 > p_aux_W * 1.05) {
-        double p_aux2 = out->p_cd_MW * 1e6;
-        if (fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux2, out,
-                                   &p_brems_W, &burn)) {
+    // Coherence stationnaire + piquage : la puissance CD chauffe aussi le
+    // plasma, et le piquage radial reel differe du 1.3 initial. On re-simule
+    // la combustion (une iteration suffit : dependances faibles en T).
+    // Machines pulsees (ITER) : courant par transformateur, p_aux inchange.
+    bool need_reburn_cd = steady_state && out->p_cd_MW * 1e6 > p_aux_W * 1.05;
+    bool need_reburn_peaking = fabs(peaking_calc - out->peaking_used) > 0.04;
+    if (need_reburn_cd || need_reburn_peaking) {
+        double p_aux2 = need_reburn_cd ? out->p_cd_MW * 1e6 : p_aux_W;
+        out->peaking_used = peaking_calc;
+        if (fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux2,
+                                   out->peaking_used, out, &p_brems_W, &burn)) {
             out->p_aux_W = p_aux2;
             // Recalcul bootstrap avec la temperature re-equilibree
             double eps = machine->a_m / machine->R_m;
@@ -300,12 +319,23 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
         out->c_divertor = (out->f_rad_required <= catalog->f_rad_max + 1e-9);
     }
 
+    // C9 (V5) : auto-suffisance en tritium. TBR = TBR_local du concept de
+    // couverture x couverture geometrique. Consommation : chaque MW de
+    // fusion brule 0.0561 kg de tritium par an (3.548e17 reactions/s/MW
+    // x 5.007e-27 kg/triton x 3.156e7 s/an).
+    {
+        out->tbr = catalog->tbr_local * catalog->blanket_coverage;
+        out->tritium_burn_kg_year = 0.0561 * out->p_fusion_MW;
+        out->tritium_margin_kg_year = (out->tbr - 1.0) * out->tritium_burn_kg_year;
+        out->c_tbr = (out->tbr >= 1.05);
+    }
+
     bool burn_ok = burn.success && !burn.thermal_runaway_detected &&
                    burn.T_final_keV >= 4.0 &&
                    burn.T_final_keV <= FUSION_DT_T_MAX_KEV;
     out->viable = burn_ok && out->c_greenwald && out->c_beta && out->c_q95 &&
                   out->c_wall && out->c_lh && out->c_bcoil && out->c_regime &&
-                  out->c_divertor;
+                  out->c_divertor && out->c_tbr;
     return true;
 }
 
@@ -399,14 +429,15 @@ fusion_dt_reactor_result_t* fusion_dt_reactor_optimize(
              "a=%.2f m B0=%.2f T Ip=%.1f MA q95=%.1f n=%.2e T=%.1f keV "
              "tau_E=%.2f s Q=%.1f P_fus=%.0f MW P_net=%.0f MW mur=%.2f MW/m2 "
              "betaN=%.2f fGW=%.2f P_recirc=%.0f MW f_bs=%.2f P_CD=%.0f MW "
-             "f_rad=%.2f He=%.1f%%",
+             "f_rad=%.2f TBR=%.2f T_marge=%.1f kg/an piquage=%.2f He=%.1f%%",
              catalog->name, total, viable_count,
              (unsigned long long)result->total_compute_time_ns,
              b->machine.R_m, b->machine.a_m, b->machine.B0_T, b->machine.I_p_MA,
              b->machine.q95, b->n_e_m3, b->T_final_keV, b->tau_E_s, b->q_factor,
              b->p_fusion_MW, b->p_net_MW, b->wall_load_MW_m2, b->beta_n,
              b->f_greenwald, b->p_recirc_MW, b->f_bootstrap, b->p_cd_MW,
-             b->f_rad_required, b->he_fraction * 100.0);
+             b->f_rad_required, b->tbr, b->tritium_margin_kg_year,
+             b->peaking_used, b->he_fraction * 100.0);
 
     FORENSIC_LOG_MODULE_METRIC(FUSION_DT_REACTOR_MODULE, "opt_viable", (double)viable_count);
     FORENSIC_LOG_MODULE_METRIC(FUSION_DT_REACTOR_MODULE, "opt_best_p_net_MW",

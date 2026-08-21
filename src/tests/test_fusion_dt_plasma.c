@@ -21,6 +21,7 @@
 
 #include "../physics/fusion_dt_plasma.h"
 #include "../physics/fusion_dt_reactor.h"
+#include "../physics/fusion_dt_profiles.h"
 #include "../debug/memory_tracker.h"
 #include "../debug/forensic_logger.h"
 #include "../debug/ultra_forensic_logger.h"
@@ -692,6 +693,104 @@ static void phase12_stationarity_divertor_and_bugfixes(void) {
 }
 
 // ---------------------------------------------------------------------------
+// PHASE 14 — V5 : profils radiaux calcules (fondation transport 1.5-D)
+// ---------------------------------------------------------------------------
+static void phase14_radial_profiles(void) {
+    printf("\n=== PHASE 14 : PROFILS RADIAUX CALCULES (SIMPSON, 200 PAS) ===\n");
+
+    // Profils plats : le piquage DOIT valoir exactement 1
+    double f_flat = fusion_dt_profiles_peaking_fusion(10.0, 0.0, 0.0);
+    TEST_ASSERT(fabs(f_flat - 1.0) < 1e-9,
+                "Profils plats -> piquage fusion = 1 (verification exacte)");
+
+    // Profils paraboliques standards : piquage fusion dans la plage publiee
+    double f_iter = fusion_dt_profiles_peaking_fusion(
+        9.0, FUSION_DT_ALPHA_N_DEFAULT, FUSION_DT_ALPHA_T_DEFAULT);
+    printf("    Piquage fusion parabolique pur a <T>=9 keV : %.3f "
+           "(litterature 0-D->1-D : ~1.5-2.5)\n", f_iter);
+    TEST_ASSERT(f_iter > 1.5 && f_iter < 2.5,
+                "Piquage parabolique pur dans [1.5,2.5] (coherent litterature)");
+
+    // Monotonie physique : plus de piquage de T => plus de piquage fusion
+    double f_low = fusion_dt_profiles_peaking_fusion(9.0, 0.3, 0.5);
+    double f_high = fusion_dt_profiles_peaking_fusion(9.0, 0.3, 1.5);
+    TEST_ASSERT(f_high > f_low,
+                "Monotonie : alpha_T plus eleve => piquage fusion plus eleve");
+
+    // Le bremsstrahlung pique moins que la fusion (sqrt(T) vs sigmav(T))
+    double f_brems = fusion_dt_profiles_peaking_brems(9.0, 0.3, 1.2);
+    printf("    Piquage bremsstrahlung : %.3f (doit etre < piquage fusion %.3f)\n",
+           f_brems, f_iter);
+    TEST_ASSERT(f_brems > 1.0 && f_brems < f_iter,
+                "Piquage brems > 1 mais < piquage fusion (physique correcte)");
+
+    // Piquage effectif ancre ITER : proche de 1.3 a 9-10 keV, varie avec T
+    double pk9 = fusion_dt_profiles_effective_peaking(9.0, 0.3, 1.2);
+    double pk20 = fusion_dt_profiles_effective_peaking(20.0, 0.3, 1.2);
+    printf("    Piquage effectif ancre ITER : %.3f a 9 keV, %.3f a 20 keV\n",
+           pk9, pk20);
+    TEST_ASSERT(fabs(pk9 - 1.3) < 0.01,
+                "Ancrage exact : piquage effectif = 1.30 au point de calibration");
+    TEST_ASSERT(pk20 > 0.9 && pk20 < 1.6 && fabs(pk20 - pk9) > 0.005,
+                "Le piquage effectif varie physiquement avec T (plus forfaitaire)");
+}
+
+// ---------------------------------------------------------------------------
+// PHASE 15 — V5 : auto-suffisance tritium (TBR), contrainte C9
+// ---------------------------------------------------------------------------
+static void phase15_tritium_breeding(void) {
+    printf("\n=== PHASE 15 : AUTO-SUFFISANCE TRITIUM (TBR, CONTRAINTE C9) ===\n");
+
+    // Validation des TBR contre les etudes publiees
+    fusion_dt_material_catalog_t lts = fusion_dt_catalog_lts_iter();
+    fusion_dt_material_catalog_t hts = fusion_dt_catalog_hts_rebco();
+    double tbr_lts = lts.tbr_local * lts.blanket_coverage;
+    double tbr_hts = hts.tbr_local * hts.blanket_coverage;
+    printf("    TBR LTS/HCPB : %.3f (EU-DEMO publie ~1.10-1.15)\n", tbr_lts);
+    printf("    TBR HTS/FLiBe : %.3f (ARC publie ~1.3)\n", tbr_hts);
+    TEST_ASSERT(tbr_lts > 1.05 && tbr_lts < 1.15,
+                "TBR LTS dans [1.05,1.15] (EU-DEMO HCPB publie)");
+    TEST_ASSERT(tbr_hts > 1.25 && tbr_hts < 1.35,
+                "TBR HTS dans [1.25,1.35] (ARC FLiBe publie 1.3)");
+
+    // Bilan tritium d'un design reel (burn execute)
+    fusion_dt_machine_t m;
+    fusion_dt_machine_derive(&m, &hts, 6.0, 3.1, 1.8, 0.4, hts.q95_min * 2.4);
+    fusion_dt_reactor_point_t pt;
+    bool ok = fusion_dt_reactor_evaluate(&hts, &m, 0.64, 50e6, true, &pt);
+    TEST_ASSERT(ok, "Evaluation design HTS avec bilan tritium");
+    if (ok) {
+        printf("    Design HTS R=6 m : P_fus=%.0f MW -> consommation T = %.1f kg/an, "
+               "production nette = +%.1f kg/an (TBR=%.2f)\n",
+               pt.p_fusion_MW, pt.tritium_burn_kg_year,
+               pt.tritium_margin_kg_year, pt.tbr);
+        // Verification de la constante de consommation : ~56 kg/an/GW
+        double kg_per_GW = pt.tritium_burn_kg_year / (pt.p_fusion_MW / 1000.0);
+        TEST_ASSERT(kg_per_GW > 53.0 && kg_per_GW < 59.0,
+                    "Consommation tritium ~56 kg/an/GW_fus (verification physique)");
+        TEST_ASSERT(pt.c_tbr, "Contrainte C9 satisfaite (TBR >= 1.05)");
+        TEST_ASSERT(pt.tritium_margin_kg_year > 0.0,
+                    "Production nette de tritium positive (auto-suffisance)");
+        // Le piquage calcule atteint legitimement sa borne basse 1.0 pour les
+        // regimes chauds (T>15 keV : reactivite quasi plate au centre, le
+        // piquage n'amplifie plus) — decouverte V5, cf. RAPPORT 155.
+        TEST_ASSERT(pt.peaking_used >= 1.0 && pt.peaking_used <= 2.0,
+                    "Piquage radial calcule dans [1.0,2.0] (borne basse legitime a T eleve)");
+    }
+
+    // Contre-exemple : une couverture insuffisante DOIT violer C9
+    fusion_dt_material_catalog_t bad = hts;
+    bad.blanket_coverage = 0.70;   // trop de ports : TBR = 0.99
+    fusion_dt_reactor_point_t pt_bad;
+    if (fusion_dt_reactor_evaluate(&bad, &m, 0.64, 50e6, true, &pt_bad)) {
+        printf("    Contre-exemple couverture 70%% : TBR=%.2f -> %s\n",
+               pt_bad.tbr, pt_bad.c_tbr ? "ACCEPTE (erreur!)" : "REJETE (correct)");
+        TEST_ASSERT(!pt_bad.c_tbr,
+                    "Couverture insuffisante rejetee par C9 (le detecteur mord)");
+    }
+}
+
+// ---------------------------------------------------------------------------
 // PHASE 13 — Bilan de couverture vers la "solution ideale" (transparent)
 // Chaque verrou d'une centrale reelle est note : modelise / partiel / absent.
 // Le pourcentage est un indicateur de COUVERTURE DE MODELISATION, pas une
@@ -708,9 +807,9 @@ static void phase13_coverage_scorecard(void) {
         { "Stationnarite courant (bootstrap+CD)",                0.70, "MODELISE (0-D)" },
         { "Evacuation divertor (P_sep/R + semis radiatif)",      0.60, "MODELISE (simplifie)" },
         { "Charge murale / materiaux (catalogues + exigences)",  0.60, "CATALOGUE (pas d'invention)" },
-        { "Profils radiaux / transport (1.5-D)",                 0.20, "PARAMETRE (piquage calibre)" },
+        { "Profils radiaux / transport (1.5-D)",                 0.50, "CALCULE (Simpson, ancre ITER)" },
         { "Pertes synchrotron",                                  0.20, "BORNE (contrainte T<=25 keV)" },
-        { "Production de tritium (TBR couverture)",              0.00, "ABSENT" },
+        { "Production de tritium (TBR couverture)",              0.60, "MODELISE (TBR + bilan kg/an)" },
         { "Controle temps reel / disruptions 3-D",               0.00, "ABSENT" },
         { "Economie (EUR/kW), licensing, surete",                0.10, "PROXY (P_recirc reelle)" },
     };
@@ -756,6 +855,8 @@ int main(void) {
     phase10_iter_self_consistent_burn();
     phase11_constrained_material_optimization();
     phase12_stationarity_divertor_and_bugfixes();
+    phase14_radial_profiles();
+    phase15_tritium_breeding();
     phase13_coverage_scorecard();
 
     uint64_t t_end_ns = lum_get_timestamp();

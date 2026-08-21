@@ -33,6 +33,12 @@
 //       limite technologique (~15-20 MW/m, classe ITER tungstene). La
 //       fraction rayonnee au bord est controlable par semis d'impuretes
 //       (Ne/Ar) jusqu'a f_rad_max ; au-dela le design est invalide.
+//   C9 (V5). Auto-suffisance en tritium : TBR = TBR_local * couverture
+//       geometrique >= 1.05 (marge demarrage/pertes/decroissance). Le
+//       tritium n'existe pas a l'etat naturel en quantite (stock mondial
+//       civil ~25 kg) : une centrale consomme ~56 kg/an/GW_fus et DOIT les
+//       regenerer dans sa couverture lithiee (6Li + n -> T + He). TBR_local
+//       par concept publie : HCPB EU-DEMO ~1.30, FLiBe+Be ARC ~1.42.
 //   V4 STATIONNARITE : un reacteur STATIONNAIRE doit entretenir son courant.
 //       Fraction bootstrap f_bs = 0.7 sqrt(eps) beta_p (approximation
 //       standard, Wesson "Tokamaks"), le reste par generation de courant
@@ -75,6 +81,9 @@ typedef struct {
     double div_limit_MW_m;       // Limite P_sep/R du divertor (MW/m)
     double f_rad_max;            // Fraction rayonnee au bord max (semis d'impuretes)
     double gamma_cd;             // Efficacite generation de courant n20*R*I/P (A/W*m^2/1e20)
+    // V5 — couverture tritigene
+    double tbr_local;            // TBR local du concept de couverture (publie)
+    double blanket_coverage;     // Couverture geometrique (1 - ports - divertor)
     bool hypothetical;           // true = cibles materiaux NON demontrees
 } fusion_dt_material_catalog_t;
 
@@ -119,8 +128,13 @@ typedef struct {
     double p_recirc_MW;          // Recirculation reelle max(P_aux, P_CD)
     double p_sep_MW;             // Puissance a la separatrice (avant semis)
     double f_rad_required;       // Fraction rayonnee necessaire pour le divertor
+    // V5 — tritium et profils
+    double tbr;                  // Tritium Breeding Ratio du design
+    double tritium_burn_kg_year; // Consommation tritium (kg/an)
+    double tritium_margin_kg_year; // Production nette (kg/an), >0 si TBR>1
+    double peaking_used;         // Piquage fusion calcule (profils radiaux)
     bool c_greenwald, c_beta, c_q95, c_wall, c_lh, c_bcoil, c_regime,
-         c_divertor;
+         c_divertor, c_tbr;
     bool viable;                 // Toutes contraintes satisfaites + burn stable
 } fusion_dt_reactor_point_t;
 

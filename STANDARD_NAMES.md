@@ -1188,3 +1188,17 @@
 2026-08-21 21:00 - BUG-V4-1 + Détecteur d'anomalies énergétiques neutralisé par mauvaise échelle u_eV (corrigé, test de déclenchement ajouté)
 2026-08-21 21:00 - BUG-V4-2 + Point final balayage Lawson dépendant de l'arrondi IEEE-754 (clamp défensif + test bord de domaine)
 2026-08-21 21:00 - BUG-V4-3 + Stationnarité appliquée à tort aux machines pulsées (paramètre steady_state explicite)
+
+2026-08-21 22:00 - fusion_dt_profiles.c + Module profils radiaux paramétriques (Simpson 200 pas, fondation 1.5-D)
+2026-08-21 22:00 - fusion_dt_profiles.h + Header profils radiaux (piquage fusion/brems exacts, ancrage ITER)
+2026-08-21 22:00 - fusion_dt_profiles_peaking_fusion + Piquage fusion exact <n2 sigmav(T)>/(<n>2 sigmav(<T>))
+2026-08-21 22:00 - fusion_dt_profiles_peaking_brems + Piquage bremsstrahlung exact <n2 sqrtT>/(<n>2 sqrt<T>)
+2026-08-21 22:00 - fusion_dt_profiles_effective_peaking + Piquage effectif ancré calibration ITER (1.3 à 9 keV)
+2026-08-21 22:00 - tbr_local + TBR local du concept de couverture (HCPB 1.30, FLiBe 1.42, hyp. 1.50)
+2026-08-21 22:00 - blanket_coverage + Couverture géométrique tritigène (1 - ports - divertor)
+2026-08-21 22:00 - tbr + Tritium Breeding Ratio du design (contrainte C9 >= 1.05)
+2026-08-21 22:00 - tritium_burn_kg_year + Consommation tritium 0.0561 kg/an/MW_fus (vérifiée par test)
+2026-08-21 22:00 - tritium_margin_kg_year + Production nette de tritium (auto-suffisance filière)
+2026-08-21 22:00 - peaking_used + Piquage radial calculé utilisé par la combustion (plus forfaitaire)
+2026-08-21 22:00 - c_tbr + Contrainte C9 auto-suffisance tritium
+2026-08-21 22:00 - DECOUVERTE-V5-PIQUAGE + Évanouissement du gain de piquage à T>15 keV (réactivité plate au centre) — calibration 1.3 surestimait les régimes chauds
