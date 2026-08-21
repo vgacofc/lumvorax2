@@ -30,6 +30,9 @@ fusion_dt_material_catalog_t fusion_dt_catalog_lts_iter(void) {
     c.greenwald_frac_max = 0.90;
     c.eta_th = 0.33;              // cycle Rankine classique
     c.eta_aux = 0.40;
+    c.div_limit_MW_m = 17.0;      // divertor tungstene classe ITER (~15-17 MW/m)
+    c.f_rad_max = 0.70;           // semis Ne/Ar demontre (ASDEX-U, JET)
+    c.gamma_cd = 0.30;            // NBI/ECCD etat de l'art
     c.hypothetical = false;
     return c;
 }
@@ -46,6 +49,9 @@ fusion_dt_material_catalog_t fusion_dt_catalog_hts_rebco(void) {
     c.greenwald_frac_max = 0.90;
     c.eta_th = 0.40;              // cycle a sels fondus haute temperature
     c.eta_aux = 0.40;
+    c.div_limit_MW_m = 20.0;      // divertor avance (geometrie longue jambe)
+    c.f_rad_max = 0.80;           // semis pousse type DEMO
+    c.gamma_cd = 0.35;            // LHCD haute efficacite (design ARC)
     c.hypothetical = false;
     return c;
 }
@@ -62,6 +68,9 @@ fusion_dt_material_catalog_t fusion_dt_catalog_future_hypothetical(void) {
     c.greenwald_frac_max = 0.90;
     c.eta_th = 0.45;              // HYPOTHESE : cycles supercritiques
     c.eta_aux = 0.50;
+    c.div_limit_MW_m = 25.0;      // HYPOTHESE : divertor metal liquide
+    c.f_rad_max = 0.85;           // HYPOTHESE : controle radiatif avance
+    c.gamma_cd = 0.45;            // HYPOTHESE : CD haute efficacite
     c.hypothetical = true;
     return c;
 }
@@ -125,23 +134,15 @@ void fusion_dt_machine_derive(fusion_dt_machine_t* machine,
     machine->n_gw_m3 = machine->I_p_MA / (M_PI * machine->a_m * machine->a_m) * 1e20;
 }
 
-// ---------------------------------------------------------------------------
-// Evaluation d'un design : combustion reelle a l'equilibre + contraintes
-// ---------------------------------------------------------------------------
-bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
-                                const fusion_dt_machine_t* machine,
-                                double greenwald_fraction, double p_aux_W,
-                                fusion_dt_reactor_point_t* out) {
-    if (!catalog || !machine || !out || greenwald_fraction <= 0.0) return false;
-    memset(out, 0, sizeof(*out));
-    out->machine = *machine;
-    out->p_aux_W = p_aux_W;
-    out->n_e_m3 = greenwald_fraction * machine->n_gw_m3;
-
-    // Combustion reelle : IPB98(y,2) complete + cendres d'helium
+// Combustion reelle d'un design a p_aux donne (IPB98 complete + cendres)
+static bool fusion_dt_reactor_burn(const fusion_dt_machine_t* machine,
+                                   double n_e_m3, double p_aux_W,
+                                   fusion_dt_reactor_point_t* out,
+                                   double* p_brems_total_W,
+                                   fusion_dt_burn_result_t* burn_out) {
     fusion_dt_config_t cfg;
     memset(&cfg, 0, sizeof(cfg));
-    cfg.n_e_m3 = out->n_e_m3;
+    cfg.n_e_m3 = n_e_m3;
     cfg.T_keV = 9.0;
     cfg.volume_m3 = machine->volume_m3;
     cfg.p_aux_W = p_aux_W;
@@ -163,19 +164,95 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
 
     fusion_dt_plasma_t* plasma = fusion_dt_plasma_create(&cfg);
     if (!plasma) return false;
-    fusion_dt_burn_result_t burn = fusion_dt_plasma_run_burn(plasma);
+    *burn_out = fusion_dt_plasma_run_burn(plasma);
 
-    out->T_final_keV = burn.T_final_keV;
-    out->q_factor = burn.q_factor_final;
-    out->p_fusion_MW = burn.p_fusion_final_MW;
+    out->T_final_keV = burn_out->T_final_keV;
+    out->q_factor = burn_out->q_factor_final;
+    out->p_fusion_MW = burn_out->p_fusion_final_MW;
     out->tau_E_s = plasma->state.tau_E_eff_s;
-    out->he_fraction = plasma->state.n_helium_m3 / cfg.n_e_m3;
+    out->he_fraction = plasma->state.n_helium_m3 / n_e_m3;
     out->p_heat_MW = (plasma->state.p_alpha_W_m3 * machine->volume_m3
                       + p_aux_W) / 1e6;
+    *p_brems_total_W = plasma->state.p_brems_W_m3 * machine->volume_m3;
+    fusion_dt_plasma_destroy(&plasma);
+    return true;
+}
 
-    // P_net avec les rendements DU CATALOGUE (pas les valeurs par defaut)
+// ---------------------------------------------------------------------------
+// Evaluation d'un design : combustion reelle a l'equilibre + contraintes
+// ---------------------------------------------------------------------------
+bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
+                                const fusion_dt_machine_t* machine,
+                                double greenwald_fraction, double p_aux_W,
+                                bool steady_state,
+                                fusion_dt_reactor_point_t* out) {
+    if (!catalog || !machine || !out || greenwald_fraction <= 0.0) return false;
+    memset(out, 0, sizeof(*out));
+    out->machine = *machine;
+    out->p_aux_W = p_aux_W;
+    out->n_e_m3 = greenwald_fraction * machine->n_gw_m3;
+
+    double p_brems_W = 0.0;
+    fusion_dt_burn_result_t burn;
+    memset(&burn, 0, sizeof(burn));
+    if (!fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux_W, out,
+                                &p_brems_W, &burn))
+        return false;
+
+    // ---- V4 : stationnarite (bootstrap + generation de courant) ----
+    // beta_p = 2 mu0 <p> / B_p^2, B_p = mu0 I_p / l_p (perimetre poloidal)
+    // f_bs = 0.7 sqrt(eps) beta_p (Wesson), I_CD = I_p (1 - f_bs)
+    // P_CD = n20 R I_CD / gamma_CD
+    {
+        double eps = machine->a_m / machine->R_m;
+        double l_p = 2.0 * M_PI * machine->a_m
+                     * sqrt((1.0 + machine->kappa * machine->kappa) / 2.0);
+        double B_p = 4.0e-7 * M_PI * machine->I_p_MA * 1e6 / l_p;
+        double p_pa = 2.0 * out->n_e_m3 * out->T_final_keV * FUSION_DT_KEV_TO_JOULE;
+        out->beta_p = 2.0 * 4.0e-7 * M_PI * p_pa / (B_p * B_p);
+        out->f_bootstrap = 0.7 * sqrt(eps) * out->beta_p;
+        if (out->f_bootstrap > 0.95) out->f_bootstrap = 0.95;
+        out->i_cd_MA = machine->I_p_MA * (1.0 - out->f_bootstrap);
+        double n20 = out->n_e_m3 / 1e20;
+        out->p_cd_MW = n20 * machine->R_m * (out->i_cd_MA * 1e6)
+                       / catalog->gamma_cd / 1e6;
+    }
+
+    // Coherence stationnaire : la puissance CD chauffe aussi le plasma.
+    // Si P_CD depasse le chauffage suppose, on re-simule la combustion avec
+    // p_aux = P_CD (une iteration suffit : P_CD depend faiblement de T).
+    // Machines pulsees (ITER) : courant par transformateur, pas de re-burn.
+    if (steady_state && out->p_cd_MW * 1e6 > p_aux_W * 1.05) {
+        double p_aux2 = out->p_cd_MW * 1e6;
+        if (fusion_dt_reactor_burn(machine, out->n_e_m3, p_aux2, out,
+                                   &p_brems_W, &burn)) {
+            out->p_aux_W = p_aux2;
+            // Recalcul bootstrap avec la temperature re-equilibree
+            double eps = machine->a_m / machine->R_m;
+            double l_p = 2.0 * M_PI * machine->a_m
+                         * sqrt((1.0 + machine->kappa * machine->kappa) / 2.0);
+            double B_p = 4.0e-7 * M_PI * machine->I_p_MA * 1e6 / l_p;
+            double p_pa = 2.0 * out->n_e_m3 * out->T_final_keV
+                          * FUSION_DT_KEV_TO_JOULE;
+            out->beta_p = 2.0 * 4.0e-7 * M_PI * p_pa / (B_p * B_p);
+            out->f_bootstrap = 0.7 * sqrt(eps) * out->beta_p;
+            if (out->f_bootstrap > 0.95) out->f_bootstrap = 0.95;
+            out->i_cd_MA = machine->I_p_MA * (1.0 - out->f_bootstrap);
+            double n20 = out->n_e_m3 / 1e20;
+            out->p_cd_MW = n20 * machine->R_m * (out->i_cd_MA * 1e6)
+                           / catalog->gamma_cd / 1e6;
+        }
+    }
+
+    // Recirculation reelle : le plus grand des deux postes (le systeme CD
+    // fournit aussi du chauffage — on ne compte pas double). En mode pulse,
+    // seule la puissance de chauffage recircule (P_CD informatif).
+    out->p_recirc_MW = (steady_state && out->p_cd_MW > out->p_aux_W / 1e6)
+                           ? out->p_cd_MW : out->p_aux_W / 1e6;
+
+    // P_net avec les rendements DU CATALOGUE et la recirculation stationnaire
     out->p_net_MW = catalog->eta_th * 1.15 * out->p_fusion_MW
-                    - (p_aux_W / 1e6) / catalog->eta_aux;
+                    - out->p_recirc_MW / catalog->eta_aux;
 
     // ---- Contraintes ----
     out->f_greenwald = out->n_e_m3 / machine->n_gw_m3;
@@ -209,13 +286,26 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
     // favorables ; les reacteurs reels operent a 8-25 keV).
     out->c_regime = (burn.T_final_keV <= 25.0);
 
+    // C8 (V4) : evacuation de puissance au divertor. La puissance conduite a
+    // la separatrice P_sep = P_chauffage - P_brems doit respecter
+    // P_sep (1 - f_rad) / R <= limite divertor ; f_rad est controlable par
+    // semis d'impuretes jusqu'a f_rad_max (ASDEX-U/JET/DEMO).
+    {
+        out->p_sep_MW = out->p_heat_MW - p_brems_W / 1e6;
+        if (out->p_sep_MW < 0.0) out->p_sep_MW = 0.0;
+        double p_div_bare = out->p_sep_MW / machine->R_m;  // MW/m sans semis
+        out->f_rad_required = (p_div_bare > catalog->div_limit_MW_m)
+            ? 1.0 - catalog->div_limit_MW_m / p_div_bare
+            : 0.0;
+        out->c_divertor = (out->f_rad_required <= catalog->f_rad_max + 1e-9);
+    }
+
     bool burn_ok = burn.success && !burn.thermal_runaway_detected &&
                    burn.T_final_keV >= 4.0 &&
                    burn.T_final_keV <= FUSION_DT_T_MAX_KEV;
     out->viable = burn_ok && out->c_greenwald && out->c_beta && out->c_q95 &&
-                  out->c_wall && out->c_lh && out->c_bcoil && out->c_regime;
-
-    fusion_dt_plasma_destroy(&plasma);
+                  out->c_wall && out->c_lh && out->c_bcoil && out->c_regime &&
+                  out->c_divertor;
     return true;
 }
 
@@ -276,7 +366,8 @@ fusion_dt_reactor_result_t* fusion_dt_reactor_optimize(
             for (size_t k = 0; k < p_aux_points; k++) {
                 double p_aux = p_aux_W * p_aux_fracs[k];
                 fusion_dt_reactor_point_t* pt = &result->points[idx++];
-                if (!fusion_dt_reactor_evaluate(catalog, &machine, fgw, p_aux, pt))
+                if (!fusion_dt_reactor_evaluate(catalog, &machine, fgw, p_aux,
+                                                true, pt))
                     continue;
 
                 FORENSIC_LOG_NANO(FUSION_DT_REACTOR_MODULE, "reactor_R_m", R);
@@ -307,13 +398,15 @@ fusion_dt_reactor_result_t* fusion_dt_reactor_optimize(
              "[%s] %zu designs (%zu viables) en %llu ns. Optimum: R=%.2f m "
              "a=%.2f m B0=%.2f T Ip=%.1f MA q95=%.1f n=%.2e T=%.1f keV "
              "tau_E=%.2f s Q=%.1f P_fus=%.0f MW P_net=%.0f MW mur=%.2f MW/m2 "
-             "betaN=%.2f fGW=%.2f P_aux=%.0f MW He=%.1f%%",
+             "betaN=%.2f fGW=%.2f P_recirc=%.0f MW f_bs=%.2f P_CD=%.0f MW "
+             "f_rad=%.2f He=%.1f%%",
              catalog->name, total, viable_count,
              (unsigned long long)result->total_compute_time_ns,
              b->machine.R_m, b->machine.a_m, b->machine.B0_T, b->machine.I_p_MA,
              b->machine.q95, b->n_e_m3, b->T_final_keV, b->tau_E_s, b->q_factor,
              b->p_fusion_MW, b->p_net_MW, b->wall_load_MW_m2, b->beta_n,
-             b->f_greenwald, b->p_aux_W / 1e6, b->he_fraction * 100.0);
+             b->f_greenwald, b->p_recirc_MW, b->f_bootstrap, b->p_cd_MW,
+             b->f_rad_required, b->he_fraction * 100.0);
 
     FORENSIC_LOG_MODULE_METRIC(FUSION_DT_REACTOR_MODULE, "opt_viable", (double)viable_count);
     FORENSIC_LOG_MODULE_METRIC(FUSION_DT_REACTOR_MODULE, "opt_best_p_net_MW",

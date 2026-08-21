@@ -127,6 +127,12 @@ fusion_dt_lawson_result_t* fusion_dt_lawson_scan(double T_start_keV, double T_en
 
     for (size_t i = 0; i < count; i++) {
         double T = T_start_keV + (double)i * T_step_keV;
+        // CORRECTION FRAGILITE V4 (audit RAPPORT 154) : l'accumulation
+        // flottante peut placer le dernier point a T_end + epsilon (ex.
+        // 1980*0.05 -> 99.0000000000000055 selon l'arrondi IEEE-754), le
+        // faisant sortir du domaine Bosch-Hale et produisant un inf silencieux
+        // dans le CSV. Clamp defensif au domaine demande.
+        if (T > T_end_keV) T = T_end_keV;
         fusion_dt_lawson_point_t* pt = &result->points[i];
         pt->T_keV = T;
         pt->reactivity_m3_s = fusion_dt_reactivity_bosch_hale(T);
@@ -437,9 +443,14 @@ bool fusion_dt_plasma_step(fusion_dt_plasma_t* plasma) {
                      (unsigned long long)step_ns);
     }
 
-    // Detection d'anomalie energetique (comportement non programme)
+    // Detection d'anomalie energetique (comportement non programme).
+    // CORRECTION BUG V4 (audit RAPPORT 154) : le parametre de reference est
+    // l'ECHELLE d'energie servant au saut relatif |dE|/ref. L'appel V1-V3
+    // passait une constante de conversion (6.24e18), rendant le saut relatif
+    // toujours ~1e-24 : le detecteur ne pouvait JAMAIS se declencher.
+    // Reference correcte : l'energie du pas precedent (seuil natif = 20%/pas).
     ultra_forensic_check_anomaly_energy(FUSION_DT_MODULE_NAME, W_prev, W,
-                                        1.0 / FUSION_DT_KEV_TO_JOULE);
+                                        W_prev);
     return true;
 }
 

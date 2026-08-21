@@ -29,6 +29,17 @@
 //       synchrotron (proportionnelles a B^2 T^2, non modelisees ici) et le
 //       courant de bootstrap deviennent dominants : le modele sort de son
 //       domaine de confiance. Les reacteurs reels operent a 8-25 keV.
+//   C8 (V4). Evacuation de puissance au divertor : P_separatrice/R <=
+//       limite technologique (~15-20 MW/m, classe ITER tungstene). La
+//       fraction rayonnee au bord est controlable par semis d'impuretes
+//       (Ne/Ar) jusqu'a f_rad_max ; au-dela le design est invalide.
+//   V4 STATIONNARITE : un reacteur STATIONNAIRE doit entretenir son courant.
+//       Fraction bootstrap f_bs = 0.7 sqrt(eps) beta_p (approximation
+//       standard, Wesson "Tokamaks"), le reste par generation de courant
+//       (efficacite gamma_CD = n20 R I_CD / P_CD, litterature 0.2-0.45).
+//       La puissance de recirculation reelle est max(P_chauffage, P_CD) :
+//       c'est le poste qui penalise les designs a fort courant et basse
+//       pression (physique des "advanced tokamaks").
 //
 // CATALOGUES MATERIAUX : la reponse honnete a "developper de nouveaux
 // materiaux" — un logiciel ne peut pas inventer un alliage reel (cela exige
@@ -60,6 +71,10 @@ typedef struct {
     double greenwald_frac_max;   // Fraction de Greenwald max exploitable
     double eta_th;               // Rendement thermique -> electrique
     double eta_aux;              // Rendement des systemes de chauffage
+    // V4 — divertor et stationnarite
+    double div_limit_MW_m;       // Limite P_sep/R du divertor (MW/m)
+    double f_rad_max;            // Fraction rayonnee au bord max (semis d'impuretes)
+    double gamma_cd;             // Efficacite generation de courant n20*R*I/P (A/W*m^2/1e20)
     bool hypothetical;           // true = cibles materiaux NON demontrees
 } fusion_dt_material_catalog_t;
 
@@ -96,7 +111,16 @@ typedef struct {
     double wall_load_MW_m2;      // Charge neutronique murale
     double p_lh_MW;              // Seuil L-H (Martin 2008)
     double p_heat_MW;            // Chauffage total a l'equilibre
-    bool c_greenwald, c_beta, c_q95, c_wall, c_lh, c_bcoil, c_regime;
+    // V4 — stationnarite et divertor
+    double beta_p;               // Beta poloidal a l'equilibre
+    double f_bootstrap;          // Fraction de courant auto-genere
+    double i_cd_MA;              // Courant a generer exterieurement
+    double p_cd_MW;              // Puissance de generation de courant requise
+    double p_recirc_MW;          // Recirculation reelle max(P_aux, P_CD)
+    double p_sep_MW;             // Puissance a la separatrice (avant semis)
+    double f_rad_required;       // Fraction rayonnee necessaire pour le divertor
+    bool c_greenwald, c_beta, c_q95, c_wall, c_lh, c_bcoil, c_regime,
+         c_divertor;
     bool viable;                 // Toutes contraintes satisfaites + burn stable
 } fusion_dt_reactor_point_t;
 
@@ -139,9 +163,15 @@ double fusion_dt_q95_uckan(double R_m, double a_m, double kappa, double delta,
 double fusion_dt_p_lh_martin(double n_e_m3, double B0_T, double surface_m2);
 
 // ---- Evaluation d'un design (burn reel + contraintes) ----
+// steady_state=true  : centrale stationnaire — si P_CD > P_aux, le burn est
+//                      re-simule avec p_aux = P_CD (coherence), et la
+//                      recirculation reelle est max(P_aux, P_CD).
+// steady_state=false : machine pulsee (ITER : courant par transformateur) —
+//                      P_CD est calcule a titre informatif, recirc = P_aux.
 bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
                                 const fusion_dt_machine_t* machine,
                                 double greenwald_fraction, double p_aux_W,
+                                bool steady_state,
                                 fusion_dt_reactor_point_t* out);
 
 // ---- Optimisation contrainte (grille R x f_GW) ----

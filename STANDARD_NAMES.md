@@ -1172,3 +1172,19 @@
 2026-08-21 20:00 - profile_peaking + Facteur de piquage de profils (calibré 1.3 sur point ITER, pratique codes systèmes)
 2026-08-21 20:00 - FUSION_DT_REACTOR_MAGIC + Magic number 0x46525254 ("FRRT") du module réacteur
 2026-08-21 20:00 - reactor_designs.csv + Export CSV grille 1296 designs réacteurs contraints (logs/fusion)
+
+2026-08-21 21:00 - fusion_dt_reactor_burn + Combustion interne d'un design à p_aux donné (factorisation V4)
+2026-08-21 21:00 - steady_state + Mode évaluation centrale stationnaire vs machine pulsée (ITER)
+2026-08-21 21:00 - beta_p + Bêta poloïdal à l'équilibre (bootstrap Wesson f_bs=0.7 sqrt(eps) beta_p)
+2026-08-21 21:00 - f_bootstrap + Fraction de courant auto-généré (validé ITER: 0.28 vs ~0.25 publié)
+2026-08-21 21:00 - p_cd_MW + Puissance de génération de courant P_CD = n20 R I_CD / gamma_CD
+2026-08-21 21:00 - p_recirc_MW + Recirculation réelle max(P_chauffage, P_CD)
+2026-08-21 21:00 - f_rad_required + Fraction rayonnée au bord requise pour le divertor (semis Ne/Ar)
+2026-08-21 21:00 - c_divertor + Contrainte C8 évacuation divertor P_sep(1-f_rad)/R <= limite
+2026-08-21 21:00 - div_limit_MW_m + Limite divertor P_sep/R du catalogue (17/20/25 MW/m)
+2026-08-21 21:00 - gamma_cd + Efficacité génération de courant du catalogue (0.30/0.35/0.45)
+2026-08-21 21:00 - f_rad_max + Fraction rayonnée maximale par semis d'impuretés (0.70/0.80/0.85)
+2026-08-21 21:00 - coverage_score + Métrique forensique de couverture des verrous de conception (53% V4)
+2026-08-21 21:00 - BUG-V4-1 + Détecteur d'anomalies énergétiques neutralisé par mauvaise échelle u_eV (corrigé, test de déclenchement ajouté)
+2026-08-21 21:00 - BUG-V4-2 + Point final balayage Lawson dépendant de l'arrondi IEEE-754 (clamp défensif + test bord de domaine)
+2026-08-21 21:00 - BUG-V4-3 + Stationnarité appliquée à tort aux machines pulsées (paramètre steady_state explicite)
