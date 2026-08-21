@@ -1116,3 +1116,39 @@
 + C137-CPU-PROFILE + C137 — Profil CPU Ubuntu forensic : Intel(R) Core(TM) i5-8265U @ 1.60GHz (Whiskey Lake, 4 cores physiques, 8 threads, cache L3 6 MiB). Flags gcc -march=native disponibles : avx2, bmi2, aes, fma, f16c, sha (NON listé — pas d'extension SHA-NI sur Whiskey Lake → SHA-256 software via FIPS 180-4 nécessaire, ce qui confirme le choix d'implémentation embarquée en C135-SHA256-WITNESS).
 + C137-OBS-FREEZE-CLEAN + C137 — Observation : parent_freeze.lumtrace (134 MB) ne montre PAS le pattern NUL queue → le snapshot via SIGSTOP/fork écrit un trailer différent du snapshot direct. À investiguer en C138 : analyser le trailer exact des deux modes pour comprendre la divergence.
 + run_ubuntu_fish_safe + C137 — Script bash/fish-safe à fournir aux utilisateurs : gère automatiquement l'idiomatique fish (LISTE), valide chemin repo, exit non-zero si bug détecté. Pré-validé Ubuntu 24.04 / gcc 13.3.0.
+
+2026-08-21 18:30 - fusion_dt_plasma.c + Module C fusion nucléaire D-T (plasma 0-D) dans src/physics — premier module fusion réel du dépôt
+2026-08-21 18:30 - fusion_dt_plasma.h + Header public du module fusion nucléaire D-T
+2026-08-21 18:30 - fusion_dt_plasma_t + Moteur plasma D-T (magic FUSION_DT_PLASMA_MAGIC 0x46445450, config, état, groupes LUM, hash bit-level)
+2026-08-21 18:30 - fusion_dt_config_t + Configuration scénario plasma 0-D (n, T, tau_E, V, P_aux, Zeff, IPB98, cendres hélium)
+2026-08-21 18:30 - fusion_dt_state_t + État instantané plasma (T, W, puissances, Q, tau_E effectif, n_fuel, n_He, Z_eff dynamique) hashé bit à bit
+2026-08-21 18:30 - fusion_dt_burn_result_t + Résultat agrégé simulation de combustion (Q, P_fus, ignition, hash final)
+2026-08-21 18:30 - fusion_dt_lawson_point_t + Point du balayage de Lawson (T, réactivité, n*tau requis, triple produit)
+2026-08-21 18:30 - fusion_dt_lawson_result_t + Résultat balayage de Lawson (optima ignition)
+2026-08-21 18:30 - fusion_dt_derivs_t + Dérivées couplées (dW/dt, dn_He/dt) + grandeurs intermédiaires
+2026-08-21 18:30 - fusion_dt_design_point_t + Point de conception réacteur (n, tau_E, Q, P_net, fraction He)
+2026-08-21 18:30 - fusion_dt_design_result_t + Résultat optimisation 2D du point de fonctionnement
+2026-08-21 18:30 - fusion_dt_reactivity_bosch_hale + Réactivité <sigma-v> D-T paramétrisation Bosch-Hale 1992 (m^3/s)
+2026-08-21 18:30 - fusion_dt_power_density + Puissance fusion volumique plasma 50/50 D-T (W/m^3)
+2026-08-21 18:30 - fusion_dt_bremsstrahlung + Pertes bremsstrahlung volumiques NRL (W/m^3)
+2026-08-21 18:30 - fusion_dt_lawson_n_tau + n*tau_E minimal d'ignition à T donné (critère de Lawson)
+2026-08-21 18:30 - fusion_dt_lawson_scan + Balayage de Lawson avec journalisation nanoseconde par point
+2026-08-21 18:30 - fusion_dt_plasma_create + Création moteur plasma D-T (protection double-free)
+2026-08-21 18:30 - fusion_dt_plasma_destroy + Destruction sécurisée double-free du moteur plasma
+2026-08-21 18:30 - fusion_dt_plasma_step + Pas RK4 système couplé (W, n_He) avec log forensique ns + hash bit-level
+2026-08-21 18:30 - fusion_dt_plasma_run_burn + Simulation de combustion complète (détection ignition/excursion)
+2026-08-21 18:30 - fusion_dt_plasma_sync_lums + Projection bilan de particules sur LUMs + conservation VORAX
+2026-08-21 18:30 - fusion_dt_state_hash + Hash FNV-1a 64 bits bit-level de l'état plasma
+2026-08-21 18:30 - fusion_dt_tau_eff + Dégradation confinement IPB98(y,2) tau_E ~ P^-0.69
+2026-08-21 18:30 - fusion_dt_derivatives + Système dynamique couplé énergie + cendres hélium (RK4 2D)
+2026-08-21 18:30 - fusion_dt_optimize_operating_point + Balayage 2D (densité x confinement) maximisant P_net électrique
+2026-08-21 18:30 - fusion_dt_design_result_destroy + Destruction sécurisée du résultat d'optimisation
+2026-08-21 18:30 - fusion_dt_p_net_electric_MW + Estimation nette électrique (eta_th=0.33, M_blanket=1.15, eta_aux=0.40)
+2026-08-21 18:30 - fusion_dt_snapshot_bit_level + Snapshot .lum bit-level de l'état plasma + preuve diff=0 (lum_memory_tracer)
+2026-08-21 18:30 - enable_ash_dynamics + Option dynamique cendres hélium (quasi-neutralité, dilution)
+2026-08-21 18:30 - tau_he_ratio + Ratio confinement particules alpha tau_He/tau_E (littérature ~5)
+2026-08-21 18:30 - test_fusion_dt_plasma.c + Test 8 phases module fusion (51 assertions)
+2026-08-21 18:30 - test-fusion + Cible Makefile d'exécution du test fusion D-T
+2026-08-21 18:30 - lawson_scan.csv + Export CSV balayage de Lawson pour audit externe (logs/fusion)
+2026-08-21 18:30 - design_scan.csv + Export CSV grille de designs réacteur (logs/fusion)
+2026-08-21 18:30 - plasma_state_bit.lum + Snapshot bit-level natif de l'état plasma (magic LUMT, 1 LUM = 1 bit)
