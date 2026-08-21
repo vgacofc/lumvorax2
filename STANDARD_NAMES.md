@@ -1152,3 +1152,23 @@
 2026-08-21 18:30 - lawson_scan.csv + Export CSV balayage de Lawson pour audit externe (logs/fusion)
 2026-08-21 18:30 - design_scan.csv + Export CSV grille de designs réacteur (logs/fusion)
 2026-08-21 18:30 - plasma_state_bit.lum + Snapshot bit-level natif de l'état plasma (magic LUMT, 1 LUM = 1 bit)
+
+2026-08-21 20:00 - fusion_dt_reactor.c + Module conception réacteurs tokamak sous contraintes (classe PROCESS/SYCOMORE)
+2026-08-21 20:00 - fusion_dt_reactor.h + Header public conception réacteurs (7 contraintes, 3 catalogues matériaux)
+2026-08-21 20:00 - fusion_dt_material_catalog_t + Catalogue matériaux/limites (B_coil, mur, beta_N, q95, Greenwald, rendements)
+2026-08-21 20:00 - fusion_dt_machine_t + Machine tokamak dérivée (R, a, kappa, delta, B0, Ip, V, S, n_GW, q95, B_coil)
+2026-08-21 20:00 - fusion_dt_reactor_point_t + Design évalué (équilibre burn réel + 7 contraintes + P_net)
+2026-08-21 20:00 - fusion_dt_reactor_result_t + Résultat optimisation contrainte (grille 4D complète)
+2026-08-21 20:00 - fusion_dt_catalog_lts_iter + Catalogue LTS Nb3Sn/EUROFER (état ITER, démontré)
+2026-08-21 20:00 - fusion_dt_catalog_hts_rebco + Catalogue HTS REBCO/W (état SPARC/ARC, démontré)
+2026-08-21 20:00 - fusion_dt_catalog_future_hypothetical + Catalogue cibles matériaux futures (HYPOTHETIQUE étiqueté)
+2026-08-21 20:00 - fusion_dt_machine_derive + Dérivation machine (B0 max conducteur, Ip depuis q95 cible)
+2026-08-21 20:00 - fusion_dt_q95_uckan + Facteur de sécurité q95 (ITER Physics Design Guidelines, calibré ITER=3.00)
+2026-08-21 20:00 - fusion_dt_p_lh_martin + Seuil de transition L-H (Martin 2008)
+2026-08-21 20:00 - fusion_dt_reactor_evaluate + Évaluation design : burn réel IPB98 complet + 7 contraintes
+2026-08-21 20:00 - fusion_dt_reactor_optimize + Optimisation contrainte 4D (R, f_GW, P_aux, q95) maximisant P_net
+2026-08-21 20:00 - fusion_dt_reactor_result_destroy + Destruction sécurisée résultat optimisation réacteur
+2026-08-21 20:00 - use_ipb98_full + Mode confinement PREDIT par IPB98(y,2) complète (ITER Physics Basis 1999)
+2026-08-21 20:00 - profile_peaking + Facteur de piquage de profils (calibré 1.3 sur point ITER, pratique codes systèmes)
+2026-08-21 20:00 - FUSION_DT_REACTOR_MAGIC + Magic number 0x46525254 ("FRRT") du module réacteur
+2026-08-21 20:00 - reactor_designs.csv + Export CSV grille 1296 designs réacteurs contraints (logs/fusion)

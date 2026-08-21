@@ -17,6 +17,10 @@
 
 #define FUSION_DT_MODULE_NAME "fusion_dt_plasma"
 
+// Declaration anticipee (definie apres le cycle de vie)
+static double fusion_dt_tau_eff(const fusion_dt_plasma_t* plasma,
+                                double p_heat_W, double p_brems_W);
+
 // ---------------------------------------------------------------------------
 // Hash FNV-1a 64 bits : tracabilite BIT-LEVEL de l'etat plasma.
 // Chaque octet (donc chaque bit) de la representation memoire participe au
@@ -177,9 +181,23 @@ void fusion_dt_lawson_result_destroy(fusion_dt_lawson_result_t** result_ptr) {
 // Cycle de vie du moteur plasma
 // ---------------------------------------------------------------------------
 fusion_dt_plasma_t* fusion_dt_plasma_create(const fusion_dt_config_t* config) {
-    if (!config || config->n_e_m3 <= 0.0 || config->tau_E_s <= 0.0 ||
+    if (!config || config->n_e_m3 <= 0.0 ||
         config->volume_m3 <= 0.0 || config->dt_s <= 0.0) {
         forensic_log(FORENSIC_LEVEL_ERROR, __func__, "Configuration plasma invalide");
+        return NULL;
+    }
+    if (config->use_ipb98_full) {
+        if (config->ipb98_I_MA <= 0.0 || config->ipb98_B_T <= 0.0 ||
+            config->ipb98_R_m <= 0.0 || config->ipb98_epsilon <= 0.0 ||
+            config->ipb98_kappa <= 0.0 || config->ipb98_M_amu <= 0.0 ||
+            config->ipb98_h98 <= 0.0) {
+            forensic_log(FORENSIC_LEVEL_ERROR, __func__,
+                         "Parametres IPB98(y,2) invalides");
+            return NULL;
+        }
+    } else if (config->tau_E_s <= 0.0) {
+        forensic_log(FORENSIC_LEVEL_ERROR, __func__,
+                     "tau_E_s requis hors mode IPB98 complet");
         return NULL;
     }
 
@@ -201,7 +219,9 @@ fusion_dt_plasma_t* fusion_dt_plasma_create(const fusion_dt_config_t* config) {
     plasma->state.time_s = 0.0;
     plasma->state.T_keV = config->T_keV;
     plasma->state.W_J_m3 = 3.0 * config->n_e_m3 * config->T_keV * FUSION_DT_KEV_TO_JOULE;
-    plasma->state.tau_E_eff_s = config->tau_E_s;
+    plasma->state.tau_E_eff_s = config->use_ipb98_full
+        ? fusion_dt_tau_eff(plasma, config->p_aux_W, 0.0)
+        : config->tau_E_s;
     plasma->state.n_fuel_m3 = config->n_e_m3;
     plasma->state.n_helium_m3 = 0.0;
     plasma->state.z_eff_dynamic = config->z_eff;
@@ -240,11 +260,32 @@ void fusion_dt_plasma_destroy(fusion_dt_plasma_t** plasma_ptr) {
 // (analyses POPCON) : sans elle, un plasma 0-D est thermiquement instable
 // entre la branche froide et l'excursion vers T > 100 keV.
 // ---------------------------------------------------------------------------
-static double fusion_dt_tau_eff(const fusion_dt_plasma_t* plasma, double p_heat_W) {
-    double tau = plasma->config.tau_E_s;
-    double exponent = plasma->config.tau_scaling_exponent;
-    if (exponent > 0.0 && plasma->config.p_ref_W > 0.0) {
-        double ratio = p_heat_W / plasma->config.p_ref_W;
+static double fusion_dt_tau_eff(const fusion_dt_plasma_t* plasma,
+                                double p_heat_W, double p_brems_W) {
+    const fusion_dt_config_t* cfg = &plasma->config;
+
+    if (cfg->use_ipb98_full) {
+        // IPB98(y,2) complete : tau_E predit par la machine et la puissance.
+        // La loi est definie sur la puissance CONDUITE (chauffage moins
+        // rayonnement de coeur), conformement a l'ITER Physics Basis.
+        double P_MW = (p_heat_W - p_brems_W) / 1e6;
+        if (P_MW < 1.0) P_MW = 1.0;   // garde-fou : loi non definie a P -> 0
+        double n19 = cfg->n_e_m3 / 1e19;
+        return 0.0562 * cfg->ipb98_h98
+             * pow(cfg->ipb98_I_MA, 0.93)
+             * pow(cfg->ipb98_B_T, 0.15)
+             * pow(n19, 0.41)
+             * pow(cfg->ipb98_M_amu, 0.19)
+             * pow(cfg->ipb98_R_m, 1.97)
+             * pow(cfg->ipb98_epsilon, 0.58)
+             * pow(cfg->ipb98_kappa, 0.78)
+             * pow(P_MW, -0.69);
+    }
+
+    double tau = cfg->tau_E_s;
+    double exponent = cfg->tau_scaling_exponent;
+    if (exponent > 0.0 && cfg->p_ref_W > 0.0) {
+        double ratio = p_heat_W / cfg->p_ref_W;
         if (ratio < 1e-3) ratio = 1e-3;  // garde-fou numerique (P_heat -> 0)
         tau *= pow(ratio, -exponent);
     }
@@ -299,12 +340,14 @@ static fusion_dt_derivs_t fusion_dt_derivatives(const fusion_dt_plasma_t* plasma
     if (T_clamped > FUSION_DT_T_MAX_KEV) T_clamped = FUSION_DT_T_MAX_KEV;
 
     double sv = fusion_dt_reactivity_bosch_hale(T_clamped);
-    double R = 0.25 * n_fuel * n_fuel * sv;
+    double peaking = (cfg->profile_peaking > 0.0) ? cfg->profile_peaking : 1.0;
+    double R = 0.25 * n_fuel * n_fuel * sv * peaking;
     double p_alpha = R * FUSION_DT_E_ALPHA_J;
     double p_brems = fusion_dt_bremsstrahlung(n_e, T_clamped, z_eff);
     double p_aux_density = cfg->p_aux_W / cfg->volume_m3;
     double p_heat_W = (p_alpha + p_aux_density) * cfg->volume_m3;
-    double tau_eff = fusion_dt_tau_eff(plasma, p_heat_W);
+    double tau_eff = fusion_dt_tau_eff(plasma, p_heat_W,
+                                       p_brems * cfg->volume_m3);
 
     d.dW_dt = p_alpha + p_aux_density - p_brems - W / tau_eff;
     d.dnHe_dt = cfg->enable_ash_dynamics

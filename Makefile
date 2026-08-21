@@ -59,6 +59,7 @@ SOURCES = \
 	$(SRC_DIR)/advanced_calculations/quantum_simulator.c \
 	$(SRC_DIR)/physics/kerr_metric.c \
 	$(SRC_DIR)/physics/fusion_dt_plasma.c \
+	$(SRC_DIR)/physics/fusion_dt_reactor.c \
 	$(SRC_DIR)/lum/lum_memory_tracer.c \
 	$(SRC_DIR)/logging/log_writer.c \
 	$(SRC_DIR)/common/time_ns.c

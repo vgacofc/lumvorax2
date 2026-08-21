@@ -86,6 +86,28 @@ typedef struct {
     //         physiquement les excursions thermiques.
     bool enable_ash_dynamics;
     double tau_he_ratio;      // tau_He / tau_E (typiquement 5.0)
+    // Loi d'echelle IPB98(y,2) COMPLETE (ITER Physics Basis, Nucl. Fusion 39
+    // (1999) 2175) : le confinement n'est plus un parametre libre mais est
+    // PREDIT a partir de la machine :
+    //   tau_E = 0.0562 * H98 * I^0.93 * B^0.15 * n19^0.41 * M^0.19
+    //           * R^1.97 * eps^0.58 * kappa^0.78 * P_MW^-0.69
+    // (I en MA, B en T, n19 en 10^19 m^-3, R en m, P en MW). Quand ce mode
+    // est actif, tau_E_s / tau_scaling_exponent / p_ref_W sont ignores.
+    bool use_ipb98_full;
+    double ipb98_I_MA;        // Courant plasma (MA)
+    double ipb98_B_T;         // Champ toroidal sur l'axe (T)
+    double ipb98_R_m;         // Grand rayon (m)
+    double ipb98_epsilon;     // Rapport d'aspect inverse a/R
+    double ipb98_kappa;       // Elongation
+    double ipb98_M_amu;       // Masse isotopique moyenne (2.5 pour D-T)
+    double ipb98_h98;         // Facteur H98 (1.0 = conforme base de donnees)
+    // Facteur de piquage de profils : les plasmas reels ont des profils n(r),
+    // T(r) piques qui augmentent <sigma-v n^2> par rapport au 0-D plat.
+    // Les codes systemes (PROCESS) utilisent des profils paraboliques
+    // analytiques equivalents. Ici : facteur multiplicatif sur le taux de
+    // reactions, calibre sur le point de conception ITER (1.3).
+    // 0.0 ou 1.0 = profils plats (comportement V1/V2 inchange).
+    double profile_peaking;
 } fusion_dt_config_t;
 
 // Etat instantane du plasma (structure hashee bit a bit a chaque pas)

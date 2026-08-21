@@ -20,6 +20,7 @@
 #include <sys/types.h>
 
 #include "../physics/fusion_dt_plasma.h"
+#include "../physics/fusion_dt_reactor.h"
 #include "../debug/memory_tracker.h"
 #include "../debug/forensic_logger.h"
 #include "../debug/ultra_forensic_logger.h"
@@ -425,6 +426,196 @@ static void phase8_native_bit_level_snapshot(void) {
 }
 
 // ---------------------------------------------------------------------------
+// Machine ITER publiee, construite manuellement (pas via machine_derive)
+// pour valider les formules geometriques et les contraintes une a une.
+// Valeurs publiees : R=6.2 m, a=2.0 m, kappa=1.7, delta=0.33, B0=5.3 T,
+// I_p=15 MA, n=1.0e20 m^-3, V~830 m^3, S~680 m^2, q95=3.0, f_GW~0.85,
+// beta_N~1.8, P_LH~70-90 MW, tau_E~3.7 s (H98=1), charge murale ~0.6 MW/m2.
+// ---------------------------------------------------------------------------
+static fusion_dt_machine_t build_iter_machine(void) {
+    fusion_dt_machine_t m;
+    memset(&m, 0, sizeof(m));
+    m.R_m = 6.2; m.a_m = 2.0; m.kappa = 1.7; m.delta = 0.33;
+    m.B0_T = 5.3; m.I_p_MA = 15.0;
+    m.volume_m3 = 2.0 * M_PI * M_PI * m.R_m * m.a_m * m.a_m * m.kappa;
+    m.surface_m2 = 4.0 * M_PI * M_PI * m.R_m * m.a_m
+                   * sqrt((1.0 + m.kappa * m.kappa) / 2.0);
+    m.n_gw_m3 = m.I_p_MA / (M_PI * m.a_m * m.a_m) * 1e20;
+    m.q95 = fusion_dt_q95_uckan(m.R_m, m.a_m, m.kappa, m.delta, m.B0_T, m.I_p_MA);
+    m.b_coil_T = m.B0_T * m.R_m / (m.R_m - m.a_m - 1.4);
+    return m;
+}
+
+// ---------------------------------------------------------------------------
+// PHASE 9 — Validation geometrie + contraintes + IPB98(y,2) sur ITER publie
+// ---------------------------------------------------------------------------
+static void phase9_iter_published_validation(void) {
+    printf("\n=== PHASE 9 : VALIDATION MACHINE ITER (VALEURS PUBLIEES) ===\n");
+
+    fusion_dt_machine_t m = build_iter_machine();
+    printf("    V=%.0f m^3 (publie ~830) | S=%.0f m^2 (publie ~680)\n",
+           m.volume_m3, m.surface_m2);
+    printf("    q95=%.2f (publie 3.0) | n_GW=%.3e (f_GW=%.2f, publie ~0.85)\n",
+           m.q95, m.n_gw_m3, 1.0e20 / m.n_gw_m3);
+    printf("    B_coil=%.1f T (publie 11.8) | P_LH=%.0f MW (publie 70-90)\n",
+           m.b_coil_T, fusion_dt_p_lh_martin(1.0e20, m.B0_T, m.surface_m2));
+
+    TEST_ASSERT(m.volume_m3 > 790.0 && m.volume_m3 < 870.0,
+                "Volume plasma ITER dans [790,870] m^3 (publie ~830)");
+    TEST_ASSERT(m.surface_m2 > 640.0 && m.surface_m2 < 720.0,
+                "Surface plasma ITER dans [640,720] m^2 (publie ~680)");
+    TEST_ASSERT(m.q95 > 2.85 && m.q95 < 3.15,
+                "q95 Uckan dans [2.85,3.15] (regle de conception ITER: 3.0)");
+    double fgw = 1.0e20 / m.n_gw_m3;
+    TEST_ASSERT(fgw > 0.80 && fgw < 0.88,
+                "Fraction de Greenwald dans [0.80,0.88] (publie ~0.85)");
+    TEST_ASSERT(m.b_coil_T > 11.0 && m.b_coil_T < 12.5,
+                "Champ au conducteur dans [11,12.5] T (publie 11.8)");
+    double p_lh = fusion_dt_p_lh_martin(1.0e20, m.B0_T, m.surface_m2);
+    TEST_ASSERT(p_lh > 70.0 && p_lh < 100.0,
+                "Seuil L-H Martin dans [70,100] MW (publie 70-90)");
+
+    // tau_E IPB98(y,2) complet a P_loss = 95 MW (regime nominal publie 3.7 s)
+    fusion_dt_config_t cfg;
+    memset(&cfg, 0, sizeof(cfg));
+    cfg.n_e_m3 = 1.0e20; cfg.T_keV = 8.9; cfg.volume_m3 = m.volume_m3;
+    cfg.p_aux_W = 95e6; cfg.z_eff = 1.6; cfg.dt_s = 1e-3; cfg.max_steps = 1;
+    cfg.log_every = 1;
+    cfg.use_ipb98_full = true;
+    cfg.ipb98_I_MA = m.I_p_MA; cfg.ipb98_B_T = m.B0_T; cfg.ipb98_R_m = m.R_m;
+    cfg.ipb98_epsilon = m.a_m / m.R_m; cfg.ipb98_kappa = m.kappa;
+    cfg.ipb98_M_amu = 2.5; cfg.ipb98_h98 = 1.0;
+    fusion_dt_plasma_t* p = fusion_dt_plasma_create(&cfg);
+    TEST_ASSERT(p != NULL, "Creation plasma ITER mode IPB98 complet");
+    if (p) {
+        printf("    tau_E IPB98(y,2) a P=95 MW : %.2f s (publie 3.7 a H98=1)\n",
+               p->state.tau_E_eff_s);
+        TEST_ASSERT(p->state.tau_E_eff_s > 2.7 && p->state.tau_E_eff_s < 4.2,
+                    "tau_E IPB98 complet dans [2.7,4.2] s (publie ~3.7)");
+        fusion_dt_plasma_destroy(&p);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// PHASE 10 — Burn ITER auto-coherent : confinement PREDIT, plus impose
+// ---------------------------------------------------------------------------
+static void phase10_iter_self_consistent_burn(void) {
+    printf("\n=== PHASE 10 : BURN ITER AUTO-COHERENT (IPB98 COMPLET + CENDRES) ===\n");
+
+    fusion_dt_machine_t m = build_iter_machine();
+    fusion_dt_material_catalog_t cat = fusion_dt_catalog_lts_iter();
+    fusion_dt_reactor_point_t pt;
+    bool ok = fusion_dt_reactor_evaluate(&cat, &m, 1.0e20 / m.n_gw_m3, 50e6, &pt);
+    TEST_ASSERT(ok, "Evaluation reacteur ITER executee");
+    if (!ok) return;
+
+    printf("    T=%.2f keV | Q=%.2f | P_fus=%.0f MW | tau_E predit=%.2f s | He=%.2f%%\n",
+           pt.T_final_keV, pt.q_factor, pt.p_fusion_MW, pt.tau_E_s,
+           pt.he_fraction * 100.0);
+    printf("    Contraintes: fGW=%.2f%s betaN=%.2f%s q95=%.2f%s mur=%.2f MW/m2%s "
+           "P_LH=%.0f MW%s Bcoil=%.1f T%s\n",
+           pt.f_greenwald, pt.c_greenwald ? "(OK)" : "(VIOLE)",
+           pt.beta_n, pt.c_beta ? "(OK)" : "(VIOLE)",
+           pt.machine.q95, pt.c_q95 ? "(OK)" : "(VIOLE)",
+           pt.wall_load_MW_m2, pt.c_wall ? "(OK)" : "(VIOLE)",
+           pt.p_lh_MW, pt.c_lh ? "(OK)" : "(VIOLE)",
+           pt.machine.b_coil_T, pt.c_bcoil ? "(OK)" : "(VIOLE)");
+
+    TEST_ASSERT(pt.T_final_keV > 6.0 && pt.T_final_keV < 13.0,
+                "T equilibre ITER dans [6,13] keV (publie ~8.9)");
+    TEST_ASSERT(pt.q_factor > 4.0 && pt.q_factor < 25.0,
+                "Q ITER auto-coherent dans [4,25] (objectif publie 10)");
+    TEST_ASSERT(pt.wall_load_MW_m2 > 0.35 && pt.wall_load_MW_m2 < 1.05,
+                "Charge murale ITER dans [0.35,1.05] MW/m2 (publie ~0.6)");
+    TEST_ASSERT(pt.beta_n > 1.2 && pt.beta_n < 2.6,
+                "beta_N ITER dans [1.2,2.6] (publie ~1.8)");
+    TEST_ASSERT(pt.viable, "ITER satisfait TOUTES les contraintes (design valide)");
+}
+
+// ---------------------------------------------------------------------------
+// PHASE 11 — SOLUTION : optimisation contrainte pour 3 catalogues materiaux
+// ---------------------------------------------------------------------------
+static void phase11_constrained_material_optimization(void) {
+    printf("\n=== PHASE 11 : OPTIMISATION CONTRAINTE — 3 CATALOGUES MATERIAUX ===\n");
+
+    mkdir("logs", 0755);
+    mkdir("logs/fusion", 0755);
+    FILE* csv = fopen("logs/fusion/reactor_designs.csv", "w");
+    if (csv) {
+        fprintf(csv, "catalog,R_m,a_m,B0_T,Ip_MA,n_e_m3,fgw,p_aux_MW,T_keV,q_factor,"
+                     "p_fusion_MW,p_net_MW,tau_E_s,beta_n,wall_MW_m2,p_lh_MW,"
+                     "he_frac,viable\n");
+    }
+
+    fusion_dt_material_catalog_t catalogs[3];
+    catalogs[0] = fusion_dt_catalog_lts_iter();
+    catalogs[1] = fusion_dt_catalog_hts_rebco();
+    catalogs[2] = fusion_dt_catalog_future_hypothetical();
+    double R_min[3] = {5.0, 2.2, 2.0};
+    double R_max[3] = {9.5, 6.0, 6.0};
+
+    fusion_dt_reactor_point_t best[3];
+    memset(best, 0, sizeof(best));
+
+    for (int c = 0; c < 3; c++) {
+        // fgw descend a 0.25 : les machines a tres haut champ (catalogue
+        // futur) ont une densite de Greenwald si elevee que meme 40% de
+        // celle-ci viole la limite de charge murale.
+        fusion_dt_reactor_result_t* res = fusion_dt_reactor_optimize(
+            &catalogs[c], R_min[c], R_max[c], 8, 0.25, 0.90, 6,
+            3.1, 1.8, 0.4, 50e6);
+        char label[160];
+        snprintf(label, sizeof(label), "Optimisation [%s] executee avec designs viables",
+                 catalogs[c].name);
+        TEST_ASSERT(res != NULL && res->success, label);
+        if (!res) continue;
+
+        printf("    %s\n", res->message);
+        best[c] = res->best;
+
+        if (csv) {
+            for (size_t i = 0; i < res->points_evaluated; i++) {
+                const fusion_dt_reactor_point_t* p = &res->points[i];
+                fprintf(csv, "%s,%.2f,%.2f,%.2f,%.1f,%.3e,%.2f,%.0f,%.2f,%.2f,"
+                             "%.1f,%.1f,%.2f,%.2f,%.2f,%.1f,%.4f,%d\n",
+                        catalogs[c].name, p->machine.R_m, p->machine.a_m,
+                        p->machine.B0_T, p->machine.I_p_MA, p->n_e_m3,
+                        p->f_greenwald, p->p_aux_W / 1e6, p->T_final_keV,
+                        p->q_factor, p->p_fusion_MW, p->p_net_MW, p->tau_E_s,
+                        p->beta_n, p->wall_load_MW_m2, p->p_lh_MW,
+                        p->he_fraction, p->viable ? 1 : 0);
+            }
+        }
+
+        snprintf(label, sizeof(label), "[%s] P_net > 0 (production nette reelle)",
+                 catalogs[c].name);
+        TEST_ASSERT(res->best.p_net_MW > 0.0, label);
+        fusion_dt_reactor_result_destroy(&res);
+    }
+    if (csv) {
+        fclose(csv);
+        printf("    CSV exporte : logs/fusion/reactor_designs.csv\n");
+    }
+    TEST_ASSERT(csv != NULL, "Export CSV des designs reacteurs");
+
+    // Les materiaux HTS permettent un reacteur NET-POSITIF plus compact que LTS
+    // (c'est la these de SPARC/ARC, ici retrouvee par le calcul contraint)
+    if (best[0].viable && best[1].viable) {
+        printf("    Compacite: LTS R=%.2f m vs HTS R=%.2f m (ARC publie: 3.3 m)\n",
+               best[0].machine.R_m, best[1].machine.R_m);
+        TEST_ASSERT(best[1].machine.R_m < best[0].machine.R_m,
+                    "HTS REBCO permet un reacteur net-positif plus compact que LTS");
+    }
+    // Le catalogue hypothetique quantifie le gain si la R&D materiaux aboutit
+    if (best[1].viable && best[2].viable) {
+        printf("    Gain materiaux futurs: P_net %.0f MW (HTS) -> %.0f MW (hypothetique)\n",
+               best[1].p_net_MW, best[2].p_net_MW);
+        TEST_ASSERT(best[2].p_net_MW >= best[1].p_net_MW,
+                    "Les cibles materiaux futures augmentent P_net (exigences chiffrees)");
+    }
+}
+
+// ---------------------------------------------------------------------------
 int main(void) {
     // Sequence d'initialisation standard LUM/VORAX (cf. test_forensic_complete_system.c)
     memory_tracker_init();
@@ -446,6 +637,9 @@ int main(void) {
     phase6_helium_ash_dynamics();
     phase7_operating_point_optimization();
     phase8_native_bit_level_snapshot();
+    phase9_iter_published_validation();
+    phase10_iter_self_consistent_burn();
+    phase11_constrained_material_optimization();
 
     uint64_t t_end_ns = lum_get_timestamp();
 
