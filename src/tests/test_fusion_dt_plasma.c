@@ -22,6 +22,7 @@
 #include "../physics/fusion_dt_plasma.h"
 #include "../physics/fusion_dt_reactor.h"
 #include "../physics/fusion_dt_profiles.h"
+#include "../physics/fusion_dt_transport.h"
 #include "../debug/memory_tracker.h"
 #include "../debug/forensic_logger.h"
 #include "../debug/ultra_forensic_logger.h"
@@ -791,6 +792,90 @@ static void phase15_tritium_breeding(void) {
 }
 
 // ---------------------------------------------------------------------------
+// PHASE 16 — V6 : transport radial 1.5-D — le profil de temperature est
+// PREDIT par l'equation de diffusion (chi cale IPB98), plus impose.
+// ---------------------------------------------------------------------------
+static void phase16_radial_transport_1p5d(void) {
+    printf("\n=== PHASE 16 : TRANSPORT RADIAL 1.5-D (PROFIL PREDIT) ===\n");
+
+    // Cas ITER-like : a=2 m, <n>=1e20, V=830 m^3, P_aux=50 MW, <T> cible 9 keV
+    fusion_dt_transport_result_t tr;
+    bool ok = fusion_dt_transport_solve(2.0, 1.0e20, 830.0, 50e6, 9.0, &tr);
+    TEST_ASSERT(ok && tr.converged, "Solveur 1.5-D converge (cas ITER-like)");
+    if (!ok) return;
+
+    printf("    <T>=%.2f keV (cible 9.0) | T0 PREDIT=%.2f keV | piquage T=%.2f\n",
+           tr.T_avg_keV, tr.T0_keV, tr.peaking_T);
+    printf("    chi cale=%.2f m^2/s (tokamaks reels: ~0.5-3) | bilan=%.2e | %d iter\n",
+           tr.chi_m2_s, tr.balance_error, tr.iterations);
+    printf("    Piquage fusion PREDIT=%.2f (parametrique V5: %.2f)\n",
+           tr.peaking_fusion,
+           fusion_dt_profiles_peaking_fusion(9.0, 0.3, 1.2));
+
+    TEST_ASSERT(fabs(tr.T_avg_keV - 9.0) / 9.0 < 0.02,
+                "Temperature moyenne atteinte a 2% de la cible IPB98");
+    TEST_ASSERT(tr.balance_error < 0.02,
+                "Conservation de l'energie : flux sortant = sources a 2% pres");
+    TEST_ASSERT(tr.peaking_T > 1.5 && tr.peaking_T < 3.5,
+                "Piquage T0/<T> PREDIT dans [1.5,3.5] (litterature H-mode)");
+    TEST_ASSERT(tr.chi_m2_s > 0.1 && tr.chi_m2_s < 10.0,
+                "Diffusivite calee dans [0.1,10] m^2/s (tokamaks reels ~1)");
+    {
+        double f_param = fusion_dt_profiles_peaking_fusion(9.0, 0.3, 1.2);
+        double ecart = fabs(tr.peaking_fusion - f_param) / f_param;
+        TEST_ASSERT(tr.peaking_fusion > 1.2 && ecart < 0.40,
+                    "Piquage fusion PREDIT coherent avec le parametrique (<40%)");
+    }
+    // Le profil predit doit etre monotone decroissant (physique du transport)
+    {
+        bool monotone = true;
+        for (int i = 1; i <= FUSION_DT_TRANSPORT_GRID_N; i++)
+            if (tr.T_profile_keV[i] > tr.T_profile_keV[i - 1] + 1e-9)
+                monotone = false;
+        TEST_ASSERT(monotone, "Profil T(rho) PREDIT monotone decroissant");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// PHASE 17 — V6 : indice economique physique (energie magnetique stockee)
+// ---------------------------------------------------------------------------
+static void phase17_magnetic_energy_economics(void) {
+    printf("\n=== PHASE 17 : INDICE ECONOMIQUE (ENERGIE MAGNETIQUE STOCKEE) ===\n");
+
+    // Validation ITER : E_mag proxy ~27 GJ (systeme TF publie ~41 GJ,
+    // notre enveloppe est conservatrice — meme ordre de grandeur)
+    fusion_dt_machine_t m = build_iter_machine();
+    fusion_dt_material_catalog_t lts = fusion_dt_catalog_lts_iter();
+    fusion_dt_reactor_point_t pt;
+    bool ok = fusion_dt_reactor_evaluate(&lts, &m, 1.0e20 / m.n_gw_m3, 50e6,
+                                         false, &pt);
+    TEST_ASSERT(ok, "Evaluation ITER avec indice economique");
+    if (ok) {
+        printf("    E_mag ITER (proxy enveloppe) : %.1f GJ (systeme TF publie ~41 GJ)\n",
+               pt.e_mag_GJ);
+        TEST_ASSERT(pt.e_mag_GJ > 20.0 && pt.e_mag_GJ < 45.0,
+                    "E_mag ITER dans [20,45] GJ (ordre de grandeur publie)");
+    }
+
+    // Comparaison capitalistique HTS : E_mag/P_net doit etre fini et documente
+    fusion_dt_material_catalog_t hts = fusion_dt_catalog_hts_rebco();
+    fusion_dt_machine_t mh;
+    fusion_dt_machine_derive(&mh, &hts, 6.0, 3.1, 1.8, 0.4, hts.q95_min * 2.4);
+    fusion_dt_reactor_point_t ph;
+    if (fusion_dt_reactor_evaluate(&hts, &mh, 0.90, 50e6, true, &ph) && ph.viable) {
+        printf("    HTS R=6 m : E_mag=%.1f GJ | P_net=%.0f MW | "
+               "indice capital=%.3f GJ/MW\n",
+               ph.e_mag_GJ, ph.p_net_MW, ph.cost_index_GJ_MW);
+        TEST_ASSERT(isfinite(ph.cost_index_GJ_MW) && ph.cost_index_GJ_MW > 0.0,
+                    "Indice capital E_mag/P_net fini et positif (design HTS)");
+        TEST_ASSERT(ph.e_mag_GJ > 30.0 && ph.e_mag_GJ < 300.0,
+                    "E_mag HTS dans une plage physiquement plausible");
+    } else {
+        TEST_ASSERT(false, "Design HTS de reference viable pour l'indice capital");
+    }
+}
+
+// ---------------------------------------------------------------------------
 // PHASE 13 — Bilan de couverture vers la "solution ideale" (transparent)
 // Chaque verrou d'une centrale reelle est note : modelise / partiel / absent.
 // Le pourcentage est un indicateur de COUVERTURE DE MODELISATION, pas une
@@ -807,11 +892,11 @@ static void phase13_coverage_scorecard(void) {
         { "Stationnarite courant (bootstrap+CD)",                0.70, "MODELISE (0-D)" },
         { "Evacuation divertor (P_sep/R + semis radiatif)",      0.60, "MODELISE (simplifie)" },
         { "Charge murale / materiaux (catalogues + exigences)",  0.60, "CATALOGUE (pas d'invention)" },
-        { "Profils radiaux / transport (1.5-D)",                 0.50, "CALCULE (Simpson, ancre ITER)" },
+        { "Profils radiaux / transport (1.5-D)",                 0.70, "PREDIT (diffusion, chi cale)" },
         { "Pertes synchrotron",                                  0.20, "BORNE (contrainte T<=25 keV)" },
         { "Production de tritium (TBR couverture)",              0.60, "MODELISE (TBR + bilan kg/an)" },
         { "Controle temps reel / disruptions 3-D",               0.00, "ABSENT" },
-        { "Economie (EUR/kW), licensing, surete",                0.10, "PROXY (P_recirc reelle)" },
+        { "Economie (EUR/kW), licensing, surete",                0.30, "INDICE PHYSIQUE (E_mag/P_net)" },
     };
     size_t n = sizeof(items) / sizeof(items[0]);
     double sum = 0.0;
@@ -857,6 +942,8 @@ int main(void) {
     phase12_stationarity_divertor_and_bugfixes();
     phase14_radial_profiles();
     phase15_tritium_breeding();
+    phase16_radial_transport_1p5d();
+    phase17_magnetic_energy_economics();
     phase13_coverage_scorecard();
 
     uint64_t t_end_ns = lum_get_timestamp();

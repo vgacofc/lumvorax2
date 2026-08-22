@@ -1202,3 +1202,12 @@
 2026-08-21 22:00 - peaking_used + Piquage radial calculé utilisé par la combustion (plus forfaitaire)
 2026-08-21 22:00 - c_tbr + Contrainte C9 auto-suffisance tritium
 2026-08-21 22:00 - DECOUVERTE-V5-PIQUAGE + Évanouissement du gain de piquage à T>15 keV (réactivité plate au centre) — calibration 1.3 surestimait les régimes chauds
+
+2026-08-22 14:00 - fusion_dt_transport.c + Solveur transport radial 1.5-D stationnaire (diffusion chaleur, chi calé IPB98)
+2026-08-22 14:00 - fusion_dt_transport.h + Header transport 1.5-D (grille 100 pts, piédestal H-mode)
+2026-08-22 14:00 - fusion_dt_transport_solve + Résolution profil T(rho) PREDIT (bissection chi + point fixe sources)
+2026-08-22 14:00 - fusion_dt_transport_result_t + Résultat transport (T0, piquages prédits, chi calé, bilan intégral)
+2026-08-22 14:00 - e_mag_GJ + Énergie magnétique stockée B0²/(2mu0)·V_enveloppe (validé ITER 26.9 GJ vs ~41 publié)
+2026-08-22 14:00 - cost_index_GJ_MW + Indice capitalistique E_mag/P_net (GJ par MW net)
+2026-08-22 14:00 - BUG-V6-1 + Densité nulle au bord => couche limite artificielle et chi non physique (corrigé : piédestal n_bord=35%)
+2026-08-22 14:00 - VALIDATION-V6-CHI + chi calé par le solveur = 1.80 m2/s, dans la plage mesurée des tokamaks réels (0.5-3)

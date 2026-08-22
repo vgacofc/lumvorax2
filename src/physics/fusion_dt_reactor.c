@@ -319,6 +319,19 @@ bool fusion_dt_reactor_evaluate(const fusion_dt_material_catalog_t* catalog,
         out->c_divertor = (out->f_rad_required <= catalog->f_rad_max + 1e-9);
     }
 
+    // V6 : indice economique physique — energie magnetique stockee (premier
+    // poste de cout d'un tokamak, proportionnelle a la masse d'aimants)
+    {
+        const double mu0 = 4.0e-7 * M_PI;
+        double r_env = machine->a_m + catalog->d_gap_m;   // rayon enveloppe bobines
+        double v_field = 2.0 * M_PI * M_PI * machine->R_m * r_env * r_env
+                         * machine->kappa;
+        out->e_mag_GJ = machine->B0_T * machine->B0_T / (2.0 * mu0)
+                        * v_field / 1e9;
+        out->cost_index_GJ_MW = (out->p_net_MW > 0.0)
+            ? out->e_mag_GJ / out->p_net_MW : INFINITY;
+    }
+
     // C9 (V5) : auto-suffisance en tritium. TBR = TBR_local du concept de
     // couverture x couverture geometrique. Consommation : chaque MW de
     // fusion brule 0.0561 kg de tritium par an (3.548e17 reactions/s/MW

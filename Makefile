@@ -61,6 +61,7 @@ SOURCES = \
 	$(SRC_DIR)/physics/fusion_dt_plasma.c \
 	$(SRC_DIR)/physics/fusion_dt_reactor.c \
 	$(SRC_DIR)/physics/fusion_dt_profiles.c \
+	$(SRC_DIR)/physics/fusion_dt_transport.c \
 	$(SRC_DIR)/lum/lum_memory_tracer.c \
 	$(SRC_DIR)/logging/log_writer.c \
 	$(SRC_DIR)/common/time_ns.c

@@ -133,6 +133,13 @@ typedef struct {
     double tritium_burn_kg_year; // Consommation tritium (kg/an)
     double tritium_margin_kg_year; // Production nette (kg/an), >0 si TBR>1
     double peaking_used;         // Piquage fusion calcule (profils radiaux)
+    // V6 — indice economique physique
+    // Energie magnetique stockee E_mag = B0^2/(2 mu0) x volume enveloppe par
+    // les bobines (2 pi^2 R (a+d_gap)^2 kappa) : le premier poste de cout
+    // d'un tokamak (validation ITER : ~27 GJ calcule, ~41 GJ publie systeme
+    // TF complet — proxy conservateur du meme ordre).
+    double e_mag_GJ;             // Energie magnetique stockee (GJ)
+    double cost_index_GJ_MW;     // E_mag / P_net : cout capital par MW (relatif)
     bool c_greenwald, c_beta, c_q95, c_wall, c_lh, c_bcoil, c_regime,
          c_divertor, c_tbr;
     bool viable;                 // Toutes contraintes satisfaites + burn stable
