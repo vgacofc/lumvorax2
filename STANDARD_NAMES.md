@@ -1116,3 +1116,98 @@
 + C137-CPU-PROFILE + C137 — Profil CPU Ubuntu forensic : Intel(R) Core(TM) i5-8265U @ 1.60GHz (Whiskey Lake, 4 cores physiques, 8 threads, cache L3 6 MiB). Flags gcc -march=native disponibles : avx2, bmi2, aes, fma, f16c, sha (NON listé — pas d'extension SHA-NI sur Whiskey Lake → SHA-256 software via FIPS 180-4 nécessaire, ce qui confirme le choix d'implémentation embarquée en C135-SHA256-WITNESS).
 + C137-OBS-FREEZE-CLEAN + C137 — Observation : parent_freeze.lumtrace (134 MB) ne montre PAS le pattern NUL queue → le snapshot via SIGSTOP/fork écrit un trailer différent du snapshot direct. À investiguer en C138 : analyser le trailer exact des deux modes pour comprendre la divergence.
 + run_ubuntu_fish_safe + C137 — Script bash/fish-safe à fournir aux utilisateurs : gère automatiquement l'idiomatique fish (LISTE), valide chemin repo, exit non-zero si bug détecté. Pré-validé Ubuntu 24.04 / gcc 13.3.0.
+
+2026-08-21 18:30 - fusion_dt_plasma.c + Module C fusion nucléaire D-T (plasma 0-D) dans src/physics — premier module fusion réel du dépôt
+2026-08-21 18:30 - fusion_dt_plasma.h + Header public du module fusion nucléaire D-T
+2026-08-21 18:30 - fusion_dt_plasma_t + Moteur plasma D-T (magic FUSION_DT_PLASMA_MAGIC 0x46445450, config, état, groupes LUM, hash bit-level)
+2026-08-21 18:30 - fusion_dt_config_t + Configuration scénario plasma 0-D (n, T, tau_E, V, P_aux, Zeff, IPB98, cendres hélium)
+2026-08-21 18:30 - fusion_dt_state_t + État instantané plasma (T, W, puissances, Q, tau_E effectif, n_fuel, n_He, Z_eff dynamique) hashé bit à bit
+2026-08-21 18:30 - fusion_dt_burn_result_t + Résultat agrégé simulation de combustion (Q, P_fus, ignition, hash final)
+2026-08-21 18:30 - fusion_dt_lawson_point_t + Point du balayage de Lawson (T, réactivité, n*tau requis, triple produit)
+2026-08-21 18:30 - fusion_dt_lawson_result_t + Résultat balayage de Lawson (optima ignition)
+2026-08-21 18:30 - fusion_dt_derivs_t + Dérivées couplées (dW/dt, dn_He/dt) + grandeurs intermédiaires
+2026-08-21 18:30 - fusion_dt_design_point_t + Point de conception réacteur (n, tau_E, Q, P_net, fraction He)
+2026-08-21 18:30 - fusion_dt_design_result_t + Résultat optimisation 2D du point de fonctionnement
+2026-08-21 18:30 - fusion_dt_reactivity_bosch_hale + Réactivité <sigma-v> D-T paramétrisation Bosch-Hale 1992 (m^3/s)
+2026-08-21 18:30 - fusion_dt_power_density + Puissance fusion volumique plasma 50/50 D-T (W/m^3)
+2026-08-21 18:30 - fusion_dt_bremsstrahlung + Pertes bremsstrahlung volumiques NRL (W/m^3)
+2026-08-21 18:30 - fusion_dt_lawson_n_tau + n*tau_E minimal d'ignition à T donné (critère de Lawson)
+2026-08-21 18:30 - fusion_dt_lawson_scan + Balayage de Lawson avec journalisation nanoseconde par point
+2026-08-21 18:30 - fusion_dt_plasma_create + Création moteur plasma D-T (protection double-free)
+2026-08-21 18:30 - fusion_dt_plasma_destroy + Destruction sécurisée double-free du moteur plasma
+2026-08-21 18:30 - fusion_dt_plasma_step + Pas RK4 système couplé (W, n_He) avec log forensique ns + hash bit-level
+2026-08-21 18:30 - fusion_dt_plasma_run_burn + Simulation de combustion complète (détection ignition/excursion)
+2026-08-21 18:30 - fusion_dt_plasma_sync_lums + Projection bilan de particules sur LUMs + conservation VORAX
+2026-08-21 18:30 - fusion_dt_state_hash + Hash FNV-1a 64 bits bit-level de l'état plasma
+2026-08-21 18:30 - fusion_dt_tau_eff + Dégradation confinement IPB98(y,2) tau_E ~ P^-0.69
+2026-08-21 18:30 - fusion_dt_derivatives + Système dynamique couplé énergie + cendres hélium (RK4 2D)
+2026-08-21 18:30 - fusion_dt_optimize_operating_point + Balayage 2D (densité x confinement) maximisant P_net électrique
+2026-08-21 18:30 - fusion_dt_design_result_destroy + Destruction sécurisée du résultat d'optimisation
+2026-08-21 18:30 - fusion_dt_p_net_electric_MW + Estimation nette électrique (eta_th=0.33, M_blanket=1.15, eta_aux=0.40)
+2026-08-21 18:30 - fusion_dt_snapshot_bit_level + Snapshot .lum bit-level de l'état plasma + preuve diff=0 (lum_memory_tracer)
+2026-08-21 18:30 - enable_ash_dynamics + Option dynamique cendres hélium (quasi-neutralité, dilution)
+2026-08-21 18:30 - tau_he_ratio + Ratio confinement particules alpha tau_He/tau_E (littérature ~5)
+2026-08-21 18:30 - test_fusion_dt_plasma.c + Test 8 phases module fusion (51 assertions)
+2026-08-21 18:30 - test-fusion + Cible Makefile d'exécution du test fusion D-T
+2026-08-21 18:30 - lawson_scan.csv + Export CSV balayage de Lawson pour audit externe (logs/fusion)
+2026-08-21 18:30 - design_scan.csv + Export CSV grille de designs réacteur (logs/fusion)
+2026-08-21 18:30 - plasma_state_bit.lum + Snapshot bit-level natif de l'état plasma (magic LUMT, 1 LUM = 1 bit)
+
+2026-08-21 20:00 - fusion_dt_reactor.c + Module conception réacteurs tokamak sous contraintes (classe PROCESS/SYCOMORE)
+2026-08-21 20:00 - fusion_dt_reactor.h + Header public conception réacteurs (7 contraintes, 3 catalogues matériaux)
+2026-08-21 20:00 - fusion_dt_material_catalog_t + Catalogue matériaux/limites (B_coil, mur, beta_N, q95, Greenwald, rendements)
+2026-08-21 20:00 - fusion_dt_machine_t + Machine tokamak dérivée (R, a, kappa, delta, B0, Ip, V, S, n_GW, q95, B_coil)
+2026-08-21 20:00 - fusion_dt_reactor_point_t + Design évalué (équilibre burn réel + 7 contraintes + P_net)
+2026-08-21 20:00 - fusion_dt_reactor_result_t + Résultat optimisation contrainte (grille 4D complète)
+2026-08-21 20:00 - fusion_dt_catalog_lts_iter + Catalogue LTS Nb3Sn/EUROFER (état ITER, démontré)
+2026-08-21 20:00 - fusion_dt_catalog_hts_rebco + Catalogue HTS REBCO/W (état SPARC/ARC, démontré)
+2026-08-21 20:00 - fusion_dt_catalog_future_hypothetical + Catalogue cibles matériaux futures (HYPOTHETIQUE étiqueté)
+2026-08-21 20:00 - fusion_dt_machine_derive + Dérivation machine (B0 max conducteur, Ip depuis q95 cible)
+2026-08-21 20:00 - fusion_dt_q95_uckan + Facteur de sécurité q95 (ITER Physics Design Guidelines, calibré ITER=3.00)
+2026-08-21 20:00 - fusion_dt_p_lh_martin + Seuil de transition L-H (Martin 2008)
+2026-08-21 20:00 - fusion_dt_reactor_evaluate + Évaluation design : burn réel IPB98 complet + 7 contraintes
+2026-08-21 20:00 - fusion_dt_reactor_optimize + Optimisation contrainte 4D (R, f_GW, P_aux, q95) maximisant P_net
+2026-08-21 20:00 - fusion_dt_reactor_result_destroy + Destruction sécurisée résultat optimisation réacteur
+2026-08-21 20:00 - use_ipb98_full + Mode confinement PREDIT par IPB98(y,2) complète (ITER Physics Basis 1999)
+2026-08-21 20:00 - profile_peaking + Facteur de piquage de profils (calibré 1.3 sur point ITER, pratique codes systèmes)
+2026-08-21 20:00 - FUSION_DT_REACTOR_MAGIC + Magic number 0x46525254 ("FRRT") du module réacteur
+2026-08-21 20:00 - reactor_designs.csv + Export CSV grille 1296 designs réacteurs contraints (logs/fusion)
+
+2026-08-21 21:00 - fusion_dt_reactor_burn + Combustion interne d'un design à p_aux donné (factorisation V4)
+2026-08-21 21:00 - steady_state + Mode évaluation centrale stationnaire vs machine pulsée (ITER)
+2026-08-21 21:00 - beta_p + Bêta poloïdal à l'équilibre (bootstrap Wesson f_bs=0.7 sqrt(eps) beta_p)
+2026-08-21 21:00 - f_bootstrap + Fraction de courant auto-généré (validé ITER: 0.28 vs ~0.25 publié)
+2026-08-21 21:00 - p_cd_MW + Puissance de génération de courant P_CD = n20 R I_CD / gamma_CD
+2026-08-21 21:00 - p_recirc_MW + Recirculation réelle max(P_chauffage, P_CD)
+2026-08-21 21:00 - f_rad_required + Fraction rayonnée au bord requise pour le divertor (semis Ne/Ar)
+2026-08-21 21:00 - c_divertor + Contrainte C8 évacuation divertor P_sep(1-f_rad)/R <= limite
+2026-08-21 21:00 - div_limit_MW_m + Limite divertor P_sep/R du catalogue (17/20/25 MW/m)
+2026-08-21 21:00 - gamma_cd + Efficacité génération de courant du catalogue (0.30/0.35/0.45)
+2026-08-21 21:00 - f_rad_max + Fraction rayonnée maximale par semis d'impuretés (0.70/0.80/0.85)
+2026-08-21 21:00 - coverage_score + Métrique forensique de couverture des verrous de conception (53% V4)
+2026-08-21 21:00 - BUG-V4-1 + Détecteur d'anomalies énergétiques neutralisé par mauvaise échelle u_eV (corrigé, test de déclenchement ajouté)
+2026-08-21 21:00 - BUG-V4-2 + Point final balayage Lawson dépendant de l'arrondi IEEE-754 (clamp défensif + test bord de domaine)
+2026-08-21 21:00 - BUG-V4-3 + Stationnarité appliquée à tort aux machines pulsées (paramètre steady_state explicite)
+
+2026-08-21 22:00 - fusion_dt_profiles.c + Module profils radiaux paramétriques (Simpson 200 pas, fondation 1.5-D)
+2026-08-21 22:00 - fusion_dt_profiles.h + Header profils radiaux (piquage fusion/brems exacts, ancrage ITER)
+2026-08-21 22:00 - fusion_dt_profiles_peaking_fusion + Piquage fusion exact <n2 sigmav(T)>/(<n>2 sigmav(<T>))
+2026-08-21 22:00 - fusion_dt_profiles_peaking_brems + Piquage bremsstrahlung exact <n2 sqrtT>/(<n>2 sqrt<T>)
+2026-08-21 22:00 - fusion_dt_profiles_effective_peaking + Piquage effectif ancré calibration ITER (1.3 à 9 keV)
+2026-08-21 22:00 - tbr_local + TBR local du concept de couverture (HCPB 1.30, FLiBe 1.42, hyp. 1.50)
+2026-08-21 22:00 - blanket_coverage + Couverture géométrique tritigène (1 - ports - divertor)
+2026-08-21 22:00 - tbr + Tritium Breeding Ratio du design (contrainte C9 >= 1.05)
+2026-08-21 22:00 - tritium_burn_kg_year + Consommation tritium 0.0561 kg/an/MW_fus (vérifiée par test)
+2026-08-21 22:00 - tritium_margin_kg_year + Production nette de tritium (auto-suffisance filière)
+2026-08-21 22:00 - peaking_used + Piquage radial calculé utilisé par la combustion (plus forfaitaire)
+2026-08-21 22:00 - c_tbr + Contrainte C9 auto-suffisance tritium
+2026-08-21 22:00 - DECOUVERTE-V5-PIQUAGE + Évanouissement du gain de piquage à T>15 keV (réactivité plate au centre) — calibration 1.3 surestimait les régimes chauds
+
+2026-08-22 14:00 - fusion_dt_transport.c + Solveur transport radial 1.5-D stationnaire (diffusion chaleur, chi calé IPB98)
+2026-08-22 14:00 - fusion_dt_transport.h + Header transport 1.5-D (grille 100 pts, piédestal H-mode)
+2026-08-22 14:00 - fusion_dt_transport_solve + Résolution profil T(rho) PREDIT (bissection chi + point fixe sources)
+2026-08-22 14:00 - fusion_dt_transport_result_t + Résultat transport (T0, piquages prédits, chi calé, bilan intégral)
+2026-08-22 14:00 - e_mag_GJ + Énergie magnétique stockée B0²/(2mu0)·V_enveloppe (validé ITER 26.9 GJ vs ~41 publié)
+2026-08-22 14:00 - cost_index_GJ_MW + Indice capitalistique E_mag/P_net (GJ par MW net)
+2026-08-22 14:00 - BUG-V6-1 + Densité nulle au bord => couche limite artificielle et chi non physique (corrigé : piédestal n_bord=35%)
+2026-08-22 14:00 - VALIDATION-V6-CHI + chi calé par le solveur = 1.80 m2/s, dans la plage mesurée des tokamaks réels (0.5-3)

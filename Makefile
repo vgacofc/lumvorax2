@@ -58,6 +58,11 @@ SOURCES = \
 	$(SRC_DIR)/network/hostinger_resource_limiter.c \
 	$(SRC_DIR)/advanced_calculations/quantum_simulator.c \
 	$(SRC_DIR)/physics/kerr_metric.c \
+	$(SRC_DIR)/physics/fusion_dt_plasma.c \
+	$(SRC_DIR)/physics/fusion_dt_reactor.c \
+	$(SRC_DIR)/physics/fusion_dt_profiles.c \
+	$(SRC_DIR)/physics/fusion_dt_transport.c \
+	$(SRC_DIR)/lum/lum_memory_tracer.c \
 	$(SRC_DIR)/logging/log_writer.c \
 	$(SRC_DIR)/common/time_ns.c
 
@@ -73,7 +78,8 @@ LIB_LUMVORAX = liblumvorax.so
 TEST_EXECUTABLES = \
 	$(BIN_DIR)/test_forensic_complete_system \
 	$(BIN_DIR)/test_integration_complete_39_modules \
-	$(BIN_DIR)/test_quantum
+	$(BIN_DIR)/test_quantum \
+	$(BIN_DIR)/test_fusion_dt_plasma
 
 .PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so
 
@@ -104,6 +110,16 @@ $(BIN_DIR)/test_integration_complete_39_modules: $(OBJECTS)
 
 $(BIN_DIR)/test_quantum: $(OBJECTS)
 	$(CC) $(CFLAGS) src/tests/test_quantum_simulator_complete.c $(OBJECTS) -o $@ $(LDFLAGS)
+
+# Test module fusion nucleaire D-T (validation Bosch-Hale, Lawson, burn 0-D,
+# cendres helium, optimiseur, snapshot bit-level). NOTE: le .c du test est
+# dans les prerequis pour garantir la recompilation quand le test change.
+$(BIN_DIR)/test_fusion_dt_plasma: src/tests/test_fusion_dt_plasma.c $(OBJECTS)
+	$(CC) $(CFLAGS) src/tests/test_fusion_dt_plasma.c $(OBJECTS) -o $@ $(LDFLAGS)
+
+test-fusion: $(BIN_DIR)/test_fusion_dt_plasma
+	@echo "=== TEST MODULE FUSION NUCLEAIRE D-T ==="
+	$(BIN_DIR)/test_fusion_dt_plasma
 
 # TESTS PROGRESSIFS 1M → 100M avec TOUS les modules + redirection console
 test-progressive: $(MAIN_EXECUTABLE)
