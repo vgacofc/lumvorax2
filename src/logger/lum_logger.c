@@ -35,10 +35,9 @@ lum_logger_t* lum_logger_create(const char* log_filename, bool console_output, b
     logger->sequence_counter = 0;
     logger->trace_all_lums = false;
     logger->conservation_check = true;
-    logger->level = LUM_LOG_INFO;       // INIT NOUVEAU CHAMP
-    logger->enabled = true;             // INIT NOUVEAU CHAMP
-    logger->level = LUM_LOG_INFO;       // Initialisation niveau par défaut
-    logger->enabled = true;             // Initialisation activé par défaut
+    /* LL-003 FIX: suppression de la double initialisation redondante */
+    logger->level = LUM_LOG_INFO;
+    logger->enabled = true;
     
     // Initialisation module et session
     strncpy(logger->module_name, "system", sizeof(logger->module_name) - 1);
@@ -403,20 +402,61 @@ const char* vorax_operation_to_string(vorax_operation_e operation) {
     }
 }
 
-// CSV export function
+/* LL-001 FIX: export CSV réel — lit chaque ligne du fichier log texte
+ * (format: "[YYYY-MM-DD HH:MM:SS] [LEVEL] [SEQ] MESSAGE") et produit
+ * une ligne CSV par entrée. Les lignes non conformes sont ignorées. */
 bool lum_log_export_csv(const char* log_filename, const char* csv_filename) {
     if (!log_filename || !csv_filename) return false;
 
+    FILE* log_file = fopen(log_filename, "r");
+    if (!log_file) {
+        fprintf(stderr, "[LUM_LOGGER] lum_log_export_csv: cannot open log file %s\n", log_filename);
+        return false;
+    }
+
     FILE* csv_file = fopen(csv_filename, "w");
-    if (!csv_file) return false;
+    if (!csv_file) {
+        fclose(log_file);
+        fprintf(stderr, "[LUM_LOGGER] lum_log_export_csv: cannot open csv file %s\n", csv_filename);
+        return false;
+    }
 
-    // Write CSV header
-    fprintf(csv_file, "timestamp,sequence_id,level,type,operation,lum_count,input_count,output_count,conservation_valid,message\n");
+    /* En-tête CSV */
+    fprintf(csv_file, "timestamp,level,sequence_id,message\n");
 
-    // Note: This is a simplified implementation
-    // In a real implementation, you'd parse the log file and extract structured data
+    char line[2048];
+    size_t exported = 0;
+    while (fgets(line, sizeof(line), log_file)) {
+        /* Format attendu: "[YYYY-MM-DD HH:MM:SS] [LEVEL] [SEQ] MESSAGE\n" */
+        char ts[32] = {0};
+        char level_str[16] = {0};
+        unsigned int seq = 0;
+        char msg[1024] = {0};
 
+        /* Tentative de parsing de la ligne structurée */
+        int parsed = sscanf(line, "[%31[^]]] [%15[^]]] [%u] %1023[^\n]",
+                            ts, level_str, &seq, msg);
+        if (parsed == 4) {
+            /* Échapper les virgules et guillemets dans le message */
+            /* Remplacer les guillemets doubles par deux guillemets (convention CSV RFC 4180) */
+            char safe_msg[1024] = {0};
+            size_t si = 0, di = 0;
+            while (msg[si] && di < sizeof(safe_msg) - 2) {
+                if (msg[si] == '"') { safe_msg[di++] = '"'; safe_msg[di++] = '"'; }
+                else { safe_msg[di++] = msg[si]; }
+                si++;
+            }
+            safe_msg[di] = '\0';
+            fprintf(csv_file, "%s,%s,%u,\"%s\"\n", ts, level_str, seq, safe_msg);
+            exported++;
+        }
+        /* Lignes non conformes (headers, debug brut) : ignorées silencieusement */
+    }
+
+    fclose(log_file);
     fclose(csv_file);
+    fprintf(stderr, "[LUM_LOGGER] lum_log_export_csv: %zu entries exported to %s\n",
+            exported, csv_filename);
     return true;
 }
 

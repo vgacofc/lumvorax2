@@ -1,10 +1,12 @@
 # Makefile LUM/VORAX - Compilation COMPLÈTE TOUS MODULES
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations -Wl,-z,stack-size=16777216
+# MK-001 FIX: -DDEBUG_MODE actif par défaut (conformément au protocole ARTCB mode DEBUG).
+# MK-002 FIX: -Wl,-z,stack-size retiré de CFLAGS (linker flag ≠ compiler flag).
+CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
 LDFLAGS = -lm -lpthread -lrt -Wl,-z,stack-size=16777216
 
-# Debug/Release modes for performance control  
-debug: CFLAGS += -DDEBUG_MODE -g3
+# Debug/Release modes for performance control
+debug: CFLAGS += -g3
 debug: all
 
 release: CFLAGS += -O3 -DNDEBUG  

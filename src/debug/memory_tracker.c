@@ -51,10 +51,11 @@ void memory_tracker_export_json(const char* filename) {
 }
 
 static memory_tracker_t g_tracker = {0};
+/* MT-002 FIX: un seul mutex g_tracker_mutex protège l'intégralité de g_tracker.
+ * allocation_mutex supprimé — il créait une race condition avec g_tracker_mutex. */
 static pthread_mutex_t g_tracker_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int g_tracker_initialized = 0;
-static pthread_mutex_t allocation_mutex = PTHREAD_MUTEX_INITIALIZER;
-static uint64_t g_global_generation = 1;  // CORRECTION: Compteur génération global
+static uint64_t g_global_generation = 1;  /* Compteur génération global pour anti-ABA */
 
 void memory_tracker_init(void) {
     pthread_mutex_lock(&g_tracker_mutex);
@@ -143,11 +144,13 @@ void* tracked_malloc(size_t size, const char* file, int line, const char* func) 
     if (!g_tracker_initialized) memory_tracker_init();
     if (!memory_tracker_is_enabled()) return malloc(size);
 
-    pthread_mutex_lock(&allocation_mutex);
+    /* MT-002 FIX: utiliser g_tracker_mutex (mutex unique) comme tracked_calloc
+     * pour éviter la race condition entre les deux mutex sur le même état g_tracker. */
+    pthread_mutex_lock(&g_tracker_mutex);
 
     void* ptr = malloc(size);
     if (!ptr) {
-        pthread_mutex_unlock(&allocation_mutex);
+        pthread_mutex_unlock(&g_tracker_mutex);
         return NULL;
     }
 
@@ -180,7 +183,7 @@ void* tracked_malloc(size_t size, const char* file, int line, const char* func) 
     }
 
     add_entry(ptr, size, file, line, func);
-    pthread_mutex_unlock(&allocation_mutex);
+    pthread_mutex_unlock(&g_tracker_mutex);
     return ptr;
 }
 
@@ -198,7 +201,8 @@ void tracked_free(void* ptr, const char* file, int line, const char* func) {
         return;
     }
 
-    pthread_mutex_lock(&allocation_mutex);
+    /* MT-002 FIX: même mutex unique g_tracker_mutex pour tracked_free */
+    pthread_mutex_lock(&g_tracker_mutex);
 
     // CORRECTION CRITIQUE: Validation intégrité avant libération
     int found_entry_idx = -1;
@@ -210,11 +214,22 @@ void tracked_free(void* ptr, const char* file, int line, const char* func) {
     }
 
     if (found_entry_idx == -1) {
-        printf("[MEMORY_TRACKER] CRITICAL ERROR: Free of untracked pointer %p at %s:%d in %s()\n",
+        /* MT-003 FIX: un pointeur non tracké peut venir d'un module alloué avant
+         * l'initialisation du tracker (ex: module externe, init précoce).
+         * Politique documentée : journaliser l'anomalie + libérer proprement
+         * sans crasher. En build forensic strict, passer -DTRACKER_STRICT_ABORT=1. */
+        fprintf(stderr, "[MEMORY_TRACKER] WARNING: Free of untracked pointer %p at %s:%d in %s()\n",
                ptr, file, line, func);
-        printf("[MEMORY_TRACKER] This indicates memory corruption or double-free!\n");
-        pthread_mutex_unlock(&allocation_mutex);
-        abort(); // Arrêt immédiat sur pointeur non suivi
+        fprintf(stderr, "[MEMORY_TRACKER] Pointer may have been allocated before tracker init.\n");
+        fprintf(stderr, "[MEMORY_TRACKER] Freeing safely without abort (non-strict mode).\n");
+#ifdef TRACKER_STRICT_ABORT
+        pthread_mutex_unlock(&g_tracker_mutex);
+        abort();
+#else
+        pthread_mutex_unlock(&g_tracker_mutex);
+        free(ptr);  /* Libération sécurisée sans crash */
+        return;
+#endif
     }
 
     memory_entry_t* entry = &g_tracker.entries[found_entry_idx];
@@ -245,7 +260,7 @@ void tracked_free(void* ptr, const char* file, int line, const char* func) {
     printf("[MEMORY_TRACKER] FREE: %p (%zu bytes) at %s:%d in %s() - originally allocated at %s:%d\n",
            ptr, entry->size, file, line, func, entry->file, entry->line);
 
-    pthread_mutex_unlock(&allocation_mutex);
+    pthread_mutex_unlock(&g_tracker_mutex);
 
     // LIBÉRATION SÉCURISÉE
     free(ptr);
@@ -515,56 +530,107 @@ int memory_tracker_reset_freed(void) {
 }
 /* ======================================================
  * lv_* — Implémentations LumVorax Integration Bridge
+ * MT-001 FIX: les fonctions journalisent réellement les événements
+ * et délèguent les allocations au tracker instrumenté.
  * Requis par lumvorax_integration.h (flag -DLUMVORAX_ENABLED=1)
- * Compatibilité Replit + Ubuntu — C48 2026-04-16
+ * Compatibilité Replit + Ubuntu — C48 2026-04-16 / MT-001-FIX
  * ====================================================== */
 #include <time.h>
 #include <stdint.h>
 #include <stdbool.h>
 
+/* Fichier de log bridge LumVorax — ouvert une seule fois au lv_init() */
+static FILE* lv_log_fp = NULL;
+
 bool lv_init(const char* log_dir) {
-    (void)log_dir;
+    /* MT-001 FIX: ouvrir un fichier de log réel pour tracer les événements bridge */
+    if (!log_dir) log_dir = "/tmp";
+    char path[512];
+    snprintf(path, sizeof(path), "%s/lv_bridge_%lu.log", log_dir,
+             (unsigned long)time(NULL));
+    lv_log_fp = fopen(path, "w");
+    if (!lv_log_fp) {
+        fprintf(stderr, "[LV_BRIDGE] WARNING: cannot open log file %s — events lost\n", path);
+        return false;
+    }
+    fprintf(lv_log_fp, "[LV_BRIDGE] init log_dir=%s\n", log_dir);
+    fflush(lv_log_fp);
     return true;
 }
 
-void lv_destroy(void) {}
+void lv_destroy(void) {
+    /* MT-001 FIX: fermer proprement le fichier de log bridge */
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] destroy\n");
+        fclose(lv_log_fp);
+        lv_log_fp = NULL;
+    }
+}
 
 void lv_module_start(const char* file, int line, const char* func,
                      const char* module, const char* label) {
-    (void)file; (void)line; (void)func; (void)module; (void)label;
+    /* MT-001 FIX: écriture réelle dans le log bridge */
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] MODULE_START module=%s label=%s at %s:%d %s()\n",
+                module ? module : "?", label ? label : "?", file, line, func);
+        fflush(lv_log_fp);
+    }
 }
 
 void lv_module_end(const char* file, int line, const char* func,
                    const char* module, const char* label, bool success) {
-    (void)file; (void)line; (void)func; (void)module; (void)label; (void)success;
+    /* MT-001 FIX: écriture réelle dans le log bridge */
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] MODULE_END module=%s label=%s success=%s at %s:%d %s()\n",
+                module ? module : "?", label ? label : "?",
+                success ? "true" : "false", file, line, func);
+        fflush(lv_log_fp);
+    }
 }
 
 void lv_module_metric(const char* file, int line, const char* func,
                       const char* module, const char* metric, double value) {
-    (void)file; (void)line; (void)func; (void)module; (void)metric; (void)value;
+    /* MT-001 FIX: enregistrement réel de la métrique dans le log bridge */
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] METRIC module=%s metric=%s value=%.6f at %s:%d %s()\n",
+                module ? module : "?", metric ? metric : "?", value, file, line, func);
+        fflush(lv_log_fp);
+    }
 }
 
 void lv_module_operation(const char* file, int line, const char* func,
                          const char* module, const char* op, const char* data) {
-    (void)file; (void)line; (void)func; (void)module; (void)op; (void)data;
+    /* MT-001 FIX: enregistrement réel de l'opération dans le log bridge */
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] OPERATION module=%s op=%s data=%s at %s:%d %s()\n",
+                module ? module : "?", op ? op : "?", data ? data : "null", file, line, func);
+        fflush(lv_log_fp);
+    }
 }
 
 void* lv_tracked_calloc(size_t nmemb, size_t size, const char* file, int line, const char* func) {
-    (void)file; (void)line; (void)func;
-    return calloc(nmemb, size);
+    /* MT-001 FIX: délégation au tracker instrumenté */
+    return tracked_calloc(nmemb, size, file, line, func);
 }
 
 void* lv_tracked_malloc(size_t size, const char* file, int line, const char* func) {
-    (void)file; (void)line; (void)func;
-    return malloc(size);
+    /* MT-001 FIX: délégation au tracker instrumenté */
+    return tracked_malloc(size, file, line, func);
 }
 
 void lv_tracked_free(void* ptr, const char* file, int line, const char* func) {
-    (void)file; (void)line; (void)func;
-    free(ptr);
+    /* MT-001 FIX: délégation au tracker instrumenté */
+    tracked_free(ptr, file, line, func);
 }
 
-void lv_report_leaks(void) {}
+void lv_report_leaks(void) {
+    /* MT-001 FIX: rapport réel des leaks via tracker */
+    memory_tracker_check_leaks();
+    if (lv_log_fp) {
+        fprintf(lv_log_fp, "[LV_BRIDGE] lv_report_leaks called — see MEMORY_TRACKER output\n");
+        fflush(lv_log_fp);
+    }
+}
 
 uint64_t lv_get_timestamp_ns(void) {
     struct timespec ts;

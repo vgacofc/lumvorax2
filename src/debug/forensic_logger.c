@@ -55,7 +55,7 @@ bool forensic_logger_init(const char* filename) {
     }
     
     uint64_t timestamp = lum_get_timestamp();
-    fprintf(forensic_log_file, "=== FORENSIC LOG STARTED (timestamp: %lu ns) ===\n", timestamp);
+    fprintf(forensic_log_file, "=== FORENSIC LOG STARTED (timestamp: %llu ns) ===\n", timestamp);
     fprintf(forensic_log_file, "Forensic logging initialized successfully\n");
     fflush(forensic_log_file);
     
@@ -79,7 +79,7 @@ void forensic_log_memory_operation(const char* operation, void* ptr, size_t size
     if (!forensic_log_file) return;
     
     uint64_t timestamp = lum_get_timestamp();
-    fprintf(forensic_log_file, "[%lu] MEMORY_%s: ptr=%p, size=%zu\n", 
+    fprintf(forensic_log_file, "[%llu] MEMORY_%s: ptr=%p, size=%zu\n", 
             timestamp, operation, ptr, size);
     fflush(forensic_log_file);
 }
@@ -88,12 +88,12 @@ void forensic_log_lum_operation(const char* operation, uint64_t lum_count, doubl
     if (!forensic_log_file) return;
     
     uint64_t timestamp = lum_get_timestamp();
-    fprintf(forensic_log_file, "[%lu] LUM_%s: count=%lu, duration=%.3f ns\n",
+    fprintf(forensic_log_file, "[%llu] LUM_%s: count=%llu, duration=%.3f ns\n",
             timestamp, operation, lum_count, duration_ns);
     fflush(forensic_log_file);
     
     // NOUVEAU: Log détaillé pour chaque LUM individuel
-    printf("[FORENSIC_REALTIME] LUM_%s: count=%lu at timestamp=%lu ns\n", 
+    printf("[FORENSIC_REALTIME] LUM_%s: count=%llu at timestamp=%llu ns\n", 
            operation, lum_count, timestamp);
 }
 
@@ -104,13 +104,14 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
         return;
     }
     
-    // ÉCRITURE FICHIER: Log détaillé avec flush immédiat
-    fprintf(forensic_log_file, "[%lu] [LUM_%u] %s: Individual LUM processing (memory=%p)\n",
-            timestamp_ns, lum_id, operation, (void*)&lum_id);
+    /* FL-002 FIX: &lum_id était l'adresse d'une variable locale (stack), pas l'adresse
+     * du LUM en mémoire — log forensique trompeur. On supprime ce champ sans valeur. */
+    fprintf(forensic_log_file, "[%llu] [LUM_%u] %s: Individual LUM processing\n",
+            timestamp_ns, lum_id, operation);
     fflush(forensic_log_file);
     
     // ÉCRITURE CONSOLE: Affichage temps réel obligatoire
-    printf("[FORENSIC_LUM] [%lu] LUM_%u %s\n", timestamp_ns, lum_id, operation);
+    printf("[FORENSIC_LUM] [%llu] LUM_%u %s\n", timestamp_ns, lum_id, operation);
     fflush(stdout);
     
     // NOUVEAU: Log dans fichier séparé horodaté
@@ -125,13 +126,13 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
                  tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec);
         individual_log = fopen(individual_filename, "w");
         if (individual_log) {
-            fprintf(individual_log, "=== LOG INDIVIDUEL LUMs - SESSION %lu ===\n", timestamp_ns);
+            fprintf(individual_log, "=== LOG INDIVIDUEL LUMs - SESSION %llu ===\n", timestamp_ns);
             fflush(individual_log);
         }
     }
     
     if (individual_log) {
-        fprintf(individual_log, "[%lu] LUM_%u: %s\n", timestamp_ns, lum_id, operation);
+        fprintf(individual_log, "[%llu] LUM_%u: %s\n", timestamp_ns, lum_id, operation);
         fflush(individual_log);
     }
 }
@@ -139,7 +140,7 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
 void forensic_logger_destroy(void) {
     if (forensic_log_file) {
         uint64_t timestamp = lum_get_timestamp();
-        fprintf(forensic_log_file, "=== FORENSIC LOG ENDED (timestamp: %lu ns) ===\n", timestamp);
+        fprintf(forensic_log_file, "=== FORENSIC LOG ENDED (timestamp: %llu ns) ===\n", timestamp);
         fclose(forensic_log_file);
         forensic_log_file = NULL;
     }
@@ -152,7 +153,7 @@ void forensic_log(forensic_level_e level, const char* function, const char* form
     va_list args;
     va_start(args, format);
     
-    fprintf(forensic_log_file, "[%lu] [%d] %s: ", timestamp, level, function);
+    fprintf(forensic_log_file, "[%llu] [%d] %s: ", timestamp, level, function);
     vfprintf(forensic_log_file, format, args);
     fprintf(forensic_log_file, "\n");
     fflush(forensic_log_file);
@@ -168,7 +169,7 @@ void unified_forensic_log(unified_forensic_level_e level, const char* function, 
     va_list args;
     va_start(args, format);
     
-    fprintf(forensic_log_file, "[%lu] [UNIFIED_%d] %s: ", timestamp, level, function);
+    fprintf(forensic_log_file, "[%llu] [UNIFIED_%d] %s: ", timestamp, level, function);
     vfprintf(forensic_log_file, format, args);
     fprintf(forensic_log_file, "\n");
     fflush(forensic_log_file);
