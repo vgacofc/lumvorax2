@@ -455,3 +455,46 @@ Fichiers non commités :
 **CERTIFIED_100=false | unique_human_proven=false | Mode DEBUG actif**
 **Rapport produit le : 2026-10-02 | Session forensic indépendante**
 **Auteur : Agent Bob IDE — session LumVorax uniquement**
+
+---
+
+## ADDENDUM — Anomalies découvertes après rédaction initiale
+
+### ANOMALIE #10 — BUG CALCUL : improvement NX-42 — dead code toujours 0%
+**Fichier :** `src/tests/nx42_30_problems_execution_v2.c`, lignes 74–76
+**Gravité : 🟠 SÉRIEUX — CALCUL MORT**
+
+```c
+// ligne 76 : première assignation — jamais utilisée
+improvement = (1.0 - (double)lat_v35 / (double)lat_v35) * 100.0;
+// → lat_v35/lat_v35 = 1.0 toujours → improvement = 0.0% → dead code
+// ligne 83 : assignation finale (correcte) écrase la précédente
+improvement = (1.0 - (double)lat_v42 / (double)lat_v35) * 100.0;
+```
+
+La ligne 76 est du code mort qui calcule toujours 0% et est immédiatement écrasée par la ligne 83. C'est un bug mineur mais il révèle un manque de revue du code.
+
+### ANOMALIE #11 — NX11 canonical final : SHA-256 réel MAIS module `atp` arbitraire
+**Fichier :** `src/sch/nx/sch_nx_v11_canonical_final.c`, lignes 94–95
+**Gravité : 🟠 SÉRIEUX**
+
+```c
+double dissipation = 1.0 + ((double)rand()/RAND_MAX * 2.0);
+n.atp -= dissipation;
+```
+
+Contrairement aux autres NX (v6-v10) qui utilisent des constantes hardcodées (`-= 2.0`, `-= 1.5`), le NX11 utilise un rand() pour la dissipation. SHA-256 est réel (appelle `sha256_hash()`). Mais `atp` reste une grandeur arbitraire non ancrée à une physique réelle.
+
+### ANOMALIE #12 — Test diff=0 stubs : logging forensic silencieux en test
+**Fichier :** `src/lum/test_diff_zero_stubs.c`, lignes 47–62
+**Gravité : ⚠️ RISQUE AUDIT**
+
+Le logging forensic est **silencieux** dans les tests diff=0 (stubs). Cela signifie que les violations de traçabilité ne sont pas détectées pendant les tests unitaires. Ce n'est pas un bug d'exécution mais une limite forensic documentée.
+
+---
+
+**AVANCEMENT FINAL : 90%**
+**Fichiers encore non lus intégralement :** `src/lum/lum_core.c` (complet), `src/vorax/vorax_operations.c` (lignes 80-565), rapports 127-133 (vérification croisée formelle).
+
+**Verdict global maintenu :** Solveur NS 2D = PROUVÉ. Tests convergence = REDÉFINIS (T01 FAIL masqué). NX-42 30 problèmes = STUBS LCG. SHA-256 blockchain = STUB (zéros). Superposition quantique = FAKE classique.
+
