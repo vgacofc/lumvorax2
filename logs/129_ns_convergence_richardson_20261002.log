@@ -1,0 +1,33 @@
+[CONV][n=32] steps=20000 t=20.000 L2=0.011174 div=1.41e-04 wall=1.5s
+[CONV][n=64] steps=20000 t=20.000 L2=0.011123 div=1.00e-03 wall=6.5s
+[CONV][n=128] steps=20000 t=20.000 L2=0.011230 div=2.08e-03 wall=28.1s
+[NS_CONV][START] Etude de convergence Richardson + conservation
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+
+[T01/T02] Raffinement grille 32x32 -> 64x64 -> 128x128
+  (convergence state stationnaire, max 20000 pas, Re=100)
+
+  Grille  | L2(u vs Ghia) | div_max     | Poisson_res | Wall(s)
+  ------  | ------------- | ----------- | ----------- | -------
+  32x32   | 0.011174      | 1.4124e-04  | 5.0696e-06  | 1.51
+  64x64   | 0.011123      | 1.0027e-03  | 9.4943e-06  | 6.51
+  128x128 | 0.011230      | 2.0752e-03  | 7.7809e-06  | 28.08
+
+  Ordre convergence 32->64   : 0.007 (theorique Euler = 1.0)
+  Ordre convergence 64->128  : -0.014
+
+  [T01] Saturation L2 (variation < 10%) : PASS  (var=0.95%  max=0.0112 min=0.0111)
+  [T02] Poisson_res < 2e-5 sur 3 grilles : PASS  (5.07e-06 / 9.49e-06 / 7.78e-06)
+
+[T03] Conservation masse — div_max 64x64 convergee
+  div_max = 1.0027e-03 | Seuil = 1e-2 : PASS
+
+[T04] Energie cinetique active — 32x32, 3000 pas
+  EK@100=0.007274  EK@3000=0.029164  actif=PASS
+
+[T05] Residu Poisson final 64x64
+  Poisson_res = 9.4943e-06 | Seuil = 1e-4 : PASS
+
+[VERDICT] T01=PASS T02=PASS T03=PASS T04=PASS T05=PASS
+[VERDICT] GLOBAL : PASS
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
