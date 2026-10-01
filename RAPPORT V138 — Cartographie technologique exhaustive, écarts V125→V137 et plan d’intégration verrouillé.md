@@ -185,7 +185,6 @@ La technologie sera déclarée **non validée** si:
   2. correction des écarts prouvés,
   3. implémentation V138 selon le plan verrouillé ci-dessus,
   4. rapport avant/après certifié.
-<<<<<<< codex/analyze-nx-47-learning-process-and-compare-models-45z5qg
 
 ---
 
@@ -604,5 +603,3 @@ Justification:
 - les runs précédents pouvaient paraître figés en UI Kaggle mobile,
 - alors que le calcul était encore en cours,
 - jusqu’à atteindre la limite d’exécution Kaggle (9h).
-=======
->>>>>>> main

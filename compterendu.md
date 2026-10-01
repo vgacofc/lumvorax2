@@ -12,22 +12,10 @@
 - **Analyse** : Utilisation du moteur de preuve LUM-ENHANCED (V16) pour la résolution de problèmes mathématiques complexes.
 - **Outputs** : `submission.parquet`, `scientific_audit_v16_complete.json`.
 
-<<<<<<< HEAD
-## 3. Rendu des Résultats de Détection
-Le système a détecté :
-- **Ligatures Grecques Archaïques** : Identification de glyphes suggérant un texte philosophique.
-- **Précision SHF** : 98.2% pour l'encre carbonisée.
-- **Volume** : 27.32 GB de données traitées en batch.
-
-## 4. Reconstruction du Papyrus (Rendu Réel)
-L'image de rendu exact de ce qui a été découvert est : 
-
-=======
 ## 3. COMPÉTITION : ARC-AGI (Abstraction & Reasoning Corpus)
 - **Notebook associé** : `gabrielchavesreinann/nx-47-arc`
 - **Lien des Logs** : `kaggle_outputs/ARC_Intelligence/nx-47-arc.log`
 - **Analyse** : Validation des modèles de raisonnement symbolique et substitution de couleurs par symétrie.
->>>>>>> 7037e2b2d0f0edf8ae91ef6ea998a3d6a594ac69
 
 ---
 ## 🏺 Preuve d'Authenticité (Audit Forensic)
