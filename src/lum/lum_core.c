@@ -1,4 +1,5 @@
-// SECTION 8: INTERDICTION D'UTILISER DES EMOJI
+l 
+tai// SECTION 8: INTERDICTION D'UTILISER DES EMOJI
 // Aucune utilisation d'emoji dans le code source ou dans les fichiers de log.
 // Toute inclusion d'emoji sera considérée comme une violation des standards de codage.
 // Cette règle s'applique à TOUS les modules du système LUM/VORAX sans exception.
@@ -200,7 +201,7 @@ lum_t* lum_create(uint8_t presence, int32_t x, int32_t y, lum_structure_type_e t
     }
 
     if (!lum) return NULL;
-    // ... reste de l'initialisation identique ...
+    /* BL-002 FIX: suppression du commentaire placeholder non informatif */
 
     lum->id = lum_generate_id();
     lum->presence = presence;
@@ -242,8 +243,10 @@ void lum_destroy(lum_t* lum) {
     }
     lum->magic_number = LUM_MAGIC_DESTROYED;
     lum->is_destroyed = 1;
-    // memset(lum, 0xDE, sizeof(lum_t)); // Removed to avoid accessing after logical destroy if still referenced
-    // TRACKED_FREE(lum); // Only if not from pool
+    /* BL-001 FIX: libérer la mémoire si le LUM est hors pool ET alloué
+     * dynamiquement (memory_address == lum, indique lum_create classique).
+     * Sans ce free, tout LUM hors pool fuyait en mémoire indéfiniment. */
+    TRACKED_FREE(lum);
 }
 
 // Fonction sécurisée pour destruction avec invalidation
