@@ -11,6 +11,7 @@
 #include <stdatomic.h>
 #include <immintrin.h>
 #include <stdbool.h> // CORRECTION: Include pour le type bool
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable (macOS/Linux) */
 
 // lum_log est définie dans le module logger
 
@@ -76,9 +77,9 @@ vorax_result_t* vorax_fuse(lum_group_t* group1, lum_group_t* group2) {
     result->execution_time_ns = fusion_time_ns;
 
     char success_msg[256];
-    snprintf(success_msg, sizeof(success_msg), 
-             "Fusion completed: %zu LUMs in %lu ns (%.2f M LUMs/sec)", 
-             total_count, fusion_time_ns, 
+    snprintf(success_msg, sizeof(success_msg),
+             "Fusion completed: %zu LUMs in %" PRIu64 " ns (%.2f M LUMs/sec)", /* C2-FIX */
+             total_count, fusion_time_ns,
              (double)total_count * 1000.0 / fusion_time_ns);
     vorax_result_set_success(result, success_msg);
 
@@ -185,9 +186,9 @@ vorax_result_t* vorax_split(lum_group_t* group, size_t parts) {
     result->use_vectorization = true;
 
     char success_msg[256];
-    snprintf(success_msg, sizeof(success_msg), 
-             "Split completed: %zu LUMs → %zu parts in %lu ns (%.2f M LUMs/sec)", 
-             group->count, parts, split_time_ns, 
+    snprintf(success_msg, sizeof(success_msg),
+             "Split completed: %zu LUMs \xe2\x86\x92 %zu parts in %" PRIu64 " ns (%.2f M LUMs/sec)", /* C2-FIX */
+             group->count, parts, split_time_ns,
              result->throughput_lums_per_sec / 1000000.0);
     vorax_result_set_success(result, success_msg);
 
@@ -344,7 +345,27 @@ vorax_result_t* vorax_retrieve(lum_memory_t* memory, lum_zone_t* zone) {
     return result;
 }
 
-// Compress operation: Convert group to Ω (compressed form)
+/* BL-012 NOTE ARCHITECTURALE: vorax_compress() / vorax_expand() sont des
+ * opérations de PROJECTION et non de COMPRESSION réversible.
+ *
+ * vorax_compress() convertit N LUMs en 1 LUM Ω (LUM_STRUCTURE_COMPRESSED).
+ * Les données individuelles des N LUMs originaux NE SONT PAS stockées
+ * dans le LUM Ω (un lum_t fait 64 octets — il ne peut pas contenir N × 64 octets).
+ *
+ * vorax_expand() reconstruit 'parts' LUMs nouveaux à partir de Ω,
+ * mais ces LUMs ont des position_x = 0..parts-1 et un contenu vide (lum_create).
+ * Ils NE reconstituent PAS les LUMs originaux.
+ *
+ * C'est une limite de conception délibérée : compress/expand représente
+ * une transition d'état (réduction puis expansion structurelle), pas
+ * un codec avec dictionnaire. Pour une compression réversible avec
+ * restauration des données originales, il faudrait stocker les données
+ * originales hors du LUM Ω (ex: dans une zone mémoire séparée référencée
+ * par memory_address), ce qui est un chantier architectural distinct.
+ *
+ * Cette limite est documentée ici conformément au rapport 140 §7 Bloc C item 20.
+ */
+/* Compress operation: Convert group to Ω (compressed form) — PROJECTION IRREVERSIBLE */
 vorax_result_t* vorax_compress(lum_group_t* group) {
     vorax_result_t* result = vorax_result_create();
     if (!result || !group) {

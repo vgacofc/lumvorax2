@@ -109,12 +109,20 @@ static uint32_t lum_checksum(const void* data, size_t len) {
     return lum_crc32c(data, len);
 }
 
+/* BL-004 FIX : compteur d'ID unique partagé entre toutes les granularités.
+ * Avant ce fix, 4 variables static uint32_t next_id = 1 indépendantes
+ * (page/byte/bit/hugepage) produisaient des IDs identiques entre granularités
+ * (ex: LUM_PAGE id=1 et LUM_BIT id=1 pour le même snapshot), rendant toute
+ * corrélation cross-granularité impossible.
+ * Solution : un seul compteur atomique global. */
+#include <stdatomic.h>
+static atomic_uint g_lum_next_id = 1;
+
 /* Encode 1 page (4096 octets) en 1 lum_t.
  * memory_address pointe sur une copie heap-allouée du contenu (à libérer après).
  */
 static void encode_page_to_lum(uint64_t vaddr, const uint8_t* page_data, lum_t* out) {
-    static uint32_t next_id = 1;
-    out->id = next_id++;
+    out->id = atomic_fetch_add(&g_lum_next_id, 1u);
     out->presence = 1;
     out->structure_type = 0; /* PAGE */
     out->is_destroyed = 0;
@@ -128,10 +136,12 @@ static void encode_page_to_lum(uint64_t vaddr, const uint8_t* page_data, lum_t* 
     memset(out->padding, 0, sizeof(out->padding));
 }
 
-/* Encode 1 octet en 1 lum_t (granularité BYTE) */
+/* Encode 1 octet en 1 lum_t (granularité BYTE)
+ * BL-006 FIX : checksum = CRC32C(byte_val) au lieu du byte brut.
+ * Un checksum égal à la donnée elle-même ne détecte aucune erreur de transmission
+ * (si le byte est corrompu, le checksum l'est aussi de la même façon). */
 static void encode_byte_to_lum(uint64_t vaddr, uint8_t byte_val, lum_t* out) {
-    static uint32_t next_id = 1;
-    out->id = next_id++;
+    out->id = atomic_fetch_add(&g_lum_next_id, 1u);
     out->presence = (byte_val != 0) ? 1 : 0;
     out->structure_type = 1; /* BYTE */
     out->is_destroyed = 0;
@@ -140,15 +150,15 @@ static void encode_byte_to_lum(uint64_t vaddr, uint8_t byte_val, lum_t* out) {
     out->position_y = (int32_t)(vaddr >> 32);
     out->timestamp = now_ns();
     out->memory_address = (void*)(uintptr_t)vaddr;
-    out->checksum = byte_val;
+    /* BL-006 FIX: CRC32C sur le byte (4 octets avec padding à 0) */
+    out->checksum = lum_crc32c(&byte_val, 1);
     out->magic_number = LUM_TRACER_MAGIC;
     memset(out->padding, 0, sizeof(out->padding));
 }
 
 /* Encode 1 bit en 1 lum_t (granularité BIT) */
 static void encode_bit_to_lum(uint64_t bit_addr, uint8_t bit_val, lum_t* out) {
-    static uint32_t next_id = 1;
-    out->id = next_id++;
+    out->id = atomic_fetch_add(&g_lum_next_id, 1u);
     out->presence = bit_val & 1u;
     out->structure_type = 2; /* BIT */
     out->is_destroyed = 0;
@@ -157,7 +167,7 @@ static void encode_bit_to_lum(uint64_t bit_addr, uint8_t bit_val, lum_t* out) {
     out->position_y = (int32_t)(bit_addr >> 32);
     out->timestamp = now_ns();
     out->memory_address = (void*)(uintptr_t)bit_addr;
-    out->checksum = bit_val & 1u;
+    out->checksum = bit_val & 1u;  /* 1 bit : CRC serait surdimensionné, valeur suffisante */
     out->magic_number = LUM_TRACER_MAGIC;
     memset(out->padding, 0, sizeof(out->padding));
 }
@@ -165,11 +175,13 @@ static void encode_bit_to_lum(uint64_t bit_addr, uint8_t bit_val, lum_t* out) {
 /* Encode 1 huge page (2 MiB max) en 1 lum_t (granularité HUGEPAGE) — C115
  * hp_vaddr : adresse virtuelle de début de la tranche
  * hp_len   : taille réelle lue (multiple de PAGE_SIZE, ≤ HUGEPAGE_SIZE)
+ * BL-007 FIX : checksum CRC32C sur la totalité des données (hp_len octets),
+ * pas seulement la première page. Le commentaire "Adler-32" était obsolète
+ * depuis C117 qui avait migré vers CRC32C — corrigé ici.
  */
 static void encode_hugepage_to_lum(uint64_t hp_vaddr, const uint8_t* hp_data,
                                     size_t hp_len, lum_t* out) {
-    static uint32_t next_id = 1;
-    out->id = next_id++;
+    out->id = atomic_fetch_add(&g_lum_next_id, 1u);
     out->presence = 1;
     out->structure_type = 3; /* HUGEPAGE */
     out->is_destroyed = 0;
@@ -179,8 +191,10 @@ static void encode_hugepage_to_lum(uint64_t hp_vaddr, const uint8_t* hp_data,
     out->position_y = (int32_t)(hp_vaddr >> 32);
     out->timestamp = now_ns();
     out->memory_address = (void*)(uintptr_t)hp_vaddr;
-    /* Checksum Adler-32 sur la première page uniquement (rapide pour 2 MiB) */
-    out->checksum = lum_checksum(hp_data, PAGE_SIZE < hp_len ? PAGE_SIZE : hp_len);
+    /* BL-007 FIX: CRC32C sur la totalité des données (hp_len), pas seulement
+     * la première page. Un checksum partiel ne détecte pas les corruptions
+     * dans les pages 2 à 512 d'une tranche HUGEPAGE de 2 MiB. */
+    out->checksum = lum_crc32c(hp_data, hp_len);
     out->magic_number = LUM_TRACER_MAGIC;
     memset(out->padding, 0, sizeof(out->padding));
 }
@@ -250,8 +264,15 @@ int lum_memory_snapshot_self(const char* out_path,
         uint64_t start = 0, end = 0;
         char perms[8] = {0};
         char path[256] = {0};
+        /* Parsing /proc/maps : utiliser des variables unsigned long intermédiaires
+         * pour le sscanf %lx (unsigned long), puis convertir en uint64_t.
+         * Sur les systèmes où unsigned long = 32 bits, une approche strtoull serait
+         * nécessaire — cette implémentation est Linux 64-bit. */
+        unsigned long start_ul = 0, end_ul = 0;
         int n = sscanf(line, "%lx-%lx %7s %*s %*s %*s %255s",
-                       &start, &end, perms, path);
+                       &start_ul, &end_ul, perms, path);
+        start = (uint64_t)start_ul;
+        end   = (uint64_t)end_ul;
         if (n < 3) continue;
         if (perms[0] != 'r') continue; /* page non-lisible : skip */
 

@@ -1,5 +1,6 @@
 
 #include "hostinger_resource_limiter.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include "../debug/memory_tracker.h"
 #include "../logger/lum_logger.h"
 #include <stdio.h>

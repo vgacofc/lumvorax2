@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <inttypes.h> /* C2-FIX: PRIu64 portable */
 #include <math.h>
 #include <stdint.h>
 
@@ -139,8 +140,13 @@ double operation_timer_get_elapsed(operation_timer_t* timer) {
 size_t performance_metrics_get_memory_usage(void) {
     struct rusage usage;
     if (getrusage(RUSAGE_SELF, &usage) == 0) {
-        // Convert kilobytes to bytes
-        global_memory_usage = usage.ru_maxrss * 1024;
+        /* C1-FIX: ru_maxrss est en BYTES sur macOS, en KILOBYTES sur Linux.
+         * Guard conditionnel pour portabilité. */
+#if defined(__APPLE__)
+        global_memory_usage = (size_t)usage.ru_maxrss;
+#else
+        global_memory_usage = (size_t)usage.ru_maxrss * 1024;
+#endif
         return global_memory_usage;
     }
     return 0;
@@ -214,7 +220,7 @@ void performance_metrics_print_summary(performance_metrics_t* metrics) {
     if (!metrics) return;
 
     printf("=== Performance Metrics Summary ===\n");
-    printf("Total Operations: %zu\n", metrics->total_operations);
+    printf("Total Operations: %" PRIu64 "\n", metrics->total_operations); /* C2-FIX */
     printf("Start Time: %ld.%ld\n", metrics->start_time.tv_sec, metrics->start_time.tv_nsec);
     printf("Last Update: %ld\n", metrics->last_update);
     printf("Memory Peak: %zu bytes\n", metrics->memory_peak);

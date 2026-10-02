@@ -163,28 +163,26 @@ static void _split_child(lum_btree_node_t* parent, int child_idx) {
 static bool _insert_non_full(lum_btree_node_t* n, uint64_t key, uint64_t value) {
     int i = n->n_keys - 1;
     if (n->is_leaf) {
-        /* Chercher la position d'insertion et decaler */
+        /* BL-009 FIX: upsert B-Tree — vérifier d'abord si la clé existe,
+         * AVANT de déplacer quoi que ce soit, pour éviter le double décalage
+         * redondant (décaler puis re-compacter) qui était fragile et trompeur. */
+
+        /* Étape 1: chercher si la clé existe déjà sans modifier le tableau */
+        int found_at = -1;
+        for (int k = 0; k <= i; k++) {
+            if (n->keys[k] == key) { found_at = k; break; }
+        }
+        if (found_at >= 0) {
+            /* Clé existante : mise à jour simple de la valeur, sans déplacement */
+            n->vals[found_at] = value;
+            return false; /* pas de nouvelle clé */
+        }
+
+        /* Étape 2: clé nouvelle — décaler les clés supérieures d'une position */
         while (i >= 0 && key < n->keys[i]) {
             n->keys[i + 1] = n->keys[i];
             n->vals[i + 1] = n->vals[i];
             i--;
-        }
-        if (i >= 0 && n->keys[i] == key) {
-            /* Cle existe deja : mise a jour */
-            n->keys[i + 1] = n->keys[i]; /* annuler le decalage */
-            n->vals[i + 1] = n->vals[i];
-            /* Retroceder */
-            n->vals[i] = value;
-            /* Annuler l'insertion */
-            n->keys[i + 1] = n->keys[i]; /* rien a faire, deja annule */
-            /* En fait : si key == n->keys[i], on ne doit PAS inserer */
-            /* Retroceder le decalage effectue */
-            for (int j = i + 1; j < n->n_keys; j++) {
-                n->keys[j] = n->keys[j + 1];
-                n->vals[j] = n->vals[j + 1];
-            }
-            n->vals[i] = value;
-            return false; /* pas de nouvelle cle */
         }
         n->keys[i + 1] = key;
         n->vals[i + 1] = value;

@@ -277,6 +277,10 @@ lumq_result_t lumq_execute(lumq_ctx_t* ctx, const lumq_ast_t* ast) {
             clock_gettime(CLOCK_REALTIME, &ts);
             ctx->catalog->tables[tidx].modified_ts_ns =
                 (uint64_t)ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+            /* BL-010 FIX: marquer le catalogue dirty après mise à jour de n_rows.
+             * Sans ce flag, lum_catalog_save() skippe l'écriture (if (!cat->dirty) return true)
+             * et la valeur n_rows est perdue au prochain redémarrage. */
+            ctx->catalog->dirty = true;
         }
         res.ok = true;
         res.rows_affected = 1;
@@ -353,8 +357,11 @@ lumq_result_t lumq_execute(lumq_ctx_t* ctx, const lumq_ast_t* ast) {
         bool deleted = lum_btree_delete(idx, ast->key);
         if (deleted) {
             int tidx = lum_catalog_find_table(ctx->catalog, ast->table_name);
-            if (tidx >= 0)
+            if (tidx >= 0) {
                 ctx->catalog->tables[tidx].n_rows = lum_btree_count(idx);
+                /* BL-010 FIX (DELETE): même correction que INSERT — dirty flag requis */
+                ctx->catalog->dirty = true;
+            }
         }
         res.ok = true;
         res.rows_affected = deleted ? 1 : 0;

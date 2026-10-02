@@ -313,7 +313,10 @@ bool zero_copy_prefault_pages(zero_copy_pool_t* pool) {
     if (!pool || !pool->is_mmap_backed) return false;
 
     // Prefault toutes les pages en les touchant
-    size_t page_size = getpagesize();
+    /* C1-FIX: sysconf(_SC_PAGESIZE) est POSIX standard (C99 compatible) ;
+     * getpagesize() est une extension GNU/BSD non garantie avec -std=c99 strict. */
+    size_t page_size = (size_t)sysconf(_SC_PAGESIZE);
+    if ((long)page_size <= 0) page_size = 4096; /* fallback défensif */
     uint8_t* mem = (uint8_t*)pool->memory_region;
 
     for (size_t offset = 0; offset < pool->total_size; offset += page_size) {
@@ -330,14 +333,22 @@ bool zero_copy_prefault_pages(zero_copy_pool_t* pool) {
 bool zero_copy_advise_sequential(zero_copy_pool_t* pool) {
     if (!pool || !pool->is_mmap_backed) return false;
 
-    // Optimisation pour accès séquentiel
+/* C1-FIX: madvise + MADV_SEQUENTIAL disponibles sur Linux et macOS, mais
+ * nécessitent -D_GNU_SOURCE (Linux) ou macOS >= 10.2. Avec -std=c99 strict,
+ * certains compilateurs ne les exposent pas sans la feature macro.
+ * Guard conditionnel : on tente madvise seulement si MADV_SEQUENTIAL est défini. */
+#if defined(MADV_SEQUENTIAL)
     if (madvise(pool->memory_region, pool->total_size, MADV_SEQUENTIAL) == 0) {
         lum_log(LUM_LOG_DEBUG, "Sequential access advised for zero-copy pool");
         return true;
     }
-
     lum_log(LUM_LOG_ERROR, "madvise SEQUENTIAL failed: %s", strerror(errno));
     return false;
+#else
+    /* macOS/BSD sans MADV_SEQUENTIAL : no-op, retour true (pas d'erreur) */
+    lum_log(LUM_LOG_DEBUG, "madvise SEQUENTIAL not available on this platform, skipped");
+    return true;
+#endif
 }
 
 void zero_copy_print_stats(zero_copy_pool_t* pool) {

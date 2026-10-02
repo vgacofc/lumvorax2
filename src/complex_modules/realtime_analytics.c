@@ -3,6 +3,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "realtime_analytics.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include "../debug/memory_tracker.h"
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
 #include <stdlib.h>
@@ -229,11 +230,11 @@ bool realtime_analytics_full_trace(realtime_stream_t* stream, const char* trace_
     clock_gettime(CLOCK_MONOTONIC, &ts);
     
     fprintf(file, "=== REALTIME ANALYTICS FULL TRACE ===\n");
-    fprintf(file, "Timestamp: %lu.%09lu\n", ts.tv_sec, ts.tv_nsec);
+    fprintf(file, "Timestamp: %" PRIu64 ".%09lu\n", ts.tv_sec, ts.tv_nsec);
     fprintf(file, "Stream buffer size: %zu\n", stream->buffer_size);
     fprintf(file, "Read index: %zu\n", stream->read_index);
     fprintf(file, "Write index: %zu\n", stream->write_index);
-    fprintf(file, "Total processed: %lu\n", stream->total_processed);
+    fprintf(file, "Total processed: %" PRIu64 "\n", stream->total_processed);
     fprintf(file, "Processing rate: %.3f LUMs/sec\n", stream->processing_rate);
     fprintf(file, "Is streaming: %s\n", stream->is_streaming ? "true" : "false");
     
@@ -246,7 +247,7 @@ bool realtime_analytics_full_trace(realtime_stream_t* stream, const char* trace_
     while (current_index != stream->write_index && trace_count < 1000) {
         lum_t* lum = stream->data_buffer[current_index];
         if (lum) {
-            fprintf(file, "LUM[%zu]: id=%u, presence=%u, pos=(%d,%d), type=%u, timestamp=%lu\n",
+            fprintf(file, "LUM[%zu]: id=%u, presence=%u, pos=(%d,%d), type=%u, timestamp=%" PRIu64 "\n",
                    trace_count, lum->id, lum->presence, lum->position_x, lum->position_y,
                    lum->structure_type, lum->timestamp);
             
@@ -289,7 +290,7 @@ analytics_result_t* realtime_analyze_stream(realtime_stream_t* stream, analytics
     // Traçage complet automatique
     char trace_filename[256];
     snprintf(trace_filename, sizeof(trace_filename), 
-             "realtime_analysis_trace_%lu.txt", start.tv_sec);
+             "realtime_analysis_trace_%" PRIu64 ".txt", start.tv_sec);
     realtime_analytics_full_trace(stream, trace_filename);
 
     // Création métriques

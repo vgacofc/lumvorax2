@@ -2,8 +2,17 @@
 CC = gcc
 # MK-001 FIX: -DDEBUG_MODE actif par défaut (conformément au protocole ARTCB mode DEBUG).
 # MK-002 FIX: -Wl,-z,stack-size retiré de CFLAGS (linker flag ≠ compiler flag).
-CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
-LDFLAGS = -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+# MK-004 FIX: -lrt et -Wl,-z,stack-size sont Linux-only.
+# macOS nécessite -D_DARWIN_C_SOURCE pour exposer ru_maxrss, getpagesize, etc.
+# via <sys/resource.h> même avec -D_POSIX_C_SOURCE=200809L.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
+    LDFLAGS = -lm -lpthread -lrt -Wl,-z,stack-size=16777216
+else
+    CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
+    LDFLAGS = -lm -lpthread
+endif
 
 # Debug/Release modes for performance control
 debug: CFLAGS += -g3
@@ -101,8 +110,13 @@ $(BIN_DIR)/test_forensic_complete_system: $(OBJECTS)
 	$(CC) $(CFLAGS) src/tests/test_forensic_complete_system.c $(OBJECTS) -o $@ $(LDFLAGS)
 
 # Test d'intégration complète 39 modules
+# MK-003 FIX: -lmvec est Linux-only (libmvec = glibc vectorisée) ; macOS ne la fournit pas.
 $(BIN_DIR)/test_integration_complete_39_modules: $(OBJECTS)
+ifeq ($(UNAME_S),Linux)
 	$(CC) $(CFLAGS) src/tests/test_integration_complete_39_modules.c $(OBJECTS) -o $@ $(LDFLAGS) -lmvec -lm
+else
+	$(CC) $(CFLAGS) src/tests/test_integration_complete_39_modules.c $(OBJECTS) -o $@ $(LDFLAGS)
+endif
 
 $(BIN_DIR)/test_quantum: $(OBJECTS)
 	$(CC) $(CFLAGS) src/tests/test_quantum_simulator_complete.c $(OBJECTS) -o $@ $(LDFLAGS)

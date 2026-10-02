@@ -2,6 +2,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "ai_optimization.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include "../debug/memory_tracker.h"
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
 #include <stdlib.h>
@@ -246,7 +247,7 @@ lum_group_t* ai_agent_make_decision(ai_agent_t* agent, lum_group_t* current_stat
     
     snprintf(reasoning_trace.reasoning_explanation, sizeof(reasoning_trace.reasoning_explanation),
              "Agent with success_rate=%.3f chose %s strategy based on threshold 0.5. "
-             "Experience count: %lu, Learning rate: %.6f",
+             "Experience count: %" PRIu64 ", Learning rate: %.6f",
              agent->success_rate, 
              (agent->success_rate > 0.5) ? "conservative" : "exploratory",
              agent->experience_count, agent->learning_rate);
@@ -301,7 +302,7 @@ lum_group_t* ai_agent_make_decision(ai_agent_t* agent, lum_group_t* current_stat
     static bool auto_save_enabled = true;
     if (auto_save_enabled) {
         char filename[256];
-        snprintf(filename, sizeof(filename), "ai_reasoning_state_%lu.dat", agent->decisions_made);
+        snprintf(filename, sizeof(filename), "ai_reasoning_state_%" PRIu64 ".dat", agent->decisions_made);
         ai_agent_save_reasoning_state(agent, filename);
     }
 

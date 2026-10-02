@@ -24,9 +24,14 @@
 #ifndef LUM_ALIGNED_ALLOC_SAFE_H
 #define LUM_ALIGNED_ALLOC_SAFE_H
 
+/* C1-FIX: _POSIX_C_SOURCE est déjà requis par le Makefile (-D_POSIX_C_SOURCE=200809L).
+ * Sur macOS/Clang avec -std=c99, aligned_alloc (C11) n'est pas exposé par stdlib.h.
+ * On garde posix_memalign comme chemin primaire et aligned_alloc comme optimisation
+ * uniquement si __STDC_VERSION__ >= 201112L est disponible. */
 #include <stdlib.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,14 +65,17 @@ static inline void* lum_aligned_alloc_safe(size_t alignment, size_t size) {
     size_t aligned_size = lum_align_up(size, alignment);
     if (aligned_size == 0) return NULL;  /* overflow */
 
-    /* Tentative aligned_alloc (C11) avec size garanti multiple */
-    void* p = aligned_alloc(alignment, aligned_size);
-    if (p) return p;
-
-    /* Fallback POSIX (errno-based, jamais d'UB) */
+    /* Chemin POSIX primaire (portable Linux/macOS, -std=c99 compatible) */
     void* q = NULL;
     int rc = posix_memalign(&q, alignment, aligned_size);
     if (rc == 0) return q;
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+    /* C1-FIX: aligned_alloc uniquement si C11 est disponible au préprocesseur.
+     * Évite l'implicit-function-declaration sur macOS/Clang avec -std=c99. */
+    void* p = aligned_alloc(alignment, aligned_size);
+    if (p) return p;
+#endif
 
     return NULL;
 }

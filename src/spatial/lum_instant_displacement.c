@@ -3,6 +3,7 @@
 
 
 #include "lum_instant_displacement.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include "../debug/memory_tracker.h"
 #include "../logger/lum_logger.h"
 #include <stdio.h>
@@ -72,7 +73,7 @@ bool lum_instant_displace(lum_t* lum, int32_t new_x, int32_t new_y, lum_displace
     lum_logger_t* logger = lum_get_global_logger();
     if (logger) {
         char log_msg[256];
-        snprintf(log_msg, sizeof(log_msg), "LUM[%u] déplacée instantanément de (%d,%d) → (%d,%d) en %lu ns",
+        snprintf(log_msg, sizeof(log_msg), "LUM[%u] déplacée instantanément de (%d,%d) → (%d,%d) en %" PRIu64 " ns",
                  lum->id, result->from_x, result->from_y, result->to_x, result->to_y, 
                  result->displacement_time_ns);
         lum_log_message(logger, LUM_LOG_DEBUG, log_msg);
@@ -113,7 +114,7 @@ bool lum_group_instant_displace_all(lum_group_t* group, int32_t delta_x, int32_t
     }
 
     uint64_t end_time = get_precise_timestamp_ns();
-    printf("[GROUP_DISPLACEMENT] %zu LUMs déplacées en %lu ns (%.2f ns/LUM)\n",
+    printf("[GROUP_DISPLACEMENT] %zu LUMs déplacées en %" PRIu64 " ns (%.2f ns/LUM)\n",
            group->count, end_time - start_time, 
            (double)(end_time - start_time) / group->count);
 
@@ -171,7 +172,7 @@ void lum_displacement_metrics_print(const lum_displacement_metrics_t* metrics) {
     printf("Taux de succès: %.2f%%\n", 
            metrics->total_displacements > 0 ? 
            (100.0 * metrics->successful_displacements / metrics->total_displacements) : 0.0);
-    printf("Temps total: %lu ns\n", metrics->total_time_ns);
+    printf("Temps total: %" PRIu64 " ns\n", metrics->total_time_ns);
     printf("Temps moyen par déplacement: %.2f ns\n", metrics->average_time_ns);
     printf("=============================================\n\n");
 }
@@ -244,14 +245,14 @@ bool lum_test_displacement_performance(size_t num_lums) {
     }
     if (logger) {
         char log_msg[256];
-        snprintf(log_msg, sizeof(log_msg), "Déplacements individuels: %lu ns total (%.2f ns/LUM)", 
+        snprintf(log_msg, sizeof(log_msg), "Déplacements individuels: %" PRIu64 " ns total (%.2f ns/LUM)", 
                  end_individual - start_individual,
                  (double)(end_individual - start_individual) / num_lums);
         lum_log_message(logger, LUM_LOG_INFO, log_msg);
     }
     if (logger) {
         char log_msg[256];
-        snprintf(log_msg, sizeof(log_msg), "Déplacement de groupe: %lu ns total (%.2f ns/LUM)",
+        snprintf(log_msg, sizeof(log_msg), "Déplacement de groupe: %" PRIu64 " ns total (%.2f ns/LUM)",
                  end_group - start_group,
                  (double)(end_group - start_group) / num_lums);
         lum_log_message(logger, LUM_LOG_INFO, log_msg);
@@ -317,12 +318,12 @@ bool lum_test_displacement_vs_traditional_move(size_t num_operations) {
     double speedup = (double)traditional_time / instant_time;
 
     printf("\n📈 COMPARAISON PERFORMANCE :\n");
-    printf("Méthode traditionnelle: %lu ns (%lu ns/op)\n", 
+    printf("Méthode traditionnelle: %" PRIu64 " ns (%" PRIu64 " ns/op)\n", 
            traditional_time, traditional_time / num_operations);
-    printf("Déplacement instantané: %lu ns (%lu ns/op)\n", 
+    printf("Déplacement instantané: %" PRIu64 " ns (%" PRIu64 " ns/op)\n", 
            instant_time, instant_time / num_operations);
     printf("Accélération: %.2fx plus rapide\n", speedup);
-    printf("Gain: %lu ns économisés (%.1f%%)\n", 
+    printf("Gain: %" PRIu64 " ns économisés (%.1f%%)\n", 
            traditional_time - instant_time,
            100.0 * (traditional_time - instant_time) / traditional_time);
 

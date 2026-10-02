@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable macOS/Linux */
 #include "core/time_ns.h"
 #include "physics/kerr_metric.h"
 #include "logging/log_writer.h"
@@ -31,7 +32,7 @@ int main() {
         
         if (i % 10 == 0) {
             uint64_t now = time_ns_get_absolute();
-            printf("[PROGRESS] %d%% | TS: %lu ns | r: %.6f | theta: %.6f\n", i, now, photon.r, photon.theta);
+            printf("[PROGRESS] %d%% | TS: %" PRIu64 " ns | r: %.6f | theta: %.6f\n", i, now, photon.r, photon.theta); /* C2-FIX */
         }
         
         // Simulation d'un pas d'intégration

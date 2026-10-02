@@ -490,7 +490,7 @@ bool matrix_stress_test_100m_lums(matrix_config_t* config) {
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
 
-    printf("Creating matrix %zux%zu (%lu LUMs) with safety limits...\n", size, size, total_lums);
+    printf("Creating matrix %zux%zu (%" PRIu64 " LUMs) with safety limits...\n", size, size, total_lums);
     lum_matrix_t* matrix = lum_matrix_create(size, size);
 
 #ifdef __AVX512F__
@@ -514,7 +514,7 @@ bool matrix_stress_test_100m_lums(matrix_config_t* config) {
     }
 
     double creation_time = elapsed;
-    printf("[SUCCESS] Created %lu LUMs in %.3f seconds\n", total_lums, creation_time);
+    printf("[SUCCESS] Created %" PRIu64 " LUMs in %.3f seconds\n", total_lums, creation_time);
     if (creation_time > 0) {
         printf("Creation rate: %.0f LUMs/second\n", total_lums / creation_time);
     }

@@ -3,6 +3,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "transaction_wal_extension.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable macOS/Linux */
 #include "../debug/memory_tracker.h"
 #include <unistd.h>     // Pour fileno()
 #include <stdio.h>
@@ -260,7 +261,7 @@ wal_extension_result_t* wal_extension_begin_transaction(wal_extension_context_t*
         result->wal_durability_confirmed = true;
 
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                "Transaction %lu began successfully", result->wal_transaction_id);
+                "Transaction %" PRIu64 " began successfully", result->wal_transaction_id);
     } else {
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
                 "Failed to write WAL record: %s", strerror(errno));
@@ -313,10 +314,10 @@ wal_extension_result_t* wal_extension_commit_transaction(wal_extension_context_t
         result->wal_durability_confirmed = true;
 
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                "Transaction %lu committed successfully", transaction_id);
+                "Transaction %" PRIu64 " committed successfully", transaction_id);
     } else {
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                "Failed to commit transaction %lu: %s", transaction_id, strerror(errno));
+                "Failed to commit transaction %" PRIu64 ": %s", transaction_id, strerror(errno));
         result->wal_durability_confirmed = false;
     }
 
@@ -364,10 +365,10 @@ wal_extension_result_t* wal_extension_rollback_transaction(wal_extension_context
         result->wal_durability_confirmed = true;
 
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                "Transaction %lu rolled back successfully", transaction_id);
+                "Transaction %" PRIu64 " rolled back successfully", transaction_id);
     } else {
         snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                "Failed to rollback transaction %lu: %s", transaction_id, strerror(errno));
+                "Failed to rollback transaction %" PRIu64 ": %s", transaction_id, strerror(errno));
         result->wal_durability_confirmed = false;
     }
 
@@ -421,7 +422,7 @@ wal_extension_result_t* wal_extension_log_lum_operation(wal_extension_context_t*
             result->wal_durability_confirmed = true;
 
             snprintf(result->wal_error_details, sizeof(result->wal_error_details),
-                    "LUM operation logged for transaction %lu", transaction_id);
+                    "LUM operation logged for transaction %" PRIu64 "", transaction_id);
         } else {
             snprintf(result->wal_error_details, sizeof(result->wal_error_details),
                     "Failed to write LUM data: %s", strerror(errno));

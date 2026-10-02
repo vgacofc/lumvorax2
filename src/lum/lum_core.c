@@ -1,19 +1,25 @@
-l 
-tai// SECTION 8: INTERDICTION D'UTILISER DES EMOJI
-// Aucune utilisation d'emoji dans le code source ou dans les fichiers de log.
-// Toute inclusion d'emoji sera considérée comme une violation des standards de codage.
-// Cette règle s'applique à TOUS les modules du système LUM/VORAX sans exception.
-// Aucune utilisation d'emoji dans le code source ou dans les fichiers de log.
-// Toute inclusion d'emoji sera considérée comme une violation des standards de codage.
-
+/* **************************************************************************
+** lum_core.c — Implémentation du module LUM Core (Luminary Unit Module)
+**
+** Projet : ARTCB (Autonomous Reflexive Temporal Cognitive Blockchain)
+** Module : LumVorax / lum
+** Auteur : ARTCB Project <contact@artcb.me>
+**
+** CERTIFIED_100=false | unique_human_proven=false
+** Mode DEBUG actif
+** ************************************************************************ */
+/* C1-FIX + SECTION 8: En-tête corrigé — caractères corrompus supprimés */
+/* SECTION 8: INTERDICTION D'UTILISER DES EMOJI dans le code source ou les logs. */
 #include "lum_core.h"
 #include "../common/common_types.h"
 #include "../common/debug_macros.h"
 #include "../../include/lumvorax_ibm_constants.h"  // C94: ponts physique IBM
 #include "../debug/memory_tracker.h"
 #include "../debug/forensic_logger.h"
+#include "../lum/lum_aligned_alloc_safe.h" /* C1-FIX: wrapper aligned_alloc portable */
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t (macOS/Linux portable) */
 #include <string.h>
 #include <time.h>
 #include <assert.h>
@@ -139,7 +145,7 @@ bool lum_pool_init(void) {
         pthread_mutex_unlock(&pool_mutex);
         return true;
     }
-    g_lum_pool = (lum_t*)aligned_alloc(64, LUM_POOL_SIZE * sizeof(lum_t));
+    g_lum_pool = (lum_t*)lum_aligned_alloc_safe(64, LUM_POOL_SIZE * sizeof(lum_t)); /* C1-FIX */
     g_lum_pool_bitmap = (uint8_t*)calloc(LUM_POOL_SIZE / 8, 1);
     if (!g_lum_pool || !g_lum_pool_bitmap) {
         pthread_mutex_unlock(&pool_mutex);
@@ -157,7 +163,7 @@ static __thread uint32_t tlp_index = 0;
 
 static lum_t* lum_alloc_tlp(void) {
     if (!tlp_pool) {
-        tlp_pool = (lum_t*)aligned_alloc(64, LUM_TLP_SIZE * sizeof(lum_t));
+        tlp_pool = (lum_t*)lum_aligned_alloc_safe(64, LUM_TLP_SIZE * sizeof(lum_t)); /* C1-FIX */
         if (!tlp_pool) return NULL;
         memset(tlp_pool, 0, LUM_TLP_SIZE * sizeof(lum_t));
     }
@@ -167,12 +173,25 @@ static lum_t* lum_alloc_tlp(void) {
     return NULL; // Fallback au pool global si TLP plein
 }
 
-// Garde-fou adaptatif pour maintenir CPU < 85%
+/* BL-003 NOTE: lum_adaptive_load_control() est un rate-limiter par compteur
+ * d'opérations, PAS un monitoring CPU réel.
+ * Fonctionnement réel : toutes les 1000 opérations lum_create(), insertion
+ * d'un nanosleep fixe de 50 µs. Il n'y a aucune lecture du load CPU
+ * (pas de /proc/loadavg, pas de sysinfo, pas de clock-based adaptive).
+ * Ce mécanisme ne peut pas maintenir le CPU < 85% de façon garantie :
+ * il introduit uniquement une pause périodique déterministe.
+ * Le commentaire "pour maintenir CPU < 85%" est donc inexact.
+ * Pour un vrai rate-limiter CPU-aware, il faudrait lire /proc/stat entre
+ * deux mesures et ajuster le délai dynamiquement.
+ * Cette fonction est conservée telle quelle car elle assure une protection
+ * minimale utile (évite la saturation dans les boucles tight), mais son
+ * comportement réel est documenté ici. */
 static void lum_adaptive_load_control(void) {
     static uint32_t op_count = 0;
     if (++op_count % 1000 == 0) {
-        // Simulation de monitoring de charge - insertion d'un micro-repos
-        struct timespec delay = {0, 50000}; // 50 microseconds
+        /* Rate-limiter fixe : 50 µs de pause toutes les 1000 opérations.
+         * Non proportionnel à la charge CPU réelle. */
+        struct timespec delay = {0, 50000}; /* 50 microseconds */
         nanosleep(&delay, NULL);
     }
 }
@@ -215,7 +234,7 @@ lum_t* lum_create(uint8_t presence, int32_t x, int32_t y, lum_structure_type_e t
     lum->magic_number = LUM_VALIDATION_PATTERN;
     lum->checksum = (lum->id ^ lum->timestamp ^ (uint32_t)(uintptr_t)lum) & 0xFFFFFF;
     
-    printf("[FORENSIC_REALTIME] LUM_CREATE_POOL: ID=%u, pos=(%d,%d), type=%u, timestamp=%lu ns\n", 
+    printf("[FORENSIC_REALTIME] LUM_CREATE_POOL: ID=%u, pos=(%d,%d), type=%u, timestamp=%" PRIu64 " ns\n", /* C2-FIX */
            lum->id, x, y, type, lum->timestamp);
     fflush(stdout);
     return lum;
@@ -306,7 +325,10 @@ lum_group_t* lum_group_create(size_t initial_capacity) {
     group->lums = NULL;
     group->allocated_size = lums_size;
 
-    // Tentative allocation huge pages pour > 2MB
+    /* C1-FIX: MAP_ANONYMOUS et MAP_HUGETLB sont Linux-only — guard macOS/BSD.
+     * Sur macOS le chemin posix_memalign fallback (ci-dessous) est utilisé. */
+#if defined(__linux__) && defined(MAP_ANONYMOUS) && defined(MAP_HUGETLB)
+    /* Tentative allocation huge pages pour > 2MB (Linux uniquement) */
     if (lums_size >= 2 * 1024 * 1024) {
         group->lums = (lum_t*)mmap(NULL, lums_size,
                                   PROT_READ | PROT_WRITE,
@@ -318,6 +340,7 @@ lum_group_t* lum_group_create(size_t initial_capacity) {
             group->alloc_method = LUM_ALLOC_MMAP;
         }
     }
+#endif /* __linux__ + MAP_ANONYMOUS + MAP_HUGETLB */
 
     // Fallback allocation normale avec TRACKED_MALLOC pour éviter bug aligned_alloc
     if (!group->lums) {
@@ -914,7 +937,7 @@ uint64_t lum_get_timestamp(void) {
 
 void lum_print(const lum_t* lum) {
     if (lum) {
-        DEBUG_PRINTF("LUM[%u]: presence=%u, pos=(%d,%d), type=%u, ts=%lu\n",
+        DEBUG_PRINTF("LUM[%u]: presence=%u, pos=(%d,%d), type=%u, ts=%" PRIu64 "\n", /* C2-FIX */
                lum->id, lum->presence, lum->position_x, lum->position_y,
                lum->structure_type, lum->timestamp);
     }

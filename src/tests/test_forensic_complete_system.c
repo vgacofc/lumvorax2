@@ -2,6 +2,7 @@
 // Logs SHA-256, horodatage nanoseconde, validation TOUS modules
 
 #include <stdio.h>
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -119,7 +120,7 @@ static void forensic_session_init(void) {
 
     printf("🛡️ === SESSION FORENSIQUE INITIALISÉE ===\\n");
     printf("Session ID: %s\\n", g_forensic_session.session_id);
-    printf("Timestamp: %lu nanosec\\n", session_time);
+    printf("Timestamp: %" PRIu64 " nanosec\\n", session_time);
 }
 
 // Ajout résultat test module
@@ -146,7 +147,7 @@ static void forensic_add_result(const char* module_name, uint64_t execution_time
     // Génération SHA-256 pour ce module
     char module_data[512];
     snprintf(module_data, sizeof(module_data), 
-             "%s_%lu_%lu_%lu_%s", 
+             "%s_%" PRIu64 "_%" PRIu64 "_%" PRIu64 "_%s", 
              module_name, execution_time, memory_used, operations, 
              success ? "SUCCESS" : "FAIL");
     generate_sha256_simulation(module_data, result->sha256_simulation);
@@ -163,7 +164,7 @@ static void forensic_add_result(const char* module_name, uint64_t execution_time
 
     g_forensic_session.result_count++;
 
-    printf("📊 %s: %s (%.2f M ops/sec, %lu bytes, %lu ns)\\n", 
+    printf("📊 %s: %s (%.2f M ops/sec, %" PRIu64 " bytes, %" PRIu64 " ns)\\n", 
            module_name, success ? "PASS" : "FAIL", 
            result->ops_per_second / 1e6, memory_used, execution_time);
 }
@@ -357,18 +358,18 @@ static void generate_final_forensic_report(void) {
     fprintf(report, "=== RAPPORT FORENSIQUE COMPLET LUM/VORAX ===\\n");
     fprintf(report, "Session: %s\\n", g_forensic_session.session_id);
     fprintf(report, "Conformité: prompt.txt ABSOLUE\\n");
-    fprintf(report, "Timestamp génération: %lu ns\\n", get_precise_timestamp_ns());
+    fprintf(report, "Timestamp génération: %" PRIu64 " ns\\n", get_precise_timestamp_ns());
     fprintf(report, "\\n");
 
     fprintf(report, "=== STATISTIQUES GLOBALES ===\\n");
     fprintf(report, "Modules testés: %zu\\n", g_forensic_session.result_count);
-    fprintf(report, "Temps total: %lu ns (%.3f sec)\\n", 
+    fprintf(report, "Temps total: %" PRIu64 " ns (%.3f sec)\\n", 
             g_forensic_session.total_execution_time_ns,
             g_forensic_session.total_execution_time_ns / 1e9);
-    fprintf(report, "Mémoire totale: %lu bytes (%.2f MB)\\n", 
+    fprintf(report, "Mémoire totale: %" PRIu64 " bytes (%.2f MB)\\n", 
             g_forensic_session.total_memory_used,
             g_forensic_session.total_memory_used / (1024.0 * 1024.0));
-    fprintf(report, "Opérations totales: %lu\\n", g_forensic_session.total_operations);
+    fprintf(report, "Opérations totales: %" PRIu64 "\\n", g_forensic_session.total_operations);
     fprintf(report, "Checksum global: 0x%08X\\n", g_forensic_session.global_checksum);
     fprintf(report, "Résultat final: %s\\n", g_forensic_session.all_tests_passed ? "TOUS TESTS PASSÉS" : "ÉCHECS DÉTECTÉS");
     fprintf(report, "\\n");
@@ -378,10 +379,10 @@ static void generate_final_forensic_report(void) {
         forensic_test_result_t* result = &g_forensic_session.results[i];
 
         fprintf(report, "Module: %s\\n", result->module_name);
-        fprintf(report, "  Timestamp: %lu ns\\n", result->test_timestamp_ns);
-        fprintf(report, "  Durée: %lu ns\\n", result->execution_time_ns);
-        fprintf(report, "  Mémoire: %lu bytes\\n", result->memory_used_bytes);
-        fprintf(report, "  Opérations: %lu\\n", result->operations_performed);
+        fprintf(report, "  Timestamp: %" PRIu64 " ns\\n", result->test_timestamp_ns);
+        fprintf(report, "  Durée: %" PRIu64 " ns\\n", result->execution_time_ns);
+        fprintf(report, "  Mémoire: %" PRIu64 " bytes\\n", result->memory_used_bytes);
+        fprintf(report, "  Opérations: %" PRIu64 "\\n", result->operations_performed);
         fprintf(report, "  Performance: %.2f Mops/sec\\n", result->ops_per_second / 1e6);
         fprintf(report, "  Checksum: 0x%08X\\n", result->checksum_result);
         fprintf(report, "  SHA-256: %08X%08X%08X%08X%08X%08X%08X%08X\\n",

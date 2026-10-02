@@ -2,6 +2,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "ai_dynamic_config_manager.h"
+#include <inttypes.h> /* C2-FIX: PRIu64 pour uint64_t portable */
 #include "../debug/memory_tracker.h"
 #include "../logger/lum_logger.h"
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
@@ -289,7 +290,7 @@ ai_dynamic_optimization_result_t* ai_optimize_all_system_parameters(
 
     manager->optimization_cycles_count++;
 
-    LOG_INFOF("=== AI SYSTEM-WIDE OPTIMIZATION CYCLE #%lu ===", 
+    LOG_INFOF("=== AI SYSTEM-WIDE OPTIMIZATION CYCLE #%" PRIu64 " ===", 
            manager->optimization_cycles_count);
     LOG_INFOF("Target performance: %.3f", performance_target);
     LOG_INFOF("Active modules under AI control: %zu/%d", 
@@ -463,9 +464,9 @@ bool ai_export_system_configuration(ai_dynamic_config_manager_t* manager,
     if (!file) return false;
 
     fprintf(file, "# AI Dynamic Config Manager - System Configuration Export\n");
-    fprintf(file, "# Generated at: %lu\n", (unsigned long)time(NULL));
+    fprintf(file, "# Generated at: %" PRIu64 "\n", (unsigned long)time(NULL));
     fprintf(file, "# Active modules: %zu/%d\n", manager->active_modules_count, MODULE_COUNT);
-    fprintf(file, "# Optimization cycles: %lu\n", manager->optimization_cycles_count);
+    fprintf(file, "# Optimization cycles: %" PRIu64 "\n", manager->optimization_cycles_count);
     fprintf(file, "\n[GLOBAL_SETTINGS]\n");
     fprintf(file, "auto_optimization_enabled=%s\n", 
             manager->auto_optimization_enabled ? "true" : "false");
@@ -480,7 +481,7 @@ bool ai_export_system_configuration(ai_dynamic_config_manager_t* manager,
             fprintf(file, "type=%d\n", (int)config->module_type);
             fprintf(file, "is_active=%s\n", config->is_active ? "true" : "false");
             fprintf(file, "performance_weight=%.6f\n", config->performance_weight);
-            fprintf(file, "last_updated=%lu\n", config->last_updated_timestamp);
+            fprintf(file, "last_updated=%" PRIu64 "\n", config->last_updated_timestamp);
             fprintf(file, "config_size=%zu\n", config->config_size);
             fprintf(file, "\n");
         }
