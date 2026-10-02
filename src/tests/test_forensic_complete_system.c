@@ -294,27 +294,35 @@ static void* test_neural_network(size_t scale) {
 }
 
 static void* test_simd_optimizer(size_t scale) {
+    /* S153-FIX: tableau plat lum_t* requis par simd_process_lum_array_bulk() — pas NULL */
+    size_t actual_scale = scale > 1000 ? 1000 : scale;
+
     simd_capabilities_t* caps = simd_detect_capabilities();
     if (!caps) return NULL;
 
-    // Test avec groupe LUM
-    lum_group_t* group = lum_group_create(scale > 1000 ? 1000 : scale);
-    if (!group) {
+    /* Allouer un tableau plat lum_t (même patron que simd_benchmark_vectorization()) */
+    lum_t* test_lums = (lum_t*)TRACKED_MALLOC(actual_scale * sizeof(lum_t));
+    if (!test_lums) {
         simd_capabilities_destroy(caps);
         return NULL;
     }
 
-    // Test SIMD avec les capacités détectées
-    simd_result_t* result = simd_process_lum_array_bulk(NULL, scale > 1000 ? 1000 : scale);
-    if (result) {
-        lum_group_destroy(group);
-        simd_capabilities_destroy(caps);
-        return result;
+    /* Initialisation des champs requis par le moteur SIMD */
+    for (size_t i = 0; i < actual_scale; i++) {
+        memset(&test_lums[i], 0, sizeof(lum_t));
+        test_lums[i].presence    = (uint8_t)(i % 2);
+        test_lums[i].position_x  = (int32_t)(i % 100);
+        test_lums[i].position_y  = (int32_t)(i / 10);
+        test_lums[i].structure_type = LUM_STRUCTURE_LINEAR;
     }
 
-    lum_group_destroy(group);
+    /* Appel correct avec tableau LUM réel (corrige le NULL passé avant S153) */
+    simd_result_t* result = simd_process_lum_array_bulk(test_lums, actual_scale);
+
+    /* Nettoyage dans tous les cas */
+    TRACKED_FREE(test_lums);
     simd_capabilities_destroy(caps);
-    return NULL;
+    return result;
 }
 
 // ===== TEST PROGRESSIF 1 → 100K AVEC TOUS MODULES (CONFORME PROMPT.TXT) =====
