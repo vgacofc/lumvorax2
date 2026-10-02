@@ -44,13 +44,13 @@ void log_writer_entry(const char* module, const char* event, uint64_t value) {
 
     FILE* ft = fopen(path_csv, "a");
     if (ft) {
-        fprintf(ft, "%" PRIu64 ",%s,%s,%lx\n", ts, module, event, value);
+        fprintf(ft, "%" PRIu64 ",%s,%s,%"PRIx64"\n", ts, module, event, value);
         fclose(ft);
     }
 
     FILE* fj = fopen(path_json, "a");
     if (fj) {
-        fprintf(fj, "{\"ts\":%" PRIu64 ", \"mod\":\"%s\", \"ev\":\"%s\", \"val\":\"%lx\"}\n", ts, module, event, value);
+        fprintf(fj, "{\"ts\":%" PRIu64 ", \"mod\":\"%s\", \"ev\":\"%s\", \"val\":\"%" PRIx64 "\"}\n", ts, module, event, value);
         fclose(fj);
     }
 }

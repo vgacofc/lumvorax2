@@ -30,10 +30,26 @@
   #define REPLIT_CACHE_LINE_SIZE 64
 #endif
 
-// Limites m\u00e9moire conteneur Replit (512MB-1GB typique)
-#define REPLIT_MEMORY_LIMIT_MB 768
-#define REPLIT_MEMORY_WARNING_THRESHOLD (REPLIT_MEMORY_LIMIT_MB * 1024 * 1024 * 80 / 100) // 80%
-#define REPLIT_MEMORY_CRITICAL_THRESHOLD (REPLIT_MEMORY_LIMIT_MB * 1024 * 1024 * 95 / 100) // 95%
+/* CT-003 FIX: REPLIT_MEMORY_LIMIT_MB était hardcodé à 768.
+ * La valeur réelle varie selon le plan Replit (512, 768, 1024, 2048 MB).
+ * Stratégie : conserver 768 comme constante compile-time de fallback ;
+ * fournir replit_memory_limit_mb_runtime() qui lit la variable d'env
+ * REPLIT_MEMORY_LIMIT_MB au premier appel (once_flag). */
+#define REPLIT_MEMORY_LIMIT_MB_DEFAULT 768
+#define REPLIT_MEMORY_LIMIT_MB REPLIT_MEMORY_LIMIT_MB_DEFAULT  /* compat backward */
+
+#include <stdlib.h>  /* CT-003: pour getenv() */
+static inline size_t replit_memory_limit_mb_runtime(void) {
+    const char* env = getenv("REPLIT_MEMORY_LIMIT_MB");
+    if (env) {
+        long val = strtol(env, NULL, 10);
+        if (val > 0 && val <= 65536) return (size_t)val;
+    }
+    return REPLIT_MEMORY_LIMIT_MB_DEFAULT;
+}
+
+#define REPLIT_MEMORY_WARNING_THRESHOLD  (replit_memory_limit_mb_runtime() * 1024UL * 1024UL * 80 / 100)
+#define REPLIT_MEMORY_CRITICAL_THRESHOLD (replit_memory_limit_mb_runtime() * 1024UL * 1024UL * 95 / 100)
 
 // Thread pool persistent pour \u00e9viter overhead cr\u00e9ation/destruction
 #define REPLIT_THREAD_POOL_SIZE 4 // 2-4 cores typique conteneur

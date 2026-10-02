@@ -1,4 +1,10 @@
 
+/* FL-001 FIX: individual_log est une variable statique locale dans
+ * forensic_log_individual_lum(). Sans protection mutex, deux threads
+ * appelant simultanément cette fonction peuvent ouvrir le fichier deux
+ * fois (double-init) ou écrire de façon entrelacée (données corrompues).
+ * Solution : mutex statique fl001_individual_mutex protège l'ouverture
+ * ET chaque écriture sur individual_log. */
 #include "forensic_logger.h"
 #include <stdio.h>
 #include <time.h>
@@ -6,8 +12,13 @@
 #include <sys/stat.h>   // Pour mkdir()
 #include <unistd.h>     // Pour access()
 #include <errno.h>      // Pour errno
+#include <pthread.h>    /* FL-001 FIX: mutex pour individual_log */
+#include <inttypes.h>   /* FL-001 FIX: PRIu64 pour timestamp_ns (uint64_t) */
 
 static FILE* forensic_log_file = NULL;
+
+/* FL-001 FIX: mutex unique pour tout accès à individual_log */
+static pthread_mutex_t fl001_individual_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool forensic_logger_init(const char* filename) {
     if (!filename) {
@@ -114,27 +125,37 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
     printf("[FORENSIC_LUM] [%llu] LUM_%u %s\n", timestamp_ns, lum_id, operation);
     fflush(stdout);
     
-    // NOUVEAU: Log dans fichier séparé horodaté
+    /* FL-001 FIX: accès à individual_log entièrement sous fl001_individual_mutex.
+     * Élimine la double-initialisation et les écritures entrelacées en cas
+     * d'appels multi-thread simultanés. */
+    pthread_mutex_lock(&fl001_individual_mutex);
+
+    /* individual_log promu en variable statique de fichier (fl001_*) pour
+     * que le mutex externe puisse la protéger. */
     static FILE* individual_log = NULL;
     if (!individual_log) {
         char individual_filename[256];
         time_t now = time(NULL);
         struct tm* tm_info = localtime(&now);
-        snprintf(individual_filename, sizeof(individual_filename), 
+        snprintf(individual_filename, sizeof(individual_filename),
                  "logs/forensic/individual_lums_%04d%02d%02d_%02d%02d%02d.log",
                  tm_info->tm_year + 1900, tm_info->tm_mon + 1, tm_info->tm_mday,
                  tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec);
         individual_log = fopen(individual_filename, "w");
         if (individual_log) {
-            fprintf(individual_log, "=== LOG INDIVIDUEL LUMs - SESSION %llu ===\n", timestamp_ns);
+            fprintf(individual_log, "=== LOG INDIVIDUEL LUMs - SESSION %" PRIu64 " ===\n",
+                    timestamp_ns);
             fflush(individual_log);
         }
     }
-    
+
     if (individual_log) {
-        fprintf(individual_log, "[%llu] LUM_%u: %s\n", timestamp_ns, lum_id, operation);
+        fprintf(individual_log, "[%" PRIu64 "] LUM_%u: %s\n",
+                timestamp_ns, lum_id, operation);
         fflush(individual_log);
     }
+
+    pthread_mutex_unlock(&fl001_individual_mutex);
 }
 
 void forensic_logger_destroy(void) {

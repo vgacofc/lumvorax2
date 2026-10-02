@@ -112,8 +112,8 @@ static void forensic_session_init(void) {
     memset(&g_forensic_session, 0, sizeof(g_forensic_session));
 
     uint64_t session_time = get_precise_timestamp_ns();
-    snprintf(g_forensic_session.session_id, sizeof(g_forensic_session.session_id), 
-             "FORENSIC_SESSION_%016lX", session_time);
+    snprintf(g_forensic_session.session_id, sizeof(g_forensic_session.session_id),
+             "FORENSIC_SESSION_%016" PRIX64, session_time);
 
     g_forensic_session.result_count = 0;
     g_forensic_session.all_tests_passed = true;

@@ -70,8 +70,8 @@ bool hostinger_check_ram_availability(size_t required_mb) {
         // CORRECTION RAPPORT 117: Logging système
         if (lum_get_global_logger()) {
             char log_msg[256];
-            snprintf(log_msg, sizeof(log_msg), "❌ RAM insuffisante: %zu MB + %zu MB > %zu MB max",
-                     global_monitor->current_ram_usage_mb, required_mb, max_ram_mb);
+            snprintf(log_msg, sizeof(log_msg), "❌ RAM insuffisante: %" PRIu64 " MB + %" PRIu64 " MB > %" PRIu64 " MB max",
+                     global_monitor->current_ram_usage_mb, (uint64_t)required_mb, (uint64_t)max_ram_mb);
             lum_log_message(lum_get_global_logger(), LUM_LOG_WARN, log_msg);
         }
         return false;

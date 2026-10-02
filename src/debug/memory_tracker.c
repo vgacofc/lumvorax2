@@ -8,12 +8,16 @@
 
 #include "../logger/lum_logger.h" // Include for lum_log function
 
-// Global tracking variables - removing unused duplicates
-static size_t g_count = 0; // Current number of active allocations
-static size_t g_total_allocated = 0; // Total bytes ever allocated
-static size_t g_total_freed = 0; // Total bytes ever freed
-static bool g_tracking_enabled = true; // Flag to enable/disable tracking
-static bool g_release_mode = false; // Flag for release mode
+// Global tracking variables
+/* MT-004 FIX: g_active_alloc_count compte les allocations NON libérées (nombre,
+ * pas bytes). leak_detection = g_active_alloc_count > 0, ce qui est exact même
+ * quand les sizes allouées / libérées diffèrent (realloc, large alloc, etc.). */
+static size_t g_count = 0;                   /* nombre d'allocations actives */
+static size_t g_active_alloc_count = 0;      /* MT-004 FIX: compteur d'allocs actives */
+static size_t g_total_allocated = 0;         /* Total bytes cumulés alloués */
+static size_t g_total_freed = 0;             /* Total bytes cumulés libérés */
+static bool g_tracking_enabled = true;
+static bool g_release_mode = false;
 
 void memory_tracker_enable(bool enable) {
     g_tracking_enabled = enable;
@@ -44,7 +48,11 @@ void memory_tracker_export_json(const char* filename) {
     fprintf(fp, "  \"total_allocated\": %zu,\n", g_total_allocated);
     fprintf(fp, "  \"total_freed\": %zu,\n", g_total_freed);
     fprintf(fp, "  \"current_allocations\": %zu,\n", g_count);
-    fprintf(fp, "  \"leak_detection\": %s\n", (g_total_allocated > g_total_freed) ? "true" : "false");
+    /* MT-004 FIX: leak_detection = allocations actives > 0 (compte exact).
+     * L'ancienne formule (g_total_allocated > g_total_freed) comparait des bytes
+     * cumulés et pouvait donner true même sans fuite si les sizes diffèrent. */
+    fprintf(fp, "  \"active_alloc_count\": %zu,\n", g_active_alloc_count);
+    fprintf(fp, "  \"leak_detection\": %s\n", (g_active_alloc_count > 0) ? "true" : "false");
     fprintf(fp, "}\n");
 
     fclose(fp);
@@ -131,6 +139,7 @@ static void add_entry(void* ptr, size_t size, const char* file, int line, const 
 
     g_tracker.total_allocated += size;
     g_tracker.current_usage += size;
+    g_active_alloc_count++;  /* MT-004 FIX: incrément compteur allocations actives */
 
     if (g_tracker.current_usage > g_tracker.peak_usage) {
         g_tracker.peak_usage = g_tracker.current_usage;
@@ -256,6 +265,7 @@ void tracked_free(void* ptr, const char* file, int line, const char* func) {
 
     g_tracker.total_freed += entry->size;
     g_tracker.current_usage -= entry->size;
+    if (g_active_alloc_count > 0) g_active_alloc_count--;  /* MT-004 FIX */
 
     printf("[MEMORY_TRACKER] FREE: %p (%zu bytes) at %s:%d in %s() - originally allocated at %s:%d\n",
            ptr, entry->size, file, line, func, entry->file, entry->line);

@@ -185,7 +185,17 @@ void audio_fft_cooley_tukey(double* real, double* imag, size_t n) {
 
 // FFT/IFFT via opérations VORAX CYCLE (algorithme réel)
 audio_processing_result_t* audio_apply_fft_vorax(audio_processor_t* processor, size_t fft_size) {
+    /* AUDIO-001 FIX: fft_size doit être <= buffer_size car fft_real/fft_imag
+     * sont alloués pour buffer_size éléments seulement (audio_processor_create()).
+     * Si fft_size > buffer_size, la boucle de padding écrit hors allocation.
+     * Guard ajouté : retour NULL si fft_size dépasse la capacité du buffer. */
     if (!processor || fft_size == 0 || (fft_size & (fft_size - 1)) != 0) return NULL;
+    if (fft_size > processor->buffer_size) {
+        fprintf(stderr,
+            "[AUDIO_PROCESSOR] AUDIO-001: fft_size=%zu > buffer_size=%zu — buffer overflow prevented\n",
+            fft_size, processor->buffer_size);
+        return NULL;
+    }
     
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);

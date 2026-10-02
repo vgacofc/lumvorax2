@@ -464,7 +464,7 @@ bool ai_export_system_configuration(ai_dynamic_config_manager_t* manager,
     if (!file) return false;
 
     fprintf(file, "# AI Dynamic Config Manager - System Configuration Export\n");
-    fprintf(file, "# Generated at: %" PRIu64 "\n", (unsigned long)time(NULL));
+    fprintf(file, "# Generated at: %lu\n", (unsigned long)time(NULL));
     fprintf(file, "# Active modules: %zu/%d\n", manager->active_modules_count, MODULE_COUNT);
     fprintf(file, "# Optimization cycles: %" PRIu64 "\n", manager->optimization_cycles_count);
     fprintf(file, "\n[GLOBAL_SETTINGS]\n");

@@ -230,7 +230,7 @@ bool realtime_analytics_full_trace(realtime_stream_t* stream, const char* trace_
     clock_gettime(CLOCK_MONOTONIC, &ts);
     
     fprintf(file, "=== REALTIME ANALYTICS FULL TRACE ===\n");
-    fprintf(file, "Timestamp: %" PRIu64 ".%09lu\n", ts.tv_sec, ts.tv_nsec);
+    fprintf(file, "Timestamp: %ld.%09lu\n", ts.tv_sec, ts.tv_nsec);
     fprintf(file, "Stream buffer size: %zu\n", stream->buffer_size);
     fprintf(file, "Read index: %zu\n", stream->read_index);
     fprintf(file, "Write index: %zu\n", stream->write_index);
@@ -290,7 +290,7 @@ analytics_result_t* realtime_analyze_stream(realtime_stream_t* stream, analytics
     // Traçage complet automatique
     char trace_filename[256];
     snprintf(trace_filename, sizeof(trace_filename), 
-             "realtime_analysis_trace_%" PRIu64 ".txt", start.tv_sec);
+             "realtime_analysis_trace_%ld.txt", start.tv_sec);
     realtime_analytics_full_trace(stream, trace_filename);
 
     // Création métriques

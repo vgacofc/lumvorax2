@@ -1,25 +1,23 @@
 /* block_header.c — Header de bloc + comptage des leading zeros.
  *
- * Cycle C95 — squelette compilable. Le hash SHA-256 lui-même est délégué
- * aux fonctions sha256_* déjà présentes dans le minier BTC NX48.
+ * Cycle C143 — stub sha256_stub() remplacé par sha256_lumvorax() réelle
+ * (FIPS 180-4, définie dans sha256_mini.c — même module blockchain).
+ * L'anomalie "32 octets nuls" du rapport 135 est corrigée ici.
  */
 #include "blockchain_lumvorax.h"
 #include <string.h>
 
-/* Stub : sera remplacé par appel à sha256_double() du minier BTC. */
-static void sha256_stub(const uint8_t *data, size_t len, uint8_t out[32]) {
-    (void)data;
-    (void)len;
-    /* Placeholder pour compilation seule. La vraie impl appelle
-     * src/advanced_calculations/bitcoin_quantum_mining/sha256_neural.c
-     */
-    memset(out, 0, 32);
-}
+/* SHA-256 FIX (rapport 135 / rapport 143) : suppression du stub memset(0).
+ * sha256_lumvorax() est déclarée dans sha256_mini.c, même répertoire.
+ * Double-SHA256 conforme au protocole Bitcoin (hash(hash(header))). */
+extern void sha256_lumvorax(const uint8_t *data, size_t len, uint8_t out[32]);
 
 void block_header_hash(const block_header_t *h, uint8_t out_hash[32]) {
     if (!h || !out_hash) return;
-    /* Pour compatibilité Bitcoin : hash des 80 premiers octets uniquement. */
-    sha256_stub((const uint8_t *)h, 80, out_hash);
+    /* Double-SHA256 sur les 80 premiers octets du header (protocole Bitcoin). */
+    uint8_t mid[32];
+    sha256_lumvorax((const uint8_t *)h, 80, mid);
+    sha256_lumvorax(mid, 32, out_hash);
 }
 
 int block_header_meets_difficulty(const uint8_t hash[32], uint32_t bits) {
