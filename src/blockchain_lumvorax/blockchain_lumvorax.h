@@ -44,7 +44,15 @@ typedef struct {
     uint32_t lum_payload_size;       /* taille section .lum suivante */
 } block_header_t;
 
-/* Calcule SHA-256 du header (compatible Bitcoin pour les 80 premiers octets). */
+/* Sérialise le header dans un buffer canonique de LUMVORAX_HEADER_SERIAL_LEN octets.
+ * Format : version(4LE) prev_hash(32) merkle_root(32) timestamp(8LE) bits(4LE) nonce(8LE)
+ * = 88 octets — déterministe et indépendant du padding/ABI.
+ * Retourne le nombre d'octets écrits (toujours LUMVORAX_HEADER_SERIAL_LEN si h!=NULL). */
+#define LUMVORAX_HEADER_SERIAL_LEN 88
+int block_header_serialize_canonical(const block_header_t *h, uint8_t out[LUMVORAX_HEADER_SERIAL_LEN]);
+
+/* Calcule double-SHA256 du header via sérialisation canonique (corrige BL-013 + BL-015).
+ * Tous les champs (version, prev_hash, merkle_root, timestamp, bits, nonce) sont inclus. */
 void block_header_hash(const block_header_t *h, uint8_t out_hash[LUMVORAX_BLOCK_HASH_LEN]);
 
 /* Vérifie si le hash satisfait la difficulté (leading_zeros >= bits). */

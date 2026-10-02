@@ -1,11 +1,26 @@
 /* genesis.c — Bloc genesis LUMVORAX (C99 Q6)
  *
+ * Projet : LUMVORAX / LVX&ARTCB
+ * Module : blockchain_lumvorax/genesis
+ * Auteur : LumVorax Project
+ *
+ * BL-015 FIX (rapport 149) : lumvorax_genesis_compute_hash() utilisait une
+ *   sérialisation divergente de block_header_hash() — tronquait timestamp
+ *   et nonce à 32 bits, ignorait height. Les deux fonctions produisaient des
+ *   digests différents pour le même header.
+ *   CORRECTION : lumvorax_genesis_compute_hash() délègue maintenant à
+ *   block_header_serialize_canonical() — sérialisation unique, 88 octets,
+ *   little-endian explicite, tous champs PoW inclus.
+ *
  * Le bloc genesis est le bloc 0 de la chaîne LUMVORAX. Il a :
  *  - prev_hash = 0x00...0 (32 octets nuls)
  *  - merkle_root = SHA256("LUMVORAX-GENESIS-2026-CYCLE-C99")
- *  - timestamp = 1714000000 (2024-04-25 fixe pour reproductibilité)
- *  - bits = 0x1d00ffff (difficulté Bitcoin testnet style)
- *  - nonce = solution PoW pré-calculée (best effort 8 LZ)
+ *  - timestamp = 1714000000 (2024-04-24 17:46:40 UTC — fixe pour reproductibilité)
+ *  - bits = 0x1d00ffff (difficulté minimale)
+ *  - nonce = solution PoW (cherchée par GENESIS_STANDALONE)
+ *
+ * CERTIFIED_100=false | unique_human_proven=false
+ * Mode DEBUG actif
  */
 #include "blockchain_lumvorax.h"
 #include <stdio.h>
@@ -17,13 +32,13 @@ extern void sha256_lumvorax(const uint8_t* data, size_t len, uint8_t out[32]);
 
 static const char GENESIS_MAGIC[] = "LUMVORAX-GENESIS-2026-CYCLE-C99";
 static const uint32_t GENESIS_VERSION   = 1;
-static const uint32_t GENESIS_TIMESTAMP = 1714000000U;  /* 2024-04-24 17:46:40 UTC */
-static const uint32_t GENESIS_BITS      = 0x1d00ffffU;  /* difficulté minimale */
+static const uint64_t GENESIS_TIMESTAMP = 1714000000ULL;  /* 2024-04-24 17:46:40 UTC */
+static const uint32_t GENESIS_BITS      = 0x1d00ffffU;    /* difficulté minimale */
 
 int lumvorax_genesis_create(block_header_t* hdr) {
     if (!hdr) return -1;
     memset(hdr, 0, sizeof(*hdr));
-    hdr->version = GENESIS_VERSION;
+    hdr->version   = GENESIS_VERSION;
     /* prev_hash = tout zéro (déjà fait par memset) */
     sha256_lumvorax((const uint8_t*)GENESIS_MAGIC, sizeof(GENESIS_MAGIC) - 1, hdr->merkle_root);
     hdr->timestamp = GENESIS_TIMESTAMP;
@@ -35,19 +50,13 @@ int lumvorax_genesis_create(block_header_t* hdr) {
 
 int lumvorax_genesis_compute_hash(const block_header_t* hdr, uint8_t out[32]) {
     if (!hdr || !out) return -1;
-    /* Sérialise header en 80 octets compatibles Bitcoin (low 32 bits ts/nonce) */
-    uint8_t buf[80];
-    uint32_t ts32    = (uint32_t)(hdr->timestamp & 0xFFFFFFFFU);
-    uint32_t nonce32 = (uint32_t)(hdr->nonce     & 0xFFFFFFFFU);
-    memcpy(buf + 0,  &hdr->version, 4);
-    memcpy(buf + 4,  hdr->prev_hash, 32);
-    memcpy(buf + 36, hdr->merkle_root, 32);
-    memcpy(buf + 68, &ts32, 4);
-    memcpy(buf + 72, &hdr->bits, 4);
-    memcpy(buf + 76, &nonce32, 4);
-    /* Double SHA-256 (Bitcoin standard) */
+    /* BL-015 FIX : délègue à block_header_serialize_canonical() — même sérialisation
+     * que block_header_hash(). Tous les champs PoW (nonce 64 bits, bits, timestamp
+     * 64 bits) sont correctement inclus. Plus de divergence inter-chemins. */
+    uint8_t buf[LUMVORAX_HEADER_SERIAL_LEN];
+    block_header_serialize_canonical(hdr, buf);
     uint8_t mid[32];
-    sha256_lumvorax(buf, 80, mid);
+    sha256_lumvorax(buf, LUMVORAX_HEADER_SERIAL_LEN, mid);
     sha256_lumvorax(mid, 32, out);
     return 0;
 }
