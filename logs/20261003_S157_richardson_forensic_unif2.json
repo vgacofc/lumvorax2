@@ -1,0 +1,64 @@
+{
+  "session": "S157",
+  "date": "2026-10-03",
+  "head_avant": "2ec3a85",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode": "DEBUG",
+  "modules_implementes": [
+    "FORENSIC-UNIF-002",
+    "Richardson-PROTOCOL-003"
+  ],
+  "fichiers_crees": [
+    "src/validation/ns_forensic_unif2.c",
+    "src/validation/ns_richardson_manufactured.c"
+  ],
+  "makefile_modifie": true,
+  "build_status": "OK 0 erreur 0 warning",
+  "forensic_unif2": {
+    "verdict": "PASS",
+    "total_bits_traced": 49280,
+    "total_bits_expected": 49280,
+    "modules": 7,
+    "anomalies_corrigees": [
+      "A1-valeur_bit_reelle",
+      "A2-timestamp_reel",
+      "A3-couverture_etendue",
+      "A4-lum_id_64bits",
+      "A5-paires_io"
+    ],
+    "bug_cache_decouvert": "encode_lum_id_64 produit 64 bits mais forensic_log_individual_lum recoit uint32_t(lum_id & 0xFFFFFFFF) — 24 bits perdus",
+    "taux_collision_log": "98.7%",
+    "lum_id_distincts_log": 640,
+    "lum_id_distincts_attendus": 49280
+  },
+  "richardson_003": {
+    "verdict": "FAIL_HONNETE",
+    "T01": "FAIL (ord=0.014, attendu>=1.5)",
+    "T02": "FAIL (ord=-9999 L2 non decroissant)",
+    "T03": "FAIL (L2_128>L2_64)",
+    "T04": "FAIL (Linf=1.049>0.05)",
+    "bugs_decouvertes": [
+      "Linf>1.0 systematique — erreur absolue > 100% impossible si u_exact=y in [0,1]",
+      "L1=(N+1)/(2N) valeur structurelle pas erreur numerique — mesure incorrecte",
+      "CL lid-driven != Couette pur — coins singuliers contaminent la solution",
+      "ns_solver_set_lid_bc() incompatible avec validation Couette exacte"
+    ],
+    "anomalie_log": "timestamp header 184785280912000ns (uptime?) vs events 1790976...ns (CLOCK_REALTIME) — deux sources differentes"
+  },
+  "bugs_caches_forensic_logger": [
+    "mutex_lock_count(8) != mutex_unlock_count(14) dans forensic_logger.c",
+    "mutex_lock_count(15) != mutex_unlock_count(18) dans memory_tracker.c",
+    "mutex_lock_count(6) != mutex_unlock_count(11) dans lum_core.c",
+    "fflush() appele sur chaque evenement individuel — O(N) fsync sur 49280 appels = goulot I/O majeur"
+  ],
+  "optimisations_memoire_identifiees": [
+    "Ring buffer lock-free pour forensic_log_individual_lum — batch flush toutes les 4096 entrees",
+    "Pool allocateur fixe pour lum_t (taille fixe 64 bytes) — elimine malloc/free par evenement",
+    "Arena allocateur par session forensic — liberation O(1) en fin de session",
+    "Alignement 64 bytes des struct lum_t pour eviter false sharing multi-thread",
+    "mmap anonymous pour les grands tableaux NS (u,v,p) — evite fragmentation heap",
+    "Prefetch explicite __builtin_prefetch sur les boucles NS internes",
+    "Consolidation des 49280 fflush() en 1 seul fflush a la fin du pas NS"
+  ]
+}

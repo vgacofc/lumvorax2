@@ -110,6 +110,32 @@ TEST_EXECUTABLES = \
 	$(BIN_DIR)/test_integration_complete_39_modules \
 	$(BIN_DIR)/test_quantum
 
+# === S157 : FORENSIC-UNIF-002 + Richardson-PROTOCOL-003 ===
+NS_SOURCES = \
+	$(SRC_DIR)/solvers/ns_solver_2d.c \
+	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/common/time_ns.c \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/binary/binary_lum_converter.c
+
+$(BIN_DIR)/ns_forensic_unif2: $(NS_SOURCES) $(SRC_DIR)/validation/ns_forensic_unif2.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_forensic_unif2.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S157] Binaire: bin/ns_forensic_unif2"
+
+$(BIN_DIR)/ns_richardson_manufactured: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_manufactured.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_manufactured.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S157] Binaire: bin/ns_richardson_manufactured"
+
+science: directories $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured
+	@echo "[S157] Binaires science compilés"
+
+.PHONY: science
+
 # SHA-256 blockchain — cible séparée (BL-004/SHA-256 build proof)
 # Sources blockchain non incluses dans SOURCES principal (module indépendant).
 BLOCKCHAIN_SOURCES = \
