@@ -68,6 +68,30 @@ static const uint8_t FIPS_EMPTY[32] = {
     0xa4,0x95,0x99,0x1b,0x78,0x52,0xb8,0x55
 };
 
+/* Double-SHA256("abc") = SHA256(SHA256("abc"))
+ * Vecteur calculé indépendamment (Python hashlib + C runtime session 145) :
+ *   SHA256("abc") = ba7816bf...
+ *   SHA256(SHA256("abc")) = 4f8b42c2...
+ * Calculé par : python3 -c "import hashlib; r=hashlib.sha256(b'abc').digest(); print(hashlib.sha256(r).digest().hex())" */
+static const uint8_t DOUBLE_SHA256_ABC[32] = {
+    0x4f,0x8b,0x42,0xc2,0x2d,0xd3,0x72,0x9b,
+    0x51,0x9b,0xa6,0xf6,0x8d,0x2d,0xa7,0xcc,
+    0x5b,0x2d,0x60,0x6d,0x05,0xda,0xed,0x5a,
+    0xd5,0x12,0x8c,0xc0,0x3e,0x6c,0x63,0x58
+};
+
+/* block_header_hash(version=1, all-zero fields, timestamp=1727712000, nonce=42)
+ * Header canonique de test (80 octets, alignement C99 vérifié par offsetof) :
+ *   version=1, prev_hash=0...0, merkle_root=0...0, timestamp=0xcbfa6600=1727712000
+ * Vecteur calculé par : python3 hashlib double-SHA256 des 80 premiers octets
+ * = c9c8cd4d81a28f032db564c7bde6988432cd305cadabbd05e223f9fbe4fa6df0 */
+static const uint8_t CANONICAL_HEADER_HASH[32] = {
+    0xc9,0xc8,0xcd,0x4d,0x81,0xa2,0x8f,0x03,
+    0x2d,0xb5,0x64,0xc7,0xbd,0xe6,0x98,0x84,
+    0x32,0xcd,0x30,0x5c,0xad,0xab,0xbd,0x05,
+    0xe2,0x23,0xf9,0xfb,0xe4,0xfa,0x6d,0xf0
+};
+
 /* ---- tests ---------------------------------------------------------------- */
 
 static void test_sha256_abc(void) {
@@ -89,18 +113,20 @@ static void test_sha256_empty(void) {
 }
 
 static void test_double_sha256_abc(void) {
-    printf("\n[T03] Double-SHA256(\"abc\") — comportement Bitcoin\n");
+    printf("\n[T03] Double-SHA256(\"abc\") — vecteur de référence calculé indépendamment\n");
     uint8_t round1[32], round2[32];
     sha256_lumvorax((const uint8_t*)"abc", 3, round1);
     sha256_lumvorax(round1, 32, round2);
     print_hex("double_sha256(abc)", round2, 32);
-    /* vérifie simplement que le résultat diffère du premier round */
-    check(memcmp(round1, round2, 32) != 0, "T03", "double-SHA256 diffère du single-SHA256");
-    check(!bytes_all_zero(round2, 32), "T03b", "double-SHA256 non nul");
+    print_hex("expected           ", DOUBLE_SHA256_ABC, 32);
+    /* T03 : comparaison exacte avec vecteur de référence (Python hashlib indépendant) */
+    check(memcmp(round2, DOUBLE_SHA256_ABC, 32) == 0, "T03",
+          "double-SHA256(abc) == vecteur de reference calcule independamment");
+    check(memcmp(round1, round2, 32) != 0, "T03b", "double-SHA256 differe du single-SHA256");
 }
 
-static void test_block_header_hash_non_zero(void) {
-    printf("\n[T04] block_header_hash() — digest non nul\n");
+static void test_block_header_hash_canonical(void) {
+    printf("\n[T04] block_header_hash() — vecteur canonique de reference\n");
     block_header_t hdr;
     memset(&hdr, 0, sizeof(hdr));
     hdr.version = 1;
@@ -110,7 +136,11 @@ static void test_block_header_hash_non_zero(void) {
     uint8_t out[32];
     block_header_hash(&hdr, out);
     print_hex("block_hash ", out, 32);
-    check(!bytes_all_zero(out, 32), "T04", "block_header_hash() produit un digest non nul");
+    print_hex("expected   ", CANONICAL_HEADER_HASH, 32);
+    /* T04 : comparaison exacte avec vecteur calculé par Python hashlib (double-SHA256 des 80 oct) */
+    check(memcmp(out, CANONICAL_HEADER_HASH, 32) == 0, "T04",
+          "block_header_hash(canonical) == vecteur de reference calcule independamment");
+    check(!bytes_all_zero(out, 32), "T04b", "block_header_hash() produit un digest non nul");
 }
 
 static void test_block_header_hash_deterministic(void) {
@@ -186,7 +216,7 @@ int main(void) {
     test_sha256_abc();
     test_sha256_empty();
     test_double_sha256_abc();
-    test_block_header_hash_non_zero();
+    test_block_header_hash_canonical();
     test_block_header_hash_deterministic();
     test_block_header_hash_sensitivity();
     test_sha256_nist_message_448bit();

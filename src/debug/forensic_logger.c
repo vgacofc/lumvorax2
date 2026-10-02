@@ -125,21 +125,30 @@ void forensic_log_lum_operation(const char* operation, uint64_t lum_count, doubl
 
 // FONCTION RENFORCÉE: Log systématique pour chaque LUM avec double écriture
 void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_t timestamp_ns) {
-    if (!forensic_log_file) {
+    /* FL-005 FIX: forensic_log_file accédé sous fl001_log_file_mutex.
+     * Ordre d'acquisition strict : fl001_log_file_mutex TOUJOURS avant
+     * fl001_individual_mutex (jamais l'inverse) pour éviter tout deadlock.
+     * On copie le FILE* en local sous verrou, puis on le relâche avant
+     * d'écrire — permet d'écrire sans tenir le verrou global pendant l'I/O. */
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    FILE* log_snapshot = forensic_log_file;   /* copie atomique sous verrou */
+    pthread_mutex_unlock(&fl001_log_file_mutex);
+
+    if (!log_snapshot) {
         printf("[FORENSIC_ERROR] Log file not initialized for LUM_%u\n", lum_id);
         return;
     }
-    
+
     /* FL-002 FIX: &lum_id était l'adresse d'une variable locale (stack), pas l'adresse
      * du LUM en mémoire — log forensique trompeur. On supprime ce champ sans valeur. */
-    fprintf(forensic_log_file, "[%llu] [LUM_%u] %s: Individual LUM processing\n",
+    fprintf(log_snapshot, "[%llu] [LUM_%u] %s: Individual LUM processing\n",
             timestamp_ns, lum_id, operation);
-    fflush(forensic_log_file);
-    
+    fflush(log_snapshot);
+
     // ÉCRITURE CONSOLE: Affichage temps réel obligatoire
     printf("[FORENSIC_LUM] [%llu] LUM_%u %s\n", timestamp_ns, lum_id, operation);
     fflush(stdout);
-    
+
     /* FL-001 FIX: accès à individual_log entièrement sous fl001_individual_mutex.
      * Élimine la double-initialisation et les écritures entrelacées en cas
      * d'appels multi-thread simultanés. */

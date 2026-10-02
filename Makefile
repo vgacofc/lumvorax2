@@ -23,22 +23,6 @@ debug: all
 release: CFLAGS += -O3 -DNDEBUG
 release: all
 
-# BL-008 FIX: build portable sans -march=native pour portabilité ISA
-# Usage : make portable   →  bin/lum_vorax_portable (sans instructions AVX-512/native)
-portable: directories
-	$(CC) $(CFLAGS_PORTABLE) $(SRC_DIR)/main.c $(SOURCES:.c=.o) -o $(BIN_DIR)/lum_vorax_portable $(LDFLAGS) || \
-	$(MAKE) _portable_from_scratch
-
-_portable_from_scratch:
-	$(CC) $(CFLAGS_PORTABLE) -c $(SRC_DIR)/main.c -o $(BIN_DIR)/main_portable.o
-	for src in $(SOURCES); do \
-	    obj=$$(echo $$src | sed 's/\.c$$/_portable.o/'); \
-	    $(CC) $(CFLAGS_PORTABLE) -c $$src -o $$obj; \
-	done
-	find $(SRC_DIR) -name '*_portable.o' | xargs $(CC) $(CFLAGS_PORTABLE) $(BIN_DIR)/main_portable.o -o $(BIN_DIR)/lum_vorax_portable $(LDFLAGS)
-	find $(SRC_DIR) -name '*_portable.o' -delete
-	rm -f $(BIN_DIR)/main_portable.o
-
 # Répertoires
 SRC_DIR = src
 BIN_DIR = bin
@@ -93,6 +77,28 @@ SOURCES = \
 # Objets
 OBJECTS = $(SOURCES:.c=.o)
 
+# BL-008/BL-014 FIX: build portable ISOLÉ dans build/obj/portable/
+# SOURCES et SRC_DIR sont définis avant ce bloc — PORTABLE_OBJECTS s'évalue correctement.
+# Jamais de réutilisation des .o natifs (build/obj/native/ ou src/**/*.o).
+# Usage : make portable  →  bin/lum_vorax_portable
+PORTABLE_OBJ_DIR = build/obj/portable
+PORTABLE_OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(PORTABLE_OBJ_DIR)/%.o,$(SOURCES))
+
+$(PORTABLE_OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS_PORTABLE) -c $< -o $@
+
+portable: directories $(PORTABLE_OBJECTS)
+	@mkdir -p $(PORTABLE_OBJ_DIR)
+	$(CC) $(CFLAGS_PORTABLE) -c $(SRC_DIR)/main.c -o $(PORTABLE_OBJ_DIR)/main.o
+	$(CC) $(CFLAGS_PORTABLE) $(PORTABLE_OBJ_DIR)/main.o $(PORTABLE_OBJECTS) \
+	    -o $(BIN_DIR)/lum_vorax_portable $(LDFLAGS)
+	@echo "[BL-014 OK] Binaire portable compile depuis $(PORTABLE_OBJ_DIR) (aucun .o natif reutilise)"
+
+portable-clean:
+	rm -rf build/obj/portable
+	rm -f $(BIN_DIR)/lum_vorax_portable
+
 # Exécutables
 MAIN_EXECUTABLE = $(BIN_DIR)/lum_vorax_complete
 TEST_PROGRESSIVE = $(BIN_DIR)/test_progressive_all_modules
@@ -120,7 +126,7 @@ blockchain_test: directories
 	@echo "[blockchain_test] Binaire: bin/test_blockchain_sha256"
 	@nm $(BIN_DIR)/test_blockchain_sha256 | grep -E "sha256_lumvorax|block_header_hash" && echo "[SHA-256 OK] Symboles liés"
 
-.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so blockchain_test portable _portable_from_scratch
+.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so blockchain_test portable portable-clean
 
 all: directories $(MAIN_EXECUTABLE) $(TEST_EXECUTABLES) $(LIB_LUMVORAX)
 
@@ -177,3 +183,4 @@ clean:
 	rm -rf $(BIN_DIR)
 	find . -name "*.o" -type f -delete
 	rm -f src/blockchain_lumvorax/*.o
+	rm -rf build/obj/portable
