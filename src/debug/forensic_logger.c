@@ -20,6 +20,14 @@ static FILE* forensic_log_file = NULL;
 /* FL-001 FIX: mutex unique pour tout accès à individual_log */
 static pthread_mutex_t fl001_individual_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+/* FL-001 FIX v2: mutex global pour forensic_log_file — protège toutes les
+ * fonctions écrivant dans forensic_log_file (forensic_log_memory_operation,
+ * forensic_log_lum_operation, forensic_log, unified_forensic_log,
+ * forensic_logger_init, forensic_logger_destroy). Sans ce verrou, deux threads
+ * peuvent entremêler leurs écritures ou accéder à forensic_log_file pendant
+ * qu'un autre thread le ferme/réinitialise. */
+static pthread_mutex_t fl001_log_file_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 bool forensic_logger_init(const char* filename) {
     if (!filename) {
         fprintf(stderr, "[FORENSIC] ERROR: filename is NULL\n");
@@ -49,15 +57,17 @@ bool forensic_logger_init(const char* filename) {
     }
     
     // Tentative d'ouverture avec gestion d'erreur robuste
+    pthread_mutex_lock(&fl001_log_file_mutex);
     forensic_log_file = fopen(filename, "w");
     if (!forensic_log_file) {
         // Fallback vers répertoire courant
         char fallback_name[256];
-        snprintf(fallback_name, sizeof(fallback_name), "forensic_fallback_%lu.log", 
+        snprintf(fallback_name, sizeof(fallback_name), "forensic_fallback_%lu.log",
                  (unsigned long)time(NULL));
         
         forensic_log_file = fopen(fallback_name, "w");
         if (!forensic_log_file) {
+            pthread_mutex_unlock(&fl001_log_file_mutex);
             fprintf(stderr, "[FORENSIC] CRITICAL: Cannot create any log file\n");
             return false;
         }
@@ -69,6 +79,7 @@ bool forensic_logger_init(const char* filename) {
     fprintf(forensic_log_file, "=== FORENSIC LOG STARTED (timestamp: %llu ns) ===\n", timestamp);
     fprintf(forensic_log_file, "Forensic logging initialized successfully\n");
     fflush(forensic_log_file);
+    pthread_mutex_unlock(&fl001_log_file_mutex);
     
     printf("[FORENSIC] Log initialized successfully: %s\n", filename);
     return true;
@@ -87,24 +98,28 @@ bool forensic_logger_init_individual_files(void) {
 }
 
 void forensic_log_memory_operation(const char* operation, void* ptr, size_t size) {
-    if (!forensic_log_file) return;
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    if (!forensic_log_file) { pthread_mutex_unlock(&fl001_log_file_mutex); return; }
     
     uint64_t timestamp = lum_get_timestamp();
-    fprintf(forensic_log_file, "[%llu] MEMORY_%s: ptr=%p, size=%zu\n", 
+    fprintf(forensic_log_file, "[%llu] MEMORY_%s: ptr=%p, size=%zu\n",
             timestamp, operation, ptr, size);
     fflush(forensic_log_file);
+    pthread_mutex_unlock(&fl001_log_file_mutex);
 }
 
 void forensic_log_lum_operation(const char* operation, uint64_t lum_count, double duration_ns) {
-    if (!forensic_log_file) return;
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    if (!forensic_log_file) { pthread_mutex_unlock(&fl001_log_file_mutex); return; }
     
     uint64_t timestamp = lum_get_timestamp();
     fprintf(forensic_log_file, "[%llu] LUM_%s: count=%llu, duration=%.3f ns\n",
             timestamp, operation, lum_count, duration_ns);
     fflush(forensic_log_file);
+    pthread_mutex_unlock(&fl001_log_file_mutex);
     
     // NOUVEAU: Log détaillé pour chaque LUM individuel
-    printf("[FORENSIC_REALTIME] LUM_%s: count=%llu at timestamp=%llu ns\n", 
+    printf("[FORENSIC_REALTIME] LUM_%s: count=%llu at timestamp=%llu ns\n",
            operation, lum_count, timestamp);
 }
 
@@ -159,16 +174,19 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
 }
 
 void forensic_logger_destroy(void) {
+    pthread_mutex_lock(&fl001_log_file_mutex);
     if (forensic_log_file) {
         uint64_t timestamp = lum_get_timestamp();
         fprintf(forensic_log_file, "=== FORENSIC LOG ENDED (timestamp: %llu ns) ===\n", timestamp);
         fclose(forensic_log_file);
         forensic_log_file = NULL;
     }
+    pthread_mutex_unlock(&fl001_log_file_mutex);
 }
 
 void forensic_log(forensic_level_e level, const char* function, const char* format, ...) {
-    if (!forensic_log_file) return;
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    if (!forensic_log_file) { pthread_mutex_unlock(&fl001_log_file_mutex); return; }
     
     uint64_t timestamp = lum_get_timestamp();
     va_list args;
@@ -180,11 +198,13 @@ void forensic_log(forensic_level_e level, const char* function, const char* form
     fflush(forensic_log_file);
     
     va_end(args);
+    pthread_mutex_unlock(&fl001_log_file_mutex);
 }
 
 // Implementation of unified_forensic_log for compatibility
 void unified_forensic_log(unified_forensic_level_e level, const char* function, const char* format, ...) {
-    if (!forensic_log_file) return;
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    if (!forensic_log_file) { pthread_mutex_unlock(&fl001_log_file_mutex); return; }
     
     uint64_t timestamp = lum_get_timestamp();
     va_list args;
@@ -196,4 +216,5 @@ void unified_forensic_log(unified_forensic_level_e level, const char* function, 
     fflush(forensic_log_file);
     
     va_end(args);
+    pthread_mutex_unlock(&fl001_log_file_mutex);
 }

@@ -19,6 +19,15 @@ static size_t g_total_freed = 0;             /* Total bytes cumulés libérés *
 static bool g_tracking_enabled = true;
 static bool g_release_mode = false;
 
+static memory_tracker_t g_tracker = {0};
+/* MT-002 FIX: un seul mutex g_tracker_mutex protège l'intégralité de g_tracker.
+ * allocation_mutex supprimé — il créait une race condition avec g_tracker_mutex.
+ * MT-004 FIX v2: g_tracker_mutex placé ici (avant memory_tracker_export_json)
+ * pour que le snapshot atomique puisse l'utiliser. */
+static pthread_mutex_t g_tracker_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int g_tracker_initialized = 0;
+static uint64_t g_global_generation = 1;  /* Compteur génération global pour anti-ABA */
+
 void memory_tracker_enable(bool enable) {
     g_tracking_enabled = enable;
 }
@@ -38,6 +47,17 @@ void memory_tracker_set_release_mode(bool mode) {
 void memory_tracker_export_json(const char* filename) {
     if (!memory_tracker_is_enabled()) return;
 
+    /* MT-004 FIX v2: snapshot atomique — prendre le mutex, copier les compteurs
+     * dans des variables locales, libérer le mutex, puis écrire le JSON.
+     * Évite qu'un thread allouant/libérant en parallèle produise un JSON
+     * incohérent (état intermédiaire entre deux opérations). */
+    pthread_mutex_lock(&g_tracker_mutex);
+    size_t snap_total_allocated = g_total_allocated;
+    size_t snap_total_freed     = g_total_freed;
+    size_t snap_count           = g_count;
+    size_t snap_active          = g_active_alloc_count;
+    pthread_mutex_unlock(&g_tracker_mutex);
+
     FILE* fp = fopen(filename, "w");
     if (!fp) {
         fprintf(stderr, "[MEMORY_TRACKER] ERROR: Could not open file %s for writing.\n", filename);
@@ -45,25 +65,18 @@ void memory_tracker_export_json(const char* filename) {
     }
 
     fprintf(fp, "{\n");
-    fprintf(fp, "  \"total_allocated\": %zu,\n", g_total_allocated);
-    fprintf(fp, "  \"total_freed\": %zu,\n", g_total_freed);
-    fprintf(fp, "  \"current_allocations\": %zu,\n", g_count);
+    fprintf(fp, "  \"total_allocated\": %zu,\n", snap_total_allocated);
+    fprintf(fp, "  \"total_freed\": %zu,\n", snap_total_freed);
+    fprintf(fp, "  \"current_allocations\": %zu,\n", snap_count);
     /* MT-004 FIX: leak_detection = allocations actives > 0 (compte exact).
-     * L'ancienne formule (g_total_allocated > g_total_freed) comparait des bytes
-     * cumulés et pouvait donner true même sans fuite si les sizes diffèrent. */
-    fprintf(fp, "  \"active_alloc_count\": %zu,\n", g_active_alloc_count);
-    fprintf(fp, "  \"leak_detection\": %s\n", (g_active_alloc_count > 0) ? "true" : "false");
+     * Le snapshot est atomique (pris sous mutex) — représente un instant cohérent. */
+    fprintf(fp, "  \"active_alloc_count\": %zu,\n", snap_active);
+    fprintf(fp, "  \"leak_detection\": %s\n", (snap_active > 0) ? "true" : "false");
     fprintf(fp, "}\n");
 
     fclose(fp);
 }
 
-static memory_tracker_t g_tracker = {0};
-/* MT-002 FIX: un seul mutex g_tracker_mutex protège l'intégralité de g_tracker.
- * allocation_mutex supprimé — il créait une race condition avec g_tracker_mutex. */
-static pthread_mutex_t g_tracker_mutex = PTHREAD_MUTEX_INITIALIZER;
-static int g_tracker_initialized = 0;
-static uint64_t g_global_generation = 1;  /* Compteur génération global pour anti-ABA */
 
 void memory_tracker_init(void) {
     pthread_mutex_lock(&g_tracker_mutex);

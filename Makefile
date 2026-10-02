@@ -8,9 +8,11 @@ CC = gcc
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
+    CFLAGS_PORTABLE = -Wall -Wextra -std=c99 -g -O2 -march=x86-64 -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
     LDFLAGS = -lm -lpthread -lrt -Wl,-z,stack-size=16777216
 else
     CFLAGS = -Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
+    CFLAGS_PORTABLE = -Wall -Wextra -std=c99 -g -O2 -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -DDEBUG_MODE -I./src/common -I./src/debug -I./src/crypto -I./src/advanced_calculations
     LDFLAGS = -lm -lpthread
 endif
 
@@ -18,8 +20,24 @@ endif
 debug: CFLAGS += -g3
 debug: all
 
-release: CFLAGS += -O3 -DNDEBUG  
+release: CFLAGS += -O3 -DNDEBUG
 release: all
+
+# BL-008 FIX: build portable sans -march=native pour portabilité ISA
+# Usage : make portable   →  bin/lum_vorax_portable (sans instructions AVX-512/native)
+portable: directories
+	$(CC) $(CFLAGS_PORTABLE) $(SRC_DIR)/main.c $(SOURCES:.c=.o) -o $(BIN_DIR)/lum_vorax_portable $(LDFLAGS) || \
+	$(MAKE) _portable_from_scratch
+
+_portable_from_scratch:
+	$(CC) $(CFLAGS_PORTABLE) -c $(SRC_DIR)/main.c -o $(BIN_DIR)/main_portable.o
+	for src in $(SOURCES); do \
+	    obj=$$(echo $$src | sed 's/\.c$$/_portable.o/'); \
+	    $(CC) $(CFLAGS_PORTABLE) -c $$src -o $$obj; \
+	done
+	find $(SRC_DIR) -name '*_portable.o' | xargs $(CC) $(CFLAGS_PORTABLE) $(BIN_DIR)/main_portable.o -o $(BIN_DIR)/lum_vorax_portable $(LDFLAGS)
+	find $(SRC_DIR) -name '*_portable.o' -delete
+	rm -f $(BIN_DIR)/main_portable.o
 
 # Répertoires
 SRC_DIR = src
@@ -86,7 +104,23 @@ TEST_EXECUTABLES = \
 	$(BIN_DIR)/test_integration_complete_39_modules \
 	$(BIN_DIR)/test_quantum
 
-.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so
+# SHA-256 blockchain — cible séparée (BL-004/SHA-256 build proof)
+# Sources blockchain non incluses dans SOURCES principal (module indépendant).
+BLOCKCHAIN_SOURCES = \
+    $(SRC_DIR)/blockchain_lumvorax/sha256_mini.c \
+    $(SRC_DIR)/blockchain_lumvorax/block_header.c
+
+blockchain_test: directories
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/blockchain_lumvorax/sha256_mini.c -o $(SRC_DIR)/blockchain_lumvorax/sha256_mini.o
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/blockchain_lumvorax/block_header.c -o $(SRC_DIR)/blockchain_lumvorax/block_header.o
+	$(CC) $(CFLAGS) src/tests/test_blockchain_sha256.c \
+	    $(SRC_DIR)/blockchain_lumvorax/sha256_mini.o \
+	    $(SRC_DIR)/blockchain_lumvorax/block_header.o \
+	    -o $(BIN_DIR)/test_blockchain_sha256 $(LDFLAGS)
+	@echo "[blockchain_test] Binaire: bin/test_blockchain_sha256"
+	@nm $(BIN_DIR)/test_blockchain_sha256 | grep -E "sha256_lumvorax|block_header_hash" && echo "[SHA-256 OK] Symboles liés"
+
+.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so blockchain_test portable _portable_from_scratch
 
 all: directories $(MAIN_EXECUTABLE) $(TEST_EXECUTABLES) $(LIB_LUMVORAX)
 
@@ -142,3 +176,4 @@ clean:
 	rm -f $(MAIN_EXECUTABLE) $(TEST_EXECUTABLES)
 	rm -rf $(BIN_DIR)
 	find . -name "*.o" -type f -delete
+	rm -f src/blockchain_lumvorax/*.o

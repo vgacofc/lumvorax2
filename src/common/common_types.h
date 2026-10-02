@@ -30,20 +30,27 @@
   #define REPLIT_CACHE_LINE_SIZE 64
 #endif
 
-/* CT-003 FIX: REPLIT_MEMORY_LIMIT_MB était hardcodé à 768.
- * La valeur réelle varie selon le plan Replit (512, 768, 1024, 2048 MB).
- * Stratégie : conserver 768 comme constante compile-time de fallback ;
- * fournir replit_memory_limit_mb_runtime() qui lit la variable d'env
- * REPLIT_MEMORY_LIMIT_MB au premier appel (once_flag). */
+/* CT-003 FIX v2: REPLIT_MEMORY_LIMIT_MB_DEFAULT = fallback compile-time uniquement.
+ * Le macro public REPLIT_MEMORY_LIMIT_MB a été supprimé : tout code actif DOIT
+ * appeler replit_memory_limit_mb_runtime() pour obtenir la valeur réelle depuis
+ * l'environnement d'exécution. Aucun module ne doit utiliser une constante 768
+ * directement — utiliser REPLIT_MEMORY_LIMIT_MB_DEFAULT uniquement comme fallback
+ * documenté dans replit_memory_limit_mb_runtime().
+ * strtol() utilise endptr + errno pour une validation robuste. */
 #define REPLIT_MEMORY_LIMIT_MB_DEFAULT 768
-#define REPLIT_MEMORY_LIMIT_MB REPLIT_MEMORY_LIMIT_MB_DEFAULT  /* compat backward */
 
 #include <stdlib.h>  /* CT-003: pour getenv() */
+#include <errno.h>   /* CT-003 v2: pour strtol errno */
 static inline size_t replit_memory_limit_mb_runtime(void) {
     const char* env = getenv("REPLIT_MEMORY_LIMIT_MB");
-    if (env) {
-        long val = strtol(env, NULL, 10);
-        if (val > 0 && val <= 65536) return (size_t)val;
+    if (env && env[0] != '\0') {
+        char* endptr = NULL;
+        errno = 0;
+        long val = strtol(env, &endptr, 10);
+        /* Validation robuste : pas d'overflow, pas de chars résiduels, plage valide */
+        if (errno == 0 && endptr != env && *endptr == '\0' && val > 0 && val <= 65536) {
+            return (size_t)val;
+        }
     }
     return REPLIT_MEMORY_LIMIT_MB_DEFAULT;
 }
