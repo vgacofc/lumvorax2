@@ -252,9 +252,10 @@ static AdaptiveResult run_adaptive(int n, double dt, const char *proto_name)
         checks_done++;
         check_idx++;
 
-        /* Forensic : log d'un event LUM par point de contrôle
-         * lum_id = (n * 10000 + total_steps / POLL_INTERVAL) % UINT32_MAX */
-        uint32_t lum_id = (uint32_t)((n * 10000 + checks_done) & 0x7FFFFFFF);
+        /* FORENSIC-UNIF-003 BUG-1 FIX : lum_id uint64_t complet.
+         * Encodage : n(16) | checks_done(32) | reserved(16) */
+        uint64_t lum_id = ((uint64_t)(n & 0xFFFFU) << 48)
+                        | ((uint64_t)(checks_done & 0xFFFFFFFFU) << 16);
         forensic_log_individual_lum(lum_id, "NS_ADAPTIVE_CHECKPOINT",
                                     time_ns_get_absolute());
         forensic_evts++;

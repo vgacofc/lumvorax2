@@ -185,10 +185,9 @@ static void trace_double_bits_real(double value, uint16_t run_id, int module,
         /* Journaliser : operation encode le nom du module + valeur du bit */
         snprintf(op_buf, sizeof(op_buf), "%s:val=%d", MOD_NAMES[module], bit_val);
 
-        /* forensic_log_individual_lum prend un uint32_t — on passe les 32 LSB.
-         * La partie haute (run_id + protocol + module) est dans le champ operation. */
-        forensic_log_individual_lum((uint32_t)(lum_id & 0xFFFFFFFFU),
-                                    op_buf, ts_real);
+        /* FORENSIC-UNIF-003 BUG-1 FIX : on passe le lum_id uint64_t complet.
+         * Plus de troncature — les 64 bits sont conservés jusqu'au log. */
+        forensic_log_individual_lum(lum_id, op_buf, ts_real);
 
         /* Statistiques locales */
         cov->bits_traced++;

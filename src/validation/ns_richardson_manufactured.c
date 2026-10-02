@@ -397,10 +397,17 @@ static void log_forensic_checkpoint(int n, int protocol_id,
              "PROTO003:n=%d:proto=%d:L2=%.6f:conv=%d",
              n, protocol_id, L2, converged);
 
-    /* LUM_ID encodé : n (bits 31..16) | protocol (bits 15..8) | steps/1000 (bits 7..0) */
-    uint32_t lum_id = (uint32_t)((n & 0xFFFF) << 16)
-                    | (uint32_t)((protocol_id & 0xFF) << 8)
-                    | (uint32_t)(((steps / 1000) & 0xFF));
+    /* FORENSIC-UNIF-003 BUG-1 FIX : lum_id est maintenant uint64_t.
+     * Encodage : n(16) | protocol(8) | steps/1000(8) | L2_mantissa(16) | reserved(16)
+     * Chaque grille/protocole/run produit un LUM_ID distinct dans le log. */
+    uint64_t lum_id = ((uint64_t)(n            & 0xFFFFU) << 48)
+                    | ((uint64_t)(protocol_id  & 0xFFU)   << 40)
+                    | ((uint64_t)((steps/1000) & 0xFFU)   << 32)
+                    | ((uint64_t)(converged    & 0x1U)     << 31);
+    /* Incorporer les bits de L2 pour distinguer les runs à même n/proto/steps */
+    uint64_t l2_bits;
+    memcpy(&l2_bits, &L2, sizeof(uint64_t));
+    lum_id |= (l2_bits & 0x7FFFU);  /* 15 bits mantisse basse de L2 */
 
     forensic_log_individual_lum(lum_id, op_buf, ts);
     (void)dt;

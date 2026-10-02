@@ -111,6 +111,7 @@ TEST_EXECUTABLES = \
 	$(BIN_DIR)/test_quantum
 
 # === S157 : FORENSIC-UNIF-002 + Richardson-PROTOCOL-003 ===
+# === S159 : FORENSIC-UNIF-003 + Richardson-PROTOCOL-003b ===
 NS_SOURCES = \
 	$(SRC_DIR)/solvers/ns_solver_2d.c \
 	$(SRC_DIR)/debug/forensic_logger.c \
@@ -131,8 +132,21 @@ $(BIN_DIR)/ns_richardson_manufactured: $(NS_SOURCES) $(SRC_DIR)/validation/ns_ri
 	    -o $@ $(LDFLAGS)
 	@echo "[S157] Binaire: bin/ns_richardson_manufactured"
 
-science: directories $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured
-	@echo "[S157] Binaires science compilés"
+$(BIN_DIR)/ns_forensic_unif3: $(NS_SOURCES) $(SRC_DIR)/validation/ns_forensic_unif3.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_forensic_unif3.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S159] Binaire: bin/ns_forensic_unif3"
+
+$(BIN_DIR)/ns_richardson_couette_periodic: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_couette_periodic.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_couette_periodic.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S159] Binaire: bin/ns_richardson_couette_periodic"
+
+science: directories $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured \
+         $(BIN_DIR)/ns_forensic_unif3 $(BIN_DIR)/ns_richardson_couette_periodic
+	@echo "[S159] Tous les binaires science compilés"
 
 .PHONY: science
 

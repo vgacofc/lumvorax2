@@ -639,8 +639,8 @@ bool lum_group_add(lum_group_t* group, lum_t* lum) {
     group->count++;
     DEBUG_PRINTF("[DEBUG] lum_group_add: SUCCÈS - nouvelle count=%zu\n", group->count);
 
-    // FORENSIC LOG: Log chaque LUM ajouté au groupe
-    forensic_log_individual_lum(group->lums[group->count-1].id, "ADD_TO_GROUP", group->lums[group->count-1].timestamp);
+    /* FORENSIC-UNIF-003 BUG-1 FIX : cast explicite uint32→uint64 (champ .id est uint32_t) */
+    forensic_log_individual_lum((uint64_t)group->lums[group->count-1].id, "ADD_TO_GROUP", group->lums[group->count-1].timestamp);
     forensic_log_lum_operation("ADD_TO_GROUP", group->count, 0.0);
 
     return true;

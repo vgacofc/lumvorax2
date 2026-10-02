@@ -1,4 +1,24 @@
 
+/* **************************************************************************
+** forensic_logger.c — Logger forensic bit-level nanoseconde
+**
+** Projet : LumVorax (Autonomous Reflexive Temporal Cognitive Engine)
+** Module : src/debug / forensic_logger
+** Auteur : LumVorax Project
+**
+** FORENSIC-UNIF-003 — corrections appliquées :
+**   BUG-1 FIX : lum_id uint32_t → uint64_t (corrige troncature 64→32)
+**   BUG-3 FIX : horloge header = CLOCK_MONOTONIC (idem événements)
+**              séparation explicite horloge monotone / horloge civile
+**   PERF-1 FIX : batch flush toutes les FLUSH_BATCH_SIZE écritures
+**               (au lieu d'un fflush() par événement)
+**   NEW : compteur event_seq global monotone (uint64_t atomique sous mutex)
+**         détection de pertes/duplications par analyse du log
+**
+** CERTIFIED_100=false | unique_human_proven=false
+** Mode DEBUG actif
+** ************************************************************************ */
+
 /* FL-001 FIX: individual_log est une variable statique locale dans
  * forensic_log_individual_lum(). Sans protection mutex, deux threads
  * appelant simultanément cette fonction peuvent ouvrir le fichier deux
@@ -9,13 +29,32 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include <sys/stat.h>   // Pour mkdir()
-#include <unistd.h>     // Pour access()
-#include <errno.h>      // Pour errno
+#include <sys/stat.h>   /* Pour mkdir() */
+#include <unistd.h>     /* Pour access() */
+#include <errno.h>      /* Pour errno */
 #include <pthread.h>    /* FL-001 FIX: mutex pour individual_log */
 #include <inttypes.h>   /* FL-001 FIX: PRIu64 pour timestamp_ns (uint64_t) */
 
+/* ── PERF-1 FIX : taille du batch flush ─────────────────────────────────────
+ * fflush() est appelé une fois toutes les FLUSH_BATCH_SIZE écritures au lieu
+ * d'une fois par événement. En cas d'arrêt brutal (kill/crash), au maximum
+ * FLUSH_BATCH_SIZE-1 événements peuvent être perdus. Valeur choisie : 1024.
+ */
+#define FLUSH_BATCH_SIZE 1024U
+
 static FILE* forensic_log_file = NULL;
+
+/* ── FORENSIC-UNIF-003 : compteur séquentiel global ─────────────────────────
+ * event_seq est incrémenté de façon atomique (sous fl001_log_file_mutex) à
+ * chaque appel à forensic_log_individual_lum(). Il est écrit dans le log :
+ *   [ts_ns] [seq=N] [lum_id=0xXXXX...] ...
+ * Un programme d'analyse peut ainsi détecter des gaps (pertes) ou des
+ * doublons (duplications) dans le fichier de log.
+ */
+static uint64_t g_event_seq = 0;
+
+/* ── PERF-1 : compteur d'événements pour le batch flush ─────────────────── */
+static uint64_t g_flush_counter = 0;
 
 /* FL-001 FIX: mutex unique pour tout accès à individual_log */
 static pthread_mutex_t fl001_individual_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -28,26 +67,43 @@ static pthread_mutex_t fl001_individual_mutex = PTHREAD_MUTEX_INITIALIZER;
  * qu'un autre thread le ferme/réinitialise. */
 static pthread_mutex_t fl001_log_file_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+/* ── BUG-3 FIX : fonctions d'horloge publiques ──────────────────────────── */
+
+uint64_t forensic_get_monotonic_ns(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+}
+
+uint64_t forensic_get_event_seq(void)
+{
+    pthread_mutex_lock(&fl001_log_file_mutex);
+    uint64_t seq = g_event_seq;
+    pthread_mutex_unlock(&fl001_log_file_mutex);
+    return seq;
+}
+
 bool forensic_logger_init(const char* filename) {
     if (!filename) {
         fprintf(stderr, "[FORENSIC] ERROR: filename is NULL\n");
         return false;
     }
-    
-    // Créer répertoire si nécessaire avec vérification complète
+
+    /* Créer répertoire si nécessaire avec vérification complète */
     char dir_path[256];
     strncpy(dir_path, filename, sizeof(dir_path) - 1);
     dir_path[sizeof(dir_path) - 1] = '\0';
-    
+
     char *last_slash = strrchr(dir_path, '/');
     if (last_slash) {
         *last_slash = '\0';
-        
-        // Créer récursivement tous les répertoires parents
+
+        /* Créer récursivement tous les répertoires parents */
         char temp_path[256];
         char *token = strtok(dir_path, "/");
-        temp_path[0] = '\0';  // Secure initialization
-        
+        temp_path[0] = '\0';
+
         while (token != NULL) {
             strncat(temp_path, token, sizeof(temp_path) - strlen(temp_path) - 1);
             strncat(temp_path, "/", sizeof(temp_path) - strlen(temp_path) - 1);
@@ -55,33 +111,53 @@ bool forensic_logger_init(const char* filename) {
             token = strtok(NULL, "/");
         }
     }
-    
-    // Tentative d'ouverture avec gestion d'erreur robuste
+
+    /* BUG-3 FIX : le header utilise CLOCK_MONOTONIC (même source que les événements).
+     * L'horloge civile (CLOCK_REALTIME) est également journalisée à titre informatif
+     * pour permettre la corrélation externe — les deux valeurs sont clairement étiquetées. */
     pthread_mutex_lock(&fl001_log_file_mutex);
+
+    /* Réinitialiser les compteurs au démarrage d'une nouvelle session */
+    g_event_seq    = 0;
+    g_flush_counter = 0;
+
     forensic_log_file = fopen(filename, "w");
     if (!forensic_log_file) {
-        // Fallback vers répertoire courant
+        /* Fallback vers répertoire courant */
         char fallback_name[256];
         snprintf(fallback_name, sizeof(fallback_name), "forensic_fallback_%lu.log",
                  (unsigned long)time(NULL));
-        
+
         forensic_log_file = fopen(fallback_name, "w");
         if (!forensic_log_file) {
             pthread_mutex_unlock(&fl001_log_file_mutex);
             fprintf(stderr, "[FORENSIC] CRITICAL: Cannot create any log file\n");
             return false;
         }
-        
+
         fprintf(stderr, "[FORENSIC] WARNING: Using fallback log: %s\n", fallback_name);
     }
-    
-    uint64_t timestamp = lum_get_timestamp();
-    fprintf(forensic_log_file, "=== FORENSIC LOG STARTED (timestamp: %llu ns) ===\n", timestamp);
-    fprintf(forensic_log_file, "Forensic logging initialized successfully\n");
+
+    /* BUG-3 FIX : header utilise CLOCK_MONOTONIC pour cohérence avec les événements.
+     * ts_monotonic_ns = horloge utilisée pour event_seq et les durées.
+     * ts_realtime_ns  = horloge civile, pour corrélation externe uniquement. */
+    uint64_t ts_mono = forensic_get_monotonic_ns();
+    struct timespec tsr;
+    clock_gettime(CLOCK_REALTIME, &tsr);
+    uint64_t ts_real = (uint64_t)tsr.tv_sec * 1000000000ULL + (uint64_t)tsr.tv_nsec;
+
+    fprintf(forensic_log_file,
+            "=== FORENSIC LOG STARTED ===\n"
+            "ts_monotonic_ns=%" PRIu64 " ts_realtime_ns=%" PRIu64 "\n"
+            "flush_batch_size=%u event_seq_start=0\n"
+            "format: [ts_ns] [seq=N] [lum_id=0xXXXX...] op_name\n",
+            ts_mono, ts_real, FLUSH_BATCH_SIZE);
     fflush(forensic_log_file);
     pthread_mutex_unlock(&fl001_log_file_mutex);
-    
+
     printf("[FORENSIC] Log initialized successfully: %s\n", filename);
+    printf("[FORENSIC] BUG-3 FIX: header monotonic=%" PRIu64 " ns | realtime=%" PRIu64 " ns\n",
+           ts_mono, ts_real);
     return true;
 }
 
@@ -123,44 +199,49 @@ void forensic_log_lum_operation(const char* operation, uint64_t lum_count, doubl
            operation, lum_count, timestamp);
 }
 
-// FONCTION RENFORCÉE: Log systématique pour chaque LUM avec double écriture
-void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_t timestamp_ns) {
-    /* FL-005 FIX v2 (rapport 149) : maintien du fl001_log_file_mutex pendant TOUTE
-     * la durée de l'écriture dans forensic_log_file (Option A rapport 148 §4).
-     * La correction session 147 copiait le FILE* puis relâchait le mutex AVANT
-     * d'écrire — forensic_logger_destroy() pouvait appeler fclose() sur ce même
-     * FILE* entre la copie et l'écriture (use-after-close).
-     * Ici le mutex n'est jamais relâché entre la vérification et le fflush final,
-     * donc forensic_logger_destroy() doit attendre la fin de l'écriture complète.
-     * Ordre d'acquisition strict : fl001_log_file_mutex TOUJOURS avant
-     * fl001_individual_mutex — jamais l'inverse. */
+/* FORENSIC-UNIF-003 : forensic_log_individual_lum corrigé
+ *
+ * BUG-1 FIX : lum_id est maintenant uint64_t — aucune troncature 64→32.
+ * PERF-1 FIX : batch flush toutes les FLUSH_BATCH_SIZE écritures.
+ * NEW      : event_seq global monotone incrémenté sous mutex — chaque entrée
+ *             du log porte son numéro de séquence unique pour détection de
+ *             pertes et duplications.
+ *
+ * FL-005 FIX v2 conservé : fl001_log_file_mutex maintenu pendant toute l'écriture
+ * (pas de relâche entre vérification et fflush conditionnelle).
+ * Ordre d'acquisition strict : fl001_log_file_mutex TOUJOURS avant
+ * fl001_individual_mutex — jamais l'inverse. */
+void forensic_log_individual_lum(uint64_t lum_id, const char* operation, uint64_t timestamp_ns) {
     pthread_mutex_lock(&fl001_log_file_mutex);
     if (!forensic_log_file) {
         pthread_mutex_unlock(&fl001_log_file_mutex);
-        printf("[FORENSIC_ERROR] Log file not initialized for LUM_%u\n", lum_id);
+        /* PERF : pas de printf par événement manqué en production — stderr seulement */
+        fprintf(stderr, "[FORENSIC_ERROR] Log file not initialized for LUM_0x%016" PRIx64 "\n",
+                lum_id);
         return;
     }
 
-    /* FL-002 FIX: &lum_id était l'adresse d'une variable locale (stack), pas l'adresse
-     * du LUM en mémoire — log forensique trompeur. On supprime ce champ sans valeur. */
-    fprintf(forensic_log_file, "[%" PRIu64 "] [LUM_%u] %s: Individual LUM processing\n",
-            timestamp_ns, lum_id, operation);
-    fflush(forensic_log_file);
+    /* BUG-1 FIX : lum_id est écrit en hexadécimal 64 bits complet.
+     * NEW : event_seq incrémenté sous mutex, écrit dans le log.
+     * Format : [ts_ns] [seq=N] [lum_id=0xXXXXXXXXXXXXXXXX] op_name */
+    uint64_t seq = ++g_event_seq;
+    fprintf(forensic_log_file,
+            "[%" PRIu64 "] [seq=%" PRIu64 "] [lum_id=0x%016" PRIx64 "] %s\n",
+            timestamp_ns, seq, lum_id, operation);
+
+    /* PERF-1 FIX : flush conditionnel — une fois toutes les FLUSH_BATCH_SIZE écritures.
+     * Le flush final est garanti par forensic_logger_destroy(). */
+    g_flush_counter++;
+    if (g_flush_counter % FLUSH_BATCH_SIZE == 0) {
+        fflush(forensic_log_file);
+    }
+
     pthread_mutex_unlock(&fl001_log_file_mutex);
 
-    // ÉCRITURE CONSOLE: Affichage temps réel obligatoire (hors mutex — stdout ne dépend pas du FILE*)
-    printf("[FORENSIC_LUM] [%" PRIu64 "] LUM_%u %s\n", timestamp_ns, lum_id, operation);
-    fflush(stdout);
-
-    /* FL-001 FIX: accès à individual_log entièrement sous fl001_individual_mutex.
-     * Élimine la double-initialisation et les écritures entrelacées en cas
-     * d'appels multi-thread simultanés.
-     * Ordre d'acquisition strict respecté : fl001_log_file_mutex déjà relâché
-     * ci-dessus avant d'acquérir fl001_individual_mutex. */
+    /* FL-001 FIX : accès à individual_log entièrement sous fl001_individual_mutex.
+     * Ordre d'acquisition strict respecté : fl001_log_file_mutex déjà relâché. */
     pthread_mutex_lock(&fl001_individual_mutex);
 
-    /* individual_log promu en variable statique de fichier (fl001_*) pour
-     * que le mutex externe puisse la protéger. */
     static FILE* individual_log = NULL;
     if (!individual_log) {
         char individual_filename[256];
@@ -172,16 +253,21 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
                  tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec);
         individual_log = fopen(individual_filename, "w");
         if (individual_log) {
-            fprintf(individual_log, "=== LOG INDIVIDUEL LUMs - SESSION %" PRIu64 " ===\n",
+            /* BUG-1 FIX : header individual_log avec même format lum_id 64 bits */
+            fprintf(individual_log,
+                    "=== LOG INDIVIDUEL LUMs - SESSION ts=%" PRIu64 " ===\n"
+                    "format: [ts_ns] [seq=N] [lum_id=0xXXXX...] op\n",
                     timestamp_ns);
             fflush(individual_log);
         }
     }
 
     if (individual_log) {
-        fprintf(individual_log, "[%" PRIu64 "] LUM_%u: %s\n",
-                timestamp_ns, lum_id, operation);
-        fflush(individual_log);
+        /* BUG-1 FIX : lum_id 64 bits complet dans le log individuel */
+        fprintf(individual_log,
+                "[%" PRIu64 "] [seq=%" PRIu64 "] [lum_id=0x%016" PRIx64 "] %s\n",
+                timestamp_ns, seq, lum_id, operation);
+        /* PERF-1 FIX : pas de fflush par événement dans individual_log non plus */
     }
 
     pthread_mutex_unlock(&fl001_individual_mutex);
@@ -190,8 +276,19 @@ void forensic_log_individual_lum(uint32_t lum_id, const char* operation, uint64_
 void forensic_logger_destroy(void) {
     pthread_mutex_lock(&fl001_log_file_mutex);
     if (forensic_log_file) {
-        uint64_t timestamp = lum_get_timestamp();
-        fprintf(forensic_log_file, "=== FORENSIC LOG ENDED (timestamp: %llu ns) ===\n", timestamp);
+        /* BUG-3 FIX : footer utilise CLOCK_MONOTONIC (cohérent avec le header) */
+        uint64_t ts_mono = forensic_get_monotonic_ns();
+        struct timespec tsr;
+        clock_gettime(CLOCK_REALTIME, &tsr);
+        uint64_t ts_real = (uint64_t)tsr.tv_sec * 1000000000ULL + (uint64_t)tsr.tv_nsec;
+
+        fprintf(forensic_log_file,
+                "=== FORENSIC LOG ENDED ===\n"
+                "ts_monotonic_ns=%" PRIu64 " ts_realtime_ns=%" PRIu64 "\n"
+                "total_events=%" PRIu64 "\n",
+                ts_mono, ts_real, g_event_seq);
+        /* Flush final garanti (PERF-1 : flush des événements en attente dans le batch) */
+        fflush(forensic_log_file);
         fclose(forensic_log_file);
         forensic_log_file = NULL;
     }

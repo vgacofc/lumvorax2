@@ -96,13 +96,14 @@ static int trace_double_bits(double value, int module_id, int step, int i, int j
     int traced = 0;
 
     for (int b = 0; b < BITS_PER_DOUBLE; b++) {
-        uint32_t lum_id = encode_lum_id(module_id, step & 0xFF, i & 0x3F,
-                                         j & 0x3F, b);
+        uint32_t lum_id_32 = encode_lum_id(module_id, step & 0xFF, i & 0x3F,
+                                             j & 0x3F, b);
         /* Le timestamp est incrémenté de 1 ns fictif par bit pour garantir
          * l'unicité de l'ordre. La résolution réelle de time_ns_get_absolute()
          * dépend de CLOCK_REALTIME — déclarée ici, pas supposée 1ns hardware. */
         uint64_t ts_bit = ts_base + (uint64_t)b;
-        forensic_log_individual_lum(lum_id, op_name, ts_bit);
+        /* FORENSIC-UNIF-003 BUG-1 FIX : cast explicite uint32→uint64 (valeur conservée) */
+        forensic_log_individual_lum((uint64_t)lum_id_32, op_name, ts_bit);
         traced++;
     }
 

@@ -1,0 +1,169 @@
+{
+  "session": "S159",
+  "date": "2026-10-03",
+  "git_head_before": "b1e8ff970bbe44ecaccc071d0c8c7ca3bba2b150",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode": "DEBUG",
+
+  "chantiers": [
+    "FORENSIC-UNIF-003",
+    "Richardson-PROTOCOL-003b"
+  ],
+
+  "forensic_unif3": {
+    "binary": "bin/ns_forensic_unif3",
+    "log": "logs/forensic/ns_forensic_unif3.log",
+    "grid": "4x4",
+    "steps": 10,
+    "modules": 7,
+    "bits_per_double": 64,
+    "run_id": "0x6612",
+    "ts_start_realtime_ns": 1790980664768355000,
+    "header_monotonic_ns": 189164062848000,
+    "total_expected": 49280,
+    "total_traced": 49280,
+    "event_seq_logger": 49280,
+    "gaps_detected": 0,
+    "xor_all_lum_ids": "0x0000000000000000",
+    "xor_zero_warning": "N pair + steps pair -> annulation symmetrique attendue",
+    "wall_time_s": 0.221,
+    "verdict": "PASS",
+    "bug1_closed": true,
+    "bug3_closed": true,
+    "perf1_closed": true,
+    "event_seq_continuous": true,
+    "modules_detail": {
+      "U_IN":       {"expected": 7680,  "traced": 7680,  "lost": 0},
+      "V_IN":       {"expected": 7680,  "traced": 7680,  "lost": 0},
+      "P_IN":       {"expected": 10240, "traced": 10240, "lost": 0},
+      "UTMP":       {"expected": 7680,  "traced": 7680,  "lost": 0},
+      "VTMP":       {"expected": 7680,  "traced": 7680,  "lost": 0},
+      "U_OUT":      {"expected": 7680,  "traced": 7680,  "lost": 0},
+      "POISSON_RES":{"expected": 640,   "traced": 640,   "lost": 0}
+    },
+    "log_header_verification": {
+      "ts_monotonic_ns_in_header": 189164062848000,
+      "ts_realtime_ns_in_header": 1790980664768215000,
+      "source_uniforme": "CLOCK_MONOTONIC pour durees/ordre, CLOCK_REALTIME pour correlation externe",
+      "bug3_status": "CLOSED"
+    }
+  },
+
+  "richardson_protocol_003b": {
+    "binary": "bin/ns_richardson_couette_periodic",
+    "log": "logs/forensic/ns_richardson_couette_periodic.log",
+    "status": "TIMEOUT_PARTIAL",
+    "note": "timeout 180s avant completion protocole C grille 128x128",
+    "bug2_fix": "y_node = (j-0.5)*dy (au lieu de j*dy)",
+    "cl_type": "periodiques_en_x",
+    "resultats_partiels": {
+      "proto_A": {
+        "32x32": {
+          "status": "LIMIT",
+          "steps": 40000,
+          "L1": 0.500054,
+          "L2": 0.547572,
+          "Linf": 0.752932,
+          "u_min": -0.2750,
+          "u_max": 0.9298,
+          "v_max": 6.22e-5
+        },
+        "64x64": {
+          "status": "LIMIT",
+          "steps": 40000,
+          "L1": 0.500103,
+          "L2": 0.547965,
+          "Linf": 0.753979,
+          "u_min": -0.2757,
+          "u_max": 0.9648,
+          "v_max": 2.24e-4
+        }
+      },
+      "proto_B": {
+        "32x32": {
+          "status": "CONV",
+          "steps": 129950,
+          "L1": 0.500055,
+          "L2": 0.547383,
+          "Linf": 0.748802,
+          "u_min": -0.3311,
+          "u_max": 0.9374,
+          "v_max": 1.78e-6
+        },
+        "64x64": {
+          "status": "CONV",
+          "steps": 221800,
+          "L1": 0.500072,
+          "L2": 0.547703,
+          "Linf": 0.749905,
+          "u_min": -0.3298,
+          "u_max": 0.9686,
+          "v_max": 6.57e-6
+        },
+        "128x128": "TIMEOUT_EN_COURS"
+      }
+    },
+    "diagnostic_critique": {
+      "L1_converge_vers": "0.500 = (N+1)/(2N) pour N grand",
+      "u_min_negatif": "u_min < 0 (jusqu'a -0.33) detecte — undershoot confirme",
+      "u_max_inferieur_a_1": "u_max < 1 — pas d'overshoot mais solution n'a pas atteint Couette",
+      "interpretation": "La solution stationnaire n'est PAS u=y meme avec CL periodiques. L1~0.5 indique que le solveur converge vers une solution differente de la reference analytique. Cause probable: le solveur interne reinitialise les CL lid-driven avant chaque pas, et set_couette_periodic_bc() est appele APRES. Le pas de diffusion avec u=0 aux bords O/E (lid_bc) contamine la solution avant la correction periodique.",
+      "solution_requise": "Modifier ns_solver_step() pour accepter un callback CL, OU implementer un mini-solveur Couette periodique natif sans appel a ns_solver_set_lid_bc() en interne.",
+      "chantier_suivant": "Richardson-PROTOCOL-003c avec solveur Couette natif ou MMS"
+    },
+    "tests_T01b_T06b": {
+      "status": "NON_EVALUABLES_TIMEOUT",
+      "note": "protocole C 128x128 non termine — tests non evaluables"
+    }
+  },
+
+  "corrections_appliquees": {
+    "BUG-1": {
+      "description": "forensic_log_individual_lum uint32_t -> uint64_t",
+      "fichiers": [
+        "src/debug/forensic_logger.h (ligne 38: signature)",
+        "src/debug/forensic_logger.c (ligne 214: implementation)",
+        "src/validation/ns_forensic_unif2.c (ligne 190: cast supprime)",
+        "src/validation/ns_forensic_unif.c (ligne 105: cast explicite uint32->uint64)",
+        "src/validation/ns_richardson_adaptive.c (ligne 257: uint32->uint64)",
+        "src/validation/ns_richardson_manufactured.c (ligne 401: uint32->uint64)",
+        "src/lum/lum_core.c (ligne 643: cast explicite)"
+      ],
+      "status": "CLOSED"
+    },
+    "BUG-3": {
+      "description": "Header/footer log = CLOCK_MONOTONIC (unifie avec evenements)",
+      "fichiers": ["src/debug/forensic_logger.c"],
+      "status": "CLOSED"
+    },
+    "PERF-1": {
+      "description": "Batch flush 1024 evenements (plus de fflush par event)",
+      "fichiers": ["src/debug/forensic_logger.c (FLUSH_BATCH_SIZE=1024)"],
+      "status": "CLOSED"
+    },
+    "NEW_event_seq": {
+      "description": "Compteur global monotone event_seq dans le log",
+      "status": "IMPLEMENTED_VERIFIED"
+    }
+  },
+
+  "nouveaux_fichiers": [
+    "src/validation/ns_forensic_unif3.c",
+    "src/validation/ns_richardson_couette_periodic.c"
+  ],
+
+  "chantiers_ouverts": [
+    "Richardson-PROTOCOL-003c : solveur Couette natif sans lid_bc interne",
+    "BUILD-THREAD-001",
+    "PERF-FORENSIC-001",
+    "ARCH-MEM-001",
+    "BUILD-PROOF-001",
+    "BUILD-PORT-002",
+    "BL-003 -> BL-012",
+    "C3 -> NX-42",
+    "C4 NX-42 problemes 6-30",
+    "Lyapunov robuste",
+    "T04 renforce"
+  ]
+}
