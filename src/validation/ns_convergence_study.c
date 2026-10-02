@@ -196,8 +196,23 @@ static GridResult run_grid(int n, int n_steps)
     return r;
 }
 
-/* ── T04 : énergie cinétique — état final < transitoire peak ────────────── */
-static int test_energy_final_lt_early(double *ek_at_100_out, double *ek_final_out)
+/* ── T04 FIX (rapport 151) : énergie cinétique — convergence vers plateau ── */
+/*
+ * Pour une cavité entraînée (lid-driven cavity) à Re=100 :
+ *   - L'énergie cinétique CROÎT de 0 jusqu'à un plateau d'équilibre.
+ *     EK@100 < EK@plateau est ATTENDU et correct physiquement.
+ *     L'ancien critère "état_final < état_early" était incorrect pour ce cas.
+ *   - Le critère honnête est : la simulation atteint un état stationnaire
+ *     (|dEK/dt| faible sur les derniers pas) et l'énergie reste dans une
+ *     plage physiquement raisonnable pour Re=100 (typiquement 0.001..0.1).
+ *
+ * Méthode :
+ *   - Comparer EK sur les 100 derniers pas (pas 2900-3000) : si la variation
+ *     relative est < 5%, la simulation a convergé vers un état stationnaire.
+ *   - Vérifier que EK finale est dans [1e-4, 1.0] (sanity check physique).
+ */
+static int test_energy_convergence(double *ek_at_100_out, double *ek_at_2900_out,
+                                    double *ek_final_out, double *ek_variation_out)
 {
     NSParams p = {
         .nx = 32, .ny = 32,
@@ -208,18 +223,34 @@ static int test_energy_final_lt_early(double *ek_at_100_out, double *ek_final_ou
     NSSolver2D *s = ns_solver_create(&p);
     ns_solver_set_lid_bc(s);
 
-    double ek_at_100 = 0.0;
+    double ek_at_100 = 0.0, ek_at_2900 = 0.0;
     for (int i = 0; i < 3000; i++) {
         ns_solver_step(s);
-        if (i == 99) ek_at_100 = kinetic_energy(s);
+        if (i == 99)   ek_at_100  = kinetic_energy(s);
+        if (i == 2899) ek_at_2900 = kinetic_energy(s);
     }
     double ek_final = kinetic_energy(s);
     ns_solver_destroy(s);
 
-    if (ek_at_100_out) *ek_at_100_out = ek_at_100;
-    if (ek_final_out)  *ek_final_out  = ek_final;
-    /* état à t=3000 doit être dans ±50% de l'état à t=100 — simul toujours active */
-    return (ek_final > 0.0 && ek_at_100 > 0.0);
+    if (ek_at_100_out)   *ek_at_100_out   = ek_at_100;
+    if (ek_at_2900_out)  *ek_at_2900_out  = ek_at_2900;
+    if (ek_final_out)    *ek_final_out     = ek_final;
+
+    /* Variation relative sur les 100 derniers pas (état stationnaire ?) */
+    double variation = (ek_at_2900 > 1e-15)
+                       ? fabs(ek_final - ek_at_2900) / ek_at_2900
+                       : 1.0;
+    if (ek_variation_out) *ek_variation_out = variation;
+
+    /* Critères :
+     *   1. EK finale dans plage physique [1e-4, 1.0] pour Re=100 lid-driven
+     *   2. Variation relative < 5% sur les 100 derniers pas → état quasi-stationnaire
+     *   3. EK@100 < EK_final : cavité non encore chargée à t=100 → normal
+     */
+    int ok_range = (ek_final >= 1e-4 && ek_final <= 1.0);
+    int ok_stationary = (variation < 0.05);
+    int ok_growth = (ek_at_100 < ek_final);  /* croissance attendue lid-driven */
+    return ok_range && ok_stationary && ok_growth;
 }
 
 /* ── main ────────────────────────────────────────────────────────────────── */
@@ -253,24 +284,42 @@ int main(void)
     printf("  Ordre convergence 32->64   : %.3f (theorique Euler = 1.0)\n", order_32_64);
     printf("  Ordre convergence 64->128  : %.3f\n\n", order_64_128);
 
-    /* T01 : L2 varie de moins de 10% entre les 3 grilles = saturation saine
-     * d'un schéma Euler 1er ordre (l'erreur de troncature temporelle domine). */
-    double l2_max = g32.l2_u > g64.l2_u ? g32.l2_u : g64.l2_u;
-    if (g128.l2_u > l2_max) l2_max = g128.l2_u;
-    double l2_min = g32.l2_u < g64.l2_u ? g32.l2_u : g64.l2_u;
-    if (g128.l2_u < l2_min) l2_min = g128.l2_u;
-    double l2_variation = (l2_max - l2_min) / l2_max;
-    int t01_pass = (l2_variation <= 0.10);  /* saturation : variation < 10% */
+    /* T01 : L2 doit décroître avec le raffinement — g64 < g32 ET g128 < g64.
+     * Critère honnête : décroissance stricte sur les deux paires de grilles.
+     * Note : si l'erreur de troncature temporelle domine (Euler 1er ordre, dt
+     * identique), la saturation spatiale est attendue. T01 documente ce fait
+     * sans le masquer. */
+    int t01_pass = (g64.l2_u < g32.l2_u) && (g128.l2_u < g64.l2_u);
+    double ratio_32_64  = (g64.l2_u > 0.0) ? g32.l2_u / g64.l2_u : 0.0;
+    double ratio_64_128 = (g128.l2_u > 0.0) ? g64.l2_u / g128.l2_u : 0.0;
 
-    /* T02 : résidu Poisson < 2e-5 sur toutes les grilles = convergence pression OK */
-    int t02_pass = (g32.poisson_res_final < 2e-5) &&
-                   (g64.poisson_res_final < 2e-5) &&
-                   (g128.poisson_res_final < 2e-5);
+    /* T02 FIX (rapport 151) : vérification de l'ordre Richardson ≥ 0.8.
+     * L'ancien T02 testait uniquement le résidu Poisson (condition nécessaire
+     * mais insuffisante pour certifier la convergence spatiale).
+     * Ordre théorique Euler 1er ordre = 1.0. Seuil tolérant = 0.8.
+     * Si L2 ne décroît pas (saturation temporelle), l'ordre est non défini
+     * → on documente le fait et on FAIL avec raison explicite.
+     * Résidu Poisson reste vérifié en T05 (critère distinct). */
+    int t02_richardson_defined = (g64.l2_u < g32.l2_u) && (g128.l2_u < g64.l2_u);
+    int t02_pass = t02_richardson_defined &&
+                   (order_32_64  >= 0.8) &&
+                   (order_64_128 >= 0.8);
 
-    printf("  [T01] Saturation L2 (variation < 10%%) : %s  (var=%.2f%%  max=%.4f min=%.4f)\n",
-           t01_pass ? "PASS" : "FAIL", l2_variation * 100.0, l2_max, l2_min);
-    printf("  [T02] Poisson_res < 2e-5 sur 3 grilles : %s  (%.2e / %.2e / %.2e)\n\n",
-           t02_pass ? "PASS" : "FAIL",
+    printf("  [T01] L2 decroit avec raffinement (32->64->128) : %s\n", t01_pass ? "PASS" : "FAIL");
+    printf("        L2_32=%.6f  L2_64=%.6f  L2_128=%.6f\n",
+           g32.l2_u, g64.l2_u, g128.l2_u);
+    printf("        ratio 32/64=%.3f  ratio 64/128=%.3f\n", ratio_32_64, ratio_64_128);
+    printf("  [T02] Ordre Richardson ≥ 0.8 (Euler theorique 1.0) : %s\n",
+           t02_pass ? "PASS" : "FAIL");
+    printf("        ordre_32_64=%.3f  ordre_64_128=%.3f  seuil=0.8\n",
+           order_32_64, order_64_128);
+    if (!t02_richardson_defined)
+        printf("        [WARN] Ordre non defini : L2 ne decroit pas strictement entre grilles.\n");
+    if (!t02_pass && t02_richardson_defined)
+        printf("        [WARN] Ordre < 0.8 : saturation temporelle probable (dt identique sur 3 grilles).\n");
+    printf("        [NOTE] L'erreur de troncature temporelle (Euler, dt=%.3f) peut dominer\n", 0.001);
+    printf("               et saturer L2 meme si la grille spatiale se raffine.\n");
+    printf("        Residu Poisson (info separee T05) : %.2e / %.2e / %.2e\n\n",
            g32.poisson_res_final, g64.poisson_res_final, g128.poisson_res_final);
 
     /* ── T03 : conservation de masse ── */
@@ -279,12 +328,18 @@ int main(void)
     printf("  div_max = %.4e | Seuil = 1e-2 : %s\n\n",
            g64.div_max, t03_pass ? "PASS" : "FAIL");
 
-    /* ── T04 : énergie cinétique ── */
-    printf("[T04] Energie cinetique active — 32x32, 3000 pas\n");
-    double ek100 = 0.0, ekfinal = 0.0;
-    int t04_pass = test_energy_final_lt_early(&ek100, &ekfinal);
-    printf("  EK@100=%.6f  EK@3000=%.6f  actif=%s\n\n",
-           ek100, ekfinal, t04_pass ? "PASS" : "FAIL");
+    /* ── T04 : énergie cinétique — convergence vers plateau stationnaire ── */
+    printf("[T04] Energie cinetique — convergence vers etat stationnaire (32x32, 3000 pas)\n");
+    double ek100 = 0.0, ek2900 = 0.0, ekfinal = 0.0, ek_var = 0.0;
+    int t04_pass = test_energy_convergence(&ek100, &ek2900, &ekfinal, &ek_var);
+    printf("  EK@100=%.6f  EK@2900=%.6f  EK@3000=%.6f  variation=%.2f%%\n",
+           ek100, ek2900, ekfinal, ek_var * 100.0);
+    printf("  Criteres : EK_final in [1e-4,1.0]=%s | variation<5%%=%s | EK@100<EK_final=%s\n",
+           (ekfinal >= 1e-4 && ekfinal <= 1.0) ? "OK" : "FAIL",
+           (ek_var < 0.05) ? "OK" : "FAIL",
+           (ek100 < ekfinal) ? "OK" : "FAIL");
+    printf("  [NOTE] Lid-driven cavity : EK croit de 0 vers plateau — croissance EK@100<EK@3000 est correcte.\n");
+    printf("  T04=%s\n\n", t04_pass ? "PASS" : "FAIL");
 
     /* ── T05 : résidu Poisson ── */
     printf("[T05] Residu Poisson final 64x64\n");
