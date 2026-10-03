@@ -1,0 +1,77 @@
+{
+  "session": "S162",
+  "date": "2026-10-03",
+  "module": "UNICITE-001-FIX",
+  "commit_before": "6f50173",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode": "DEBUG",
+
+  "bug_diagnosed": {
+    "id": "UNICITE-001",
+    "description": "encode_lum_id_64() v1 omettait l'index de cellule (cell_idx). Plusieurs cellules du même champ au même step et bit_pos produisaient le même LUM_ID.",
+    "schema_v1": "[63:48]=run_id(16) | [47:44]=protocol(4) | [43:40]=module(4) | [39:8]=step(32) | [7:2]=bit_pos(6) | [1:0]=réservé",
+    "collision_count_before": 3840,
+    "root_cause": "Absence du paramètre cell_idx dans l'encodage — pour une grille 4x4 avec 7 modules et 10 steps, chaque grille de (nx-1)*ny ou nx*ny cellules partage bit_pos [0..63] → collisions intra-champ"
+  },
+
+  "fix_applied": {
+    "file": "src/validation/ns_forensic_unif4.c",
+    "schema_v2": "[63:48]=run_id(16) | [47:44]=protocol(4) | [43:40]=module(4) | [39:24]=step(16) | [23:8]=cell_idx(16) | [7:0]=bit_pos(8)",
+    "functions_modified": [
+      "encode_lum_id_64 — signature: +cell_idx:uint16_t, step: uint32_t→uint16_t, bit_pos: 6bits→8bits",
+      "trace_double_bits_mono — signature: +cell_idx:uint16_t",
+      "trace_field_u — calcul cidx linéaire, passe cidx à trace_double_bits_mono",
+      "trace_field_v — idem",
+      "trace_field_p — idem",
+      "trace_field_utmp — idem",
+      "trace_field_vtmp — idem",
+      "trace_ns_step_unif4 — cast step_n→uint16_t, cell_idx=0 pour POISSON (scalaire)"
+    ]
+  },
+
+  "execution_result": {
+    "binary": "bin/ns_forensic_unif4",
+    "grid": "4x4",
+    "steps": 10,
+    "modules": 7,
+    "bits_per_double": 64,
+    "total_expected": 49280,
+    "total_traced": 49280,
+    "lost": 0,
+    "event_seq": 49280,
+    "hash_set_size": 49280,
+    "duplicates": 0,
+    "unicite_pass": true,
+    "monotonic_regressions": 0,
+    "seq_gaps": 0,
+    "wall_time_s": 1.260,
+    "verdict": "PASS",
+    "run_id": "0xE31C",
+    "ts_mono_start_ns": 232413316039000
+  },
+
+  "log_verified": {
+    "path": "logs/forensic/ns_forensic_unif4.log",
+    "size_bytes": 3559754,
+    "real_event_lines": 49280,
+    "format_sample": "[232413317117000] [seq=1] [lum_id=0xe31c200000000000] U_IN:c0:val=0",
+    "cell_idx_visible_in_log": true
+  },
+
+  "compiler": {
+    "command": "gcc -Wall -Wextra -std=c99 -g -O3",
+    "warnings": 0,
+    "errors": 0
+  },
+
+  "open_chantiers": [
+    "Richardson-PROTOCOL-001 — OPEN",
+    "BUILD-THREAD-001 — corrigé S161 faux positif à nettoyer",
+    "perf_forensic_001 — pas encore exécuté",
+    "ns_richardson_003c — pas encore exécuté",
+    "FORENSIC-UNIF-001 pour unif2/unif3 — encode_lum_id_64 v1 encore présent"
+  ],
+
+  "note": "UNICITE-001 FERMÉ sur ns_forensic_unif4.c. Les fichiers ns_forensic_unif2.c et ns_forensic_unif3.c utilisent encore encode_lum_id_64 v1 — à corriger en session suivante si requis."
+}
