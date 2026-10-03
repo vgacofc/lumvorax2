@@ -158,6 +158,12 @@ $(BIN_DIR)/ns_richardson_003c: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson
 	    -o $@ $(LDFLAGS)
 	@echo "[S161] Binaire: bin/ns_richardson_003c"
 
+$(BIN_DIR)/ns_richardson_005_separation: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_005_separation.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_005_separation.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S167] Binaire: bin/ns_richardson_005_separation"
+
 $(BIN_DIR)/ns_richardson_004_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_004_mms.c
 	$(CC) $(CFLAGS) $(NS_SOURCES) \
 	    $(SRC_DIR)/validation/ns_richardson_004_mms.c \

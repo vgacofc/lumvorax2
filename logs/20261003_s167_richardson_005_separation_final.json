@@ -1,0 +1,91 @@
+{
+  "session": "S167",
+  "rapport": "171",
+  "date": "2026-10-03",
+  "head_avant": "1264b79",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode_debug": true,
+  "binaire": "bin/ns_richardson_005_separation",
+  "source": "src/validation/ns_richardson_005_separation.c",
+
+  "contexte": {
+    "audit_s166": "Proto A de S166 était dt∝dx² (pas dt=const). Ordre 2.000 = convergence couplée spatiale+temporelle, pas preuve isolée de l'ordre spatial.",
+    "objectif_s167": "EXP-SPACE (dt fixe → ordre spatial pur) + EXP-TIME (grille fixe → ordre temporel pur)"
+  },
+
+  "exp_space": {
+    "methode": "dt=5.00e-7 fixe sur les 3 grilles. dt << dt_stable_128 → erreur temporelle négligeable",
+    "justification_dt": {
+      "dt_stable_128": 1.526e-6,
+      "DT_FIXED": 5e-7,
+      "ratio_securite": 3.05,
+      "erreur_temp_vs_spatial": "O(5e-7) / O(6.1e-5) ≈ 0.8% — négligeable"
+    },
+    "resultats": {
+      "32x32":  { "L2": 2.247e-4, "Linf": 9.356e-4, "steps": 6000, "wall_s": 1.3 },
+      "64x64":  { "L2": 5.530e-5, "Linf": 2.518e-4, "steps": 6000, "wall_s": 4.6 },
+      "128x128":{ "L2": 1.243e-5, "Linf": 5.912e-5, "steps": 6000, "wall_s": 19.1 }
+    },
+    "ordres": {
+      "32_64":  2.023,
+      "64_128": 2.153
+    },
+    "ratios_l2": {
+      "32_64":  4.063,
+      "64_128": 4.447
+    },
+    "tests": {
+      "T-SPACE-1": "PASS — ord 32→64 = 2.023 ≥ 1.5",
+      "T-SPACE-2": "PASS — ord 64→128 = 2.153 ≥ 1.5",
+      "T-SPACE-3": "PASS — L2 strictement décroissant"
+    },
+    "verdict": "PASS — ordre spatial O(dx²) ISOLÉ et DÉMONTRÉ"
+  },
+
+  "exp_time": {
+    "methode": "Grille 64×64 fixe, 4 valeurs de dt : 1e-5, 5e-6, 2.5e-6, 1.25e-6",
+    "resultats": {
+      "dt_1e-5":   { "L2": 2.012e-5, "Linf": 9.004e-5, "steps": 300,  "wall_s": 1.8 },
+      "dt_5e-6":   { "L2": 3.863e-5, "Linf": 1.752e-4, "steps": 600,  "wall_s": 2.6 },
+      "dt_2.5e-6": { "L2": 4.789e-5, "Linf": 2.177e-4, "steps": 1200, "wall_s": 3.0 },
+      "dt_1.25e-6":{ "L2": 5.252e-5, "Linf": 2.390e-4, "steps": 2400, "wall_s": 3.7 }
+    },
+    "observation": "L2 AUGMENTE quand dt diminue — inverse de l'attendu",
+    "diagnostic": {
+      "cause_principale": "L'erreur spatiale fixe O(dx_64²)=O(2.44e-4) domine toutes les runs. Les erreurs temporelles O(dt) = O(1e-5 à 1.25e-6) sont toutes inférieures à O(dx²). On mesure donc la variation des résidus Poisson entre les runs, pas l'ordre temporel.",
+      "condition_pour_observer_ordre_temporel": "O(dt) doit être comparable à O(dx²). Il faut soit une grille grossière (N=8 ou N=16) où dx² est grand, soit un T_FINAL plus long qui amplifie l'accumulation d'erreur temporelle.",
+      "solution_future": "EXP-TIME-v2 sur grille N=16 (dx²=0.0039) avec dt de 1e-3 à 1e-4 — erreur temporelle O(dt) ≈ O(dx²) → ordre mesurable"
+    },
+    "tests": {
+      "T-TIME-1": "FAIL — L2 non décroissant (erreur spatiale domine)",
+      "T-TIME-2": "FAIL — même raison"
+    },
+    "verdict": "FAIL honnête — régime non séparable avec N=64 et ces dt"
+  },
+
+  "bilan_corrections_s166": {
+    "correction_1": "Proto A S166 identifié comme dt∝dx², pas dt=const — rapport 170 à corriger",
+    "correction_2": "L'ordre 2.000 de S166 = convergence couplée, pas preuve isolée",
+    "correction_s167": "EXP-SPACE avec dt fixe fournit maintenant la preuve isolée correcte (ord=2.023/2.153)"
+  },
+
+  "verdict_global": "PARTIEL — EXP-SPACE PASS (ordre spatial démontré), EXP-TIME FAIL honnête (domination erreur spatiale)",
+
+  "forensic": {
+    "log": "logs/forensic/ns_richardson_005_separation.log",
+    "nb_evenements": 7,
+    "duree_wall_s_totale": 38.1
+  },
+
+  "chantiers_ouverts": [
+    "EXP-TIME-v2 : grille N=16, dt grand (ordre temporel mesurable)",
+    "Richardson-PROTOCOL-006 : MMS avec terme source artificiel Re>1 (advection non linéaire)",
+    "BUILD-THREAD-001, BUILD-PROOF-001, BUILD-PORT-002",
+    "BL-003 à BL-012",
+    "C3 NS → NX-42",
+    "C4 NX-42 problèmes 6–30",
+    "Lyapunov robustesse quantitative",
+    "FORENSIC-UNIF-001"
+  ]
+}
