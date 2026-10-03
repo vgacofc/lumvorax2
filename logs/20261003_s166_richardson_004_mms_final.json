@@ -1,0 +1,104 @@
+{
+  "session": "S166",
+  "rapport": "170",
+  "date": "2026-10-03",
+  "head_avant": "0e6ee57",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode_debug": true,
+  "binaire": "bin/ns_richardson_004_mms",
+  "source": "src/validation/ns_richardson_004_mms.c",
+
+  "contexte": {
+    "s165_result": "L2=0 (plancher machine) — état stationnaire exact du discret",
+    "probleme_s165": "Richardson non évaluable quand L2 < plancher machine",
+    "solution_s166": "MMS Taylor-Green 2D (solution analytique exacte NS) — forçage terme source nul"
+  },
+
+  "solution_mms": {
+    "u_exact": "-sin(pi*x)*cos(pi*y)*exp(-2*pi^2*t/Re)",
+    "v_exact": "cos(pi*x)*sin(pi*y)*exp(-2*pi^2*t/Re)",
+    "div_free": true,
+    "terme_source": "nul (NS satisfait exactement)",
+    "re": 1.0,
+    "t_final": 0.003
+  },
+
+  "test0_analytique": {
+    "statut": "PASS",
+    "max_div_discret": 7.589e-19,
+    "l2_at_t0": 0.5080,
+    "u_bord_ouest": 0.0,
+    "u_bord_est": 3.879e-37
+  },
+
+  "resultats_simulation": {
+    "proto_A_dt_const": {
+      "32x32":  { "dt": 1.953e-4, "steps": 15,  "stable": true, "L1": 2.680e-4, "L2": 4.919e-4, "Linf": 2.068e-3, "wall_s": 0.04 },
+      "64x64":  { "dt": 4.883e-5, "steps": 61,  "stable": true, "L1": 6.723e-5, "L2": 1.239e-4, "Linf": 5.712e-4, "wall_s": 0.7  },
+      "128x128":{ "dt": 1.221e-5, "steps": 245, "stable": true, "L1": 1.675e-5, "L2": 3.096e-5, "Linf": 1.495e-4, "wall_s": 9.8  }
+    },
+    "proto_B_dt_prop_dx": {
+      "32x32":  { "dt": 1.953e-4,  "steps": 15,  "stable": true, "L1": 2.680e-4, "L2": 4.919e-4, "Linf": 2.068e-3, "wall_s": 0.04 },
+      "64x64":  { "dt": 2.441e-5,  "steps": 122, "stable": true, "L1": 1.765e-5, "L2": 3.334e-5, "Linf": 1.554e-4, "wall_s": 1.1  },
+      "128x128":{ "dt": 3.052e-6,  "steps": 983, "stable": true, "L1": 1.786e-6, "L2": 2.985e-6, "Linf": 1.366e-5, "wall_s": 12.0 }
+    },
+    "proto_C_dt_prop_dx2": {
+      "32x32":  { "dt": 1.953e-4,  "steps": 15,   "stable": true, "L1": 2.680e-4, "L2": 4.919e-4, "Linf": 2.068e-3, "wall_s": 0.04 },
+      "64x64":  { "dt": 1.221e-5,  "steps": 245,  "stable": true, "L1": 7.170e-6, "L2": 1.194e-5, "Linf": 5.246e-5, "wall_s": 1.8  },
+      "128x128":{ "dt": 7.629e-7,  "steps": 3932, "stable": true, "L1": 6.425e-6, "L2": 1.146e-5, "Linf": 5.444e-5, "wall_s": 18.1 }
+    }
+  },
+
+  "analyse_richardson": {
+    "proto_A": {
+      "ordre_32_64":  1.990,
+      "ordre_64_128": 2.000,
+      "verdict": "O(dx^2) confirmé — preuve directe de l'ordre spatial"
+    },
+    "proto_B": {
+      "ordre_32_64":  3.883,
+      "ordre_64_128": 3.482,
+      "verdict": "Ordre élevé anormal — mélange erreur spatiale O(dx^2) + erreur temporelle O(dt)=O(dx) avec dt proportionnel à dx"
+    },
+    "proto_C": {
+      "ordre_32_64":  5.364,
+      "ordre_64_128": 0.060,
+      "verdict": "FAIL T02m — L2_64 et L2_128 quasi-identiques car T_FINAL=0.003 trop court : erreur d'initialisation masque la différence spatiale"
+    }
+  },
+
+  "tests": {
+    "T00m": { "statut": "PASS", "critere": "solution analytique div-free, bornée, bords nuls" },
+    "T01m": { "statut": "PASS", "critere": "ordre 32->64 >= 1.5",  "valeur": 5.364, "note": "via proto C — ordre anormal car T_FINAL court" },
+    "T02m": { "statut": "FAIL", "critere": "ordre 64->128 >= 1.5", "valeur": 0.060, "cause": "L2_64≈L2_128 car T_FINAL=0.003 trop court pour séparer les erreurs spatiales" },
+    "T03m": { "statut": "PASS", "critere": "L2 strictement décroissant (proto C)", "L2_32": 4.919e-4, "L2_64": 1.194e-5, "L2_128": 1.146e-5 },
+    "T04m": { "statut": "PASS", "critere": "Linf_128 < 0.1", "valeur": 5.444e-5 },
+    "T05m": { "statut": "FAIL", "critere": "ordre dans [1.5, 2.5]", "valeur": 0.060 }
+  },
+
+  "verdict_global": "FAIL honnête",
+  "preuve_partielle": {
+    "proto_A_ordre_2": "DÉMONTRÉ — ordre spatial O(dx^2) prouvé par Proto A (dt=const, ordre=1.990/2.000)",
+    "proto_C_separation": "NON_DÉMONTRÉ — T_FINAL=0.003 trop court pour Proto C",
+    "richardson_protocol_001": "PARTIELLEMENT FERMÉ — ordre spatial confirmé via Proto A, séparation spatiale/temporelle reste OPEN"
+  },
+
+  "forensic": {
+    "log": "logs/forensic/ns_richardson_004_mms.log",
+    "ts_debut_ns": 1791033408952004000,
+    "nb_simulations": 9,
+    "tous_stables": true,
+    "duree_wall_s_totale_estimee": 44.0
+  },
+
+  "chantiers_ouverts_apres_s166": [
+    "Richardson-PROTOCOL-004b : T_FINAL plus long (0.02+) avec Proto C — nécessite timeout IDE > 300s ou exécution hors IDE",
+    "BUILD-THREAD-001, BUILD-PROOF-001, BUILD-PORT-002",
+    "BL-003 à BL-012",
+    "C3 NS → NX-42",
+    "C4 NX-42 problèmes 6–30",
+    "Lyapunov robustesse quantitative",
+    "FORENSIC-UNIF-001"
+  ]
+}

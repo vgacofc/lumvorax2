@@ -144,9 +144,44 @@ $(BIN_DIR)/ns_richardson_couette_periodic: $(NS_SOURCES) $(SRC_DIR)/validation/n
 	    -o $@ $(LDFLAGS)
 	@echo "[S159] Binaire: bin/ns_richardson_couette_periodic"
 
-science: directories $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured \
-         $(BIN_DIR)/ns_forensic_unif3 $(BIN_DIR)/ns_richardson_couette_periodic
-	@echo "[S159] Tous les binaires science compilés"
+# === S161 : FORENSIC-UNIF-004 + Richardson-003c + BUILD-THREAD-001 + PERF-FORENSIC-001 ===
+
+$(BIN_DIR)/ns_forensic_unif4: $(NS_SOURCES) $(SRC_DIR)/validation/ns_forensic_unif4.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_forensic_unif4.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S161] Binaire: bin/ns_forensic_unif4"
+
+$(BIN_DIR)/ns_richardson_003c: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_003c.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_003c.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S161] Binaire: bin/ns_richardson_003c"
+
+$(BIN_DIR)/ns_richardson_004_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_004_mms.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_004_mms.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S166] Binaire: bin/ns_richardson_004_mms"
+
+$(BIN_DIR)/build_thread_001: $(NS_SOURCES) $(SRC_DIR)/tests/build_thread_001.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/tests/build_thread_001.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S161] Binaire: bin/build_thread_001"
+
+$(BIN_DIR)/perf_forensic_001: $(NS_SOURCES) $(SRC_DIR)/tests/perf_forensic_001.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/tests/perf_forensic_001.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S161] Binaire: bin/perf_forensic_001"
+
+science: directories \
+         $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured \
+         $(BIN_DIR)/ns_forensic_unif3 $(BIN_DIR)/ns_richardson_couette_periodic \
+         $(BIN_DIR)/ns_forensic_unif4 $(BIN_DIR)/ns_richardson_003c \
+         $(BIN_DIR)/build_thread_001  $(BIN_DIR)/perf_forensic_001
+	@echo "[S161] Tous les binaires science compilés"
 
 .PHONY: science
 
