@@ -1,0 +1,94 @@
+{
+  "log_version": "v33",
+  "session": "S180",
+  "date": "2026-10-04",
+  "module": "FORENSIC-UNIF-002",
+  "chantier": "FU002-FIX-P0P1P2P3",
+  "git_head_before": "d5bf92d",
+  "git_head_after": "TBD",
+  "binary_sha256": "2cac0bcfb00809b6f2cd26f15a63213b7a9c8236905d773ee0fdf1f5364e37dc",
+  "binary_path": "bin/main_cable_001",
+
+  "compilation": {
+    "status": "OK",
+    "warnings": 0,
+    "errors": 0,
+    "command": "make bin/main_cable_001",
+    "flags": "-Wall -Wextra -std=c99 -g -O3 -march=native -fPIC -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -DDEBUG_MODE"
+  },
+
+  "corrections_appliquees": {
+    "P0_SERIALIZE": {
+      "statut": "CORRIGE",
+      "fichier": "src/debug/forensic_unif_002.c",
+      "avant": "mutex pris pour event_seq++, relâché, construction hors mutex, second mutex stats, _write_event() sans verrou → interleave possible",
+      "apres": "un seul mutex g_mutex protège TOUTE la transaction : event_seq++ → construction → stats → fprintf → fflush",
+      "fonction": "forensic_unif002_log_event()",
+      "lignes_apres": "263-288"
+    },
+    "P1_CONTINUITY": {
+      "statut": "CORRIGE",
+      "fichier": "src/debug/forensic_unif_002.c",
+      "avant": "g_stats.last_seq_seen initialisé à 0 → check_continuity(0) → 0==0 → faux DUPLICATE au démarrage",
+      "apres": "flag has_last_seq_seen (bool, init false) → première séquence acceptée sans anomalie, pas d'init à UINT64_MAX",
+      "fonction": "forensic_unif002_check_continuity()",
+      "lignes_apres": "404-464"
+    },
+    "P2_TIMESTAMPS": {
+      "statut": "CORRIGE",
+      "fichier": "src/debug/forensic_unif_002.c + forensic_unif_002.h",
+      "avant": "un seul timestamp_ns CLOCK_REALTIME",
+      "apres": "ts_realtime_ns (CLOCK_REALTIME) + ts_monotonic_ns (CLOCK_MONOTONIC) dans fu002_event_t et JSON-Lines",
+      "helpers": "_now_realtime_ns() + _now_monotonic_ns()",
+      "lignes_h": "96-98"
+    },
+    "P3_BIT_VALUE": {
+      "statut": "CORRIGE",
+      "fichier": "src/debug/forensic_unif_002.c + forensic_unif_002.h",
+      "avant": "bit_value seul — pas de provenance avant/après pour les transformations",
+      "apres": "bit_value_before + bit_value_after dans fu002_event_t ; nouvelle API forensic_unif002_log_transformation_ex()",
+      "lignes_h": "101-102",
+      "lignes_c": "315-359"
+    }
+  },
+
+  "resultats_test_nominal": {
+    "source": "stderr [FU002][DEBUG] Session terminée",
+    "run_id": "0x4AD78009",
+    "bits_input": 64,
+    "lums_created": 64,
+    "loss_count": 0,
+    "duplicate_count": 0,
+    "integrity_ok": true,
+    "exit_code": 0,
+    "statut": "PASS"
+  },
+
+  "resultats_test_concurrence": {
+    "threads": 8,
+    "events_per_thread": 12500,
+    "total_events": 100000,
+    "bits_input": 100000,
+    "lums_created": 100000,
+    "loss_count": 0,
+    "duplicate_count": 0,
+    "integrity_ok": true,
+    "json_lines_valides": 200002,
+    "json_lines_invalides": 0,
+    "statut": "PASS"
+  },
+
+  "fichiers_modifies": [
+    "src/debug/forensic_unif_002.h",
+    "src/debug/forensic_unif_002.c"
+  ],
+
+  "invariants": {
+    "CERTIFIED_100": false,
+    "unique_human_proven": false,
+    "mode_debug": true
+  },
+
+  "rapport_associe": "RAPPORT/187_FU002_CORRECTIONS_P0P1P2P3_S180_20261004.md",
+  "log_precedent": "logs/v32_main_cable_001_forensic_unif_002_S179_20261004.json"
+}
