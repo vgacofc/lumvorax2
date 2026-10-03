@@ -38,6 +38,7 @@
 #include "../solvers/ns_solver_2d.h"
 #include "../debug/forensic_logger.h"
 #include "../common/time_ns.h"
+#include "lum_id_schema.h"   /* UNICITE-002 : schéma v3 partagé */
 
 #include <stdio.h>
 #include <stdlib.h>

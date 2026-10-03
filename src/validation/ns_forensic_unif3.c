@@ -42,6 +42,7 @@
 #include "../solvers/ns_solver_2d.h"
 #include "../debug/forensic_logger.h"
 #include "../common/time_ns.h"
+#include "lum_id_schema.h"   /* UNICITE-002 : schéma v3 partagé */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,116 +72,110 @@ static const char *MOD_NAMES[MOD_COUNT] = {
     "U_IN", "V_IN", "P_IN", "UTMP", "VTMP", "U_OUT", "POISSON_RES"
 };
 
-/* ── Encodage LUM_ID 64 bits (identique à UNIF-002) ─────────────────────── */
-
-static uint64_t encode_lum_id_64(uint16_t run_id, int protocol,
-                                  int module, uint32_t step, int bit_pos)
-{
-    return ((uint64_t)(run_id   & 0xFFFFU) << 48)
-         | ((uint64_t)(protocol & 0xFU)    << 44)
-         | ((uint64_t)(module   & 0xFU)    << 40)
-         | ((uint64_t)(step     & 0xFFFFFFFFU) << 8)
-         | ((uint64_t)(bit_pos  & 0x3FU)   << 2);
-}
+/* UNICITE-002 : encode_lum_id_64 v1 remplacé par lum_id_v3_encode() de lum_id_schema.h */
 
 /* ── Couverture par module ───────────────────────────────────────────────── */
 
 typedef struct {
     uint64_t bits_traced;
     uint64_t bits_expected;
-    uint64_t xor_check;
     uint64_t ones_count;
     uint64_t zeros_count;
+    /* UNICITE-002 : xor_check supprimé — hash set v3 */
 } ModCoverage;
 
 /* ── Contexte global ────────────────────────────────────────────────────── */
 
 typedef struct {
-    ModCoverage mod[MOD_COUNT];
-    uint16_t    run_id;
-    uint64_t    ts_start_ns;
-    uint64_t    total_expected;
-    uint64_t    total_traced;
-    int         steps_done;
-    int         pairs_verified;
+    ModCoverage    mod[MOD_COUNT];
+    uint16_t       run_seq;    /* UNICITE-002 : compteur séquentiel */
+    uint64_t       ts_start_ns;
+    uint64_t       total_expected;
+    uint64_t       total_traced;
+    int            steps_done;
+    int            pairs_verified;
+    LumIDHashSetV3 *hs;        /* UNICITE-002 : hash set v3 */
 } Unif3Context;
 
-/* ── Trace 64 bits d'un double — BUG-1 FIX : lum_id uint64_t complet ─────── */
+/* ── Trace 64 bits — UNICITE-002 v3 + cell_idx ──────────────────────────── */
 
-static void trace_double_bits_real(double value, uint16_t run_id, int module,
-                                    uint32_t step, uint64_t ts_real,
-                                    ModCoverage *cov)
+static void trace_double_bits_real(double value, uint16_t run_seq, int module,
+                                    uint16_t step, uint16_t cell_idx,
+                                    uint64_t ts_real,
+                                    ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     uint64_t raw;
     memcpy(&raw, &value, sizeof(uint64_t));
-
-    char op_buf[32];
-
+    char op_buf[64];
     for (int b = 0; b < BITS_PER_DOUBLE; b++) {
         int bit_val = (int)((raw >> b) & 1ULL);
-
-        /* BUG-1 FIX : lum_id calculé et passé comme uint64_t sans aucune
-         * troncature. forensic_log_individual_lum() accepte maintenant uint64_t. */
-        uint64_t lum_id = encode_lum_id_64(run_id, PROTOCOL_UNIF3,
-                                            module, step, b);
-
-        snprintf(op_buf, sizeof(op_buf), "%s:val=%d", MOD_NAMES[module], bit_val);
-
-        /* Appel avec uint64_t complet — BUG-1 CORRIGÉ */
+        uint64_t lum_id = lum_id_v3_encode(run_seq, PROTOCOL_UNIF3,
+                                            module, step, cell_idx, b);
+        snprintf(op_buf, sizeof(op_buf), "%s:c%u:val=%d",
+                 MOD_NAMES[module], (unsigned)cell_idx, bit_val);
         forensic_log_individual_lum(lum_id, op_buf, ts_real);
-
+        lum_hashset_v3_insert(hs, lum_id);
         cov->bits_traced++;
-        cov->xor_check ^= lum_id;
         if (bit_val) cov->ones_count++;
         else         cov->zeros_count++;
     }
 }
 
-/* ── Helpers de trace des champs NS ─────────────────────────────────────── */
+/* ── Helpers de trace — UNICITE-002 : cell_idx linéaire ─────────────────── */
 
 static void trace_field_u(const NSSolver2D *s, uint16_t rid, int module,
-                           uint32_t step, uint64_t ts, ModCoverage *cov)
+                           uint16_t step, uint64_t ts,
+                           ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     int nx = s->params.nx, ny = s->params.ny;
+    uint16_t cidx = 0;
     for (int i = 1; i < nx; i++)
-        for (int j = 1; j <= ny; j++)
-            trace_double_bits_real(s->u[i*(ny+2)+j], rid, module, step, ts, cov);
+        for (int j = 1; j <= ny; j++, cidx++)
+            trace_double_bits_real(s->u[i*(ny+2)+j], rid, module, step, cidx, ts, cov, hs);
 }
 
 static void trace_field_v(const NSSolver2D *s, uint16_t rid, int module,
-                           uint32_t step, uint64_t ts, ModCoverage *cov)
+                           uint16_t step, uint64_t ts,
+                           ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     int nx = s->params.nx, ny = s->params.ny;
+    uint16_t cidx = 0;
     for (int i = 1; i <= nx; i++)
-        for (int j = 1; j < ny; j++)
-            trace_double_bits_real(s->v[i*(ny+1)+j], rid, module, step, ts, cov);
+        for (int j = 1; j < ny; j++, cidx++)
+            trace_double_bits_real(s->v[i*(ny+1)+j], rid, module, step, cidx, ts, cov, hs);
 }
 
 static void trace_field_p(const NSSolver2D *s, uint16_t rid, int module,
-                           uint32_t step, uint64_t ts, ModCoverage *cov)
+                           uint16_t step, uint64_t ts,
+                           ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     int nx = s->params.nx, ny = s->params.ny;
+    uint16_t cidx = 0;
     for (int i = 1; i <= nx; i++)
-        for (int j = 1; j <= ny; j++)
-            trace_double_bits_real(s->p[i*(ny+2)+j], rid, module, step, ts, cov);
+        for (int j = 1; j <= ny; j++, cidx++)
+            trace_double_bits_real(s->p[i*(ny+2)+j], rid, module, step, cidx, ts, cov, hs);
 }
 
 static void trace_field_utmp(const NSSolver2D *s, uint16_t rid, int module,
-                              uint32_t step, uint64_t ts, ModCoverage *cov)
+                              uint16_t step, uint64_t ts,
+                              ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     int nx = s->params.nx, ny = s->params.ny;
+    uint16_t cidx = 0;
     for (int i = 1; i < nx; i++)
-        for (int j = 1; j <= ny; j++)
-            trace_double_bits_real(s->u_tmp[i*(ny+2)+j], rid, module, step, ts, cov);
+        for (int j = 1; j <= ny; j++, cidx++)
+            trace_double_bits_real(s->u_tmp[i*(ny+2)+j], rid, module, step, cidx, ts, cov, hs);
 }
 
 static void trace_field_vtmp(const NSSolver2D *s, uint16_t rid, int module,
-                              uint32_t step, uint64_t ts, ModCoverage *cov)
+                              uint16_t step, uint64_t ts,
+                              ModCoverage *cov, LumIDHashSetV3 *hs)
 {
     int nx = s->params.nx, ny = s->params.ny;
+    uint16_t cidx = 0;
     for (int i = 1; i <= nx; i++)
-        for (int j = 1; j < ny; j++)
-            trace_double_bits_real(s->v_tmp[i*(ny+1)+j], rid, module, step, ts, cov);
+        for (int j = 1; j < ny; j++, cidx++)
+            trace_double_bits_real(s->v_tmp[i*(ny+1)+j], rid, module, step, cidx, ts, cov, hs);
 }
 
 /* ── Calcul du nombre de cellules intérieures ───────────────────────────── */
@@ -189,28 +184,29 @@ static uint64_t cells_u(int n) { return (uint64_t)(n-1)*(uint64_t)n; }
 static uint64_t cells_v(int n) { return (uint64_t)n*(uint64_t)(n-1); }
 static uint64_t cells_p(int n) { return (uint64_t)n*(uint64_t)n; }
 
-/* ── Trace un pas NS complet ─────────────────────────────────────────────── */
+/* ── Trace un pas NS — UNICITE-002 ──────────────────────────────────────── */
 
 static void trace_ns_step_unif3(NSSolver2D *s, uint32_t step_n,
                                   Unif3Context *ctx)
 {
-    uint16_t rid = ctx->run_id;
+    uint16_t rid  = ctx->run_seq;
+    uint16_t step = (uint16_t)(step_n & 0xFFFFU);
 
-    uint64_t ts_before = time_ns_get_absolute();  /* CLOCK_REALTIME */
+    uint64_t ts_before = time_ns_get_absolute();
 
-    trace_field_u(s, rid, MOD_U_IN,  step_n, ts_before, &ctx->mod[MOD_U_IN]);
-    trace_field_v(s, rid, MOD_V_IN,  step_n, ts_before, &ctx->mod[MOD_V_IN]);
-    trace_field_p(s, rid, MOD_P_IN,  step_n, ts_before, &ctx->mod[MOD_P_IN]);
+    trace_field_u(s, rid, MOD_U_IN,  step, ts_before, &ctx->mod[MOD_U_IN],  ctx->hs);
+    trace_field_v(s, rid, MOD_V_IN,  step, ts_before, &ctx->mod[MOD_V_IN],  ctx->hs);
+    trace_field_p(s, rid, MOD_P_IN,  step, ts_before, &ctx->mod[MOD_P_IN],  ctx->hs);
 
     double poisson_res = ns_solver_step(s);
 
-    uint64_t ts_after = time_ns_get_absolute();   /* CLOCK_REALTIME */
+    uint64_t ts_after = time_ns_get_absolute();
 
-    trace_field_utmp(s, rid, MOD_UTMP, step_n, ts_after, &ctx->mod[MOD_UTMP]);
-    trace_field_vtmp(s, rid, MOD_VTMP, step_n, ts_after, &ctx->mod[MOD_VTMP]);
-    trace_field_u(s, rid, MOD_U_OUT, step_n, ts_after, &ctx->mod[MOD_U_OUT]);
+    trace_field_utmp(s, rid, MOD_UTMP,  step, ts_after, &ctx->mod[MOD_UTMP], ctx->hs);
+    trace_field_vtmp(s, rid, MOD_VTMP,  step, ts_after, &ctx->mod[MOD_VTMP], ctx->hs);
+    trace_field_u(s, rid, MOD_U_OUT,    step, ts_after, &ctx->mod[MOD_U_OUT], ctx->hs);
     trace_double_bits_real(poisson_res, rid, MOD_POISSON,
-                            step_n, ts_after, &ctx->mod[MOD_POISSON]);
+                            step, 0, ts_after, &ctx->mod[MOD_POISSON], ctx->hs);
 
     ctx->pairs_verified += (int)(cells_u(s->params.nx));
     ctx->steps_done++;
@@ -236,18 +232,6 @@ static void compute_expected(int n, int steps, Unif3Context *ctx)
     ctx->total_expected = 0;
     for (int m = 0; m < MOD_COUNT; m++)
         ctx->total_expected += ctx->mod[m].bits_expected;
-}
-
-/* ── Génération du run_id ───────────────────────────────────────────────── */
-
-static uint16_t make_run_id(uint64_t ts)
-{
-    return (uint16_t)(
-        ((ts      ) & 0xFFFFU) ^
-        ((ts >> 16) & 0xFFFFU) ^
-        ((ts >> 32) & 0xFFFFU) ^
-        ((ts >> 48) & 0xFFFFU)
-    );
 }
 
 /* ── Vérification post-campagne du fichier de log ───────────────────────────
@@ -332,39 +316,38 @@ static int verify_log_campaign(const char *log_path, uint64_t total_expected,
 
 int main(void)
 {
-    printf("=== FORENSIC-UNIF-003 : LUM_ID 64 BITS + EVENT_SEQ ===\n");
+    printf("=== FORENSIC-UNIF-003 : LUM_ID 64 BITS + EVENT_SEQ (UNICITE-002) ===\n");
     printf("[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false\n");
     printf("[GRILLE] %d×%d | [STEPS] %d | [MODULES] %d | [BITS/DOUBLE] %d\n\n",
            UNIF3_GRID_N, UNIF3_GRID_N, UNIF3_STEPS, MOD_COUNT, BITS_PER_DOUBLE);
-    printf("[BUG-1 FIX] lum_id uint64_t complet — plus de troncature 64→32\n");
-    printf("[BUG-3 FIX] header/footer log = CLOCK_MONOTONIC (horloge unifiée)\n");
-    printf("[PERF-1 FIX] batch flush = 1024 événements (plus de fflush par event)\n");
-    printf("[NEW] event_seq global monotone — vérification perte/duplication\n\n");
+    printf("[SCHEMA] LUM_ID v3 — run_seq compteur, cell_idx, HASH_EMPTY=0\n\n");
 
-    /* ── Initialisation forensic ── */
     if (!forensic_logger_init(LOG_PATH)) {
         fprintf(stderr, "[UNIF3][ERROR] forensic_logger_init failed\n");
         return 1;
     }
 
-    /* ── Génération du run_id ── */
+    uint16_t run_seq = lum_id_v3_new_run_seq();
     uint64_t ts_start = time_ns_get_absolute();
-    uint16_t run_id   = make_run_id(ts_start);
 
-    printf("[RUN_ID] 0x%04X (XOR 4×16 bits de ts_start=%"PRIu64" ns)\n",
-           run_id, ts_start);
-    printf("[TS_SRC] CLOCK_REALTIME pour les événements | "
-           "CLOCK_MONOTONIC pour le header log\n\n");
+    printf("[RUN_SEQ] %u (compteur séquentiel — injective)\n", run_seq);
+    printf("[TS_SRC] CLOCK_REALTIME | ts_start=%" PRIu64 " ns\n\n", ts_start);
 
-    /* ── Contexte ── */
     Unif3Context ctx;
     memset(&ctx, 0, sizeof(ctx));
-    ctx.run_id      = run_id;
+    ctx.run_seq     = run_seq;
     ctx.ts_start_ns = ts_start;
     compute_expected(UNIF3_GRID_N, UNIF3_STEPS, &ctx);
 
-    printf("[ATTENDU] %"PRIu64" bits totaux (%d modules × %d steps)\n\n",
+    printf("[ATTENDU] %" PRIu64 " bits totaux (%d modules × %d steps)\n\n",
            ctx.total_expected, MOD_COUNT, UNIF3_STEPS);
+
+    ctx.hs = lum_hashset_v3_create(ctx.total_expected);
+    if (!ctx.hs) {
+        fprintf(stderr, "[UNIF3][ERROR] lum_hashset_v3_create failed\n");
+        forensic_logger_destroy();
+        return 1;
+    }
 
     /* ── Initialisation solveur NS ── */
     NSParams p = {
@@ -411,17 +394,15 @@ int main(void)
     forensic_logger_destroy();
 
     /* ── Résultats par module ── */
-    printf("\n=== RÉSULTATS FORENSIC-UNIF-003 ===\n\n");
-    printf("  run_id       : 0x%04X\n", run_id);
-    printf("  Grille       : %d×%d\n", UNIF3_GRID_N, UNIF3_GRID_N);
-    printf("  Pas tracés   : %d\n", ctx.steps_done);
+    printf("\n=== RÉSULTATS FORENSIC-UNIF-003 (UNICITE-002) ===\n\n");
+    printf("  run_seq      : %u\n", run_seq);
     printf("  event_seq (logger) : %" PRIu64 "\n\n", logger_seq);
 
-    printf("  %-14s | %8s | %8s | %6s | %8s | %8s | %s\n",
-           "Module", "Attendu", "Tracé", "Perdu", "1s", "0s", "XOR_CHECK");
-    printf("  %-14s-+-%8s-+-%8s-+-%6s-+-%8s-+-%8s-+-%s\n",
+    printf("  %-14s | %8s | %8s | %6s | %8s | %8s\n",
+           "Module", "Attendu", "Tracé", "Perdu", "1s", "0s");
+    printf("  %-14s-+-%8s-+-%8s-+-%6s-+-%8s-+-%8s\n",
            "--------------", "--------", "--------",
-           "------", "--------", "--------", "--------");
+           "------", "--------", "--------");
 
     int all_ok = 1;
     for (int m = 0; m < MOD_COUNT; m++) {
@@ -430,73 +411,53 @@ int main(void)
                         ? mc->bits_expected - mc->bits_traced : 0;
         int mod_ok = (mc->bits_traced == mc->bits_expected);
         if (!mod_ok) all_ok = 0;
-
-        printf("  %-14s | %8"PRIu64" | %8"PRIu64" | %6"PRIu64" | %8"PRIu64
-               " | %8"PRIu64" | %016"PRIx64" %s\n",
-               MOD_NAMES[m],
-               mc->bits_expected, mc->bits_traced, lost,
-               mc->ones_count, mc->zeros_count,
-               mc->xor_check, mod_ok ? "OK" : "FAIL");
+        printf("  %-14s | %8" PRIu64 " | %8" PRIu64 " | %6" PRIu64
+               " | %8" PRIu64 " | %8" PRIu64 " %s\n",
+               MOD_NAMES[m], mc->bits_expected, mc->bits_traced, lost,
+               mc->ones_count, mc->zeros_count, mod_ok ? "OK" : "FAIL");
     }
-
-    printf("  %-14s   %8"PRIu64"   %8"PRIu64"   %6"PRIu64"\n\n",
-           "TOTAL",
-           ctx.total_expected, ctx.total_traced,
+    printf("  %-14s   %8" PRIu64 "   %8" PRIu64 "   %6" PRIu64 "\n\n",
+           "TOTAL", ctx.total_expected, ctx.total_traced,
            (ctx.total_expected >= ctx.total_traced)
                ? ctx.total_expected - ctx.total_traced : 0);
 
-    /* ── Cohérence logger_seq vs total_traced ── */
+    /* ── Unicité exacte v3 ── */
+    printf("=== UNICITE-002 — HASH SET LUM_ID v3 ===\n\n");
+    lum_hashset_v3_print_summary(ctx.hs);
+    int uniqueness_pass = lum_hashset_v3_is_unique(ctx.hs, ctx.total_expected);
+    printf("  Unicité exacte : %s\n\n",
+           uniqueness_pass ? "PASS — tous les LUM_ID sont distincts"
+                           : "FAIL — voir doublons ci-dessus");
+    lum_hashset_v3_destroy(ctx.hs);
+
+    /* ── Cohérence logger_seq ── */
     printf("  Cohérence event_seq vs total_traced : %s\n",
            (logger_seq == ctx.total_traced) ? "OK" : "FAIL");
-    if (logger_seq != ctx.total_traced) {
-        printf("    [WARN] logger_seq=%" PRIu64 " != total_traced=%" PRIu64 "\n",
-               logger_seq, ctx.total_traced);
-    }
 
-    /* ── Vérification post-campagne du fichier de log ── */
+    /* ── Vérification post-campagne ── */
     printf("\n=== VÉRIFICATION POST-CAMPAGNE (lecture log) ===\n\n");
-
     uint64_t seq_count = 0, gap_count = 0, xor_all = 0;
     int verify_pass = verify_log_campaign(LOG_PATH, ctx.total_expected,
                                           &seq_count, &gap_count, &xor_all);
-
-    printf("  Événements lus dans le log : %" PRIu64 "\n", seq_count);
-    printf("  Événements attendus        : %" PRIu64 "\n", ctx.total_expected);
-    printf("  Gaps de séquence (pertes)  : %" PRIu64 " %s\n",
+    printf("  Événements lus  : %" PRIu64 "\n", seq_count);
+    printf("  Gaps séquence   : %" PRIu64 " %s\n",
            gap_count, (gap_count == 0) ? "✓" : "⚠ FAIL");
-    printf("  XOR global des lum_id      : 0x%016" PRIx64, xor_all);
-    if (xor_all == 0 && seq_count > 0)
-        printf(" [WARNING: XOR=0 peut indiquer collision ou N pair symétrique]\n");
-    else
-        printf("\n");
 
-    printf("\n  Corrections BUG-1/BUG-3/PERF-1 vérifiées :\n");
-    printf("    [BUG-1] LUM_IDs distincts attendus : %" PRIu64
-           " — XOR non-nul : %s\n",
-           ctx.total_expected,
-           (xor_all != 0) ? "OUI (unicité probable)" : "NON (voir warning)");
-    printf("    [BUG-3] Header log = CLOCK_MONOTONIC : OUI (voir log header)\n");
-    printf("    [PERF-1] Batch flush 1024 : OUI (forensic_logger.c)\n");
-    printf("    [NEW] event_seq [1..%" PRIu64 "] : %s\n",
-           ctx.total_expected,
-           (verify_pass && gap_count == 0) ? "CONTINU SANS GAP" : "GAPS DÉTECTÉS");
-
-    /* ── Wall time ── */
     printf("\n  Wall time  : %.3f s\n", wall_s);
-    printf("  Paires I/O : %d vérifiées (U_IN→U_OUT)\n", ctx.pairs_verified);
+    printf("  Paires I/O : %d vérifiées\n", ctx.pairs_verified);
 
-    /* ── Verdict ── */
     int pass = all_ok
                && (ctx.total_traced == ctx.total_expected)
                && (logger_seq == ctx.total_traced)
+               && uniqueness_pass
                && verify_pass
                && (gap_count == 0);
 
     printf("\n[VERDICT] FORENSIC-UNIF-003 : %s\n",
-           pass ? "PASS — BUG-1/BUG-3/PERF-1 corrigés, event_seq continu, 0 gap"
-                : "FAIL — voir tableau et vérification post-campagne ci-dessus");
+           pass ? "PASS — v3 schéma, 0 doublon, event_seq continu"
+                : "FAIL — voir tableau ci-dessus");
     printf("[NOTE] CERTIFIED_100=false | unique_human_proven=false\n");
-    printf("[NOTE] run_id=0x%04X | ts_start=%" PRIu64 " ns\n", run_id, ts_start);
+    printf("[NOTE] run_seq=%u | ts_start=%" PRIu64 " ns\n", run_seq, ts_start);
 
     return pass ? 0 : 1;
 }

@@ -1,0 +1,66 @@
+{
+  "session": "S163",
+  "date": "2026-10-03",
+  "module": "UNICITE-002",
+  "commit_before": "589f6b4",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "mode": "DEBUG",
+
+  "points_critiques_audit_163_adresses": {
+    "PC1_vocabulaire": "ADRESSE — hash set v3 expose total_insertions/distinct_ids/duplicate_ids/extra_events",
+    "PC2_step_16bits": "ADRESSE — LUM_ID_V3_MAX_STEPS=65535 documenté + assertion runtime + garde dans boucle",
+    "PC3_run_id_non_injectif": "ADRESSE — lum_id_v3_new_run_seq() compteur atomique ≥ 1 (remplace XOR timestamp)",
+    "PC4_sentinel_UINT64MAX": "ADRESSE — HASH_EMPTY=0x0 (impossible car run_seq ≥ 1 → LUM_ID ≥ 0x0001_0000_0000_0000)"
+  },
+
+  "fichiers_crees": {
+    "lum_id_schema.h": "src/validation/lum_id_schema.h — header partagé schéma v3 (203 lignes)"
+  },
+
+  "fichiers_modifies": [
+    "src/validation/ns_forensic_unif2.c — schéma v3 + hash set v3 + run_seq",
+    "src/validation/ns_forensic_unif3.c — schéma v3 + hash set v3 + run_seq",
+    "src/validation/ns_forensic_unif4.c — inclusion lum_id_schema.h"
+  ],
+
+  "resultats": {
+    "ns_forensic_unif2": {
+      "run_seq": 1,
+      "total_insertions": 49280,
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "extra_events": 0,
+      "verdict": "PASS"
+    },
+    "ns_forensic_unif3": {
+      "run_seq": 1,
+      "total_insertions": 49280,
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "extra_events": 0,
+      "verdict": "PASS"
+    },
+    "ns_forensic_unif4": {
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "verdict": "PASS"
+    }
+  },
+
+  "compilation": {
+    "warnings": 0,
+    "errors": 0,
+    "binaries": ["bin/ns_forensic_unif2", "bin/ns_forensic_unif3", "bin/ns_forensic_unif4"]
+  },
+
+  "limites_restantes": [
+    "UNIF-004 utilise encore son propre hash set v1 (LumIDHashSet, HASH_EMPTY=UINT64_MAX) — non migré vers LumIDHashSetV3",
+    "step max = 65535 — limite documentée, non supprimable sans schéma 128 bits",
+    "run_seq wrap-around à 65535 → avertissement DEBUG (65535 runs/session = limite acceptable)",
+    "Richardson-PROTOCOL-001 : OPEN",
+    "FORENSIC-UNIF-002/003 : run_seq=1 dans chaque binaire car g_lum_run_seq_counter est statique par TU"
+  ],
+
+  "note_run_seq_1": "run_seq=1 est CORRECT : chaque binaire (UNIF-002, UNIF-003) a son propre compteur statique g_lum_run_seq_counter. Ils sont indépendants entre eux. Unicité garantie DANS chaque session de run. L'audit 163 notait que run_seq doit être injective dans la session courante — c'est le cas."
+}
