@@ -223,6 +223,35 @@ $(BIN_DIR)/build_thread_001: $(NS_SOURCES) $(SRC_DIR)/tests/build_thread_001.c
 	    -o $@ $(LDFLAGS)
 	@echo "[S161] Binaire: bin/build_thread_001"
 
+# S174 : BUILD-THREAD-001b — TSan parallel_processor (nominal + TSan)
+THREAD001B_SOURCES = \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/common/time_ns.c \
+	$(SRC_DIR)/optimization/simd_optimizer.c \
+	$(SRC_DIR)/parallel/parallel_processor.c \
+	$(SRC_DIR)/vorax/vorax_operations.c \
+	$(SRC_DIR)/binary/binary_lum_converter.c \
+	$(SRC_DIR)/logger/lum_logger.c
+
+$(BIN_DIR)/build_thread_001b: $(THREAD001B_SOURCES) $(SRC_DIR)/tests/build_thread_001b.c
+	$(CC) $(CFLAGS) -I./src/lum -I./src/debug -I./src/parallel -I./src/common \
+	    -I./src/optimization -I./src/vorax -I./src/binary -I./src/logger \
+	    $(THREAD001B_SOURCES) \
+	    $(SRC_DIR)/tests/build_thread_001b.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S174] Binaire: bin/build_thread_001b (nominal)"
+
+$(BIN_DIR)/build_thread_001b_tsan: $(THREAD001B_SOURCES) $(SRC_DIR)/tests/build_thread_001b.c
+	$(CC) $(CFLAGS) -fsanitize=thread -fno-omit-frame-pointer \
+	    -I./src/lum -I./src/debug -I./src/parallel -I./src/common \
+	    -I./src/optimization -I./src/vorax -I./src/binary -I./src/logger \
+	    $(THREAD001B_SOURCES) \
+	    $(SRC_DIR)/tests/build_thread_001b.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S174] Binaire: bin/build_thread_001b_tsan (TSan)"
+
 $(BIN_DIR)/perf_forensic_001: $(NS_SOURCES) $(SRC_DIR)/tests/perf_forensic_001.c
 	$(CC) $(CFLAGS) $(NS_SOURCES) \
 	    $(SRC_DIR)/tests/perf_forensic_001.c \

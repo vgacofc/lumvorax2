@@ -1,0 +1,650 @@
+=== BUILD-THREAD-001b : TSan parallel_processor — S174 ===
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+[OBJECTIF] Valider protocole pthread task_queue — 7 scénarios
+
+Avancement : 0%
+[SC-01] create/destroy immédiate...
+[MEMORY_TRACKER] Initialized - tracking enabled
+[MEMORY_TRACKER] ALLOC: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-01] PASS — create/destroy immediate sans tâche
+Avancement : 14%
+[SC-02] shutdown queue vide (ex-BUG-PARALLEL-001)...
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05920 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-02] PASS — shutdown queue vide × 10 cycles
+Avancement : 28%
+[SC-03] 16 tâches + drain + destroy...
+[MEMORY_TRACKER] ALLOC: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04080 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a041b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a042e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04410 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04540 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04670 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a047a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a048d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04a00 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04b30 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04c60 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04d90 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04ec0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a04ff0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05120 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05250 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967904080 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-03] PASS — N tâches soumises puis destroy propre
+Avancement : 42%
+[SC-04] shutdown concurrent avec soumission...
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05380 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904080 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a055f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05720 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05920 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804080 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678041b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678042f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05850 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a05850 (304 bytes) at src/parallel/parallel_processor.c:119 in parallel_task_destroy() - originally allocated at src/parallel/parallel_processor.c:101
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (304 bytes) at src/parallel/parallel_processor.c:119 in parallel_task_destroy() - originally allocated at src/parallel/parallel_processor.c:101
+[MEMORY_TRACKER] FREE: 0x7f7967a05380 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804420 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05850 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05380 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a054b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05980 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05ab0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05be0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05d10 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05e40 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a05f70 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a060a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a061d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06300 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06430 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06560 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06690 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a067c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a068f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06a20 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06b50 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06c80 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06db0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a06ee0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+  [SC-04] PASS — concurrent destroy/enqueue sans deadlock
+Avancement : 56%
+[SC-05] 200 cycles create/destroy répétés...
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678047c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678048f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05b90 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05b90 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804a20 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804b50 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679042f0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679042f0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904420 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804c80 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07010 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07010 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05cc0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804db0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804ee0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07280 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07280 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05e00 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05f30 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a073b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06060 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805010 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805140 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805270 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a074f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06190 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f062c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678053a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904560 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f063f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07140 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07140 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06520 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904690 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678054d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06650 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805600 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967804550 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804550 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79679047c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79679048f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904a20 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904b50 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07270 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805730 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967804680 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805730 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06780 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f068b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f069e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06b10 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805730 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904c80 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79678059a0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79678059a0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06c40 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07620 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07620 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805ad0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07890 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07750 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07890 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904db0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805c10 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07b00 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967904ee0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06d70 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07c30 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07d60 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967905010 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805860 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805860 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805990 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967905140 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06ea0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f06fd0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7966f07100 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967905270 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79679053a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805fb0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79679054d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967905600 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07e90 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f7967a07880 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7966f05a50 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967a07880 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] FREE: 0x7f7967805d40 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-05] PASS — répétitions massives — stabilité
+Avancement : 70%
+[SC-06] 8 workers × 64 tâches...
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805d40 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967805e70 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678060e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806210 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806340 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806470 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678065a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678066d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806800 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806930 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806a60 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806b90 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806cc0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806df0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967806f20 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807050 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807180 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678072b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678073e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807510 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807640 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807770 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678078a0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678079d0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807b00 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807c30 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807d60 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807e90 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967807fc0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678080f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808220 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808350 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808480 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678085b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678086e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808810 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808940 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808a70 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808ba0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808cd0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808e00 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967808f30 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809060 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809190 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678092c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678093f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809520 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809650 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809780 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678098b0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f79678099e0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809b10 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809c40 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809d70 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809ea0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f7967809fd0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a100 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a230 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a360 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a490 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a5c0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a6f0 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a820 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780a950 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-06] PASS — 8 workers répartis — drain + destroy
+Avancement : 84%
+[SC-07] 20 broadcasts parasites + 1 tâche réelle...
+[MEMORY_TRACKER] ALLOC: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:21 in parallel_processor_create()
+[MEMORY_TRACKER] ALLOC: 0x7f796780aa80 (304 bytes) at src/parallel/parallel_processor.c:101 in parallel_task_create()
+[MEMORY_TRACKER] FREE: 0x7f79679041b0 (624 bytes) at src/parallel/parallel_processor.c:96 in parallel_processor_destroy() - originally allocated at src/parallel/parallel_processor.c:21
+  [SC-07] PASS — réveils parasites absorbés — while() robuste
+Avancement : 100%
+
+══════════════════════════════════════════════
+RÉSULTATS BUILD-THREAD-001b
+  PASS : 7/7
+  FAIL : 0/7
+  Wall : 0.081 s
+══════════════════════════════════════════════
+
+[VERDICT] BUILD-THREAD-001b : PASS COMPLET — 7/7 scénarios
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
+[NOTE] Pour validation TSan : compiler avec -fsanitize=thread

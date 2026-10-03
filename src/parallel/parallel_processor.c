@@ -68,16 +68,15 @@ parallel_processor_t* parallel_processor_create(int worker_count) {
 void parallel_processor_destroy(parallel_processor_t* processor) {
     if (!processor) return;
 
-    // Signal all workers to exit
-    for (int i = 0; i < processor->worker_count; i++) {
-        if (processor->workers[i].is_active) {
-            processor->workers[i].should_exit = true;
-        }
-    }
-
-    /* BUG-PARALLEL-001 FIX: positionner shutdown=true SOUS mutex AVANT le broadcast
-     * pour que task_queue_dequeue() sorte de son while() quand la queue est vide. */
+    /* TSan FIX (S174) : should_exit était écrit sans mutex (race avec worker_thread_main).
+     * Correction : positionner should_exit ET shutdown sous queue->mutex en une seule
+     * section critique, avant le broadcast. Les workers lisent shutdown dans
+     * task_queue_dequeue() toujours sous mutex → pas de race. Les workers ne lisent
+     * plus should_exit hors mutex (voir worker_thread_main). */
     pthread_mutex_lock(&processor->task_queue.mutex);
+    for (int i = 0; i < processor->worker_count; i++) {
+        processor->workers[i].should_exit = true;
+    }
     processor->task_queue.shutdown = true;
     pthread_mutex_unlock(&processor->task_queue.mutex);
 
@@ -201,15 +200,29 @@ parallel_task_t* task_queue_dequeue(task_queue_t* queue) {
 
     pthread_mutex_lock(&queue->mutex);
 
-    /* BUG-PARALLEL-001 FIX: vérifier shutdown DANS la condition du while
-     * pour éviter le deadlock lors de parallel_processor_destroy().
-     * Si shutdown==true ET queue vide → retourner NULL → le worker sort. */
+    /* PROTOCOLE POSIX condition variable — invariant explicite (S174) :
+     *
+     * Invariant d'attente : "rien à faire" = (head == NULL && !shutdown)
+     *
+     * Trois cas de sortie du while :
+     *   1. head != NULL             → tâche disponible, traiter
+     *   2. shutdown == true         → destroy() en cours, retourner NULL
+     *   3. head != NULL && shutdown → tâche disponible avant destroy, traiter
+     *
+     * Réveil parasite (POSIX 7.3.5) : pthread_cond_wait peut se réveiller
+     * sans signal. Dans ce cas head==NULL && !shutdown → condition du while
+     * reste vraie → reboucle immédiatement → re-attend. ✓ Absorbé.
+     *
+     * BUG-PARALLEL-001 FIX (S173) : shutdown ajouté dans la condition pour
+     * éviter le deadlock pthread_join lors de parallel_processor_destroy(). */
     while (queue->head == NULL && !queue->shutdown) {
         pthread_cond_wait(&queue->condition, &queue->mutex);
     }
 
-    /* shutdown signalé ET queue vide : sortie propre du worker */
+    /* Sortie du while : soit tâche disponible, soit shutdown demandé.
+     * Si les deux : on sert d'abord la tâche (drain avant fermeture). */
     if (queue->head == NULL) {
+        /* shutdown=true ET queue vide : sortie propre du worker */
         pthread_mutex_unlock(&queue->mutex);
         return NULL;
     }
@@ -241,22 +254,18 @@ void* worker_thread_main(void* arg) {
     parallel_processor_t* processor = (parallel_processor_t*)arg;
     if (!processor) return NULL;
 
-    // Identifier le worker actuel
-    int worker_id = -1;
-    pthread_t current_thread = pthread_self();
-    for (int i = 0; i < processor->worker_count; i++) {
-        if (pthread_equal(processor->workers[i].thread, current_thread)) {
-            worker_id = i;
-            break;
-        }
-    }
+    /* TSan FIX (S174) : ne plus lire should_exit hors mutex.
+     * La sortie est pilotée exclusivement par task_queue_dequeue() retournant NULL
+     * (shutdown=true lu sous queue->mutex → sans race).
+     * L'identification du worker_id est supprimée : les stats utilisent pthread_self()
+     * directement dans la boucle (L295). */
 
-    while (worker_id >= 0 && !processor->workers[worker_id].should_exit) {
+    while (1) {
         parallel_task_t* task = task_queue_dequeue(&processor->task_queue);
         if (!task) {
-            // Vérifier à nouveau la condition de sortie après attente
-            if (processor->workers[worker_id].should_exit) break;
-            continue;
+            /* task_queue_dequeue retourne NULL uniquement si shutdown=true ET
+             * queue vide — c'est le signal de sortie propre du worker. */
+            break;
         }
 
         clock_t start_time = clock();
