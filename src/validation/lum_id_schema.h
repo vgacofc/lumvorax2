@@ -1,5 +1,5 @@
 /* **************************************************************************
-** lum_id_schema.h — Schéma LUM_ID 64 bits v3 partagé (UNICITE-002)
+** lum_id_schema.h — Schéma LUM_ID 64 bits v3 partagé (UNICITE-003)
 **
 ** Projet : LumVorax (Autonomous Reflexive Temporal Cognitive Engine)
 ** Module : src/validation / schéma d'identifiants forensic
@@ -18,25 +18,26 @@
 **      → PB documenté : step limité à 16 bits = max 65535 (PC2 rapport 163)
 **
 **   v3 (UNICITE-002 S163) : corrections de tous les points critiques rapport 163
-**      → FIX PC2 : step 16 bits documenté + assertion à la compilation
-**      → FIX PC3 : run_id = compteur atomique global (injective dans la session)
+**      → FIX PC2 (partiel S163) : step 16 bits documenté + assertion à la compilation
+**      → FIX PC3 (partiel S163) : run_seq = compteur séquentiel (injective dans la session)
 **      → FIX PC4 : HASH_EMPTY = 0x0 — impossible car run_counter commence à 1
 **                  → bit[47:32] = run_counter_low ≥ 1 → LUM_ID ≥ 0x0001_0000_0000_0000
 **      → MAINTENU : cell_idx 16 bits, bit_pos 8 bits
 **
+**   v3.1 (UNICITE-003 S164) : corrections PC2 + PC3 identifiées audit 165
+**      → FIX PC2 : renommage LUM_ID_V3_MAX_STEPS → LUM_ID_V3_MAX_STEP_VALUE
+**                  (valeur max autorisée, pas un nombre de steps)
+**                  + ajout LUM_ID_V3_MAX_STEP_COUNT = 65536U (nombre de valeurs
+**                  disponibles dans le champ 16 bits, y compris 0)
+**      → FIX PC3 : wrap-around détecté → FAIL-HARD (abort) au lieu de réutiliser
+**                  silencieusement run_seq=1. Réutilisation = collision garantie.
+**                  Portée locale documentée honnêtement (une copie par .c).
+**
 ** Schéma v3 — Layout 64 bits :
-**   [63:48] run_id_hi   (16 bits) — moitié haute du compteur de run (0x0001..0xFFFF)
-**   [47:32] run_id_lo   (16 bits) — moitié basse du compteur de run
-**   REMARQUE : run_id 32 bits encodé sur [63:32] pour v3
-**
-** RÉVISION finale après analyse du layout :
-** Pour rester compatible avec les 4 champs d'identification du tuple unique
-** (protocol, module, step, cell_idx, bit_pos) ET adresser PC3/PC4 :
-**
 **   [63:48] run_seq      (16 bits) — compteur de session (1..65535, jamais 0)
 **   [47:44] protocol     (4 bits)
 **   [43:40] module       (4 bits)
-**   [39:24] step         (16 bits) — max 65535 pas (limite documentée)
+**   [39:24] step         (16 bits) — valeur max = LUM_ID_V3_MAX_STEP_VALUE = 65535
 **   [23:8]  cell_idx     (16 bits) — max 65535 cellules
 **   [7:0]   bit_pos      (8 bits)  — position bit dans double (0..63)
 **
@@ -44,13 +45,20 @@
 **   run_seq ∈ [1..65535] → LUM_ID ≥ 0x0001_0000_0000_0000 > 0
 **   → HASH_EMPTY = 0x0000_0000_0000_0000 n'appartient JAMAIS à l'espace des LUM_ID
 **
-** Garantie PC3 :
-**   run_seq = compteur atomique incrémenté à chaque appel de lum_id_v3_new_run_seq()
-**   Injective dans la session courante (wraps à 65535 → avertissement DEBUG).
+** Garantie PC3 (S164 UNICITE-003) :
+**   run_seq = compteur séquentiel incrémenté à chaque appel de lum_id_v3_new_run_seq().
+**   Injective dans la session courante tant que le nombre d'appels ≤ 65535.
+**   PORTÉE : variable statique locale à l'unité de compilation — chaque fichier .c
+**            qui inclut ce header a sa propre copie indépendante (OK pour UNIF-002/003/004
+**            car les runs sont indépendants).
+**   WRAP-AROUND : FAIL-HARD (abort()) — pas de réutilisation silencieuse d'un
+**                 run_seq déjà utilisé (collision garantie → interdit).
 **
-** Garantie PC2 :
-**   step max = 65535 — documenté. LUM_ID_V3_MAX_STEPS défini ici.
-**   Appelant doit vérifier step < LUM_ID_V3_MAX_STEPS avant d'appeler.
+** Garantie PC2 (S164 UNICITE-003) :
+**   LUM_ID_V3_MAX_STEP_VALUE = 65535 — valeur maximale autorisée dans le champ step.
+**   LUM_ID_V3_MAX_STEP_COUNT = 65536 — nombre de valeurs disponibles (0..65535).
+**   Appelant DOIT vérifier step <= LUM_ID_V3_MAX_STEP_VALUE avant d'appeler.
+**   UNIF-003 a oublié cette garde en S163 → corrigée en S164.
 **
 ** Garantie contre PC1 (vocabulaire) :
 **   Les commentaires distinguent explicitement :
@@ -71,9 +79,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* ── Constantes du schéma v3 ──────────────────────────────────────────────── */
+/* ── Constantes du schéma v3.1 (UNICITE-003 S164) ────────────────────────── */
 
-#define LUM_ID_V3_MAX_STEPS      65535U   /* step ∈ [0..65535] */
+/*
+ * PC2 FIX S164 : renommage LUM_ID_V3_MAX_STEPS → LUM_ID_V3_MAX_STEP_VALUE
+ *   LUM_ID_V3_MAX_STEP_VALUE = valeur maximale autorisée dans le champ step (16 bits).
+ *   LUM_ID_V3_MAX_STEP_COUNT = nombre total de valeurs disponibles (0..65535 inclus).
+ *   Distinction sémantique :
+ *     "step <= LUM_ID_V3_MAX_STEP_VALUE"  → valeur valide
+ *     "nb_steps < LUM_ID_V3_MAX_STEP_COUNT" → nombre de pas possible
+ * Ancienne macro LUM_ID_V3_MAX_STEPS conservée comme alias déprécié pour
+ * compatibilité ascendante avec tout code existant.
+ */
+#define LUM_ID_V3_MAX_STEP_VALUE 65535U   /* valeur max du champ step (16 bits) */
+#define LUM_ID_V3_MAX_STEP_COUNT 65536U   /* nb valeurs possibles dans [0..65535] */
+#define LUM_ID_V3_MAX_STEPS      LUM_ID_V3_MAX_STEP_VALUE  /* DÉPRÉCIÉ — alias */
+
 #define LUM_ID_V3_MAX_CELLS      65535U   /* cell_idx ∈ [0..65535] */
 #define LUM_ID_V3_MAX_BIT_POS    63U      /* bit_pos ∈ [0..63] pour double IEEE 754 */
 #define LUM_ID_V3_MIN_RUN_SEQ    1U       /* run_seq commence à 1, jamais 0 */
@@ -86,29 +107,40 @@
  */
 #define LUM_ID_V3_HASH_EMPTY     UINT64_C(0x0000000000000000)
 
-/* ── Compteur de run session (PC3 FIX) ───────────────────────────────────────
- * Compteur global incrémenté par lum_id_v3_new_run_seq().
- * Chaque appel retourne une valeur unique dans [1..65535].
- * NB : variable définie dans l'unité de compilation qui inclut ce header.
- *      Pour usage multi-fichier, déclarer extern dans un .c et définir dans un seul.
- *      Dans UNIF-002/003/004 : chaque fichier a son propre compteur statique (OK
- *      car les runs sont indépendants entre UNIF-002, UNIF-003 et UNIF-004).
+/* ── Compteur de run session (PC3 FIX UNICITE-003 S164) ─────────────────────
+ *
+ * Compteur séquentiel incrémenté par lum_id_v3_new_run_seq().
+ * Chaque appel retourne une valeur unique dans [1..65535] dans la session.
+ *
+ * PORTÉE HONNÊTE (audit 165, PC3) :
+ *   La variable est STATIQUE — une copie par unité de compilation (.c).
+ *   UNIF-002, UNIF-003 et UNIF-004 ont chacun leur propre compteur local.
+ *   C'est intentionnel : les runs sont indépendants entre les trois programmes.
+ *   Ne PAS supposer que cette valeur est partagée entre fichiers sans extern.
+ *
+ * WRAP-AROUND FAIL-HARD (PC3 FIX S164) :
+ *   Si 65535 appels ont déjà été faits dans la même session, un 65536e appel
+ *   signifie que run_seq=1 serait réutilisé → collision garantie → INTERDIT.
+ *   Comportement : fprintf(stderr, ...) + abort().
+ *   Rationale : un WARNING silencieux (ancienne version S163) permettait de
+ *               continuer avec des collisions sans le savoir.
  */
 static uint16_t g_lum_run_seq_counter = 0;  /* 0 = non initialisé */
 
 static inline uint16_t lum_id_v3_new_run_seq(void)
 {
     if (g_lum_run_seq_counter == LUM_ID_V3_MAX_RUN_SEQ) {
-        /* Wrap-around — signal DEBUG (ne devrait pas arriver en pratique) */
+        /* PC3 FIX S164 : FAIL-HARD — pas de wrap silencieux */
         fprintf(stderr,
-            "[LUM_ID_V3][DEBUG] AVERTISSEMENT : run_seq wrap-around à 65535."
-            " Unicité non garantie au-delà de 65535 runs par session.\n");
-        g_lum_run_seq_counter = LUM_ID_V3_MIN_RUN_SEQ;
-    } else {
-        g_lum_run_seq_counter++;
-        if (g_lum_run_seq_counter < LUM_ID_V3_MIN_RUN_SEQ)
-            g_lum_run_seq_counter = LUM_ID_V3_MIN_RUN_SEQ;
+            "[LUM_ID_V3][FATAL] run_seq wrap-around atteint (65535 appels).\n"
+            "  Réutiliser run_seq=1 produirait des collisions LUM_ID garanties.\n"
+            "  Correction requise : relancer dans un nouveau processus ou\n"
+            "  limiter le nombre d'appels à lum_id_v3_new_run_seq() à 65535.\n"
+            "  CERTIFIED_100=false — abort().\n");
+        abort();  /* FAIL-HARD : pas de continuation possible */
     }
+    g_lum_run_seq_counter++;
+    /* Invariant post-incrémentation : counter ∈ [1..65535] */
     return g_lum_run_seq_counter;
 }
 
@@ -118,7 +150,7 @@ static inline uint16_t lum_id_v3_new_run_seq(void)
  *   run_seq  : uint16_t, valeur retournée par lum_id_v3_new_run_seq(), ≥ 1
  *   protocol : int, ∈ [0..15] (4 bits)
  *   module   : int, ∈ [0..15] (4 bits)
- *   step     : uint16_t, ∈ [0..LUM_ID_V3_MAX_STEPS]
+ *   step     : uint16_t, ∈ [0..LUM_ID_V3_MAX_STEP_VALUE]
  *   cell_idx : uint16_t, ∈ [0..LUM_ID_V3_MAX_CELLS]
  *   bit_pos  : int, ∈ [0..LUM_ID_V3_MAX_BIT_POS]
  *

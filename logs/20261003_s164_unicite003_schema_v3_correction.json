@@ -1,0 +1,123 @@
+{
+  "session": "S164",
+  "rapport_ref": "166",
+  "date": "2026-10-03",
+  "tag": "UNICITE-003",
+  "mode": "DEBUG",
+  "certified_100": false,
+  "unique_human_proven": false,
+  "git_head_before": "5fdf8d2",
+  "description": "Corrections PC2 + PC3 identifiées par l'audit 165 + migration complète UNIF-004 vers schéma v3",
+
+  "corrections": {
+    "lum_id_schema.h": {
+      "PC2_rename": {
+        "before": "#define LUM_ID_V3_MAX_STEPS      65535U",
+        "after": "#define LUM_ID_V3_MAX_STEP_VALUE 65535U\n#define LUM_ID_V3_MAX_STEP_COUNT 65536U\n#define LUM_ID_V3_MAX_STEPS      LUM_ID_V3_MAX_STEP_VALUE  /* DÉPRECIÉ */",
+        "rationale": "LUM_ID_V3_MAX_STEPS était ambigu (valeur max vs nb de steps). Nouveau nom = sémantique précise."
+      },
+      "PC3_fail_hard": {
+        "before": "wrap-around → g_lum_run_seq_counter = LUM_ID_V3_MIN_RUN_SEQ (réutilisation silencieuse)",
+        "after": "wrap-around → fprintf(stderr, FATAL) + abort(). Réutilisation run_seq=1 = collision garantie → interdit.",
+        "rationale": "Un WARNING silencieux permettait de continuer avec des collisions. FAIL-HARD obligatoire."
+      },
+      "PC3_portee_documentee": {
+        "note": "static uint16_t g_lum_run_seq_counter = copie par unité de compilation. Documenté honnêtement."
+      }
+    },
+    "ns_forensic_unif3.c": {
+      "PC2_garde_step": {
+        "line_added": "if ((uint32_t)step > (uint32_t)LUM_ID_V3_MAX_STEP_VALUE)",
+        "before": "boucle sans garde — step pouvait théoriquement dépasser 65535 sans erreur",
+        "after": "garde fail-hard avec retour 1 et nettoyage ressources",
+        "rationale": "Oubli identifié audit 165. UNIF3_STEPS=10 donc ne se déclenche jamais en pratique, mais la garde est contractuellement obligatoire."
+      }
+    },
+    "ns_forensic_unif4.c": {
+      "migration_v2_v3": {
+        "supprime": [
+          "encode_lum_id_64() local (schéma v2)",
+          "LumIDHashSet typedef",
+          "HASH_EMPTY UINT64_MAX",
+          "hashset_create()",
+          "hashset_insert()",
+          "hashset_destroy()",
+          "make_run_id() XOR non-injective"
+        ],
+        "remplace_par": [
+          "lum_id_v3_encode() depuis lum_id_schema.h",
+          "LumIDHashSetV3 depuis lum_id_schema.h",
+          "lum_hashset_v3_create() / lum_hashset_v3_insert() / lum_hashset_v3_destroy()",
+          "lum_hashset_v3_print_summary() / lum_hashset_v3_is_unique()",
+          "lum_id_v3_new_run_seq() séquentielle"
+        ],
+        "rationale": "Le header était inclus en S163 mais sans effet opérationnel — les fonctions locales v2 masquaient les fonctions v3. Audit 165 l'a identifié."
+      },
+      "run_id_to_run_seq": {
+        "note": "ctx.run_id → ctx.run_seq, run_id partout → run_seq dans tout le fichier."
+      },
+      "PC2_garde_step": {
+        "line_added": "if ((uint32_t)step > (uint32_t)LUM_ID_V3_MAX_STEP_VALUE)",
+        "rationale": "Même contrat que UNIF3."
+      }
+    }
+  },
+
+  "resultats_execution": {
+    "UNIF2": {
+      "verdict": "PASS",
+      "total_events": 49280,
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "extra_events": 0,
+      "schema": "v3",
+      "run_seq": 1,
+      "note": "Non modifié en S164 — non-régression confirmée"
+    },
+    "UNIF3": {
+      "verdict": "PASS",
+      "total_events": 49280,
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "extra_events": 0,
+      "event_seq_coherence": "OK",
+      "gaps_sequence": 0,
+      "schema": "v3",
+      "run_seq": 1,
+      "correction_s164": "garde step ajoutée"
+    },
+    "UNIF4": {
+      "verdict": "PASS",
+      "total_events": 49280,
+      "distinct_ids": 49280,
+      "duplicate_ids": 0,
+      "extra_events": 0,
+      "event_seq_coherence": "OK",
+      "gaps_sequence": 0,
+      "timestamp_regressions": 0,
+      "bug3_final_close": "PROUVÉ — timestamps CLOCK_MONOTONIC",
+      "schema": "v3",
+      "run_seq": 1,
+      "correction_s164": "migration complète v2→v3"
+    }
+  },
+
+  "invariants": {
+    "certified_100": false,
+    "unique_human_proven": false,
+    "debug_mode": true
+  },
+
+  "open_chantiers": [
+    "Richardson-PROTOCOL-001 : distinguer erreur spatiale / erreur temporelle (dt_prop dx vs dx²)",
+    "T04 renforcé : quasi-stationnarité sur 100 derniers pas (max-min, std, pente)",
+    "Lyapunov robustesse quantitative : balayage epsilon [1e-5..1e-3], 5 valeurs",
+    "BUILD-THREAD-001 : validation thread safety NS solver",
+    "BUILD-PROOF-001 : preuve formelle unicité",
+    "BUILD-PORT-002 : portabilité ARM/Windows",
+    "BL-003 → BL-012 : blockchain restants",
+    "C3 : NS → NX-42",
+    "C4 : NX-42 problèmes 6-30",
+    "FORENSIC-UNIF-001 : branchement NS/Richardson/Lyapunov/NX-42 sur logger forensic nanoseconde"
+  ]
+}

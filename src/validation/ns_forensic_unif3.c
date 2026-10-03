@@ -373,6 +373,21 @@ int main(void)
     clock_gettime(CLOCK_MONOTONIC, &t0);
 
     for (int step = 0; step < UNIF3_STEPS; step++) {
+        /* PC2 FIX S164 (UNICITE-003) : garde manquante identifiée audit 165.
+         * step est cast uint16_t avant appel — la valeur doit tenir dans le champ
+         * 16 bits du schéma v3. LUM_ID_V3_MAX_STEP_VALUE = 65535 (valeur max).
+         * Ici UNIF3_STEPS=10 donc le cas ne se produit jamais, mais la garde
+         * est obligatoire pour respecter le contrat de lum_id_v3_encode(). */
+        if ((uint32_t)step > (uint32_t)LUM_ID_V3_MAX_STEP_VALUE) {
+            fprintf(stderr,
+                "[UNIF3][FATAL] step=%d dépasse LUM_ID_V3_MAX_STEP_VALUE=%u"
+                " — encodage LUM_ID impossible. Arrêt.\n",
+                step, LUM_ID_V3_MAX_STEP_VALUE);
+            ns_solver_destroy(s);
+            lum_hashset_v3_destroy(ctx.hs);
+            forensic_logger_destroy();
+            return 1;
+        }
         printf("[TRACE] Pas %d/%d ...\n", step + 1, UNIF3_STEPS);
         trace_ns_step_unif3(s, (uint32_t)step, &ctx);
     }
