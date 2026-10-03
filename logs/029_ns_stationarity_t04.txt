@@ -1,0 +1,57 @@
+=== T04-STRONG : ANALYSE MULTI-POINTS QUASI-STATIONNARITE ===
+[SESSION] S177 | CERTIFIED_100=false | unique_human_proven=false
+[MODE] DEBUG actif
+[REF] Registre 176 §5 — T04 OPEN renforcé
+[GRILLE] 128 × 128 | Proto C : dt prop dx^2
+
+[PARAM] Re=100.0 | N=128 | dx=7.8125e-03 | dt=6.2500e-06
+[PARAM] POLL_INTERVAL=50 | WIN_CAPACITY=200 | LIMIT_STEPS=500000
+
+=== BOUCLE SIMULATION (pas par pas) ===
+  [step]   [Linf]       [stationnarite_window_n]
+  step=5000     Linf=0.000000e+00  win_n=100
+  step=10000    Linf=0.000000e+00  win_n=200
+
+  [CONVERGENCE] step=10000  Linf=0.000000e+00 — critere QS satisfait
+
+=== FIN SIMULATION ===
+  steps=10000 | t_phys=0.0625 s | wall=9.27 s | converged=1
+
+=== ANALYSE MULTI-POINTS FENETRE FINALE ===
+
+  n_points  = 200  (seuil >= 20)
+  min_val   = 0.00000000e+00
+  max_val   = 0.00000000e+00
+  range     = 0.00000000e+00
+  mean      = 0.00000000e+00
+  std       = 0.00000000e+00
+  range_rel = 0.000000  (seuil < 0.0500)
+  std_rel   = 0.000000  (seuil < 0.0200)
+  slope     = 0.00000000e+00  (pente OLS brute)
+  intercept = 0.00000000e+00
+  slope_rel = 0.000000e+00  (seuil < 0.0200)
+
+  DETAIL    : n=200(>=20:OK) range_rel=0.0000(<0.0500:OK) std_rel=0.0000(<0.0200:OK) slope_rel=0.00e+00(<0.0200:OK)
+  VERDICT   : QUASI_STATIONNAIRE
+
+=== TESTS T04S-1 → T04S-8 ===
+
+  T04S-1 — n_points >= 20              : PASS  (n=200)
+  T04S-2 — range_rel < 0.0500             : PASS  (range_rel=0.000000)
+  T04S-3 — std_rel < 0.0200               : PASS  (std_rel=0.000000)
+  T04S-4 — slope_rel < 0.0200             : PASS  (slope_rel=0.00e+00)
+  T04S-5 — quasi_stationary == 1        : PASS
+  T04S-6 — Linf_final < 0.05            : PASS  (Linf=0.000000e+00)
+  T04S-7 — u_max <= 1.0 + 1e-6          : PASS  (u_max=0.996094)
+  T04S-8 — u_min >= 0.0 - 1e-6          : PASS  (u_min=0.003906)
+
+=== LIMITES HONNETES ===
+
+  - Seuils QS : RANGE_REL=0.0500, STD_REL=0.0200, SLOPE_REL=0.0200 — parametres, pas absolus.
+  - Grille 128×128 Proto C uniquement (dt prop dx^2).
+  - Couette plan : advection inactive (u.grad_u = 0).
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] T04-STRONG : PASS — 8/8 tests quasi-stationnarite multi-points (registre 176 §5)
+[NOTE] T04S-1=PASS T04S-2=PASS T04S-3=PASS T04S-4=PASS T04S-5=PASS T04S-6=PASS T04S-7=PASS T04S-8=PASS
+[NOTE] CERTIFIED_100=false | unique_human_proven=false

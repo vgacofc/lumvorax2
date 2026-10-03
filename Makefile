@@ -207,6 +207,16 @@ $(BIN_DIR)/ns_lyapunov: $(NS_SOURCES) $(SRC_DIR)/validation/ns_lyapunov.c
 	    -o $@ $(LDFLAGS)
 	@echo "[S176] Binaire: bin/ns_lyapunov"
 
+# S177 : T04-STRONG — analyse multi-points quasi-stationnarité (registre 176 §5)
+$(BIN_DIR)/ns_stationarity_t04: $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04.c
+	$(CC) $(CFLAGS) -I./src/validation $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S177] Binaire: bin/ns_stationarity_t04"
+
 # S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
 INTEGRATION_SOURCES = \
 	$(SRC_DIR)/lum/lum_core.c \
