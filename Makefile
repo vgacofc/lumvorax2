@@ -201,6 +201,7 @@ INTEGRATION_SOURCES = \
 	$(SRC_DIR)/optimization/simd_optimizer.c \
 	$(SRC_DIR)/optimization/memory_optimizer.c \
 	$(SRC_DIR)/optimization/pareto_optimizer.c \
+	$(SRC_DIR)/optimization/zero_copy_allocator.c \
 	$(SRC_DIR)/parallel/parallel_processor.c \
 	$(SRC_DIR)/logger/lum_logger.c \
 	$(SRC_DIR)/binary/binary_lum_converter.c \
