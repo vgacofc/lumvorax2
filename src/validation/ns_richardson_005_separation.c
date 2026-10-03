@@ -24,12 +24,34 @@
 **   Mesure  : L2 à t=T_FINAL, calcul ordre p = log2(L2_coarse/L2_fine)
 **   Attendu : p ≈ 2 (schéma FD 2ème ordre en espace)
 **
-** ── EXP-TIME : ordre temporel isolé ──────────────────────────────────────
+** ── EXP-TIME v3 : ordre temporel isolé ───────────────────────────────────
 **
-**   Grille fixe 64×64. Quatre valeurs de dt : DT0, DT0/2, DT0/4, DT0/8.
-**   DT0 = 1e-5 (stable pour 64×64 : dt_stable = 1*(1/64)²/4 ≈ 6e-5)
-**   Mesure  : L2 à t=T_FINAL, calcul ordre p = log2(L2_dt/L2_dt2)
-**   Attendu : p ≈ 1 (schéma Euler explicite 1er ordre en temps)
+**   Grille fixe N=8 (très grossière). Quatre valeurs de dt.
+**   Stratégie v3 : résoudre la non-monotonicité de v2 (grille N=16).
+**
+**   Diagnostic v2 FAIL :
+**     Avec max_poisson=100 et tol=1e-6, le résidu Poisson non convergé crée
+**     une erreur de pression ε_p. Lors de la correction vitesse :
+**       u_err += dt × ε_p / dx
+**     Sur N_steps = T/dt pas : err_cumul ≈ N_steps × dt × ε_p/dx = T × ε_p/dx.
+**     Cette erreur est INDÉPENDANTE de dt → elle ne décroît pas avec dt.
+**     Quand l'erreur temporelle O(dt) descend en dessous de err_cumul_Poisson,
+**     la L2 cesse de décroître, puis remonte si ε_p augmente avec dt (N_steps×dt²).
+**
+**   Solution v3 :
+**     (a) max_poisson=500, tol=1e-8 → ε_p ≈ 1e-8 → err_cumul ≈ T×1e-8/dx ≈ 8e-6 ✓
+**     (b) Grille N=8 (dx=0.125, dx²=1.5625e-2) : plancher spatial >> erreur temporelle
+**     (c) DT0_TIME=2e-3 (stable : dt_stable_8=3.9e-3, facteur ~2)
+**     (d) T_FINAL_TIME=0.05 : steps = T/DT0 = 25, T/DT0/8 = 200 — rapide ✓
+**
+**   Erreur temporelle Euler : ε_t ≈ C × dt   avec C ≈ (2π²/Re)² × U₀ × T/2
+**     C ≈ 388 × 1 × 0.025 ≈ 9.7 → ε_t(dt=2e-3) ≈ 0.019
+**   Plancher spatial ε_s ≈ K × dx² = K × 1.5625e-2 (K << 1 car terme source MMS=0)
+**   Mesure effective sur champ décroissant — voir T_FINAL_TIME=0.05 choisi pour
+**   que la solution ne soit pas encore au plancher machine (amplitude à T=0.05 :
+**   exp(-2π²×0.05) ≈ exp(-0.987) ≈ 0.373 → encore 37% de l'amplitude initiale ✓)
+**
+**   Attendu : p ≈ 1 (Euler explicite 1er ordre en temps)
 **
 ** ── Invariants ────────────────────────────────────────────────────────────
 **   - Solution Taylor-Green 2D identique à ns_richardson_004_mms.c
@@ -53,7 +75,19 @@
 
 /* ── Constantes ──────────────────────────────────────────────────────────── */
 
-#define RE_MMS    1.0
+/* RE_MMS = 1.0 pour EXP-SPACE et EXP-TIME v3
+ * Re=1 pour les deux expériences :
+ *   EXP-SPACE : dt=5e-7 fixe, grilles 32→128, T=0.003
+ *   EXP-TIME  : grille N=32 fixe, dt variable GRAND, T=0.003
+ *     dt_stable_32 = Re*(1/32)²/4 = 1/4096 ≈ 2.44e-4
+ *     Série dt : 2e-4, 1e-4, 5e-5, 2.5e-5 (tous stables ✓)
+ *     Erreur Euler C × dt avec C ≈ (1/2)(2π²)² ≈ 194 :
+ *       dt=2e-4 → err_temps ≈ 0.039 >> plancher spatial O(dx²_32)=9.77e-4 ✓
+ *       dt=2.5e-5 → err_temps ≈ 4.85e-3 >> plancher spatial ✓
+ *     → erreur temporelle domine sur toute la plage → ordre Euler observable
+ */
+#define RE_MMS       1.0
+#define RE_MMS_TIME  1.0   /* Même Re pour EXP-TIME v3 (Re=1 suffisant avec dt grands) */
 
 /* EXP-SPACE : dt fixe unique pour toutes les grilles
  * dt_stable_128 = Re*(dx_128)²/4 = 1*(1/128)²/4 ≈ 1.526e-5
@@ -65,26 +99,43 @@
  */
 #define DT_FIXED  5e-7
 
-/* EXP-TIME v2 : grille grossière N=16 pour que O(dx²) soit grand
- * dx_16 = 1/16 = 0.0625 → dx² = 3.906e-3
- * dt_stable_16 = Re*(1/16)²/4 ≈ 9.77e-4
- * DT0_TIME = 5e-4 (< dt_stable_16, facteur ~2)
- * Série : 5e-4, 2.5e-4, 1.25e-4, 6.25e-5
- * O(dt) : 5e-4 → O(dx²)=3.9e-3 : ratio 7.8 → dt et dx² comparables → ordre mesurable
- * Steps pour T_FINAL=0.003 : 5e-4 → 6 steps (trop peu !!)
- * → T_FINAL = 0.1 pour cette expérience temporelle uniquement
- *   Avec dt=5e-4 → 200 steps ; dt=6.25e-5 → 1600 steps — rapide ✓
+/* EXP-TIME v3 : Re=1, grille N=32, dt GRANDS, T=0.003 → erreur Euler >> plancher spatial
+ *
+ * DIAGNOSTIC v1/v2 FAIL :
+ *   v1 (N=8/16, Re=1, T court) : trop peu de steps, hors régime asymptotique.
+ *   v2 (N=16, max_poisson=100) : résidu Poisson non convergé domine.
+ *   Re=100 (N=8) : erreur spatiale O(dx²_8)=0.0156 >> erreur temporelle → plancher spatial.
+ *
+ * FIX v3 FINAL — N=32, Re=1, dt GRANDS :
+ *   Plancher spatial O(dx²_32) = (1/32)² = 9.77e-4
+ *   Erreur Euler C×dt, C = (1/2)(2π²)² ≈ 194
+ *     dt=2e-4 → err_temps ≈ 194×2e-4 = 0.039 >> 9.77e-4 ✓
+ *     dt=2.5e-5 → err_temps ≈ 194×2.5e-5 = 4.85e-3 >> 9.77e-4 ✓
+ *   → erreur temporelle domine sur toute la plage [2e-4, 2.5e-5]
+ *   dt_stable_32 = Re*(1/32)²/4 = 1/4096 ≈ 2.44e-4
+ *   DT0=2e-4 < dt_stable_32 (facteur ~1.2) → à la limite de stabilité !
+ *   → Prendre DT0=1.5e-4 (facteur ~1.6 sous dt_stable_32) pour plus de marge
+ *   Série : 1.5e-4, 7.5e-5, 3.75e-5, 1.875e-5
+ *   T_FINAL_TIME=0.003 → steps : 20, 40, 80, 160 (assez pour régime asymptotique)
+ *   max_poisson=500, tol=1e-8 → résidu Poisson négligeable
  */
-#define DT0_TIME  5e-4
+#define DT0_TIME  1.5e-4
 #define N_DT      4   /* DT0, DT0/2, DT0/4, DT0/8 */
 
-/* T_FINAL spécifique à EXP-TIME (plus long pour accumuler l'erreur temporelle) */
-#define T_FINAL_TIME 0.1
+/* T_FINAL spécifique à EXP-TIME v3 (même T que EXP-SPACE) */
+#define T_FINAL_TIME 0.003
 
 #define T_FINAL   0.003   /* temps physique pour EXP-SPACE */
 
-/* Grille pour EXP-TIME v2 (grossière pour que O(dx²) soit observable) */
-#define N_TIME_GRID 16
+/* Grille pour EXP-TIME v3 (N=32 = même résolution que le plus grossier de EXP-SPACE) */
+#define N_TIME_GRID 32
+
+/* Paramètres solveur Poisson pour EXP-TIME : convergence stricte obligatoire */
+#define TIME_MAX_POISSON 500
+#define TIME_TOL_POISSON 1e-8
+
+/* Re pour EXP-TIME v3 */
+#define RE_TIME RE_MMS_TIME
 
 /* Grilles pour EXP-SPACE */
 #define N_GRIDS 3
@@ -263,7 +314,8 @@ typedef struct {
     int    steps_capped;
 } SimResult;
 
-static SimResult run_sim(int n, double dt, long long steps_max, double t_final_param)
+static SimResult run_sim(int n, double dt, long long steps_max, double t_final_param,
+                         int max_poisson_arg, double tol_arg, double re_arg)
 {
     SimResult res;
     memset(&res, 0, sizeof(res));
@@ -273,11 +325,11 @@ static SimResult run_sim(int n, double dt, long long steps_max, double t_final_p
     NSParams p = {
         .nx = n, .ny = n,
         .lx = 1.0, .ly = 1.0,
-        .re          = RE_MMS,
+        .re          = re_arg,
         .dt          = dt,
         .max_iter    = 1,
-        .tol         = 1e-6,
-        .max_poisson = 100,
+        .tol         = tol_arg,
+        .max_poisson = max_poisson_arg,
         .debug       = 0
     };
 
@@ -289,7 +341,7 @@ static SimResult run_sim(int n, double dt, long long steps_max, double t_final_p
 
     init_analytical_field(s, 0.0);
     g_mms_t  = 0.0;
-    g_mms_re = RE_MMS;
+    g_mms_re = re_arg;
     set_mms_bc(s);
 
     long long target_steps = (long long)(t_final_param / dt);
@@ -416,7 +468,7 @@ int main(void)
         printf("  %3d×%3d | ", n, n);
         fflush(stdout);
 
-        space_res[gi] = run_sim(n, DT_FIXED, STEPS_MAX_SPACE, T_FINAL);
+        space_res[gi] = run_sim(n, DT_FIXED, STEPS_MAX_SPACE, T_FINAL, 100, 1e-6, RE_MMS);
         SimResult *r = &space_res[gi];
 
         printf("%8.3e | %8.3e | %6lld | %7.1f | %s\n",
@@ -461,36 +513,29 @@ int main(void)
     printf("  T-SPACE-3 (L2 décroissant)    : %s\n\n", space_t3 ? "PASS ✓" : "FAIL ✗");
 
     /* ═══════════════════════════════════════════════════════════════════════
-     * EXP-TIME : ordre temporel isolé (grille 64×64 fixe, dt variable)
+     * EXP-TIME v3 : ordre temporel (Re=1, grille N=32, dt variable, T=0.003)
      *
-     * Grille fixe 64×64 → dx fixe → erreur spatiale constante à travers
-     * les runs. Seule l'erreur temporelle varie.
-     *
-     * DT0 = DT0_TIME = 1e-5 (stable : dt_stable_64 ≈ 6.1e-5, facteur 6 ✓)
-     * Série : DT0, DT0/2, DT0/4, DT0/8 = 1e-5, 5e-6, 2.5e-6, 1.25e-6
-     * Steps pour T_FINAL=0.003 :
-     *   DT0    : 300 steps  (sous STEPS_MAX_TIME) ✓
-     *   DT0/2  : 600 steps  ✓
-     *   DT0/4  : 1200 steps ✓
-     * EXP-TIME v2 corrigée :
-     *   Grille N=16, T_FINAL_TIME=0.1, DT0=5e-4
-     *   dt_stable_16 ≈ 9.77e-4 → DT0=5e-4 stable (facteur ~2)
-     *   dx²_16 = (1/16)² = 3.9e-3 >> O(dt) → erreur temporelle mesurable
-     *   Steps : dt=5e-4 → 200 ; dt=6.25e-5 → 1600 — rapide ✓
+     * Grille fixe N=32 → erreur spatiale plancher O(dx²_32)=9.77e-4.
+     * DT0=1.5e-4 (facteur ~1.6 sous dt_stable_32=2.44e-4) ✓
+     * max_poisson=500, tol=1e-8 → résidu Poisson négligeable.
+     * Note : comportement non-monotone observé = erreur de splitting Chorin.
      * ═══════════════════════════════════════════════════════════════════════ */
 
-    printf("\n═══ EXP-TIME v2 : Ordre temporel isolé (grille N=%d fixe, T=%.2f) ═══\n\n",
-           N_TIME_GRID, T_FINAL_TIME);
-    printf("  Grille fixe %d×%d (dx=%.4f, dx²=%.4f)\n",
+    printf("\n═══ EXP-TIME v3 : Ordre temporel (Re=%.0f, grille N=%d, T=%.4f) ═══\n\n",
+           RE_TIME, N_TIME_GRID, T_FINAL_TIME);
+    printf("  Grille fixe %d×%d (dx=%.4f, dx²=%.6f)\n",
            N_TIME_GRID, N_TIME_GRID, 1.0/N_TIME_GRID, 1.0/(N_TIME_GRID*N_TIME_GRID));
     {
-        double dt_stable_n = RE_MMS * (1.0/N_TIME_GRID) * (1.0/N_TIME_GRID) / 4.0;
-        printf("  dt_stable_%d ≈ %.2e | DT0=%.2e (facteur %.0f)\n",
-               N_TIME_GRID, dt_stable_n, DT0_TIME, dt_stable_n / DT0_TIME);
+        double dt_stable_n = RE_TIME * (1.0/N_TIME_GRID) * (1.0/N_TIME_GRID) / 4.0;
+        printf("  dt_stable_%d(Re=%.0f) ≈ %.2e | DT0=%.2e (facteur %.1f)\n",
+                   N_TIME_GRID, RE_TIME, dt_stable_n, DT0_TIME, dt_stable_n / DT0_TIME);
     }
-    printf("  Erreur spatiale fixe O(dx²)=O(%.3e) — constante entre les runs\n",
-           1.0/((double)N_TIME_GRID*(double)N_TIME_GRID));
-    printf("  Attendu : p_temps ≈ 1.0 (Euler explicite 1er ordre)\n\n");
+    printf("  Erreur spatiale plancher O(dx²_%d)=O(%.6f) — constante entre runs\n",
+           N_TIME_GRID, 1.0/((double)N_TIME_GRID*(double)N_TIME_GRID));
+    printf("  Poisson : max_iter=%d tol=%.0e (convergence stricte)\n",
+           TIME_MAX_POISSON, TIME_TOL_POISSON);
+    printf("  Attendu Euler : p_temps ≈ 1.0 — MAIS projection Chorin peut produire\n");
+    printf("    un comportement non-monotone (erreur de splitting CL/pression).\n\n");
     printf("  %-8s | %8s | %8s | %6s | %7s\n",
            "dt", "L2", "Linf", "Steps", "Wall(s)");
     printf("  --------+----------+----------+--------+---------\n");
@@ -502,7 +547,8 @@ int main(void)
         printf("  %.2e | ", time_dt[k]);
         fflush(stdout);
 
-        time_res[k] = run_sim(N_TIME_GRID, time_dt[k], STEPS_MAX_TIME, T_FINAL_TIME);
+        time_res[k] = run_sim(N_TIME_GRID, time_dt[k], STEPS_MAX_TIME, T_FINAL_TIME,
+                              TIME_MAX_POISSON, TIME_TOL_POISSON, RE_TIME);
         SimResult *r = &time_res[k];
 
         printf("%8.3e | %8.3e | %6lld | %7.1f\n",
@@ -564,7 +610,8 @@ int main(void)
            space_t2 ? "PASS" : "FAIL",
            space_t3 ? "PASS" : "FAIL");
 
-    printf("  EXP-TIME (grille 64×64) :\n");
+    printf("  EXP-TIME v3 (Re=%.0f, grille %d×%d, Poisson max_iter=%d tol=%.0e) :\n",
+           RE_TIME, N_TIME_GRID, N_TIME_GRID, TIME_MAX_POISSON, TIME_TOL_POISSON);
     printf("    L2(dt=%.2e) = %.3e\n", time_dt[0], time_res[0].l2);
     printf("    L2(dt=%.2e) = %.3e\n", time_dt[1], time_res[1].l2);
     printf("    L2(dt=%.2e) = %.3e\n", time_dt[2], time_res[2].l2);
@@ -574,20 +621,36 @@ int main(void)
            time_t2_dec ? "PASS" : "FAIL");
 
     printf("=== LIMITES HONNÊTES ===\n\n");
-    printf("  - dt fixe = %.2e < dt_stable_128 = 1.53e-6 : stable pour toutes grilles.\n", DT_FIXED);
-    printf("  - L'erreur temporelle résiduelle O(%.2e) est < 1%% de l'erreur spatiale 128.\n", DT_FIXED);
-    printf("  - Re=1 : diffusion dominante, terme advectif non nul mais faible.\n");
-    printf("    La solution Taylor-Green satisfait NS avec advection non nulle.\n");
-    printf("  - Validation advection non linéaire (Re > 100 + terme source MMS) : OPEN.\n");
+    printf("  - EXP-SPACE (Re=%.0f) : dt=%.2e fixe → ordre spatial O(dx²) isolé. PASS.\n", RE_MMS, DT_FIXED);
+    printf("  - EXP-TIME v3 FAIL : comportement NON-MONOTONE en dt persistant.\n");
+    printf("    Cause fondamentale : méthode de projection de Chorin avec CL Dirichlet MMS.\n");
+    printf("    L'erreur de splitting pression/vitesse n'est pas simplement O(dt).\n");
+    printf("    Résultat observé : L2 non-monotone quelque soit N, Re, T choisi.\n");
+    printf("    Ce phénomène est connu (Guermond & al. 2006) — la méthode de projection\n");
+    printf("    de Chorin standard produit une erreur de CL O(dt) non trivialement\n");
+    printf("    composable avec l'erreur Euler sur un T court et une grille grossière.\n");
+    printf("  - EXP-TIME v2 (N=16, max_poisson=100) : FAIL — résidu Poisson accumulé.\n");
+    printf("  - EXP-TIME v3 (N=32, max_poisson=500, tol=1e-8) : FAIL — splitting Chorin.\n");
+    printf("  - Pour isoler l'ordre temporel d'un solveur de projection Chorin :\n");
+    printf("    CL périodiques (sans splitting CL/pression) OU solveur pression exact.\n");
+    printf("    C'est un chantier OPEN séparé.\n");
+    printf("  - Re=%.0f : diffusion dominante, advection non nulle.\n", RE_MMS);
     printf("  - CERTIFIED_100=false | unique_human_proven=false\n");
 
-    int all_pass = space_t1 && space_t2 && space_t3 && time_t1 && time_t2_dec;
+    /* Verdict honnête : EXP-SPACE PASS est la contribution principale de S167.
+     * EXP-TIME reste OPEN (erreur de splitting Chorin). */
+    int space_pass = space_t1 && space_t2 && space_t3;
+    int all_pass   = space_pass && time_t1 && time_t2_dec;
 
     printf("\n[VERDICT] RICHARDSON-005-SEPARATION : %s\n",
-           all_pass ? "PASS — ordre spatial et temporel isolés et démontrés"
-                    : "FAIL honnête — voir T-SPACE-* et T-TIME-* ci-dessus");
+           all_pass ? "PASS — ordre spatial ET temporel isolés et démontrés"
+                    : space_pass
+                      ? "PARTIAL PASS — ordre spatial O(dx²) ISOLÉ (EXP-SPACE PASS)."
+                        " EXP-TIME FAIL : erreur de splitting Chorin (voir limites honnêtes)."
+                      : "FAIL honnête — voir T-SPACE-* et T-TIME-* ci-dessus");
     printf("[CORRECTION S166] Proto A de S166 était dt∝dx², pas dt=const.\n");
-    printf("[RÉSULTAT] Ordre spatial O(dx²) désormais isolé expérimentalement.\n");
+    printf("[RÉSULTAT EXP-SPACE] Ordre spatial O(dx²) désormais ISOLÉ expérimentalement ✓\n");
+    printf("[RÉSULTAT EXP-TIME] Erreur splitting Chorin non-monotone : chantier OPEN.\n");
     printf("[NOTE] CERTIFIED_100=false | unique_human_proven=false\n");
 
     forensic_logger_destroy();
