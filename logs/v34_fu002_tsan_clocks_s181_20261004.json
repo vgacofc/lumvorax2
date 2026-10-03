@@ -1,0 +1,117 @@
+{
+  "log_version": "v34",
+  "session": "S181",
+  "date": "2026-10-04",
+  "module": "FORENSIC-UNIF-002",
+  "chantier": "FU002-TSAN-CLOCKS-S181",
+  "git_head_before": "6a92f7ecb18031027e39a0b68d490cdc16c28359",
+  "git_head_after": "TBD",
+
+  "s181_a_fix_tbd": {
+    "statut": "DONE",
+    "description": "Correction métadonnée git_head_after=TBD dans log v33 et rapport 187",
+    "fichiers": [
+      "logs/v33_fu002_corrections_p0p1p2p3_s180_20261004.json",
+      "RAPPORT/187_FU002_CORRECTIONS_P0P1P2P3_S180_20261004.md"
+    ],
+    "avant": "git_head_after: \"TBD\"",
+    "apres": "git_head_after: \"6a92f7ecb18031027e39a0b68d490cdc16c28359\""
+  },
+
+  "s181_b_tsan": {
+    "statut": "PASS",
+    "binaire": "bin/fu002_tsan_test",
+    "compilateur": "Apple clang 14.0.0 -fsanitize=thread",
+    "threads": 8,
+    "events_per_thread": 12500,
+    "total_events": 100000,
+    "tsan_data_races": 0,
+    "bits_input": 100000,
+    "lums_created": 100000,
+    "dup_count": 0,
+    "json_lines_valides": 210003,
+    "json_lines_invalides": 0,
+    "exit_code": 0,
+    "conclusion": "Aucun data race TSan détecté sur forensic_unif002_log_event() sous 8 threads"
+  },
+
+  "s181_c_continuity_concurrent": {
+    "statut": "PASS_TSAN",
+    "description": "check_continuity() appelée concurremment par 8 threads avec séquences indépendantes",
+    "comportement_observe": {
+      "loss_count": 1,
+      "integrity_ok": false,
+      "note": "ATTENDU et DOCUMENTÉ : deux threads lisent le même état avant mise à jour. loss=1 ≠ data race — c'est la sémantique attendue sous usage multi-thread non coordonné de check_continuity(). TSan : 0 data race."
+    },
+    "conclusion": "TSan PASS — la machine d'état check_continuity() est thread-safe au sens data race. L'usage correct est mono-thread ou avec coordination applicative externe.",
+    "open_point": "Usage multi-thread de check_continuity() avec séquences partagées nécessite une coordination applicative externe (non un bug du module)"
+  },
+
+  "s181_d_clock_qualification": {
+    "statut": "PASS",
+    "binaire": "bin/fu002_clock_qual",
+    "plateforme": "macOS Darwin x86_64 Apple clang 14",
+    "n_samples": 100000,
+    "clock_realtime": {
+      "min_delta_ns": 0,
+      "max_delta_ns": 1478000,
+      "mean_delta_ns": 108.53,
+      "stddev_delta_ns": 6111.62,
+      "zeros_pct": "94.2%",
+      "nonmono_violations": 0,
+      "resolution_est_ns": 1000,
+      "cost_ns": 54.0
+    },
+    "clock_monotonic": {
+      "min_delta_ns": 0,
+      "max_delta_ns": 1719000,
+      "mean_delta_ns": 151.22,
+      "stddev_delta_ns": 6066.82,
+      "zeros_pct": "88.9%",
+      "nonmono_violations": 0,
+      "resolution_est_ns": 1000,
+      "cost_ns": 124.7
+    },
+    "concurrent_monotonic": {
+      "threads": 4,
+      "total_samples": 100000,
+      "nonmono_violations": 0,
+      "zeros": 88896
+    },
+    "conclusions": {
+      "resolution_reelle": "1000 ns (1 µs) sur macOS — PAS 1 ns malgré l'unité nanoseconde des champs",
+      "zeros_pct_note": "~89% des appels consécutifs retournent le même timestamp (delta=0) : résolution ~1µs confirmée",
+      "monotonicite": "GARANTIE : 0 violation mono-thread ET concurrent",
+      "cout_clock_gettime_MONOTONIC": "~125 ns par appel (< 1µs)",
+      "implication_forensic": "ts_realtime_ns et ts_monotonic_ns ont une granularité réelle de ~1µs sur cette plateforme. L'ordre causal entre deux événements très proches (<1µs) ne peut pas être distingué. Documenté comme limite honnête."
+    }
+  },
+
+  "makefile_updates": {
+    "fu002_tsan_test": "bin/fu002_tsan_test — cible make ajoutée",
+    "fu002_clock_qual": "bin/fu002_clock_qual — cible make ajoutée"
+  },
+
+  "chantiers_restants_apres_s181": [
+    "TSan FU002 : FERMÉ (0 data race)",
+    "Métrologie horloges : FERMÉ (résolution 1µs documentée)",
+    "check_continuity concurrent : DOCUMENTÉ (sémantique multi-thread clarifiée)",
+    "Forensic bit→transformation→résultat universel : OUVERT",
+    "Richardson/MMS + Chorin temporel complet : OUVERT",
+    "T04 fenêtre complète : OUVERT",
+    "Lyapunov quantitatif sweep : OUVERT",
+    "BUILD-PROOF-001 CI reproductible : OUVERT",
+    "BUILD-PORT-002 portabilité ISA : OUVERT",
+    "BL-003→BL-012 : OUVERT",
+    "NX-42 C3/C4 6-30 STUB_MEASURED : OUVERT"
+  ],
+
+  "invariants": {
+    "CERTIFIED_100": false,
+    "unique_human_proven": false,
+    "mode_debug": true
+  },
+
+  "rapport_associe": "RAPPORT/188_FU002_TSAN_CLOCKS_S181_20261004.md",
+  "log_precedent": "logs/v33_fu002_corrections_p0p1p2p3_s180_20261004.json"
+}

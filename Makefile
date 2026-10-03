@@ -308,6 +308,21 @@ $(BIN_DIR)/perf_forensic_001: $(NS_SOURCES) $(SRC_DIR)/tests/perf_forensic_001.c
 	    $(SRC_DIR)/tests/perf_forensic_001.c \
 	    -o $@ $(LDFLAGS)
 	@echo "[S161] Binaire: bin/perf_forensic_001"
+# S181-B+C : TSan FU002 — data race detection + check_continuity concurrent
+$(BIN_DIR)/fu002_tsan_test: $(SRC_DIR)/debug/forensic_unif_002.c $(SRC_DIR)/tests/fu002_tsan_test.c
+	clang $(CFLAGS) -O1 -fsanitize=thread -fno-omit-frame-pointer \
+	    -I./src/debug \
+	    $(SRC_DIR)/debug/forensic_unif_002.c \
+	    $(SRC_DIR)/tests/fu002_tsan_test.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S181-B+C] Binaire: bin/fu002_tsan_test (TSan)"
+
+# S181-D : Qualification métrologique horloges REALTIME/MONOTONIC
+$(BIN_DIR)/fu002_clock_qual: $(SRC_DIR)/tests/fu002_clock_qual.c
+	$(CC) $(CFLAGS) \
+	    $(SRC_DIR)/tests/fu002_clock_qual.c \
+	    -o $@ $(LDFLAGS) -lm
+	@echo "[S181-D] Binaire: bin/fu002_clock_qual (qualification horloges)"
 
 science: directories \
          $(BIN_DIR)/ns_forensic_unif2 $(BIN_DIR)/ns_richardson_manufactured \
