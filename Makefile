@@ -192,6 +192,30 @@ $(BIN_DIR)/ns_richardson_007_re100_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_r
 	    -o $@ $(LDFLAGS)
 	@echo "[S170] Binaire: bin/ns_richardson_007_re100_mms"
 
+# S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
+INTEGRATION_SOURCES = \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/common/time_ns.c \
+	$(SRC_DIR)/optimization/simd_optimizer.c \
+	$(SRC_DIR)/optimization/memory_optimizer.c \
+	$(SRC_DIR)/optimization/pareto_optimizer.c \
+	$(SRC_DIR)/parallel/parallel_processor.c \
+	$(SRC_DIR)/logger/lum_logger.c \
+	$(SRC_DIR)/binary/binary_lum_converter.c \
+	$(SRC_DIR)/vorax/vorax_operations.c \
+	$(SRC_DIR)/parser/vorax_parser.c \
+	$(SRC_DIR)/metrics/performance_metrics.c
+
+$(BIN_DIR)/integration_lum_opt_001: $(INTEGRATION_SOURCES) $(SRC_DIR)/tests/integration_lum_opt_001.c
+	$(CC) $(CFLAGS) -I./src/lum -I./src/debug -I./src/optimization -I./src/parallel \
+	    -I./src/vorax -I./src/parser -I./src/logger -I./src/binary -I./src/metrics \
+	    $(INTEGRATION_SOURCES) \
+	    $(SRC_DIR)/tests/integration_lum_opt_001.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S170] Binaire: bin/integration_lum_opt_001"
+
 $(BIN_DIR)/build_thread_001: $(NS_SOURCES) $(SRC_DIR)/tests/build_thread_001.c
 	$(CC) $(CFLAGS) $(NS_SOURCES) \
 	    $(SRC_DIR)/tests/build_thread_001.c \
