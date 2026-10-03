@@ -217,6 +217,23 @@ $(BIN_DIR)/ns_stationarity_t04: $(NS_SOURCES) \
 	    -o $@ $(LDFLAGS)
 	@echo "[S177] Binaire: bin/ns_stationarity_t04"
 
+# S178-A : Lyapunov sweep — balayage complet Re/eps/warmup/renorm/résolution
+$(BIN_DIR)/ns_lyapunov_sweep: $(NS_SOURCES) $(SRC_DIR)/validation/ns_lyapunov_sweep.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_lyapunov_sweep.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S178-A] Binaire: bin/ns_lyapunov_sweep"
+
+# S178-B : T04 cold-start — convergence depuis u=v=0 (9 tests T04C)
+$(BIN_DIR)/ns_stationarity_t04_coldstart: $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04_coldstart.c
+	$(CC) $(CFLAGS) -I./src/validation $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04_coldstart.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S178-B] Binaire: bin/ns_stationarity_t04_coldstart"
+
 # S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
 INTEGRATION_SOURCES = \
 	$(SRC_DIR)/lum/lum_core.c \

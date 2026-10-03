@@ -1,0 +1,78 @@
+=== NS_LYAPUNOV_SWEEP — Balayage complet Lyapunov S178-A ===
+[SESSION] S178-A | CERTIFIED_100=false | unique_human_proven=false
+[MODE] DEBUG actif
+[REF] Registre 176 §5 — Lyapunov OPEN
+
+=== AXE 1 — Re SWEEP (nx=32, eps=1e-4, warmup=3000, renorm=100×50) ===
+
+  Re     | lambda     | t_simule(s)  | label          | valid_k
+  -------+------------+--------------+----------------+-------
+  50     | -2.227196   |        8.000   | STABLE         |    49
+  100    | -1.426073   |        8.000   | STABLE         |    49
+  200    | -0.881879   |        8.000   | STABLE         |    49
+  400    | -0.588989   |        8.000   | STABLE         |    49
+
+=== AXE 2 — EPSILON SWEEP (Re=100, nx=32, warmup=3000, renorm=100×50) ===
+
+  epsilon  | lambda     | t_simule(s)  | label          | sign_ok
+  ---------+------------+--------------+----------------+--------
+  1.0e-05  | -1.403949   |        8.000   | STABLE         | OUI
+  1.0e-04  | -1.426073   |        8.000   | STABLE         | OUI
+  1.0e-03  | -1.112930   |        8.000   | STABLE         | OUI
+
+  Cohérence signe epsilon : OUI (robustesse signe confirmée)
+
+=== AXE 3 — WARMUP SWEEP (Re=100, nx=32, eps=1e-4, renorm=100×50) ===
+
+  warmup  | lambda     | t_simule(s)  | label         
+  --------+------------+--------------+----------------
+  1000    | -1.269276   |        6.000   | STABLE        
+  3000    | -1.426073   |        8.000   | STABLE        
+  6000    | -1.190281   |       11.000   | STABLE        
+
+  Cohérence signe warmup : OUI
+
+=== AXE 4 — RENORM SWEEP (Re=100, nx=32, eps=1e-4, warmup=3000) ===
+
+  n_renorm | n_tot  | lambda     | t_simule(s)  | label         
+  ---------+-------+------------+--------------+----------------
+  50       | 30     | -2.581215   |        4.500   | STABLE        
+  100      | 50     | -1.426073   |        8.000   | STABLE        
+  200      | 100    | -0.804973   |       23.000   | STABLE        
+
+=== AXE 5 — RESOLUTION SWEEP (Re=100, eps=1e-4, warmup=3000, renorm=100×50) ===
+
+  nx   | lambda     | t_simule(s)  | label         
+  -----+------------+--------------+----------------
+  16   | -1.148828   |        8.000   | STABLE        
+  32   | -1.426073   |        8.000   | STABLE        
+  48   | -1.362199   |        8.000   | STABLE        
+
+  Cohérence signe résolution : OUI
+
+=== SYNTHESE — SEPARATION SIGNE / QUANTITATIF ===
+
+  Robustesse signe lambda (epsilon, warmup, resolution) : OUI
+  Variation quantitative lambda sur axe epsilon : 0.2196
+  (variation relative sur les 3 valeurs d'epsilon)
+
+  Lambda Re=100, nx=32, eps=1e-4, warmup=3000, renorm=100×50 :
+    Valeur de référence = -1.426073  label = STABLE
+
+  Note honnête : la robustesse quantitative de lambda dépend des
+  paramètres de renormalisation. Seul le signe est réellement
+  invariant à travers les axes. La valeur numérique précise de
+  lambda nécessite des runs plus longs (n_total >> 100).
+
+=== LIMITES HONNETES ===
+
+  - dt=0.001 fixe sur tous les axes — pas de CFL adaptatif.
+  - Lid-Driven Cavity seulement — pas de Couette ni de MMS.
+  - Re=400 peut approcher la limite de stabilité du solveur.
+  - La méthode Benettin mesure le 1er exposant de Lyapunov seulement.
+  - n_total=50 est minimal — une convergence plus fine nécessite n>200.
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] NS_LYAPUNOV_SWEEP S178-A : PASS — 5 axes balayés, robustesse signe vérifiée, pas de divergence
+[NOTE] sign_robust=OUI | grand_pass=PASS
+[NOTE] CERTIFIED_100=false | unique_human_proven=false

@@ -1,0 +1,71 @@
+=== T04 COLD-START : CONVERGENCE DEPUIS u=v=0 ===
+[SESSION] S178-B | CERTIFIED_100=false | unique_human_proven=false
+[MODE] DEBUG actif
+[REF] Audit S177 §10 — convergence hors-équilibre non démontrée par S177
+
+[DIFFERENCE] S177: u(0)=u_exact → Linf=0 immédiat (PASS_MACHINE)
+[DIFFERENCE] S178-B: u(0)=0 → convergence réelle depuis état nul
+
+[PARAM] Re=100.0 | N=128 | dx=7.8125e-03 | dt=6.2500e-06
+[PARAM] POLL_INTERVAL=50 | WIN_CAPACITY=300 | LIMIT_STEPS=2000000
+
+[INIT] u=v=0 partout — CL Couette imposées
+[INIT] Linf initiale = 9.960938e-01 (attendu: ≈ 0.5 depuis état nul)
+
+=== BOUCLE SIMULATION (cold-start, u=v=0) ===
+  [step]     [Linf]         [win_n]
+  step=5000       Linf=9.467211e-01  win_n=100
+  step=10000      Linf=9.291633e-01  win_n=200
+  step=15000      Linf=9.166925e-01  win_n=300
+
+  [CONVERGENCE] step=17900  Linf=9.106550e-01 — critère QS satisfait
+
+=== FIN SIMULATION ===
+  steps=17900 | t_phys=0.1119 s | wall=159.8 s | converged=1
+
+=== ANALYSE MULTI-POINTS FENETRE FINALE ===
+
+  n_points  = 300  (seuil >= 20)
+  min_val   = 9.10655016e-01
+  max_val   = 9.56875347e-01
+  range     = 4.62203316e-02
+  mean      = 9.29643921e-01
+  std       = 1.29346257e-02
+  range_rel = 0.049718  (seuil < 0.0500)
+  std_rel   = 0.013914  (seuil < 0.0200)
+  slope     = -2.95577943e-06
+  slope_rel = 3.179475e-06  (seuil < 0.0200)
+  DETAIL    : n=300(>=20:OK) range_rel=0.0497(<0.0500:OK) std_rel=0.0139(<0.0200:OK) slope_rel=3.18e-06(<0.0200:OK)
+  VERDICT   : QUASI_STATIONNAIRE
+
+=== T04C-9 : ANALYSE TRAJECTOIRE DECROISSANCE ===
+
+  Linf initial (step=5000) = 9.467211e-01
+  Linf final   (step=15000) = 9.166925e-01
+  Points trajectoire enregistrés = 3
+  Paires décroissantes = 2 / 2
+  Ratio décroissance = 1.000 (seuil >= 0.80)
+
+=== TESTS T04C-1 → T04C-9 ===
+
+  T04C-1 — n_points >= 20            : PASS  (n=300)
+  T04C-2 — range_rel < 0.0500           : PASS  (0.049718)
+  T04C-3 — std_rel < 0.0200             : PASS  (0.013914)
+  T04C-4 — slope_rel < 0.0200           : PASS  (3.18e-06)
+  T04C-5 — quasi_stationary == 1      : PASS
+  T04C-6 — Linf_final < 0.05          : FAIL  (9.106550e-01)
+  T04C-7 — u_max <= 1.0 + 1e-6        : PASS  (0.929644)
+  T04C-8 — u_min >= 0.0 - 1e-6        : FAIL  (-0.040456)
+  T04C-9 — décroissance >= 80%        : PASS  (ratio=1.000)
+
+=== LIMITES HONNETES ===
+
+  - Cold-start u=v=0 : Linf initial ≈ 0.5 attendu.
+  - Si Linf initial ≈ 0, le test est identique à S177 (état déjà proche).
+  - Couette plan : advection inactive. Pour l'advection : MMS avec source.
+  - LIMIT_STEPS=2000000 — si non convergé : documenter la limite.
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] T04 COLD-START S178-B : FAIL honnête — voir T04C-1..T04C-9 ci-dessus
+[NOTE] T04C-1=PASS T04C-2=PASS T04C-3=PASS T04C-4=PASS T04C-5=PASS T04C-6=FAIL T04C-7=PASS T04C-8=FAIL T04C-9=PASS
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
