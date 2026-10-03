@@ -65,17 +65,26 @@
  */
 #define DT_FIXED  5e-7
 
-/* EXP-TIME : dt de base sur grille 64×64
- * dt_stable_64 = Re*(1/64)²/4 ≈ 6.1e-5
- * DT0 = 1e-5 (stable, facteur 6 sous le maximum diffusif)
+/* EXP-TIME v2 : grille grossière N=16 pour que O(dx²) soit grand
+ * dx_16 = 1/16 = 0.0625 → dx² = 3.906e-3
+ * dt_stable_16 = Re*(1/16)²/4 ≈ 9.77e-4
+ * DT0_TIME = 5e-4 (< dt_stable_16, facteur ~2)
+ * Série : 5e-4, 2.5e-4, 1.25e-4, 6.25e-5
+ * O(dt) : 5e-4 → O(dx²)=3.9e-3 : ratio 7.8 → dt et dx² comparables → ordre mesurable
+ * Steps pour T_FINAL=0.003 : 5e-4 → 6 steps (trop peu !!)
+ * → T_FINAL = 0.1 pour cette expérience temporelle uniquement
+ *   Avec dt=5e-4 → 200 steps ; dt=6.25e-5 → 1600 steps — rapide ✓
  */
-#define DT0_TIME  1e-5
+#define DT0_TIME  5e-4
 #define N_DT      4   /* DT0, DT0/2, DT0/4, DT0/8 */
 
-#define T_FINAL   0.003   /* temps physique commun à toutes les expériences */
+/* T_FINAL spécifique à EXP-TIME (plus long pour accumuler l'erreur temporelle) */
+#define T_FINAL_TIME 0.1
 
-/* Grille pour EXP-TIME (fixe) */
-#define N_TIME_GRID 64
+#define T_FINAL   0.003   /* temps physique pour EXP-SPACE */
+
+/* Grille pour EXP-TIME v2 (grossière pour que O(dx²) soit observable) */
+#define N_TIME_GRID 16
 
 /* Grilles pour EXP-SPACE */
 #define N_GRIDS 3
@@ -254,7 +263,7 @@ typedef struct {
     int    steps_capped;
 } SimResult;
 
-static SimResult run_sim(int n, double dt, long long steps_max)
+static SimResult run_sim(int n, double dt, long long steps_max, double t_final_param)
 {
     SimResult res;
     memset(&res, 0, sizeof(res));
@@ -283,7 +292,7 @@ static SimResult run_sim(int n, double dt, long long steps_max)
     g_mms_re = RE_MMS;
     set_mms_bc(s);
 
-    long long target_steps = (long long)(T_FINAL / dt);
+    long long target_steps = (long long)(t_final_param / dt);
     if (target_steps < 1) target_steps = 1;
 
     int capped = 0;
@@ -407,7 +416,7 @@ int main(void)
         printf("  %3d×%3d | ", n, n);
         fflush(stdout);
 
-        space_res[gi] = run_sim(n, DT_FIXED, STEPS_MAX_SPACE);
+        space_res[gi] = run_sim(n, DT_FIXED, STEPS_MAX_SPACE, T_FINAL);
         SimResult *r = &space_res[gi];
 
         printf("%8.3e | %8.3e | %6lld | %7.1f | %s\n",
@@ -463,22 +472,24 @@ int main(void)
      *   DT0    : 300 steps  (sous STEPS_MAX_TIME) ✓
      *   DT0/2  : 600 steps  ✓
      *   DT0/4  : 1200 steps ✓
-     *   DT0/8  : 2400 steps ✓
-     *
-     * Ordre attendu p_t ≈ 1 (Euler explicite 1er ordre en temps)
-     *
-     * Note : la valeur L2 observée inclura l'erreur spatiale constante
-     * O(dx_64²) ≈ O(2.4e-4). Pour observer l'ordre temporel, il faut
-     * que l'erreur temporelle O(dt) soit > plancher machine mais < erreur spatiale.
-     * Avec DT0=1e-5 : erreur_temp ≈ O(1e-5) < O(2.4e-4) ✓ — mesurable.
+     * EXP-TIME v2 corrigée :
+     *   Grille N=16, T_FINAL_TIME=0.1, DT0=5e-4
+     *   dt_stable_16 ≈ 9.77e-4 → DT0=5e-4 stable (facteur ~2)
+     *   dx²_16 = (1/16)² = 3.9e-3 >> O(dt) → erreur temporelle mesurable
+     *   Steps : dt=5e-4 → 200 ; dt=6.25e-5 → 1600 — rapide ✓
      * ═══════════════════════════════════════════════════════════════════════ */
 
-    printf("\n═══ EXP-TIME : Ordre temporel isolé (grille 64×64 fixe) ═══\n\n");
-    printf("  Grille fixe 64×64 (dx=%.4f)\n", 1.0/64.0);
-    printf("  dt_stable_64 ≈ 6.1e-5 | DT0=%.2e (stable, facteur %.0f)\n",
-           DT0_TIME, 6.1e-5 / DT0_TIME);
-    printf("  Erreur spatiale fixe O(dx²)=O(%.2e) — constante entre les runs\n",
-           1.0/(64.0*64.0));
+    printf("\n═══ EXP-TIME v2 : Ordre temporel isolé (grille N=%d fixe, T=%.2f) ═══\n\n",
+           N_TIME_GRID, T_FINAL_TIME);
+    printf("  Grille fixe %d×%d (dx=%.4f, dx²=%.4f)\n",
+           N_TIME_GRID, N_TIME_GRID, 1.0/N_TIME_GRID, 1.0/(N_TIME_GRID*N_TIME_GRID));
+    {
+        double dt_stable_n = RE_MMS * (1.0/N_TIME_GRID) * (1.0/N_TIME_GRID) / 4.0;
+        printf("  dt_stable_%d ≈ %.2e | DT0=%.2e (facteur %.0f)\n",
+               N_TIME_GRID, dt_stable_n, DT0_TIME, dt_stable_n / DT0_TIME);
+    }
+    printf("  Erreur spatiale fixe O(dx²)=O(%.3e) — constante entre les runs\n",
+           1.0/((double)N_TIME_GRID*(double)N_TIME_GRID));
     printf("  Attendu : p_temps ≈ 1.0 (Euler explicite 1er ordre)\n\n");
     printf("  %-8s | %8s | %8s | %6s | %7s\n",
            "dt", "L2", "Linf", "Steps", "Wall(s)");
@@ -491,7 +502,7 @@ int main(void)
         printf("  %.2e | ", time_dt[k]);
         fflush(stdout);
 
-        time_res[k] = run_sim(N_TIME_GRID, time_dt[k], STEPS_MAX_TIME);
+        time_res[k] = run_sim(N_TIME_GRID, time_dt[k], STEPS_MAX_TIME, T_FINAL_TIME);
         SimResult *r = &time_res[k];
 
         printf("%8.3e | %8.3e | %6lld | %7.1f\n",
