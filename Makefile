@@ -38,6 +38,7 @@ SOURCES = \
 	$(SRC_DIR)/logger/log_manager.c \
 	$(SRC_DIR)/debug/memory_tracker.c \
 	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/debug/forensic_unif_002.c \
 	$(SRC_DIR)/debug/ultra_forensic_logger.c \
 	$(SRC_DIR)/debug/enhanced_logging.c \
 	$(SRC_DIR)/debug/logging_system.c \
@@ -234,6 +235,14 @@ $(BIN_DIR)/ns_stationarity_t04_coldstart: $(NS_SOURCES) \
 	    -o $@ $(LDFLAGS)
 	@echo "[S178-B] Binaire: bin/ns_stationarity_t04_coldstart"
 
+# S179 : MAIN-CABLE-001 + FORENSIC-UNIF-002 — câblage complet LUM/VORAX dans main
+# Utilise SOURCES complet (tous les modules) + forensic_unif_002 déjà dans SOURCES
+$(BIN_DIR)/main_cable_001: $(SOURCES) $(SRC_DIR)/main.c
+	$(CC) $(CFLAGS) $(SOURCES) \
+	    $(SRC_DIR)/main.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S179] Binaire: bin/main_cable_001 (MAIN-CABLE-001 + FORENSIC-UNIF-002)"
+
 # S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
 INTEGRATION_SOURCES = \
 	$(SRC_DIR)/lum/lum_core.c \
@@ -325,7 +334,7 @@ blockchain_test: directories
 	@echo "[blockchain_test] Binaire: bin/test_blockchain_sha256"
 	@nm $(BIN_DIR)/test_blockchain_sha256 | grep -E "sha256_lumvorax|block_header_hash" && echo "[SHA-256 OK] Symboles liés"
 
-.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so blockchain_test portable portable-clean
+.PHONY: all clean test test-progressive test-stress test-forensic rsa_test science_test liblumvorax.so blockchain_test portable portable-clean main_cable_001
 
 all: directories $(MAIN_EXECUTABLE) $(TEST_EXECUTABLES) $(LIB_LUMVORAX)
 
