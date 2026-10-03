@@ -1,0 +1,38 @@
+[NS_LYAPUNOV][START] Calcul exposant Lyapunov sur vorticite NS 2D
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+
+[PARAMS] nx=32 ny=32 Re=100.0 dt=0.0010 warmup=3000
+         n_renorm=100 n_renorm_total=50 epsilon=1.00e-04
+
+[LYAPUNOV] Phase warmup (3000 pas)...
+[LYAPUNOV] Norme vorticite ref initiale = 2.294945
+
+  k   | t_sim   | ||delta_w|| | log(growth) | lambda_cum
+  --- | ------- | ----------- | ----------- | ----------
+    0 |   0.100 | 4.68420e-06 | +0.000000  | +0.000000
+   10 |   1.100 | 8.98868e-05 | -0.106619  | -3.105686
+   20 |   2.100 | 9.11644e-05 | -0.092506  | -2.079406
+   30 |   3.100 | 9.09060e-05 | -0.095344  | -1.711883
+   40 |   4.100 | 9.10106e-05 | -0.094194  | -1.524055
+   49 |   5.000 | 9.05645e-05 | -0.099108  | -1.426073
+
+[LYAPUNOV] === RESULTAT FINAL ===
+  Exposant Lyapunov lambda = -1.426073
+  Temps simule total       = 8.000 s
+  Label dynamique          = STABLE
+  (lambda <= 0 -> STABLE | 0 < lambda <= 0.01 -> MARGINAL_CHAOS | > 0.01 -> WEAKLY_CHAOTIC)
+
+[C2_CORRECTION] Audit NX35_LOG_P9.csc
+  Valeur historique metric_lyapunov = 0.0254219
+  Convention LumVorax : lambda > 0 -> CHAOTIC (pas STABLE)
+  Label original dans NX35_LOG_P9.csc : STABLE (incorrect)
+  Label corrige                       : WEAKLY_CHAOTIC (0.0254219 > 0.01)
+  Valeur lambda solveur ns_2d (Re=100): -1.426073 -> STABLE
+
+[C2_CORRECTION] NX35_LOG_P9_CORRECTED.csc ecrit.
+
+[ROBUSTESSE_EPSILON] Test signe lambda avec epsilon*10 = 1.00e-03
+  lambda(eps=0.0001)=-1.426073  lambda(eps*10=0.001)=-1.112930  meme_signe=OUI
+
+[VERDICT] lambda=-1.426073 label=STABLE fini_ok+robustesse=PASS
+[NOTE] CERTIFIED_100=false | unique_human_proven=false

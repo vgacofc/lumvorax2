@@ -200,6 +200,13 @@ $(BIN_DIR)/ns_richardson_008_time_chorin: $(NS_SOURCES) $(SRC_DIR)/validation/ns
 	    -o $@ $(LDFLAGS)
 	@echo "[S175] Binaire: bin/ns_richardson_008_time_chorin"
 
+# S176 : Lyapunov NS 2D — exposant de Lyapunov sur champ de vorticité (Benettin 1980)
+$(BIN_DIR)/ns_lyapunov: $(NS_SOURCES) $(SRC_DIR)/validation/ns_lyapunov.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_lyapunov.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S176] Binaire: bin/ns_lyapunov"
+
 # S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
 INTEGRATION_SOURCES = \
 	$(SRC_DIR)/lum/lum_core.c \
