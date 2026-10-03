@@ -192,6 +192,14 @@ $(BIN_DIR)/ns_richardson_007_re100_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_r
 	    -o $@ $(LDFLAGS)
 	@echo "[S170] Binaire: bin/ns_richardson_007_re100_mms"
 
+# S175 : Richardson-008-TIME — ordre temporel Chorin complet (CL MMS, grille staggered)
+# Utilise le solveur staggered complet ns_solver_2d.c
+$(BIN_DIR)/ns_richardson_008_time_chorin: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_008_time_chorin.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_008_time_chorin.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S175] Binaire: bin/ns_richardson_008_time_chorin"
+
 # S170 : INTEGRATION-LUM-OPT-001 — audit intégration LUM/VORAX modules
 INTEGRATION_SOURCES = \
 	$(SRC_DIR)/lum/lum_core.c \

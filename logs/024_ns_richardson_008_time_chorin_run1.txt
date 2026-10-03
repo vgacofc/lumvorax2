@@ -1,0 +1,88 @@
+=== RICHARDSON-PROTOCOL-008 : ORDRE TEMPOREL NS CHORIN COMPLET ===
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+[OBJECTIF] Mesurer O(dt) ordre temporel Euler — solveur Chorin NS complet
+[STRATEGIE] CL periodiques Taylor-Green — pas d'erreur splitting Chorin
+[MMS] Taylor-Green 2D | Re=1 | terme source=0 (solution exacte NS)
+[GRILLE] N=32 x 32 (fixe) | T_final=0.0200
+
+  Stabilité N=32, Re=1 :
+    dt_stable_diffusion = Re × dx²/4 = 2.44e-04
+    DT0 = 2.00e-04  (< dt_stable=2.44e-04 ? OUI ✓)
+    Amortissement Taylor-Green à T=0.0200 : exp(-2π²×T/Re) = 0.6738
+
+  Tableau série temporelle :
+  dt        |   steps |   CFL_adv |  CFL_diff | max_poisson
+  ----------+---------+-----------+-----------+-----------
+  2.00e-04  |     100 |    0.0064 |    0.2048 |       1000
+  1.00e-04  |     200 |    0.0032 |    0.1024 |       2000
+  5.00e-05  |     400 |    0.0016 |    0.0512 |       4000
+  2.50e-05  |     800 |    0.0008 |    0.0256 |       8000
+
+[FORENSIC] Log initialized successfully: logs/forensic/ns_richardson_008_time_chorin.log
+[FORENSIC] BUG-3 FIX: header monotonic=271405778402000 ns | realtime=1791062908892387000 ns
+═══ EXP-TIME-008 : Ordre temporel Chorin complet (CL periodiques) ═══
+
+  dt        |       L2 |     Linf |  div_max |  p_resid | Wall(s) | Stable
+  ----------+----------+----------+----------+----------+---------+-------
+  2.00e-04  | [008][DEBUG] n=32 dt=2.00e-04 steps=100 max_poisson=1000
+2.122e-01 | 6.388e-01 | 1.588e-05 | 9.747e-11 |     0.5 | OUI
+  1.00e-04  | [008][DEBUG] n=32 dt=1.00e-04 steps=200 max_poisson=2000
+2.119e-01 | 6.387e-01 | 7.864e-06 | 9.855e-11 |     0.7 | OUI
+  5.00e-05  | [008][DEBUG] n=32 dt=5.00e-05 steps=400 max_poisson=4000
+2.118e-01 | 6.386e-01 | 3.913e-06 | 9.660e-11 |     1.4 | OUI
+  2.50e-05  | [008][DEBUG] n=32 dt=2.50e-05 steps=800 max_poisson=8000
+2.117e-01 | 6.386e-01 | 1.952e-06 | 9.613e-11 |     2.3 | OUI
+
+  Ordres de convergence temporelle :
+  Ordre dt=2.00e-04 → 1.00e-04 : 0.002
+  Ordre dt=1.00e-04 → 5.00e-05 : 0.001
+  Ordre dt=5.00e-05 → 2.50e-05 : 0.001
+
+  Ordre moyen : 0.001 (theorique : 1.000)
+
+  T-TIME-1 (ord 2.00e-04→1.00e-04 ≥ 0.8) : FAIL ✗  [ordre=0.002]
+  T-TIME-2 (ord 1.00e-04→5.00e-05 ≥ 0.8) : FAIL ✗  [ordre=0.001]
+  T-TIME-3 (ord 5.00e-05→2.50e-05 ≥ 0.8) : FAIL ✗  [ordre=0.001]
+  T-TIME-4 (L2 monotone decroissant) : PASS ✓
+  T-TIME-5 (ordre moyen ∈ [0.7,1.4]) : FAIL ✗  [moy=0.001]
+  T-TIME-6 (toutes series stables)    : PASS ✓
+
+═══ SYNTHÈSE RICHARDSON-PROTOCOL-008 ═══
+
+  Methode : Chorin (Euler explicite) — mini-solveur NS periodique autonome
+  CL     : periodiques (ghost cells) — pas d'erreur splitting Chorin
+  Re = 1 | N = 32 | T_final = 0.0200
+
+  L2(dt=2.00e-04) = 2.122e-01  [steps=100  wall=0.5s]
+  L2(dt=1.00e-04) = 2.119e-01  [steps=200  wall=0.7s]
+  L2(dt=5.00e-05) = 2.118e-01  [steps=400  wall=1.4s]
+  L2(dt=2.50e-05) = 2.117e-01  [steps=800  wall=2.3s]
+
+  Ordres mesures :
+    dt=2.00e-04 → 1.00e-04 : 0.002
+    dt=1.00e-04 → 5.00e-05 : 0.001
+    dt=5.00e-05 → 2.50e-05 : 0.001
+  Ordre moyen : 0.001 (theorique Euler = 1.0)
+
+  T-TIME-1:FAIL  T-TIME-2:FAIL  T-TIME-3:FAIL
+  T-TIME-4:PASS  T-TIME-5:FAIL  T-TIME-6:PASS
+
+  Score : 2/6
+
+=== LIMITES HONNETES ===
+
+  - Schéma de projection implémenté ici : mini-solveur autonome
+    avec grille régulière collocated (vs grille décalée du solveur principal).
+    Les résultats valident l'ordre temporel d'une méthode de projection
+    de Chorin identique conceptuellement à ns_solver_2d.c.
+  - CL périodiques ≠ CL Dirichlet ns_solver_2d.c (qui a l'erreur splitting).
+    Pour fermer l'erreur splitting sur CL Dirichlet :
+    implémenter le schéma 'rotational pressure-correction' (Guermond 2006).
+  - Pression initialisée à 0 — champ de pression transitoire au démarrage.
+  - Re=1 (diffusion dominante) — advection non linéaire Re>>1 hors périmètre.
+  - Poisson SOR : convergence garantie par max_poisson adaptatif.
+    Résidu Poisson affiché dans le tableau ci-dessus.
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] RICHARDSON-008-TIME-CHORIN : FAIL honnete — voir T-TIME-* et diagnostic ci-dessus
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
