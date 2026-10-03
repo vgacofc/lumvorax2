@@ -185,6 +185,13 @@ $(BIN_DIR)/ns_richardson_004_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richard
 	    -o $@ $(LDFLAGS)
 	@echo "[S166] Binaire: bin/ns_richardson_004_mms"
 
+# S170 : Richardson-007-RE100 — ordre spatial NS complet Re=100, MMS Taylor-Green
+$(BIN_DIR)/ns_richardson_007_re100_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_007_re100_mms.c
+	$(CC) $(CFLAGS) $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_007_re100_mms.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S170] Binaire: bin/ns_richardson_007_re100_mms"
+
 $(BIN_DIR)/build_thread_001: $(NS_SOURCES) $(SRC_DIR)/tests/build_thread_001.c
 	$(CC) $(CFLAGS) $(NS_SOURCES) \
 	    $(SRC_DIR)/tests/build_thread_001.c \

@@ -1,0 +1,62 @@
+=== RICHARDSON-PROTOCOL-007 : ORDRE SPATIAL NS COMPLET Re=100 ===
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+[OBJECTIF] Vérifier O(dx²) spatial en régime convectif (Re=100)
+[MMS] Taylor-Green 2D | Re=100 | terme source=0 (solution exacte NS)
+[PARAMS] T_final=0.50 | dt=1.00e-04 | Poisson max=800 tol=1e-08
+
+  Justification DT_FIXED=1.00e-04 :
+    N= 16 : CFL_adv=0.0016 | dt_diff=9.77e-02 | DT_FIXED << dt_diff ✓
+    N= 32 : CFL_adv=0.0032 | dt_diff=2.44e-02 | DT_FIXED << dt_diff ✓
+    N= 64 : CFL_adv=0.0064 | dt_diff=6.10e-03 | DT_FIXED << dt_diff ✓
+  Ratio erreur_temp/erreur_spatiale_64 ≈ 0.41
+  (dt constant → erreur temporelle FIXE entre grilles → ordre = ordre spatial)
+
+[FORENSIC] Log initialized successfully: logs/forensic/ns_richardson_007_re100_mms.log
+[FORENSIC] BUG-3 FIX: header monotonic=257628766913000 ns | realtime=1791049130093524000 ns
+═══ EXP-SPACE Re=100 : Ordre spatial isolé (dt=1.00e-04 fixe) ═══
+
+  Grille  |       L2 |     Linf |  Steps | Wall(s) | Stable | Capped
+  -------+----------+----------+--------+---------+--------+-------
+   16× 16 | 1.027e-03 | 3.133e-03 |   5000 |     3.1 | OUI    | non
+   32× 32 | 2.620e-04 | 9.175e-04 |   5000 |    15.4 | OUI    | non
+   64× 64 | 6.239e-05 | 2.355e-04 |   5000 |    96.3 | OUI    | non
+
+  Ordre spatial 16→32 : 1.971
+  Ordre spatial 32→64 : 2.070
+  Ratio L2(16)/L2(32) : 3.920 (attendu ~4 pour O(dx²))
+  Ratio L2(32)/L2(64) : 4.200 (attendu ~4 pour O(dx²))
+
+  T-SPACE-1 (ord 16→32 ≥ 1.5)    : PASS ✓
+  T-SPACE-2 (ord 32→64 ≥ 1.5)    : PASS ✓
+  T-SPACE-3 (L2 décroissant)      : PASS ✓
+  T-SPACE-4 (toutes grilles stable) : PASS ✓
+
+═══ SYNTHÈSE RICHARDSON-PROTOCOL-007 ═══
+
+  Re = 100 (régime convectif — terme advectif non négligeable)
+  T_final = 0.50 | dt = 1.00e-04 | steps = 5000
+
+  L2( 16× 16) = 1.027e-03
+  L2( 32× 32) = 2.620e-04
+  L2( 64× 64) = 6.239e-05
+  Ordre 16→32 : 1.971
+  Ordre 32→64 : 2.070
+
+  T-SPACE-1 : PASS | T-SPACE-2 : PASS | T-SPACE-3 : PASS | T-SPACE-4 : PASS
+
+=== LIMITES HONNÊTES ===
+
+  - Taylor-Green 2D satisfait NS exactement : terme source = 0.
+    L'erreur mesurée est l'erreur de discrétisation spatiale pure.
+  - Re=100 : advection et diffusion comparables au niveau de l'erreur.
+    Le schéma d'advection centré 2ème ordre contribue à l'ordre global ≈ 2.
+  - dt=1.00e-04 fixe → erreur temporelle O(dt) fixe entre grilles.
+    Elle ne diminue pas avec le raffinement → l'ordre mesuré = ordre spatial.
+  - Poisson max=800 tol=1e-08 : résidu Poisson négligeable.
+  - Grille 128×128 non testée (coût : 5000 pas × 128² trop long pour CI).
+  - Chorin CL/pression splitting : erreur O(dt) sur bords présente mais fixe.
+  - Régime turbulent (Re > 1000) : hors périmètre.
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] RICHARDSON-007-RE100 : PASS — ordre spatial O(dx²) confirmé en régime convectif Re=100
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
