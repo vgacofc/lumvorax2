@@ -344,22 +344,24 @@ static void run_loop004_memory_opt(int n)
                 t1 - t0, 1, 0, note);
 }
 
-/* ── LOOP-005 : Parallel — audit niveau A/B/C/D avec timeout défensif ────
+/* ── LOOP-005 : Parallel — audit niveau A/B/C/D — BUG-PARALLEL-001 FIXÉ ───
  *
- * BUG-PARALLEL-001 (documenté honnêtement) :
- *   parallel_processor_wait_for_completion() (L127) et worker_thread_main()
- *   (L224) présentent un deadlock : task_queue_dequeue() fait pthread_cond_wait
- *   sans vérifier should_exit. Quand la queue se vide et que destroy() appelle
- *   broadcast + should_exit=true, les workers ne sortent pas du cond_wait
- *   (ils y retournent immédiatement après en sortir, queue vide → re-wait).
- *   parallel_processor_destroy() bloque indéfiniment sur pthread_join.
+ * BUG-PARALLEL-001 FERMÉ (S173) :
+ *   task_queue_dequeue() vérifiait uniquement queue->head==NULL sans tester
+ *   queue->shutdown. Lors de destroy(), le broadcast réveillait les workers
+ *   qui retournaient immédiatement en cond_wait (queue vide) → deadlock sur
+ *   pthread_join.
  *
- * WORKAROUND AUDIT : on audite les niveaux A/B/C (parallel_processor_create +
- *   submit) sans appeler wait_for_completion ni destroy (évite le deadlock).
- *   Le niveau D est marqué PARTIAL : tâches soumises + exécutées par les
- *   workers (confirmé par LUM_CREATE_POOL dans stdout), mais destroy bloquant.
- *   Ce bug est documenté, pas caché. Fix requis dans parallel_processor.c :
- *   task_queue_dequeue() doit vérifier should_exit après pthread_cond_wait.
+ * FIX appliqué dans parallel_processor.c :
+ *   - task_queue_t.shutdown (bool) ajouté dans le header.
+ *   - task_queue_init() initialise shutdown=false.
+ *   - parallel_processor_destroy() positionne shutdown=true sous mutex AVANT
+ *     le pthread_cond_broadcast.
+ *   - task_queue_dequeue() boucle sur (head==NULL && !shutdown) ; retourne NULL
+ *     si shutdown=true ET queue vide → le worker sort proprement.
+ *
+ * RÉSULTAT : parallel_processor_destroy() retourne sans deadlock.
+ *   Les workers se terminent proprement via pthread_join.
  * ──────────────────────────────────────────────────────────────────────────── */
 
 static void run_loop005_parallel(lum_group_t *group)
@@ -384,8 +386,7 @@ static void run_loop005_parallel(lum_group_t *group)
 
     int submitted = 0;
     if (proc) {
-        /* Niveau D : soumission réelle des tâches — exécution par workers
-         * confirmée par les LUM_CREATE_POOL imprimés pendant LOOP-005 */
+        /* Niveau D : soumission réelle des tâches — exécution par workers */
         for (size_t i = 0; i < sz; i++) {
             parallel_task_t *task = parallel_task_create(
                 TASK_LUM_CREATE, lum_ptrs[i], sizeof(lum_t));
@@ -395,17 +396,20 @@ static void run_loop005_parallel(lum_group_t *group)
             }
         }
 
-        /* Attente bornée (100 ms max) pour laisser les workers vider la queue.
-         * On n'appelle PAS wait_for_completion (deadlock) ni destroy (deadlock).
-         * Les threads workers fuient ici — comportement documenté honnêtement. */
-        for (int w = 0; w < 100; w++) {
+        /* Attente bornée (200 ms max) pour laisser les workers vider la queue
+         * avant d'appeler destroy(). Nécessaire car les tâches TASK_LUM_CREATE
+         * allouent des lum_t que le test ne possède pas — on attend juste la
+         * soumission complète. */
+        for (int w = 0; w < 200; w++) {
             if (task_queue_is_empty(&proc->task_queue)) break;
-            usleep(1000);  /* 1 ms par itération, max 100 ms total */
+            usleep(1000);  /* 1 ms par itération, max 200 ms total */
         }
-        /* NOTE HONNÊTE : parallel_processor_destroy() NON appelé ici car
-         * pthread_join bloque indéfiniment (BUG-PARALLEL-001).
-         * Les workers threads et la structure processor fuient en mémoire.
-         * CERTIFIED_100=false. */
+
+        /* BUG-PARALLEL-001 FERMÉ : destroy() propre sans deadlock.
+         * shutdown=true positionné avant broadcast → workers sortent
+         * de task_queue_dequeue() → pthread_join retourne. */
+        parallel_processor_destroy(proc);
+        proc = NULL;
     }
 
     free(lum_ptrs);
@@ -416,14 +420,13 @@ static void run_loop005_parallel(lum_group_t *group)
     snprintf(note, sizeof(note),
              "parallel_processor_create(workers=%d) ok=%d. "
              "Taches soumises=%d/%zu. "
-             "BUG-PARALLEL-001: destroy() bloquant (pthread_join deadlock). "
-             "Workers fuient — documente, pas cache.",
+             "BUG-PARALLEL-001 FERME: destroy() propre — pthread_join sans deadlock.",
              PARALLEL_WORKERS, c_ok,
              submitted, sz);
 
     char op[128];
     snprintf(op, sizeof(op),
-             "LOOP005:parallel:c_ok=%d:submitted=%d:sz=%zu:bug=BUG-PARALLEL-001",
+             "LOOP005:parallel:c_ok=%d:submitted=%d:sz=%zu:BUG-PARALLEL-001-FERME",
              c_ok, submitted, sz);
     forensic_log_individual_lum((uint64_t)0x05ULL << 56, op,
                                 time_ns_get_absolute());

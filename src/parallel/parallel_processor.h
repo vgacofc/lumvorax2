@@ -42,6 +42,7 @@ typedef struct {
     size_t count;
     pthread_mutex_t mutex;
     pthread_cond_t condition;
+    bool shutdown;  /* BUG-PARALLEL-001 FIX: signale aux workers que destroy() est en cours */
 } task_queue_t;
 
 // Worker thread info

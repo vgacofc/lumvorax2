@@ -75,6 +75,12 @@ void parallel_processor_destroy(parallel_processor_t* processor) {
         }
     }
 
+    /* BUG-PARALLEL-001 FIX: positionner shutdown=true SOUS mutex AVANT le broadcast
+     * pour que task_queue_dequeue() sorte de son while() quand la queue est vide. */
+    pthread_mutex_lock(&processor->task_queue.mutex);
+    processor->task_queue.shutdown = true;
+    pthread_mutex_unlock(&processor->task_queue.mutex);
+
     // Wake up all workers
     pthread_cond_broadcast(&processor->task_queue.condition);
 
@@ -138,6 +144,7 @@ bool task_queue_init(task_queue_t* queue) {
     queue->head = NULL;
     queue->tail = NULL;
     queue->count = 0;
+    queue->shutdown = false;  /* BUG-PARALLEL-001 FIX: initialiser à false */
 
     if (pthread_mutex_init(&queue->mutex, NULL) != 0) {
         return false;
@@ -194,8 +201,17 @@ parallel_task_t* task_queue_dequeue(task_queue_t* queue) {
 
     pthread_mutex_lock(&queue->mutex);
 
-    while (queue->head == NULL) {
+    /* BUG-PARALLEL-001 FIX: vérifier shutdown DANS la condition du while
+     * pour éviter le deadlock lors de parallel_processor_destroy().
+     * Si shutdown==true ET queue vide → retourner NULL → le worker sort. */
+    while (queue->head == NULL && !queue->shutdown) {
         pthread_cond_wait(&queue->condition, &queue->mutex);
+    }
+
+    /* shutdown signalé ET queue vide : sortie propre du worker */
+    if (queue->head == NULL) {
+        pthread_mutex_unlock(&queue->mutex);
+        return NULL;
     }
 
     parallel_task_t* task = queue->head;
