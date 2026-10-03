@@ -164,6 +164,21 @@ $(BIN_DIR)/ns_richardson_005_separation: $(NS_SOURCES) $(SRC_DIR)/validation/ns_
 	    -o $@ $(LDFLAGS)
 	@echo "[S167] Binaire: bin/ns_richardson_005_separation"
 
+# S168 : Richardson-006-TIME — ordre temporel Euler isolé (diffusion pure, sans splitting Chorin)
+# Sources minimales : forensic_logger, memory_tracker, time_ns seulement — pas de solveur NS
+NS_DIFF_SOURCES = \
+	$(SRC_DIR)/debug/forensic_logger.c \
+	$(SRC_DIR)/debug/memory_tracker.c \
+	$(SRC_DIR)/common/time_ns.c \
+	$(SRC_DIR)/lum/lum_core.c \
+	$(SRC_DIR)/binary/binary_lum_converter.c
+
+$(BIN_DIR)/ns_richardson_006_time_periodic: $(NS_DIFF_SOURCES) $(SRC_DIR)/validation/ns_richardson_006_time_periodic.c
+	$(CC) $(CFLAGS) $(NS_DIFF_SOURCES) \
+	    $(SRC_DIR)/validation/ns_richardson_006_time_periodic.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S168] Binaire: bin/ns_richardson_006_time_periodic"
+
 $(BIN_DIR)/ns_richardson_004_mms: $(NS_SOURCES) $(SRC_DIR)/validation/ns_richardson_004_mms.c
 	$(CC) $(CFLAGS) $(NS_SOURCES) \
 	    $(SRC_DIR)/validation/ns_richardson_004_mms.c \

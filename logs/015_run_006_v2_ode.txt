@@ -1,0 +1,85 @@
+=== RICHARDSON-PROTOCOL-006-TIME v2 : ORDRE EULER ISOLÉ (DIFFUSION PURE) ===
+[MODE] DEBUG | CERTIFIED_100=false | unique_human_proven=false
+[MODÈLE] Diffusion 2D — SANS pression, SANS advection, SANS splitting Chorin
+[MMS] u=sin(πx)sin(πy)exp(-2π²νt) | ν=1.0
+
+[FORENSIC] Log initialized successfully: logs/forensic/ns_richardson_006_time_periodic.log
+[FORENSIC] BUG-3 FIX: header monotonic=248559328272000 ns | realtime=1791040060755368000 ns
+═══ EXP-SPACE : Ordre spatial (dt=5.00e-07 fixe) ═══
+
+  Justification dt fixe :
+    dx_32=1/33=0.0303, dx_64=1/65=0.0154, dx_128=1/129=0.0078
+    dt_stable_128 = (1/129)²/(4ν) = 1.502e-05
+    DT_FIXED = 5.00e-07 → facteur 30 sous dt_stable_128 → stable ✓
+    Erreur temporelle O(5.00e-07) << Erreur spatiale O((1/129)²=6.01e-05)
+    → ordre mesuré = ordre spatial pur (Laplacien FD centré O(dx²))
+
+  Grille   |       L2 |  Steps | Wall(s)
+  --------+----------+--------+---------
+   32× 32 | 2.159e-05 |   6000 |     0.0
+   64× 64 | 5.377e-06 |   6000 |     0.1
+  128×128 | 1.251e-06 |   6000 |     0.5
+
+  Ordre spatial 32→64  : 2.005
+  Ordre spatial 64→128 : 2.103
+  Ratio L2(32)/L2(64)  : 4.015 (attendu ~4 pour O(dx²))
+  Ratio L2(64)/L2(128) : 4.297 (attendu ~4 pour O(dx²))
+
+  T-SPACE-1 (ord 32→64  ≥ 1.5) : PASS ✓
+  T-SPACE-2 (ord 64→128 ≥ 1.5) : PASS ✓
+  T-SPACE-3 (L2 décroissant)    : PASS ✓
+
+
+═══ EXP-TIME v2 : Ordre temporel Euler (ODE scalaire du/dt=λu) ═══
+
+  Modèle ODE : du/dt = λu  avec λ = -2π²ν = -19.7392
+  CI : u(0) = 1.0  |  Solution exacte : u(T) = exp(λT) = 0.402692
+  T_ODE = 256 × DT0 = 4.6080e-02
+  Erreur Euler : e(dt,T) = (1+λ·dt)^{T/dt} - exp(λT)
+  Ordre attendu : log2(|e(dt)| / |e(dt/2)|) = 1.0 (exact pour petit dt)
+
+  dt        |      u_euler |      u_exact |   err_signed |  Steps
+  ---------+--------------+--------------+--------------+-------
+  1.800e-04 | +4.020405e-01 | +4.026922e-01 |  -6.5173e-04 |    256
+  9.000e-05 | +4.023666e-01 | +4.026922e-01 |  -3.2561e-04 |    512
+  4.500e-05 | +4.025295e-01 | +4.026922e-01 |  -1.6274e-04 |   1024
+  2.250e-05 | +4.026109e-01 | +4.026922e-01 |  -8.1355e-05 |   2048
+
+  Ordres temporels (ODE scalaire, raffinement ×2 en dt) :
+  dt=1.800e-04 → dt/2=9.000e-05 : err -6.5173e-04 → -3.2561e-04 | ordre = 1.001
+  dt=9.000e-05 → dt/2=4.500e-05 : err -3.2561e-04 → -1.6274e-04 | ordre = 1.001
+  dt=4.500e-05 → dt/2=2.250e-05 : err -1.6274e-04 → -8.1355e-05 | ordre = 1.000
+
+  T-TIME-1 (ordres ∈ [0.5, 2.5])   : PASS ✓
+  T-TIME-2 (|err| décroissant)      : PASS ✓
+  T-TIME-3 (erreurs signe cohérent)  : PASS ✓
+
+═══ SYNTHÈSE RICHARDSON-PROTOCOL-006-TIME v2 ═══
+
+  EXP-SPACE (dt=5.00e-07 fixe, T=0.0030) :
+    L2(N=32)  = 2.1587e-05
+    L2(N=64)  = 5.3771e-06
+    L2(N=128) = 1.2512e-06
+    Ordre 32→64  : 2.005
+    Ordre 64→128 : 2.103
+    T-SPACE : T1=PASS | T2=PASS | T3=PASS
+
+  EXP-TIME v2 (ODE scalaire du/dt=λu, T=4.6080e-02) :
+    err(dt=1.800e-04) = -6.5173e-04
+    err(dt=9.000e-05) = -3.2561e-04
+    err(dt=4.500e-05) = -1.6274e-04
+    err(dt=2.250e-05) = -8.1355e-05
+    T-TIME : T1=PASS | T2=PASS | T3=PASS
+
+=== LIMITES HONNÊTES ===
+
+  - EXP-SPACE : ordre spatial O(dx²) sur solveur diffusion 2D.
+  - EXP-TIME  : ordre temporel O(dt) sur ODE scalaire du/dt=λu.
+    L'ODE utilise le MÊME intégrateur Euler que le solveur 2D.
+    AUCUNE erreur spatiale → ordre O(dt) exactement mesurable.
+  - Ce résultat NE valide PAS Chorin NS (splitting OPEN — rapport 172).
+  - CERTIFIED_100=false | unique_human_proven=false
+
+[VERDICT] RICHARDSON-006-TIME v2 : PASS — ordre spatial O(dx²) + temporel O(dt) démontrés
+[NOTE] EXP-TIME : ODE scalaire identique à l'intégrateur Euler du solveur.
+[NOTE] CERTIFIED_100=false | unique_human_proven=false
