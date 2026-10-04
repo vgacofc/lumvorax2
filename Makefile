@@ -235,6 +235,16 @@ $(BIN_DIR)/ns_stationarity_t04_coldstart: $(NS_SOURCES) \
 	    -o $@ $(LDFLAGS)
 	@echo "[S178-B] Binaire: bin/ns_stationarity_t04_coldstart"
 
+# S183 : T04-ENHANCED P3 — fenêtre finale renforcée Lid-Driven Cavity cold-start
+$(BIN_DIR)/ns_stationarity_t04_enhanced: $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04_enhanced.c
+	$(CC) $(CFLAGS) -I./src/validation $(NS_SOURCES) \
+	    $(SRC_DIR)/validation/ns_stationarity_analysis.c \
+	    $(SRC_DIR)/validation/ns_stationarity_t04_enhanced.c \
+	    -o $@ $(LDFLAGS)
+	@echo "[S183] Binaire: bin/ns_stationarity_t04_enhanced"
+
 # S179 : MAIN-CABLE-001 + FORENSIC-UNIF-002 — câblage complet LUM/VORAX dans main
 # Utilise SOURCES complet (tous les modules) + forensic_unif_002 déjà dans SOURCES
 $(BIN_DIR)/main_cable_001: $(SOURCES) $(SRC_DIR)/main.c

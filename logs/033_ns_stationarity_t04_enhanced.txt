@@ -1,0 +1,65 @@
+=== T04-ENHANCED P3 ===
+Date     : 2026-10-04T09:40:48Z
+Solveur  : Lid-Driven Cavity Re=100 N=32 dt=4.0e-04
+Init     : u=v=0 (cold-start)
+LIMIT    : 100000 steps
+Fenetre  : 300 pts toutes les 50 iter
+
+[DEBUG] Linf_initial = 0.000000e+00 (cold-start u=v=0)
+[step=  1000] Linf=8.2296e-01 qs=0 range_rel=0.7527 std_rel=0.1955 slope_rel=5.53e-04
+[step=  2000] Linf=8.6426e-01 qs=0 range_rel=0.7399 std_rel=0.1531 slope_rel=2.00e-04
+[step=  3000] Linf=8.8072e-01 qs=0 range_rel=0.7317 std_rel=0.1317 slope_rel=1.09e-04
+[step=  4000] Linf=8.8905e-01 qs=0 range_rel=0.7254 std_rel=0.1179 slope_rel=7.02e-05
+[step=  5000] Linf=8.9367e-01 qs=0 range_rel=0.7203 std_rel=0.1079 slope_rel=4.95e-05
+[step=  6000] Linf=8.9641e-01 qs=0 range_rel=0.7160 std_rel=0.1001 slope_rel=3.70e-05
+[step=  7000] Linf=8.9815e-01 qs=0 range_rel=0.7125 std_rel=0.0938 slope_rel=2.88e-05
+[step=  8000] Linf=8.9933e-01 qs=0 range_rel=0.7097 std_rel=0.0886 slope_rel=2.31e-05
+[step=  9000] Linf=9.0017e-01 qs=0 range_rel=0.7073 std_rel=0.0842 slope_rel=1.89e-05
+[step= 10000] Linf=9.0078e-01 qs=0 range_rel=0.7053 std_rel=0.0804 slope_rel=1.58e-05
+[step= 11000] Linf=9.0133e-01 qs=0 range_rel=0.7036 std_rel=0.0771 slope_rel=1.34e-05
+[step= 12000] Linf=9.0178e-01 qs=0 range_rel=0.7022 std_rel=0.0741 slope_rel=1.16e-05
+[step= 13000] Linf=9.0214e-01 qs=0 range_rel=0.7010 std_rel=0.0715 slope_rel=1.01e-05
+[step= 14000] Linf=9.0243e-01 qs=0 range_rel=0.6999 std_rel=0.0691 slope_rel=8.84e-06
+[step= 15000] Linf=9.0266e-01 qs=0 range_rel=0.6990 std_rel=0.0670 slope_rel=7.84e-06
+[step= 16000] Linf=9.0284e-01 qs=0 range_rel=0.0855 std_rel=0.0164 slope_rel=2.83e-06
+[step= 17000] Linf=9.0299e-01 qs=1 range_rel=0.0419 std_rel=0.0088 slope_rel=1.64e-06
+[CONVERGENCE] Quasi-stationnarite a step=17000 (Linf=9.0299e-01 300 pts fenetre)
+
+=== ANALYSE FENETRE FINALE ===
+n_steps  = 17000
+t_phys   = 6.8000 s
+wall     = 36.41 s
+converged= 1
+n_points = 300
+min_val  = 8.654200e-01
+max_val  = 9.029877e-01
+mean     = 8.971985e-01
+std      = 7.924922e-03
+range_rel= 0.041872
+std_rel  = 0.008833
+slope    = 1.468326e-06
+slope_rel= 1.636568e-06
+quasi_qs = 1
+Linf_last= 9.029877e-01
+u_max    = 9.029877e-01
+
+=== TRAJECTOIRE Linf (340 points) ===
+Linf[0]  = 2.869709e-01 (step=50)
+Linf[-1] = 9.029877e-01 (step=17000)
+
+=== TESTS T04E-1 -> T04E-10 ===
+PASS : T04E-1 — n_points >= QS_MIN_POINTS
+PASS : T04E-2 — range_rel < 0.05 (variation max-min faible)
+PASS : T04E-3 — std_rel < 0.02 (ecart-type faible)
+PASS : T04E-4 — slope_rel < 0.02 (pente OLS faible)
+PASS : T04E-5 — quasi_stationary == 1 (4 criteres simultanes)
+PASS : T04E-6 — Linf_final > 0.0 (champ Lid-Driven non nul — physiquement attendu)
+PASS : T04E-7 — u_max > 0.0 (couvercle lid a entraine le fluide)
+PASS : T04E-8 — u_max <= 1.0 + 1e-4 (pas de divergence)
+PASS : T04E-9 — trajectoire >= 10 points (convergence observable)
+PASS : T04E-10 — mean fenetre dans (0, 1) — plausibilite physique Lid-Driven
+
+=== RESUME ===
+PASS : 10 / 10
+VERDICT : T04-ENHANCED P3 : PASS
+CERTIFIED_100=false | unique_human_proven=false
