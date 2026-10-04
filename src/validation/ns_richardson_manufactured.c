@@ -160,24 +160,92 @@ static double couette_p_exact(double x, double y)
     return 0.0;
 }
 
-/* ── Application des CL Couette (remplacement de lid-driven) ─────────────
+/* ── Application des CL Couette plan (rapport 191 — correction P1) ────────
  *
- * CL Couette plan :
- *   y=0 (j=0, paroi basse)  : u = 0  (no-slip)
- *   y=1 (j=ny, paroi haute) : u = 1  (plaque mobile)
- *   x=0, x=Lx               : Neumann (ou périodique — ici Neumann)
+ * AVANT (8aaabe5) : set_couette_bc() appelait ns_solver_set_lid_bc() qui
+ *   impose u=0 sur les bords O/E (parois solides) → cavité Lid-Driven ≠ Couette.
+ *   L2 ≈ 0.57 indépendamment du raffinement : erreur structurelle irréductible.
+ *
+ * APRÈS (rapport 191) : CL Couette plan correct :
+ *   y=0 (j=0)     : u = 0  (no-slip Sud — miroir)
+ *   y=1 (j=ny+1)  : u = 1  (couvercle Nord — miroir)
+ *   x=0, x=Lx     : Neumann (∂u/∂x = 0) — copie de la colonne voisine
  *   v = 0 sur tous les bords
- *   p : Neumann homogène
+ *   p : Neumann homogène dp/dn=0
  *
- * Le solveur utilise la même CL que Lid-Driven pour la paroi haute (u=1),
- * ce qui correspond exactement à Couette. On peut donc réutiliser
- * ns_solver_set_lid_bc() directement.
+ * Attention : les macros U/V/P ne sont pas disponibles ici (définies dans
+ * ns_solver_2d.c uniquement). On accède aux tableaux directement.
  */
 static void set_couette_bc(NSSolver2D *s)
 {
-    /* ns_solver_set_lid_bc() impose u=1 sur le couvercle Nord et
-     * u=v=0 sur les autres parois — identique à Couette plan. */
-    ns_solver_set_lid_bc(s);
+    int    nx = s->params.nx;
+    int    ny = s->params.ny;
+
+    /* ── u : composante x — tableau (nx+1)×(ny+2) indexé u[i*(ny+2)+j] ── */
+
+    /* Bords Sud et Nord (identiques à Lid-Driven) */
+    for (int i = 0; i <= nx; i++) {
+        s->u[i * (ny + 2) + 0]      = -s->u[i * (ny + 2) + 1];        /* no-slip Sud */
+        s->u[i * (ny + 2) + ny + 1] = 2.0 - s->u[i * (ny + 2) + ny];  /* couvercle Nord: u=1 */
+    }
+
+    /* Bords O/E : Neumann (∂u/∂x = 0) — copie de la colonne intérieure voisine.
+     * Remplace le u=0 solide de Lid-Driven qui provoquait L2 ≈ 0.57. */
+    for (int j = 0; j <= ny + 1; j++) {
+        s->u[0  * (ny + 2) + j] = s->u[1        * (ny + 2) + j];  /* Neumann Ouest */
+        s->u[nx * (ny + 2) + j] = s->u[(nx - 1) * (ny + 2) + j]; /* Neumann Est   */
+    }
+
+    /* ── v : composante y — tableau (nx+2)×(ny+1) indexé v[i*(ny+1)+j] ── */
+
+    /* v = 0 sur les bords N/S */
+    for (int i = 0; i <= nx + 1; i++) {
+        s->v[i * (ny + 1) + 0]      = 0.0;   /* bord Sud */
+        s->v[i * (ny + 1) + ny]     = 0.0;   /* bord Nord */
+    }
+    /* v = 0 sur les bords O/E (Neumann : pas de flux transverse pour Couette) */
+    for (int j = 0; j <= ny; j++) {
+        s->v[0        * (ny + 1) + j] = 0.0;  /* bord Ouest */
+        s->v[(nx + 1) * (ny + 1) + j] = 0.0;  /* bord Est   */
+    }
+
+    /* ── p : pression — tableau (nx+2)×(ny+2) indexé p[i*(ny+2)+j] ── */
+
+    /* Neumann homogène dp/dn=0 */
+    for (int j = 0; j <= ny + 1; j++) {
+        s->p[0        * (ny + 2) + j] = s->p[1    * (ny + 2) + j];
+        s->p[(nx + 1) * (ny + 2) + j] = s->p[nx   * (ny + 2) + j];
+    }
+    for (int i = 0; i <= nx + 1; i++) {
+        s->p[i * (ny + 2) + 0]      = s->p[i * (ny + 2) + 1];
+        s->p[i * (ny + 2) + ny + 1] = s->p[i * (ny + 2) + ny];
+    }
+}
+
+/* ── Initialisation du champ u avec le profil Couette exact (rapport 191) ──
+ *
+ * Sans cette initialisation, le solveur démarre depuis u=0 et doit "monter"
+ * vers le profil linéaire. Avec initialisation, la convergence est immédiate
+ * (quelques centaines de pas) car l'état initial satisfait déjà u≈y.
+ *
+ * u_exact(x, y) = y → u[i*(ny+2)+j] = j * dy   (face à y = j * dy)
+ */
+static void init_couette_profile(NSSolver2D *s)
+{
+    int    nx = s->params.nx;
+    int    ny = s->params.ny;
+    double dy = s->dy;
+
+    for (int i = 0; i <= nx; i++) {
+        for (int j = 0; j <= ny + 1; j++) {
+            double y = (double)j * dy;
+            s->u[i * (ny + 2) + j] = y;
+        }
+    }
+    /* v = 0 partout à l'initialisation */
+    for (int i = 0; i <= nx + 1; i++)
+        for (int j = 0; j <= ny; j++)
+            s->v[i * (ny + 1) + j] = 0.0;
 }
 
 /* ── Calcul des erreurs L1/L2/Linf sur le champ u ────────────────────────── */
@@ -301,6 +369,8 @@ static GridResult run_to_steady(int n, double dt, int protocol_id)
         res.converged = 0;
         return res;
     }
+    /* [rapport 191] Initialiser avec profil Couette exact avant la boucle */
+    init_couette_profile(s);
     set_couette_bc(s);
 
     /* Fenêtre de stationnarité */
@@ -315,9 +385,9 @@ static GridResult run_to_steady(int n, double dt, int protocol_id)
     int    limit_steps = (protocol_id == PROTO_A) ? LIMIT_STEPS_A : LIMIT_STEPS_BC;
 
     while (total_steps < limit_steps) {
-        /* Exécuter POLL_INTERVAL pas */
+        /* Exécuter POLL_INTERVAL pas avec CL Couette (rapport 191 — step_with_bc) */
         for (int k = 0; k < POLL_INTERVAL && total_steps < limit_steps; k++) {
-            poisson_res = ns_solver_step(s);
+            poisson_res = ns_solver_step_with_bc(s, set_couette_bc);
             total_steps++;
         }
 
