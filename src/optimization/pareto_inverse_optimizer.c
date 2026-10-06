@@ -1,6 +1,23 @@
 
+/* **************************************************************************
+** pareto_inverse_optimizer.c — Optimiseur Pareto Inversé Multi-Couches
+**
+** Projet : ARTCB (Autonomous Reflexive Temporal Cognitive Blockchain)
+** Module : optimization/pareto_inverse_optimizer
+** Auteur : ARTCB Project <contact@artcb.me>
+**
+** Instrumentation FU002 (forensic_unif_002) activée :
+**   - ts_monotonic_ns_now_pareto_inv() : timestamps nanoseconde
+**   - FU002 dans pareto_inverse_optimizer_create() et
+**     pareto_execute_multi_layer_optimization()
+**
+** CERTIFIED_100=false | unique_human_proven=false
+** Mode DEBUG actif
+** ************************************************************************ */
+
 #include "pareto_inverse_optimizer.h"
 #include "../debug/memory_tracker.h"
+#include "../debug/forensic_unif_002.h"
 #include "../logger/lum_logger.h"
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
 #include <stdlib.h>
@@ -8,6 +25,14 @@
 #include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
+#include <time.h>
+
+/* Helper timestamp nanoseconde monotone (nom unique pour éviter conflits) */
+static inline uint64_t ts_monotonic_ns_now_pareto_inv(void) {
+    struct timespec _ts;
+    clock_gettime(CLOCK_MONOTONIC, &_ts);
+    return (uint64_t)_ts.tv_sec * 1000000000ULL + (uint64_t)_ts.tv_nsec;
+}
 
 static double get_high_precision_time(void) {
     struct timeval tv;
@@ -36,6 +61,22 @@ pareto_inverse_optimizer_t* pareto_inverse_optimizer_create(void) {
         "// DSL VORAX - Optimisation Multi-Couches Pareto Inversé\n", sizeof(optimizer->multi_layer_script));
     
     lum_log(LUM_LOG_INFO, "Pareto Inverse Optimizer créé avec 5 couches d'optimisation");
+
+    /* FU002 — enregistrement création */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_pareto_inv();
+        bit_id_t _bid = forensic_unif002_new_bit_id((uint8_t)(optimizer->max_layers & 0xFF));
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "pareto_inverse_optimizer_create max_layers=%d ts_ns=%llu",
+                 optimizer->max_layers, (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "pareto_inverse_optimizer", _desc);
+    }
+
     return optimizer;
 }
 
@@ -84,6 +125,21 @@ pareto_inverse_result_t pareto_execute_multi_layer_optimization(pareto_inverse_o
     
     double start_time = get_high_precision_time();
     lum_log(LUM_LOG_INFO, "Début optimisation multi-couches sur %zu LUMs", input_group->count);
+
+    /* FU002 — entrée optimisation multi-couches */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_pareto_inv();
+        bit_id_t _bid = forensic_unif002_new_bit_id((uint8_t)(input_group->count & 0xFF));
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "pareto_execute_multi_layer_optimization layers=%zu lum_count=%zu ts_ns=%llu",
+                 optimizer->layer_count, input_group->count, (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "pareto_inverse_optimizer", _desc);
+    }
     
     // Phase 1: Analyse des métriques baseline
     pareto_metrics_t baseline_metrics = pareto_evaluate_metrics(input_group, "baseline_multi_layer");

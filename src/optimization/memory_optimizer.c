@@ -1,12 +1,20 @@
 #include "memory_optimizer.h"
 #include "../debug/memory_tracker.h"
+#include "../debug/forensic_unif_002.h"  // FU002 BIT-LEVEL NANOSECONDE
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <time.h>
 
 // Les fonctions de memory tracking sont définies dans memory_tracker.c
 
+/* FU002 — helper nanoseconde monotone */
+static inline uint64_t ts_monotonic_ns_now_memopt(void) {
+    struct timespec _ts;
+    clock_gettime(CLOCK_MONOTONIC, &_ts);
+    return (uint64_t)_ts.tv_sec * 1000000000ULL + (uint64_t)_ts.tv_nsec;
+}
 
 // Create memory optimizer
 memory_optimizer_t* memory_optimizer_create(size_t initial_pool_size) {
@@ -44,6 +52,21 @@ memory_optimizer_t* memory_optimizer_create(size_t initial_pool_size) {
         pthread_mutex_destroy(&optimizer->stats_mutex);
         TRACKED_FREE(optimizer);
         return NULL;
+    }
+
+    /* FU002 — log BIT-LEVEL création optimizer mémoire */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_memopt();
+        bit_id_t _bid = forensic_unif002_new_bit_id(0x02);
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "memory_optimizer_create pool_size=%zu ts_ns=%llu opt=%p",
+                 initial_pool_size, (unsigned long long)_ts_ns, (void*)optimizer);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "memory_optimizer", _desc);
     }
 
     return optimizer;
@@ -226,8 +249,24 @@ typedef struct allocated_block {
 void memory_pool_defragment(memory_pool_t* pool) {
     if (!pool || !pool->is_initialized) return;
 
+    /* FU002 — log BIT-LEVEL début défragmentation */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_memopt();
+        bit_id_t _bid = forensic_unif002_new_bit_id(0x03);
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "memory_pool_defragment pool=%p used=%zu total=%zu ts_ns=%llu",
+                 (void*)pool, pool->used_size, pool->pool_size,
+                 (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "memory_optimizer", _desc);
+    }
+
     // NOUVELLE IMPLÉMENTATION: Défragmentation avancée avec compactage réel
-    printf("[MEMORY_OPTIMIZER] Défragmentation avancée démarrée - Pool: %zu bytes, utilisés: %zu bytes\n", 
+    printf("[MEMORY_OPTIMIZER] Défragmentation avancée démarrée - Pool: %zu bytes, utilisés: %zu bytes\n",
            pool->pool_size, pool->used_size);
 
     if (pool->used_size == 0) {

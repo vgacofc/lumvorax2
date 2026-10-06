@@ -7,6 +7,7 @@
 #include "simd_optimizer.h"
 #include "../logger/lum_logger.h"
 #include "../debug/memory_tracker.h"
+#include "../debug/forensic_unif_002.h"  // FU002 BIT-LEVEL NANOSECONDE
 #include "../lum/lum_core.h"  // For lum_get_timestamp function
 #include "../complex_modules/ai_optimization.h"  // Pour ai_optimization_config_t - CORRECTION APPLIQUÉE
 #include "../advanced_calculations/matrix_calculator.h"
@@ -17,6 +18,13 @@
 #include <stdio.h>
 #include <unistd.h>     // Pour getpagesize si nécessaire
 #include <sys/mman.h>   // Pour madvise si utilisé
+
+/* FU002 — helper nanoseconde monotone */
+static inline uint64_t ts_monotonic_ns_now_simd(void) {
+    struct timespec _ts;
+    clock_gettime(CLOCK_MONOTONIC, &_ts);
+    return (uint64_t)_ts.tv_sec * 1000000000ULL + (uint64_t)_ts.tv_nsec;
+}
 
 
 #ifdef __x86_64__
@@ -29,6 +37,20 @@
 simd_capabilities_t* simd_detect_capabilities(void) {
     simd_capabilities_t* caps = TRACKED_MALLOC(sizeof(simd_capabilities_t));
     if (!caps) return NULL;
+
+    /* FU002 — log BIT-LEVEL création caps SIMD */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_simd();
+        bit_id_t _bid = forensic_unif002_new_bit_id(0x01);
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc), "simd_detect_capabilities ts_ns=%llu caps=%p",
+                 (unsigned long long)_ts_ns, (void*)caps);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "simd_optimizer", _desc);
+    }
 
     caps->avx512_available = false;
     caps->avx512_supported = false;
@@ -413,8 +435,8 @@ void simd_optimize_lum_batch(lum_t* lums, size_t count, ai_optimization_config_t
     if (!lums || count == 0) return;
 }
 
-bool simd_optimize_lum_operations(simd_optimizer_t* optimizer, 
-                                   lum_group_t* group, 
+bool simd_optimize_lum_operations(simd_optimizer_t* optimizer,
+                                   lum_group_t* group,
                                    simd_operation_e operation,
                                    simd_result_t* result) {
     if (!optimizer || !group || !result) return false;
@@ -423,6 +445,21 @@ bool simd_optimize_lum_operations(simd_optimizer_t* optimizer,
     result->scalar_fallback_count = 0;
     result->performance_gain = 0.0;
     result->execution_time_ns = 0;
+
+    /* FU002 — log BIT-LEVEL entrée opération SIMD */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now_simd();
+        bit_id_t _bid = forensic_unif002_new_bit_id((uint8_t)(operation & 0xFF));
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "simd_optimize_lum_operations op=%d count=%zu ts_ns=%llu",
+                 (int)operation, group->count, (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "simd_optimizer", _desc);
+    }
 
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);

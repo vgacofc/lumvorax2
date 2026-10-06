@@ -6,7 +6,8 @@
 #endif
 #include "zero_copy_allocator.h"
 #include "../logger/lum_logger.h"
-#include "../debug/memory_tracker.h"  // NOUVEAU: Pour TRACKED_MALLOC/FREE
+#include "../debug/memory_tracker.h"  // Pour TRACKED_MALLOC/FREE
+#include "../debug/forensic_unif_002.h"  // FU002 BIT LEVEL NANOSECONDE
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
 #include <sys/mman.h>   // Pour mmap, munmap, madvise, MADV_SEQUENTIAL
 #include <sys/stat.h>   // Pour S_IRUSR, S_IWUSR
@@ -25,10 +26,11 @@
 
 static uint64_t next_allocation_id = 1;
 
-static uint64_t get_timestamp_us(void) {
+/* ~~get_timestamp_us revoked 2026-10-07~~ — remplacé par ts_monotonic_ns_now (nanoseconde) */
+static inline uint64_t ts_monotonic_ns_now(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return ts.tv_sec * 1000000ULL + ts.tv_nsec / 1000ULL;
+    return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
 }
 
 zero_copy_pool_t* zero_copy_pool_create(size_t size, const char* name) {
@@ -53,7 +55,7 @@ zero_copy_pool_t* zero_copy_pool_create(size_t size, const char* name) {
     // Nom de région pour debugging
     pool->region_name = TRACKED_MALLOC(strlen(name) + 1);
     if (pool->region_name) {
-        SAFE_STRCPY(pool->region_name, name, sizeof(pool->region_name));
+        SAFE_STRCPY(pool->region_name, name, strlen(name) + 1);
     }
 
     // Allocation initiale (standard malloc, upgradée à mmap plus tard si demandé)
@@ -68,6 +70,18 @@ zero_copy_pool_t* zero_copy_pool_create(size_t size, const char* name) {
     // Initialisation à zéro pour sécurité
     memset(pool->memory_region, 0, size);
 
+    /* FU002 — création du pool */
+    {
+        uint64_t _ts_ns = ts_monotonic_ns_now();
+        bit_id_t bid = forensic_unif002_new_bit_id((uint8_t)(size & 0xFF));
+        lum_id_t lid = {0};
+        bit_id_t zero_id = {0};
+        char _op[128];
+        snprintf(_op, sizeof(_op), "zero_copy_pool_create size=%zu ts_ns=%llu",
+                 size, (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, bid, lid,
+            zero_id, zero_id, 0, "zero_copy_allocator", _op);
+    }
     lum_log(LUM_LOG_INFO, "Zero-copy pool '%s' created: %zu bytes", name, size);
     return pool;
 }
@@ -146,9 +160,24 @@ zero_copy_allocation_t* zero_copy_alloc(zero_copy_pool_t* pool, size_t size) {
             pool->memory_reused_bytes += aligned_size;
 
             // Mise à jour statistiques
-            uint64_t reuse_time = get_timestamp_us() - current->last_used_timestamp;
-            lum_log(LUM_LOG_DEBUG, "Zero-copy reuse: %zu bytes, reused after %lu μs", 
-                    aligned_size, reuse_time);
+            uint64_t now_ns = ts_monotonic_ns_now();
+            uint64_t reuse_ns = now_ns - current->last_used_timestamp;
+            /* FU002 — hit zero-copy */
+            {
+                uint64_t _ts_ns2 = ts_monotonic_ns_now();
+                bit_id_t bid = forensic_unif002_new_bit_id((uint8_t)(aligned_size & 0xFF));
+                lum_id_t lid = {0};
+                bit_id_t zero_id = {0};
+                char _op2[128];
+                snprintf(_op2, sizeof(_op2),
+                         "zero_copy_alloc_hit size=%zu reuse_ns=%llu ts_ns=%llu",
+                         aligned_size, (unsigned long long)reuse_ns,
+                         (unsigned long long)_ts_ns2);
+                forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, bid, lid,
+                    zero_id, zero_id, 0, "zero_copy_allocator", _op2);
+            }
+            lum_log(LUM_LOG_DEBUG, "Zero-copy reuse: %zu bytes, reused after %lu ns",
+                    aligned_size, reuse_ns);
 
             TRACKED_FREE(current);
             pool->allocations_served++;
@@ -196,7 +225,7 @@ bool zero_copy_free(zero_copy_pool_t* pool, zero_copy_allocation_t* allocation) 
         if (free_block) {
             free_block->ptr = allocation->ptr;
             free_block->size = allocation->size;
-            free_block->last_used_timestamp = get_timestamp_us();
+            free_block->last_used_timestamp = ts_monotonic_ns_now();
             free_block->next = pool->free_list;
 
             pool->free_list = free_block;

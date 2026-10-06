@@ -1,4 +1,19 @@
+/* **************************************************************************
+** async_logger.c — Journalisation asynchrone avec tracé FU002 et memory_tracker
+**
+** Projet : ARTCB (Autonomous Reflexive Temporal Cognitive Blockchain)
+** Module : LUM-VORAX / optimisation / async_logging
+** Auteur : ARTCB Project <contact@artcb.me>
+**
+** Instrumentation : forensic_unif_002 (LUM/VORAX BIT LEVEL NANOSECONDE)
+**                   memory_tracker (TRACKED_MALLOC/FREE)
+**
+** CERTIFIED_100=false | unique_human_proven=false
+** Mode DEBUG actif
+** ************************************************************************ */
 #include "async_logger.h"
+#include "../../debug/forensic_unif_002.h"
+#include "../../debug/memory_tracker.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,16 +82,22 @@ static void* flush_thread_func(void* arg) {
 }
 
 async_logger_t* async_logger_create(const char* filepath, size_t buffer_size) {
-    async_logger_t* logger = (async_logger_t*)calloc(1, sizeof(async_logger_t));
+    /* AVANT : calloc(1, sizeof(async_logger_t))
+       APRÈS : TRACKED_MALLOC + memset pour suivi mémoire complet */
+    async_logger_t* logger = (async_logger_t*)TRACKED_MALLOC(sizeof(async_logger_t));
     if (!logger) return NULL;
-    
+    memset(logger, 0, sizeof(async_logger_t));
+
     if (buffer_size == 0) buffer_size = ASYNC_LOG_BUFFER_SIZE;
-    
-    logger->buffer = (async_log_entry_t*)calloc(buffer_size, sizeof(async_log_entry_t));
+
+    /* AVANT : calloc(buffer_size, sizeof(async_log_entry_t))
+       APRÈS : TRACKED_MALLOC pour suivi de l'allocation du buffer circulaire */
+    logger->buffer = (async_log_entry_t*)TRACKED_MALLOC(buffer_size * sizeof(async_log_entry_t));
     if (!logger->buffer) {
-        free(logger);
+        TRACKED_FREE(logger);
         return NULL;
     }
+    memset(logger->buffer, 0, buffer_size * sizeof(async_log_entry_t));
     
     logger->capacity = buffer_size;
     logger->head = 0;
@@ -102,31 +123,45 @@ async_logger_t* async_logger_create(const char* filepath, size_t buffer_size) {
         if (logger->output_file) fclose(logger->output_file);
         pthread_mutex_destroy(&logger->mutex);
         pthread_cond_destroy(&logger->cond);
-        free(logger->buffer);
-        free(logger);
+        TRACKED_FREE(logger->buffer);
+        TRACKED_FREE(logger);
         return NULL;
     }
-    
+
+    /* FU002 : tracer la création du logger asynchrone */
+    bit_id_t bid = forensic_unif002_new_bit_id(0x0A);
+    lum_id_t lid = {0};
+    forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, bid, lid,
+        "async_logger_create: async logger allocated and thread started");
+
     return logger;
 }
 
 void async_logger_destroy(async_logger_t* logger) {
     if (!logger) return;
-    
+
+    /* FU002 : tracer la destruction avant libération */
+    bit_id_t bid = forensic_unif002_new_bit_id(0x0B);
+    lum_id_t lid = {0};
+    forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, bid, lid,
+        "async_logger_destroy: flushing and freeing async logger");
+
     logger->running = false;
     pthread_cond_signal(&logger->cond);
     pthread_join(logger->flush_thread, NULL);
-    
+
     async_logger_flush(logger);
-    
+
     if (logger->output_file) {
         fclose(logger->output_file);
     }
-    
+
     pthread_mutex_destroy(&logger->mutex);
     pthread_cond_destroy(&logger->cond);
-    free(logger->buffer);
-    free(logger);
+    /* AVANT : free(logger->buffer) / free(logger)
+       APRÈS : TRACKED_FREE pour cohérence avec TRACKED_MALLOC */
+    TRACKED_FREE(logger->buffer);
+    TRACKED_FREE(logger);
 }
 
 bool async_logger_log(async_logger_t* logger, async_log_level_t level,

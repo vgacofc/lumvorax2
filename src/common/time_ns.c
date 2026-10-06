@@ -17,6 +17,20 @@ uint64_t time_ns_get_absolute(void) {
 }
 
 /**
+ * time_ns_get_monotonic
+ * FORENSIC-UNIF-004 BUG-3 FIX : retourne CLOCK_MONOTONIC (monotone garanti).
+ * Utiliser pour tous les timestamps d'événements forensic (ordre, durées).
+ * Ne jamais mélanger avec time_ns_get_absolute() dans le même fichier de log.
+ */
+uint64_t time_ns_get_monotonic(void) {
+    struct timespec ts;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+        return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+    }
+    return 0;
+}
+
+/**
  * time_ns_get_thread_cpu
  * Returns the CPU time for the current thread in nanoseconds.
  */

@@ -1,3 +1,18 @@
+/* **************************************************************************
+** pareto_optimizer.c — Optimiseur Pareto Standard / Hybride
+**
+** Projet : ARTCB (Autonomous Reflexive Temporal Cognitive Blockchain)
+** Module : optimization/pareto_optimizer
+** Auteur : ARTCB Project <contact@artcb.me>
+**
+** Instrumentation FU002 (forensic_unif_002) activée :
+**   - ts_monotonic_ns_now_pareto() : timestamps nanoseconde
+**   - FU002 dans pareto_optimizer_create() et pareto_evaluate_metrics()
+**
+** CERTIFIED_100=false | unique_human_proven=false
+** Mode DEBUG actif
+** ************************************************************************ */
+
 // Feature test macros for POSIX functions
 // _GNU_SOURCE defined in Makefile
 #define _POSIX_C_SOURCE 200809L
@@ -6,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "../debug/memory_tracker.h"
+#include "../debug/forensic_unif_002.h"
 #include "../common/safe_string.h"  // SÉCURITÉ: Pour SAFE_STRCPY
 #include <stdio.h>
 
@@ -217,6 +233,26 @@ pareto_optimizer_t* pareto_optimizer_create(const pareto_config_t* config) {
            "// DSL VORAX - Optimisations Pareto Inversées\n", sizeof(optimizer->vorax_optimization_script));
 
     lum_logf(LUM_LOG_INFO, "Pareto optimizer created with inverse mode enabled");
+
+    /* FU002 — enregistrement création */
+    {
+        struct timespec _ts_fu002;
+        clock_gettime(CLOCK_MONOTONIC, &_ts_fu002);
+        uint64_t _ts_ns = (uint64_t)_ts_fu002.tv_sec * 1000000000ULL + (uint64_t)_ts_fu002.tv_nsec;
+        bit_id_t _bid = forensic_unif002_new_bit_id((uint8_t)(optimizer->point_capacity & 0xFF));
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "pareto_optimizer_create capacity=%zu inverse=%d ts_ns=%llu",
+                 optimizer->point_capacity,
+                 optimizer->inverse_pareto_mode ? 1 : 0,
+                 (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "pareto_optimizer", _desc);
+    }
+
     return optimizer;
 }
 
@@ -245,6 +281,24 @@ pareto_metrics_t pareto_evaluate_metrics(lum_group_t* group, const char* operati
     if (!group) {
         metrics.efficiency_ratio = 0.0;
         return metrics;
+    }
+
+    /* FU002 — entrée évaluation métriques */
+    {
+        struct timespec _ts_fu002;
+        clock_gettime(CLOCK_MONOTONIC, &_ts_fu002);
+        uint64_t _ts_ns = (uint64_t)_ts_fu002.tv_sec * 1000000000ULL + (uint64_t)_ts_fu002.tv_nsec;
+        bit_id_t _bid = forensic_unif002_new_bit_id((uint8_t)(group->count & 0xFF));
+        lum_id_t _lid = {0};
+        char _desc[128];
+        bit_id_t _zero_id = {0};
+        snprintf(_desc, sizeof(_desc),
+                 "pareto_evaluate_metrics op=%s lum_count=%zu ts_ns=%llu",
+                 operation_sequence ? operation_sequence : "NULL",
+                 group->count, (unsigned long long)_ts_ns);
+        forensic_unif002_log_event(FU002_EVT_LUM_TRANSFORMED, _bid, _lid,
+                                   _zero_id, _zero_id, 0,
+                                   "pareto_optimizer", _desc);
     }
 
     // Calcul authentique des métriques basées sur les opérations LUM réelles
