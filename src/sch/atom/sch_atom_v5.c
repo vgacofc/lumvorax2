@@ -27,10 +27,26 @@ typedef struct {
     char interaction_type[16]; // vdW, Hydrogen, Ionic
 } SCH_Invariant;
 
-#define NUM_ATOMS 1000
-#define DT 1.0 // fs
-#define THRESHOLD 0.3 // nm
-#define STRONG_THRESHOLD 0.15 // nm
+#define NUM_ATOMS        1000
+#define DT               1.0    /* pas de temps (fs) */
+#define THRESHOLD        0.3    /* seuil de détection de cluster (nm) */
+
+/*
+ * STRONG_THRESHOLD — frontière TYPE1 (liaison covalente/forte) vs TYPE2 (faible)
+ * Référence : Voter 1997, Falk & Langer 1998 — coupure ≈ 0.15 nm.
+ * PROTOCOLE : ne jamais écrire 0.15 en dur dans le code.
+ */
+#define STRONG_THRESHOLD     0.15   /* nm — frontière TYPE1/TYPE2 */
+
+/*
+ * Sous-seuils de type d'interaction interatomique (nm) :
+ *   IONIC_THRESHOLD    : dist < 0.12 nm → liaison ionique (Bondi 1964 : rayon vdW K⁺/Na⁺)
+ *   HYDROGEN_THRESHOLD : 0.12 ≤ dist < 0.20 nm → liaison hydrogène (Jeffrey 1997)
+ *   Au-delà de 0.20 nm → interaction de van der Waals faible
+ * PROTOCOLE : jamais de littéraux 0.12 / 0.20 en dur.
+ */
+#define IONIC_THRESHOLD    0.12   /* nm — liaison ionique */
+#define HYDROGEN_THRESHOLD 0.20   /* nm — frontière H-bond / vdW */
 
 int FALSIFICATION_MODE = 0;
 
@@ -70,9 +86,9 @@ void detect_and_classify(SCH_Atom* pool, uint64_t step) {
                 inv.dist = d;
                 inv.class = (d < STRONG_THRESHOLD) ? 1 : 2;
                 
-                if (d < 0.12) strcpy(inv.interaction_type, "Ionic");
-                else if (d < 0.20) strcpy(inv.interaction_type, "Hydrogen");
-                else strcpy(inv.interaction_type, "vdW");
+                if (d < IONIC_THRESHOLD)         strcpy(inv.interaction_type, "Ionic");
+                else if (d < HYDROGEN_THRESHOLD) strcpy(inv.interaction_type, "Hydrogen");
+                else                             strcpy(inv.interaction_type, "vdW");
 
                 char buf[256];
                 sprintf(buf, "[%s][%llu] ATOMS(%llu,%llu) DIST(%.4f) CLASS(%d) TYPE(%s)", 

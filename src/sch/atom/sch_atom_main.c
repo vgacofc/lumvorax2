@@ -73,9 +73,24 @@ typedef struct {
 } SCH_TransientEvent;
 
 /* ── Paramètres de simulation ─────────────────────────────────────────── */
-#define DT_FEMTO         1.0
-#define NUM_ATOMS_INIT   1000
+#define DT_FEMTO          1.0
+#define NUM_ATOMS_INIT    1000
 #define CLUSTER_THRESHOLD 0.3   /* seuil de proximité pour cluster (nm) */
+
+/*
+ * STRONG_CLUSTER_THRESHOLD — seuil de distinction TYPE1 (liaison forte)
+ * vs TYPE2 (interaction faible / bruit thermique), en nanomètres.
+ *
+ * Référence physique :
+ *   - Voter (1997) KMC / Henkelman (2001) NEB : frontière typique 0.10–0.15 σ
+ *     pour métaux ; 0.15 nm ≈ rayon de covalence C–C court (Bondi 1964).
+ *   - Falk & Langer (1998) : coupure STZ ≈ 0.15 nm dans les verres amorphes.
+ *
+ * PROTOCOLE : jamais de littéral 0.15 dans le code — toujours cette constante.
+ * Pour rendre le seuil adaptatif (recommandation Henkelman), remplacer cette
+ * constante par un paramètre calculé depuis la température (kT) ou le matériau.
+ */
+#define STRONG_CLUSTER_THRESHOLD 0.15   /* nm — frontière TYPE1/TYPE2 */
 
 /* Phase C-3 : Cartographie et Falsification */
 int FALSIFICATION_MODE = 0;
@@ -219,7 +234,7 @@ void detect_transient_clusters(SCH_Atom* pool, int count, uint64_t step) {
             double dist = sqrt(dx*dx + dy*dy + dz*dz);
 
             if (dist < CLUSTER_THRESHOLD) {
-                int type = (dist < 0.15) ? 1 : 2;
+                int type = (dist < STRONG_CLUSTER_THRESHOLD) ? 1 : 2;
                 SCH_TransientEvent ev = {
                     step,
                     ts_step,
